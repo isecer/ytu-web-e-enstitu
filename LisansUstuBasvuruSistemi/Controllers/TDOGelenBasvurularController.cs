@@ -100,8 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                       Es_EYKYaGonderildi = xD != null ? xD.EYKYaGonderildi : null,
                                                       Es_EYKDaOnaylandi = xD != null ? xD.EYKDaOnaylandi : null,
                                                       Es_FormKodu = xD != null ? xD.FormKodu : null
-                                                  }).ToList(),
-
+                                                  }).ToList(), 
                     };
             var q2 = q;
             if (tdoDanismanOnayYetkisi && !tdoGelenBasvuruKayit)
