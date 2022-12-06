@@ -1,0 +1,882 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@model fmBasvuruSureci
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var kayit = RoleNames.YGBasvuruSureciKayit.InRoleCurrent();
+    var silme = RoleNames.YGBasvuruSureciSil.InRoleCurrent();  
+
+
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Yatay Geçiş Başvuru Süreçleri</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="125"></th>
+                                <th class="sirala" field="EnstituAd">Enstitu</th>
+                                <th width="180" class="sirala" field="OgretimYili">Öğretim Yılı</th>
+                                <th width="105" class="sirala" field="BaslangicTarihi">Başlangıç Tar.</th>
+                                <th width="105" class="sirala" field="BitisTarihi">Bitiş Tar.</th>
+
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th>
+                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
+                                </th>
+                                <th>
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    var OtipJsonStr = Json.Encode(item.CmbOgrenimTipBilgi);
+                                    bool suanAktif = (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now) || (item.AGNOGirisBaslangicTarihi <= DateTime.Now && item.AGNOGirisBitisTarihi >= DateTime.Now) || (item.SonucGirisBaslangicTarihi <= DateTime.Now && item.SonucGirisBitisTarihi >= DateTime.Now);
+                                    bool KopyalamaAktif = (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now) || item.BaslangicTarihi > DateTime.Now;
+                                    RowIndex++;
+                                    <tr class="delrw_@item.BasvuruSurecID" style="@(suanAktif?"color:green;font-weight:bold;":"")">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 50px;">
+                                                        <div class="btn-group">
+                                                            <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs"></i></a>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li role="presentation" class="dropdown-header" style="font-weight:bold;">İşlemler</li>
+                                                                @*<li class="divider" style="padding-top: 0px; margin-top: 4px;"></li>*@
+
+                                                                @if (kayit)
+                                                                {
+                                                                    <li>
+                                                                        <a href="@Url.Action("Kayit")"><i class="fa fa-pencil"></i>Yeni</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@Url.Action("Kayit", new { id = item.BasvuruSurecID })"><i class="fa fa-edit"></i>Düzenle</a>
+                                                                    </li>
+                                                                }
+                                                                @if (silme)
+                                                                {
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" onclick="getDetail(@item.BasvuruSurecID,true,$(this))"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i>Sil</a>
+                                                                    </li>
+                                                                }
+
+                                                                @if (kayit && (item.SonucGirisBitisTarihi ?? item.BitisTarihi).AddMonths(1) > DateTime.Now) //1 ay geçen süreçlerde işlem yapılamasın
+                                                                {
+                                                                    if (item.Hesaplandi)
+                                                                    {
+                                                                        <li role="presentation" class="dropdown-header" style="font-weight:bold;">Toplu Kayıt Kapatma</li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0);" onclick="TopluKayitKapatma(@item.BasvuruSurecID,@MulakatSonucTipi.Asil,'@OtipJsonStr')"> <i class="fa fa-save"></i> Toplu Kayıt Kapatma (Asil)</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0);" onclick="TopluKayitKapatma(@item.BasvuruSurecID,@MulakatSonucTipi.Yedek,'@OtipJsonStr')"> <i class="fa fa-save"></i> Toplu Kayıt Kapatma (Yedek)</a>
+                                                                        </li>
+                                                                    }
+
+                                                                    <li role="presentation" class="dropdown-header" style="font-weight:bold;">Veri Kopyalama</li>
+                                                                    <li>
+                                                                        @if (KopyalamaAktif || UserIdentity.Current.IsAdmin)
+                                                                        {
+                                                                            <a href="javascript:void(0)" onclick="Kopyala(@item.BasvuruSurecID,'@item.EnstituKod',true,@item.Hesaplandi.ToString().ToLower())"><i class="fa fa-copy fa-lg"></i>Sınav Bilgilerini Kopyala</a>
+
+                                                                            <a href="javascript:void(0)" onclick="Kopyala(@item.BasvuruSurecID,'@item.EnstituKod',false,@item.Hesaplandi.ToString().ToLower())"><i class="fa fa-copy fa-lg"></i>Kota Bilgilerini Kopyala</a>
+                                                                        }
+                                                                    </li>
+
+
+                                                                }
+
+                                                                <li role="presentation" class="dropdown-header" style="font-weight:bold;">Raporlar</li>
+                                                                @if (item.Hesaplandi)
+                                                                {
+                                                                    <li>
+                                                                        <a href="@Url.Action("GetProgramKotalari", new { id = item.BasvuruSurecID })" class="tooltips" data-style="blue"><i class="fa fa-picture-o "></i>Kalan Kontenjan bilgilerini İndir</a>
+                                                                    </li>
+                                                                }
+                                                                <li>
+                                                                    <a href="@Url.Action("getImages", new { id = item.BasvuruSurecID })" class="tooltips" data-style="blue" data-original-title="Kesin kaydı yapılan öğrencilerin başvuru fotoğraflarını indir"><i class="fa fa-picture-o "></i>Başvuru Fotoğraflarını İndir</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" onclick="kkOgrList(@item.BasvuruSurecID)" class="tooltips" data-style="blue" data-original-title="Kesin kaydı yapılan öğrencilerin listesini indir"><i class="fa fa-picture-o "></i>Kayıt olan öğrenci listesini indir</a>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow-ana-@item.BasvuruSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.BasvuruSurecID,'ana-')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.EnstituAdi</td>
+                                        <td>@item.BaslangicYil / @item.BitisYil @item.DonemAdi</td>
+                                        <td>
+                                            @item.BaslangicTarihi.ToFormatDateAndTime()
+                                        </td>
+                                        <td>
+                                            @item.BitisTarihi.ToFormatDateAndTime()
+                                        </td>
+
+
+                                    </tr>
+                                    <tr class="cls-ana-@item.BasvuruSurecID delrw_@item.BasvuruSurecID" style="display:none;">
+                                        <td id="cls-ana-@item.BasvuruSurecID" colspan="5" style="height:566px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function showDetail(id, tip) {
+        var rwID = $('#iShow-' + tip + id);
+        var cls = 'cls-' + tip + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
+    }
+
+    function getDetail(id, Isdelete, sndr) {
+       var tbName = "@TabAdlari.BasvuruSureciTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if ($('#SelectedTb-' + tbName).length > 0) {
+            subData(id, Isdelete, sndr);
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("getBsDetail", "YGBasvuruSureci")',
+                data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
+                async: false,
+                success: function (result) {
+                    if (Isdelete != true) {
+                        $('#cls-ana-' + id).html(result);
+                        subData(id, Isdelete);
+                    }
+                    else {
+                        subData(id, Isdelete, result);
+                    }
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+
+    }
+     
+    function subData(id, Isdelete, mContent) {
+        var _panel = $('#pnglDB_' + id);
+
+        var tbName = "@TabAdlari.BasvuruSureciTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if (Isdelete == true) tID = 1;
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getBsSubData", "YGBasvuruSureci")',
+            data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
+            // async: false,
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#' + tbName + '-' + tID).html(result);
+                    _pRefresh(_panel, true);
+                }
+                else {
+
+                    var _nme = tbName+ '-1';
+                    $(mContent).find('#' + _nme).html(result);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuru Sürecini Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Yatay Geçiş Başvuru Süreci Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: "Başvuru Sürecini Sil",
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(id);
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    $(btbx).find('.modal-dialog').addClass('modal-lg');
+                    _pRefresh(_panel, true);
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+
+    function getMsncPrDetay(bsrID, otID, prKod) {
+        var cID = (bsrID + "_" + otID + "_" + prKod);
+        var _panel = $('#pnglDB_' + bsrID);
+        var tbName = "@TabAdlari.MulakatDetayTN-" + cID;
+        var tID = getSelectedTabID(tbName);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getMulakatDetay", "YGMulakatSureci")',
+            data: { BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod, tbInx: tID, IsDelete: false, IsBootBox: true },
+            success: function (result) {
+                var btbx = bootbox.dialog({
+                    message: result,//+ " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Mülakat bilgisi</td></tr></table>",
+                    title: "Yatay Geçiş Mülakat detayı",
+                    buttons: {
+                        danger: {
+                            label: "Kapat",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                $(btbx).find('.modal-dialog').addClass('modal-lg');
+                _pRefresh(_panel, true);
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function getBsncPrDetay(id, prKod, otID) {
+        var _panel = $('#pnglDB_' + id);
+        _pRefresh(_panel, false);
+        var tbName = "@TabAdlari.BasvuruSonucDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        $.ajax({
+            url: '@Url.Action("getBasvuruSonucDetay", "YGBasvuruSureci")',
+            data: { id: id, ProgramKod: prKod, OgrenimTipKod: otID, tbInx: tID, IsDelete: false, IsBootBox: true },
+            success: function (result) {
+                var btbx = bootbox.dialog({
+                    message: result,//+ " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Mülakat bilgisi</td></tr></table>",
+                    title: "Yatay Geçiş Başvuru sonuçları detayı",
+                    buttons: {
+                        //success: {
+                        //    label: "Başvuru Sürecini Sil",
+                        //    className: "btn-danger",
+                        //    callback: function () {
+                        //        sil(sndr, id);
+                        //        _pRefresh(_panel, true);
+                        //    }
+
+                        //},
+                        danger: {
+                            label: "Kapat",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                $(btbx).find('.modal-dialog').addClass('modal-lg');
+                _pRefresh(_panel, true);
+
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+
+    function getBSonucHesap(id) {
+
+        var _panel = $('#pnglDB_' + id);
+        var btbx = bootbox.dialog({
+            message: " <table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Başvuru sonuçları hesaplanıp kayıt edilecek. İşleme devam etmek istiyor musunuz?</td></tr></table>",
+            title: "Yatay Geçiş Başvuru sonuçlarını hesapla",
+            buttons: {
+                success: {
+                    label: "Başvuruları Hesapla",
+                    className: "btn-danger",
+                    callback: function () {
+                        _pRefresh(_panel, false);
+                        $.ajax({
+                            url: '@Url.Action("BasvuruSonucHesap", "YGBasvuruSureci")',
+                            data: { id: id },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.IsSuccess) {
+                                    getDetail(id);
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                                _pRefresh(_panel, true);
+                            }
+                        });
+                    }
+
+                },
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+    function bbRprtShowD(id, show) {
+
+        if (show) {
+            $('.detRow_' + id).removeClass("hide");
+        }
+        else {
+            $('.detRow_' + id).addClass("hide");
+        }
+    }
+    function kkOgrList(id) {
+        yeniDialogBB(null, 'Kayıt olan öğrenci listesi', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipleri.KesinKayitListesi +'&BasvuruSurecID=' + id + '', 'auto', 'modal-dialog modal-lg')
+
+    }
+    function setchkRtEkBilgi(sndr) {
+        if ($(sndr).attr('id') == '_rprsncTip') {
+            if ($(sndr).prop('checked')) {
+                $('#_rprsncIletisim').prop('checked', false);
+            }
+        }
+        else {
+            if ($(sndr).prop('checked')) {
+                $('#_rprsncTip').prop('checked', false);
+            }
+        }
+    }
+    function getReportType(id, _AnabilimdaliKod, _ProgramKod, _OgrenimTipKod, oTips) {
+        _AnabilimdaliKod = (_AnabilimdaliKod == "null" || _AnabilimdaliKod == null) ? "" : _AnabilimdaliKod;
+        _OgrenimTipKod = (_OgrenimTipKod == "null" || _OgrenimTipKod == null) ? "" : _OgrenimTipKod;
+        _ProgramKod = (_ProgramKod == "null" || _ProgramKod == null) ? "" : _ProgramKod;
+        var otipRw = "";
+        var IsShowOtips = false;
+        if (_AnabilimdaliKod == "" && _OgrenimTipKod == "" && _ProgramKod=="") {
+            IsShowOtips = true;
+        }
+        if (IsShowOtips) {
+            otipRw = "<tr><td>Öğrenim Seviyeleri </td><td>";
+            var OtipList = eval(oTips);
+            for (var i = 0; i < OtipList.length; i++) {
+                var sOtip = OtipList[i];
+                otipRw += "<input type='checkbox' value='" + sOtip.Value + "' class='ChkSonucRprOtip' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>" + sOtip.Caption + "</span><br/>";
+
+            }
+            otipRw += "</td></tr>";
+        }
+        var mdlS = "<table class='table' style='width:100%;table-layout:fixed;'>" +
+                    "<tr> " +
+                      "<td style='width:200px;'>Liste Durumu</td>" +
+                      "<td id='_rdG'>" +
+                        "<input type='radio'name='rdGroup' value='1' checked='checked' onchange='bbRprtShowD(" + id + "," + true + ")' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Tüm Sonuçlar</span><br/>" +
+                        "<input type='radio'name='rdGroup' value='2' onchange='bbRprtShowD(" + id + "," + false + ")'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Tam Yedek Listesi</span><br/>" +
+                        "<input type='radio'name='rdGroup' value='3' onchange='bbRprtShowD(" + id + "," + false + ")'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Tam Yedek Listesi (İşlem Görmeyenler)</span><br/>" +
+                        "<input type='radio'name='rdGroup' value='4' onchange='bbRprtShowD(" + id + "," + false + ")'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Kalan Kontenjan Kadar Yedek</span>" +
+                      "</td>" +
+                        "</tr>" +
+                        otipRw+
+                      
+                    @*"<tr class='detRow_" + id + "'>" +
+                      "<td>Program Liste Türü </td>" +
+                      "<td><input type='checkbox' id='chkUyrkTip_@KullaniciTipBilgi.YerliOgrenci' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Yerli Öğrenci Listesi</span>" +
+                           "<br/>" +
+                           "<input type='checkbox' id='chkUyrkTip_@KullaniciTipBilgi.YabanciOgrenci' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Yabancı Öğrenci Listesi</span>" +
+                        "</td>" +
+                    "</tr>" +*@
+
+                    "<tr class='detRow_" + id + "'>" +
+                        "<td>Listelenecek Sonuç Tipleri </td>" +
+                        "<td>" +
+                               "<input type='checkbox' class='ChkMSonucTp' value='@MulakatSonucTipi.Asil' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Asil</span><br/>" +
+                               "<input type='checkbox' class='ChkMSonucTp' value='@MulakatSonucTipi.Yedek' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Yedek</span><br />" +
+                               "<input type='checkbox' class='ChkMSonucTp' value='@MulakatSonucTipi.Kazanamadı' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Kazanamadı</span>" +
+                    "</td>" +
+                    "</tr>" +
+                    "<tr class='detRow_" +
+                    id +
+                    "'>" +
+                    "<td>Kayıt Durumu</td>" +
+                    "<td><select id='_KayitDurum'><option value='' selected='selected'>Tümü</option><option value='0'>Ön Kayıt</option><option value='1'>Kayıt Olanlar</option><option value='2'>Kayıt Olmayanlar</option></select></td>" +
+                    "</tr>" +
+                    "<tr> " +
+                    "<td>Ek Bilgi</td>" +
+                    "<td id='_rdGP'>" +
+                    "<input type='radio'name='rdGroupP' value='1' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Sadece Sonuç Gösterilsin</span><br/>" +
+                    "<input type='radio'name='rdGroupP' value='2'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>GNBNO + Sonuç Gösterilsin</span><br/>" +
+                    "<input type='radio'name='rdGroupP' value='3'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Tüm Puanlar + Sonuç Gösterilsin</span><br/>" +
+                    "<input type='radio'name='rdGroupP' value='4'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>İletişim Bilgisi + Sonuç Gösterilsin</span><br/>" +
+                    "</td>" +
+                    "</tr>" +
+                    "</table>";
+        var btbx = bootbox.dialog({
+            message: mdlS,
+            title: "Yatay Geçiş Başvuru sonuç rapor alma işlemi",
+            buttons: {
+                success: {
+                    label: "Rapor Al",
+                    className: "btn-danger",
+                    callback: function() {
+                        var _sncTp = "";
+                        var _KayitDurumID = $('#_KayitDurum').val(); 
+                        var Otips = "";
+                        if (IsShowOtips) {
+                            var OtipVal = [];
+                            $('.ChkSonucRprOtip').each(function(inx, chk) {
+                                if ($(chk).prop('checked')) OtipVal.push(parseInt($(chk).val()));
+                            });
+                            Otips = OtipVal.join(',');
+                        }
+                        var SubRaporTipID = $('input[name=rdGroup]:checked', '#_rdG').val();
+                        if (SubRaporTipID == "1") {
+                            var _sncTpVal = [];
+                            $('.ChkMSonucTp').each(function (inx, chk) {
+                                if ($(chk).prop('checked')) _sncTpVal.push(parseInt($(chk).val()));
+                            });
+                            _sncTp = _sncTpVal.join(',');
+                        }
+                        else KayitDurum = '';
+
+                        var EkBilgiTipID = $('input[name=rdGroupP]:checked', '#_rdGP').val();
+                        var _rGtip = "";
+                        if (_AnabilimdaliKod == "" && _ProgramKod == "") {
+                            _rGtip =  "Başvuru Sonuç Tüm Liste";
+                        }
+                        else if (_AnabilimdaliKod != "" && _ProgramKod == "") {
+                            _rGtip =  "Başvuru Sonuç ABD Listesi";
+                        }
+                        else if (_AnabilimdaliKod != "" && _ProgramKod != "") {
+                            _rGtip =   "Başvuru Sonuç Program Listesi";
+                        }
+                        yeniDialogBB(null, _rGtip, '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipleri.BasvuruSonucListesi +'&BasvuruSurecID=' + id + '&AnabilimdaliKod=' + _AnabilimdaliKod + '&ProgramKod=' + _ProgramKod + '&OgrenimTipKod=' + _OgrenimTipKod + '&MulakatSonucTipID=' + _sncTp + '&EkBilgiTipID=' + EkBilgiTipID + '&KayitDurumID=' + _KayitDurumID + '&SubRaporTipID=' + SubRaporTipID + '&OgrenimTips=' + Otips , 'auto', 'modal-dialog modal-lg')
+                    }
+
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+    function getMJSendMailBB(id) {
+        var mdlS = "<table class='table' style='width:100%;table-layout:fixed;'>" +
+                    "<tr>" +
+                      "<td>Sınav Yer Bilgisi </td>" +
+                      "<td>Gönderilecek</td>" +
+                    "</tr>" +
+                    "<tr> " +
+                      "<td>Jüri Bilgisi</td>" +
+                      "<td>" +
+                      "<input type='checkbox' id='_MJJuriBilgisi' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Gönderilecek</span>" +
+                      "</td>" +
+                    "</tr>" +
+                  "</table>";
+        var btbx = bootbox.dialog({
+            message: mdlS,
+            title: "Yatay Geçiş Mülakat Sınavı Yer / Jüri Bilgisi Mail gönderim İşlemi",
+            buttons: {
+                success: {
+                    label: "Maili Gönder",
+                    className: "btn-danger",
+                    callback: function () {
+                        var _JuriBilgisiGonderilsin = $('#_MJJuriBilgisi').prop('checked');
+                        getMJSendMail(id, _JuriBilgisiGonderilsin);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+
+    function getMJSendMail(id, JuriBGonderilsin) {
+        var _panel = $('#pnglDB_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("mailGonderJuriYer", "YGBasvuruSureci")',
+            data: { 'id': id, 'JuriBilgisiGonderilsin': JuriBGonderilsin },
+            success: function (result) {
+                _pRefresh(_panel, true);
+                showMmMessage(result.Messages, 'Tamam');
+                if (result.IsSuccess) {
+                    getDetail(id);
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function getMJNBolumSendMailBB(id, isSinavYerOrSinavNotGiris) {
+        var mtip = "";
+        var bilgi = "";
+        if (isSinavYerOrSinavNotGiris) {
+            mtip = "Anabilim Dallarına sınav yeri girişi için bilgi maili gönder";
+            bilgi = "Anabilim Dallarına sınav yeri girişi için bilgi maili gönderilecek işleme devam etmek istiyor musunuz?";
+        }
+        else {
+            mtip = "Anabilim Dallarına sınav notu girişi için bilgi maili gönder";
+            bilgi = "Anabilim Dallarına sınav notu girişi için bilgi maili gönderilecek işleme devam etmek istiyor musunuz?";
+        }
+        var mdlS = " <table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>" + bilgi + "</td></tr></table>";
+        var btbx = bootbox.dialog({
+            message: mdlS,
+            title: mtip,
+            buttons: {
+                success: {
+                    label: "Maili Gönder",
+                    className: "btn-danger",
+                    callback: function () {
+                        getMJNBolumSendMail(id, isSinavYerOrSinavNotGiris);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+    function getMJNBolumSendMail(id, isSinavYerOrSinavNotGiris) {
+        var _panel = $('#pnglDB_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("mailGonderBolumSinavYerBilgiGiris", "YGBasvuruSureci")',
+            data: { 'id': id, 'isSinavYerOrSinavNotGiris': isSinavYerOrSinavNotGiris },
+            success: function (result) {
+                _pRefresh(_panel, true);
+                showMmMessage(result.Messages, 'Tamam');
+                if (result.IsSuccess) {
+                    getDetail(id);
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function bMailGonderimCnt(xcontentLst, title) {
+        var contItm = "";
+        for (var i = 0; i < xcontentLst.length; i++) {
+            var xval = xcontentLst[i];
+            contItm += "<a href=javascript:void(0) class=list-group-item><span class='fa fa-circle text-" + xval.Caption + "'></span>" + xval.Value + " </a>";
+        }
+
+        var xcontent = "<div class='list-group list-group-simple'>" + contItm + "</div>";
+        var btbx = bootbox.dialog({
+            message: xcontent,
+            title: title,
+            buttons: {
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');
+    }
+
+    function getBSSendMailBB(id, bilgi, IsSonucOrAnket,Otips) {
+        var contItm = "";
+        var title = "";
+        if (bilgi != "") {
+            contItm = "<br/><div class='list-group list-group-simple'><a href=javascript:void(0) class=list-group-item><span class='fa fa-circle text-success'></span>" + bilgi + " </a></div><br/>";
+
+        }
+        var mdlS = "";
+        var OtipList = eval(Otips);
+        var otipRw = "<tr><td width='180'>Öğrenim Seviyeleri</td><td>";
+        for (var i = 0; i < OtipList.length; i++) {
+            var sOtip = OtipList[i];
+             otipRw += "<input type='checkbox' value='" + sOtip.Value + "' class='ChkMGSonucOtip' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>" + sOtip.Caption + "</span><br/>";
+
+        }
+        otipRw += "</td></tr>";
+
+        if (IsSonucOrAnket) {
+            mdlS = contItm + "<table class='table' style='width:100%;table-layout:fixed;'>" +
+                otipRw +
+                "<tr>" +
+                "<td colspan='2'>Yukarıda seçilen öğrenim seviyelerine başvuru yapan öğrencilere başvuru sonuçları" + (bilgi != "" ? " tekrar " : " ") + "mail olarak göndermek istiyor musunuz?</td>" +
+                "</tr>" +
+
+                "</table>";
+        }
+        else {
+            mdlS = contItm + "<table class='table' style='width:100%;table-layout:fixed;'>" +
+                otipRw +
+                "<tr>" +
+                "<td  colspan='2'>Yukarıda seçilen öğrenim seviyelerine başvuru yapıp kayıt olmayan öğrencilere anket giriş bilgilerini" + (bilgi != "" ? " tekrar " : " ") + "mail olarak göndermek istiyor musunuz?</td>" +
+                "</tr>" +
+
+                "</table>";
+        }
+        var btbx = bootbox.dialog({
+            message: mdlS,
+            title: IsSonucOrAnket? "Yatay Geçiş Başvuru Sonuçları Mail Gönderim İşlemi":"Yatay Geçiş Başvuru Sonuç Anket Giriş Bilgileri Mail Gönderim İşlemi",
+            buttons: {
+                success: {
+                    label: "Maili Gönder",
+                    className: "btn-danger",
+                    callback: function () {
+                        var OtipVal=[];
+                        $('.ChkMGSonucOtip').each(function (inx, chk) {
+                            if ($(chk).prop('checked')) OtipVal.push(parseInt($(chk).val()));
+
+                        });
+                         var _panel = $('#pnglDB_' + id);
+                        _pRefresh(_panel, false);
+                        $.ajax({
+                            url: '@Url.Action("basvuruSonucMailGonderim", "YGBasvuruSureci")',
+                            data: { 'id': id, 'IsSonucOrAnket': IsSonucOrAnket, 'OgrenimTipKods': OtipVal.join(',') },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                showMmMessage(result.Messages, 'Tamam');
+                                if (result.IsSuccess) {
+                                    getDetail(id);
+                                }
+
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                                _pRefresh(_panel, true);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+
+</script>
+
+<script type="text/javascript">
+    function TopluKayitKapatma(id, mulakatSonucTipID, oTips) {
+        var topiRw = "<tr><td width='120'>Öğrenim Seviyeleri </td><td>";
+        var otipList = eval(oTips);
+        for (var i = 0; i < otipList.length; i++) {
+            var sOtip = otipList[i];
+            topiRw += "<input type='checkbox' value='" + sOtip.Value + "' class='ChkTKKOtip' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>" + sOtip.Caption + "</span><br/>";
+
+        }
+        topiRw += "</td></tr>";
+
+        if (mulakatSonucTipID === 1) {
+            topiRw += "<tr><td colspan='2' style='font-size:12pt;color:maroon;'>Yukarıda seçilen Öğrenim Seviyelerine göre İşlem görmeyen Asil öğrenci kayıtları Kayıt olmadı şeklinde güncellenecek! İşlemi Onaylıyor Musunuz?</td></tr>";
+        }
+        else {
+            topiRw += "<tr><td colspan='2' style='font-size:12pt;color:maroon;'>Yukarıda seçilen Öğrenim Seviyelerine göre İşlem görmeyen Yedek öğrenci kayıtları Kayıt olmadı şeklinde güncellenecek! İşlemi Onaylıyor Musunuz?</td></tr>";
+        }
+
+        window.bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'>" + topiRw+"</table>",
+            title: "Yatay Geçiş Toplu Kayıt Kapatma İşlemi",
+            buttons: {
+                success: {
+                    label: 'Evet',
+                    className: "btn-danger",
+                    callback: function() {
+                        var _panel = $('#pnglDB_' + id);
+                        _pRefresh(_panel, false);
+                        var OtipVal = [];
+                        $('.ChkTKKOtip').each(function (inx, chk) {
+                            if ($(chk).prop('checked')) OtipVal.push(parseInt($(chk).val()));
+                        });
+                        var OgrenimTipKods = OtipVal.join(',');
+                        $.ajax({
+                            url: '@Url.Action("TopluKayitKapatma", "YGBasvuruSureci")',
+                            data: { BasvuruSurecID: id, 'MulakatSonucTipID': mulakatSonucTipID,  "OgrenimTipKods": OgrenimTipKods},
+                            success: function(result) {
+                                if (result.Messages.length > 0)
+                                    showMmMessage(result.Messages, 'Tamam');
+                                _pRefresh(_panel, true);
+                            },
+                            error: function(err) {
+                                alert(err.responseText);
+                                _pRefresh(_panel, true);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Hayır',
+                    className: "btn-primary",
+                    callback: function() {
+                    }
+                }
+            }
+        });
+
+    }
+
+    function getImages(id) {
+        $.ajax({
+            url: '@Url.Action("getImages", "YGBasvuruSureci")',
+            data: { id: id },
+            success: function (result) {
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function sil(id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "YGBasvuruSureci")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(".delrw_" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+    function Kopyala(id, eKod, IsSinavOrKota,IsHesaplandi) {
+
+        var strNot = "";
+        if (IsHesaplandi) {
+            if (IsSinavOrKota) {
+                strNot = "<tr><td style='font-size:9pt;color:maroon;'><b>Not:</b> Eğer hesaplanan veya kayıt olunan programlar var ise yapacağınız kopyalama işlemi bu hesaplamaları etkileyebilir. Zorunlu ve kontrollü olmadıkça bu kopyalama işlemini yapmayınız.</td></tr>";
+            }
+            else {
+                strNot = "<tr><td style='font-size:9pt;color:maroon;'><b>Not:</b> Kopyalama işleminden sonra <b>hesaplanan bir programın</b> kota bilgileri değişecek ise bu işlemin o program üzerinde hiçbir etkisi olmaz. Hesaplanan programlarda kota bilgileri yeni aktarılan kota bilgileri olarak gözükse de eski hesaplama sonuçları sisteme kalır. Bu durumda başvuru sonuçları kısmından program seçilir ve açılan hesaplama sonuç ekranından <b>Bu program için tekrar hesapla</b> butonuna tıklanarak hesaplama işlemi gerçekleştirilir.</td></tr>";
+            }
+        }
+        var btbx = bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:9pt;color:green;'>" + (IsSinavOrKota ? "Sınav" : "Kota") + " Bilgileri seçili sürece kopyalanacak! Kopyalama işlemini onaylıyor musunuz?</td></tr>"
+                      + strNot+ "</table>",
+            title:"Yatay Geçiş "+ (IsSinavOrKota?"Sınav":"Kota")+" Bilgilerini Kopyala",
+            buttons: {
+                success: {
+                    label: 'Evet',
+                    className: "btn-danger",
+                    callback: function () {
+                        var _panel = $('#pnglDB_' + id);
+                        _pRefresh(_panel, false);
+                        $.ajax({
+                            url: '@Url.Action("Kopyala")',
+                            data: { basvuruSurecID: id, EnstituKod: eKod, IsSinavOrKota: IsSinavOrKota },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                _pRefresh(_panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Hayır',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+    }
+
+
+     function showDetailSna(id) {
+         var sndr = $('#iShow_' + id);
+         var cls = 'cls-' + id;
+         var unTogled = ($('.' + cls).css("display") == "none");
+         toggleByClass(sndr, cls, unTogled);
+     }
+</script>

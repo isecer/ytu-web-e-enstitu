@@ -1,0 +1,704 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmTIBasvuru
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var kyetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+    var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent();
+    var TITezDegerlendirmeDuzeltme = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+    var ToplantiTalepYetki = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
+    var mKids = (List<int>)ViewBag.kIds;
+    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "TIGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
+                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+
+                        @*@if (Model.RowCount > 0)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                                </li>
+
+                            }*@
+                        @if (mailYetki && mKids.Count > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
+                            </li>
+                        }
+                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Rapor Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("TIAraRaporDonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Rapor Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("AktifTIAraRaporDonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Rapor Sayısı</td>
+                                            <td>
+                                                @Html.DropDownList("TIAraRaporSayisi", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Rapor Sayısı</td>
+                                            <td>
+                                                @Html.DropDownList("AktifAraRaporSayisi", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Rapor Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("TIAraRaporRaporDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Rapor Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("AktifTIAraRaporRaporDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'false' : 'true')); $('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvurular</h3>
+                    <ul class="panel-controls"></ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th>Ad Soyad</th>
+                                <th width="140">Aktif Rapor Dönemi</th>
+                                <th width="180">Aktif Rapor Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@item.DurumColor;">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.TIBasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TIBasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.TIAraRaporAktifDonemAdi<br />@(item.AraRaporSayisi.HasValue ? item.AraRaporSayisi + ". Rapor" : "")
+                                        </td>
+                                        <td>
+                                            @item.TIAraRaporRaporDurumAdi <br />@Management.toTIDegerlendirmeSonucu(item.IsOyBirligiOrCouklugu, item.IsBasariliOrBasarisiz)
+                                        </td>
+
+                                        <td>
+                                            @if (kyetki)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { TIBasvuruID = item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.TIBasvuruID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                    <tr class="cls-@item.TIBasvuruID" style="display:none">
+                                        <td id="cls-@item.TIBasvuruID" class="clspTd" colspan="5" style="padding: 1px 1px 1px 1px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="clspTd" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+@if (Model.RowCount > 0 && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
+{
+    <script>
+        $(function () {
+            showDetail('@Model.Data.First().TIBasvuruID');
+        },200)
+    </script>
+}
+    <script type="text/javascript">
+    $(function () {
+        Resized(window.innerWidth);
+    })
+    function Resized(screenwidth) {
+        if (screenwidth <= 800) {
+            $('.clsHide').addClass('hide');
+            $('.clspTd').attr("colspan", "4");
+            $('.ctWidth').removeAttr('width');
+        }
+        else {
+            $('.clsHide').removeClass('hide');
+            $('.clspTd').attr("colspan", "5");
+            $('.ctWidth').attr('width', '280');
+
+        }
+    }
+    window.addEventListener('resize', function (event) {
+        Resized(window.innerWidth);
+    });
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function newApp() {
+        showDuyuru(@DuyuruPopupTipleri.TIBasvuru, '@Url.Action("BasvuruYap")');
+    }
+
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetailx(id);
+
+    }
+    function getDetailx(id, Isdelete, sndr) {
+
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetailTIBasvuru", "Ajax")',
+            data: { id: id, UniqueID: '@Model.IsDegerlendirme',  IsDelete: (Isdelete == true) },
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    Resized(window.innerWidth);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Başvuru Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Başvuruyu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    $(btbx).find('.modal-dialog').addClass('modal-lg');
+
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+
+
+
+
+
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+
+
+
+    </script>
+@if (ToplantiTalepYetki || TITezDegerlendirmeDuzeltme)
+{
+    <script>
+        function showSRDialog(TIBasvuruID, TIBasvuruAraRaporID, SRTalepID) {
+            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("RezervasyonAl", "TIBasvuru")',
+                data: { 'TIBasvuruAraRaporID': TIBasvuruAraRaporID, 'SRTalepID': SRTalepID },
+                success: function (result) {
+                    _pRefresh(_panel, true);
+                    var btbxxFS = bootbox.dialog({
+                        message: result,
+                        title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez İzleme Toplantı Bilgi Girişi' : 'Tez İzleme Toplantı Bilgileri Düzenleme'),
+                        buttons: {
+                            success: {
+                                label: "Kaydet",
+                                className: "btn-success",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    _pRefresh(pnlx, false);
+                                    $('#TIAraRaporSrForm').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                getDetailx(result.DialogID);
+                                                var _clsBtn = $('.modal-header').find('button').first();
+                                                $(_clsBtn).click();
+                                            }
+                                            else {
+                                                getMsg(result);
+                                                return false;
+                                            }
+                                            _pRefresh(pnlx, true);
+
+                                        },
+                                        complete: function (cmp) {
+                                            _pRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            _pRefresh(pnlx, true);
+                                        }
+
+                                    });
+                                    $('#TIAraRaporSrForm').submit();
+
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+
+                    // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+            });
+        }
+    </script>
+}
+@if (DegerlendirmeYetki || TITezDegerlendirmeDuzeltme)
+{
+    <script>
+        function AraRaporDegerlendir(UniqueID, IsDrBurs,TIBasvuruID) {
+            var IsTezIzlemeRaporuTezOnerisiUygun = $('#IsTezIzlemeRaporuTezOnerisiUygun_' + UniqueID).val();
+            var IsTezIzlemeRaporuAltAlanUygun = $('#IsTezIzlemeRaporuAltAlanUygun_' + UniqueID).val();
+            var IsBasarili = $('#IsBasarili_' + UniqueID).val();
+            var Aciklama = $('#Aciklama_' + UniqueID).val();
+            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            bootbox.dialog({
+                message: "Tez izleme rapor değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez İzleme Raporu Değerlendirmesi",
+                buttons: {
+                    success: {
+                        label: "Evet",
+                        className: "btn-success",
+                        callback: function (event) {
+                            _pRefresh(_panel, false);
+                            $.ajax({
+                                url: '@Url.Action("AraRaporDegerlendi", "TIBasvuru")',
+                                data: {
+                                    'UniqueID': UniqueID,
+                                    'IsTezIzlemeRaporuTezOnerisiUygun': IsTezIzlemeRaporuTezOnerisiUygun,
+                                    'IsDrBurs': IsDrBurs,
+                                    'IsTezIzlemeRaporuAltAlanUygun': IsTezIzlemeRaporuAltAlanUygun,
+                                    'IsBasarili': IsBasarili,
+                                    'Aciklama': Aciklama
+
+                                },
+                                success: function (result) {
+                                    _pRefresh(_panel, true);
+                                    if (result.IsSuccess || result.IsRefresh) {
+                                        getDetailx(TIBasvuruID);
+
+                                    }
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                },
+                                error: function (err) { 
+                                    _pRefresh(_panel, true);
+                                    alert(err.responseText);
+
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: "Hayır",
+                        className: "btn-primary",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+        }
+        function showDLinkGonder(TIBasvuruID, TIBasvuruAraRaporID, UniqueID, AdSoyad) {
+
+            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            _pRefresh(_panel, false);
+            var btbxxFS = bootbox.dialog({
+                message: AdSoyad +" isimli komite üyesine yeni değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
+                title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
+                buttons: {
+                    success: {
+                        label: "Gönder",
+                        className: "btn-primary",
+                        callback: function (event) {
+                            $.ajax({
+                                url: '@Url.Action("DegerlendirmeLinkiGonder", "TIBasvuru")',
+                                data: {
+                                    'TIBasvuruID': TIBasvuruID,
+                                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID,
+                                    'UniqueID': UniqueID,
+
+                                },
+                                success: function (result) {
+                                    _pRefresh(_panel, true);
+                                    if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                    getDetailx(TIBasvuruID);
+
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                },
+                                error: function (err) {
+                                    _pRefresh(_panel, true);
+                                    alert(err.responseText);
+
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: "Kapat",
+                        className: "btn-primary",
+                        callback: function () {
+                            _pRefresh(_panel, true);
+                        }
+                    }
+                }
+            });
+        }
+        function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        var btbx = bootbox.dialog({
+            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + RaporNo + " bilgisini silmek istiyor musunuz?</td></tr></table><br/>",
+            title: "Rapor Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Raporu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("DetaySil", "TIBasvuru")',
+                            data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.IsSuccess) {
+                                    $(sndr).closest("tr").remove();
+                                    $(".cls-Rpr_" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                _pRefresh(_panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                        _pRefresh(_panel, true);
+                    }
+                }
+            }
+        });
+
+
+    }
+    </script>
+}
+@if (kyetki)
+{
+    <script>
+        function DanismanEslestir(TIBasvuruID, OgrenciNo) {
+            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            _pRefresh(_panel, false);
+
+            $.ajax({
+                url: '@Url.Action("DanismanEslestir", "TIBasvuru")',
+                data: {
+                    'id': TIBasvuruID,
+                    'OgrenciNo': OgrenciNo,
+
+                },
+                success: function (result) {
+                    _pRefresh(_panel, true);
+                    if (result.IsSuccess) {
+                        getDetailx(TIBasvuruID);
+
+                    }
+                    showMmMessage(result.Messages, 'Tamam');
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            });
+        }
+        function sil(sndr, id) {
+            $.ajax({
+                url: '@Url.Action("Sil", "TIBasvuru")',
+                data: { id: id  },
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        $(sndr).closest("tr").remove();
+                        $(".cls-" + id).remove();
+                    }
+                    showMmMessage(result.Messages, 'Tamam');
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+
+    </script>
+}
+@if (DegerlendirmeYetki || TITezDegerlendirmeDuzeltme)
+{
+    <script>
+         function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
+             var _panel = $('#bsvrDet_' + TIBasvuruID);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTIAraRaporFormu", "TIBasvuru")',
+                data: {
+                    'TIBasvuruID': TIBasvuruID,
+                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID
+                },
+                success: function (resultG) {
+                    _pRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
+
+                                success: {
+                                    label: 'İleri',
+                                    className: "btn-info btnKaydet",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        _pRefresh(pnlx, false);
+                                        $('#FrmTIAraRaporFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.mMessage.IsSuccess && result.SaveData) {
+                                                    if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    getDetailx(TIBasvuruID);
+
+                                                }
+                                                else {
+                                                    $('#SelectedTabID').val(result.SelectedTabID);
+
+                                                    if (result.SelectedTabID == "4" || !result.IsYeniJO) {
+                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                        $('.btnKaydet').text('Kaydet');
+                                                        $('#SaveData').val("true");
+
+                                                    }
+                                                    else {
+
+                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                        $('.btnKaydet').text('İleri');
+                                                        $('#SaveData').val("false");
+                                                    }
+                                                    $("[href='#tab-" + result.SelectedTabID + "']").first().click();
+                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    return false;
+                                                }
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                _pRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmTIAraRaporFormu').submit();
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg'); 
+                        if (resultG.Messages.length > 0) showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else { 
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+    </script>
+}

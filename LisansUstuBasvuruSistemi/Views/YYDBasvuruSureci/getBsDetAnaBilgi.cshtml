@@ -1,0 +1,232 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model bsUrecDetay
+@{
+    Layout = null;
+    string Color = "color=blue";
+    var nowDate = DateTime.Now;
+    bool MulakatBilgiGirisAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
+    bool MulakatNotGirisAcik = Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi <= nowDate && Model.SonucGirisBitisTarihi >= nowDate;
+    bool AgnoNotGirisAcik = Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi <= nowDate && Model.AGNOGirisBitisTarihi >= nowDate;
+    string _colorMul = "green";
+    string _colorSG = "gray";
+    string _colorUyari = "red";
+
+    var tercihB = Model.ToplamBasvuruBilgisi.ListB.Where(p => p.ID == -1).FirstOrDefault();
+
+}
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-list-alt"></i> Başvuru Süreci Bilgisi
+        </h3>
+    </div>
+    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+            <div class="col-md-12" style="text-align: left; height: 464px; overflow: auto;">
+                <table class="table" style="font-size:9pt;margin:0px;@Color">
+                    <tr>
+                        <td style="text-align:right;" width="230">Enstitü Adı</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.EnstituAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Eğitim Öğretim Yılı</td>
+                        <td>:</td>
+                        <td style="font-weight:bold;"><span style="color:@(MulakatBilgiGirisAcik || MulakatNotGirisAcik ? _colorMul : _colorSG);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
+                    </tr> 
+                    <tr>
+                        <td style="text-align:right;">Başvuru Durumu Sayısal Bilgi</td>
+                        <td>:</td>
+                        <td>
+                            @foreach (var item in Model.ToplamBasvuruBilgisi.ListB.Where(p => p.ID > -1))
+                            {
+                                <span style="color:@item.Color;">
+                                    <i class="@item.ClassName"></i> @item.Key : <b>@item.Toplam</b>
+                                    @if (item.ID == BasvuruDurumu.Onaylandı)
+                                    {
+                                        <span style="color:@tercihB.Color;">[@tercihB.Key:<b>@tercihB.Toplam</b>]</span>
+                                    }
+                                </span>
+                            }
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td style="text-align:right;">Tercih Kota Tipi</td>
+                        <td>:</td>
+                        <td>
+                            @Model.Kota_BasvuruSurecKontrolTipAdi , Toplam Kota: @Model.ToplamKota
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:right;" title="Farklı öğrenim tipleri aynı başvuruda alınabilsin">F.Ö.T.A.B.A</td>
+                        <td>:</td>
+                        <td>@(Model.FarkliOgrenimTipleriAyniBasvurudaAlinabilsin ? "Evet" : "Hayır")</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Kayıt için belge yüklemesi istensin </td>
+                        <td>:</td>
+                        <td>
+                            @Model.IsBelgeYuklemeVar.ToEvetHayir()
+                        </td>
+                    </tr>
+                    @if (Model.IsKayittaBelgeOnayiZorunlu)
+                    {
+                        <tr>
+                            <td style="text-align:right;">
+                                Kayıt için belge onayı zorunlu
+                            </td>
+                            <td>:</td>
+                            <td>
+                                @Model.IsKayittaBelgeOnayiZorunlu.ToEvetHayir()
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="text-align:right;">İşlem Yapan</td>
+                        <td>:</td>
+                        <td>@Model.IslemYapan [@Model.IslemTarihi.ToFormatDateAndTime()]</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Mülakat Sınav Türleri</td>
+                        <td>:</td>
+                        <td>
+                            <table class="table" style="width:100%;table-layout:fixed;">
+                                <thead>
+                                    <tr>
+                                        <th>Sınav Adı</th>
+                                        <th width="75">Yüzde Oranı</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.MulakatSTurModel.Count > 0 && Model.OgrenimTipleriLst.Any(a => a.MulakatSurecineGirecek))
+                                    {
+                                        foreach (var item in Model.MulakatSTurModel)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.SinavTurAdi @(item.Zorunlu ? "(Zorunlu)" : "")
+                                                </td>
+                                                <td>
+                                                    %@item.YuzdeOran
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="2" style="color:red;text-align:center;">
+                                                Mülakat Sınav Türleri Tanımlanmadı
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="panel panel-info" style="margin:0px;">
+                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                        <h3 class="panel-title">
+                            <i class="fa fa-list-alt"></i> Başvurulabilecek Öğrenim Tipleri
+                        </h3>
+                    </div>
+                    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                        <div class="panel-body" style="margin: 0px; padding:3px;">
+                            <div class="panel panel-default form-horizontal" style="margin:0px;">
+                                <table class="table" style="width:100%;table-layout:fixed; @Color">
+                                    <tr>
+                                        <th>Öğrenim Tipi</th>
+                                        <th width="50">Kota</th>
+                                        <th width="220" class="IsBelgeYuklemeVar  @(Model.IsBelgeYuklemeVar?"":"hide") ">Belge Yükleme Asil Baş-Bit Tarihi</th>
+                                        <th width="220" class="IsBelgeYuklemeVar  @(Model.IsBelgeYuklemeVar?"":"hide") ">Belge Yükleme Ydk Baş-Bit Tarihi</th>
+                                        <th width="45" title="Başarı Not Ortalaması">B.N.O.</th>
+                                        <th width="45" title="Genel Başarı Notu Formülleri">GBNF</th>
+                                        <th width="40">Mlkt</th>
+                                        <th width="50" title="Alan İçi Bilimsel Hazırlık">AI-BH</th>
+                                        <th width="50" title="Alan Dışı Bilimsel Hazırlık">AD-BH</th>
+                                        <th width="50" title="YÖK Öğrenci Öğrenim Kontrolü">YK-ÖK</th>
+                                    </tr>
+                                    @foreach (var bst in Model.OgrenimTipleriLst)
+                                    {
+
+                                        var MulTit = bst.MulakatSurecineGirecek ? "Mulakat+" : "";
+                                        var strPopupCont = "<span style='color:blue;'><b>GBNF (Ales+"+ MulTit + "Agno)=</b>" + bst.GBNFormulu + "</span><br/><span style='color:blue;'><b>GBNF (" + MulTit + "Agno)=</b>" + bst.GBNFormuluAlessiz + "</span>";
+
+
+
+                                        if (bst.MulakatSurecineGirecek)
+                                        {
+                                            strPopupCont += "<br/><span style='color:blue;'><b>GBNF (Ales+Agno)=</b>" + bst.GBNFormuluMulakatsiz + "</span>";
+                                        }
+
+                                        strPopupCont += "<br/><br/><span style='color:blue;'><b>Dosyalı GBNF (Dosya+" + MulTit+"Agno)=</b>" + bst.GBNFormuluD + "</span><br/><span style='color:blue;'><b>Dosyalı GBNF (" + MulTit + "Agno)=</b>" + bst.GBNFormuluDDosyasiz + "</span>";
+                                        if (bst.MulakatSurecineGirecek)
+                                        {
+                                            strPopupCont += "<br/><span style='color:blue;'><b>Dosyalı GBNF (Dosya+Agno)=</b>" + bst.GBNFormuluDMulakatsiz + "</span>";
+                                        }
+                                    <tr>
+                                        <td>@bst.OgrenimTipAdi</td>
+                                        <td>@bst.Kota</td>
+                                        <td class="IsBelgeYuklemeVar  @(Model.IsBelgeYuklemeVar?"":"hide")"> 
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td>
+                                                            @(bst.BelgeYuklemeAsilBasTar.HasValue ? bst.BelgeYuklemeAsilBasTar.ToString("yyyy-MM-dd HH:mm"):"")
+                                                            /
+                                                            @(bst.BelgeYuklemeAsilBitTar.HasValue ? bst.BelgeYuklemeAsilBitTar.ToString("yyyy-MM-dd HH:mm"):"")
+                                                        </td>
+                                                    </tr>
+                                                </table> 
+                                        </td>
+                                        <td class="IsBelgeYuklemeVar @(Model.IsBelgeYuklemeVar?"":"hide")"> 
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td>
+                                                            @(bst.BelgeYuklemeYedekBasTar.HasValue ? bst.BelgeYuklemeYedekBasTar.ToString("yyyy-MM-dd HH:mm"):"")
+                                                            /
+                                                            @(bst.BelgeYuklemeYedekBitTar.HasValue ? bst.BelgeYuklemeYedekBitTar.ToString("yyyy-MM-dd HH:mm"):"")
+                                                        </td>
+                                                    </tr>
+                                                </table> 
+                                        </td>
+                                        <td>@bst.BasariNotOrtalamasi</td>
+                                        <td style="text-align:center;">
+                                            <button type="button" style="padding:0px;margin:0px;width:20px;height:20px;" class="btn btn-default _popover" data-container="body" data-toggle="popover" data-placement="top" data-html="true" data-title="@bst.OgrenimTipAdi Öğrenim Tipine Ait Genel Başarı Not Formülleri" data-content="@strPopupCont">
+                                                <img src="~/Images/formul.jpg" style="width:16px;height:16px;cursor:pointer" />
+                                            </button>
+                                        </td> 
+                                        <td>
+                                            <span class="label label-@(bst.MulakatSurecineGirecek ? "success" : "danger")">@(bst.MulakatSurecineGirecek ? "Evet" : "Hayır")</span>
+                                        </td>
+                                        <td>
+                                            <span class="label label-@(bst.AlanIciBilimselHazirlik ? "success" : "danger")">@(bst.AlanIciBilimselHazirlik ? "Var" : "Yok")</span>
+                                        </td>
+                                        <td>
+                                            <span class="label label-@(bst.AlanDisiBilimselHazirlik ? "success" : "danger")">@(bst.AlanDisiBilimselHazirlik ? "Var" : "Yok")</span>
+                                        </td>
+                                        <td title=""><span class="label label-@(bst.YokOgrenciKontroluYap ? "success" : "danger")">@(bst.YokOgrenciKontroluYap ? "Evet" : "Hayır")</span></td>
+                                    </tr>
+
+                                    }
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        jQuery('._popover').popover({ trigger: 'hover' });
+    })
+</script>
+

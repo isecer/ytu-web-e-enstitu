@@ -1,0 +1,225 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model frTalepler
+@{
+    Layout = null;
+    var _color = Model.Color;
+    bool IsDelete = (bool)ViewBag.IsDelete;
+    var kRole = RoleNames.SRTalepDuzelt.InRoleCurrent(); 
+
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+
+
+}
+<div class="panel panel-success" id="SRDetay_@Model.SRTalepID" style="color:@_color">
+
+    <div class="panel-heading  padding-0">
+        <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Talep Detayı</h3>
+        @if (IsDelete == false)
+        {
+            <ul class="panel-controls">
+                <li><a href="javascript:void(0)" onclick="getDetail('@Model.SRTalepID')" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+            </ul>
+        }
+    </div>
+    <div class="panel-body" style="padding: 0px;">
+        <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <table style="margin:0px;">
+                        <tr>
+                            <td width="150" style="text-align:center;">
+                                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                            </td>
+                            <td style="padding-left:10px;text-align:left;">
+
+                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                    <tr>
+                                        <td width="140">Ad Soyad</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.TalepYapan
+                                        </td>
+                                    </tr>    
+                                    <tr>
+                                        <td>Kullanıcı Tipi</td>
+                                        <td>:</td>
+                                        <td>@Model.KullaniciTipAdi</td>
+                                    </tr>
+                                    @if (bilgiModel.OgrenciNo.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Öğrenci No</td>
+                                            <td>:</td>
+                                            <td>@bilgiModel.OgrenciNo</td>
+                                        </tr>
+                                    }
+                                    @if (bilgiModel.OgrenimTipAdi.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Öğrenim Seviyesi</td>
+                                            <td>:</td>
+                                            <td>
+                                                @bilgiModel.OgrenimTipAdi
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (bilgiModel.ProgramAdi.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Program</td>
+                                            <td>:</td>
+                                            <td>
+                                                @bilgiModel.ProgramAdi
+                                            </td>
+                                        </tr>
+                                    } 
+                                    @if (bilgiModel.UnvanAdi.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Unvan</td>
+                                            <td>:</td>
+                                            <td>
+                                                @bilgiModel.UnvanAdi
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (bilgiModel.SicilNo.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Sicil No</td>
+                                            <td>:</td>
+                                            <td>
+                                                @bilgiModel.SicilNo
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>Talep Tipi</td>
+                                        <td>:</td>
+                                        <td>@Model.TalepTipAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Salon Adı</td>
+                                        <td>:</td>
+                                        <td>@Model.SalonAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Talep Tarihi</td>
+                                        <td>:</td>
+                                        <td>
+                                            @Model.Tarih.ToString("dd.MM.yyyy") @Model.HaftaGunAdi, @string.Format("{0:hh\\:mm}", Model.BasSaat) - @string.Format("{0:hh\\:mm}", Model.BitSaat)
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td>İşlem Tarihi</td>
+                                        <td>:</td>
+                                        <td>
+                                            @Model.IslemTarihi
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Talep Durumu</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if (!Model.ClassName.IsNullOrWhiteSpace())
+                                            {
+                                                <span>
+                                                    <i class="@Model.ClassName" style="font-size:17pt;font-weight:bold;"></i> @Model.DurumListeAdi
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>@Model.DurumListeAdi</span>
+
+                                            }
+                                            @if (Model.SRDurumID == SRTalepDurum.Reddedildi && Model.SRDurumAciklamasi.IsNullOrWhiteSpace() == false)
+                                            {
+                                                <span style="color:red;">(@Model.SRDurumAciklamasi)</span>
+                                            }
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+            </div>
+            @if (kRole)
+            {
+                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                        <div class="panel-body form-group-separated">
+
+                            <div class="col-md-12">
+                                @{
+                                    var _id = "SRDurumID_" + Model.SRTalepID.ToString();
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-xs-4 control-label">İşlem Durumu</label>
+                                        <div class="col-md-8 col-xs-8">
+                                            @if (kRole && IsDelete == false)
+                                            {
+                                                @Html.DropDownList("SRDurumID", null, new { id = _id, onchange = "DurumKontrol(" + Model.SRTalepID + ")" })
+                                            }
+                                            else
+                                            {
+                                                @Model.DurumListeAdi
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-group @(Model.SRDurumID == BelgeTalepDurum.Kapatildi ? "" : "hide")" id="aciklamabilgi_@Model.SRTalepID">
+                                        <label class="col-md-4 col-xs-4 control-label">Açıklama</label>
+                                        <div class="col-md-8 col-xs-8">
+                                            @if (kRole && IsDelete == false)
+                                            {
+                                                <textarea style="width:100%;" id="SRDurumAciklamasi_@Model.SRTalepID" name="SRDurumAciklamasi_">@Model.SRDurumAciklamasi.toStrObjEmptString().Trim()</textarea>
+                                            }
+                                            else
+                                            {
+                                                @Model.SRDurumAciklamasi
+                                            }
+                                        </div>
+                                    </div>
+                                    if (kRole && IsDelete == false)
+                                    {
+                                        <div class="form-group" id="btnKyt_@Model.SRTalepID">
+                                            <label class="col-md-4 col-xs-4 control-label"></label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="button" value="Kaydet" onclick="kaydet(@Model.SRTalepID)" />
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                                    }
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+    function DurumKontrol(id) {
+        var secimval = $('#SRDurumID_' + id).val();
+        if (secimval == null || secimval == "") {
+            $('#btnKyt_' + id).addClass("hide");
+        } else {
+
+            $('#btnKyt_' + id).removeClass("hide");
+        }
+        if (secimval == '@SRTalepDurum.Reddedildi') {
+            $('#aciklamabilgi_' + id).removeClass("hide");
+        }
+        else {
+            $('#aciklamabilgi_' + id).addClass("hide")
+        }
+    }
+
+</script>
+
+

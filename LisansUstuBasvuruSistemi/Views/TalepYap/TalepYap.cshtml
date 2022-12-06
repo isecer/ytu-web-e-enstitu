@@ -1,0 +1,282 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model TalepGelenTalepler
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var Dosya = Model.TalepGelenTalepBelgeleris.Where(p => !p.IsDanismanOnayDosyasi).FirstOrDefault(); 
+    var DosyaDanismanOnay = Model.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi).FirstOrDefault();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="row">
+    <form id="FrmBasvuruSurec" method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+        <input type="text" style="display:none;" id="TalepGelenTalepID" name="TalepGelenTalepID" value="@Model.TalepGelenTalepID" />
+        <input type="text" style="display:none;" id="TalepSurecID" name="TalepSurecID" value="@Model.TalepSurecID" />
+        <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
+        <input type="text" style="display:none;" id="OgrenimTipKod" name="OgrenimTipKod" value="@Model.OgrenimTipKod" />
+        <div class="col-md-12">
+            <div class="panel panel-success" id="kPanel">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-file-text-o fa-lg"></i>&nbsp; Talep Yap</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit","TalepSureci",new { id = Model.TalepSurecID })';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Talep Tipi</label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("TalepTipID", null, new { @class = "form-control", style = "padding:0px;", onchange = "TTChange(this);" })
+                                    <script>
+                                        $(function () {
+                                            TTChange($('#TalepTipID'));
+                                        })
+
+                                        function TTChange(sndr) {
+                                            var sVal = $(sndr).val();
+                                            var talepTipID = $('#TalepTipID').val();
+                                            $('.AllGroup').addClass('hide');
+                                            if (talepTipID != "") {
+                                                $.ajax({
+                                                    url: '@Url.Action("GetTalepTipBilgi", "TalepYap")',
+                                                    data: {
+                                                        'TalepTipID': talepTipID,
+                                                        'TalepSurecID':@Model.TalepSurecID,
+                                                        'KullaniciID':@Model.KullaniciID
+                                                    },
+                                                    success: function (result) {
+                                                        var classEk = result.IsDoktora ? "Dr" : "YL";
+                                                        $('.AllGroup').addClass('hide');
+                                                        if (result.TalepTipID == '@TalepTipi.LisansustuSureUzatmaTalebi') {
+                                                            $('.EkSure' + classEk).removeClass('hide');
+                                                        }
+                                                        else if (result.TalepTipID == '@TalepTipi.YDSSinavSonucuBelgesiYukleme') {
+                                                            $('.YDS' + classEk).removeClass('hide');
+                                                        }
+                                                        else if (result.TalepTipID == '@TalepTipi.KayitSildirmeBelgesiYukleme') {
+                                                            $('.Silme' + classEk).removeClass('hide');
+
+                                                        }
+                                                        else if (result.TalepTipID == '@TalepTipi.Covid19KayitDondurmaTalebi') {
+                                                            $('.Dondurma' + classEk).removeClass('hide');
+                                                        }
+                                                        if (result.IsBelgeYuklemeVar) {
+                                                            $('.TTB').removeClass('hide');
+                                                        }
+                                                        if (result.IsTaahhutIsteniyor) {
+                                                            $('#TaahhutAciklamasi').html(result.TaahhutAciklamasi);
+                                                        }
+                                                        if (result.TalepTipAciklama != null && result.TalepTipAciklama != "") {
+                                                            $('#ttaContent').html(result.TalepTipAciklama);
+                                                            $('.Not').removeClass("hide");
+                                                        }
+
+
+                                                    },
+                                                    error: function (err) {
+                                                        alert(err.responseText);
+
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group AllGroup Not">
+                                <label class="col-md-3 col-xs-5 control-label">Not</label>
+                                <div class="col-md-9 col-xs-7" id="ttaContent">
+
+                                </div>
+                            </div>
+                            <div class="form-group AllGroup EkSureDr EkSureYL">
+                                <label class="col-md-3 col-xs-5 control-label">Ödenmeyen Harç Borcunuz Var Mı?</label>
+                                <div class="col-md-9 col-xs-7">
+                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="danger" data-off="success">
+                                        <input type="checkbox" value="true" name="IsHarcBorcuVar" class="toggle" @Model.IsHarcBorcuVar.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group AllGroup EkSureYL EkSureDr DondurmaDr DondurmaYL">
+                                <label class="col-md-3 col-xs-5 control-label">YTÜ'de Araştırma Görevlisi Misiniz?</label>
+                                <div class="col-md-9 col-xs-7">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="success" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsYtuArGor" onchange="if ($(this).prop('checked')) { $('.IsYtuArGor').removeClass('hide'); } else { $('.IsYtuArGor').addClass('hide'); }" class="toggle" @Model.IsYtuArGor.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group IsYtuArGor @(Model.IsYtuArGor==true?"":"hide")">
+                                <div class="form-group AllGroup EkSureYL EkSureDr DondurmaDr DondurmaYL">
+                                    <label class="col-md-3 col-xs-5 control-label">Araştırma Görevlisi Statüsü</label>
+                                    <div class="col-md-9 col-xs-7">
+                                        @Html.DropDownList("TalepArGorStatuID", null, new { @class = "form-control", style = "padding:0px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.OgrenimTipKod != OgrenimTipi.Doktra)
+                            {
+                                <div class="form-group AllGroup EkSureYL DondurmaYL">
+                                    <label class="col-md-3 col-xs-5 control-label">Ders Yükü Tamamlandı Mı?</label>
+                                    <div class="col-md-9 col-xs-7">
+                                        <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="success" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsDersYukuTamamlandi" onchange="if ($(this).prop('checked')) { $('.IsDosyaDanismanOnayBelge').removeClass('hide'); } else { $('.IsDosyaDanismanOnayBelge').addClass('hide'); }" class="toggle" @Model.IsDersYukuTamamlandi.ToChecked() />
+                                        </div>
+                                        <br /><b>Not:</b> YTÜ Senato Esaslarında belirtilen kayıtlı olunan programın minumum alınması gereken program seçmeli ve zorunlu dersleri dahil.
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group IsDosyaDanismanOnayBelge  @(Model.IsDersYukuTamamlandi == true ? "" : "hide")">
+                                    <div class="form-group AllGroup EkSureYL  DondurmaYL">
+                                        <label class="col-md-3 col-xs-5 control-label">Danışman Onaylı Dilekçe</label>
+                                        <div class="col-md-9 col-xs-7">
+                                            <table>
+                                                <tr>
+                                                    <td width="30" style="text-align: center;"><i class="fa fa-file-pdf-o" style="color: green; font-size: 17pt;"></i></td>
+                                                    <td>
+                                                        <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaDanismanOnay" title="Belge Seç (Belge PDF türünde olmalıdır)" />
+                                                        @if (DosyaDanismanOnay != null)
+                                                        {
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(DosyaDanismanOnay != null ? DosyaDanismanOnay.DosyaAdi : "")" />
+                                                            <a href="@Url.Content(DosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@DosyaDanismanOnay.DosyaAdi</a>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+
+                                <div class="form-group AllGroup EkSureDr DondurmaDr">
+                                    <label class="col-md-3 col-xs-5 control-label">Tez Önerisi Yapıldı Mı?</label>
+                                    <div class="col-md-9 col-xs-7">
+                                        <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="success" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsTezOnerisiYapildi" onchange="if ($(this).prop('checked')) { $('.IsDosyaDanismanOnayBelge').removeClass('hide'); } else { $('.IsDosyaDanismanOnayBelge').addClass('hide'); }" class="toggle" @Model.IsTezOnerisiYapildi.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group IsDosyaDanismanOnayBelge @(Model.IsTezOnerisiYapildi==true?"":"hide")">
+                                    <div class="form-group AllGroup EkSureDr DondurmaDr">
+                                        <label class="col-md-3 col-xs-5 control-label">Tez Öneri Tarihi</label>
+                                        <div class="col-md-9 col-xs-7">
+                                            <input class="form-control form-control-inline input-medium" style="width: 100px;" autocomplete="off" size="16" type="text" value="@(!Model.DoktoraTezOneriTarihi.HasValue ? "" : Model.DoktoraTezOneriTarihi.ToString("dd-MM-yyyy"))" name="DoktoraTezOneriTarihi" id="DoktoraTezOneriTarihi" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group AllGroup EkSureDr DondurmaDr">
+                                        <label class="col-md-3 col-xs-5 control-label">Danışman Onaylı Dilekçe</label>
+                                        <div class="col-md-9 col-xs-7">
+                                            <table>
+                                                <tr>
+                                                    <td width="30" style="text-align: center;"><i class="fa fa-file-pdf-o" style="color: green; font-size: 17pt;"></i></td>
+                                                    <td>
+                                                        <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaTezOneri" title="Belge Seç (Belge PDF türünde olmalıdır)" />
+                                                        @if (DosyaDanismanOnay != null)
+                                                        {
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(DosyaDanismanOnay != null ? DosyaDanismanOnay.DosyaAdi : "")" />
+                                                            <a href="@Url.Content(DosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@DosyaDanismanOnay.DosyaAdi</a>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                            <div class="form-group AllGroup SilmeDr SilmeYL YDSDr YDSYL">
+                                <label class="col-md-3 col-xs-5 control-label">Belge Seçiniz</label>
+                                <div class="col-md-9 col-xs-7">
+
+                                    <table>
+                                        <tr>
+                                            <td width="30" style="text-align: center;"><i class="fa fa-file-pdf-o" style="color: green; font-size: 17pt;"></i></td>
+                                            <td>
+                                                <input type="file" class="fileinput btn-info" accept="application/pdf" name="Dosya" id="Dosya" title="Belge Seç (Belge PDF türünde olmalıdır)" />
+
+                                                @if (Dosya != null)
+                                                {
+                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="@(Dosya != null ? Dosya.DosyaAdi : "")" />
+                                                    <a href="@Url.Content(Dosya.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Dosya.DosyaAdi</a>
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group AllGroup SilmeDr SilmeYL">
+                                <label class="col-md-3 col-xs-5 control-label">Taahhüt</label>
+                                <div class="col-md-9 col-xs-7">
+                                    <div class="checkbox">
+                                        <label style="color:white;" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="">
+                                            <table>
+                                                <tr>
+                                                    <td width="30" style="text-align:center;">
+                                                        <input style="width:18px;height:18px;cursor:pointer;" type="checkbox" id="IsTaahut" value="true" name="IsTaahut" @Model.IsTaahut.ToChecked()>
+                                                    </td>
+                                                    <td>
+                                                        <span style="color:red;" id="TaahhutAciklamasi"></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button type="button" onclick="Kontrol()" class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('#DoktoraTezOneriTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'd-m-Y'
+        });
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+    function Kontrol() {
+        var _panel = $('#kPanel');
+        _pRefresh(_panel, false);
+        $('#FrmBasvuruSurec').ajaxForm({
+            success: function (result) {
+                if (result.IsSuccess) {
+                    window.location.href = "@Url.Action("Index")";
+                }
+                else getMsg(result);
+
+            },
+            complete: function (cmp) {
+                setTimeout(function () { _pRefresh(_panel, true); }, 200);
+            },
+            error: function (err) {
+                alert(err);
+            }
+
+        });
+        $('#FrmBasvuruSurec').submit();
+    }
+</script>

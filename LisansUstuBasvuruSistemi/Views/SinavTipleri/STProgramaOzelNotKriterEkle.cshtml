@@ -1,0 +1,474 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model kmSinavTipleriSPNA
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
+    var stip = (SinavTipleri)ViewBag.stip;
+    var stipAdi = stip.SinavAdi;
+    var programlar = (List<kulaniciProgramYetkiModel>)ViewBag.Programlar;
+}
+
+
+
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="SinavTipID" name="SinavTipID" value="@Model.SinavTipID" />
+        <input type="text" style="display:none;" id="SinavTipleriOT_SNAID" name="SinavTipleriOT_SNAID" value="@Model.SinavTipleriOT_SNAID" />
+        <div class="col-md-12">
+            <div class="panel panel-success" style="padding:0px;margin:0px;">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp;  @(Model.SinavTipleriOT_SNAID == 0 ? "Programa özel sınav tipi notu tanımlama işlemi (" + stipAdi + ")" : "Programa ait özel sınav tipi notu düzenleme işlemi (" + stipAdi + ")")</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal" style="padding:0px;margin:0px;">
+                        <div class="panel-body form-group-separated"> 
+                            <div class="_OzelNot2 form-group">
+                                <label class="col-md-2 col-xs-3 control-label">Sınavın isteneceği Öğrenim Seviyeleri ve Not Aralıkları</label>
+                                <div class="col-md-10 col-xs-9">
+                                    <table class="table" style="width:100%;table-layout:fixed;padding:0px;margin:0px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Öğrenim Tipi</th>
+                                                <th width="30">Dil</th>
+                                                <th width="100">Geçerlilik</th>
+                                                <th width="100">İstensin</th>
+                                                <th width="80" class="NANotG">Min</th>
+                                                <th width="80" class="NANotG">Max</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="_ozelNotRow">
+                                            @foreach (var item in Model.SinavTipleriOTNotAraliklari)
+                                            {
+                                                var dil = item.Ingilizce ? "En" : "Tr";
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group" title="@item.OgrenimTipAdi">
+                                                            <input type="text" class="hide" name="NAOgrenimTipKod" value="@item.OgrenimTipKod" />
+                                                            @item.OgrenimTipAdi
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="hide" name="NAIngilizce" value="@(item.Ingilizce.ToString().ToLower())" />
+                                                        @dil
+                                                    </td>
+                                                    <td>
+                                                        <div style="height:31px;" class="make-switch" data-on-label="Gçrli" data-off-label="Gçrsz" data-on="info" data-off="danger">
+                                                            <input type="checkbox" disabled="disabled"  id="chkIsGecerli_@(item.OgrenimTipKod)_@dil" onchange="NANotGKontrol2(this,'@(item.OgrenimTipKod)_@dil')" class="toggle" @item.IsGecerli.ToChecked() />
+                                                        </div>
+                                                        <input type="text" class="hide" name="NAIsGecerli" id="NAIsGecerli_@(item.OgrenimTipKod)_@dil" value="@(item.IsGecerli ? 1 : 0)" />
+                                                    </td>
+                                                    <td>
+                                                        <div style="height:31px;" class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                            <input type="checkbox"  disabled="disabled"  id="chkIsIstensil_@(item.OgrenimTipKod)_@dil" onchange="NANotGKontrol(this,'@(item.OgrenimTipKod)_@dil')" class="toggle" @item.IsIstensin.ToChecked() />
+                                                        </div>
+                                                        <input type="text" class="hide" name="NAIsIstensin" id="NAIsIstensin_@(item.OgrenimTipKod)_@dil" value="@(item.IsIstensin ? 1 : 0)" />
+                                                    </td>
+                                                    <td class="NANotG">
+                                                        <div class="form-group NANotG_@(item.OgrenimTipKod)_@dil @(item.IsOzelNotAralik ? "" : "hide") @(item.SuccessRow.HasValue && item.PropName.Contains("NAMin") && item.SuccessRow.Value == false ? "has-error" : "")">
+                                                            <input type="text" class="form-control" name="NAMin" value="@item.Min" />
+                                                        </div>
+                                                    </td>
+                                                    <td class="NANotG">
+                                                        <div class="form-group NANotG_@(item.OgrenimTipKod)_@dil @(item.IsOzelNotAralik ? "" : "hide") @(item.SuccessRow.HasValue && item.PropName.Contains("NAMax") && item.SuccessRow.Value == false ? "has-error" : "")">
+                                                            <input type="text" class="form-control" name="NAMax" value="@item.Max" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <label class="col-md-2 col-xs-3 control-label">Not Dönüşümü</label>
+                                <div class="col-md-10 col-xs-9">
+                                    <div style="height:31px;" class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="NotDonusum" id="NotDonusum" onchange="wozelNotD(this)" class="toggle" @Model.NotDonusum.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group @(Model.NotDonusum ?"":"hide")" id="NtFormulDv">
+                                <label class="col-md-2 col-xs-3 control-label">Formül</label>
+                                <div class="col-md-10 col-xs-9">
+                                    <textarea style="min-height:100px;" type="text" class="form-control" name="NotDonusumFormulu" id="NotDonusumFormulu" autocomplete="off">@Model.NotDonusumFormulu</textarea>
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                <label class="col-md-2 col-xs-3 control-label">Programlar</label>
+                                <div class="col-md-10 col-xs-9">
+                                     
+                                    <table class="table" style="width:100%;table-layout:fixed;">
+                                        <thead>
+                                            <tr>
+                                                <th>Program Adı</th>      
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <table style="width: 100%;">
+                                                        <tr>
+                                                            <td>
+                                                                <div style="width: 100%;" class="checkbox pull-left">
+                                                                    <label style="width: 100%;">
+                                                                        <input style="color: red; width: 100%;" type="text" name="search" id="filterBInp" placeholder="ara..." class="form-control">
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                            <td><a href="javascript:void(0);" onclick="Filtrele()" class="label label-warning">Ara</a></td>
+                                                        </tr>
+                                                    </table>
+
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>   
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <div style="overflow-x:auto;height:160px;">
+                                                            <table id="prgList" style="width:100%;padding:0px;margin:0px;">
+                                                                @foreach (var item in programlar)
+                                                                {
+                                                                    <tr class="_rows" @(item.YetkiVar ? "style=color:blue" : "")>
+                                                                        <td width="600">
+                                                                            <div class="checkbox pull-left">
+                                                                                <label>
+                                                                                    <input type="checkbox" class="icheckbox chkAll" name="IPProgramKod" value="@item.ProgramKod" @item.YetkiVar.ToChecked()>
+                                                                                    <span class="programAdlari" style="font-size:8pt;">@item.ProgramAdi </span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </td>                                               
+                                                                    </tr>
+                                                                }
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>   
+                                            <tr>
+                                                <td id="filtreKelime" colspan="2"></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer" style="text-align:center;height:35px;padding-top:1px;padding-bottom:1px;">
+
+                    <button class="btn btn-primary"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>                                                                         
+<script type='text/javascript' src='/Content/js/plugins/icheck/icheck.min.js'></script>
+ 
+<script>
+
+    $(function () {
+        $('#_SinavNotDeger').keydown(function (e) {
+            myMask(e, this, false, 5, 3, 2);
+        });
+        $('#_SubSinavMin').keydown(function (e) {
+            myMask(e, this, false, 5, 3, 2);
+        });
+        $('#_SubSinavMax').keydown(function (e) {
+            myMask(e, this, false, 5, 3, 2);
+        });
+        $(".spinner_default").spinner();     
+    });
+    //function NANotGKontrol2(sndr, _elm) {
+
+    //    if ($(sndr).prop('checked') == true) {
+    //        $('#NAIsGecerli_' + _elm).val("1");
+    //        if ($('#chkIsIstensil_' + _elm).prop("checked") == true) {
+    //            $('.NANotG_' + _elm).removeClass('hide');
+    //            $('#NAIsIstensin_' + _elm).val("1");
+
+    //        }
+    //    }
+    //    else {
+    //        //$('#NAIsIstensin_' + _elm).prop("checked", false)
+    //        $('#chkIsIstensil_' + _elm).removeAttr('checked');
+    //        $('#chkIsIstensil_' + _elm).parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
+    //        $('.NANotG_' + _elm).addClass("hide");
+    //        $('#NAIsIstensin_' + _elm).val("0");
+    //        $('#NAIsGecerli_' + _elm).val("0");
+    //    }
+    //}
+    //function NANotGKontrol(sndr, _elm) {
+
+    //    if ($('#chkIsGecerli_' + _elm).prop("checked")) {
+    //        if ($(sndr).prop('checked') == true) {
+    //            $('#NAIsIstensin_' + _elm).val("1");
+    //            $('.NANotG_' + _elm).removeClass('hide');
+    //        }
+    //        else {
+    //            $('.NANotG_' + _elm).addClass('hide');
+    //            $('#NAIsIstensin_' + _elm).val("0");
+    //        }
+    //    }
+    //    else {
+    //        $('#chkIsIstensil_' + _elm).removeAttr('checked');
+    //        $('#chkIsIstensil_' + _elm).parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
+    //    }
+    //}
+    //function sbNotDkontrol() {
+    //    if ($('#_NotDonusum').prop('checked') == true) {
+    //        $('#sbNtFormulDv').removeClass("hide");
+    //    }
+    //    else {
+    //        $('#sbNtFormulDv').addClass("hide");
+    //    }
+    //}
+    @*function kusuratBKontrol() {                                                                                             
+        if ('@stip.WebService.ToString().ToLower()'=='true' || ($('#OzelNot').prop('checked') && $('#OzelNotTipID').val() == '@OzelNotTip.SeciliNotlar')) {
+            $('._kusuratB').addClass('hide');
+        }
+        else {
+            $('._kusuratB').removeClass('hide');
+        }
+    }*@
+    @*function OzelNotTipKontrol() {
+
+        var tip = $('#OzelNotTipID').val();
+        if (tip == '@OzelNotTip.SeciliNotlar') {
+            $('#dvBelliNotAraliklari').addClass('hide');
+            $('#dvBelliNotlar').removeClass('hide');
+
+        }
+        else if (tip == '@OzelNotTip.SeciliNotAraliklari') {
+
+            $('#dvBelliNotlar').addClass('hide');
+            $('#dvBelliNotAraliklari').removeClass('hide');
+        }
+        else {
+            $('#dvBelliNotAraliklari').addClass('hide');
+            $('#dvBelliNotlar').addClass('hide');
+        }
+        sbNotDkontrol();
+        kusuratBKontrol();
+    }*@
+
+    @*function notAralikKontrol() {
+        var _SinavTipGrupID = '@stip.SinavTipGrupID';
+        var _OzelNot = $('#OzelNot').prop('checked');
+        $('#_ozelNotRow').find('tr').each(function (inx, inptx) {
+            var valNaI = $(inptx).find('input[name=NAIsIstensin]').val();
+            var valminP = $(inptx).find('input[name=NAMin]').parent();
+            var valmaxP = $(inptx).find('input[name=NAMax]').parent();
+            if (_OzelNot == false && valNaI == "1") {
+                $(valminP).removeClass("hide");
+                $(valmaxP).removeClass("hide");
+
+            }
+            else {
+                $(valminP).addClass("hide");
+                $(valmaxP).addClass("hide");
+            }
+        })
+        if (_SinavTipGrupID == '@SinavTipGrup.Tomer') {
+            $('._OzelNot2').addClass('hide');
+        }
+        else {
+            $('._OzelNot2').removeClass('hide');
+        }
+        if (_OzelNot) {
+            $('.NANotG').addClass("hide");
+
+        } else {
+            $('.NANotG').removeClass('hide');
+        }
+        kusuratBKontrol();
+
+    }*@
+    @*function wozelNot() {
+        var _SinavTipGrupID = '@stip.SinavTipGrupID';
+        var sndr = $('#OzelNot');
+        if ('@stip.WebService.ToString().ToLower()' == 'false') {
+
+            if ($(sndr).prop('checked') == true) {
+                $('#_OzelNot').removeClass('hide');
+                $('._OzelNot').addClass('hide');
+                OzelNotTipKontrol();
+            }
+            else {
+                if (_SinavTipGrupID != '@SinavTipGrup.Tomer') {
+                    $('._OzelNot').addClass('hide');
+                    $('._OzelNot2').removeClass('hide');
+                }
+                else {
+
+                    $('._OzelNot2').addClass('hide');
+                    $('._OzelNot').removeClass('hide');
+                }
+                $('#_OzelNot').addClass('hide');
+
+            }
+        }
+        else {
+            $('#_OzelNot').addClass('hide');
+            if (_SinavTipGrupID == '@SinavTipGrup.DilSinavlari' || _SinavTipGrupID == '@SinavTipGrup.Ales_Gree') {
+                $('._OzelNot').addClass('hide');
+                $('._OzelNot2').removeClass('hide');
+            }
+            else {
+
+                $('._OzelNot2').addClass('hide');
+                $('._OzelNot').removeClass('hide');
+            }
+            $('#OzelNot').removeAttr('checked');
+            $('#OzelNot').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
+
+        }
+
+        wozelNotD($('#NotDonusum'));
+        notAralikKontrol();
+    }*@
+    @*function wozelNotD(sndr) {
+        if ('@stip.WebService.ToString().ToLower()' == 'false' && $('#OzelNot').prop('checked') == false) {
+            if ($(sndr).prop('checked') == true) {
+                $('#NtFormulDv').removeClass('hide');
+            }
+            else {
+                $('#NtFormulDv').addClass('hide');
+            }
+        }
+        else {
+            $('#NtFormulDv').addClass('hide');
+            $('#NotDonusum').removeAttr('checked');
+            $('#NotDonusum').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
+
+        }
+    }*@
+
+    @*function notEkle() {
+        var _tip = $('#OzelNotTipID').val();
+        if (_tip == '@OzelNotTip.SeciliNotlar') {
+            var NotharfAdi = $('#_SinavNotAdi').val();
+            var NotharfDegeri = $('#_SinavNotDeger').val();
+            var _rowEkle = true;
+            if (NotharfAdi == "" || NotharfDegeri == "") {
+                _rowEkle = false
+                showMessage("warning", "Uyarı", "Eklemek işlemini yapabilmek için sınav notu harfini ve değerini girmeniz gerekmektedir!");
+            }
+            $('#_NotTbody').find("tr").each(function (inx, trx) {
+                var _sntAd = $(trx).find("input[name=SinavNotAdi]").val();
+                if (_sntAd.toLowerCase() == NotharfAdi.toLowerCase()) {
+                    showMessage("warning", "Uyarı", "Eklemek istediğiniz sınav notu harfi zaten listede mevcut! Tekrar eklenemez.");
+                    _rowEkle = false;
+                    return;
+                }
+            });
+            if (_rowEkle) {
+                var _rw = "<tr>" +
+                             "<td><input type='text' class='hide' name='SinavNotlariID' value='' /><input type='text' class='hide' name='SinavNotAdi' value='" + NotharfAdi + "' />" + NotharfAdi + "</td>" +
+                             "<td><input type='text' class='hide' name='SinavNotDeger' value='" + NotharfDegeri + "' />" + NotharfDegeri + "</td>" +
+                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                        "</tr>";
+                $('#_NotTbody').append(_rw);
+                $('#_SinavNotAdi').val("");
+                $('#_SinavNotDeger').val("");
+                $('.tooltips').tooltip();
+            }
+        }
+        else if (_tip == '@OzelNotTip.SeciliNotAraliklari') {
+            var sbSinavAralikAdi = $('#_SubSinavAralikAdi').val();
+            var _min = $('#_SubSinavMin').val();
+            var _max = $('#_SubSinavMax').val();
+            var _formul = $('#_SubNotDonusumFormulu').val();
+            var _notDonusum = $('#_NotDonusum').prop('checked');
+            var _rowEkle = true;
+            if (sbSinavAralikAdi == "" || _min == "" || _max == "" || (_notDonusum && _formul == "")) {
+                _rowEkle = false
+                showMessage("warning", "Uyarı", "Eklemek işlemini yapabilmek için sınav not aralığı adı, min " + ((_notDonusum && _formul == "" ? ", maks ve formül" : " ve maks")) + " değerlerini girmeniz gerekmektedir!");
+            }
+            if (_notDonusum == false) _formul = "";
+            $('#_NotSubAralikTbody').find("tr").each(function (inx, trx) {
+                var _subAad = $(trx).find("input[name=SubSinavAralikAdi]").val();
+                if (_subAad.toLowerCase() == sbSinavAralikAdi.toLowerCase()) {
+                    showMessage("warning", "Uyarı", "Eklemek istediğiniz sınav notu harfi zaten listede mevcut! Tekrar eklenemez.");
+                    _rowEkle = false;
+                    return;
+                }
+            });
+            if (_rowEkle) {
+                var _rw = "<tr>" +
+                             "<td><input type='text' class='hide' name='SubSinavAralikID' value='' /><input type='text' class='hide' name='SubSinavAralikAdi' value='" + sbSinavAralikAdi + "' />" + sbSinavAralikAdi + "</td>" +
+                             "<td><input type='text' class='hide' name='SubSinavMin' value='" + _min + "' />" + _min + "</td>" +
+                             "<td><input type='text' class='hide' name='SubSinavMax' value='" + _max + "' />" + _max + "</td>" +
+                             "<td style='text-align:center;'><input type='checkbox' value='true' name='SubNotDonusum' class='hide' " + (_notDonusum ? " checked=checked" : "") + " /><span class='label label-" + (_notDonusum ? "success" : "danger") + "'>" + (_notDonusum ? "Evet" : "Hayır") + "</span></td>" +
+                             "<td><input type='text' class='hide' name='SubNotDonusumFormulu' value='" + _formul + "' />" + (_notDonusum ? ("<img src='@Url.Content("~/Images/formul.jpg")' style='width:20px;height:20px;cursor:pointer' title=" + _formul + "/>") : "") + "</td>" +
+                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                        "</tr>";
+                $('#_NotSubAralikTbody').append(_rw);
+                $('#_SubSinavAralikAdi').val("");
+                $('#_SubSinavMin').val("");
+                $('#_SubSinavMax').val("");
+                $('#_SubNotDonusumFormulu').val("");
+                $('.tooltips').tooltip();
+
+            }
+
+        }
+
+    }*@
+    function Filtrele() {
+        var filtreval = $('#filterBInp').val().replace('İ', 'i').toLowerCase();
+        var $fltrRow = $('._rows');
+
+        if (filtreval != null && filtreval != "") {
+            var toplam = $('._rows').length;
+            $('#prgList').find('tr').each(function (inx, trx) {              
+                var _programadi = $(trx).find(".programAdlari").first().text();  
+                var clmValprog = _programadi.replace('İ', 'i').toLowerCase();
+                //var ipS = $(trx).find('.ipS').first().text().toLowerCase();
+                var AShow = clmValprog.indexOf(filtreval) > -1;
+                // var IShow = ipS.indexOf(filtreval) > -1;
+                if (AShow) {
+                    $(trx).removeClass("hide");
+                }
+                else {
+                    $(trx).addClass("hide");
+                }
+
+            })
+            var Gizli = $('._rows.hide').length;
+            var gosterilen = toplam - Gizli;
+            $('#filtreKelime').html("[Ara:  %<span style='color:red;'>" + filtreval + "</span>%] [Bulunan: <span style='color:red;'>" + gosterilen + "</span>]");
+
+        }
+        else {
+            $fltrRow.removeClass("hide");
+            $('#filtreKelime').html("");
+
+        }
+    }
+    $('#filterBInp').bind("keydown", function (event) {
+        if (event.keyCode == 13) {
+            Filtrele();
+            event.preventDefault();
+        }
+    });
+
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+
+</script>
+
+@if (MmMessage.IsCloseDialog)
+{
+    <script>
+        setTimeout(function () {
+            window.top.getDetail('@Model.SinavTipID', false, null);
+            window.top.dialogKapat('@MmMessage.DialogID');
+        }, 4000);
+
+    </script>
+}

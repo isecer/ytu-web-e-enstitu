@@ -1,0 +1,167 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model kmMezuniyetSureci
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var kmMzOtoMail = (List<kmMzOtoMail>)ViewBag.kmMzOtoMail;
+    var IsYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
+}
+
+<div class="row">
+    <form id="FrmMezuniyetSurec" method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+        <input type="text" style="display:none;" id="MezuniyetSurecID" name="MezuniyetSurecID" value="@Model.MezuniyetSurecID" />
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-time"></i>&nbsp; Başvuru süreç kaydı</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit", "MezuniyetSureci", new { id = Model.MezuniyetSurecID })';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+
+
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "getOtBilgi(this);" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Öğretim Yılı</label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("OgretimYili", null, "", new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Başlangıç / Bitiş Tarihi</label>
+                                <div class="col-md-9 col-xs-7">
+                                    <table>
+                                        <tr>
+                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi == DateTime.MinValue ? "" : Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td style="width:5px;text-align:center;">/</td>
+                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi == DateTime.MinValue ? "" : Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                           
+                           
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12" id="_otBilgi">
+                                    @{Html.RenderPartial("getOtBilgiM", Model.OgrenimTipModel);}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Başvurlara Otomatik Mail Gönderme</label>
+                                <div class="col-md-9 col-xs-7">
+                                    <table class="table" style="width:100%;table-layout:fixed;">
+
+                                        <tbody>
+                                            @foreach (var item in kmMzOtoMail)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox pull-left">
+                                                            <label>
+                                                                <input type="checkbox" class="icheckbox" name="gID" value="@(item.gID)" @item.Checked.ToChecked()>
+                                                                @item.Aciklama
+
+                                                            </label>
+                                                        </div>
+                                                        <input type="hidden" class="form-control" name="MezuniyetSurecOtoMailID" value="@(item.gID + "_" + item.MezuniyetSurecOtoMailID)">
+                                                        <input type="hidden" class="form-control" name="MailSablonTipID" value="@(item.gID + "_" + item.MailSablonTipID)">
+                                                        <input type="hidden" class="form-control" name="ZamanTipID" value="@(item.gID + "_" + item.ZamanTipID)">
+                                                        <input type="hidden" class="form-control" name="Zaman" value="@(item.gID + "_" + item.Zaman)">
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-5 control-label">Bezcilt Oluşturulurken İstenen Anket</label>
+                                <div class="col-md-9 col-xs-7">
+                                    @Html.DropDownList("AnketID", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            @if (Model.MezuniyetSurecID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-5 control-label padding-top-0 padding-bottom-0">Yönetmelik Bilgilerini Kopyala</label>
+                                    <div class="col-md-9 col-xs-7 padding-top-0 padding-bottom-0">
+                                        <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsYonetmelikKopyala" class="toggle" @IsYonetmelikKopyala.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-5 control-label padding-top-0 padding-bottom-0">Durum</label>
+                                    <div class="col-md-9 col-xs-7 padding-top-0 padding-bottom-0">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    $(function () {
+        $('#BaslangicTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#BitisTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+         
+
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+    function getOtBilgi(sndr) {
+        var _panel = $('#_otBilgi');
+        _pRefresh(_panel, false);
+        var sndrVal = $(sndr).val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getOtBilgiM", "MezuniyetSureci")',
+                data: { EnstituKod: sndrVal, MezuniyetSurecID: '@Model.MezuniyetSurecID' },
+                success: function (result) {
+                    $("#_otBilgi").html(result);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            $("#_otBilgi").html('');
+            _pRefresh(_panel, true);
+        }
+    }
+</script>

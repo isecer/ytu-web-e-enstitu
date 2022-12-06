@@ -1,0 +1,570 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model Kullanicilar
+@{
+    /**/
+
+    Layout = null;
+    bool ResimVar = (bool)ViewBag.ResimVar;
+    bool kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+    bool IYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    bool eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    bool pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var enstitu = (Enstituler)ViewBag.Enstitu;
+    var rollerE = (IEnumerable<CheckObject<Enstituler>>)ViewBag.KEnstituler;
+    var roller = (IEnumerable<CheckObject<Roller>>)ViewBag.KRoller;
+    var cats = (List<CmbIntDto>)ViewBag.cats;
+    var user = (Kullanicilar)ViewBag.Kullanici;
+    var rollerP = (List<kulaniciProgramYetkiModel>)ViewBag.KProgramlar;
+    var ytuOgrnB = (OgrenimTipleri)ViewBag.YtuOgrenimB;
+    var donem = (Donemler)ViewBag.Donem;
+    var secilenTumRoollerCount = roller.Count(a => a.Checked == true);
+    var eYetkiCount = (int)ViewBag.EkRollerCount;
+    var danisman = (Kullanicilar)ViewBag.Danisman;
+}
+<div class="col-md-12" style="padding:6px;">
+    <div class="panel panel-info">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Kullanıcı Detayı</h3>
+            <ul class="panel-controls">
+                @if (kYetki)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="mGonder('@user.KullaniciID');" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg"></i></span>
+                    </li>
+                    <li style="padding-right:5px;">
+                        <span class="label label-info label-form" onclick="window.open('@Url.Action("Kayit", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank');" style="cursor:pointer;" title="Kullanıcı Düzenle"><i class="fa fa-edit fa-lg"></i></span>
+                    </li>
+                }
+                @if (eYetki)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="window.open('@Url.Action("YetkilendirmeEnstitu", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank')" style="cursor:pointer;" title="Enstitü Yetkileri Düzenle"><i class="fa fa-cog fa-lg"></i></span>
+                    </li>
+                }
+                @if (IYetki)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="window.open('@Url.Action("Yetkilendirme", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank');" style="cursor:pointer;" title="Erişim Yetkileri Düzenle"><i class="fa fa-cog fa-lg"></i></span>
+                    </li>
+                }
+
+                @if (pYetki)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="window.open('@Url.Action("KullaniciProgramYetkileri", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank');" style="cursor:pointer;" title="Program Yetkileri Düzenle"><i class="fa fa-cog fa-lg"></i></span>
+                    </li>
+                }
+
+            </ul>
+        </div>
+        <div class="panel-body padding-0">
+            <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                <table id="tblKul" style="width:100%;">
+                    <tr>
+                        <td style="vertical-align:top;padding:0px;">
+
+                            <table class="table" style="width:100%;margin:0px;padding:0px;">
+                                <tr>
+                                    <td width="140">Enstitü</td>
+                                    <td width="5">:</td>
+                                    <td>@enstitu.EnstituAd</td>
+                                </tr>
+                                <tr>
+                                    <td>Kullanıcı Tipi</td>
+                                    <td>:</td>
+                                    <td>@Model.KullaniciTipleri.KullaniciTipAdi</td>
+                                </tr>
+                                <tr>
+                                    <td>Ad Soyad</td>
+                                    <td>:</td>
+                                    <td>
+                                        @Model.Ad @Model.Soyad
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Kullanıcı Adı</td>
+                                    <td>:</td>
+                                    <td>@Model.KullaniciAdi</td>
+                                </tr>
+                                <tr>
+                                    <td>Şifre Giriş Türü</td>
+                                    <td>:</td>
+                                    <td>@(Model.IsActiveDirectoryUser ? "Active Directory" : "Lokal Şifre")</td>
+                                </tr>
+                                @if (kYetki)
+                                {
+                                    <tr>
+                                        <td>Yetki Grubu</td>
+                                        <td>:</td>
+                                        <td>@Model.YetkiGruplari.YetkiGrupAdi @(eYetkiCount > 0 ? "(+ " + eYetkiCount + " Yetki)" : "")</td>
+                                    </tr>
+                                }
+                                @if (UserIdentity.Current.IsAdmin)
+                                {
+                                    <tr>
+                                        <td>Yönetici Mi?</td>
+                                        <td>:</td>
+                                        <td>@Model.IsAdmin.ToEvetHayir()</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td>Oluşturma Tarihi</td>
+                                    <td>:</td>
+                                    <td>@Model.OlusturmaTarihi.ToDatetTimeString()</td>
+                                </tr>
+                                <tr>
+                                    <td>Son Giriş Tarihi</td>
+                                    <td>:</td>
+                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToDatetTimeString() : "Henüz Giriş Yapmamış")</td>
+                                </tr>
+
+                                @if (Model.Aciklama.IsNullOrWhiteSpace() == false)
+                                {
+                                    <tr>
+                                        <td>Açıklama</td>
+                                        <td>:</td>
+                                        <td>@Model.Aciklama</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td>Kullanıcı Aktiflik</td>
+                                    <td>:</td>
+                                    <td>@Model.IsAktif.ToAktifPasif()</td>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                        <td width="140" style="background-color:#3fbae4;">
+                            <div class="panel-body profile bg-info" style="padding: 0px; margin: 0px;" id="pImageD">
+
+                                <table style="height:100%;width:100%;table-layout:fixed;background-color:#3fbae4;">
+                                    <tr class="_EditImg @((kYetki) || Model.KullaniciID == UserIdentity.Current.Id?"":"hide")">
+                                        <td style="text-align:center;">
+                                            <a class="btn btn-info" href="javascript:void(0);" onclick="getImageUpload()"><i class="fa fa-image fa-lg"></i> Resim Yükle</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+
+                                            <div class="profile-image" style="padding: 0px; margin: 0px;">
+                                                <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi" alt="@Model.Ad @Model.Soyad">
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="_EditImg @(ResimVar && (kYetki || Model.KullaniciID == UserIdentity.Current.Id)?"":"hide")">
+                                        <td height="30">
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="text-align:center;"><button class="btn btn-info" onclick="rotateImage(true)" title="Sola Döndür"><i class="fa fa-rotate-left fa-lg"></i></button></td>
+                                                    <td style="text-align:center;"><button class="btn btn-info" onclick="rotateImage(false)" title="Sağa Döndür"><i class="fa fa-rotate-right fa-lg"></i></button></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-12" style="max-height:500px;overflow:auto;">
+
+    <div class="panel panel-info panel-toggled">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-id-card-o fa-lg"></i> Kimlik / Adres Bilgisi</h3>
+            <ul class="panel-controls">
+                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+            </ul>
+        </div>
+        <div class="panel-body padding-0" id="#">
+            <table class="table" style="width:100%;margin:0px;">
+                @if (!Model.TcKimlikNo.IsNullOrWhiteSpace())
+                {
+                    <tr>
+                        <td width="140">T.C. Kimlik No</td>
+                        <td width="5">:</td>
+                        <td>@Model.TcKimlikNo</td>
+                    </tr>
+                }
+                @if (!Model.PasaportNo.IsNullOrWhiteSpace())
+                {
+                    <tr>
+                        <td width="140">Pasaport No</td>
+                        <td width="5">:</td>
+                        <td>@Model.PasaportNo</td>
+                    </tr>
+                }
+
+                @if (Model.CinsiyetID.HasValue)
+                {
+                    <tr>
+                        <td>Cinsiyet</td>
+                        <td>:</td>
+                        <td>@Model.Cinsiyetler.CinsiyetAdi</td>
+                    </tr>
+                }
+
+
+                @if (Model.Adres.IsNullOrWhiteSpace() == false)
+                {
+                    <tr>
+                        <td>Adres</td>
+                        <td>:</td>
+                        <td>@Model.Adres</td>
+                    </tr>
+                }
+                <tr>
+                    <td>E-Posta Adresi</td>
+                    <td>:</td>
+                    <td>@Model.EMail</td>
+                </tr>
+                @if (!Model.CepTel.IsNullOrWhiteSpace())
+                {
+                    <tr>
+                        <td>Cep Tel</td>
+                        <td>:</td>
+                        <td>@Model.CepTel</td>
+                    </tr>
+                }
+
+                @if (Model.BirimID.HasValue)
+                {
+                    <tr>
+                        <td width="140">Birim</td>
+                        <td width="5">:</td>
+                        <td>@Model.Birimler.BirimAdi</td>
+                    </tr>
+
+                    <tr>
+                        <td>Unvan</td>
+                        <td>:</td>
+                        <td>@Model.Unvanlar.UnvanAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Sicil No</td>
+                        <td>:</td>
+                        <td>@Model.SicilNo</td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+
+    @if (Model.YtuOgrencisi)
+    {
+        <div class="panel panel-info panel-toggled">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-graduation-cap fa-lg"></i> YTÜ Öğrenci Bilgileri</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body padding-0">
+                <table class="table" style="width:100%;margin:0px;">
+                    <tr>
+                        <td width="140">Öğrenci No</td>
+                        <td width="5">:</td>
+                        <td>@Model.OgrenciNo</td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>@ytuOgrnB.OgrenimTipAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Program</td>
+                        <td>:</td>
+                        <td>@Model.Programlar.ProgramAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu</td>
+                        <td>:</td>
+                        <td>@Model.OgrenimDurumlari.OgrenimDurumAdi</td>
+                    </tr>
+                    @if (Model.KayitDonemID.HasValue)
+                    {
+
+                        <tr>
+                            <td>Kayıt Tarihi</td>
+                            <td>:</td>
+                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToDateString()</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            Tez Danışmanı
+                        </td>
+                        <td>:</td>
+                        <td>
+                            @if (danisman != null)
+                            {
+                                <a href="javascript:void(0)" onclick="detayGor(@danisman.KullaniciID)">
+                                    @danisman.Unvanlar.UnvanAdi @danisman.Ad @danisman.Soyad
+                                </a>
+                            }
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+    }
+    @if (kYetki)
+    {
+        <div class="panel panel-info panel-toggled">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-cog fa-lg"></i> Kullanıcı Enstitü Yetkileri</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body" style="padding:1px 7px 1px 7px;">
+                <table class="chks" style="width:100%;table-layout:fixed;">
+                    @foreach (var role in rollerE.OrderBy(o => o.Value.EnstituAd))
+                    {
+                        <tr>
+                            <td>
+                                <div class="">
+                                    <label>
+                                        <input type="checkbox" disabled="disabled" class="icheckbox" @role.Checked.ToChecked()>
+                                    </label>
+                                    <span style="@(role.Checked.Value ? " color:green;" : "color:gray;")">@role.Value.EnstituAd</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+                </table>
+
+            </div>
+        </div>
+        <div class="panel panel-info panel-toggled">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-cog fa-lg"></i> Kullanıcı Erişim Yetkileri</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body" style="padding:1px 7px 1px 7px;">
+                @if (secilenTumRoollerCount == 0)
+                {
+                    <span style="color:maroon;margin:10px auto;">Hiçbir Erişim Yetkisi Yok</span>
+                }
+                else
+                {
+                    foreach (var cat in cats.OrderBy(o => o.Value))
+                    {
+                        var roles = roller.Where(p => p.Value.Kategori == cat.Caption).ToArray();
+                        var allcheckedCnt = roles.Count(a => a.Checked.Value);
+                        <div class="col-md-6" style="margin:0px;padding:2px;">
+
+                            <!-- DEFAULT LIST GROUP -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading padding-0">
+                                    <h3 class="panel-title" style="font-size:9pt;">@cat.Caption (@(allcheckedCnt > 0 ? allcheckedCnt + " yetki" : "Yetki yok"))</h3>
+                                </div>
+                                <div class="panel-body padding-0" style="height: 70px; overflow: auto;">
+                                    <table class="chks" style="width:100%;table-layout:fixed;">
+                                        @foreach (var role in roles.OrderBy(o => o.Value.GorunurAdi))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="">
+                                                        <label>
+                                                            <input type="checkbox" disabled="disabled" class="icheckbox" @role.Checked.ToChecked()>
+                                                        </label>
+                                                        <span style="@(role.Checked.Value ? " color:green;" : "color:gray;")">@role.Value.GorunurAdi</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="panel panel-info panel-toggled">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;"><i class="fa fa-cog fa-lg"></i> Kullanıcı Program Yetkileri</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body" style="padding:1px 7px 1px 7px;">
+                @if (rollerP.Count == 0)
+                {
+                    <span style="color:maroon;margin:10px auto;">Hiçbir Program Yetkisi Yok</span>
+                }
+                else
+                {
+                    foreach (var cat in rollerP.OrderBy(o => o.EnstituAdi).Select(s => new { s.EnstituKod, s.EnstituAdi, s.EnstituKisaAd }).Distinct())
+                    {
+                        var roles = rollerP.Where(p => p.EnstituKod == cat.EnstituKod).ToArray();
+                        var allcheckedCnt = roles.Count();
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading padding-0">
+                                <h3 class="panel-title" style="font-size:9pt;"><a target="_blank" href="@Url.Action("KullaniciProgramYetkileri","Kullanicilar",new { id=Model.KullaniciID})"><i class="fa fa-cog fa-lg"></i> @cat.EnstituAdi (@(allcheckedCnt > 0 ? allcheckedCnt + " Yetki" : "Yetki yok"))</a></h3>
+                            </div>
+                            <div class="panel-body padding-0" style="max-height: 75px; overflow: auto;">
+                                <table class="table" style="table-layout:fixed;width:100%;">
+                                    @foreach (var item in roles.Select((s, inx) => new { s = s, inx = inx }))
+                                    {
+                                        <tr>
+                                            <td width="30">@(item.inx + 1))</td>
+                                            <td>
+                                                <span>Anabilim Dalı: @item.s.AnabilimDaliAdi </span><br />
+                                                <span>Program: @item.s.ProgramAdi </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+
+    $(function () {
+        $('.srollkkk').slimScroll({
+            color: 'red',
+            height: '500px'
+        });
+        $(".panel-collapse").on("click", function () {
+            panel_collapse($(this).parents(".panel").first());
+            $(this).parents(".dropdown").first().removeClass("open");
+            return false;
+        });
+    })
+    $('.icheckbox').iCheck({ checkboxClass: 'icheckbox_minimal-grey', radioClass: 'iradio_minimal-grey' });
+
+</script>
+
+<script>
+        function rotateImage(rotate) {
+            var _panel = $('#pImageD');
+            _pRefresh(_panel, false);
+            setTimeout(function () {
+                $.ajax({
+                    url: '@Url.Action("rotateImage", "Ajax")',
+                    data: { LeftOrRight: rotate, KullaniciID: @Model.KullaniciID },
+                    success: function (result) {
+                        var src = root + result.ResimAdi + "?time=" + new Date();
+                        $('.pImageD').first().attr('src', src);
+                        $('#pImageD').find('.panel-refresh-layer').remove();
+                        _pRefresh(_panel, true);
+                    },
+                    error: function (err) {
+                        $('#pImageD').find('.panel-refresh-layer').remove();
+                        alert(err.responseText);
+                        _pRefresh(_panel, true);
+                    }
+                });
+            }, 1000);
+
+        }
+    function getImageUpload() {
+
+        var _panelM = $('#pImageD');
+        _pRefresh(_panelM, false);
+        $.ajax({
+            url: '@Url.Action("getImageUpload", "Ajax")',
+            data: {  'KullaniciID': @Model.KullaniciID },
+            success: function (resultPG) {
+                _pRefresh(_panelM, true);
+                var btbxxFSx = bootbox.dialog({
+                    message: resultPG,
+                    title: "<i class='fa fa-user fa-lg'></i> Profil Resmi Yükleme İşlemi",
+                    buttons: {
+                        success: {
+                            label: "Resmi Yükle",
+                            className: "btn-success",
+                            callback: function () {
+                                var kbuton = $(btbxxFSx).find('.modal-footer').find('.btn-primary').first();
+                                $(kbuton).attr('disabled', 'disabled');
+                                var _panel = $('#_ImageUploadPnl');
+                                _pRefresh(_panel, false);
+                                $('#GetImageUploadForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.mMessage.IsSuccess) {
+                                            toastr["success"](result.mMessage.Title, "Resim Yükle");
+                                            var src = result.ResimAdi + "?time=" + new Date();
+                                            $('.pImageD').first().attr('src', src);
+                                            $('#pImageD').find('.panel-refresh-layer').remove();
+                                            $('._EditImg').removeClass('hide');
+                                            if (result.AnaResmiDegistir) {
+                                                var _userMainImg = $('#userMainImg').first();
+                                                $(_userMainImg).attr('src', src);
+                                            }
+
+                                            _pRefresh(_panel, true);
+                                            setTimeout(function () {
+                                                var _clsBtn = $(btbxxFSx).find('.modal-header').find('button').first();
+                                                $(_clsBtn).click();
+                                            }, 800)
+                                        }
+                                        else {
+                                            $(kbuton).removeAttr('disabled');
+                                            getMsg(result.mMessage);
+                                            return false;
+                                        }
+                                        _pRefresh(_panel, true);
+                                    },
+                                    complete: function (cmp) {
+                                        $(kbuton).removeAttr('disabled');
+                                        _pRefresh(_panel, true);
+                                    },
+                                    error: function (err) {
+                                        $(kbuton).removeAttr('disabled');
+                                        _pRefresh(_panel, true);
+                                    }
+
+                                });
+                                $('#GetImageUploadForm').submit();
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: "Vazgeç",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+
+            },
+            error: function (err) {
+                _pRefresh(_panelM, true);
+                alert(err.responseText);
+            }
+        });
+    }
+
+</script>

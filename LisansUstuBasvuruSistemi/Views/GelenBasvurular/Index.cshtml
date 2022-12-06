@@ -1,0 +1,519 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmBasvurular
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var kayit = RoleNames.GelenBasvurularKayit.InRoleCurrent();
+    var sil = RoleNames.GelenBasvurularSil.InRoleCurrent();
+    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel; 
+    var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
+    var mKids = (List<int>)ViewBag.kIds;
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "GelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
+                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+                        @if (Model.RowCount > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+                        }
+                        @if (mailYetki && mKids.Count > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
+                            </li>
+                        }
+                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Akademik Dönem</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        @Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Öğrenim Seviyesi</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Öğrenci Tipi</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Öğrenim Durumu</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        @Html.DropDownList("LOgrenimDurumID", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Uyruk / Cinsiyet</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td>@Html.DropDownList("UyrukKod", null, new { @class = "form-control" })</td>
+                                                <td>@Html.DropDownList("CinsiyetID", null, new { @class = "form-control" })</td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Programlar</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        @Html.DropDownList("ProgramKod", null, new { @class = "form-control selectpicker", id = "ProgramKod", multiple = "multiple", data_live_search = "true", data_live_search_placeholder = "Search", data_actions_box = "true" })
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">B.Durum / B.Sonuç</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td>@Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })</td>
+                                                <td>@Html.DropDownList("MulakatSonucTipID", null, new { @class = "form-control" })</td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Sınav / Taahhüt</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td>@Html.DropDownList("SinavTipKod", null, new { @class = "form-control" })</td>
+                                                <td> @Html.DropDownList("IsTaahhutVar", null, new { @class = "form-control" })</td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @*<div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Dr. Mezuniyet Belgesi</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        <div class="form-group">
+                                            @Html.DropDownList("IsOncedenMezuniyetiVar", null, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>*@
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-5 control-label">Aranacak Kelime</label>
+                                    <div class="col-md-8 col-xs-7">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" class="form-control" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" /></td>
+                                                <td width="100">
+                                                    <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'false' : 'true')); $('#frmGBasvurular').submit();" class="btn btn-info"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var sProgs = '@Html.Raw(Json.Encode(SelectedPrograms))';
+                var nVal = JSON.parse(sProgs);
+                setTimeout(function () {
+                    $('#ProgramKod').selectpicker('val', nVal);
+                    $('#ProgramKod').selectpicker("refresh");
+                }, 1400);
+
+
+            })
+        </script>
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvuru Listesi</h3>
+                    <ul class="panel-controls">
+                        @foreach (var item in IndexModel.ListB)
+                        {
+                            <li style="color:@item.Color;">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
+                        }
+                        <li>
+                            <a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="BasvuruSurecAdi" width="160">Süreç Adı</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B Tarihi</th>
+                                <th class="sirala" field="TercihSayisi" width="50">TS</th>
+                                <th class="sirala" field="BasvuruDurumAdi" width="110">Durum</th>
+                                <th width="65"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    item.YLUniversiteID = 1;
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@item.DurumColor;" id="cls-@item.BasvuruID">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.BasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.BasvuruSurecAdi <br />@item.BasTar.ToDateString() - @item.BitTar.ToDateString()</td>
+                                        <td>
+                                            @item.BasvuruTarihi
+                                        </td>
+                                        <td>
+                                            <span style="font-size:14pt;">@item.TercihSayisi</span>
+                                            @if (item.BasvuruDurumID == BasvuruDurumu.Onaylandı || item.BasvuruDurumID == BasvuruDurumu.Gonderildi)
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'BAŞVURU BİLGİSİ','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.Basvuru&BasvuruID=@item.BasvuruID' , 'auto', 'modal-dialog modal-lg' )">
+                                                    <span style="font-size:18pt;" title="Yazdır" class="fa fa-print"></span>
+                                                </a>
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!item.DurumClassName.IsNullOrWhiteSpace())
+                                            {
+                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                {
+                                                    <span class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color:" + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=color:" + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
+                                                    </span>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                {
+                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi">@item.BasvuruDurumAdi</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.BasvuruDurumAdi</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @if (kayit)
+                                            {
+                                                if (item.IsNotDuzelt)
+                                                {
+                                                    <a href="javascript:void(0);" onclick="getGBNDet(@item.BasvuruID)"><i style="font-size:11pt;color:@(item.LOgrenimDurumID==OgrenimDurum.Mezun?"blue":"red");" class="glyphicon glyphicon-pencil tooltips" data-style="blue" data-original-title="Lisans Notunu Düzelt"></i></a>
+                                                }
+
+                                                <a href="@Url.Action("BasvuruYap", "Basvuru", new { BasvuruID = item.BasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+
+                                            }
+                                            @if (sil)
+                                            {<a href="javascript:void(0)" onclick="sil('@item.BasvuruID')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>}
+                                            @if (kayit && item.KayitliTercihVar == false)
+                                            {
+                                                if (item.BasvuruDurumID == BasvuruDurumu.Onaylandı)
+                                                {
+                                                    <a href="javascript:void(0);" onclick="taslagaCevir(@item.BasvuruID)"><i style="font-size:13pt;width:17px;text-align:right;" class="tooltips" data-style="blue" data-original-title="Başvuru Durumunu Taslağa Çevir">T</i></a>
+
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.BasvuruID" style="display:none">
+                                        <td id="cls-ana-@item.BasvuruID" colspan="8" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+ 
+<script type="text/javascript">
+     $('#AdSoyad').keypress(function (e) {
+         if (e.which == 13) {
+             return false;
+         }
+     });
+    function taslagaCevir(id) {
+        var btbx = bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Başvuru Taslak Durumuna Çevrilsin Mi?</td></tr></table>",
+            title: "Başvuruyu Taslak Durumuna Çevirme İşlemi",
+            buttons: {
+                success: {
+                    label: "Taslak Durumuna Çevir",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("TaslagaCevir", "GelenBasvurular")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) {
+
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+ function showDetail(id, Isdelete, sndr, IsBelgeShow) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(id, Isdelete, sndr, IsBelgeShow);
+    }
+    function GetDetail(id, IsBelgeShow) {
+        var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if (IsBelgeShow == true) {
+            tID="4";
+        }
+        $.ajax({
+            url: '@Url.Action("GetBasvuruDetay", "Ajax")',
+            data: { 'id': id, 'tbInx': tID },
+            async: false,
+            success: function (result) {
+                $('#cls-ana-' + id).html(result.page);
+                if (IsBelgeShow == true) {
+                    tabchangeSet("4");
+                }
+                SubData(id);
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+    }
+    function SubData(id,isDelete) {
+        var _panel = $('#bsvrDet_' + id);
+        var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if (isDelete) tID = 1;
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetBasvuruSubData", "Ajax")',
+            data: { 'id': id, 'tbInx': tID },
+            success: function (result) { 
+                if (isDelete) {
+
+                    sil(id,result.page)
+                }
+                else {
+
+                    var _nme = tbName + "-" + tID;
+                    $('#' + _nme).html(result.page);
+                }
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+</script>
+@if (kayit)
+{
+    <script>
+        function sil(id, result) {
+
+            var btbx = bootbox.dialog({
+                message: " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+                title: "Başvuru Silme İşlemi",
+                buttons: {
+                    success: {
+                        label: 'Başvuruyu Sil',
+                        className: "btn-danger",
+                        callback: function () {
+                            var _panel = $(btbx).find('.panel').first();
+                            _pRefresh(_panel, true);
+                            $.ajax({
+                                url: '@Url.Action("Sil", "Basvuru")',
+                                data: { id: id },
+                                success: function (result) {
+                                    if (result.IsSuccess) {
+                                        $("#cls-" + id).remove();
+                                        $(".cls-" + id).remove();
+                                    }
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                    _pRefresh(_panel, false);
+                                },
+                                error: function (err) {
+                                    alert(err.responseText);
+
+                                    _pRefresh(_panel, false);
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: 'Vazgeç',
+                        className: "btn-primary",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+        }
+        function getGBNDet(bsvID) {
+            $.ajax({
+                url: '@Url.Action("getGBNDetail", "Ajax")',
+                data: { id: bsvID },
+                success: function (result) {
+                    bootbox.dialog({
+                        message: result,
+                        title: "AGNO düzeltme işlemi",
+                        buttons: {
+                            success: {
+                                label: 'Kaydet',
+                                className: "btn-success",
+                                callback: function () {
+                                    var retV = _kaydetGNBO();
+                                    return retV;
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+    </script>
+}

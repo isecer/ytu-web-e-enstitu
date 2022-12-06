@@ -1,0 +1,775 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model  fmMezuniyetBasvurulari
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+    var kyetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+                </tr>
+                <tr>
+                    <td width="200" style="color:cadetblue">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @bilgiModel.Enstitü.EnstituAd
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@bilgiModel.Kullanici.Ad @bilgiModel.Kullanici.Soyad</td>
+                </tr>
+                @if (bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Öğrenci No / Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Anabilim Dalı / Program</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td> @bilgiModel.KullaniciTipYetkiYokMsj</td>
+                    </tr>
+                }
+
+                @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Başvuru Durumu</td>
+                        <td>:</td>
+                        <td>Sistem Başvuru alımına açıktır. Başvuru yapmak için Yeni Başvuru butonuna tıklayınız.</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="newApp(@bilgiModel.Kullanici.KullaniciID)"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    if (bilgiModel.SistemBasvuruyaAcik == false)
+                    {
+                        <tr>
+                            <td>Başvuru Durumu</td>
+                            <td>:</td>
+                            <td>
+                                Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                <br />
+                                <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                            </td>
+                        </tr>
+                    }
+                    else if (bilgiModel.EnstituYetki == false)
+                    {
+                        <tr>
+                            <td>Başvuru Durumu</td>
+                            <td>:</td>
+                            <td>
+                                Seçili enstitü için mezuniyet başvurusu yapamazsınız!
+                            </td>
+                        </tr>
+                    }
+
+
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        @Html.Hidden("KullaniciID", Model.KullaniciID)
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th width="40"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th>Mezuniyet Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.MezuniyetBasvurulariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.MezuniyetBasvurulariID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail">
+                                        </td>
+                                        <td>
+                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                        </td>
+                                        <td>
+                                            @item.BasvuruTarihi.ToString()
+                                        </td>
+
+                                        <td id="MDurum_@item.MezuniyetBasvurulariID">
+                                            @item.ToMezuniyetDurum()
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.MezuniyetBasvurulariID" style="display:none">
+                                        <td id="cls-@item.MezuniyetBasvurulariID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@if (Model.RowCount > 0)
+{
+    <script>
+        $(function () {
+            showDetail('@(Model.Data.First().MezuniyetBasvurulariID)',@(Model.RowID.HasValue?4:1));
+        },200)
+    </script>
+}
+<script type="text/javascript">
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function newApp(KullaniciID) {
+        var url = '@Url.Action("BasvuruYap")';
+        if (KullaniciID != undefined && KullaniciID != null) url += "?KullaniciID=" + KullaniciID;
+        showDuyuru(@DuyuruPopupTipleri.MezuniyetBasvuru, url);
+    }
+
+
+    function showDetail(id,tbNo) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetailx(id,false,null,tbNo);
+
+    }
+    function getDetailx(id, Isdelete, sndr,tbNo) {
+
+        var _panel = $('#bsvrDet_' + id);
+
+
+        var tbName = "@TabAdlari.MezuniyetBasvurulariTN-" + id;
+        var tID = tbNo != undefined ? tbNo: getSelectedTabID(tbName);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
+            data: { id: id, tbInx: tID, IsDelete: (Isdelete == true)  },
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>Seçilen Mezuniyet Başvurusunu Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Mezuniyet Başvurusu Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Başvuruyu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+
+      function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "Mezuniyet")',
+            data: { id: id  },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+
+
+
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+
+    function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
+        $.ajax({
+            url: '@Url.Action("RezervasyonAl", "Mezuniyet")',
+            data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID, 'SRTalepID': SRTalepID },
+            success: function (result) {
+
+                var btbxxFS = bootbox.dialog({
+                    message: result,
+                    title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Rezervasyon Talebi Yap' : 'Rezervasyon Talebini Düzelt'),
+                    buttons: {
+                        success: {
+                            label: 'Kaydet',
+                            className: "btn-success",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#MezuniyetSRForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            toastr["success"](result.Messages[0], result.Title);
+                                            getDetailx(MezuniyetBasvurulariID);
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                }).submit();
+
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: 'Kapat',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function BasvuruBelgeKaydet(frmID, id, bID) {
+        var pldID = $('#bsvrDet_' + bID);
+
+        _pRefresh(pldID, false);
+        var aFrm = $('#' + frmID).ajaxForm({
+            success: function (result) {
+                _pRefresh(pldID, true);
+                getDetailx(bID);
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            complete: function (cmp) {
+                _pRefresh(pldID, true);
+            },
+            error: function (err) {
+                _pRefresh(pldID, true);
+            }
+
+        }).submit();
+    }
+    function ChangeFile(sndr, BTipID) {
+        var _BelgeIconID = '#BelgeIcon_' + BTipID;
+        var _BelgeAdiID = '#BelgeAdi_' + BTipID;
+        var _BelgeyiKaydetID = '#BelgeyiKaydet_' + BTipID;
+        var _ChkInptTbl = '#yOnayChk_' + BTipID;
+        $(_BelgeAdiID).removeAttr("onclick");
+        $(_BelgeIconID).removeAttr("onclick");
+        var isSuccessFSize = true;
+        if (sndr.files[0].size > (1024 * 1024 * 20)) {
+            isSuccessFSize = false;
+            var btbx = bootbox.dialog({
+                message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 20 MB olabilir.</td></tr></table>",
+                title: "Belge Kayıt İşlemi",
+                buttons: {
+                    success: {
+                        label: 'Tamam',
+                        className: "btn-success",
+                        callback: function () {
+                        }
+                    }
+
+                }
+            });
+        }
+        if (sndr.files.length > 0 && isSuccessFSize) {
+
+            $(_BelgeAdiID).val(sndr.files[0].name);
+            $(_BelgeyiKaydetID).removeClass('hide');
+            $(_ChkInptTbl).addClass('hide');
+
+        }
+        else {
+            $(sndr).val("");
+            $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
+            $(_BelgeyiKaydetID).addClass('hide');
+
+        }
+    }
+    function showSRBCiltDialog(MezuniyetBasvurulariID, SRTalepID, SRTalepleriBezCiltFormID) {
+        $.ajax({
+            url: '@Url.Action("BezCiltForm", "Mezuniyet")',
+            data: { 'SRTalepID': SRTalepID, 'SRTalepleriBezCiltFormID': SRTalepleriBezCiltFormID },
+            success: function (result) {
+
+                var btbxxFS = bootbox.dialog({
+                    message: result,
+                    title: "<i class='fa fa-file-text-o'></i> " + (SRTalepleriBezCiltFormID <= 0 ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzenle'),
+                    buttons: {
+                        success: {
+                            label: 'Kaydet',
+                            className: "btn-success",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#MezuniyetSRBezCiltForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            toastr["success"](result.Messages[0], result.Title);
+                                            getDetailx(MezuniyetBasvurulariID);
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                });
+                                $('#MezuniyetSRBezCiltForm').submit();
+
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: 'Kapat',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                //$(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function OgrenciUzatmaOnayKayit(SRTalepID, mID) {
+        var _panel = $('#bsvrDet_' + mID);
+        var IsOgrenciUzatmaSonrasiOnay = $('#IsOgrenciUzatmaSonrasiOnay_' + SRTalepID).val();
+
+
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("OgrenciUzatmaOnayKayit", "Mezuniyet")',
+            data: { SRTalepID: SRTalepID, IsOgrenciUzatmaSonrasiOnay: IsOgrenciUzatmaSonrasiOnay },
+            success: function (result) {
+                getMsg(result.Messages);
+                if (result.Messages.IsSuccess == true) {
+                    getDetailx(mID);
+                }
+
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+@if (kyetki)
+{
+    <script>
+        function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
+            var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+            _pRefresh(_panel, false);
+            $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        getDetailx(MezuniyetBasvurulariID);
+                    }
+                    else {
+                         showMmMessage(result.Messages, 'Tamam');
+
+                    }
+                    _pRefresh(_panel, true);
+
+                },
+                complete: function (cmp) {
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+
+            }).submit();
+
+        }
+        function SrDurumKaydet(MezuniyetBasvurulariID, SRTalepID) {
+            var ibtID = $('#SRDurumID_' + SRTalepID).val();
+            var ibTipAciklama = $('#SRDurumAciklamasi_' + SRTalepID).val();
+            $.ajax({
+                url: '@Url.Action("SRDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': SRTalepID,
+                    'SRDurumID': ibtID,
+                    'SRDurumAciklamasi': ibTipAciklama
+                },
+                success: function (result) {
+                    getDetailx(MezuniyetBasvurulariID);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+        function SrSnvDurumKaydet(MezuniyetBasvurulariID, SRTalepID) {
+            var snvDrmID = $('#MezuniyetSinavDurumID_' + SRTalepID).val();
+            var $_TTSTarih = $('#InpTTSt_' + SRTalepID).find('input').first();
+
+            var _TTSTarih = "";
+            if ($_TTSTarih.length > 0) _TTSTarih = $_TTSTarih.val();
+            var dt = null;
+            if (_TTSTarih != "" && _TTSTarih != null && _TTSTarih != undefined) {
+                var _yil = _TTSTarih.split("-")[2];
+                var _ay = _TTSTarih.split("-")[1];
+                var _gun = _TTSTarih.split("-")[0];
+                dt = _ay + "-" + _gun + "-" + _yil;
+            }
+            $.ajax({
+                url: '@Url.Action("SRSinavDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': SRTalepID,
+                    'MezuniyetSinavDurumID': snvDrmID,
+                    'TezTeslimSonTarih': dt
+                },
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        getDetailx(MezuniyetBasvurulariID);
+
+
+                    }
+                    else {
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+        function MzDurumKaydet(MezuniyetBasvurulariID) {
+            var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
+            var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();
+            $.ajax({
+                url: '@Url.Action("MezuniyetDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': MezuniyetBasvurulariID,
+                    'IsMezunOldu': _IsMezunOldu,
+                    'Tarih': _MezuniyetTarihi
+                },
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        getDetailx(MezuniyetBasvurulariID);
+
+                    }
+                    else {
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+    </script>
+
+}
+
+@if (true)
+{
+
+    <script>
+             function GetJuriOneriFormu(MezuniyetBasvurulariID) {
+        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetJuriOneriFormu", "MezuniyetGelenBasvurular")',
+            data: {
+                'MezuniyetBasvurulariID': MezuniyetBasvurulariID,
+            },
+            success: function (result) {
+                _pRefresh(_panel, true);
+                if (result.IsSuccess) {
+
+
+
+                    var btbxxFS = bootbox.dialog({
+                        message: result.Content,
+                        //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                        buttons: {
+
+                            success: {
+                                label: 'İleri',
+                                className: "btn-primary btnKaydet",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    _pRefresh(pnlx, false);
+                                    $('#FrmJuriOneriFormu').ajaxForm({
+                                        success: function (result) {
+                                            if (result.mMessage.IsSuccess) {
+                                                var _clsBtn = $('.bootbox-close-button').first();
+                                                $(_clsBtn).click();
+                                                getDetailx(MezuniyetBasvurulariID);
+                                            }
+                                            else {
+                                                $('#PostDetayTabAdi').val(result.SelectedDetayTabAdi);
+
+                                                if (result.SelectedDetayTabAdi == "tab-YtuDisiJuri-4" || !result.IsYeniJO) {
+                                                     $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                    $('.btnKaydet').text('Kaydet');
+                                                    $('#SaveData').val("true");
+
+                                                }
+                                                else {
+                                                    $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                    $('.btnKaydet').text('İleri');
+                                                    $('#SaveData').val("false");
+                                                }
+                                                $("[href='#" + result.SelectedAnaTabAdi + "']").first().click();
+                                                $("[href='#" + result.SelectedDetayTabAdi + "']").first().click();
+                                                if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                return false;
+                                            }
+                                            _pRefresh(pnlx, true);
+                                        },
+                                        complete: function (cmp) {
+                                            _pRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            _pRefresh(pnlx, true);
+                                        }
+
+                                    });
+                                    $('#FrmJuriOneriFormu').submit();
+                                    return false;
+                                }
+                            }
+                        }
+                    });
+                    $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                }
+                else {
+                    showMmMessage(result.Messages, 'Tamam');
+                }
+
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        })
+    }
+
+        function SinavDegerlendir(UniqueID, MBasvuruID, IsDanisman) {
+            var IsTezBasligiDegisti = $('#IsTezBasligiDegisti_' + UniqueID).val();
+            var TezOrjinalBasligi = $('#TezOrjinalBasligi_' + UniqueID).val();
+            var TezOrjinalBasligiCevirisi = $('#TezOrjinalBasligiCevirisi_' + UniqueID).val();
+            var IsTezSanayiVeIsBirligiKapsamindaGerceklesti = $('#IsTezSanayiVeIsBirligiKapsamindaGerceklesti_' + UniqueID).val();
+            var MezuniyetSinavDurumID = $('#MezuniyetSinavDurumID_' + UniqueID).val();
+            var Aciklama = $('#Aciklama_' + UniqueID).val();
+            var IsYokDrBursiyeriVar = $('#IsYokDrBursiyeriVar_' + UniqueID).val();
+            var YokDrOncelikliAlan = $('#YokDrOncelikliAlan_' + UniqueID).val();
+            if (!IsDanisman) {
+                IsTezBasligiDegisti = null;
+                TezOrjinalBasligi = null;
+                TezOrjinalBasligiCevirisi = null;
+                IsYokDrBursiyeriVar = null;
+                YokDrOncelikliAlan = null;
+            }
+            var _panel = $('#bsvrDet_' + MBasvuruID);
+            bootbox.dialog({
+                message: "Tez sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Sınavı Değerlendirmesi",
+                buttons: {
+                    success: {
+                        label: "Evet",
+                        className: "btn-success",
+                        callback: function (event) {
+                            _pRefresh(_panel, false);
+                            $.ajax({
+                                url: '@Url.Action("SinavDegerlendir", "Mezuniyet")',
+                                data: {
+                                    'UniqueID': UniqueID,
+                                    'IsTezBasligiDegisti': IsTezBasligiDegisti,
+                                    'TezOrjinalBasligi': TezOrjinalBasligi,
+                                    'TezOrjinalBasligiCevirisi': TezOrjinalBasligiCevirisi,
+                                    'IsTezSanayiVeIsBirligiKapsamindaGerceklesti': IsTezSanayiVeIsBirligiKapsamindaGerceklesti,
+                                    'MezuniyetSinavDurumID': MezuniyetSinavDurumID,
+                                    'Aciklama': Aciklama,
+                                    'YokDrOncelikliAlan': YokDrOncelikliAlan,
+                                    'IsYokDrBursiyeriVar': IsYokDrBursiyeriVar
+
+                                },
+                                success: function (result) {
+                                    _pRefresh(_panel, true);
+                                    if (result.IsSuccess || result.IsRefresh) {
+                                        getDetailx(MBasvuruID);
+
+                                    }
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                },
+                                error: function (err) {
+                                    _pRefresh(_panel, true);
+                                    alert(err.responseText);
+
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: "Hayır",
+                        className: "btn-primary",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+        }
+
+
+    </script>
+}

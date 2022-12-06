@@ -1,0 +1,361 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmBelgeTalepleri
+@{
+    ViewBag.Title = "Index";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Belge Talep İşlemi</td>
+                </tr>
+                <tr>
+                    <td width="200">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @bilgiModel.Enstitü.EnstituAd
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@bilgiModel.Kullanici.Ad @bilgiModel.Kullanici.Soyad</td>
+                </tr>
+                @if (bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Öğrenci No / Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Anabilim Dalı / Program</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                        </td>
+                    </tr>
+                }
+
+                @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Eğitim Öğretim Yılı</td>
+                        <td>:</td>
+                        <td>@bilgiModel.DonemAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Talep Durumu</td>
+                        <td>:</td>
+                        <td>Sistem belge talebi işlemine açıktır. Belge talebi için Yeni belge talep butonuna tıklayınız.</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location.href='@Url.Action("TalepYap")'"><i class="fa fa-plus tooltips"></i>Yeni belge talebi yap</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    if (bilgiModel.SistemBasvuruyaAcik == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>Sistem belge talebi işlemine kapalıdır.</td>
+                        </tr>
+                    }
+                    else if (bilgiModel.EnstituYetki == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>Seçili enstitü için belge talebi yapamazsınız!</td>
+                        </tr>
+                    }
+                    else if (bilgiModel.KullaniciTipYetki == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>Belge talebi yapabilmek için profil bilginizi düzeltip ytu öğrencisi olduğunuzu belirtiniz.</td>
+                        </tr>
+                    }
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Belge Taleplerim</h3>
+                    <ul class="panel-controls">
+                        @foreach (var item in IndexModel.ListB)
+                        {
+                            <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
+                        }
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th class="sirala" field="AdiSoyadi">Ad Soyad</th> 
+                                <th class="sirala" field="TalepTarihi" width="160">Talep Tarihi</th>
+                                <th class="sirala" field="DurumListeAdi">Durum</th>
+                                <th width="40"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th>
+
+                                </th>
+                                <th>
+                                    <input name="AdiSoyadi" type="text" value="@Model.AranacakKelime" class="form-control" />
+                                </th>
+                                @*<th>@Html.DropDownList("BelgeTipID", null, new { @class = "form-control" })</th>*@
+                                <th>@Html.DropDownList("OgretimYili", null, new { @class = "form-control" })</th>
+                                <th>@Html.DropDownList("BelgeDurumID", null, new { @class = "form-control" })</th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr class="mColor_@item.BelgeTalepID" style="color:@item.Color">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.BelgeTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.BelgeTalepID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" @(item.KullaniciID.HasValue ? ("onclick=detayGor(" + item.KullaniciID + ")") : "") class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;">
+                                                        <table>
+                                                            <tr>
+                                                                <td id="TdAs_@item.BelgeTalepID">@item.AdiSoyadi (@item.OgrenciNo)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>@item.OgrenimTipAdi, <span style="cursor:pointer;" class="@item.DilFlagClass" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Belgenin hazırlanacağı dil: @item.DilAdi"></span> @item.BelgeTipAdi <span style="font-size:10pt;font-weight:bold">(@item.IstenenBelgeSayisi)</span></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td  id="TdTr_@item.BelgeTalepID">
+                                            @item.TalepTarihi.ToString("dd-MM-yyyy HH:mm:ss") <br />
+                                            @item.OgretimYiliBaslangic / @item.OgretimYiliBitis @item.DonemAdi
+                                        </td>
+                                        <td>
+                                            @{
+                                                var vBil = item.BelgeTalepID.toVerilmeBilgisi(item.DurumListeAdi);
+                                                string tColor = "style=cursor:pointer;color:" + (vBil.Value < 0 ? "maroon;" : item.Color);
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td style="width:30px;">
+                                                            @if (!item.ClassName.IsNullOrWhiteSpace())
+                                                            {
+                                                                <span class="tooltips mColor_@item.BelgeTalepID" data-style="blue" data-original-title="@item.BelgeDurumAciklamasi" @(!item.Color.IsNullOrWhiteSpace() ? tColor : "")>
+                                                                    <i id="bticon_@item.BelgeTalepID" class="@item.ClassName" style="font-size:17pt;font-weight:bold;"></i>
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="@item.ClassName mColor_@item.BelgeTalepID" style="font-size:17pt;font-weight:bold;color:@(vBil.Value<0? tColor: "color:"+ item.Color)"></i>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <span id="btCapt_@item.BelgeTalepID">@Html.Raw(vBil.Caption)</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("TalepYap", "BelgeTalebi", new { id = item.BelgeTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.BelgeTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.BelgeTalepID)"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.BelgeTalepID" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.BelgeTalepID" style="display:none">
+                                        <td id="cls-@item.BelgeTalepID" colspan="7" style="padding: 1px 1px 2px 2px;"></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetail(id);
+    }
+    function getDetail(id) { 
+        var _panel = $('#btDetay_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getdetay", "BelgeTalebi")',
+            data: { id: id },
+            success: function (result) { 
+                    $('#cls-' + id).html(result);
+                    _pRefresh(_panel, true); 
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function SilmeOnay(sndr,id) {
+        var AdSoyad = $('#TdAs_' + id).html();
+        var Tarih = $('#TdTr_' + id).html(); 
+        var SoruHtml = "<table style='table-layout:fixed;width:100%;'>" +
+            "<tr><td width='30' style='padding-left:10px;'></td><td style='padding-right:10px;'>" + (AdSoyad + ' - ' + Tarih) + "</td></tr>" +
+            "<tr><td width='30' style='color:maroon;padding-left:10px;'><i class='fa fa-info fa-2x'></i></td><td style='color:maroon;padding-right:10px;'>Seçilen Belge Talebini Silmek İstiyor Musunuz?</td></tr>" +
+            "</table>";
+        var btbx = bootbox.dialog({
+            message: SoruHtml,
+            title: "Belge Talebi Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Belge Talebini Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        sil(sndr, id);
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        }); 
+    }
+    function sil(sndr, id) {  
+        $.ajax({
+            url: '@Url.Action("Sil", "BelgeTalebi")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove(); 
+                }
+                toastr[result.IsSuccess ? "success" : "error"](result.Messages[0], "Belge Talebi Silme İşlemi");
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+</script>
+@if (RoleNames.BelgeTalebiDuzelt.InRoleCurrent())
+{
+<script>
+
+        function kaydet(id) {
+            var mktr = $('#VerilenBelgeSayisi_' + id).val();
+            if (mktr == null || mktr == "" || parseInt(mktr) < 1) {
+                alert('Verilen miktarı seçiniz!');
+                return;
+            }
+            var ibtID = $('#IstenenBelgeDurumID_' + id).val();
+            var ibTipAciklama = $('#BelgeDurumAciklamasi_' + id).val();
+            $.ajax({
+                url: '@Url.Action("Istenenkaydet", "BelgeTalebi")',
+                data: {
+                    'id': id,
+                    'IslemTipID': ibtID,
+                    'IslemTipAciklamasi': ibTipAciklama,
+                    'miktar': mktr
+                },
+                success: function (result) {
+                    getDetail(id, false, null);
+                    $(".mColor_" + id).each(function (inx, itmx) {
+                        $(itmx).attr("style","color:"+ result.Color);
+                    });
+                    $("#btCapt_" + id).html(result.verilmeBilgi.Caption);
+                    $("#bticon_" + id).attr("Class", "");
+                    $("#bticon_" + id).addClass(result.ClassName);
+                    //$("#td2_" + id).html(result.verilmeBilgi);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+</script>
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+</script>

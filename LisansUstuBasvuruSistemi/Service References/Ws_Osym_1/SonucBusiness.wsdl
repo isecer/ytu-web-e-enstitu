@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns_="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:tns__="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.FaultContracts" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:q1="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:q1_="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="" name="SonucBusiness" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" />
+      <xs:element name="SinavGrupBilgileriniGetir">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavGrupBilgileriniGetirResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="SinavGrupBilgileriniGetirResult" nillable="true" type="q1:ServisSonucOfArrayOfSinavGrupBilgiYKHEH_S_P5" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonuclariGetir">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="adayTcKimlikNo" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="yil" type="xs:int" />
+            <xs:element minOccurs="0" name="sinavGrupId" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonuclariGetirResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" minOccurs="0" name="SinavSonuclariGetirResult" nillable="true" type="q2:ServisSonucOfArrayOfSinavSonucTemelBilgiYKHEH_S_P5" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonucHtml">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="adayTcKimlikNo" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="sonucId" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonucHtmlResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" minOccurs="0" name="SinavSonucHtmlResult" nillable="true" type="q3:ServisSonucOfSonucBilgiHtmlYKHEH_S_P5" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonucXml">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="adayTcKimlikNo" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="sonucId" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonucXmlResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" minOccurs="0" name="SinavSonucXmlResult" nillable="true" type="q4:ServisSonucOfSonucBilgiXmlYKHEH_S_P5" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonuc">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="adayTcKimlikNo" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="sonucId" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SinavSonucResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" minOccurs="0" name="SinavSonucResult" nillable="true" type="q5:ServisSonucOfSonucBilgiYKHEH_S_P5" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="anyType" nillable="true" type="xs:anyType" />
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary" />
+      <xs:element name="boolean" nillable="true" type="xs:boolean" />
+      <xs:element name="byte" nillable="true" type="xs:byte" />
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime" />
+      <xs:element name="decimal" nillable="true" type="xs:decimal" />
+      <xs:element name="double" nillable="true" type="xs:double" />
+      <xs:element name="float" nillable="true" type="xs:float" />
+      <xs:element name="int" nillable="true" type="xs:int" />
+      <xs:element name="long" nillable="true" type="xs:long" />
+      <xs:element name="QName" nillable="true" type="xs:QName" />
+      <xs:element name="short" nillable="true" type="xs:short" />
+      <xs:element name="string" nillable="true" type="xs:string" />
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte" />
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt" />
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong" />
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort" />
+      <xs:element name="char" nillable="true" type="tns:char" />
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int" />
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration" />
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S" />
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid" />
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName" />
+      <xs:attribute name="Id" type="xs:ID" />
+      <xs:attribute name="Ref" type="xs:IDREF" />
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+      <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xs:complexType name="ServisSonucOfArrayOfSinavGrupBilgiYKHEH_S_P5">
+        <xs:annotation>
+          <xs:appinfo>
+            <GenericType Name="ServisSonucOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+              <GenericParameter Name="ArrayOfSinavGrupBilgi" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+            </GenericType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:ServisSonuc">
+            <xs:sequence>
+              <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" minOccurs="0" name="Sonuc" nillable="true" type="q1:ArrayOfSinavGrupBilgi" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:element name="ServisSonucOfArrayOfSinavGrupBilgiYKHEH_S_P5" nillable="true" type="tns:ServisSonucOfArrayOfSinavGrupBilgiYKHEH_S_P5" />
+      <xs:complexType name="ServisSonuc">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Aciklama" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SonucKodu" type="tns:SonucKodu" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ServisSonuc" nillable="true" type="tns:ServisSonuc" />
+      <xs:simpleType name="SonucKodu">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="KayitBulunamadi" />
+          <xs:enumeration value="Basarili" />
+          <xs:enumeration value="GecersizVeri" />
+          <xs:enumeration value="YetkisizIslem" />
+          <xs:enumeration value="ZamanAsimi" />
+          <xs:enumeration value="BeklenmeyenHata">
+            <xs:annotation>
+              <xs:appinfo>
+                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1000</EnumerationValue>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="SonucKodu" nillable="true" type="tns:SonucKodu" />
+      <xs:complexType name="ServisSonucOfArrayOfSinavSonucTemelBilgiYKHEH_S_P5">
+        <xs:annotation>
+          <xs:appinfo>
+            <GenericType Name="ServisSonucOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+              <GenericParameter Name="ArrayOfSinavSonucTemelBilgi" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+            </GenericType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:ServisSonuc">
+            <xs:sequence>
+              <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" minOccurs="0" name="Sonuc" nillable="true" type="q2:ArrayOfSinavSonucTemelBilgi" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:element name="ServisSonucOfArrayOfSinavSonucTemelBilgiYKHEH_S_P5" nillable="true" type="tns:ServisSonucOfArrayOfSinavSonucTemelBilgiYKHEH_S_P5" />
+      <xs:complexType name="ServisSonucOfSonucBilgiHtmlYKHEH_S_P5">
+        <xs:annotation>
+          <xs:appinfo>
+            <GenericType Name="ServisSonucOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+              <GenericParameter Name="SonucBilgiHtml" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+            </GenericType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:ServisSonuc">
+            <xs:sequence>
+              <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" minOccurs="0" name="Sonuc" nillable="true" type="q3:SonucBilgiHtml" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:element name="ServisSonucOfSonucBilgiHtmlYKHEH_S_P5" nillable="true" type="tns:ServisSonucOfSonucBilgiHtmlYKHEH_S_P5" />
+      <xs:complexType name="ServisSonucOfSonucBilgiXmlYKHEH_S_P5">
+        <xs:annotation>
+          <xs:appinfo>
+            <GenericType Name="ServisSonucOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+              <GenericParameter Name="SonucBilgiXml" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+            </GenericType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:ServisSonuc">
+            <xs:sequence>
+              <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" minOccurs="0" name="Sonuc" nillable="true" type="q4:SonucBilgiXml" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:element name="ServisSonucOfSonucBilgiXmlYKHEH_S_P5" nillable="true" type="tns:ServisSonucOfSonucBilgiXmlYKHEH_S_P5" />
+      <xs:complexType name="ServisSonucOfSonucBilgiYKHEH_S_P5">
+        <xs:annotation>
+          <xs:appinfo>
+            <GenericType Name="ServisSonucOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.CommonContracts" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+              <GenericParameter Name="SonucBilgi" Namespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" />
+            </GenericType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:ServisSonuc">
+            <xs:sequence>
+              <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" minOccurs="0" name="Sonuc" nillable="true" type="q5:SonucBilgi" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:element name="ServisSonucOfSonucBilgiYKHEH_S_P5" nillable="true" type="tns:ServisSonucOfSonucBilgiYKHEH_S_P5" />
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.DataContracts.Sonuc" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="ArrayOfSinavGrupBilgi">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SinavGrupBilgi" nillable="true" type="tns:SinavGrupBilgi" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfSinavGrupBilgi" nillable="true" type="tns:ArrayOfSinavGrupBilgi" />
+      <xs:complexType name="SinavGrupBilgi">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Ad" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Id" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SinavGrupBilgi" nillable="true" type="tns:SinavGrupBilgi" />
+      <xs:complexType name="ArrayOfSinavSonucTemelBilgi">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SinavSonucTemelBilgi" nillable="true" type="tns:SinavSonucTemelBilgi" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfSinavSonucTemelBilgi" nillable="true" type="tns:ArrayOfSinavSonucTemelBilgi" />
+      <xs:complexType name="SinavSonucTemelBilgi">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AciklamaTarihi" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Ad" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Id" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SinavSonucTemelBilgi" nillable="true" type="tns:SinavSonucTemelBilgi" />
+      <xs:complexType name="SonucBilgiHtml">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AciklamaTarihi" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="SonucAd" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SonucHtml" nillable="true" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SonucBilgiHtml" nillable="true" type="tns:SonucBilgiHtml" />
+      <xs:complexType name="SonucBilgiXml">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AciklamaTarihi" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="SonucAd" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Xml" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SonucBilgiXml" nillable="true" type="tns:SonucBilgiXml" />
+      <xs:complexType name="SonucBilgi">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AciklamaTarihi" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Puanlar" nillable="true" type="tns:ArrayOfPuan" />
+          <xs:element minOccurs="0" name="SonucAciklama" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="SonucAd" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SonucBilgi" nillable="true" type="tns:SonucBilgi" />
+      <xs:complexType name="ArrayOfPuan">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Puan" nillable="true" type="tns:Puan" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfPuan" nillable="true" type="tns:ArrayOfPuan" />
+      <xs:complexType name="Puan">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Deger" type="xs:decimal" />
+          <xs:element minOccurs="0" name="Kod" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="Puan" nillable="true" type="tns:Puan" />
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.FaultContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Osym.BilgiServisleri.Contracts.FaultContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="ServiceException">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DebugInfo" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ServiceException" nillable="true" type="tns:ServiceException" />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ISonuc_SinavSonucHtml_ServiceExceptionFault_FaultMessage">
+    <wsdl:part name="detail" element="tns__:ServiceException" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonucXml_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonucXml" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavGrupBilgileriniGetir_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinavGrupBilgileriniGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonucHtml_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonucHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavGrupBilgileriniGetir_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinavGrupBilgileriniGetir" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonuclariGetir_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonuclariGetir" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonuclariGetir_ServiceExceptionFault_FaultMessage">
+    <wsdl:part name="detail" element="tns__:ServiceException" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonucXml_ServiceExceptionFault_FaultMessage">
+    <wsdl:part name="detail" element="tns__:ServiceException" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonucHtml_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonucHtml" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavGrupBilgileriniGetir_ServiceExceptionFault_FaultMessage">
+    <wsdl:part name="detail" element="tns__:ServiceException" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonucXml_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonucXmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISonuc_SinavSonuclariGetir_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinavSonuclariGetirResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ISonuc">
+    <wsdl:operation name="SinavGrupBilgileriniGetir">
+      <wsdl:input message="tns:ISonuc_SinavGrupBilgileriniGetir_InputMessage" />
+      <wsdl:output message="tns:ISonuc_SinavGrupBilgileriniGetir_OutputMessage" />
+      <wsdl:fault name="ServiceExceptionFault" message="tns:ISonuc_SinavGrupBilgileriniGetir_ServiceExceptionFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonucHtml">
+      <wsdl:input message="tns:ISonuc_SinavSonucHtml_InputMessage" />
+      <wsdl:output message="tns:ISonuc_SinavSonucHtml_OutputMessage" />
+      <wsdl:fault name="ServiceExceptionFault" message="tns:ISonuc_SinavSonucHtml_ServiceExceptionFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonucXml">
+      <wsdl:input message="tns:ISonuc_SinavSonucXml_InputMessage" />
+      <wsdl:output message="tns:ISonuc_SinavSonucXml_OutputMessage" />
+      <wsdl:fault name="ServiceExceptionFault" message="tns:ISonuc_SinavSonucXml_ServiceExceptionFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonuclariGetir">
+      <wsdl:input message="tns:ISonuc_SinavSonuclariGetir_InputMessage" />
+      <wsdl:output message="tns:ISonuc_SinavSonuclariGetir_OutputMessage" />
+      <wsdl:fault name="ServiceExceptionFault" message="tns:ISonuc_SinavSonuclariGetir_ServiceExceptionFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ISonuc" type="tns:ISonuc">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SinavGrupBilgileriniGetir">
+      <soap:operation soapAction="http://tempuri.org/ISonuc/SinavGrupBilgileriniGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceExceptionFault">
+        <soap:fault use="literal" name="ServiceExceptionFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonucHtml">
+      <soap:operation soapAction="http://tempuri.org/ISonuc/SinavSonucHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceExceptionFault">
+        <soap:fault use="literal" name="ServiceExceptionFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonucXml">
+      <soap:operation soapAction="http://tempuri.org/ISonuc/SinavSonucXml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceExceptionFault">
+        <soap:fault use="literal" name="ServiceExceptionFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SinavSonuclariGetir">
+      <soap:operation soapAction="http://tempuri.org/ISonuc/SinavSonuclariGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceExceptionFault">
+        <soap:fault use="literal" name="ServiceExceptionFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SonucBusiness">
+    <wsdl:port name="BasicHttpBinding_ISonuc" binding="tns:BasicHttpBinding_ISonuc">
+      <soap:address location="https://vps.osym.gov.tr:443/Ext/Provider/BilgiServisi/Sonuc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

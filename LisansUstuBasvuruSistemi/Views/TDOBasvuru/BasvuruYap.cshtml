@@ -1,0 +1,86 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model KmTDOBasvuru
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+     
+    var _MmMessage = (MmMessage)ViewBag._MmMessage;
+
+
+}
+
+<div class="row">
+    <form id="bsvrSbmtFrm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil" aria-hidden="true"></i> Tez danışmanı öneri Başvuru Formu</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@Model.EnstituKod" />
+                            <input type="text" style="display:none;" id="TDOBasvuruID" name="TDOBasvuruID" value="@Model.TDOBasvuruID" />
+                            <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
+                            <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
+                            <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
+                            <input type="text" style="display:none;" id="PasaportNo" name="PasaportNo" value="@Model.PasaportNo" />
+                            <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
+                            <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenim Seviyesi</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="OgrenimTipAdi" id="OgrenimTipAdi" value="@Model.OgrenimTipAdi" />
+                                    @Model.OgrenimTipAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Anabilim Dalı</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="AnabilimdaliAdi" id="AnabilimdaliAdi" value="@Model.AnabilimdaliAdi" />
+                                    @Model.AnabilimdaliAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Program</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="ProgramAdi" id="ProgramAdi" value="@Model.ProgramAdi" />
+                                    @Model.ProgramAdi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenci No</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="OgrenciNo" id="OgrenciNo" value="@Model.OgrenciNo" />
+                                    @Model.OgrenciNo
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
+                                <div class="col-md-9 col-xs-10">
+                                    <input class="hide" name="Ad" id="Ad" value="@Model.Ad" />
+                                    <input class="hide" name="Soyad" id="Soyad" value="@Model.Soyad" />
+                                    @Model.Ad @Model.Soyad
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index",new { Model.KullaniciID })" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet ve Sonraki Adıma Geç</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+      $(function () {
+        var model = '@Html.Raw(Json.Encode(_MmMessage))';
+        validateControl(model);
+    });
+</script>
+

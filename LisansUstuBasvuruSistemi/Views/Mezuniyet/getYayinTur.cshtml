@@ -1,0 +1,441 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model YayinBilgiModel
+@{
+    Layout = null; 
+}
+@if (Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu())
+{
+    <div class="form-group">
+        <label class="col-md-3 col-xs-4 control-label">Yayın Durumu</label>
+        <div class="col-md-9 col-xs-8">
+            <select id="Yayinlanmis" name="Yayinlanmis" class="form-control" onchange="yChange(this)">
+                <option @(Model.Yayinlanmis.HasValue == false ? "selected" : "")></option>
+                <option value="true" @(Model.Yayinlanmis == true ? "selected" : "")>Yayınlanmış</option>
+                <option value="false" @(Model.Yayinlanmis == false ? "selected" : "")>Yayınlanmamış</option>
+            </select>
+            <script>
+                function yChange(sndr) {
+                    var sval = $('#Yayinlanmis').val();
+                    if (sval == "") {
+                        $('.yBaslik').addClass("hide");
+                        $('.yTarih').addClass("hide");
+                        $('.yBelge').addClass("hide");
+                        $('.kLink').addClass("hide");
+                        $('.yMetni').addClass("hide");
+                        $('.yLinki').addClass("hide");
+                        $('.yIndex').addClass("hide");
+                        $('.yMak').addClass("hide");
+
+                        $('.ptur').addClass("hide");
+                        $('.pekip').addClass("hide");
+                        $('.pdurum').addClass("hide");
+                        $('.pkurulus').addClass("hide");
+                        $('.dergis').addClass("hide");
+                        $('.yilCilts').addClass("hide");
+                        $('.etkinlik').addClass("hide");
+                        $('.yerbilgisi').addClass("hide");
+                        $('.yazars').addClass("hide");
+
+                    }
+                    else if (sval == "true") {
+                        $('.yBaslik').removeClass("hide");
+                        $('.yTarih').addClass("hide");
+                        $('.yBelge').addClass("hide");
+                        $('.kLink').removeClass("hide");
+                        $('.yMetni').removeClass("hide");
+                        $('.yLinki').removeClass("hide");
+                        $('.yIndex').removeClass("hide");
+                        $('.yMak').addClass("hide");
+                        $('.ptur').removeClass("hide");
+                        $('.pekip').removeClass("hide");
+                        $('.pdurum').removeClass("hide");
+                        if ($('#MezuniyetYayinProjeTurID').val() == "3") { $('.pkurulus').removeClass("hide"); }
+                        $('.dergis').removeClass("hide");
+                        $('.yilCilts').removeClass("hide");
+                        $('.etkinlik').removeClass("hide");
+                        $('.yerbilgisi').removeClass("hide");
+                        $('.yazars').removeClass("hide");
+                        $('.yilCints').removeClass("hide");
+                        
+                    }
+                    else {
+                        $('.yBaslik').removeClass("hide");
+                        $('.yTarih').addClass("hide");
+                        $('.yBelge').removeClass("hide");
+                        $('.kLink').removeClass("hide");
+                        $('.yMetni').addClass("hide");
+                        $('.yLinki').addClass("hide");
+                        $('.yIndex').removeClass("hide");
+                        $('.yMak').removeClass("hide");
+                        $('.ptur').removeClass("hide");
+                        $('.pekip').removeClass("hide");
+                        $('.pdurum').removeClass("hide");
+                        if ($('#MezuniyetYayinProjeTurID').val() == "3") { $('.pkurulus').removeClass("hide"); }
+                        $('.dergis').removeClass("hide");
+                        $('.yilCilts').removeClass("hide");
+                        $('.etkinlik').removeClass("hide");
+                        $('.yerbilgisi').removeClass("hide");
+                        $('.yazars').removeClass("hide");
+                        $('.yilCints').removeClass("hide");
+                    }
+                }
+            </script>
+        </div>
+    </div>
+}
+<div class="form-group yBaslik  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+    <label class="col-md-3 col-xs-4 control-label">Yayın Başlığı</label>
+    <div class="col-md-9 col-xs-8 " style="text-align: left;">
+        <input type="text" class="form-control" autocomplete="off" value="" name="YayinBasligi" id="YayinBasligi">
+    </div>
+</div>
+@if (Model.YayinYazarlarIstensin)
+{
+    <div class="form-group yazars  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Yazarlar</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" placeholder="Yazar1; Yazar2; Yazar3 şeklinde girilmelidir." value="" name="YazarAdi" id="YazarAdi">
+        </div>
+    </div>
+}
+@if (Model.YayinProjeTurIstensin)
+{
+    <div class="form-group ptur  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Proje Türü</label>
+        <div class="col-md-9 col-xs-8">
+            <select id="MezuniyetYayinProjeTurID" name="MezuniyetYayinProjeTurID" class="form-control" onchange="ProjeTurKontrol(this)">
+                <option value=""></option>
+                @foreach (var item in Model.MezuniyetYayinProjeTurleris)
+                {
+                    <option value="@item.MezuniyetYayinProjeTurID">@item.ProjeTurAdi</option>
+                }
+            </select>
+        </div>
+        <script>
+            function ProjeTurKontrol(sndr) { 
+                if ($(sndr).val() == "3") {
+                    $('.pkurulus').removeClass('hide');
+
+                }
+                else {
+                    $('.pkurulus').addClass('hide');
+                }
+            }
+        </script>
+    </div>
+}
+@if (Model.YayinProjeTurIstensin)
+{
+    <div class="form-group pkurulus  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?(Model.MezuniyetYayinTurID==3?"":"hide"):"hide") : "hide"):(Model.MezuniyetYayinTurID==3?"":"hide"))">
+        <label class="col-md-3 col-xs-4 control-label">Proje Dest. Kuruluş</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="ProjeDeatKurulus" id="ProjeDeatKurulus">
+        </div>
+    </div>
+}
+@if (Model.YayinProjeEkibiIstensin)
+{
+    <div class="form-group pekip  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Proje Ekibi</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" placeholder="ProjeEkibi1; ProjeEkibi2; ProjeEkibi3 şeklinde girilmelidir." name="ProjeEkibi" id="ProjeEkibi">
+        </div>
+    </div>
+}
+@if (Model.IsTarihAraligiIstensin)
+{
+    <div class="form-group ptar  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Tarih Aralığı (Başlangıç/Bitiş)</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" placeholder="Başlangıç Tarihi / Bitiş Tarihi şekline girilmelidir." autocomplete="off" value="" name="TarihAraligi" id="TarihAraligi">
+        </div>
+    </div>
+}
+@if (Model.YayinMevcutDurumIstensin)
+{
+    <div class="form-group pdurum  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Proje Mevcut Durum</label>
+        <div class="col-md-9 col-xs-8">
+            <select class="form-control" name="IsProjeTamamlandiOrDevamEdiyor" id="IsProjeTamamlandiOrDevamEdiyor">
+                <option></option>
+                <option value="true">Tamamlandı</option>
+                <option value="false">Devam ediyor ve en az bir ara rapor teslim edildi</option>
+            </select>
+        </div>
+    </div>
+}
+
+@if (Model.YayinEtkinlikAdiIstensin)
+{
+    <div class="form-group etkinlik  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Etkinlik Adı</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="EtkinlikAdi" id="EtkinlikAdi">
+        </div>
+    </div>
+}
+@if (Model.YayinYerBilgisiIstensin)
+{
+    <div class="form-group yerbilgisi  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Yer</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="YerBilgisi" id="YerBilgisi">
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinTarihZorunlu)
+{
+    <div class="form-group yTarih  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Bildiri Tarihi</label>
+        <div class="col-md-9 col-xs-8">
+            <input class="form-control form-control-inline input-medium date-pickerx" placeholder="Örnek Format: @DateTime.Now.ToString("dd-MM-yyyy")" autocomplete="off" size="16" type="text" value="@(Model.MezuniyetYayinTarih.HasValue == false ? "" : Model.MezuniyetYayinTarih.ToString("dd-MM-yyyy"))" name="MezuniyetYayinTarih" id="MezuniyetYayinTarih">
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinBelgeTurZorunlu)
+{
+    <div class="form-group yBelge  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinBelgeTurAdi</label>
+        <div class="col-md-9 col-xs-8">
+            <table>
+                <tr>
+                    <td width="30" style="text-align:center;"><i class="fa fa-file-pdf-o" style="color:green;font-size:17pt;"></i></td>
+                    <td><input type="file" class="fileinputx btn-info" name="MezuniyetYayinBelgeAdi" id="MezuniyetYayinBelgeAdi" title="Dosya Seçiniz" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+@if (Model.YayinDergiAdiIstensin)
+{
+    <div class="form-group dergis hide">
+        <label class="col-md-3 col-xs-4 control-label">Dergi Adı</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="DergiAdi" id="DergiAdi">
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinKaynakLinkTurZorunlu)
+{
+    <div class="form-group kLink @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinKaynakLinkTurAdi</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="MezuniyetYayinKaynakLinki" id="MezuniyetYayinKaynakLinki">
+        </div>
+    </div>
+}
+@if (Model.YayinYilCiltSayiIstensin)
+{
+    <div class="form-group yilCints  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Yıl/Cilt/Sayı/ss</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="YilCiltSayiSS" id="YilCiltSayiSS">
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinMetinZorunlu)
+{
+    <div class="form-group yMetni @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinMetinTurAdi</label>
+        <div class="col-md-9 col-xs-8">
+            <table>
+                <tr>
+                    <td width="30" style="text-align:center;"><i class="fa fa-file-pdf-o" style="color:green;font-size:17pt;"></i></td>
+                    <td><input type="file" class="fileinputx btn-info" name="MezuniyetYayinMetniBelgeAdi" id="MezuniyetYayinMetniBelgeAdi" title="Dosya Seçiniz" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinLinkiZorunlu)
+{
+    <div class="form-group yLinki @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinLinkTurAdi</label>
+        <div class="col-md-9 col-xs-8">
+            <input type="text" class="form-control" autocomplete="off" value="" name="MezuniyetYayinLinki" id="MezuniyetYayinLinki">
+        </div>
+    </div>
+}
+@if (Model.MezuniyetYayinIndexTurZorunlu)
+{
+    <div class="form-group yIndex @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Index Bilgisi</label>
+        <div class="col-md-9 col-xs-8">
+            <select id="MezuniyetYayinIndexTurID" name="MezuniyetYayinIndexTurID" class="form-control">
+                <option value=""></option>
+                @foreach (var item in Model.YayinIndexTurleri)
+                {
+                    <option value="@item.MezuniyetYayinIndexTurID">@item.IndexTurAdi</option>
+                }
+            </select>
+        </div>
+    </div>
+}
+@if (Model.MezuniyetKabulEdilmisMakaleZorunlu)
+{
+    <div class="form-group yMak @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
+        <label class="col-md-3 col-xs-4 control-label">Kabul Edilmiş Makale</label>
+        <div class="col-md-9 col-xs-8">
+            <table>
+                <tr>
+                    <td width="30" style="text-align:center;"><i class="fa fa-file-pdf-o" style="color:green;font-size:17pt;"></i></td>
+                    <td><input type="file" class="fileinputx btn-info" name="MezuniyetYayinKabulEdilmisMakaleAdi" id="MezuniyetYayinKabulEdilmisMakaleAdi" title="Dosya Seçiniz" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+<div id="clone"></div>
+<div class="form-group">
+    <label class="col-md-3 col-xs-4 control-label"></label>
+    <div class="col-md-9 col-xs-8">
+        <a style="width: 120px; margin: 0px auto;" href="javascript:void(0);" class="btn btn-success btn-block" onclick="yayiniEkle()">Yayını Ekle</a>
+    </div>
+</div>
+
+<script>
+    $('.fileinputx').bootstrapFileInput();
+    $('.date-pickerx').datetimepicker({
+        timepicker: false,
+        format: 'd-m-Y'
+    });
+    $.datetimepicker.setLocale('tr');
+    function yayiniEkle() {
+        var _panel = $('#yayinPanel');
+        var _panel2=$('#yayinListPanel') ;
+        _pRefresh(_panel, false);
+        var rowNum=$('#yRows').find('tr').length+1;
+        var yayinTurID = $('#MezuniyetYayinTurID').val();
+        var yayinTurAdi = $("#MezuniyetYayinTurID :selected").text();
+        var YayinBasligi = $('#YayinBasligi').val();
+        var MezuniyetYayinBelgeDosya =$('#MezuniyetYayinBelgeAdi').length>0? $('#MezuniyetYayinBelgeAdi').val().split('/').pop().split('\\').pop().replace("'",""):"";
+        var MezuniyetYayinKaynakLinki =$('#MezuniyetYayinKaynakLinki').length>0? $('#MezuniyetYayinKaynakLinki').val().replace("'",""):"";
+        var YayinMetniDosya = $('#MezuniyetYayinMetniBelgeAdi').length>0?$('#MezuniyetYayinMetniBelgeAdi').val().split('/').pop().split('\\').pop().replace("'",""):"";
+        var MezuniyetYayinKabulEdilmisMakaleAdi = $('#MezuniyetYayinKabulEdilmisMakaleAdi').length>0?$('#MezuniyetYayinKabulEdilmisMakaleAdi').val().split('/').pop().split('\\').pop().replace("'",""):"";
+        var MezuniyetYayinLinki = $('#MezuniyetYayinLinki').length>0?$('#MezuniyetYayinLinki').val():"";
+        var MezuniyetYayinIndexTurID = $('#MezuniyetYayinIndexTurID').length>0?$('#MezuniyetYayinIndexTurID').val():"";
+        var MezuniyetYayinTarih = $('#MezuniyetYayinTarih').length>0?$('#MezuniyetYayinTarih').val():"";
+        var Yayinlanmis = $('#Yayinlanmis').length > 0 ? $('#Yayinlanmis').val().replace("'", "") : "";
+
+        var YazarAdi = $('#YazarAdi').length > 0 ? $('#YazarAdi').val() : "";
+        var DergiAdi = $('#DergiAdi').length > 0 ? $('#DergiAdi').val() : "";
+        var YilCiltSayiSS = $('#YilCiltSayiSS').length > 0 ? $('#YilCiltSayiSS').val() : "";
+        var MezuniyetYayinProjeTurID = $('#MezuniyetYayinProjeTurID').length > 0 ? $('#MezuniyetYayinProjeTurID').val() : "";
+        var IsProjeTamamlandiOrDevamEdiyor = $('#IsProjeTamamlandiOrDevamEdiyor').length > 0 ? $('#IsProjeTamamlandiOrDevamEdiyor').val() : "";
+        var ProjeEkibi = $('#ProjeEkibi').length > 0 ? $('#ProjeEkibi').val() : "";
+        var ProjeDeatKurulus = $('#ProjeDeatKurulus').length > 0 ? $('#ProjeDeatKurulus').val() : "";
+        var TarihAraligi = $('#TarihAraligi').length > 0 ? $('#TarihAraligi').val() : "";
+        var YerBilgisi = $('#YerBilgisi').length > 0 ? $('#YerBilgisi').val() : "";
+        var EtkinlikAdi = $('#EtkinlikAdi').length > 0 ? $('#EtkinlikAdi').val() : ""; 
+        var frmD = {
+            "MezuniyetSurecID": @Model.MezuniyetSurecID,
+            "MezuniyetYayinTurID": yayinTurID,
+            "YayinBasligi": YayinBasligi,
+            "Yayinlanmis": Yayinlanmis,
+            "MezuniyetYayinBelgeAdi": MezuniyetYayinBelgeDosya,
+            "MezuniyetYayinKaynakLinki": MezuniyetYayinKaynakLinki,
+            "MezuniyetYayinMetniBelgeAdi": YayinMetniDosya,
+            "MezuniyetYayinLinki": MezuniyetYayinLinki,
+            "MezuniyetYayinIndexTurID": MezuniyetYayinIndexTurID,
+            "MezuniyetYayinTarih": MezuniyetYayinTarih,
+            "MezuniyetYayinKabulEdilmisMakaleAdi": MezuniyetYayinKabulEdilmisMakaleAdi,
+            "YazarAdi": YazarAdi,
+            "DergiAdi": DergiAdi,
+            "YilCiltSayiSS": YilCiltSayiSS,
+            "MezuniyetYayinProjeTurID": MezuniyetYayinProjeTurID,
+            "IsProjeTamamlandiOrDevamEdiyor": IsProjeTamamlandiOrDevamEdiyor,
+            "ProjeEkibi": ProjeEkibi,
+            "ProjeDeatKurulus": ProjeDeatKurulus,
+            "TarihAraligi": TarihAraligi,
+            "YerBilgisi": YerBilgisi,
+            "EtkinlikAdi": EtkinlikAdi
+        };
+        var mFrmD=getEklenenYayinTurs(frmD,2);
+
+        var _gd = guid().substring(0, 4);
+        $.ajax({
+            url: '@Url.Action("YayinEklemeKontrol", "Mezuniyet")',
+            data: mFrmD ,
+            type: 'POST',
+            cache: false,
+            dataType: "json",
+            success: function (result) {
+                _pRefresh(_panel, true);
+                if (result.msg.IsSuccess == true) {
+                    _pRefresh(_panel2, false);
+                    $('#yRows').append(result._Row);
+                    if ($('#MezuniyetYayinBelgeAdi').length > 0) {
+                        $('#MezuniyetYayinBelgeAdi').attr('class', '').attr('title', '').attr('id', '_' + _gd).attr('name', '_MezuniyetYayinBelgesi').attr('style', 'display:none;').insertBefore($('#cls-' + result._guID).find(".fileYayinBelge").find('input').first());
+                    }
+                    else {
+                        $('#cls-' + result._guID).find(".fileYayinBelge").append("<input type='file' class='hide' name='_MezuniyetYayinBelgesi'>");
+                    }
+                    if ($('#MezuniyetYayinMetniBelgeAdi').length > 0) {
+                        $('#MezuniyetYayinMetniBelgeAdi').attr('class', '').attr('title', '').attr('id', '_x' + _gd).attr('name', '_YayinMetniBelgesi').attr('style', 'display:none;').insertBefore($('#cls-' + result._guID).find(".fileYayinMetni").find('input').first());
+                    }
+                    else {
+                        $('#cls-' + result._guID).find(".fileYayinMetni").append("<input type='file' class='hide' name='_YayinMetniBelgesi'>");
+                    }
+                    if ($('#MezuniyetYayinKabulEdilmisMakaleAdi').length > 0) {
+                        $('#MezuniyetYayinKabulEdilmisMakaleAdi').attr('class', '').attr('title', '').attr('id', '_xK' + _gd).attr('name', '_MezuniyetYayinKabulEdilmisMakaleBelgesi').attr('style', 'display:none;').insertBefore($('#cls-' + result._guID).find(".fileKabulEdilenYayin").find('input').first());
+
+                    }
+                    else {
+                        $('#cls-' + result._guID).find(".fileKabulEdilenYayin").append("<input type='file' class='hide' name='_MezuniyetYayinKabulEdilmisMakaleBelgesi'>");
+                    }
+                    yayinSiraNoDuzenle();
+                    $('.tooltips').tooltip();
+                    _pRefresh(_panel2, true);
+                    yTurKontrol($('#MezuniyetYayinTurID'));
+
+                }
+                getMsg(result.msg);
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+
+    function handleFileSelect(evt) {
+
+        var files = evt.target.files; // FileList object
+
+        // use the 1st file from the list
+        f = files[0];
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function (theFile) {
+            var filex = $('#YayinMetniDosya')
+            var data = new FormData();
+            jQuery.each($(filex)[0].files, function (i, file) {
+                data.append('[' + i + ']', file);
+            });
+            return function (e) {
+                $.ajax({
+                    url: '@Url.Action("file", "Mezuniyet")',
+                    data: { Dosya: data },
+                    cache: false,
+                    contentType: 'multipart/form-data',
+                    processData: false,
+                    type: 'POST',
+                    success: function (result) {
+
+                    },
+                    error: function (err) {
+                    }
+                });
+            };
+        })(f);
+
+        // Read in the image file as a data URL.
+        reader.readAsText(f);
+    }
+
+    //document.getElementById('YayinMetniDosya').addEventListener('change', handleFileSelect, false);
+</script>

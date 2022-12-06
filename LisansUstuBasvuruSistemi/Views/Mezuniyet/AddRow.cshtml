@@ -1,0 +1,431 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model YayinBilgiModel
+@{
+
+    Layout = null;
+}
+
+<tr>
+    <td class="rownum">@Model.RowNum.toStrObjEmptString()</td>
+    <td><ul class="panel-controls"><li id="iShow_@Model.guID" style="font-size:8pt;" onclick="showDetailY('@Model.guID','ana-')"><a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a></li></ul></td>
+    <td>@Model.MezuniyetYayinTurAdi</td>
+    <td>@Model.YayinBasligi</td>
+    @if (Model.DegerlendirmeKolonu)
+    {
+        <td>
+
+            @if (Model.Onaylandi.HasValue)
+            {
+                if (Model.Onaylandi.Value)
+                {
+                    <span style="color:green;"><i class="fa fa-thumbs-o-up" style="font-size:11pt;"></i> Onaylandı</span>
+                }
+                else
+                {
+                    <span style="color:maroon;"><i class="fa fa-thumbs-o-down" style="font-size:11pt;"></i> Onaylanmadı</span>
+                }
+
+            }
+            else
+            {
+                <span style="color:black;"><i class="fa fa-edit" style="font-size:11pt;"></i> Kontrol Edilmedi</span>
+            }
+
+        </td>
+    }
+
+    @if (!Model.IsDataShow)
+    {
+        <td>
+            <a href="javascript:void(0)" onclick="yayiniSil(this,'@Model.guID');"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Yayını Kaldır"></i></a>
+        </td>
+    }
+
+</tr>
+<tr class="cls-@Model.guID clsDetay" style="@(Model.MezuniyetBasvurulariYayinID!=Model.ShowDetayYayinID?"display:none;":"")">
+    <td id="cls-@Model.guID" colspan="@(Model.DegerlendirmeKolonu?"5":"4")" style="padding: 1px 1px 2px 65px;">
+        <div class="panel panel-info" style="margin:0px;">
+
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px; padding-left:5px;">
+                    <table class="table" style="width:100%;table-layout:fixed;margin:0px;">
+                        <tbody>
+                            <tr class="@(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"hide")">
+                                <td width="200" style="font-weight:bold;">Yayın Durumu</td>
+                                <td width="5">:</td>
+                                <td>
+                                    @if (Model.Yayinlanmis == true)
+                                    {
+                                        @("Yayınlanmış")
+                                    }
+                                    else if (Model.Yayinlanmis == false)
+                                    {
+                                        @("Yayınlanmamış")
+                                    }
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.Yayinlanmis.ToString().ToLower()" name="_Yayinlanmis">
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="200" style="font-weight:bold;">Yayın Başlığı</td>
+                                <td width="5">:</td>
+                                <td>
+                                    @Model.YayinBasligi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetBasvurulariYayinID" name="_MezuniyetBasvurulariYayinID">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinTurID" name="_MezuniyetYayinTurID">
+                                        <input type="text" class="hide" value="@Model.YayinBasligi" name="_YayinBasligi">
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr class="@(Model.YayinProjeTurIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Proje Türü</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.ProjeTurAdi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinProjeTurID" name="_MezuniyetYayinProjeTurID">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.YayinProjeTurIstensin && Model.MezuniyetYayinProjeTurID==3 ?"":"hide")">
+                                <td style="font-weight:bold;">Proje Dest. Kuruluş</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.ProjeDeatKurulus
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.ProjeDeatKurulus" name="_ProjeDeatKurulus">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.YayinYazarlarIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Yazarlar</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.YazarAdi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.YazarAdi" name="_YazarAdi">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.YayinProjeEkibiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Proje Ekibi</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.ProjeEkibi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.ProjeEkibi" name="_ProjeEkibi">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.IsTarihAraligiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Tarih Aralığı</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.TarihAraligi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.TarihAraligi" name="_TarihAraligi">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.YayinMevcutDurumIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Proje Mevcut Durum</td>
+                                <td>:</td>
+                                <td>
+                                    @if (Model.IsProjeTamamlandiOrDevamEdiyor == true)
+                                    {
+                                        @("Tamamlandı")
+                                    }
+                                    else if (Model.IsProjeTamamlandiOrDevamEdiyor == false)
+                                    {
+                                        @("Devam ediyor ve en az bir ara rapor teslim edildi")
+                                    }
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.IsProjeTamamlandiOrDevamEdiyor.toStrObjEmptString().ToLower()" name="_IsProjeTamamlandiOrDevamEdiyor">
+                                    }
+                                </td>
+                            </tr>
+
+
+                            <tr class="@(Model.YayinDergiAdiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Dergi Adı</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.DergiAdi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.DergiAdi" name="_DergiAdi">
+                                    }
+                                </td>
+                            </tr>
+
+
+                            <tr class="@(Model.YayinYilCiltSayiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Yıl/Cilt/Sayı/SS </td>
+                                <td>:</td>
+                                <td>
+                                    @Model.YilCiltSayiSS
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.YayinYilCiltSayiIstensin" name="_YilCiltSayiSS">
+                                    }
+                                </td>
+                            </tr>
+
+
+                            <tr class="@(Model.YayinEtkinlikAdiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Etkinlik Adı </td>
+                                <td>:</td>
+                                <td>
+                                    @Model.EtkinlikAdi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.EtkinlikAdi" name="_EtkinlikAdi">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.YayinYerBilgisiIstensin?"":"hide")">
+                                <td style="font-weight:bold;">Yer</td>
+                                <td>:</td>
+                                <td>
+                                    @Model.YerBilgisi
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.YerBilgisi" name="_YerBilgisi">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.MezuniyetYayinTarihZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu()? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):""):"hide")">
+                                <td width="200" style="font-weight:bold;">Bildiri Tarihi</td>
+                                <td width="5">:</td>
+                                <td>
+                                    @(Model.MezuniyetYayinTarih.HasValue ? Model.MezuniyetYayinTarih.Value.ToDateString() : "")
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinTarih" name="_MezuniyetYayinTarih">
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.MezuniyetYayinBelgeTurZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">@Model.MezuniyetYayinBelgeTurAdi</td>
+                                <td>:</td>
+                                <td class="fileYayinBelge">
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinBelgeAdi.toStrObjEmptString()" name="_MezuniyetYayinBelgesiAdi">
+                                        if (Model.MezuniyetBasvurulariYayinID > 0)
+                                        {<input type="file" class="hide" name="_MezuniyetYayinBelgesi" id="_MezuniyetYayinBelgesi@(Model.guID)">}
+                                    }
+                                    @if (Model.MezuniyetYayinBelgeDosyaYolu.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinBelgeDosyaYolu)','@Model.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"> </span>@Model.MezuniyetYayinBelgeAdi</a>
+
+                                    }
+                                    else
+                                    {
+                                        @Model.MezuniyetYayinBelgeAdi
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.MezuniyetYayinKaynakLinkTurZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">@Model.MezuniyetYayinKaynakLinkTurAdi</td>
+                                <td>:</td>
+                                <td>
+                                    @if (Model.MezuniyetYayinKaynakLinki.IsNullOrWhiteSpace() == false && Model.MezuniyetYayinKaynakLinkIsUrl)
+                                    {
+                                        <a href="@(Model.MezuniyetYayinKaynakLinki.Contains("//") ? "" + Model.MezuniyetYayinKaynakLinki : "//" + Model.MezuniyetYayinKaynakLinki)" target="_blank">@Model.MezuniyetYayinKaynakLinki</a>
+                                    }
+                                    else
+                                    {
+                                        @Model.MezuniyetYayinKaynakLinki
+                                    }
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKaynakLinki.toStrObjEmptString()" name="_MezuniyetYayinKaynakLinki">
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr class="@(Model.MezuniyetYayinMetinZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">@Model.MezuniyetYayinMetinTurAdi</td>
+                                <td>:</td>
+                                <td class="fileYayinMetni">
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinMetniBelgeAdi.toStrObjEmptString()" name="_YayinMetniBelgesiAdi">
+                                        if (Model.MezuniyetBasvurulariYayinID > 0)
+                                        {
+                                            <input type="file" class="hide" name="_YayinMetniBelgesi" id="_YayinMetniBelgesi@(Model.guID)">
+                                        }
+                                    }
+                                    @if (Model.MezuniyetYayinMetniBelgeYolu.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinMetniBelgeYolu)','@Model.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinMetniBelgeAdi</a>
+                                    }
+                                    else
+                                    {
+                                        @Model.MezuniyetYayinMetniBelgeAdi
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr class="@(Model.MezuniyetYayinLinkiZorunlu? (Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">@Model.MezuniyetYayinLinkTurAdi</td>
+                                <td>:</td>
+                                <td>
+                                    @if (Model.MezuniyetYayinLinki.IsNullOrWhiteSpace() == false && Model.MezuniyetYayinLinkIsUrl)
+                                    {
+                                        <a href="@(Model.MezuniyetYayinLinki.Contains("//") ? "" + Model.MezuniyetYayinLinki : "//" + Model.MezuniyetYayinLinki)" target="_blank">@Model.MezuniyetYayinLinki</a>
+
+                                    }
+                                    else
+                                    {
+                                        @Model.MezuniyetYayinLinki
+                                    }
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinLinki.toStrObjEmptString()" name="_MezuniyetYayinLinki">
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr class="@(Model.MezuniyetYayinIndexTurZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">Index Bilgisi</td>
+                                <td>:</td>
+                                <td>
+
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinIndexTurID" name="_MezuniyetYayinIndexTurID">
+                                    }
+                                    @if (Model.DegerlendirmeAktif && Model.DegerlendirmeKolonu)
+                                    {
+                                        <select onchange="setyTurInx(this)" class="form-control">
+                                            @foreach (var item in Model.YayinIndexTurleri)
+                                            {
+                                                <option value="@item.MezuniyetYayinIndexTurID" @(Model.MezuniyetYayinIndexTurID == item.MezuniyetYayinIndexTurID ? "selected=selected" : "")>@item.IndexTurAdi</option>
+                                            }
+                                        </select>
+                                        <script>
+                                            function setyTurInx(sndr) {
+                                                var id = '@Model.MezuniyetBasvurulariYayinID';
+                                                var inxid = $(sndr).val();
+                                                $.ajax({
+                                                    url: '@Url.Action("YayinIndexUpdate", "MezuniyetGelenBasvurular")',
+                                                    data: { id: id, "IndexID": inxid },
+                                                    success: function (result) {
+                                                        showMmMessage(result.Messages, 'Tamam');
+                                                    },
+                                                    error: function (err) {
+                                                        alert(err.responseText);
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    }
+                                    else
+                                    {
+                                        <span>@Model.MezuniyetYayinIndexTurAdi</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="@(Model.MezuniyetKabulEdilmisMakaleZorunlu?(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):""):"hide")">
+                                <td style="font-weight:bold;">Kabul Edilmiş Makale</td>
+                                <td>:</td>
+                                <td class="fileKabulEdilenYayin">
+                                    @if (!Model.IsDataShow)
+                                    {
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKabulEdilmisMakaleAdi.toStrObjEmptString()" name="_MezuniyetYayinKabulEdilmisMakaleAdi">
+                                        if (Model.MezuniyetBasvurulariYayinID > 0)
+                                        {
+                                            <input type="file" class="hide" name="_MezuniyetYayinKabulEdilmisMakaleBelgesi" id="_MezuniyetYayinKabulEdilmisMakaleBelgesi@(Model.guID)">
+                                        }
+                                    }
+                                    @if (Model.MezuniyetYayinKabulEdilmisMakaleDosyaYolu.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.MezuniyetYayinKabulEdilmisMakaleDosyaYolu)','@Model.MezuniyetYayinKabulEdilmisMakaleAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.MezuniyetYayinKabulEdilmisMakaleAdi</a>
+                                    }
+                                    else
+                                    {
+                                        @Model.MezuniyetYayinKabulEdilmisMakaleAdi
+                                    }
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    @if (Model.DegerlendirmeKolonu && Model.DegerlendirmeAktif)
+                    {
+                        <div class="panel panel-info" style="margin:0px;">
+                            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                <table class="table" style="width:100%;table-layout:fixed;margin:0px;">
+                                    <tr>
+                                        <td width="200">
+                                            Danışman İsmi Var Mı?
+                                        </td>
+                                        <td width="5">:</td>
+                                        <td>
+                                            <select id="DanismanIsmiVar_@(Model.MezuniyetBasvurulariID)_@Model.MezuniyetBasvurulariYayinID">
+                                                @foreach (var item in Management.cmbEvetHayirData(true))
+                                                {
+                                                    <option value="@(item.Value.HasValue ? item.Value.Value.ToString().ToLower() : "")" @(item.Value == Model.DanismanIsmiVar ? "selected" : "")>@item.Caption</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tez İçeriği ile Uyumlu mu?</td>
+                                        <td>:</td>
+                                        <td>
+
+                                            <select id="TezIcerikUyumuVar_@(Model.MezuniyetBasvurulariID)_@Model.MezuniyetBasvurulariYayinID">
+                                                @foreach (var item in Management.cmbEvetHayirData(true))
+                                                {
+                                                    <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.TezIcerikUyumuVar ? "selected" : "")>@item.Caption</option>
+                                                }
+                                            </select>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Yayın Şartı Onayı</td>
+                                        <td>:</td>
+                                        <td>
+
+                                            <select id="Onaylandi_@(Model.MezuniyetBasvurulariID)_@Model.MezuniyetBasvurulariYayinID">
+                                                <option @(Model.Onaylandi.HasValue == false ? "selected" : "")></option>
+                                                <option value="true" @(Model.Onaylandi == true ? "selected" : "")>Onaylandı</option>
+                                                <option value="false" @(Model.Onaylandi == false ? "selected" : "")>Onaylanmadı</option>
+                                            </select>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <a href="javascript:void(0);" class="btn btn-xm btn-success" onclick="ykKayit('#yayinContent_@Model.MezuniyetBasvurulariID','@Model.MezuniyetBasvurulariYayinID','@Model.MezuniyetBasvurulariID');"><i class="fa fa-save"></i> Kaydet</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

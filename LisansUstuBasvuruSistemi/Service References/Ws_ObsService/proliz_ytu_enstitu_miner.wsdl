@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="AktifOgrenciBilgiGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AktifOgrenciBilgiGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AktifOgrenciBilgiGetirResult" type="tns:ArrayOfOgrenciBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciBilgi" nillable="true" type="tns:OgrenciBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ogrenci" type="tns:ArrayOfOgrenci" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOgrenci">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Ogrenci" nillable="true" type="tns:Ogrenci" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Ogrenci">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OGR_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOYAD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CINSIYET" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="KAYIT_NEDEN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_TC1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_SICIL_NO1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_UNVAN1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_AD_SOYAD1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_EPOSTA1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_TELEFON1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="KAYITLI_DONEM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="KAYIT_TARIHI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ENSTITU_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ENSTITU_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ANABILIMDALI_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ANABILIMDALI_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROGRAM_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROGRAM_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMSEVIYE_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMSEVIYE_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMDURUM_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMDURUM_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="E_POSTA1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="E_POSTA2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GSM1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GSM2" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AkademikPersonelBilgiGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sicil_no" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AkademikPersonelBilgiGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AkademikPersonelBilgiGetirResult" type="tns:ArrayOfPersonelBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPersonelBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PersonelBilgi" nillable="true" type="tns:PersonelBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PersonelBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="personel" type="tns:ArrayOfPersonel" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPersonel">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Personel" nillable="true" type="tns:Personel" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Personel">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UYRUK_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UYRUK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SICIL_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SOYAD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UNVAN_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UNVAN_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FAKULTE_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FAKULTE_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ANABILIMDALI_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ANABILIMDALI_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROGRAM_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROGRAM_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMSEVIYE_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMSEVIYE_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMDURUM_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OGRENIMDURUM_AD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="E_POSTA1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="E_POSTA2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GSM1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GSM2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_OLUNAN_YL_SAYI1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_OLUNAN_YL_SAYI2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_OLUNAN_DR_SAYI1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_OLUNAN_DR_SAYI2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_MEZUN_YL_SAYI1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_MEZUN_YL_SAYI2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_MEZUN_DR_SAYI1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DANISMAN_MEZUN_DR_SAYI2" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OgrenciDersBilgileriGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OgrenciDersBilgileriGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OgrenciDersBilgileriGetirResult" type="tns:ArrayOfOgrenciDersNotBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciDersNotBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciDersNotBilgi" nillable="true" type="tns:OgrenciDersNotBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciDersNotBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ogrencidersnot" type="tns:ArrayOfOgrenciDersNot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOgrenciDersNot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciDersNot" nillable="true" type="tns:OgrenciDersNot" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciDersNot">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OGR_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TOP_KREDI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TOP_AKTS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AGNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="B_ETIK_DERS_NOTU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SEMINER_DERS_NOTU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZORUN_DERS_SAYISI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ANABILIMDALI_DERS_SAYISI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AKTIF_DNM_DERS" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OgrenciTezBilgileriGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OgrenciTezBilgileriGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OgrenciTezBilgileriGetirResult" type="tns:ArrayOfOgrenciTezBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciTezBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciTezBilgi" nillable="true" type="tns:OgrenciTezBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciTezBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ogrencitez" type="tns:ArrayOfOgrenciTez" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOgrenciTez">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciTez" nillable="true" type="tns:OgrenciTez" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciTez">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OGR_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_BASLIK" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_BASLIK_ENG" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_DILI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TIZL_SAYI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tezizlemebilgileri" type="tns:ArrayOfTezIzlemeBilgileri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTezIzlemeBilgileri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TezIzlemeBilgileri" nillable="true" type="tns:TezIzlemeBilgileri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TezIzlemeBilgileri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_DURUM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_YER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_TARIH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_SIRA" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_ID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZL_DONEM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tezIzljuribilgileri" type="tns:ArrayOfTezIzlJuriBilgileri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTezIzlJuriBilgileri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TezIzlJuriBilgileri" nillable="true" type="tns:TezIzlJuriBilgileri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TezIzlJuriBilgileri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_ADSOY" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_UNVANKOD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_UNVAN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_UNIVER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_ANABLMDAL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_BLDAL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_GSM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_IZLEME_JURI_EPOSTA" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_DANISMAN" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OgrenciTezOneriBilgileriGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OgrenciTezOneriBilgileriGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OgrenciTezOneriBilgileriGetirResult" type="tns:ArrayOfOgrenciTezOneriBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciTezOneriBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciTezOneriBilgi" nillable="true" type="tns:OgrenciTezOneriBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciTezOneriBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ogrencitezoneri" type="tns:ArrayOfOgrenciTezOneri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOgrenciTezOneri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciTezOneri" nillable="true" type="tns:OgrenciTezOneri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciTezOneri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OGR_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_ONERI_DURUM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_ONERI_SNV_YER" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TEZ_ONERI_SNV_TARIH" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OgrenciDrYeterBilgileriGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OgrenciDrYeterBilgileriGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OgrenciDrYeterBilgileriGetirResult" type="tns:ArrayOfOgrenciYeterBilgi" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciYeterBilgi">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciYeterBilgi" nillable="true" type="tns:OgrenciYeterBilgi" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciYeterBilgi">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ogrenciyeter" type="tns:ArrayOfOgrenciYeter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOgrenciYeter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciYeter" nillable="true" type="tns:OgrenciYeter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciYeter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="OGR_NO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_YAZ_SNV_DURUM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_SOZ_SNV_DURUM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_GNL_SNV_DURUM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_YAZ_SNV_TARIH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_SOZ_SNV_TARIH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_YAZ_SNV_YERI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DR_YET_SOZ_SNV_YERI" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OgrenciTezizlemeJuriBilgileriGetir">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="servisUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="servisPass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ogrenciNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OgrenciTezizlemeJuriBilgileriGetirResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OgrenciTezizlemeJuriBilgileriGetirResult" type="tns:ArrayOfOgrenciTezJuri" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOgrenciTezJuri">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OgrenciTezJuri" nillable="true" type="tns:OgrenciTezJuri" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OgrenciTezJuri">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sucess" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Error" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tezIzljuribilgileri" type="tns:ArrayOfTezIzlJuriBilgileri" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AktifOgrenciBilgiGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:AktifOgrenciBilgiGetir" />
+  </wsdl:message>
+  <wsdl:message name="AktifOgrenciBilgiGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:AktifOgrenciBilgiGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="AkademikPersonelBilgiGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:AkademikPersonelBilgiGetir" />
+  </wsdl:message>
+  <wsdl:message name="AkademikPersonelBilgiGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:AkademikPersonelBilgiGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciDersBilgileriGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:OgrenciDersBilgileriGetir" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciDersBilgileriGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:OgrenciDersBilgileriGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezBilgileriGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:OgrenciTezBilgileriGetir" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezBilgileriGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:OgrenciTezBilgileriGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezOneriBilgileriGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:OgrenciTezOneriBilgileriGetir" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezOneriBilgileriGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:OgrenciTezOneriBilgileriGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciDrYeterBilgileriGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:OgrenciDrYeterBilgileriGetir" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciDrYeterBilgileriGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:OgrenciDrYeterBilgileriGetirResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezizlemeJuriBilgileriGetirSoapIn">
+    <wsdl:part name="parameters" element="tns:OgrenciTezizlemeJuriBilgileriGetir" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciTezizlemeJuriBilgileriGetirSoapOut">
+    <wsdl:part name="parameters" element="tns:OgrenciTezizlemeJuriBilgileriGetirResponse" />
+  </wsdl:message>
+  <wsdl:portType name="proliz_ytu_enstitu_minerSoap">
+    <wsdl:operation name="AktifOgrenciBilgiGetir">
+      <wsdl:input message="tns:AktifOgrenciBilgiGetirSoapIn" />
+      <wsdl:output message="tns:AktifOgrenciBilgiGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AkademikPersonelBilgiGetir">
+      <wsdl:input message="tns:AkademikPersonelBilgiGetirSoapIn" />
+      <wsdl:output message="tns:AkademikPersonelBilgiGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDersBilgileriGetir">
+      <wsdl:input message="tns:OgrenciDersBilgileriGetirSoapIn" />
+      <wsdl:output message="tns:OgrenciDersBilgileriGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezBilgileriGetir">
+      <wsdl:input message="tns:OgrenciTezBilgileriGetirSoapIn" />
+      <wsdl:output message="tns:OgrenciTezBilgileriGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezOneriBilgileriGetir">
+      <wsdl:input message="tns:OgrenciTezOneriBilgileriGetirSoapIn" />
+      <wsdl:output message="tns:OgrenciTezOneriBilgileriGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDrYeterBilgileriGetir">
+      <wsdl:input message="tns:OgrenciDrYeterBilgileriGetirSoapIn" />
+      <wsdl:output message="tns:OgrenciDrYeterBilgileriGetirSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezizlemeJuriBilgileriGetir">
+      <wsdl:input message="tns:OgrenciTezizlemeJuriBilgileriGetirSoapIn" />
+      <wsdl:output message="tns:OgrenciTezizlemeJuriBilgileriGetirSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="proliz_ytu_enstitu_minerSoap" type="tns:proliz_ytu_enstitu_minerSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AktifOgrenciBilgiGetir">
+      <soap:operation soapAction="http://tempuri.org/AktifOgrenciBilgiGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AkademikPersonelBilgiGetir">
+      <soap:operation soapAction="http://tempuri.org/AkademikPersonelBilgiGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDersBilgileriGetir">
+      <soap:operation soapAction="http://tempuri.org/OgrenciDersBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezBilgileriGetir">
+      <soap:operation soapAction="http://tempuri.org/OgrenciTezBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezOneriBilgileriGetir">
+      <soap:operation soapAction="http://tempuri.org/OgrenciTezOneriBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDrYeterBilgileriGetir">
+      <soap:operation soapAction="http://tempuri.org/OgrenciDrYeterBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezizlemeJuriBilgileriGetir">
+      <soap:operation soapAction="http://tempuri.org/OgrenciTezizlemeJuriBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="proliz_ytu_enstitu_minerSoap12" type="tns:proliz_ytu_enstitu_minerSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AktifOgrenciBilgiGetir">
+      <soap12:operation soapAction="http://tempuri.org/AktifOgrenciBilgiGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AkademikPersonelBilgiGetir">
+      <soap12:operation soapAction="http://tempuri.org/AkademikPersonelBilgiGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDersBilgileriGetir">
+      <soap12:operation soapAction="http://tempuri.org/OgrenciDersBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezBilgileriGetir">
+      <soap12:operation soapAction="http://tempuri.org/OgrenciTezBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezOneriBilgileriGetir">
+      <soap12:operation soapAction="http://tempuri.org/OgrenciTezOneriBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciDrYeterBilgileriGetir">
+      <soap12:operation soapAction="http://tempuri.org/OgrenciDrYeterBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciTezizlemeJuriBilgileriGetir">
+      <soap12:operation soapAction="http://tempuri.org/OgrenciTezizlemeJuriBilgileriGetir" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="proliz_ytu_enstitu_miner">
+    <wsdl:port name="proliz_ytu_enstitu_minerSoap" binding="tns:proliz_ytu_enstitu_minerSoap">
+      <soap:address location="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx" />
+    </wsdl:port>
+    <wsdl:port name="proliz_ytu_enstitu_minerSoap12" binding="tns:proliz_ytu_enstitu_minerSoap12">
+      <soap12:address location="https://obsservice.yildiz.edu.tr/proliz_ytu_enstitu_miner/proliz_ytu_enstitu_miner.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

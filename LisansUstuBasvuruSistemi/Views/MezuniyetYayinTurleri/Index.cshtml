@@ -1,0 +1,233 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmMezuniyetYayinTurleri
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "MezuniyetYayinTurleri", FormMethod.Post, new { id = "frmMezuniyetYayinTurleri" }))
+    {
+
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <table style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Yayın Tür Listesi</h3></td>
+
+                            <td style="width:380px;">
+                                <ul class="panel-controls">
+                                    <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                                    <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
+                                    <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                                    <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th> 
+                                <th class="sirala" field="MezuniyetYayinTurAdi">Mezuniyet Yayın Tür Adı</th>
+                                <th class="sirala" field="IsAktif" width="60">Durum</th>
+                                <th width="40">
+                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.data)
+                                {
+                                    RowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.MezuniyetYayinTurID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.MezuniyetYayinTurID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td> 
+                                        <td id="tdMad_@item.MezuniyetYayinTurID">
+                                            @item.MezuniyetYayinTurAdi
+                                        </td>
+
+                                        <td id="tdIa_@item.MezuniyetYayinTurID" style="text-align:center;">
+                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Kayit", "MezuniyetYayinTurleri", new { id = item.MezuniyetYayinTurID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.MezuniyetYayinTurID')"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.MezuniyetYayinTurID" style="display:none">
+                                        <td id="cls-@item.MezuniyetYayinTurID" colspan="4" style="padding: 1px 1px 2px 75px;">
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading  padding-0">
+                                                    <div class="portlet-title">
+                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="padding: 0px;">
+                                                    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+                                                        <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                <div class="panel-body form-group-separated">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Mezuniyet Yayın Tür Adı</label>
+                                                                        <div class="col-md-9" style="text-align: left;">@item.MezuniyetYayinTurAdi</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Tarih İsteniyor Mu?</label>
+                                                                        <div class="col-md-9" style="text-align: left;">@item.TarihIstensin.ToEvetHayir()</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">İstenen Bilgiler</label>
+                                                                        <div class="col-md-9">
+                                                                            <table class="table" style="width:100%;table-layout:fixed;">
+                                                                                <tr>
+                                                                                    <th width="100">Bilgi Türü</th>
+                                                                                    <th>İstenen Bilgi</th>
+                                                                                    <th width="100">Zorunluluk</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>Yayın Belgesi</td>
+                                                                                    <td>@(item.MezuniyetYayinBelgeTurID.HasValue ? item.BelgeTurAdi : "İstenmiyor")</td>
+                                                                                    <td>@(item.MezuniyetYayinBelgeTurID.HasValue ? (item.BelgeZorunlu ? "Zorunlu" : "Zorunlu Değil") : "")</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>Kaynak URL</td>
+                                                                                    <td>@(item.KaynakMezuniyetYayinLinkTurID.HasValue ? item.KaynakLinkTurAdi : "İstenmiyor")</td>
+                                                                                    <td>@(item.KaynakMezuniyetYayinLinkTurID.HasValue ? (item.KaynakLinkiZorunlu ? "Zorunlu" : "Zorunlu Değil") : "")</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>Yayın Metni</td>
+                                                                                    <td>@(item.MezuniyetYayinMetinTurID.HasValue ? item.MetinTurAdi : "İstenmiyor")</td>
+                                                                                    <td>@(item.MezuniyetYayinMetinTurID.HasValue ? (item.MetinZorunlu ? "Zorunlu" : "Zorunlu Değil") : "")</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>Yayın URL</td>
+                                                                                    <td>@(item.YayinMezuniyetYayinLinkTurID.HasValue ? item.YayinLinkTurAdi : "İstenmiyor")</td>
+                                                                                    <td>@(item.YayinMezuniyetYayinLinkTurID.HasValue ? (item.YayinLinkiZorunlu ? "Zorunlu" : "Zorunlu Değil") : "")</td>
+                                                                                </tr>
+                                                                            </table>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">İndex Türü İsteniyor Mu?</label>
+                                                                        <div class="col-md-9" style="text-align: left;">@item.YayinIndexTurIstensin.ToEvetHayir()</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Kabul Edilmiş Makale İsteniyor Mu?</label>
+                                                                        <div class="col-md-9" style="text-align: left;">@item.YayinKabulEdilmisMakaleIstensin.ToEvetHayir()</div>
+                                                                    </div> 
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Durum</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">İşlem Yapan</label>
+                                                                        <div class="col-md-9">@item.IslemYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+
+    function showDetail(id) {
+        var sndr = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(sndr, cls, unTogled);
+
+    }
+    function silmeOnay(sndr, id) {
+        var gMesaj = $("#tdMad_" + id).html();
+        bootbox.dialog({
+            message: "Yayın Türü Adı: " + gMesaj + " <br/> Seçilen Yayın Türünü Silmek İstiyor Musunuz?",
+            title: "Yayın Türü Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Yayın Türünü Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        sil(sndr, id);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "MezuniyetYayinTurleri")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Yayın Türü Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+</script>

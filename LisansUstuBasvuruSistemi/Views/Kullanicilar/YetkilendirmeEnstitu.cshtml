@@ -1,0 +1,116 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var roller = (IEnumerable<CheckObject<Enstituler>>)ViewBag.Enstituler;
+    var user = ViewBag.Kullanici as Kullanicilar;
+    var allchecked = roller.All(a => a.Checked.Value);
+
+    var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var ProgramYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+}
+
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+               
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="portlet-title">
+                    <div class="panel-heading padding-0">
+                        <h3 class="panel-title"><i class="fa fa-user"></i>Enstitü Yetkileri: @user.Ad @user.Soyad [@user.KullaniciAdi] </h3>
+
+                        <ul class="panel-controls">
+                            @if (kullaniciKayit)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Kayit", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Kullanıcı</span></li>
+
+                            }
+                            @if (ErisimYetki)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Yetkilendirme", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Erişim Yetkileri</span></li>
+
+                            }
+                            @if (ProgramYetki)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("KullaniciProgramYetkileri", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Program Yetkileri</span></li>
+                            }
+                            
+                            <li><a href="@Url.Action("Yetkilendirme", user.KullaniciID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body form">
+                    <input type="hidden" name="KullaniciID" value="@user.KullaniciID" />     
+                    <br />
+                    <br />
+                            
+                    <div class="col-md-4">
+
+                        <!-- DEFAULT LIST GROUP -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading padding-0">
+                                <h3 class="panel-title">Enstitüler</h3>
+                                <ul class="panel-controls">
+                                    <li>
+                                        Tümü:<div class="make-switch switch-small" data-on-label="Evet" data-off-label="Hayır">
+                                            <input type="checkbox" value="true" name="IsAdmin" onchange="tumunusec(this)" class="toggle" @allchecked.ToChecked() />  </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="panel-body padding-0" style="height: 300px; overflow: auto;">
+                                <table class="chks"style="width:100%;table-layout:fixed;">
+                                    @foreach (var role in roller.OrderBy(o => o.Value.EnstituAd))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox pull-left">
+                                                        <label>
+                                                            <input type="checkbox" class="icheckbox" name="EnstituKods" value="@role.Value.EnstituKod" @role.Checked.ToChecked()>
+                                                            @role.Value.EnstituAd
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                </table>
+                            </div>
+                        </div>
+                        <!-- END DEFAULT LIST GROUP -->
+
+                    </div>
+                    <div class="panel-footer">
+                        <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                        <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    }
+</div>                                                  
+<script type="text/javascript">
+    
+            function tumunusec(sndr) {
+                var parBox = $(sndr).parents(".panel").first();
+                var kategori = $(parBox).find('.chks').first();
+                var chkD = $(sndr).prop("checked");
+                $(kategori).find(":checkbox").each(function (inx, itmx) {
+                    if (chkD) { $(itmx).parent().addClass("checked"); }
+                    else { $(itmx).parent().removeClass("checked"); }
+                    $(itmx).prop("checked", chkD);
+                });
+
+
+            }
+</script>
+
+

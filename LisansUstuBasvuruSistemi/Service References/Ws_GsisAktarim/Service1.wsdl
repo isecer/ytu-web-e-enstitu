@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://gsisregistrationservice.net" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://gsisregistrationservice.net" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://gsisregistrationservice.net">
+      <s:element name="studentRegistration">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="xmlStr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="studentRegistrationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="studentRegistrationResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="studentControl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="eduTypeId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="studentControlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="studentControlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="studentControlStdid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="stdid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="eduTypeId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="studentControlStdidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="studentControlStdidResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBranchId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tcKimlikNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="eduTypeId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBranchIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getBranchIdResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="studentRegistrationSoapIn">
+    <wsdl:part name="parameters" element="tns:studentRegistration" />
+  </wsdl:message>
+  <wsdl:message name="studentRegistrationSoapOut">
+    <wsdl:part name="parameters" element="tns:studentRegistrationResponse" />
+  </wsdl:message>
+  <wsdl:message name="studentControlSoapIn">
+    <wsdl:part name="parameters" element="tns:studentControl" />
+  </wsdl:message>
+  <wsdl:message name="studentControlSoapOut">
+    <wsdl:part name="parameters" element="tns:studentControlResponse" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidSoapIn">
+    <wsdl:part name="parameters" element="tns:studentControlStdid" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidSoapOut">
+    <wsdl:part name="parameters" element="tns:studentControlStdidResponse" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdSoapIn">
+    <wsdl:part name="parameters" element="tns:getBranchId" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdSoapOut">
+    <wsdl:part name="parameters" element="tns:getBranchIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="studentRegistrationHttpGetIn">
+    <wsdl:part name="xmlStr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentRegistrationHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlHttpGetIn">
+    <wsdl:part name="tcKimlikNo" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidHttpGetIn">
+    <wsdl:part name="stdid" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdHttpGetIn">
+    <wsdl:part name="tcKimlikNo" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="studentRegistrationHttpPostIn">
+    <wsdl:part name="xmlStr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentRegistrationHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlHttpPostIn">
+    <wsdl:part name="tcKimlikNo" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidHttpPostIn">
+    <wsdl:part name="stdid" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="studentControlStdidHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdHttpPostIn">
+    <wsdl:part name="tcKimlikNo" type="s:string" />
+    <wsdl:part name="eduTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getBranchIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="studentRegistration">
+      <wsdl:input message="tns:studentRegistrationSoapIn" />
+      <wsdl:output message="tns:studentRegistrationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <wsdl:input message="tns:studentControlSoapIn" />
+      <wsdl:output message="tns:studentControlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <wsdl:input message="tns:studentControlStdidSoapIn" />
+      <wsdl:output message="tns:studentControlStdidSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <wsdl:input message="tns:getBranchIdSoapIn" />
+      <wsdl:output message="tns:getBranchIdSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServiceHttpGet">
+    <wsdl:operation name="studentRegistration">
+      <wsdl:input message="tns:studentRegistrationHttpGetIn" />
+      <wsdl:output message="tns:studentRegistrationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <wsdl:input message="tns:studentControlHttpGetIn" />
+      <wsdl:output message="tns:studentControlHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <wsdl:input message="tns:studentControlStdidHttpGetIn" />
+      <wsdl:output message="tns:studentControlStdidHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <wsdl:input message="tns:getBranchIdHttpGetIn" />
+      <wsdl:output message="tns:getBranchIdHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServiceHttpPost">
+    <wsdl:operation name="studentRegistration">
+      <wsdl:input message="tns:studentRegistrationHttpPostIn" />
+      <wsdl:output message="tns:studentRegistrationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <wsdl:input message="tns:studentControlHttpPostIn" />
+      <wsdl:output message="tns:studentControlHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <wsdl:input message="tns:studentControlStdidHttpPostIn" />
+      <wsdl:output message="tns:studentControlStdidHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <wsdl:input message="tns:getBranchIdHttpPostIn" />
+      <wsdl:output message="tns:getBranchIdHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="studentRegistration">
+      <soap:operation soapAction="http://gsisregistrationservice.net/studentRegistration" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <soap:operation soapAction="http://gsisregistrationservice.net/studentControl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <soap:operation soapAction="http://gsisregistrationservice.net/studentControlStdid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <soap:operation soapAction="http://gsisregistrationservice.net/getBranchId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="studentRegistration">
+      <soap12:operation soapAction="http://gsisregistrationservice.net/studentRegistration" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <soap12:operation soapAction="http://gsisregistrationservice.net/studentControl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <soap12:operation soapAction="http://gsisregistrationservice.net/studentControlStdid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <soap12:operation soapAction="http://gsisregistrationservice.net/getBranchId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceHttpGet" type="tns:ServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="studentRegistration">
+      <http:operation location="/studentRegistration" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <http:operation location="/studentControl" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <http:operation location="/studentControlStdid" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <http:operation location="/getBranchId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceHttpPost" type="tns:ServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="studentRegistration">
+      <http:operation location="/studentRegistration" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControl">
+      <http:operation location="/studentControl" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="studentControlStdid">
+      <http:operation location="/studentControlStdid" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBranchId">
+      <http:operation location="/getBranchId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="https://193.140.1.237/GSISKayit/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="https://193.140.1.237/GSISKayit/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceHttpGet" binding="tns:ServiceHttpGet">
+      <http:address location="https://193.140.1.237/GSISKayit/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceHttpPost" binding="tns:ServiceHttpPost">
+      <http:address location="https://193.140.1.237/GSISKayit/Service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

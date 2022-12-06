@@ -1,0 +1,122 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@using CaptchaMvc.HtmlHelpers
+@{
+    var hata = (string)ViewBag.Hata;
+    var MmMessage = (MmMessage)ViewBag.MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ReturnUrl = (string)ViewBag.ReturnUrl;
+
+}
+
+
+
+
+
+
+<head>
+    <!-- META SECTION -->
+    @*<title>Atlant - Responsive Bootstrap Admin Template</title>*@
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+
+</head>
+<body>
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCaptcha" }))
+    {
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("ReturnUrl", ReturnUrl)
+        //var reqCode = Guid.NewGuid().ToString();
+        if (hata != null)
+        {
+            <script type="text/javascript">
+                        $(function () {
+                            toastr["error"]('@ViewBag.Hata', "Hata");
+                        });
+                        function refreshCaptcha() {
+                           // $('#imgCaptcha').attr('src', '@Url.Action("generatecaptcha",new { name= "logincaptcha" })'+'&refreshCode=');
+                        }
+            </script>
+        }
+
+        <div class="login-container login-v2">
+
+            <div class="login-box animated fadeInDown">
+                <div class="login-body">
+                    <div class="login-title">
+                        <strong>Hoşgeldiniz</strong>, Lütfen Giriş Yapın.
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="fa fa-user"></span>
+                                </div>
+                                <input type="text" name="UserName" class="form-control" style="margin-left:2px;" tabindex="1" placeholder="Kullanıcı Adı & EMail & TC Kimlik No" value="@ViewBag.UserName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="fa fa-lock"></span>
+                                </div>
+                                <input type="password" name="Password" class="form-control" style="margin-left:2px;" tabindex="2" autocomplete="off" placeholder="Şifre" value="@ViewBag.Password" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="fa fa-lock"></span>
+                                </div>
+                                <div id="cContentL">
+                                    @Html.Captcha(null, null, 4, null)
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary btn-lg btn-block">Giriş Yap</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <a href="javascript:void(0);" onclick="pwdSendM()">Şifrenizi mi unuttunuz?</a>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Hesap Oluştur', '@Url.Action("HesapKayit", "Account")', 'auto', 'modal-dialog modal-lg')">Yeni Hesap Oluştur</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <script>
+            $(function () {
+                //$('#cContentL').find('#CaptchaInputText').attr('id', 'CaptchaInputTextL');
+                $('#cContentL').find('#CaptchaInputText').addClass('form-control placeholder-no-fix');
+                $('#cContentL').find('br').remove();
+                // $('#cContentL').find('#CaptchaImage').attr('id', 'CaptchaImageL');
+                $('#cContentL').find('#CaptchaImage').attr('style', 'width:99%;height:70px;');
+                var placeHolderText = 'Güvenlik Kodu';
+                $('#cContentL').find('#CaptchaInputText').attr('style', 'margin-left:2px;').attr('tabindex', '3').attr('placeholder', placeHolderText);
+
+            });
+        </script>
+    }
+</body>
+
+
+
+

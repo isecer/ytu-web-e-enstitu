@@ -1,0 +1,110 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model BasvuruDetayModel
+@{
+    Layout = null; 
+    var Color = Model.DurumColor;  
+}
+
+<div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title"><i class="fa fa-id-card-o fa-lg myCaptionTd" style="color:@Color;"></i>&nbsp; <span class="myCaptionTd" style="color:@Color;">Kimlik / Adres Bilgisi</span></h3>
+    </div>
+    <div class="panel-body form-group-separated" style="padding:0px;">
+        <table class="table" style="font-size:9pt;margin:0px;color:@Color;">
+
+            <tr>
+                <td width="170" style="text-align:right;">@(Model.IsYerli ? "T.C. kimlik No" : "Pasaport No")</td>
+                <td width="10">:</td>
+                <td>
+                    @(Model.IsYerli ? Model.TcKimlikNo : Model.PasaportNo)
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Cinsiyet</td>
+                <td>:</td>
+                <td>@Model.CinsiyetAdi</td>
+            </tr>
+
+            <tr>
+                <td style="text-align:right;">Ana Adı</td>
+                <td>:</td>
+                <td>@Model.AnaAdi</td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Baba Adı</td>
+                <td>:</td>
+                <td>@Model.BabaAdi</td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Doğum Tarihi</td>
+                <td>:</td>
+                <td>@Model.DogumTarihi.ToDateString()</td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Doğum Yeri</td>
+                <td>:</td>
+                <td>@Model.DogumYeriAdi</td>
+            </tr>
+            @if (Model.IsYerli)
+            {
+                <tr>
+                    <td style="text-align:right;">Nüfus il/ilçe</td>
+                    <td>:</td>
+                    <td>@Model.NufusIlIlceAdi</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">Cilt / Aile / Sıra No</td>
+                    <td>:</td>
+                    <td>@Model.CiltNo / @Model.AileNo / @Model.SiraNo</td>
+                </tr>
+
+            }
+            <tr>
+                <td style="text-align:right;">Uyruk</td>
+                <td>:</td>
+                <td>@Model.UyrukAdi</td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Yaşadığı Şehir</td>
+                <td>:</td>
+                <td>@Model.YasadigiSehirAdi</td>
+            </tr>
+
+            @if (Model.EvTel.IsNullOrWhiteSpace() == false)
+            {
+                <tr>
+                    <td style="text-align:right;">Ev Tel</td>
+                    <td>:</td>
+                    <td>@Model.EvTel</td>
+                </tr>
+            }
+            @if (Model.CepTel.IsNullOrWhiteSpace() == false)
+            {
+                <tr>
+                    <td style="text-align:right;">Cep Tel</td>
+                    <td>:</td>
+                    <td>@Model.CepTel</td>
+                </tr>
+            }
+            @if (Model.IsTel.IsNullOrWhiteSpace() == false)
+            {
+                <tr>
+                    <td style="text-align:right;">İş Tel</td>
+                    <td>:</td>
+                    <td>@Model.IsTel</td>
+                </tr>
+            }
+            <tr>
+                <td style="text-align:right;">E-Posta Adresi</td>
+                <td>:</td>
+                <td>@Model.EMail</td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">Açık Adres</td>
+                <td>:</td>
+                <td>@Model.Adres</td>
+            </tr> 
+        </table>
+    </div>
+</div>

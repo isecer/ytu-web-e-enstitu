@@ -1,0 +1,224 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model BelgeTalepleri
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form" id="tlpFrm">
+        <input type="text" style="display:none;" id="BelgeTalepID" name="BelgeTalepID" value="@Model.BelgeTalepID" />
+        <input type="text" style="display:none;" id="OgrenciNo" name="OgrenciNo" value="@Model.OgrenciNo" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.BelgeTalepID <= 0 ? "Yeni Belge Talebi İşlemi" : "Belge talebi düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("TalepYap", Model.BelgeTalepID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Ad Soyad</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Model.AdiSoyadi
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Öğrenci No</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Model.OgrenciNo
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Belge Tipi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("BelgeTipID", null, new { @class = "form-control", onChange = "getBelgeSayisiA();getBilgi();" })
+                                </div>
+                            </div>
+                            <div class="form-group @(Model.BelgeTipID == BelgeTalepTip.Diğer?"":"hide")" id="digerBelgeAdi">
+                                <label class="col-md-3 col-xs-4 control-label">Belge Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="BelgeAdi" id="BelgeAdi" value="@Model.BelgeAdi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group @((Model.BelgeTipID == BelgeTalepTip.İlgiliMakama || Model.BelgeTipID == BelgeTalepTip.Diğer) ?"":"hide")" id="ilgilimakamAciklama">
+                                <label class="col-md-3 col-xs-4 control-label" id="ilgiliLbl">@(Model.BelgeTipID == BelgeTalepTip.İlgiliMakama ? "İlgili Makam Açıklaması" : "Diğer Belge Tipi Açıklaması")</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <textarea style="min-height:100px;" type="text" class="form-control" name="BelgeAciklamasi" id="BelgeAciklamasi" autocomplete="off">@Model.BelgeAciklamasi</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Belge Hangi Dilde Hazırlansın</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("BelgeDilKodu", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">İstenen Belge Sayısı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("IstenenBelgeSayisi", null, "", new { @class = "form-control", onChange = "getBilgi();" })
+
+
+                                </div>
+                            </div>
+                            <div id="BilgiContent">
+
+                            </div>
+                            <div class="form-group @(Model.BelgeTalepID<=0?"hide":"")">
+                                <label class="col-md-3 col-xs-4 control-label">Talep Durumu</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("BelgeDurumID", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"> </i>Geri Dön</a>
+                    <a class="btn btn-primary pull-right" onclick="frmSubmitControl()"><i class="fa fa-save"> </i>Kaydet</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    setTimeout(function () { getBilgi(); }, 200);
+    function getBelgeSayisiA() {
+        var btipID = $('#BelgeTipID').val();
+        var OgrNo = $('#OgrenciNo').val();
+        var BelgeTalepID = $('#BelgeTalepID').val();
+        if (btipID != null && OgrNo != null && btipID != "" && OgrNo != "")
+            $.ajax({
+                url: '@Url.Action("getBelgeSayisiA", "BelgeTalebi")',
+                data: { 'BelgeTalepID': BelgeTalepID, 'OgrenciNo': OgrNo, 'BelgeTipID': btipID },
+                success: function (result) {
+                    var opts = "<option></option>";
+                    var slctedWal = $('#IstenenBelgeSayisi').val();
+                    $('#IstenenBelgeSayisi').find('option').remove();
+                    for (var i = 0; i < result.length; i++) {
+
+                        if (slctedWal == result[i].Key) opts += "<option selected='selected' value='" + result[i].Key + "'>" + result[i].Value + "</option>";
+                        else opts += "<option  value='" + result[i].Key + "'>" + result[i].Value + "</option>";
+                    }
+                    $('#IstenenBelgeSayisi').append(opts);
+                    // $('#trBelgeSay').css("display", "table-row");
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    //$('#trBelgeSay').css("display", "none");
+                }
+            });
+        else {
+            // $('#trBelgeSay').css("display", "none");
+        }
+    }
+    function getBilgi() {
+        var btipID = $('#BelgeTipID').val();
+        var OgrNo = $('#OgrenciNo').val();
+        var Miktar = $('#IstenenBelgeSayisi').val();
+        var BelgeTalepID = $('#BelgeTalepID').val();
+        if (btipID == '@BelgeTalepTip.İlgiliMakama') {
+            $('#ilgilimakamAciklama').removeClass("hide");
+            $('#digerBelgeAdi').addClass("hide");
+            $('#ilgiliLbl').html('İlgili Makam Açıklaması');
+        }
+        else if (btipID == '@BelgeTalepTip.Diğer') {
+            $('#ilgilimakamAciklama').removeClass("hide");
+            $('#digerBelgeAdi').removeClass("hide");
+            $('#ilgiliLbl').html('Diğer Belge Tipi Açıklaması');
+        }
+        else {
+            $('#ilgilimakamAciklama').addClass("hide");
+            $('#digerBelgeAdi').addClass("hide");
+        }
+        if (btipID != null && OgrNo != null && Miktar != null && btipID != "" && OgrNo != "" && Miktar != "") {
+            $.ajax({
+                url: '@Url.Action("getBilgi", "BelgeTalebi")',
+                data: { 'BelgeTalepID': BelgeTalepID, 'BelgeTipID': btipID, 'miktar': Miktar },
+                success: function (result) {
+                    $('#BilgiContent').html(result.Deger);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+
+    }
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+
+    function frmSubmitControl() {
+        var frmD = $('#tlpFrm').serialize();
+        $.ajax({
+            url: '@Url.Action("TalepYapKontrol", "BelgeTalebi")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: frmD,
+            success: function (result) {
+                if (result.IsSubmitOrAnketShow) {
+                    $('#tlpFrm').submit();
+                }
+                else {
+                    var btbxxFS = bootbox.dialog({
+                    message: result.AnketGiris,
+                    //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                    buttons: {
+                        success: {
+                            label: 'Belge Talebi işlemini tamamla',
+                            className: "btn-success",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#FrmAnket').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                            $('#tlpFrm').submit();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                });
+                                $('#FrmAnket').submit();
+                                return false;
+                            }
+                        }
+                    }
+                });
+                $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+
+            }
+        });
+    }
+</script>

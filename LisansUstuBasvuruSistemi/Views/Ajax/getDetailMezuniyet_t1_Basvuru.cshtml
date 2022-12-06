@@ -1,0 +1,386 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model basvuruDetayModelMezuniyet
+@{
+
+
+    Layout = null;
+    bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    bool TdKayitYetki = KayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
+    bool IsKendiBasvuruSu = Model.KullaniciID == UserIdentity.Current.Id;
+
+    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+
+    var IsTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
+    bool sonucGirisSureciAktif = (Model.sonucGirisSureciAktif || KayitYetki) && !Model.MezuniyetJuriOneriFormlaris.Any(a => a.EYKYaGonderildi == true);
+
+}
+<div class="tab-pane @(Model.SelectedTabIndex==1?"active":"") " id="@tbName-1">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez Bilgisi</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left:10px;text-align:left;">
+                            <table style="width:100%;">
+                                <tr>
+                                    <td class="CaptionTd" width="220">Tez Dili</td>
+                                    <td class="CaptionTd" width="10">:</td>
+                                    <td class="ValueTd">@(Model.IsTezDiliTr.HasValue ? (Model.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "")</td>
+                                </tr>
+                                <tr>
+                                    <td class="CaptionTd">Tez Başlığı (Türkçe)</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">@Model.TezBaslikTr</td>
+                                </tr>
+                                <tr>
+                                    <td class="CaptionTd">Tez Başlığı (İngilizce)</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">@Model.TezBaslikEn</td>
+                                </tr>
+                                <tr>
+                                    <td class="CaptionTd">Danışman Adı</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                </tr>
+                                @if (!Model.TezEsDanismanAdi.IsNullOrWhiteSpace())
+                                {
+                                    <tr>
+                                        <td class="CaptionTd" style="font-weight:bold;">Tez Eş Danışmanı</td>
+                                        <td class="CaptionTd" style="font-weight:bold;">:</td>
+                                        <td class="ValueTd">@Model.TezEsDanismanAdi @(Model.TezEsDanismanEMail.IsNullOrWhiteSpace() ? "" : "(" + Model.TezEsDanismanEMail + ")")</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="CaptionTd">Tez Özeti (Türkçe)</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">
+                                        <div style="max-height:80px;overflow:auto;">
+                                            @Model.TezOzet
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="CaptionTd">Tez Özeti (İngilizce)</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">
+                                        <div style="max-height:80px;overflow:auto;">
+                                            @Model.TezAbstract
+                                        </div>
+                                        <br />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="CaptionTd">Tez Özeti Anahtar Kelimeler (Türkçe)</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">
+                                        @Model.OzetAnahtarKelimeler
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign" style="font-size:14pt;"></i> Danışman Onayı</td>
+                        <td style="font-size:9pt; border-bottom:1px solid;text-align:right;">
+                            @if (!Model.DanismanImzaliFormDosyaYolu.IsNullOrWhiteSpace())
+                            {
+                                <a href="javascript:void(0);" class="openFl" FPath="@Url.Content(Model.DanismanImzaliFormDosyaYolu)" FName=" @(Model.OgrenimTipKod == OgrenimTipi.Doktra? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")"><span class="fa fa-download" style="color: green;"></span>&nbsp;@Model.DanismanImzaliFormDosyaAdi</a>
+                            }
+                            else if (Model.IsDanismanOnay == true && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                            {
+                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=true' , 'auto', 'modal-dialog modal-lg' )">
+                                    <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-left:10px;text-align:left;">
+                            @if (!Model.YayinBilgileri.Any(a => a.Onaylandi.HasValue) && (IsTezDanisman || TdKayitYetki) && (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak))
+                            {
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="CaptionTd" width="100">Danışman Adı</td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="CaptionTd" style="font-weight:bold;">Onay Durumu</td>
+                                        <td class="CaptionTd" style="font-weight:bold;">:</td>
+                                        <td class="ValueTd">
+                                            <select id="DanismanBasvuruOnay_@Model.MezuniyetBasvurulariID" onchange="DanOnayChange(this);">
+                                                <option></option>
+                                                <option value="true" @(Model.IsDanismanOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum</option>
+                                                <option value="false" @(Model.IsDanismanOnay == false ? "selected" : "")>Öğrenci Başvurusunu Ret Ediyorum</option>
+                                            </select> <a href="javascript:void(0);" onclick="DanismanBasvuruOnayKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+                                            <script>
+                                                function DanOnayChange(sndr) {
+                                                    var SndrVal = $(sndr).val();
+                                                    if (SndrVal == 'false') {
+                                                        $('#BasvuruDanismanOnayAciklamaRw_@Model.MezuniyetBasvurulariID').removeClass('hide');
+                                                    }
+                                                    else {
+                                                        $('#BasvuruDanismanOnayAciklamaRw_@Model.MezuniyetBasvurulariID').addClass('hide');
+                                                    }
+                                                    if (SndrVal == 'true') {
+                                                        $('.BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID').removeClass('hide');
+                                                    }
+                                                    else {
+                                                        $('.BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID').addClass('hide');
+                                                    }
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                    <tr class="BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID @(Model.IsDanismanOnay == true ? "" : "hide")">
+                                        <td class="CaptionTd">Taahhüt 1</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            <br />
+                                            Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                        </td>
+                                    </tr>
+                                    <tr class="BasvuruDanismanOnayTaahhutRw_@Model.MezuniyetBasvurulariID @(Model.IsDanismanOnay == true ? "" : "hide")">
+                                        <td class="CaptionTd">Taahhüt 2</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            <br />
+                                            Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                            <br />
+                                            <br />
+                                        </td>
+                                    </tr>
+                                    <tr id="BasvuruDanismanOnayAciklamaRw_@Model.MezuniyetBasvurulariID" class="@(Model.IsDanismanOnay == false ? "" : "hide")">
+                                        <td class="CaptionTd" style="font-weight:bold;">Açıklama</td>
+                                        <td class="CaptionTd" style="font-weight:bold;">:</td>
+                                        <td class="ValueTd">
+                                            <textarea placeholder="Onaylanmama Sebebi" id="BasvuruDanismanOnayAciklama_@Model.MezuniyetBasvurulariID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@Model.DanismanOnayAciklama</textarea>
+                                        </td>
+                                    </tr> 
+                                </table>
+                            }
+                            else
+                            {
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="CaptionTd" width="100">Danışman Adı</td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd">@Model.TezDanismanAdi</td>
+                                    </tr>
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Taslak)
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <i class="fa fa-clock-o" aria-hidden="true"> Başvuru Öğrenci Tarafından Henüz Onaylanmadı.</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model.IsDanismanOnay == true)
+                                    {
+
+                                        <tr>
+                                            <td class="CaptionTd">Taahhüt 1</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <br />
+                                                Aşağıda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="CaptionTd">Taahhüt 2</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <br />
+                                                Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                <br />
+                                                <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="CaptionTd">Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <span style="color:green;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Danışman Tarafından Onaylandı (@Model.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+                                                <br />
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model.IsDanismanOnay == false)
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danisman Tarafından Ret Edildi (@Model.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="CaptionTd">Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                <i class="fa fa-clock-o" aria-hidden="true"> Danışman Tarafından Onay İşlemi Henüz Yapılmadı.</i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="CaptionTd">Ret Açıklaması</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                @Model.DanismanOnayAciklama
+                                            </td>
+                                        </tr>
+
+                                    }
+
+
+                                </table>
+                            }
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <script>
+            </script>
+
+        </div>
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign" style="font-size:14pt;"></i> Yayın Bilgisi</td>
+                        <td style="font-size:9pt; border-bottom:1px solid;">
+                            @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                            {
+                                <a style="float:right;" href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Yayın Şartı Onayı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                    <i class="fa fa-file-pdf-o"></i>  Yayın Onayını İndir
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left:10px;text-align:left;" colspan="2">
+                            <table id="yTable" class="table table-hover" style="width:100%;table-layout:fixed;">
+                                <thead>
+                                    <tr class="info">
+                                        <th width="20">#</th>
+                                        <th width="35"></th>
+                                        <th width="150">Yayın Türü</th>
+                                        <th>Yayın Bilgisi</th>
+                                        @if (Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
+                                        {
+                                            <th width="120"></th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.YayinBilgileri.Count > 0)
+                                    {
+                                        int inx = 0;
+                                        foreach (var item in Model.YayinBilgileri)
+                                        {
+
+                                            item.DegerlendirmeKolonu = Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak && Model.IsDanismanOnay == true;
+                                            item.DegerlendirmeAktif = sonucGirisSureciAktif && (!IsKendiBasvuruSu || Model.GelenBasvuru) && KayitYetki;
+                                            item.sonucGirisSureciAktif = sonucGirisSureciAktif;
+                                            inx++;
+                                            item.RowNum = inx;
+                                            item.IsDataShow = true;
+                                            @Html.Raw(Management.RenderPartialView("Mezuniyet", "AddRow", item));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td style="text-align:center;" colspan="@(Model.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak?"5":"4")">Yayın bilgisi istenmemektedir.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.IsDanismanOnay == true)
+        {
+            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                <table style="width:100%;">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="@Model.DurumClassName fa-lg"></i> Enstitü Onay İşlemi</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left:10px;text-align:left;">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="CaptionTd" width="140">Başvuru Durumu</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            @if (sonucGirisSureciAktif && Model.GelenBasvuru && KayitYetki)
+                                            {
+                                                @Html.DropDownList("MezuniyetYayinKontrolDurumID", Model.SMezuniyetYayinKontrolDurum, new { id = "MezuniyetYayinKontrolDurumID_" + Model.MezuniyetBasvurulariID, @class = "form-control", onchange = "bDurumChange(this,'#bdurumRowID_" + Model.MezuniyetBasvurulariID + "')" })
+                                            }
+                                            else
+                                            {
+                                                @Model.MezuniyetYayinKontrolDurumAdi @(" (" + Model.IslemTarihi + ")")
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr id="bdurumRowID_@Model.MezuniyetBasvurulariID" class="@(Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi ? "" : "hide")">
+                                        <td class="CaptionTd" >İptal Açıklaması</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            @if (sonucGirisSureciAktif && Model.GelenBasvuru && KayitYetki)
+                                            {
+                                                <textarea style="width:100%; resize:vertical;" id="MezuniyetYayinKontrolDurumAciklamasi_@Model.MezuniyetBasvurulariID">@Model.MezuniyetYayinKontrolDurumAciklamasi</textarea>
+                                            }
+                                            else
+                                            {
+                                                @Model.MezuniyetYayinKontrolDurumAciklamasi
+                                            }
+                                        </td>
+                                    </tr>
+                                    @if (sonucGirisSureciAktif && Model.GelenBasvuru && KayitYetki)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>:</td>
+                                            <td class="ValueTd">
+                                                <a href="javascript:void(0);" onclick="bDurumKayit(@Model.MezuniyetBasvurulariID)" class="btn btn-info"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

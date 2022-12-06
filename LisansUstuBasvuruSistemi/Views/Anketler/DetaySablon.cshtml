@@ -1,0 +1,102 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model List<frAnketDetay>
+@{
+    Layout = null;
+}
+<table class="table" style="margin:0px;">
+    <thead>
+        <tr>
+            <th width="50"></th>
+            <th width="55">Sıra No</th>
+            <th>Soru</th>
+            <th width="70">Veri Alımı</th> 
+            <th width="60">S.Sayısı</th>
+            <th width="80"></th>
+            <th width="35"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="8" style="padding:0px;">
+                <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
+                    @{
+                        int RowIndex = 0;
+                        foreach (var item in Model)
+                        {
+                            RowIndex++;
+                            <tr class="MainRow">
+                                <td width="50" style="text-align:center;">
+
+
+                                    <ul class="panel-controls">
+                                        <li id="iShow_Ap_@item.AnketSoruID" onclick="ShowDetail2('Ap_@item.AnketSoruID')">
+                                            <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
+                                        </li>
+                                    </ul>
+
+                                </td>
+                                <td width="55">@item.SiraNo</td>
+                                <td>@item.SoruAdi</td>
+                                <td width="70">@(item.IsTabloVeriGirisi ? "Tablo (" + item.IsTabloVeriMaxSatir.Value + ")" : "Normal")</td>
+                                
+                                <td width="60">@item.SecenekSayisi</td>
+                                <td width="80">
+                                    <span class="label label-primary" style="cursor:pointer;" title="Yeni Anket Sorusu Şıkkı Ekle" onclick="SecenekEkleDialog(@item.AnketSoruID,'')"><i class="fa fa-plus fa-lg"></i> Şık Ekle</span>
+                                </td>
+                                <td width="35">
+                                    <div class="hide" id="PnlAnkS_@item.AnketSoruID">
+                                        <div class="panel panel-default form-horizontal" style="margin:0px;padding:0px;">
+                                            <div class="panel-body" style="margin:0px;padding:0px;">
+                                                <div class="panel-body form-group-separated">
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 col-xs-4 control-label">Sıra No</label>
+                                                        <div class="col-md-10 col-xs-8">@item.SiraNo</div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-md-2 col-xs-4 control-label">Soru</label>
+                                                        <div class="col-md-10 col-xs-8">@item.SoruAdi</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="SoruEkleDialog(@item.AnketID,@item.AnketSoruID)"><i class="fa fa-edit fa-lg" title="Anket Sorusunu Düzelt"></i></a>
+                                    <a href="javascript:void(0)" onclick="SilmeOnayAks(this,@item.AnketSoruID)"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
+                                </td>
+                            </tr>
+                            <tr class="MainRow2 cls-Ap_@item.AnketSoruID" style="display:none;">
+                                <td id="cls-Ap_@item.AnketSoruID" colspan="8" style="padding: 1px 1px 2px 50px;">
+
+                                    <div class="panel" style="vertical-align:top;" id="pnglAnks_@item.AnketSoruID">
+                                        <div class="panel-heading padding-0">
+                                            <h3 class="panel-title" style="font-size:9pt;">Anket Sorusu Şıkları</h3>
+                                            <ul class="panel-controls">
+                                                <li>
+                                                    <span class="label label-primary" style="cursor:pointer;" title="Yeni Anket Sorusu Şıkkı Ekle" onclick="SecenekEkleDialog(@item.AnketID)"><i class="fa fa-plus fa-lg"></i> Şık Ekle</span>
+                                                </li>
+                                                <li><a href="javascript:void(0);" onclick="GetDetail2(@item.AnketSoruID)" class=""><span class="fa fa-refresh"></span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="panel-body" style="margin: 0px; padding: 0px;" id="pnglAnksC_@item.AnketSoruID">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                        if (RowIndex == 0)
+                        {
+                            <tr>
+                                <td colspan="7" style="color:maroon;font-size:12pt; text-align:center;height:30px;">Ankete ait herhangi bir soru bulunamadı.</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+    </tbody>
+
+</table>

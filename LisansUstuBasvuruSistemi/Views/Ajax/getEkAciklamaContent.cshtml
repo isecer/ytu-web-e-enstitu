@@ -1,0 +1,25 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model ekAciklamaContent
+@{
+    Layout = null;
+}   
+<div class="panel panel-default" style="margin:2px;">
+    <div class="panel-heading padding-0">
+        <table>
+            <tr>
+                <td><i class="glyphicon glyphicon-info-sign" style="font-size:40pt;"></i></td>
+                <td><h3 class="panel-title"> @Model.Baslik</h3></td>
+            </tr>
+        </table>
+           
+    </div>   
+</div>    
+@foreach (var item in Model.Detay)
+{
+    <div class="panel panel-danger" style="margin:2px;">
+        <div class="panel-body panel-body-pricing">    
+            <h4><span class="fa fa-caret-right" style="color:red;"></span>@item.Caption</h4>
+            <p>@Html.Raw(item.Value)</p>    
+        </div>
+    </div>
+}  

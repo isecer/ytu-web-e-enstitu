@@ -1,0 +1,65 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var err = Model.Exception;
+    if (err == null)
+    {
+        err = Server.GetLastError();
+    }
+    if (err == null)
+    {
+        err = new Exception(Request.Url.ToString());
+    }
+    using (var db = new LisansustuBasvuruSistemiEntities())
+    {
+        bool SaveError = true;
+        var ExceltionMessage = err.ToExceptionMessage();
+        if (ExceltionMessage.Contains("1- The controller for path"))
+        {
+            var x = "1 - The controller for path '/fbe/tr/Account/Login' was not found or does not implement IController.";
+            var SplitMesssages = ExceltionMessage.Split('\'');
+            if (SplitMesssages.Count() >= 3)
+            {
+                var Path = SplitMesssages[1];
+                if (Path.Contains("/tr"))
+                {
+                    Path = Path.Replace("/tr", "");
+                    SaveError = false;
+                    <script>
+                        window.location.href = '@Path';
+                    </script>
+                }
+            }
+        }
+        if (SaveError)
+        {
+            db.SistemBilgilendirmes.Add(new SistemBilgilendirme
+            {
+                BilgiTipi = BilgiTipi.Hata,
+                Message = ExceltionMessage,
+                IslemYapanID = (UserIdentity.Current.IsAuthenticated ? UserIdentity.Current.Id : (int?)null),
+                IslemYapanIP = UserIdentity.Ip,
+                IslemTarihi = DateTime.Now,
+                StackTrace = Model.Exception.ToExceptionStackTrace()
+            });
+            db.SaveChanges();
+        }
+    }
+
+
+
+}
+
+<div class="error-container">
+    <div class="error-code" style="font-size:67pt;">Hata! <div class="icon-preview"><i class="fa fa-frown-o"></i></div></div>
+    <div class="error-text">İşlem Yapılırken Bir Hata Oluştu.</div>
+    <div class="error-subtext">
+        Hata: @err.Message
+    </div>
+    <div class="error-subtext">Bu hata sistem tarafından loglandı.</div>
+    @*<div class="error-code">500</div>
+        <div class="error-text">Internal server error</div>
+        <div class="error-subtext">The server encountered an internal error or misconfiguration and was unable to complete your request.</div>*@
+</div>

@@ -1,0 +1,368 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model SROzelTanimlar
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var hGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
+    var hGSecilenler = (List<int>)ViewBag.hGSecilenler;
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="SROzelTanimID" name="SROzelTanimID" value="@Model.SROzelTanimID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.SROzelTanimID <= 0 ? "Yeni Özel Tanım işlemi" : "Özel tanımı düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("Kayit", Model.SROzelTanimID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "getSalonlar()" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Özel Tanım Tipi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control", onchange = "setWisible(this)" })
+                                </div>
+                            </div>
+                            <div class="_Sabit form-group @(Model.SROzelTanimTipID==SROzelTanimTip.ResmiTatilSabit ? "" : "hide")">
+                                <div class="panel panel-default" style="margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;">
+                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Resmi Tatil Sabit Tarihler</h3>
+                                    </div>
+                                    <div class="panel-body" style="padding:0px;">
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-3 control-label">Ay</label>
+                                                <div class="col-md-9 col-xs-9">
+                                                    @Html.DropDownList("Ay", null, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-3 control-label">Gün</label>
+                                                <div class="col-md-9 col-xs-9">
+                                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@Model.Gun" name="Gun" id="Gun">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="_Degisen form-group @(Model.SROzelTanimTipID==SROzelTanimTip.ResmiTatilDegisen ? "" : "hide")">
+                                <div class="panel panel-default" style="margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;">
+                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Resmi Tatil Sabit Olmayan Tarihler</h3>
+                                    </div>
+                                    <div class="panel-body" style="padding:0px;">
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
+                                                <div class="col-md-9 col-xs-9">
+                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BasTarih.HasValue==false ? "" : Model.BasTarih.ToString("yyyy-MM-dd"))" name="BasTarih" id="BasTarih">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
+                                                <div class="col-md-9 col-xs-9">
+                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitTarih.HasValue==false ? "" : Model.BitTarih.ToString("yyyy-MM-dd"))" name="BitTarih" id="BitTarih">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="_Rezervasyon @((Model.SROzelTanimTipID==SROzelTanimTip.Rezervasyon || Model.SROzelTanimTipID==SROzelTanimTip.Rezerve) ? "" : "hide")">
+
+                                <div class="panel panel-default" style="margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;">
+                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; <span id="rezTipAd">@(Model.SROzelTanimTipID == SROzelTanimTip.Rezervasyon ? "Rezervasyon" : "Rezerve")</span> </h3>
+                                    </div>
+                                    <div class="panel-body" style="padding:0px;">
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-3 control-label">Rezervasyon Tipi</label>
+                                            <div class="col-md-9 col-xs-9">
+                                                @Html.DropDownList("SRTalepTipID", null, new { @class = "form-control", onChange = "getSalonlar()" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-3 control-label">Salon Seçiniz</label>
+                                            <div class="col-md-9 col-xs-9">
+                                                @Html.DropDownList("SRSalonID", null, new { @class = "form-control", onChange = "getSaatler();getGunler();" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                            <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
+                                            <div class="col-md-9 col-xs-9">
+                                                <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BasTarih.HasValue == false ? "" : Model.BasTarih.ToString("yyyy-MM-dd"))" name="BasTarih2" id="BasTarih2">
+                                            </div>
+                                        </div>
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                            <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
+                                            <div class="col-md-9 col-xs-9">
+                                                <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitTarih.HasValue == false ? "" : Model.BitTarih.ToString("yyyy-MM-dd"))" name="BitTarih2" id="BitTarih2">
+                                            </div>
+                                        </div>
+                                        <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
+                                            <label class="col-md-3 col-xs-4 control-label">Hafta Günleri</label>
+                                            <div class="col-md-9 col-xs-8" id="hgunDrpd">
+                                                <select id="HaftaGunIDs" name="HaftaGunIDs" multiple class="form-control select">
+                                                    @foreach (var item2 in hGunleri)
+                                                    {
+                                                        <option value="@item2.Value" @(hGSecilenler.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <table class="_SubRezervasyon @(Model.SROzelTanimTipID==SROzelTanimTip.Rezervasyon ? "" : "hide")" style="width:100%;table-layout:fixed;">
+                                            <tr>
+                                                <td width="260">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading padding-0" style="padding:0px;">
+                                                            <h3 class="panel-title"><span class="glyphicon glyphicon-time myCaptionTd"></span> Tarih Seçiniz</h3>
+                                                            <div class="pull-right">
+                                                                <span class="panel-refresh"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body" style="height:228px;padding:0px;">
+                                                            <input type="text" id="Tarih" name="Tarih" value="@Model.Tarih.ToString("yyyy-MM-dd")" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group" id="saatLstContnt">
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            @if (Model.SROzelTanimID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Açıklama</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="Aciklama" id="Aciklama" value="@Model.Aciklama" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function setWisible(sndr) {
+        var _val = $(sndr).val();
+        if (_val == '@SROzelTanimTip.ResmiTatilSabit') {
+            $('._Sabit').removeClass('hide');
+            $('._Degisen').addClass('hide');
+            $('._Rezervasyon').addClass('hide');
+            $('._Rezerve').addClass('hide');
+            $('._SubRezervasyon').addClass('hide');
+        }
+        else if (_val == '@SROzelTanimTip.ResmiTatilDegisen') {
+            $('._Sabit').addClass('hide');
+            $('._Degisen').removeClass('hide');
+            $('._Rezervasyon').addClass('hide');
+            $('._Rezerve').addClass('hide');
+            $('._SubRezervasyon').addClass('hide');
+        }
+        else if (_val == '@SROzelTanimTip.Rezervasyon') {
+            $('._Sabit').addClass('hide');
+            $('._Degisen').addClass('hide');
+            $('._Rezervasyon').removeClass('hide');
+            $('._Rezerve').addClass('hide');
+            $('._SubRezervasyon').removeClass('hide');
+            $('#rezTipAd').html("Rezervasyon");
+
+        }
+        else if (_val == '@SROzelTanimTip.Rezerve') {
+            $('._Sabit').addClass('hide');
+            $('._Degisen').addClass('hide');
+            $('._Rezervasyon').removeClass('hide');
+            $('._Rezerve').removeClass('hide');
+            $('._SubRezervasyon').addClass('hide');
+            $('#rezTipAd').html("Rezerve");
+
+        }
+        else {
+            $('._Sabit').addClass('hide');
+            $('._Degisen').addClass('hide');
+            $('._Rezervasyon').addClass('hide');
+            $('._Rezerve').addClass('hide');
+            $('._SubRezervasyon').addClass('hide');
+        }
+    }
+    $(function () {
+        var dttme = $('#Tarih').datetimepicker({
+            lang: 'tr',
+            inline: true,
+            timepicker: false,
+            format: 'Y-m-d',
+            onSelectDate: function () {
+                getSaatler();
+            },
+            onChangeMonth: function (sndr) {
+                var date = new Date(sndr);
+                var qdate = getFormattedDate(date);
+                $('#Tarih').val(qdate); getSaatler();
+            },
+            onChangeYear: function (sndr) {
+                var date = new Date(sndr);
+                var qdate = getFormattedDate(date);
+                $('#Tarih').val(qdate);
+                getSaatler();
+            },
+        }); 
+        setTimeout(getSaatler(), 250);
+        $('#BasTarih').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+        $('#BitTarih').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+        $('#BasTarih2').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d',
+            onSelectDate: function () {
+                getGunler();
+            },
+        });
+        $('#BitTarih2').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d',
+            onSelectDate: function () {
+                getGunler();
+            },
+        });
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+    function getSaatler(date) {
+        var tarih = $('#Tarih').val();
+        var salon = $('#SRSalonID').val();
+        var talepTip = $('#SRTalepTipID').val();
+        if (tarih != null && salon != null && tarih != "" && salon != "" && talepTip != null && talepTip != "") {
+          
+                                                
+            $('#saatLstContnt').css("display", "block");
+            var _panel = $('.pnlRfrsh');
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getSaatList", "SROzelTanimlar")', 
+                data: { 'SRSalonID': salon, 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SROzelTanimID': '@(Model.SROzelTanimID<=0?"":Model.SROzelTanimID.ToString())' },
+                success: function (result) {
+                    $('#saatLstContnt').html(result.Deger);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            $('#saatLstContnt').css("display", "none");
+        }
+    }
+    function getFormattedDate(date) {
+        var year = date.getFullYear();
+        var month = (1 + date.getMonth()).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return year + "-" + month + "-" + day;
+    }
+    function getSalonlar() {
+        var enstituKod = $('#EnstituKod').val();
+        var ttip = $('#SRTalepTipID').val();
+        if (enstituKod == "" || enstituKod == null || ttip == "" || ttip == null) {
+            $('#SRSalonID').empty();
+            getSaatler();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("getSalonlar", "Ajax")',
+            data: { 'EnstituKod': enstituKod, 'SRTalepTipID': ttip },
+            success: function (result) {
+                $('#SRSalonID').empty();
+                var opt = "";
+                for (var i = 0; i < result.data.length; i++) {
+                    var valR = result.data[i].Value;
+                    var _value = "";
+                    if (valR != null) {
+                        _value = valR;
+                    }
+                    opt += "<option value=" + _value + ">" + result.data[i].Caption + "</option>"
+                }
+                $('#SRSalonID').append(opt);
+                getSaatler();
+            },
+            error: function (err) {
+                alert(err.responseText);
+                getSaatler();
+
+            }
+        });
+    }
+    function getGunler() {    
+        var srSalonID = $('#SRSalonID').val();
+        var ttip = $('#SRTalepTipID').val();
+        var tar1 = $('input[name=BasTarih2]').val();
+        var tar2 = $('input[name=BitTarih2]').val();     
+        if (srSalonID == "" || ttip == "" || tar1 == "" || tar2 == "") {
+            $('#hgunDrpd').html("");
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("getGunler", "Ajax")',
+            data: { 'SRSalonID': srSalonID, 'SRTalepTipID': ttip, 'Tarih': tar1, 'Tarih2': tar2, 'SROzelTanimID': '@(Model.SROzelTanimID<=0?"":Model.SROzelTanimID.ToString())' },
+            success: function (result) {       
+                $('#hgunDrpd').html(result);
+            },
+            error: function (err) {
+                alert(err.responseText);
+
+            }
+        });
+    }
+</script>

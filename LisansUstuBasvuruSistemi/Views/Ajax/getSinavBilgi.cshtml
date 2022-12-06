@@ -1,0 +1,256 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model sinavBilgiGrupModel
+@{
+    Layout = null;
+    string Color = Model.DurumColor; 
+}
+
+<table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+    <tr>
+        <td width="140" class="myCaptionTd">
+            Sınav Türü
+        </td>
+        <td width="10" class="myCaptionTd">:</td>
+        <td class="myCaptionTd" style="text-align:left;">
+            @Model.SinavDetay.SinavAdi
+        </td>
+    </tr>
+    <tr>
+        <td class="myCaptionTd" style="vertical-align: top;">Sınav Bilgileri</td>
+        <td class="myCaptionTd" style="vertical-align:top;">:</td>
+        <td>
+            <table style="table-layout:fixed;">
+                @if (Model.SinavDetay.WebService)
+                {
+                    <tr>
+                        <th colspan="4"><span style="font-weight:normal;font-size: 8pt;">@(Model.SinavDetay.WsSinavCekimTipID.HasValue && Model.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih ? (Model.SinavDetay.SinavAdi + " Sınavı bilgisi web servisi aracılığı ile alınmaktadır. Bilgi girişi kriterleri aşağıdaki gibidir.") : Model.SinavDetay.SinavAdi + " Sınavı bilgisi ÖSYM tarafından sağlanan web servisi aracılığı ile alınmaktadır. Bilgi girişi kriterleri aşağıdaki gibidir.")</span></th>
+                    </tr>
+                    <tr>
+                        <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                        <td width="100">Yıl Seçimi</td>
+                        <td width="3">:</td>
+                        <td style="font-weight:bold;">@(Model.SinavDetay.WsSinavCekimTipID.HasValue && Model.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih ? Model.Sinav.SinavTarihi.Value.Year : Model.Sinav.WsSinavYil)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                        <td>Dönem Seçimi</td>
+                        <td>:</td>
+                        <td style="font-weight:bold;">@(Model.SinavDetay.WsSinavCekimTipID.HasValue && Model.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih ? Model.Sinav.SinavTarihi.Value.ToString("dd-MM-yyyy") : Model.SinavDetay.SinavTipleriDonems.Where(p => p.WsDonemKod == Model.Sinav.WsSinavDonem).First().WsDonemAd)</td>
+                    </tr>
+
+                    if (Model.Sinav.WsAciklanmaTarihi.HasValue)
+                    {
+                        <tr>
+                            <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                            <td>Açıklanma Tarihi</td>
+                            <td>:</td>
+                            <td style="font-weight:bold;">@Model.Sinav.WsAciklanmaTarihi.ToDateString()</td>
+                        </tr>
+                    }
+
+                    if (Model.Sinav.IsTaahhutVar != true && Model.Sinav.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                    {
+                        <tr>
+                            <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                            <td>Sınav Dili</td>
+                            <td>:</td>
+                            <td>
+                                <span style="font-weight:bold;font-size: 9pt;">@Model.Sinav.WsSinavDili</span>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                        <td width="100">Puan Aralığı</td>
+                        <td width="3">:</td>
+                        <td style="font-weight:bold;">@Model.SinavDetay.Min - @Model.SinavDetay.Max</td>
+                    </tr>
+
+
+                }
+                else
+                {
+                    <tr>
+                        <th colspan="4">
+                            <span style="font-weight:normal;font-size: 8pt;">@Model.SinavDetay.SinavAdi Sınavı bilgisi girişi kriterleri aşağıdaki gibidir.</span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                        <td width="100">Tarih Kriteri</td>
+                        <td width="3">:</td>
+                        <td>
+                            @if (Model.SinavDetay.OzelTarih)
+                            {
+                                if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarihler)
+                                {
+                                    <span>Sadece sistem tarafından belirlenmiş tarihleri seçebilirsiniz</span>
+                                }
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarihdenOncesi)
+                                {
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve önceki sınavlar</span>
+                                }
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.BelirliTarhidenSonrasi)
+                                {
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve sonraki sınavlar</span>
+                                }
+                                else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTip.IkiTarihArasi)
+                                {
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> ile <b>@Model.SinavDetay.Tarih2.Value.ToDateString()</b> tarih aralığındaki sınavlar</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>Başvuru tarihinden itibaren maksimum <b>@Model.SinavDetay.TarihGirisMaxGecmisYil.Value</b> Yıl öncesine kadar geçerlidir</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                        <td>Sınav Tarihi</td>
+                        <td>:</td>
+                        <td>
+                            <span style="font-weight:bold;font-size: 9pt;">@Model.Sinav.SinavTarihi.ToDateString()</span>
+                        </td>
+                    </tr>
+
+
+                    if (Model.SinavDetay.OzelNot)
+                    {
+                        if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotAraliklari)
+                        {
+                            <tr>
+                                <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                <td style="vertical-align:top;">Puan Sistemi</td>
+                                <td style="vertical-align:top;">:</td>
+                                <td>
+                                    @foreach (var itemSb in Model.SinavDetay.BasvuruSurecSinavTiplerSubSinavAraliks)
+                                    {
+                                        <span>@itemSb.SubSinavAralikAdi kriterine göre <b>@itemSb.SubSinavMin</b> ile @itemSb.SubSinavMax notları arasında</span> 
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                <td style="vertical-align:top;">Sınav Puanı</td>
+                                <td style="vertical-align:top;">:</td>
+                                <td>
+                                    <b>@Model.Sinav.BasvuruSurecSubNot</b>
+                                </td>
+                            </tr>
+
+
+                        }
+                        else if (Model.SinavDetay.OzelNotTipID.HasValue && Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotlar)
+                        {
+                            <tr>
+                                <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                <td width="100">Not Kriteri</td>
+                                <td width="3">:</td>
+                                <td>
+                                    <b>@string.Join(", ", Model.SinavDetay.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotAdi).Select(s => s.SinavNotAdi).ToList())</b> Notları seçilebilir 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                <td>Seçilen Not</td>
+                                <td>:</td>
+                                <td>
+                                    <b>@Model.SinavDetay.BasvuruSurecSinavNotlaris.Where(p => p.SinavNotDeger == Model.Sinav.SinavNotu).First().SinavNotAdi</b>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                            <td style="vertical-align:top;">Puan Aralığı</td>
+                            <td style="vertical-align:top;">:</td>
+                            <td><span style="font-weight:bold;font-size: 9pt;">@Model.SinavDetay.Min - @Model.SinavDetay.Max</span></td>
+                        </tr>
+                    }
+
+                    if (Model.SinavDetay.NotDonusum)
+                    {
+                        <tr>
+                            <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                            <td style="vertical-align:top;">Sınav Puanı</td>
+                            <td style="vertical-align:top;">:</td>
+                            <td>
+                                <b>@Model.Sinav.BasvuruSurecSubNot</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:top;"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                            <td style="vertical-align:top;">Ales karşılığı</td>
+                            <td style="vertical-align:top;">:</td>
+                            <td>
+                                <span style="font-weight:bold;font-size: 9pt;">@Model.Sinav.SinavNotu</span>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </td>
+    </tr>
+    @if (Model.Sinav.IsTaahhutVar == true)
+    {
+        <tr>
+            <td class="myCaptionTd">
+                Taahhüt
+            </td>
+            <td class="myCaptionTd">:</td>
+            <td class="myCaptionTd" style="text-align:left;">
+                @{
+                    var minNot = "";
+                    if (Model.SinavDetay.OzelNotTipID == OzelNotTip.SeciliNotlar)
+                    {
+                        minNot = Model.SinavDetay.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotDeger).Select(s => s.SinavNotAdi).First();
+                    }
+                    else
+                    {
+                        minNot = Model.SinavDetay.Min.toStrObjEmptString();
+                    }
+                    var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrup.Tomer ? 
+                                    (Model.IsTurkceProgramVar ? "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim." : "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.") 
+                                    : (Model.SinavDetay.GIsTaahhutVar ? (Model.SinavDetay.SinavTipKod == 56 ? "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)" : "Başvuru koşullarında belirtilen koşula uygun sınav notu bulunan dil sınavı belgemi getireceğimi taahhüt ederim. Aksi halde başvurumun iptal edilmesini onaylıyorum.") 
+                        : "DilSinaviTaahhut");
+                    @locTaahhutkey.Replace("_xXx_", minNot)
+                }
+            </td>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <td class="myCaptionTd">
+                Puan
+            </td>
+            <td class="myCaptionTd">:</td>
+            <td class="myCaptionTd" style="text-align: left;">
+
+                @if (Model.Sinav.SinavTipGrupID == SinavTipGrup.Ales_Gree && Model.SinavDetay.WebService)
+                {
+                    var mdlXml = Model.Sinav.WsXmlData.toSinavSonucAlesXmlModel();
+                    if (Model.SinavDetay.EnstituKod == EnstituKodlari.FenBilimleri)
+                    {
+                        <span>Sayısal Puan :@mdlXml.SAY_PUAN.ToDouble().ToString("n2")</span>
+                    }
+                    else if (Model.SinavDetay.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                    {
+                        <span>Sayısal Puan:@mdlXml.SAY_PUAN.ToDouble().ToString("n2") , Eşit Ağırlık Puan:@mdlXml.EA_PUAN.ToDouble().ToString("n2") , Sözel Puan :@mdlXml.SOZ_PUAN.ToDouble().ToString("n2")</span>
+                    }
+                }
+                else
+                {
+                    @Model.Sinav.SinavNotu
+                }
+
+            </td>
+        </tr>
+    }
+</table>

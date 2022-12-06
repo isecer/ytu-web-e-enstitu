@@ -1,0 +1,124 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model BasvuruDetayModel
+@{
+    Layout = null;
+    var tbName = TabAdlari.BasvuruDetayTN + "-" + Model.BasvuruID;
+    var Color = Model.DurumColor;  
+} 
+<div class="panel" style="vertical-align:top;min-height:489px;" id="bsvrDet_@Model.BasvuruID">
+    <div class="panel-body" style="margin: 0px; padding: 0px;">
+        <div class="panel tabs" style="margin-bottom:0px; padding:0px;">
+            <ul class="nav nav-tabs BsTabBtn_@Model.BasvuruID" role="tablist">
+                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@Model.BasvuruID-1" style="margin-right:3px;"><a href="#" onclick="tabchangeSetD('@tbName',@Model.BasvuruID,1)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i style="color: @Color;" class="fa fa-id-card-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;color:@Color;">Kimlik & Adres Bilgileri</span></a></li>
+
+                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@Model.BasvuruID-2" style="margin-right:3px;"><a href="#" onclick="tabchangeSetD('@tbName',@Model.BasvuruID,2)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i style="color: @Color;" class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;color:@Color;">Öğrenim & Program Bilgileri</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@Model.BasvuruID-3" style="margin-right:3px;"><a href="#" onclick="tabchangeSetD('@tbName',@Model.BasvuruID,3)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i style="color: @Color;" class="fa fa-list-alt fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;color:@Color;">Sınav Bilgileri</span></a></li>
+                @if (Model.IsBelgeYuklemeVar)
+                {
+                    <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@Model.BasvuruID-4" style="margin-right:3px;"><a href="#" onclick="tabchangeSetD('@tbName',@Model.BasvuruID,4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i style="color: @Color;" class="fa fa-file-pdf-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;color:@Color;">Kayıt İçin Gerekli Belgeler</span></a></li>
+                }
+                <li><a href="javascript:void(0);" onclick="SubData(@Model.BasvuruID);" class="panel-refresh" title="Yenile"><span class="fa fa-refresh"></span></a></li>
+            </ul>
+            <div class="panel-body tab-content BsTabCont_@Model.BasvuruID" style="padding:0px;">
+                <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />
+                <table style="margin:0px;">
+                    <tr>
+                        <td width="150" style="text-align:center;">
+                            <img src="@(Model.ResimYolu.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                        </td>
+                        <td style="padding-left:10px;text-align:left;">
+
+                            <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+                                <tr>
+                                    <td width="140">Ad Soyad</td>
+                                    <td width="10">:</td>
+                                    <td>
+                                        @Model.AdSoyad
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Kullanıcı Tipi</td>
+                                    <td>:</td>
+                                    <td>@Model.KullaniciTipAdi</td>
+                                </tr>
+                                <tr>
+                                    <td>Başvuru Tarihi</td>
+                                    <td>:</td>
+                                    <td>@Model.BasvuruTarihi.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td>Başvuru Durumu</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if (!Model.DurumClassName.IsNullOrWhiteSpace())
+                                        {
+                                            <span style="color:@Color;">
+                                                <i class="@Model.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @Model.BasvuruDurumAdi
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>@Model.BasvuruDurumAdi</span>
+
+                                        }
+                                        @if (Model.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                        {
+                                            <span style="color:red;">(@Model.BasvuruDurumAciklamasi)</span>
+                                        }
+
+                                    </td>
+                                </tr>
+                                @if (Model.IsYerli && Model.YokOgrenimKontrolTarihi.HasValue)
+                                {
+                                    <tr>
+                                        <td>Kayıtlı Olduğu Program</td>
+                                        <td>:</td>
+                                        <td>
+                                            @Html.Raw((Model.YokOgrenimKontrolTarihi.HasValue ? Model.YokOgrenimKontrolTarihi.ToDatetTimeString() + " Tarhinde kontrol edildi <br/>" : ""))
+                                            @if (Model.YokOgrenimKaydiVar == true)
+                                            {
+                                                var Liste = Model.YokStudentControl != null ? Model.YokStudentControl.AktifOgrenimListesi : new List<string>();
+                                                @Html.Raw(string.Join("<br/>", Liste))
+                                            }
+                                            else
+                                            {
+                                                @("Kayıt Bilgisi Yok")
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="tab-pane @(Model.SelectedTabIndex == 1 ? "active" : "") " id="@tbName-1">
+
+                </div>
+                <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
+
+                </div>
+                <div class="tab-pane @(Model.SelectedTabIndex == 3 ? "active" : "") " id="@tbName-3">
+
+                </div>
+                @if (Model.IsBelgeYuklemeVar)
+                {
+                    <div class="tab-pane @(Model.SelectedTabIndex == 4 ? "active" : "") " id="@tbName-4">
+
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function tabchangeSetD(tbName, id, tID) {
+        tabchangeSet(tbName, tID);
+        var tbHtml = $('#' + tbName + '-' + tID).html().trim();
+        if (tbHtml == "") {
+            SubData(id);
+        }
+    }
+</script>

@@ -1,0 +1,72 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model AnabilimDallari
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="AnabilimDaliID" name="AnabilimDaliID" value="@Model.AnabilimDaliID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.AnabilimDaliID <= 0 ? "Yeni Anabilim Dalı Tanımlama İşlemi" : Model.AnabilimDaliKod + " Kodlu Anabilim Dalı bilgisi düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("Kayit", Model.AnabilimDaliKod)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Anabilim Dalı Kodu</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="AnabilimDaliKod" id="AnabilimDaliKod" value="@Model.AnabilimDaliKod.toEmptyStringZero()" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Anabilim Dalı Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="AnabilimDaliAdi" id="AnabilimDaliAdi" value="@Model.AnabilimDaliAdi" class="form-control" />
+                                </div>
+                            </div>
+                            @if (Model.AnabilimDaliID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                             
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+</script>

@@ -1,0 +1,1221 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model bsMulakatDetay
+@{
+    Layout = null;
+    var IsBootBox = (bool)ViewBag.IsBootBox;
+    var IsDelete = (bool)ViewBag.IsDelete;
+    var nID = !IsBootBox ? Model.MulakatID.ToString() : (Model.BasvuruSurecID + "_" + Model.OgrenimTipKod + "_" + Model.ProgramKod);
+    var Id = Model.MulakatID;
+    string Color = "color=blue;"; 
+
+    var nowDate = DateTime.Now;
+    bool MulakatBilgiGirisAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
+    bool MulakatNotGirisAcik = Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi <= nowDate && Model.SonucGirisBitisTarihi >= nowDate;
+    bool AgnoNotGirisAcik = Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi <= nowDate && Model.AGNOGirisBitisTarihi >= nowDate;
+    var mAlanIciData = Model.MulakatSonuc.Where(p => p.AlanTipID == AlanTipi.AlanIci).ToList();
+    var mAlanDisiData = Model.MulakatSonuc.Where(p => p.AlanTipID == AlanTipi.AlanDisi).ToList();
+    var mulakatSGirisyetki = RoleNames.MulakatKayıt.InRoleCurrent();
+    var bSurecKayit = RoleNames.BasvuruSureciKayit.InRoleCurrent();
+    string _colorAna = "#268a8b";
+    string _colorMul = "green";
+    string _colorSG = "gray";
+    string _colorUyari = "red";
+
+    var NotGirisiAcik = Model.MulakatSurecineGirecek ? (Model.MulakatSurecineGirecek && Model.MulakatID > 0 && mulakatSGirisyetki && (Model.MulakatSinavNotGirisiAktif || UserIdentity.Current.IsAdmin) && Model.SonucHesaplandi == false) : (mulakatSGirisyetki && Model.IsAlesYerineDosyaNotuIstensin && Model.SonucHesaplandi == false);
+
+    var tbName = TabAdlari.MulakatDetayTN + "-" + nID;
+}
+<div id="bb_MD_@nID">
+    <div class="panel panel-success" id="pndMD_@nID">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+            <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
+                <ul class="nav nav-tabs" role="tablist">
+                    @if (Model.MulakatSurecineGirecek)
+                    {
+                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Süreç Bilgisi</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Sınav Notu Girişi (Alan İçi)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Sınav Notu Girişi (Alan Dışı)</span></a></li>
+
+                    }
+                    else
+                    {
+                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Başvuranlar (Alan İçi)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Başvuranlar (Alan Dışı)</span></a></li>
+
+                    }
+                    @if (!IsDelete)
+                    {
+                        <li><a href="javascript:void(0);" onclick="getMDDetail('@Id','@Model.BasvuruSurecID','@Model.OgrenimTipKod','@Model.ProgramKod')" class="panel-refresh" title="Yenile"><span class="fa fa-refresh myValueTd" style="@Color"></span></a></li>
+                    }
+                </ul>
+                <div class="panel-body tab-content" style="padding:0px;">
+                    <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />
+                    <table class="table" style="margin:0px;">
+                        <tr>
+                            <td style="text-align:right;" width="230">Eğitim Öğretim Yılı</td>
+                            <td style="width:4px;">:</td>
+                            <td style="font-weight:bold;"><span style="color:@(MulakatBilgiGirisAcik || MulakatNotGirisAcik ? _colorMul : _colorSG);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;">Başvuru, Mülakat Jüri&Yer Bilgisi Süreci</td>
+                            <td>:</td>
+                            <td style="font-weight:bold;">
+                                @if (MulakatBilgiGirisAcik)
+                                {
+                                    <span style="color:@_colorMul;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
+                                }
+                                else
+                                {
+                                    if (Model.BitisTarihi < nowDate)
+                                    {
+                                        <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                    }
+                                    else if (Model.BaslangicTarihi > nowDate)
+                                    {
+                                        <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                    }
+
+                                }
+                            </td>
+                        </tr>
+                        @if (Model.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans)
+                        {
+                            <tr>
+                                <td style="text-align:right;">AGNO Not Giriş Süreci</td>
+                                <td>:</td>
+                                <td style="font-weight:bold;">
+                                    @if (AgnoNotGirisAcik)
+                                    {
+                                        <span style="color:@_colorMul;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
+                                    }
+                                    else
+                                    {
+                                        if (Model.AGNOGirisBitisTarihi.HasValue && Model.AGNOGirisBitisTarihi.Value < nowDate)
+                                        {
+                                            <span style="color:@_colorSG;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                        }
+                                        else if (Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi.Value > nowDate)
+                                        {
+                                            <span style="color:@_colorSG;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:@_colorUyari;">Süreç Tarihleri Belirlenmedi</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            if (Model.MulakatSonuc.Any(a => a.LOgrenimDurumID == OgrenimDurum.HalenOğrenci))
+                            {
+                                <tr>
+                                    <td style="text-align:right;">Dikkat!</td>
+                                    <td>:</td>
+                                    <td style="font-weight:bold;color:maroon;">
+                                        Henüz mezun olmadığını belirten ve AGNO bilgisi güncel olmayan @Model.MulakatSonuc.Count(a => a.LOgrenimDurumID == OgrenimDurum.HalenOğrenci) adet öğrenci bulunmaktadır.
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td style="text-align:right;">Mülakat Not Giriş Süreci</td>
+                            <td>:</td>
+                            <td style="font-weight:bold;">
+                                @if (Model.MulakatSurecineGirecek)
+                                {
+                                    if (MulakatNotGirisAcik)
+                                    {
+                                        <span style="color:@_colorMul;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
+                                    }
+                                    else
+                                    {
+                                        if (Model.SonucGirisBitisTarihi.HasValue && Model.SonucGirisBitisTarihi.Value < nowDate)
+                                        {
+                                            <span style="color:@_colorSG;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                        }
+                                        else if (Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi.Value > nowDate)
+                                        {
+                                            <span style="color:@_colorSG;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:@_colorUyari;">Süreç Tarihleri Belirlenmedi</span>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <span>Mülakat Sürecine Girmeyecek</span>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align:right;">Anabilim Dalı / Program Adı</td>
+                            <td>:</td>
+                            <td>
+                                @Model.AnabilimDaliAdi / @Model.ProgramAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;">Öğrenim Seviyesi</td>
+                            <td>:</td>
+                            <td>@Model.OgrenimTipAdi</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;">Kota Bilgisi</td>
+                            <td>:</td>
+                            <td>
+                                @if (Model.OrtakKota)
+                                {
+
+                                    <div>Ortak Kota: <span style="font-weight:bold">@Model.OrtakKotaSayisi.Value</span></div>
+                                }
+                                else
+                                {
+                                    <div>Alan İçi Kota: <span style="font-weight:bold">@Model.AlanIciKota</span>   Alan Dışı Kota: <span style="font-weight:bold">@Model.AlanDisiKota</span></div>
+                                }
+
+                            </td>
+                        </tr>
+                        @*<tr>
+                                <td style="text-align:right;">Bilimsel Hazırlık</td>
+                                <td style="width:4px;">:</td>
+                                <td>@(Model.AlanIciBilimselHazirlik ? "Alan İçi Bilimsel Hazırlık Var" : "Alan İçi Bilimsel Hazırlık Yok"), @(Model.AlanDisiBilimselHazirlik ? "Alan Dışı Bilimsel Hazırlık Var" : "Alan Dışı Bilimsel Hazırlık Yok")</td>
+                            </tr>*@
+                    </table>
+
+                    @if (Model.MulakatSurecineGirecek)
+                    {
+                        <div class="tab-pane @(Model.SelectedTabIndex == 1 ? "active" : "") " style="height:350px;overflow-x:auto;" id="@tbName-1">
+                            <div class="widget widget-default" style="margin:0px;padding:0px;">
+                                <div class="panel-heading padding-0">
+                                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp;Mülakat Sınavı Yer Bilgisi</h3>
+                                </div>
+                                <div class="panel panel-default form-horizontal" style="margin:0px;">
+                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@Color">
+                                        <thead>
+                                            <tr>
+                                                <th width="80">Sınav Türü</th>
+                                                <th width="60">% Oranı</th>
+                                                <th width="110">S Tarihi</th>
+                                                <th width="140">Kampüs</th>
+                                                <th>Sınav Yer Adı</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="Rw_tbodyD">
+                                            @if (Model.MulakatDetay.Count > 0)
+                                            {
+                                                foreach (var item in Model.MulakatDetay)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @item.MulakatSinavTurAdi
+                                                        </td>
+                                                        <td>
+                                                            <span>%@item.YuzdeOran</span>
+                                                        </td>
+                                                        <td>
+                                                            @item.SinavTarihi.ToString("dd-MM-yyyy HH:mm")
+                                                        </td>
+                                                        <td>
+                                                            @item.KampusAdi
+                                                        </td>
+                                                        <td>
+                                                            @item.YerAdi
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="5" style="color:red;font-size:14pt;text-align:center;">
+                                                        Sınav yer/saat bilgi girişi yapılmadı
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="panel-heading padding-0" style="margin-top:10px;">
+                                    <h3 class="panel-title"><i class="fa fa-group"></i>&nbsp;Mülakat Jüri Bilgisi</h3>
+                                </div>
+                                <div class="panel panel-default form-horizontal" style="margin:0px;">
+                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@Color">
+                                        <thead>
+                                            <tr>
+                                                <th width="60">Sıra No</th>
+                                                <th>Jüri Adı</th>
+                                                <th width="140">Asil/Yedek</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.MulakatJuris.Count > 0)
+                                            {
+                                                foreach (var item in Model.MulakatJuris)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @item.SiraNo
+                                                        </td>
+                                                        <td>
+                                                            @item.JuriAdi
+                                                        </td>
+                                                        <td>
+                                                            @(item.IsAsil ? "Asil" : "Yedek")
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="3" style="color:red;font-size:14pt;text-align:center;">
+                                                        Jüri bilgi girişi yapılmadı
+                                                    </td>
+
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                    <div class="tab-pane @(Model.SelectedTabIndex == (Model.MulakatSurecineGirecek ? 2 : 1) ? "active" : "") " id="@tbName-@(Model.MulakatSurecineGirecek ? 2 : 1)">
+
+                        @if ((Model.BitisTarihi < nowDate || true) && mAlanIciData.Count > 0)
+                        {
+                            <table class="table" style="width:100%;margin:0px;">
+
+                                <tr>
+                                    <td style="text-align:right;" width="230">Çıktı Al</td>
+                                    <td style="width:4px;">:</td>
+                                    <td>
+                                        @if (Model.MulakatSonuc.Count > 0)
+                                        {
+                                            if (Model.MulakatSurecineGirecek && Model.MulakatID > 0)
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Mülakata Girecek Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesiBolum&MulakatID=@Model.MulakatID&AlanTipID=@AlanTipi.AlanIci&PuanlarGozuksun=false','auto','modal-dialog modal-lg')">
+
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Mülakata Girecek Öğrenci Listesi
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Başvuru Yapan Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruOgrenciListesi&BasvuruSurecID=@Model.BasvuruSurecID&AlanTipID=@AlanTipi.AlanIci&OgrenimTipKod=@Model.OgrenimTipKod&ProgramKod=@Model.ProgramKod&PuanlarGozuksun=false','auto','modal-dialog modal-lg')">
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Başvuru Yapan Öğrenci Listesi
+                                                </a>
+                                            }
+                                        }
+                                        <span id="_AISonucRapor">
+                                            @if (Model.MulakatSonuc.Any(p => p.MulakatSonucTipID != MulakatSonucTipi.Hesaplanmadı) && Model.MulakatID > 0)
+                                            {
+
+                                                <a href="javascript:void(0);" onclick="getReportTypeBB(@Model.BasvuruSurecID,@AlanTipi.AlanIci,'@Model.AnabilimDaliKod','@Model.ProgramKod')">
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Başvuru Sonuç Listesi
+                                                </a>
+
+                                            }
+                                            else if (Model.MulakatSurecineGirecek && Model.MulakatSonuc.Count(c => c.AlanTipID == AlanTipi.AlanIci) > 0 && Model.MulakatSonuc.Count(p => p.AlanTipID == AlanTipi.AlanIci && p.SuccessRow) == Model.MulakatSonuc.Count(c => c.AlanTipID == AlanTipi.AlanIci))
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Mülakat Sonuç Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesiBolum&MulakatID=@Model.MulakatID&AlanTipID=@AlanTipi.AlanIci&PuanlarGozuksun=true&SadecePuanliListe=true','auto','modal-dialog modal-lg')">
+
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Mülakat Sonuç Öğrenci Listesi
+                                                </a>
+                                            }
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                        <div class="widget widget-default" style="margin:0px;padding:0px;">
+                            <div class="panel-heading padding-0">
+                                <h3 class="panel-title"><i class="fa fa-group"></i>&nbsp; Alan İçi @(mAlanIciData.Count > 0 ? " Başvuran (" + mAlanIciData.Count + " Kişi)" : " başvuran yok")</h3>
+                                <table style="float:right;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding-right: 2px; padding-left: 2px; " class="text-center" id="AI_filtreKelime_@Model.MulakatID"></td>
+                                            <td><input style="color:red;" type="text" name="search" id="AI_filterInp_@Model.MulakatID" placeholder="ara..."></td>
+
+                                            <td><a href="javascript:void(0);" onclick="flter($('#AI_filterInp_@Model.MulakatID'),'@AlanTipi.AlanIci',@Model.MulakatID)" class="label label-warning panel-refresh"> Ara</a></td>
+                                            @if (NotGirisiAcik)
+                                            {
+                                                <td style="width:120px;text-align:right;">
+                                                    @if (mAlanIciData.Count > 0)
+                                                    {
+                                                        <a onclick="Kaydet(@Model.MulakatID,@AlanTipi.AlanIci,@mAlanIciData.Count)" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-save">&nbsp;</i>Kaydet</a>
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="panel panel-default form-horizontal" style="margin:0px;">
+                                <table class="table " style="@Color">
+                                    <thead>
+                                        <tr>
+                                            <th width="40">S.No</th>
+                                            <th>Ad Soyad</th>
+                                            @if (!Model.SonucHesaplandi && bSurecKayit && Model.AlanDisiKota > 0)
+                                            {
+                                                <th width="75">
+
+                                                </th>
+                                            }
+                                            <th width="80">@(Model.IsAlesYerineDosyaNotuIstensin ? "Dosya Notu" : "Ales Notu")</th>
+                                            <th width="70">AGNO</th>
+                                            @if (Model.MulakatSurecineGirecek)
+                                            {
+                                                <th width="110">Yzl.Notu</th>
+                                                <th width="110">Szl.Notu</th>
+                                                <th width="35" title="Bilimsel Hazırlık">B.Haz</th>
+                                            }
+                                            <th width="19"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="9">
+                                                <div style="height:276px;overflow-y:scroll;">
+                                                    <table id="AI_fltr_@Model.MulakatID" class="table table-hover alantip_@(Model.MulakatID + "_" + AlanTipi.AlanIci)" style="width:100%;table-layout:fixed;margin:0px;">
+                                                        @{
+                                                            int inx = 1;
+                                                            foreach (var item in mAlanIciData)
+                                                            {
+                                                                <tr class="mainRow bstR_@item.BasvuruTercihID" style="color:@((item.SuccessRow || (!item.MulakatSurecineGirecek && !Model.IsAlesYerineDosyaNotuIstensin)) ? "green;" : "red;") @(item.LOgrenimDurumID.HasValue && item.LOgrenimDurumID == OgrenimDurum.HalenOğrenci ? "font-weight:bold;" : "")">
+                                                                    <td width="40" style="font-size:11pt;font-weight:bold;">
+                                                                        @(inx++)
+                                                                        <input type="text" style="display:none;" name="BasvuruTercihID" value="@item.BasvuruTercihID" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td style="width:22px;" title="öğrenciyi gör">
+                                                                                    <i class="fa fa-eye bstR_@item.BasvuruTercihID" style="color:@((item.SuccessRow || (!item.MulakatSurecineGirecek && !Model.IsAlesYerineDosyaNotuIstensin)) ? "green" : "red");cursor:pointer;" onclick="getDetailOgr('@item.BasvuruID')"></i>
+                                                                                </td>
+                                                                                <td title="öğrenciyi gör">
+                                                                                    <span class="AI_fltrAdS_@Model.MulakatID" style="cursor:pointer;" onclick="getDetailOgr('@item.BasvuruID')">
+                                                                                        @item.AdSoyad
+                                                                                    </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    @if (!Model.SonucHesaplandi && bSurecKayit && Model.AlanDisiKota > 0)
+                                                                    {
+                                                                        <td width="75">
+                                                                            <span title="Alan dışına aktar" style="cursor:pointer;font-size:8pt;" onclick="AlanTipDegistir('@item.UniqueID','@item.AdSoyad',false)">A.D Aktar  <i class="fa fa-fast-forward fa-lg"></i></span>
+
+                                                                        </td>
+                                                                    }
+                                                                    <td width="80">
+                                                                        @if (NotGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
+                                                                        {
+                                                                            <input type="text" name="AlesNotuOrDosyaNotu" class="DosyNot_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.AlesNotuOrDosyaNotu" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @(item.AlesNotuOrDosyaNotu.HasValue ? item.AlesNotuOrDosyaNotu.Value.ToString("n2") : "Snv-Yok")
+                                                                        }
+                                                                    </td>
+                                                                    <td width="70">
+                                                                        @if (item.LOgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                                                                        {
+                                                                            <span title="Final sınavları itibariyle mezun durumunda olacak.Bu öğrencinin Agno bilgisi güncel değildir!">
+                                                                                <i class="fa fa-exclamation" style="color:red;font-size:13pt;"> @item.Agno.ToString("n2")</i>
+                                                                            </span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fa fa-check" style="color:green;"></i> @item.Agno.ToString("n2")
+                                                                        }
+
+                                                                    </td>
+
+                                                                    @if (Model.MulakatSurecineGirecek)
+                                                                    {
+                                                                        <td width="110">
+                                                                            @if (NotGirisiAcik && Model.YaziliNotuIstensin)
+                                                                            {
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <td title="Yazılı Sınavına Girmedi İse İşaretleyiniz" width="20">
+                                                                                            <input type="checkbox" style="width:18px;height:18px;cursor:pointer;" name="SinavaGirmediY" id="SinavaGirmediY_@item.BasvuruTercihID" onclick="SnvcheckedChange(this)" gsid="gsnY_@item.BasvuruTercihID" value="true" @item.SinavaGirmediY.ToChecked() />
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="YaziliNotu" @(item.SinavaGirmediY == true ? "disabled=disabled" : "") class="gsnY_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.YaziliNotu" />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (Model.YaziliNotuIstensin == false)
+                                                                                {
+                                                                                    <span>-Snv Yok-</span>
+                                                                                }
+                                                                                else if (item.SinavaGirmediY.HasValue && item.SinavaGirmediY.Value)
+                                                                                {
+                                                                                    <span>-S.Girmedi-</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (item.YaziliNotu.HasValue)
+                                                                                    {
+                                                                                        <span>@item.YaziliNotu.ToString("n2")</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>---</span>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                        <td width="110">
+                                                                            @if (NotGirisiAcik && Model.SozluNotuIstensin)
+                                                                            {
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <td title="Sözlü Sınavına Girmedi İse İşaretleyiniz" width="20">
+                                                                                            <input type="checkbox" style="width:18px;height:18px;cursor:pointer;" onchange="SnvcheckedChange(this)" name="SinavaGirmediS" id="SinavaGirmediS_@item.BasvuruTercihID" gsid="gsnS_@item.BasvuruTercihID" value="true" @item.SinavaGirmediS.ToChecked() />
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="SozluNotu" @(item.SinavaGirmediS == true ? "disabled=disabled" : "") class="gsnS_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.SozluNotu" />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                if (Model.SozluNotuIstensin == false)
+                                                                                {
+                                                                                    <span>-Snv Yok-</span>
+                                                                                }
+                                                                                else if (item.SinavaGirmediS.HasValue && item.SinavaGirmediS.Value)
+                                                                                {
+                                                                                    <span>-S.Girmedi-</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (item.SozluNotu.HasValue)
+                                                                                    {
+                                                                                        <span>@item.SozluNotu.ToString("n2")</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>---</span>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                        if (item.ShowBilimselHazirlik)
+                                                                        {
+                                                                            var BhasEnbl = item.EnabledBilimselHazirlik && (Model.MulakatSinavNotGirisiAktif && Model.MulakatID > 0) || (UserIdentity.Current.IsAdmin && Model.MulakatID > 0 && Model.SonucHesaplandi == false);
+                                                                            <td width="35" title="Bilimsel Hazırlık Var İse İşaretleyiniz">
+                                                                                <input type="checkbox" style="width:18px;height:18px;cursor:pointer;" @(BhasEnbl ? "" : "disabled") name="BilimselHazirlikVar" id="BilimselHazirlikVar_@item.BasvuruTercihID" gsid="BshS_@item.BasvuruTercihID" value="true" @item.BilimselHazirlikVar.ToChecked() />
+                                                                            </td>
+                                                                        }
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfooter>
+                                        <tr>
+                                            <th colspan="8">
+                                                <table width="450" style="margin:0px auto;">
+                                                    <tr>
+                                                        <td width="150" style="text-align:center;color:@_colorAna">Toplam: @mAlanIciData.Count</td>
+                                                        @if (Model.MulakatSurecineGirecek)
+                                                        {
+                                                            <td width="150" style="text-align:center;color:@_colorMul" id="nGirisTamamC_@(Model.MulakatID)_AI">Tamamlanan: @(mAlanIciData.Where(p => p.SuccessRow).Count())</td>
+                                                            <td style="text-align:center;color:@_colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AI">Eksik Olan: @(mAlanIciData.Where(p => !p.SuccessRow).Count())</td>
+                                                        }
+                                                    </tr>
+                                                </table>
+                                            </th>
+                                        </tr>
+                                    </tfooter>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane @(Model.SelectedTabIndex == (Model.MulakatSurecineGirecek ? 3 : 2) ? "active" : "") " id="@tbName-@(Model.MulakatSurecineGirecek ? 3 : 2)">
+                        @if ((Model.BitisTarihi < nowDate || true) && mAlanDisiData.Count > 0)
+                        {
+                            <table class="table" style="width:100%;margin:0px;">
+
+                                <tr>
+                                    <td style="text-align:right;" width="230">Çıktı Al</td>
+                                    <td style="width:4px;">:</td>
+                                    <td>
+                                        @if (Model.MulakatSonuc.Count > 0)
+                                        {
+                                            if (Model.MulakatSurecineGirecek && Model.MulakatID > 0)
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Mülakata Girecek Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesiBolum&MulakatID=@Model.MulakatID&AlanTipID=@AlanTipi.AlanDisi&PuanlarGozuksun=false','auto','modal-dialog modal-lg')">
+
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Mülakata Girecek Öğrenci Listesi
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Başvuru Yapan Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruOgrenciListesi&BasvuruSurecID=@Model.BasvuruSurecID&AlanTipID=@AlanTipi.AlanDisi&OgrenimTipKod=@Model.OgrenimTipKod&ProgramKod=@Model.ProgramKod&PuanlarGozuksun=false','auto','modal-dialog modal-lg')">
+
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Başvuru Yapan Öğrenci Listesi
+                                                </a>
+                                            }
+                                        }
+
+                                        <span id="_ADSonucRapor">
+                                            @if (Model.MulakatSonuc.Any(p => p.MulakatSonucTipID != MulakatSonucTipi.Hesaplanmadı) && Model.MulakatID > 0)
+                                            {
+
+                                                <a href="javascript:void(0);" onclick="getReportTypeBB(@Model.BasvuruSurecID,@AlanTipi.AlanDisi,'@Model.AnabilimDaliKod','@Model.ProgramKod')">
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Başvuru Sonuç Listesi
+                                                </a>
+
+                                            }
+                                            else if (Model.MulakatSurecineGirecek && Model.MulakatSonuc.Count(c => c.AlanTipID == AlanTipi.AlanDisi) > 0 && Model.MulakatSonuc.Count(p => p.AlanTipID == AlanTipi.AlanDisi && p.SuccessRow) == Model.MulakatSonuc.Count(c => c.AlanTipID == AlanTipi.AlanDisi))
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB('','Mülakat Sonuç Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesiBolum&MulakatID=@Model.MulakatID&AlanTipID=@AlanTipi.AlanDisi&PuanlarGozuksun=true&SadecePuanliListe=true','auto','modal-dialog modal-lg')">
+                                                    <span style="font-size:14pt;" title="Yazdır" class="fa fa-print"></span> Mülakat Sonuç Öğrenci Listesi
+                                                </a>
+                                            }
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+
+                        <div class="widget widget-default" style="margin:0px;padding:0px;">
+                            <div class="panel-heading padding-0">
+                                <h3 class="panel-title"><i class="fa fa-group"></i>&nbsp; Alan Dışı @(mAlanDisiData.Count > 0 ? "Başvuran (" + mAlanDisiData.Count + " Kişi)" : " başvuran yok")</h3>
+                                <table style="float:right;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding-right: 2px; padding-left: 2px; " class="text-center" id="AD_filtreKelime_@Model.MulakatID"></td>
+                                            <td><input style="color:red;" type="text" name="search" id="AD_filterInp_@Model.MulakatID" placeholder="ara..."></td>
+                                            <td><a href="javascript:void(0);" onclick="flter($('#AD_filterInp_@Model.MulakatID'),'@AlanTipi.AlanDisi',@Model.MulakatID)" class="label label-warning panel-refresh"> Ara</a></td>
+                                            @if (NotGirisiAcik)
+                                            {
+                                                <td style="width:120px;text-align:right;">
+                                                    @if (mAlanDisiData.Count > 0)
+                                                    {
+                                                        <a onclick="Kaydet(@Model.MulakatID,@AlanTipi.AlanDisi,@mAlanDisiData.Count)" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-save">&nbsp;</i>Kaydet</a>
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="panel panel-default form-horizontal" style="margin:0px;">
+                                <table class="table " style="@Color">
+                                    <thead>
+                                        <tr>
+                                            <th width="40">S.No</th>
+                                            <th>Ad Soyad</th>
+                                            @if (!Model.SonucHesaplandi && bSurecKayit)
+                                            {
+                                                <th width="75">
+                                                </th>
+                                            }
+                                            <th width="80">@(Model.IsAlesYerineDosyaNotuIstensin ? "Dosya Notu" : "Ales Notu")</th>
+                                            <th width="70">AGNO</th>
+
+                                            @if (Model.MulakatSurecineGirecek)
+                                            {
+                                                <th width="110">Yzl.Notu</th>
+                                                <th width="110">Szl.Notu</th>
+                                                <th width="35" title="Bilimsel Hazırlık">B.Haz</th>
+                                            }
+                                            <th width="19"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="9">
+                                                <div style="height:276px;overflow-y:scroll;">
+                                                    <table id="AD_fltr_@Model.MulakatID" class="table table-hover alantip_@(Model.MulakatID + "_" + AlanTipi.AlanDisi)" style="width:100%;table-layout:fixed;margin:0px;">
+                                                        @{
+                                                            int inx2 = 1;
+                                                            foreach (var item in mAlanDisiData)
+                                                            {
+                                                                <tr class="mainRow bstR_@item.BasvuruTercihID" style="color:@((item.SuccessRow || (!item.MulakatSurecineGirecek && !Model.IsAlesYerineDosyaNotuIstensin)) ? "green;" : "red;") @(item.LOgrenimDurumID.HasValue && item.LOgrenimDurumID == OgrenimDurum.HalenOğrenci ? "font-weight:bold;" : "")">
+                                                                    <td width="40" style="font-size:11pt;font-weight:bold;">
+                                                                        @(inx2++)
+                                                                        <input type="text" style="display:none;" name="BasvuruTercihID" value="@item.BasvuruTercihID" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td style="width:22px;" title="öğrenciyi gör">
+                                                                                    <i class="fa fa-eye bstR_@item.BasvuruTercihID" style="color:@((item.SuccessRow || (!item.MulakatSurecineGirecek && !Model.IsAlesYerineDosyaNotuIstensin)) ? "green" : "red");cursor:pointer;" onclick="getDetailOgr('@item.BasvuruID')"></i>
+                                                                                </td>
+                                                                                <td title="öğrenciyi gör">
+                                                                                    <span class="AD_fltrAdS_@Model.MulakatID" style="cursor:pointer;" onclick="getDetailOgr('@item.BasvuruID')">
+                                                                                        @item.AdSoyad
+                                                                                    </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    @if (!Model.SonucHesaplandi && bSurecKayit)
+                                                                    {
+                                                                        <td width="75">
+                                                                            <span title="Alan içine aktar" style="font-size:8pt;cursor:pointer;" onclick="AlanTipDegistir('@item.UniqueID','@item.AdSoyad',true)"><i class="fa fa-fast-backward fa-lg"></i>  A.I aktar</span>
+                                                                        </td>
+                                                                    }
+                                                                    <td width="80">
+                                                                        @if (NotGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
+                                                                        {
+                                                                            <input type="text" name="AlesNotuOrDosyaNotu" class="DosyNot_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.AlesNotuOrDosyaNotu" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            @(item.AlesNotuOrDosyaNotu.HasValue ? item.AlesNotuOrDosyaNotu.Value.ToString("n2") : "Snv-Yok")
+                                                                        }
+                                                                    </td>
+                                                                    <td width="70">
+                                                                        @if (item.LOgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                                                                        {
+                                                                            <span title="Final sınavları itibariyle mezun durumunda olacak.Bu öğrencinin Agno bilgisi güncel değildir!">
+                                                                                <i class="fa fa-exclamation" style="color:red;font-size:13pt;"> @item.Agno.ToString("n2")</i>
+                                                                            </span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <i class="fa fa-check" style="color:green;"></i> @item.Agno.ToString("n2")
+                                                                        }
+                                                                    </td>
+                                                                    @if (Model.MulakatSurecineGirecek)
+                                                                    {
+                                                                        <td width="110">
+                                                                            @if (NotGirisiAcik && Model.YaziliNotuIstensin)
+                                                                            {
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <td width="20" title="Yazılı Sınavına Girmedi İse İşaretleyiniz">
+                                                                                            <input type="checkbox" style="width:18px;height:18px;cursor:pointer;" name="SinavaGirmediY" id="SinavaGirmediY_@item.BasvuruTercihID" onchange="SnvcheckedChange(this)" gsid="gsnY_@item.BasvuruTercihID" value="true" @item.SinavaGirmediY.ToChecked()>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="YaziliNotu" @(item.SinavaGirmediY == true ? "disabled=disabled" : "") class="gsnY_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.YaziliNotu" />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (Model.YaziliNotuIstensin == false)
+                                                                                {
+                                                                                    <span>-Snv Yok-</span>
+                                                                                }
+                                                                                else if (item.SinavaGirmediY.HasValue && item.SinavaGirmediY.Value)
+                                                                                {
+                                                                                    <span>-S.Girmedi-</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (item.YaziliNotu.HasValue)
+                                                                                    {
+                                                                                        <span>@item.YaziliNotu.ToString("n2")</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>---</span>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                        <td width="110">
+                                                                            @if (NotGirisiAcik && Model.SozluNotuIstensin)
+                                                                            {
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <td width="20" title="Sözlü Sınavına Girmedi İse İşaretleyiniz">
+                                                                                            <input style="width:18px;height:18px;cursor:pointer;" type="checkbox" name="SinavaGirmediS" id="SinavaGirmediS_@item.BasvuruTercihID" gsid="gsnS_@item.BasvuruTercihID" onchange="SnvcheckedChange(this)" value="true" @item.SinavaGirmediS.ToChecked() />
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input type="text" name="SozluNotu" @(item.SinavaGirmediS == true ? "disabled=disabled" : "") class="gsnS_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.SozluNotu" />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (Model.SozluNotuIstensin == false)
+                                                                                {
+                                                                                    <span>-Snv Yok-</span>
+                                                                                }
+                                                                                else if (item.SinavaGirmediS.HasValue && item.SinavaGirmediS.Value)
+                                                                                {
+                                                                                    <span>-S.Girmedi-</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (item.SozluNotu.HasValue)
+                                                                                    {
+                                                                                        <span>@item.SozluNotu.ToString("n2")</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span>---</span>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                        if (item.ShowBilimselHazirlik)
+                                                                        {
+                                                                            var BhasEnbl = item.EnabledBilimselHazirlik && (Model.MulakatSinavNotGirisiAktif && Model.MulakatID > 0) || (UserIdentity.Current.IsAdmin && Model.MulakatID > 0 && Model.SonucHesaplandi == false);
+                                                                            <td width="35" title="Bilimsel Hazırlık Var İse İşaretleyiniz">
+                                                                                <input type="checkbox" style="width:18px;height:18px;cursor:pointer;" @(BhasEnbl ? "" : "disabled") name="BilimselHazirlikVar" id="BilimselHazirlikVar_@item.BasvuruTercihID" gsid="BshS_@item.BasvuruTercihID" value="true" @item.BilimselHazirlikVar.ToChecked() />
+                                                                            </td>
+                                                                        }
+
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                    <tfooter>
+                                        <tr>
+                                            <th colspan="8">
+                                                <table width="450" style="margin:0px auto;">
+                                                    <tr>
+                                                        <td width="150" style="text-align:center;color:@_colorAna">Toplam: @mAlanDisiData.Count</td>
+                                                        @if (Model.MulakatSurecineGirecek)
+                                                        {
+                                                            <td width="150" style="text-align:center;color:@_colorMul" id="nGirisTamamC_@(Model.MulakatID)_AD">Tamamlanan: @(mAlanDisiData.Where(p => p.SuccessRow).Count())</td>
+                                                            <td style="text-align:center;color:@_colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AD">Eksik Olan: @(mAlanDisiData.Where(p => !p.SuccessRow).Count())</td>
+                                                        }
+                                                    </tr>
+                                                </table>
+                                            </th>
+                                        </tr>
+                                    </tfooter>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@if (bSurecKayit)
+{
+    <script>
+
+    function AlanTipDegistir(UniqueID, AdSoyad, IsAlanIciOrDisi) {
+        var btbx = bootbox.dialog({
+            message: AdSoyad + " isimli öğrenciyi " + (IsAlanIciOrDisi ? "Alan içine" : "Alan dışına") + "  aktarmak istiyor musunuz?",
+            title: "Alan değiştirme işlemi",
+            buttons: {
+                success: {
+                    label: 'Evet',
+                    className: "btn-danger",
+                    callback: function () {
+                        var id = '@Model.BasvuruSurecID';
+                        var _panel = $('#pndMD_' + '@nID');
+                        _pRefresh(_panel, false);
+                        $.ajax({
+                            url: '@Url.Action("AlanDegistirmeIslemi", "MulakatSureci")',
+                            data: { UniqueID: UniqueID, IsAlanIciOrDisi: IsAlanIciOrDisi },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.Messages.length > 0)
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                getMDDetail('@Id', '@Model.BasvuruSurecID', '@Model.OgrenimTipKod', '@Model.ProgramKod');
+
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                                _pRefresh(_panel, true);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Hayır',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    </script>
+}
+<script>
+
+    $(function () {
+        $('.icheckbox').iCheck({ checkboxClass: 'icheckbox_minimal-grey', radioClass: 'iradio_minimal-grey' });
+
+        $(function () {
+            $('.make-switch')['bootstrapSwitch']();
+        });
+    })
+    function kDownEvent(event,sndr){
+        myMask(event, sndr,  false, 5, 3, 2);
+    }
+    function SnvcheckedChange(sndr) {
+        var IsChecked = $(sndr).prop('checked');
+        var cls = $(sndr).attr("gsid");
+        var $InpGS = $('.' + cls).first();
+        if (IsChecked) {
+            $InpGS.attr("disabled", "disabled");
+            $InpGS.val("");
+        }
+        else {
+            $InpGS.removeAttr("disabled");
+            $InpGS.val("");
+        }
+    }
+
+    $('#AI_filterInp_@(Model.MulakatID)').bind('keypress', function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            flter(this,'@AlanTipi.AlanIci',@(Model.MulakatID));
+        }
+    });
+    $('#AD_filterInp_@(Model.MulakatID)').bind('keypress', function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            flter(this,'@AlanTipi.AlanDisi',@(Model.MulakatID));
+        }
+    });
+    function flter(sndr, type, mulID) {
+        var _val = $(sndr).val();
+        var tableName = "_fltr_" + mulID;
+        var fltrdCol = "_fltrAdS_" + mulID;
+        var filtrDurum = "_filtreKelime_" + mulID;
+        if (type == '@AlanTipi.AlanIci') {
+            tableName = "AI" + tableName;
+            fltrdCol = "AI" + fltrdCol;
+            filtrDurum = "AI" + filtrDurum;
+        }
+        else {
+            tableName = "AD" + tableName;
+            fltrdCol = "AD" + fltrdCol;
+            filtrDurum = "AD" + filtrDurum;
+        }
+
+        if (_val == null || _val.trim() == "")
+        {
+            $('#' + tableName).find('.mainRow').removeClass("hide");
+            $('#' + filtrDurum).html("");
+        }
+        else { 
+            _val = _val.trim().replaceAll('İ', 'i').toLowerCase();
+            var toplam = $('#' + tableName).find('.mainRow').length;
+            $('#' + tableName).find('.' + fltrdCol).each(function (inx, filtrx) {
+                var gVal = $(filtrx).text().trim().replaceAll('İ','i').toLowerCase();
+                var AShow = gVal.indexOf(_val) > -1;
+                if (AShow) {
+                    $(filtrx).parents('tr.mainRow').first().removeClass('hide');
+                }
+                else {
+                    $(filtrx).parents('tr.mainRow').first().addClass('hide');
+                }
+            });
+            var Gizli = $('#'+tableName).find('.mainRow.hide').length;
+            var gosterilen = toplam - Gizli;
+            $('#' + filtrDurum).html("[Ara:  %<span style='color:red;'>" + _val + "</span>%] [Bulunan: <span style='color:red;'>" + gosterilen + "</span>]");
+        }
+
+    }
+    function getReportTypeBB(id,_AlanTipID,_BolumKod,_ProgramKod) {
+        var mdlS = "<table class='table' style='width:100%;table-layout:fixed;'>" +
+                    "<tr>" +
+                      "<td>Listelenecek Sonuç Tipleri </td>" +
+                      "<td><input type='checkbox' id='chkSncTip_@MulakatSonucTipi.Asil' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Asil</span>" +
+                           "<br/>" +
+                           "<input type='checkbox' id='chkSncTip_@MulakatSonucTipi.Yedek' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Yedek</span>" +
+                           "<br />" +
+                           "<input type='checkbox' id='chkSncTip_@MulakatSonucTipi.Kazanamadı'  checked='checked'/> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Kazanamadı</span>" +
+                      "</td>" +
+                    "</tr>" +
+                     "<tr> " +
+                          "<td>Puan Gösterimi</td>" +
+                          "<td>" +
+                          "<input type='checkbox' id='_rprsncTip' checked='checked' /> <span style='cursor:pointer;' onclick='$(this).prev().click()'>Puanlar gösterilsin</span>" +
+                          "</td>" +
+                        "</tr>" +
+                  "</table>";
+        var btbx = bootbox.dialog({
+            message: mdlS,
+            title: "Başvuru sonuç rapor alma işlemi",
+            buttons: {
+                success: {
+                    label: "Rapor Al",
+                    className: "btn-danger",
+                    callback: function () {
+                        var _sncTp = "";
+                        if ($('#chkSncTip_@MulakatSonucTipi.Asil').prop('checked')) {
+                            _sncTp = "@MulakatSonucTipi.Asil";
+                        }
+                        if ($('#chkSncTip_@MulakatSonucTipi.Yedek').prop('checked')) {
+                            _sncTp += (_sncTp == "" ? "" : ",") + "@MulakatSonucTipi.Yedek";
+                        }
+                        if ($('#chkSncTip_@MulakatSonucTipi.Kazanamadı').prop('checked')) {
+                            _sncTp += (_sncTp == "" ? "" : ",") + "@MulakatSonucTipi.Kazanamadı";
+                        }
+                        var _rGtip = "";
+                        var _pgText =  "Puanlı";
+                        _rGtip = _pgText + " Program başvuru listesi";
+                        var _PuanlarGozuksun = $('#_rprsncTip').prop('checked');
+                        yeniDialogBB(null, 'Başvuru Sonuç Listesi (' + _rGtip + ')','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&MulakatID='+@Model.MulakatID+'&RaporTipi=' +@RaporTipleri.BasvuruSonucListesiBolum +'&BasvuruSurecID=' + id + '&AlanTipID=' + _AlanTipID +'&BolumKod=' + _BolumKod + '&ProgramKod=' + _ProgramKod + '&MulakatSonucTipID=' + _sncTp + '&PuanlarGozuksun=' + _PuanlarGozuksun + '','auto','modal-dialog modal-lg')
+
+                    }
+
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        $(btbx).find('.modal-dialog');//.addClass('modal-lg');
+
+    }
+
+    function Kaydet(mlktID, aTip, cnt) {
+        var _panel = $('#pndMD_' + '@nID');
+        var _tAtip=aTip=='@AlanTipi.AlanIci'?"AI":"AD";
+        var _BilimselHazirlik = "[";
+        var _BasvuruTercihID = "[";
+        var _GirisSinavNotuY = "[";
+        var _GirisSinavNotuS = "[";
+        var _SinavaGirmediY = "[";
+        var _SinavaGirmediS = "[";
+        var _AlesNotuOrDosyaNotu = "[";
+        $('.alantip_' + mlktID + "_" + aTip).find('.mainRow').each(function (inx, trx) {
+            var BTercihID = $(trx).find('input[name=BasvuruTercihID]').first().val();
+            var bilhaz = $(trx).find('input[name=BilimselHazirlikVar]').first().prop("checked");
+
+            bilhaz = bilhaz == true;
+            _BasvuruTercihID += (inx > 0 ? "," : "") + "'" + BTercihID + "'";
+            _BilimselHazirlik += (inx > 0 ? "," : "") + "'" + bilhaz + "'";
+
+            if ('@Model.YaziliNotuIstensin.ToString().ToLower()' == 'true') {
+                var YaziliNotu = $(trx).find('input[name=YaziliNotu]').first().val();
+                var SGirmediY = $(trx).find('input[name=SinavaGirmediY]').first().prop("checked");
+                _GirisSinavNotuY += (inx > 0 ? "," : "") + "'" + YaziliNotu + "'";
+                _SinavaGirmediY += (inx > 0 ? "," : "") + "'" + SGirmediY + "'";
+            }
+            else {
+                _GirisSinavNotuY += (inx > 0 ? "," : "") + "''";
+                _SinavaGirmediY += (inx > 0 ? "," : "") + "''";
+            }
+            if ('@Model.SozluNotuIstensin.ToString().ToLower()' == 'true') {
+                var SozluNotu = $(trx).find('input[name=SozluNotu]').first().val();
+                var SGirmediS = $(trx).find('input[name=SinavaGirmediS]').first().prop("checked");
+                _GirisSinavNotuS += (inx > 0 ? "," : "") + "'" + SozluNotu + "'";
+                _SinavaGirmediS += (inx > 0 ? "," : "") + "'" + SGirmediS + "'";
+            }
+            else {
+
+                _GirisSinavNotuS += (inx > 0 ? "," : "") + "''";
+                _SinavaGirmediS += (inx > 0 ? "," : "") + "''";
+            }
+            if ('@Model.IsAlesYerineDosyaNotuIstensin.ToString().ToLower()' == 'true') {
+                var DNot = $(trx).find('input[name=AlesNotuOrDosyaNotu]').first().val();
+                _AlesNotuOrDosyaNotu += (inx > 0 ? "," : "") + "'" + DNot + "'";
+            }
+            else {
+
+                _AlesNotuOrDosyaNotu += (inx > 0 ? "," : "") + "''";
+            }
+        });
+        _BasvuruTercihID += "]";
+        _GirisSinavNotuY += "]";
+        _GirisSinavNotuS += "]";
+        _SinavaGirmediY += "]";
+        _SinavaGirmediS += "]";
+        _BilimselHazirlik += "]";
+        _AlesNotuOrDosyaNotu += "]";
+        var frmD = {
+            "MulakatID": mlktID,
+            "BasvuruSurecID": '@Model.BasvuruSurecID',
+            "IsAlesYerineDosyaNotuIstensin": '@Model.IsAlesYerineDosyaNotuIstensin.ToString().ToLower()',
+            "MulakatSurecineGirecek": '@Model.MulakatSurecineGirecek.ToString().ToLower()',
+            "ProgramKod": '@Model.ProgramKod',
+            "OgrenimTipKod": '@Model.OgrenimTipKod',
+            "AlanTipID": aTip,
+            "BasvuruTercihID": eval(_BasvuruTercihID),
+            "SinavaGirmediY": eval(_SinavaGirmediY),
+            "YaziliNotu": eval(_GirisSinavNotuY),
+            "SinavaGirmediS": eval(_SinavaGirmediS),
+            "SozluNotu": eval(_GirisSinavNotuS),
+            "BilimselHazirlikVar": eval(_BilimselHazirlik),
+            "AlesNotuOrDosyaNotu": eval(_AlesNotuOrDosyaNotu)
+        };
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GirisSinavNotuKaydet", "YGMulakatSureci")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: frmD,
+            success: function (result) {
+                var tamamOlan=0;
+                for (var i = 0; i < result.ColorSet.Data.length; i++) {
+                    var xRw= result.ColorSet.Data[i];
+                    if(xRw.Value=="green")tamamOlan+=1;
+                    $('.bstR_'+xRw.Key).css("color",xRw.Value);
+                }
+                $('#nGirisEksikC_' + mlktID + "_" + _tAtip).html("Eksik Olan: "+(result.ColorSet.Data.length-tamamOlan));
+                $('#nGirisTamamC_' + mlktID + "_" + _tAtip).html("Tamamlanan: "+tamamOlan);
+                if(result.ColorSet.Data.length-tamamOlan==0){
+                    var _lnkUrl = "<a href='javascript:void(0);' onclick=yeniDialogBB('','Mülakat Sonuç Öğrenci Listesi','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesiBolum&MulakatID=@Model.MulakatID&AlanTipID='"+aTip+"'&PuanlarGozuksun=true&SadecePuanliListe=true','auto','modal-dialog modal-lg')><span style='font-size:14pt;' title='Yazdır')' class='fa fa-print'></span> Mülakat Sonuç Öğrenci Listesi</a>"  ;
+                    $('#_'+_tAtip+'SonucRapor').html(_lnkUrl);
+                }
+                else {
+                    $('#_'+_tAtip+'SonucRapor').html("");
+                }
+                showMmMessage(result.Messages, 'Tamam');
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+
+            }
+        });
+    }
+    function getDetailOgr(id) {
+        var _panel = $('#pndMD_' + '@nID');
+         var tbName = "@TabAdlari.MulakatDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetBasvuruDetay", "Ajax")',
+            data: { id: id, tbInx: tID},
+            success: function (result) {
+
+                _pRefresh(_panel, true);
+                var btbx = bootbox.dialog({
+                    message: result.page,
+                    title: "Başvuru Detayı",
+                    buttons: {
+                        danger: {
+                            label: 'Kapat',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                SubData(id);
+                $(btbx).find('.modal-dialog').addClass('modal-lg');
+                var bbBody = $(btbx).find('.bootbox-body').first();
+                $(bbBody).attr("id", "cls-" + id);
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+    function SubData(id) {
+            var _panel = $('#bsvrDet_' + id);
+            var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+            var tID = getSelectedTabID(tbName);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetBasvuruSubData", "Ajax")',
+                data: { 'id': id, 'tbInx': tID},
+                success: function (result) {
+                    var _nme = tbName + "-" + tID;
+                    $('#' + _nme).html(result.page);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+</script>
+@if (IsBootBox)
+{
+    <script type="text/javascript">
+
+        function getMDDetail(id, bsrID, otID, prKod, Isdelete, sndr) {
+
+            var _panel = $('#pndMD_' + '@nID');
+            var tbName = "@tbName";
+            var tID = getSelectedTabID(tbName);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getMulakatDetay", "YGMulakatSureci")',
+                data: {  BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod,  tbInx: tID, IsDelete: (Isdelete == true),IsBootBox:'@IsBootBox' },
+                success: function (result) {
+                    if (Isdelete != true) {
+                        $('#bb_MD_@nID').html(result);
+                        _pRefresh(_panel, true);
+                    }
+                    else {
+                        var btbx = bootbox.dialog({
+                            message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Mülakat Bilgisini Silmek İstiyor Musunuz?</td></tr></table>",
+                            title: "Mülakat Bilgisi Silme İşlemi",
+                            buttons: {
+                                success: {
+                                    label: "Mülakat Bilgisini Sil",
+                                    className: "btn-danger",
+                                    callback: function () {
+                                        sil(sndr, id);
+                                        _pRefresh(_panel, true);
+                                    }
+
+                                },
+                                danger: {
+                                    label: "Vazgeç",
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                                }
+                            }
+                        });
+                        $(btbx).find('.modal-dialog').addClass('modal-lg');
+                    }
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+
+        }
+
+    </script>
+}

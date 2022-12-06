@@ -1,0 +1,90 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model TDOBasvuruEsDanisman
+@{
+    Layout = null;
+}
+
+
+@using (Ajax.BeginForm("TDOEsDanismanFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTDOEsDanismanFormu" }))
+{
+    @Html.HiddenFor(p => p.TDOBasvuruEsDanismanID);
+    @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
+    @Html.HiddenFor(p => p.IsDegisiklikTalebi);
+    @Html.HiddenFor(p => p.UniqueID);
+    <div class="panel panel-default form-horizontal">
+        <div class="panel-heading padding-0" style="padding: 0px; margin: 0px;">
+            <h3 class="panel-title"><span style="color:@(Model.IsDegisiklikTalebi==true?"maroon":"")">Tez Eş Danışmanı @(Model.IsDegisiklikTalebi ? "Değişikliği " : "")Öneri Formu</span> </h3>
+        </div>
+        <div class="panel-body form-group-separated" style="padding:5px;">
+            @if (Model.IsDegisiklikTalebi)
+            {
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-5 control-label">Önceki Eş Danışman Adı</label>
+                    <div class="col-md-8 col-xs-7">
+                        <input type="text" name="OncekiEsDanismanAdi" id="OncekiEsDanismanAdi" readonly autocomplete="off" maxlength="512" value="@Model.OncekiEsDanismanAdi" class="form-control upperCase" style="color:black;" />
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Önerilen Eş Danışman Ad Soyad</label>
+                <div class="col-md-8 col-xs-7">
+                    <input type="text" name="AdSoyad" id="AdSoyadX" maxlength="512" autocomplete="off" value="@Model.AdSoyad" class="form-control upperCase" style="color:black;" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Ünvanı</label>
+                <div class="col-md-8 col-xs-7">
+                    <select class="form-control" id="UnvanAdi" name="UnvanAdi" style="width:100%;color:black;">
+                        <option value=""></option>
+                        <option @(@Model.UnvanAdi == "DR." ? "selected" : "") value="DR.">DR.</option>
+                        <option @(@Model.UnvanAdi == "PROF.DR." ? "selected" : "") value="PROF.DR.">PROF.DR.</option>
+                        <option @(@Model.UnvanAdi == "DOÇ.DR." ? "selected" : "") value="DOÇ.DR.">DOÇ.DR.</option>
+                        <option @(@Model.UnvanAdi == "DR.ÖĞR.ÜYE." ? "selected" : "") value="DR.ÖĞR.ÜYE.">DR.ÖĞR.ÜYE.</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Üniversite Adı</label>
+                <div class="col-md-8 col-xs-7">
+                    <input type="text" name="UniversiteAdi" id="UniversiteAdi" autocomplete="off" maxlength="512" value="@Model.UniversiteAdi" class="form-control upperCase" style="color:black;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Anabilim Dalı</label>
+                <div class="col-md-8 col-xs-7">
+                    <input type="text" name="AnabilimDaliAdi" id="AnabilimDaliAdi" autocomplete="off" maxlength="512" value="@Model.AnabilimDaliAdi" class="form-control upperCase" style="color:black;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Programı</label>
+                <div class="col-md-8 col-xs-7">
+                    <input type="text" name="ProgramAdi" id="ProgramAdi" maxlength="512" autocomplete="off" value="@Model.ProgramAdi" class="form-control upperCase" style="color:black;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Eş Danışman EMail</label>
+                <div class="col-md-8 col-xs-7">
+                    <input type="text" name="EMail" id="EMail" maxlength="1024" value="@Model.EMail" autocomplete="off" class="form-control" style="color:black;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-xs-5 control-label">Gerekçe</label>
+                <div class="col-md-8 col-xs-7">
+                    <textarea class="form-control" name="Gerekce" id="Gerekce" maxlength="1024" autocomplete="off" style="min-height:100px;">@Model.Gerekce</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    $('.upperCase').each(function (ix, sndr) {
+        $(sndr).attr('autocomplete', 'off');
+        $(sndr).bind('keyup', function (e) {
+            var vl = $(sndr).val();
+            $(sndr).val(vl.replaceAll("i", "İ").toUpperCase());
+        });
+    });
+</script>

@@ -1,0 +1,77 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model frAnketDetay
+@{
+    Layout = null;
+    int inx = 0;
+}
+
+@if (Model.IsTabloVeriGirisi)
+{
+    <table class="table" style="width:100%;table-layout:fixed;margin:0px;font-size:9pt;">
+        <tr>
+            <th width="15" style="text-align:left;">#</th>
+            @foreach (var item2 in Model.frAnketSecenekDetay.OrderBy(o=>o.SiraNo))
+            {
+                <th style="text-align:left;">@item2.SecenekAdi</th>
+            }
+        </tr>
+        @foreach (var itemR in Model.AnketCevaplaris)
+        {
+            inx++;
+            <tr>
+                <td width="15" style="text-align:left;">
+                    @inx 
+                </td> 
+                @for (int i = 1; i <= Model.frAnketSecenekDetay.Count; i++)
+                {
+                    <td style="text-align:left;">@itemR.GetType().GetProperty("TabloVeri"+i).GetValue(itemR,null)</td>
+                }
+               
+            </tr>
+        }
+    </table>
+}
+else
+{
+
+    <table class="table" style="width:100%;table-layout:fixed;margin:0px;font-size:9pt;">
+
+        @foreach (var item in Model.frAnketSecenekDetay.OrderBy(o=>o.SiraNo))
+        {
+
+            <tr>
+                <td>
+
+                    @if (item.IsEkAciklamaGir)
+                    {
+                        <table style="table-layout:fixed;width:100%;margin:0px;font-size:9pt;">
+                            <tr>
+                                <td width="120" style="vertical-align:top;">@item.SecenekAdi</td>
+                                <td> 
+                                        <table class="table" style="width:100%;table-layout:fixed;margin:0px;">
+
+                                            @foreach (var itemC in item.AnketCevaplaris.Select((s, inxx) => new { s.EkAciklama, inx = inxx + 1 }).OrderBy(o => o.inx))
+                                            {
+                                                <tr>
+                                                    <td width="30">@itemC.inx</td>
+                                                    <td>@itemC.EkAciklama</td>
+                                                </tr>
+                                            }
+                                        </table> 
+                                </td>
+                            </tr>
+                        </table>
+
+                    }
+                    else
+                    {
+                        @item.SecenekAdi
+                    }
+                </td>
+                <td width="55" style="text-align:right;">@item.Count</td> 
+            </tr>
+        }
+
+    </table>  
+}
+ 

@@ -1,0 +1,336 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model BelgeTalepleriDetaymodel
+@{
+    Layout = null;
+    var _color = Model.Color; 
+    var kRole = RoleNames.BelgeTalebiDuzelt.InRoleCurrent(); 
+
+}
+<div class="panel panel-success" id="btDetay_@Model.BelgeTalepID" style="color:@_color">
+
+    <div class="panel-heading  padding-0">
+        <h3 class="panel-title"><i class="fa fa-file-text"></i> Talep Detayı</h3>
+        <ul class="panel-controls">
+            <li><a href="javascript:void(0)" onclick="printTalep('#cls-@Model.BelgeTalepID','Online Belge Talep')" class="panel-refresh"><span class="fa fa-print"></span></a></li>
+            <li><a href="javascript:void(0)" onclick="getDetail(@Model.BelgeTalepID)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+        </ul>
+    </div>
+    <div class="panel-body" style="padding: 0px;">
+        <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <table style="margin:0px;">
+                        <tr>
+                            <td width="150" style="text-align:center;">
+                                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                            </td>
+                            <td style="padding-left:10px;text-align:left;">
+
+                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                    <tr>
+                                        <td width="140">Ad Soyad</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.AdiSoyadi
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">Öğrenci No</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.OgrenciNo
+                                        </td>
+                                    </tr>
+                                    @if (Model.KullaniciTipAdi.IsNullOrWhiteSpace() == false)
+                                    {
+                                        <tr>
+                                            <td>Kullanıcı Tipi</td>
+                                            <td>:</td>
+                                            <td>@Model.KullaniciTipAdi</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>Öğrenim Seviyesi</td>
+                                        <td>:</td>
+                                        <td>@Model.OgrenimTipAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Program</td>
+                                        <td>:</td>
+                                        <td>@Model.ProgramAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Talep Durumu</td>
+                                        <td>:</td>
+                                        <td>   
+                                            @{
+                                                var vBil = Model.BelgeTalepID.toVerilmeBilgisi(Model.DurumListeAdi);
+                                                string tColor = "style=cursor:pointer;" + (vBil.Value < 0 ? "color:maroon;" : Model.Color);
+                                                string vClass = (vBil.Value < 0 ? "fa fa-warning" : Model.ClassName);
+                                               <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td style="width:30px;">
+                                                            @if (!Model.ClassName.IsNullOrWhiteSpace())
+                                                            {
+                                                                <span class="tooltips mColor_@Model.BelgeTalepID" data-style="blue" data-original-title="@Model.BelgeDurumAciklamasi" @(!Model.Color.IsNullOrWhiteSpace() ? tColor : "")>
+                                                                    <i id="bticon_@Model.BelgeTalepID" class="@vClass" style="font-size:17pt;font-weight:bold;"></i>
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="@vClass mColor_@Model.BelgeTalepID" style="font-size:17pt;font-weight:bold;@(vBil.Value<0? tColor: Model.Color)"></i>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <span>@Html.Raw(vBil.Caption)</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            }     
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="widget widget-default" style="margin:0px; color:@_color">
+                        <div class="panel-body form-group-separated">
+                            <div class="col-md-6 col-xs-6">
+                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                    <tr>
+                                        <td width="140">Eğitim Öğretim Yılı</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @(Model.OgretimYiliBaslangic + " / " + Model.OgretimYiliBitis + " " + Model.DonemAdi)
+                                        </td>
+                                    </tr>   
+                                    <tr>
+                                        <td width="140">Öğrenim Durumu</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.OgrenimDurumAdi
+                                        </td>
+                                    </tr>  
+                                   
+                                    <tr>
+                                        <td width="140">E-Posta</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.Email
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">Telefon</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.Telefon
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">@(Model.BelgeTipID == BelgeTalepTip.Diğer ? "Belge Adı" : "Belge Tipi")</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            <span  style="cursor:pointer;" class="popovers @Model.DilFlagClass" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Belgenin hazırlanacağı dil: @Model.DilAdi"></span>@Model.DilAdi , 
+                                            @if (Model.BelgeTipID == BelgeTalepTip.Diğer)
+                                            {
+                                                @Model.BelgeAdi
+                                            }
+                                            else
+                                            {
+                                                @Model.BelgeTipAdi
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">Talep Tarihi</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.TalepTarihi
+                                        </td>
+                                    </tr>  
+                                </table>          
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                   
+                                   
+                                    <tr>
+                                        <td width="140">Belge Fiyatı</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @(Model.BelgeFiyati.HasValue && Model.BelgeFiyati.Value > 0 ? Model.BelgeFiyati.Value + " TL" : "Ücretsiz")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140" title="Dönemde Verilebilecek Ücretsiz Miktar">Ücretsiz Miktar</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @(Model.UcretsizMiktar.HasValue ? (Model.UcretsizMiktar + " Adet") : "Tanımlanmadı")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">Dönemlik Kota</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @(Model.DonemlikKotaVar ? (Model.DonemlikKota.Value + " Adet") : "Ücretli Olduğu İçin Kota Yok")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140" title="Dönemde Talep Edilip Henüz Verilmeyen Toplam Belge">Henüz Verilmeyen</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.SeciliDonemdehenuzVerilmeyenMiktar Adet
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140" title="Dönemde Verilebilecek Toplam Miktar">Toplam Verilen</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.SeciliDonemdeVerilenMiktar Adet
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="140">İstenen Miktar</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            @Model.IstenenBelgeSayisi Adet
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body form-group-separated">
+
+                        <div class="col-md-12">
+                            @if (Model.BelgeTipID == BelgeTalepTip.İlgiliMakama || Model.BelgeTipID == BelgeTalepTip.Diğer)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-6 col-xs-6 control-label">@(Model.BelgeTipID == BelgeTalepTip.İlgiliMakama ? "İlgili Makam Açıklaması" : "Diğer Belge Türü Açıklaması")</label>
+                                    <div class="col-md-6 col-xs-6">@Model.BelgeAciklamasi</div>
+                                </div>
+                            }
+                            @{
+                                var _id = "IstenenBelgeDurumID_" + Model.BelgeTalepID.ToString();
+                                <div class="form-group">
+                                    <label class="col-md-6 col-xs-6 control-label">İşlem Durumu</label>
+                                    <div class="col-md-6 col-xs-6">
+                                        @if (Model.Edit && kRole )
+                                        {
+                                            @Html.DropDownList("BelgeDurumID", null, new { id = _id, onchange = "fiyatHesapla(" + Model.BelgeTalepID + ")" })
+                                        }
+                                        else
+                                        {
+                                            @Model.DurumListeAdi
+                                        }
+                                    </div>
+                                </div>
+                                <div id="miktarbilgi_@Model.BelgeTalepID" class="form-group @(Model.BelgeDurumID==BelgeTalepDurum.Verildi?"":"hide")">
+                                    <label class="col-md-6 col-xs-6 control-label">Verilen miktar</label>
+                                    <div class="col-md-6 col-xs-6">
+                                        @if (Model.Edit && kRole )
+                                        {
+                                            @Html.DropDownListFor(model => model.VerilenBelgeSayisi, null, "", new { id = "VerilenBelgeSayisi_" + Model.BelgeTalepID, onChange = "fiyatHesapla(" + Model.BelgeTalepID + ")" })
+                                        }
+                                        else
+                                        {
+                                            @Model.VerilenBelgeSayisi
+                                        }
+                                    </div>
+                                </div>
+                                <div id="fiyatBilgi_@Model.BelgeTalepID" class="form-group @(Model.BelgeDurumID==BelgeTalepDurum.Verildi?"":"hide")">
+                                    <label class="col-md-6 col-xs-6 control-label">Toplam Fiyat</label>
+                                    <div class="col-md-6 col-xs-6" id="toplamFiyat_@Model.BelgeTalepID" style="font-size:22pt;">
+                                        @if (Model.VerilenBelgeTutar.HasValue && Model.VerilenBelgeTutar.Value == 0)
+                                        {
+                                            @("Ücretsiz")
+                                        }
+                                        else
+                                        {
+                                            @(Model.VerilenBelgeTutar.HasValue ? Model.VerilenBelgeTutar.Value.ToString() + " TL" : "")
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group @(Model.BelgeDurumID==BelgeTalepDurum.Kapatildi?"":"hide")" id="aciklamabilgi_@Model.BelgeTalepID">
+                                    <label class="col-md-6 col-xs-6 control-label">Kapatma Açıklaması</label>
+                                    <div class="col-md-6 col-xs-6">
+                                        @if (Model.Edit && kRole)
+                                        {
+                                            <textarea id="BelgeDurumAciklamasi_@Model.BelgeTalepID" name="BelgeDurumAciklamasi">@(Model.BelgeDurumAciklamasi.IsNullOrWhiteSpace() ? "Katkıpayı ödemesi yapılmadığı için kapatıldı." : Model.BelgeDurumAciklamasi)</textarea>
+                                        }
+                                        else
+                                        {
+                                            @Model.BelgeDurumAciklamasi
+                                        }
+                                    </div>
+                                </div>
+                                if (Model.Edit && kRole)
+                                {
+                                    <div class="form-group" id="btnKyt_@Model.BelgeTalepID">
+                                        <label class="col-md-6 col-xs-6 control-label"></label>
+                                        <div class="col-md-6 col-xs-6">
+                                            <input type="button" value="Kaydet" onclick="kaydet(@Model.BelgeTalepID)" />
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+    function fiyatHesapla(id) {
+        var secimval = $('#IstenenBelgeDurumID_' + id).val();
+        if (secimval == null || secimval == "") {
+            $('#btnKyt_' + id).addClass("hide");
+        } else {
+
+            $('#btnKyt_' + id).removeClass("hide");
+        }
+        if (secimval == '@BelgeTalepDurum.Verildi') {
+            $('#miktarbilgi_' + id).removeClass("hide");
+            $('#fiyatBilgi_' + id).removeClass("hide");
+            $('#aciklamabilgi_' + id).addClass("hide");
+            var mktr = $('#VerilenBelgeSayisi_' + id).val();
+            if (mktr == null || mktr == "" || parseInt(mktr) < 1) {
+                alert('Verilen miktarı seçiniz!');
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("miktarHesapla", "BelgeTalebi")',
+                data: { 'id': id, miktar: mktr },
+                success: function (result) {
+                    var msg = result + " TL";
+                    if (parseFloat(result) <= 0) {
+                        msg = 'Ücretsiz';
+                    }
+                    $('#toplamFiyat_' + id).html(msg);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+        else {
+            $('#fiyatBilgi_' + id).addClass("hide");
+            $('#miktarbilgi_' + id).addClass("hide");
+            if (secimval == '@BelgeTalepDurum.Kapatildi') $('#aciklamabilgi_' + id).removeClass("hide")
+            else $('#aciklamabilgi_' + id).addClass("hide")
+        }
+    }
+
+</script>
+

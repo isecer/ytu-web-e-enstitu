@@ -1,0 +1,119 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model SRSalonSaatlerModel
+@{
+    /**/
+
+    Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading padding-0" style="padding:0px;">
+        <h3 class="panel-title" style="font-size:11pt;">
+            <span>@(Model.Tarih.ToString("yyyy.MM.dd") + " " + Model.HaftaGunAdi) Tarihine ait saatler</span>
+        </h3>
+        <div class="pull-right">
+            <span class="panel-refresh"></span>
+        </div>
+    </div>
+    <div class="panel-body" style="padding-top:2px;padding-bottom:2px;">
+        @if (Model.HaftaGunundeSaatlerVar)
+        {
+            var seciliOlan = Model.Data.Where(p => p.SalonDurumID == SRSalonDurum.Alındı).FirstOrDefault();
+            if (seciliOlan != null)
+            {
+                <input type="text" name="BasSaat" id="BasSaat" style="display:none;" value="@seciliOlan.BasSaat" />
+                <input type="text" name="BitSaat" id="BitSaat" style="display:none;" value="@seciliOlan.BitSaat" />
+            }
+            else
+            {
+                <input type="text" name="BasSaat" id="BasSaat" style="display:none;" />
+                <input type="text" name="BitSaat" id="BitSaat" style="display:none;" />
+            }
+            <input type="text" style="display:none;" name="HaftaGunID" value="@Model.HaftaGunID" />
+
+            <table class="" style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th width="10px">
+
+                    </th>
+                    <th width="110">Saat Aralığı</th>
+
+                    @if (!Model.IsPopupFrame)
+                    {
+                        <th width="90">Durum</th>
+                        <th>Açıklama</th>
+                    }
+                    else
+                    {
+                        <th>Durum</th>
+                    }
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding:0px;">
+                        <div class="scrlSaatler" style="max-height:206px;overflow:auto;">
+                            <table style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+                                @foreach (var item in Model.Data)
+                                {
+
+
+                                    <tr style="color:@item.Color">
+                                        <td width="10px">
+                                            <span style="font-size:17pt;font-weight:bold;" class="fa fa-caret-right"></span>
+                                        </td>
+                                        <td style="padding:1px;" width="110">
+                                            <label style="padding:0px;margin:1px;cursor:pointer;">
+                                                <input type="radio" name="Secildi" id="Secildi" onchange="_setSaat(this,'@item.BasSaat','@item.BitSaat')" value="true" @(item.Disabled ? "disabled" : "") @(item.Checked ? "checked=checked" : "") />
+                                                <span style="font-weight:bold;">
+                                                    @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                </span>
+                                            </label>
+                                        </td>
+                                        @if (!Model.IsPopupFrame)
+                                        {
+                                            <td width="90" style="margin:0px;padding:0px;">
+                                                <span title="@item.Aciklama"> @item.SalonDurumAdi</span>
+                                            </td>
+                                            <td>
+                                                @item.Aciklama
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="margin:0px;padding:0px;">
+                                                <span title="@item.Aciklama"> @item.SalonDurumAdi</span>
+                                            </td>
+
+                                        }
+                                    </tr>
+
+                                }
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <div style="max-height:206px;overflow:auto;">
+                <table>
+                    <tr>
+                        <td>@Model.GenelAciklama</td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+    </div>
+</div>
+<script>
+    $('.scrlSaatler').slimScroll({
+        color: 'red',
+        height: '@(Model.HaftaGunundeSaatlerVar?"206px":"225px;")'
+    });
+    function _setSaat(sndr, bassat, bitsaat) {
+        $('#BasSaat').val(bassat);
+        $('#BitSaat').val(bitsaat);
+    }
+</script>

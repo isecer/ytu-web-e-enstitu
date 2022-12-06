@@ -1,0 +1,107 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel 
+@using BiskaUtil;
+@model frOzelTanimlar
+@{
+    ViewBag.Title = "getDetay";
+    Layout = null;
+    var haftaGunleri = (List<HaftaGunleri>)ViewBag.HaftaGunleri;
+}
+
+<div class="panel panel-success" id="dvDetay_@Model.SROzelTanimID">
+    <div class="panel-heading  padding-0">
+        <div class="portlet-title">
+            <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+        </div>
+    </div>
+    <div class="panel-body" style="padding: 0px;">
+        <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body form-group-separated">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Enstitü</label>
+                            <div class="col-md-9">@Model.EnstituAdi</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Özel Tanım Tipi</label>
+                            <div class="col-md-9">@Model.SROzelTanimTipAdi</div>
+                        </div>
+                        @if (Model.TalepTipAdi.IsNullOrWhiteSpace() == false)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Talep Tipi</label>
+                                <div class="col-md-9">@Model.TalepTipAdi</div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Rezervasyon Bilgi</label>
+                            <div class="col-md-9">
+                                @if (Model.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit)
+                                {
+                                    @(Model.Gun + " " + Model.AyAdi)
+                                }
+                                else if (Model.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
+                                {
+                                    <span>@Model.BasTarih.Value.ToString("dd.MM.yyyy") - @Model.BitTarih.Value.ToString("dd.MM.yyyy") </span>
+                                }
+                                else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
+                                {
+                                    var dofW = Model.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
+                                    var haftaGunu = haftaGunleri.Where(p => p.HaftaGunID == dofW).First();
+
+                                    <span>
+                                        @Model.SalonAdi <br />
+                                        @Model.Tarih.ToString("dd.MM.yyyy") @haftaGunu.HaftaGunAdi
+                                        @foreach (var item2 in Model.SROzelTanimSaatlers)
+                                        {
+                                            <br />
+                                                                                        <span>@string.Format("{0:hh\\:mm}", item2.BasSaat) -@string.Format("{0:hh\\:mm}", item2.BitSaat)</span>
+                                        }
+                                    </span>
+                                }
+                                else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezerve)
+                                {
+                                    @Model.SalonAdi <br />
+                                                                                <span>@Model.BasTarih.Value.ToString("dd.MM.yyyy") - @Model.BitTarih.Value.ToString("dd.MM.yyyy") Tarih Arası</span>
+                                    if (Model.SROzelTanimGunlers.Count > 0)
+                                    {
+                                        <table style="width:100%;table-layout:fixed;" class="table">
+                                            <tr>
+                                                <th>Hafta Günü</th>
+                                            </tr>
+                                            @foreach (var itmHg in Model.SROzelTanimGunlers)
+                                            {
+                                                <tr>
+                                                    <td>@haftaGunleri.Where(p => p.HaftaGunID == itmHg.HaftaGunID).First().HaftaGunAdi</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Açıklama</label>
+                            <div class="col-md-9">
+                                @Model.Aciklama
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Durum</label>
+                            <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                <span class="label label-@(Model.IsAktif ? "success" : "danger")">@(Model.IsAktif ? "Aktif" : "Pasif")</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">İşlem Yapan</label>
+                            <div class="col-md-9">@Model.IslemYapan [@Model.IslemTarihi.ToFormatDateAndTime()]</div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

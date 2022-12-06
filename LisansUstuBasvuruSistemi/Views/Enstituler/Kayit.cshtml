@@ -1,0 +1,139 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model Enstituler
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" id="FrmEnstitu" role="form">
+        <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@Model.EnstituKod" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.EnstituKod.IsNullOrWhiteSpace() ? "Yeni Enstitü Tanımlama İşlemi" : "Enstitü Bilgisi Düzenleme İşlemi")</h3> 
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü Kodu</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="EnstituKod" id="EnstituKod" value="@Model.EnstituKod" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="EnstituAd" id="EnstituAd" value="@Model.EnstituAd" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü Kısa Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="EnstituKisaAd" id="EnstituKisaAd" value="@Model.EnstituKisaAd" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Smtp Host Adresi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SmtpHost" id="SmtpHost" value="@Model.SmtpHost" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Smtp Kullanıcı Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SmtpKullaniciAdi" id="SmtpKullaniciAdi" value="@Model.SmtpKullaniciAdi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Smtp Mail Adresi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SmtpMailAdresi" id="SmtpMailAdresi" value="@Model.SmtpMailAdresi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Smtp Port</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SmtpPortAdresi" id="SmtpPortAdresi" value="@Model.SmtpPortAdresi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">SSL Aktif Mi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="SmtpSSL" class="toggle" @Model.SmtpSSL.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Smtp Mail Şifresi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="password" name="SmtpSifre" id="SmtpSifre" value="@Model.SmtpSifre" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Sistem Erişim Adresi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SistemErisimAdresi" id="SistemErisimAdresi" value="@Model.SistemErisimAdresi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Web Adresi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="WebAdresi" id="WebAdresi" value="@Model.WebAdresi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Toplam Kayıt Kotası</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="ToplamKayitKota" id="ToplamKayitKota" value="@Model.ToplamKayitKota" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">L.U. Başvurda Mail Gönder</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="LUBMailGonder" class="toggle" @Model.LUBMailGonder.ToChecked() />
+                                    </div>
+                                </div>
+
+                            </div>
+                            @if (!Model.EnstituKod.IsNullOrWhiteSpace())
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+   
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+
+</script>

@@ -1,0 +1,41 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@model mdlMailMainContent
+@{
+    Layout = null;
+}
+ 
+<div style="background-color:#d6dde5;font-size:13px">
+    <div style="background-color:#496a97;max-width:750px;margin:0px auto;">
+        <table style="max-width:750px;table-layout:fixed;margin:0px auto;">
+            <tr>
+                <td style="text-align:center;background-color:#496a97;">
+                    <img alt="" src="@Model.LogoPath" style="max-width:60px;margin:0px auto;" width="60" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:center;background-color:#496a97;">
+                    <span style="font-size: 20px;color: rgb(255, 255, 255);font-family: 'Times New Roman', Helvetica, Arial, sans-serif">@Model.UniversiteAdi</span> <br />
+                    <span style="font-size: 16px;color: rgb(212, 205, 196);font-family: 'Times New Roman', Helvetica, Arial, sans-serif">@Model.EnstituAdi</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="background-color:#ffffff;max-width:750px;margin:0px auto; padding: 10px 0px 5px 0px;">  
+        <table style="table-layout: fixed;">
+            <tr>
+                <td style="padding: 4px;">
+                    @Html.Raw(Model.Content) 
+                </td>
+            </tr>
+        </table>
+       
+    </div>
+    <div style="background-color:#496a97;max-width:750px;margin:0px auto;color: rgb(255, 255, 255);font-family: 'Times New Roman', Helvetica, Arial, sans-serif">
+        <table style="width:100%;table-layout:fixed;">
+            <tr>
+                <td style="text-align:center;">© 2015 - @(DateTime.Now.Year) EBIS</td>
+            </tr>
+        </table>
+          
+    </div>
+</div>

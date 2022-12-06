@@ -1,0 +1,231 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model basvuruDetayModel
+@{
+    Layout = null; 
+    string Color = Model.DurumColor;
+}
+
+<table style="margin:0px;">
+    <tr>
+        <td width="150" style="text-align:center;">
+            <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+        </td>
+        <td style="padding-left:10px;text-align:left;">
+
+            <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+                <tr>
+                    <td width="140">Ad Soyad</td>
+                    <td width="10">:</td>
+                    <td>
+                        @Model.Ad @Model.Soyad
+                    </td>
+                </tr>
+                <tr>
+                    <td>Kullanıcı Tipi</td>
+                    <td>:</td>
+                    <td>@Model.KullaniciTipAdi</td>
+                </tr>
+                <tr>
+                    <td>Başvuru Tarihi</td>
+                    <td>:</td>
+                    <td>@Model.BasvuruTarihi.ToString()</td>
+                </tr>
+                <tr>
+                    <td>Başvuru Durumu</td>
+                    <td>:</td>
+                    <td>
+                        @if (!Model.DurumClassName.IsNullOrWhiteSpace())
+                        {
+                            <span style="color:@Color;">
+                                <i class="@Model.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @Model.BasvuruDurumAdi
+                            </span>
+                        }
+                        else
+                        {
+                            <span>@Model.BasvuruDurumAdi</span>
+
+                        }
+                        @if (Model.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                        {
+                            <span style="color:red;">(@Model.BasvuruDurumAciklamasi)</span>
+                        }
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<div class="col-md-12">
+    <div class="panel panel-default form-horizontal">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title"><i class="fa fa-book"></i>&nbsp; Öğrenim Bilgisi</h3>
+
+        </div>
+        <div class="panel-body form-group-separated">
+            <div class="col-md-12" style="margin:0px auto;">
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label" style="text-align: left"></label>
+                    <div class="col-md-9 col-xs-8 _LisansEğitimidiv">
+                        <span style="font-size: 9pt;color:#337abb;"> Lisans Eğitim Bilgisi</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Üniversite</label>
+                    <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                        @Model.LUniversiteAdi
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label  padding-top-0 padding-bottom-0">Fakülte</label>
+                    <div class="col-md-9 col-xs-8  padding-top-0 padding-bottom-0">
+                        @Model.LFakulteAdi
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Bölüm</label>
+                    <div class="col-md-9 col-xs-8  padding-top-0 padding-bottom-0">
+                        @Model.LBolumAdi
+                    </div>
+                </div>
+                <div class="form-group lOdurumBilgi @(Model.LUniversiteID==Management.UniversiteYtuKod && Model.BasvuruTercihleri.Any(a=>a.OgrenimTipKod==OgrenimTipi.TezliYuksekLisans)?"":"hide")">
+                    <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Öğrenim Durumu</label>
+                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                        @Html.DropDownList("gLOgrenimDurumID", null, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not Sistemi</label>
+                    <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                        @Html.DropDownList("gLNotSistemID", null, new { @class = "form-control", onchange = "getMNOtMask(this,'gLMezuniyetNotu');getNotTipKontrol(this);" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not</label>
+                    <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                        <input type="text" name="gLMezuniyetNotu" id="gLMezuniyetNotu" autocomplete="off" value="@Model.LMezuniyetNotu" class="form-control notmask">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="msgsB" style="display:none;"></div>
+<script>
+    var maxLenth = 0;
+    var firstLength = 0;
+    var lastLength = 0;
+    var YmaxLenth = 0;
+    var YfirstLength = 0;
+    var YlastLength = 0;
+    function getMNOtMask(sndr, mskID, Resp) {
+        var val = $(sndr).val();
+        Resp = Resp == true;
+        if (!Resp) $('#' + mskID).val("");
+        if (val != "") {
+            $.ajax({
+                url: '@Url.Action("getNotSistemiKontrol", "Basvuru")',
+                data: { 'NotSistemID': val },
+                success: function (result) {
+                    if (mskID == "LMezuniyetNotu") {
+                        maxLenth = result.maxLenth;
+                        firstLength = result.firstLength;
+                        lastLength = result.lastLength;
+                    }
+                    else {
+                        YmaxLenth = result.maxLenth;
+                        YfirstLength = result.firstLength;
+                        YlastLength = result.lastLength;
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+
+        }
+    }
+    function getNotTipKontrol(sndr) {
+        var not = $(sndr).val();
+        if (not == "100") {
+            bootbox.dialog({
+                message: 'Bu seçim transkriptinde yalnızca 100 lük not ortalaması yer alan adaylar tarafından gerçekleştirilmelidir. Transkriptinde 100 lük not ortalaması ile birlikte 4 lük not ortalaması da yer aldığı halde 100 lük not girişi yapan adaylar kayıt haklarını kaybederler. Değerlendirmelerde Yükseköğretim Kurulu nun belirlediği karşılıklar esas alınmaktadır.',
+                title: 'Uyarı',
+                buttons: {
+                    danger: {
+                        label: 'Tamam',
+                        className: "btn-warning"
+                    }
+                }
+            });
+        }
+    }
+    $('#LMezuniyetNotu').keydown(function (e) {
+        myMask(e, this, false, maxLenth, firstLength, lastLength);
+    });
+
+    function _kaydetGNBO() {
+        var retV=false; 
+        var _LOgrenimDurumID=$('#gLOgrenimDurumID').val();
+        var _LNotSistemID=$('#gLNotSistemID').val();
+        var _LMezuniyetNotu=$('#gLMezuniyetNotu').val();
+        $.ajax({
+            url: '@Url.Action("setGBNDetail", "Ajax")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            async: false,
+            dataType: "json",
+            data: {
+                "BasvuruID": @Model.BasvuruID,
+                "gLOgrenimDurumID":_LOgrenimDurumID,
+                "gLNotSistemID": _LNotSistemID,
+                "gLMezuniyetNotu": _LMezuniyetNotu 
+                },
+            success: function (result) {  
+               getMsg(result);
+               retV=result.IsSuccess; 
+
+            },
+            error: function (err) {
+                alert(err.responseText); 
+            }
+        });
+        return retV;
+
+    }
+    function getMsg(result) {
+
+        var cls = result.MessageType == 1 ?
+            'success' : (result.MessageType == 3 ? 'warning' : (result.MessageType == 2 ? 'danger' : 'info'));
+        var pnlStrt = "<div class=panel panel-" + cls + "  style='margin-bottom:3px;'> <div class='panel-body panel-body-pricing'>";
+        
+        var _msgs = "";
+        for (var i = 0; i < result.Messages.length; i++) {
+
+            _msgs += "<p style='margin: 0px; padding: 0px;'><span style='color:red;' class='fa fa-caret-right'></span>&nbsp " + result.Messages[i] + "</p>";
+        }
+        var pnlEnd = "</div></div>";
+        $('#msgsB').html(pnlStrt + _msgs + pnlEnd);
+        bootbox.dialog({
+            title:'Uyarı',
+            message: $('#msgsB').html(),
+            buttons: {
+                danger: {
+                    label: 'Tamam',
+                    className: "btn-success",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+        validateControl(null, result);
+    }
+</script>

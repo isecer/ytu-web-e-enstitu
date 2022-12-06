@@ -1,0 +1,24 @@
+﻿@model DevExpress.XtraReports.UI.XtraReport
+@{
+    Layout = null;
+}
+@if (Model == null)
+{
+    <span style="font-weight:normal;color:maroon;font-size:14pt;">Aranan Döküman Sistemde Bulunamadı!</span>
+}
+else
+{
+
+    @Html.DevExpress().GetStyleSheets(
+                    new StyleSheet { ExtensionSuite = ExtensionSuite.Report }
+                )
+    @Html.DevExpress().GetScripts(
+            new Script { ExtensionSuite = ExtensionSuite.Report }
+        )
+    @Html.DevExpress().WebDocumentViewer(settings =>
+    {
+        settings.Name = "WebDocumentViewer";
+    }).Bind(Model).GetHtml()
+}
+
+

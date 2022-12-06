@@ -1,0 +1,168 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model kmAnketlerCevap
+@{
+    Layout = null;
+}
+@using (Ajax.BeginForm("SetAnket", "Ajax", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmAnket" }))
+{
+    <style>
+        .IsCheckec {
+            background-color: #c4e7f3;
+        }
+    </style>
+    @Html.HiddenFor(p => p.BasvuruSurecID)
+    @Html.HiddenFor(p => p.AnketTipID)
+    @Html.HiddenFor(p => p.AnketID)
+    @Html.HiddenFor(p => p.RowID)
+    @Html.Hidden("jSonData", Model.JsonStringData) 
+    <div class="panel panel-info">
+
+        <div class="panel-body" style="min-height:40px;text-align:center;color:#268a8b;font-weight:bold;font-size:13pt;">
+            @if (Model.AnketTipID == 1)
+            {
+                @("Başvurunuzu tamamlamadan önce lütfen aşağıdaki anketi doldurunuz.")
+            }
+            else if (Model.AnketTipID == 2)
+            {
+                @("Belge Talep işleminizi tamamlamadan önce lütfen aşağıdaki anketi doldurunuz.") 
+            }
+            else if (Model.AnketTipID == 3)
+            {
+                @("KAYIT HAKKI KAZANAN VE KAYIT YAPTIRMAYAN ADAYLAR İÇİN DEĞERLENDİRME ANKETİ") 
+            }
+            else if (Model.AnketTipID == 4)
+            {
+                @("LİSANSÜSTÜ MEZUNİYET SÜRECİ DEĞERLENDİRME ANKETİ") 
+            }
+        </div>
+
+    </div>
+    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+        <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                <div class="col-md-12" style="text-align: left;  height: 464px; overflow: auto;">
+                    <table class="table" style="width:100%;table-layout:fixed;margin:0px;font-size:10pt;">
+                        <tbody>
+                            @foreach (var item in Model.AnketCevapModel)
+                            {
+
+                                <tr class="MainRow" style="color:#268a8b; font-size:12pt;">
+                                    <td width="35">
+                                        @if (!item.SoruBilgi.IsTabloVeriGirisi)
+                                        {
+                                            <input type="text" name="AnketSoruID" id="AnketSoruID_@item.SoruBilgi.AnketSoruID" value="@item.SoruBilgi.AnketSoruID" class="form-control hide" />
+                                            <input type="text" name="AnketSoruSecenekID" id="AnketSoruSecenekID_@item.SoruBilgi.AnketSoruID" value="@item.SecilenAnketSoruSecenekID" class="form-control hide" />
+                                            <input type="text" maxlength="128" name="TabloVeri1" value="" class="form-control hide" />
+                                            <input type="text" maxlength="128" name="TabloVeri2" value="" class="form-control hide" />
+                                            <input type="text" maxlength="128" name="TabloVeri3" value="" class="form-control hide" />
+                                            <input type="text" maxlength="128" name="TabloVeri4" value="" class="form-control hide" />
+                                            <input type="text" maxlength="128" name="TabloVeri5" value="" class="form-control hide" />
+                                            if (!item.SoruSecenek.Any(a => a.IsEkAciklamaGir))
+                                            {
+                                                <textarea class="form-control hide" style="height:60px;" name="AnketSoruSecenekAciklama">@item.SoruBilgi.Aciklama</textarea>
+                                            }
+                                        }
+
+                                        @item.SoruBilgi.SiraNo )
+                                    </td>
+                                    <td>@item.SoruBilgi.SoruAdi </td>
+                                </tr>
+                                <tr style="font-size:11pt;" class="SrRw_@item.SoruBilgi.AnketSoruID">
+                                    <td colspan="2" style="padding: 1px 1px 2px 50px;">
+
+                                        <div class="panel" style="vertical-align:top;">
+                                            <div class="panel-body" id="pnglAnksC_@item.SoruBilgi.AnketSoruID" style="padding-left:0px;padding-right:0px; padding-top:1px;padding-bottom:1px;">
+
+                                                @if (item.SoruBilgi.IsTabloVeriGirisi)
+                                                {
+                                                    <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
+                                                        <tr>
+                                                            <th width="15">#</th>
+                                                            @foreach (var item2 in item.SoruSecenek)
+                                                            {
+                                                                <th>@item2.SecenekAdi</th>
+                                                            }
+                                                        </tr>
+                                                        @for (int i = 1; i <= item.SoruBilgi.IsTabloVeriMaxSatir.Value; i++)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @i
+                                                                    <input type="text" name="AnketSoruID" id="AnketSoruID_@item.SoruBilgi.AnketSoruID" value="@item.SoruBilgi.AnketSoruID" class="form-control hide" />
+                                                                    <input type="text" name="AnketSoruSecenekID" class="form-control hide" />
+                                                                    <textarea class="form-control hide" style="height:20px;" name="AnketSoruSecenekAciklama"></textarea>
+                                                                </td>
+                                                                @for (var ii = 1; ii <= 5; ii++)
+                                                                {
+
+                                                                    <td class="@(ii>item.SoruSecenek.Count?"hide":"")">
+                                                                        <input type="text" maxlength="128" name="TabloVeri@(ii)" value="" class="form-control" />
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    </table>
+                                                }
+                                                else
+                                                {
+                                                    <table class="table-hover" style="width:100%;table-layout:fixed;margin:0px;">
+                                                        @foreach (var item2 in item.SoruSecenek)
+                                                        {
+                                                            <tr class="SrsRw SrsRw_@item2.AnketSoruSecenekID @(item.SecilenAnketSoruSecenekID == item2.AnketSoruSecenekID ? "IsCheckec" : "")" style="cursor:pointer;" onclick="RwClick(@item.SoruBilgi.AnketSoruID,@item2.AnketSoruSecenekID,@item2.IsEkAciklamaGir.ToString().ToLower())">
+                                                                <td width="35">
+                                                                    <i class="@(item.SecilenAnketSoruSecenekID == item2.AnketSoruSecenekID ? "fa fa-circle" : "fa fa-circle-o")" style="font-size:17pt;"></i>
+                                                                </td>
+                                                                <td>
+                                                                    @if (item2.IsEkAciklamaGir)
+                                                                    {
+                                                                        <table style="width:100%;table-layout:fixed;">
+                                                                            <tr>
+                                                                                <td width="180px;">@item2.SecenekAdi</td>
+                                                                                <td>
+                                                                                    <div class="form-group">
+                                                                                        <textarea class="form-control" style="height:60px;" name="AnketSoruSecenekAciklama" id="AnketSoruSecenekAciklama_@item.SoruBilgi.AnketSoruID">@item.SoruBilgi.Aciklama</textarea>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @item2.SecenekAdi
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function RwClick(SrID, SrsID, IsEkAciklamaGir) {
+            $('.SrRw_' + SrID).find('.SrsRw').each(function (sr, rwx) {
+                $(rwx).find('td').eq(0).html('<i class="fa fa-circle-o" style="font-size:17pt;"></i>');
+                $(rwx).removeClass('IsCheckec');
+            })
+            $('.SrsRw_' + SrsID).addClass('IsCheckec');
+            $('.SrsRw_' + SrsID).find('td').eq(0).html('<i class="fa fa-circle" style="font-size:17pt;"></i>');
+            $('#AnketSoruSecenekID_' + SrID).val(SrsID);
+
+        }
+    </script>
+}

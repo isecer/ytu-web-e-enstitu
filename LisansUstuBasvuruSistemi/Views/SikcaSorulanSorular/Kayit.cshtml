@@ -1,0 +1,76 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model SikcaSorulanSorular
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    ViewBag.Title = "Kayit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+        <input type="text" style="display:none;" id="SSSID" name="SSSID" value="@Model.SSSID" />
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-bullhorn"></i>&nbsp; Sıkça Sorulan Sorular Kayıt</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit", Model.SSSID)';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+
+
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div>
+                                        <textarea id="AciklamaHtml" name="AciklamaHtml" class="form-control Ckeditor">@Model.AciklamaHtml</textarea>
+                                        <textarea style="display: none;" id="Aciklama" name="Aciklama">@Model.Aciklama</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckeditor/showCk.js"></script>
+<script>
+
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+    $("form").submit(function (event) {
+        var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText();
+        $('#Aciklama').val(txt);
+    });
+
+</script>

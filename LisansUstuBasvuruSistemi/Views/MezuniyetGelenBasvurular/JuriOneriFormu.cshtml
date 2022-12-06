@@ -1,0 +1,879 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model MezuniyetJuriOneriFormuModel
+@{
+    Layout = null;
+    var TezDanismaniBilgi = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault();
+    var TikUyesi1Bilgi = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi1").FirstOrDefault();
+    var TikUyesi2Bilgi = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi2").FirstOrDefault();
+
+}
+<div class="widget widget-default" style="margin:0px;padding:4px;">
+    <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i>&nbsp; <span class="myCaptionTd"> @(Model.IsDoktoraOrYL ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</span> </h3>
+            <ul class="panel-controls">
+
+                <li><a href="javascript:void(0);" onclick="ShowNote();"><span class="fa fa-info-circle"></span></a></li>
+            </ul>
+        </div>
+        <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
+
+
+            @using (Ajax.BeginForm("JuriOneriFormuPost", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmJuriOneriFormu" }))
+            { 
+                @Html.HiddenFor(p => p.MezuniyetBasvurulariID);
+                @Html.HiddenFor(p => p.MezuniyetJuriOneriFormID); 
+                @Html.Hidden("PostDetayTabAdi", "tab-TezDanismani");
+                @Html.Hidden("SaveData", (Model.MezuniyetJuriOneriFormID > 0 ? "true" : "false"));
+            <div class="panel-body form-group-separated">
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Anabilimdalı / Program</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Model.OgrenciAnabilimdaliProgramAdi
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Model.OgrenciAdSoyad
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Sınavda Tez Başlığı Değişecek Mi?</label>
+                    <div class="col-md-9 col-xs-10">
+                        <select class="form-control" style="width:100%;" name="IsTezBasligiDegisti" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari').removeClass('hide'); }else{$('.RwtezBasliklari').addClass('hide');}">
+                            <option @((Model.IsTezBasligiDegisti == null).ToSelected()) value=""></option>
+                            <option @((Model.IsTezBasligiDegisti == true).ToSelected()) value="true">Tez Başlığı Değişecek</option>
+                            <option @((Model.IsTezBasligiDegisti == false).ToSelected()) value="false">Tez Başlığı Değişmeyecek</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
+                    <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı Türkçe</label>
+                    <div class="col-md-9 col-xs-10">
+                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
+                    <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı İngilizce</label>
+                    <div class="col-md-9 col-xs-10">
+                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control" />
+                    </div>
+                </div>
+            </div>
+                <div class="panel panel-primary" style="margin:0px;margin-top:0px;">
+                    <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab-TezDanismani" data-toggle="tab" aria-expanded="false">
+                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">Tez Danışmanı</span>
+                                </a>
+                            </li>
+                            @if (Model.IsDoktoraOrYL)
+                            {
+                                <li>
+                                    <a href="#tab-TikUyesi1" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">1. Tik Üyesi</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab-TikUyesi2" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">2. Tik Üyesi</span>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                                <a href="#tab-YtuIciJuri" data-toggle="tab" aria-expanded="false">
+                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">YTU İçinden Jüri Adayı Önerisi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#tab-YtuDisiJuri" data-toggle="tab" aria-expanded="false">
+                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">YTU Dışından Jüri Adayı Önerisi</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="panel-body tab-content" style="padding:0px;">
+                            <div class="tab-pane active" id="tab-TezDanismani">
+                                <div class="widget widget-default" style="padding:3px;margin:0px;">
+                                    <div class="panel panel-default form-horizontal">
+                                        <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                            <h3 class="panel-title" style="font-size:9pt;">Tez Danışmanı Verisi için Aşağıdaki Bilgileri Eksiksizce Doldurunuz Lütfen.</h3>
+                                        </div>
+                                        <div class="panel-body form-group-separated" style="padding:5px;">
+
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Adı Soyadı (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="hidden" name="JuriTipAdi" value="TezDanismani" />
+                                                    <input type="hidden" name="AnaTabAdi" value="tab-TezDanismani" />
+                                                    <input type="hidden" name="DetayTabAdi" value="tab-TezDanismani" />
+                                                    <input type="text" class="form-control upperCase"  name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.AdSoyad : "")" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Unvanı (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control upperCase hide"  name="xUnvanAdi" maxlength="128" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UnvanAdi : "")" style="width: 100%;color:black;" />
+
+                                                    @Html.DropDownList("UnvanAdi", TezDanismaniBilgi.SlistUnvanAdi, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUnvanAdi" })
+
+                                                    @if (TezDanismaniBilgi.UnvanAdi != null && TezDanismaniBilgi.UnvanAdi != "")
+                                                    {
+                                                        <script>
+                                                            $(function () {
+                                                                $('#TezDanismaniUnvanAdi').val('@Html.Raw(TezDanismaniBilgi.UnvanAdi)');
+                                                            })
+                                                        </script>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    E-Posta Adresi (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@Model.Danisman.EMail.Trim()" style="width: 100%;" id="TezDanismaniEMail" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Üniversitesi (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    @Html.DropDownList("UniversiteID", TezDanismaniBilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUniversiteID" })
+                                                    @if (TezDanismaniBilgi != null && TezDanismaniBilgi.UniversiteID.HasValue)
+                                                    {
+                                                        <script>
+                                                            $(function () {
+                                                                $('#TezDanismaniUniversiteID').val('67');
+                                                            })
+                                                        </script>
+                                                    }
+                                                    @*<input type="text" class="form-control" maxlength="128" name="UniversiteAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UniversiteAdi : "")" style="width: 100%;" id="TezDanismaniUniversiteAdi" />*@
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Anabilimdalı / Program (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TezDanismaniAnabilimdaliProgramAdi" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Uzmanlık Alanı (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UzmanlikAlani : "")" style="width: 100%;" id="TezDanismaniUzmanlikAlani" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.BilimselCalismalarAnahtarSozcukler : "")" style="width: 100%;height:40px;" id="TezDanismaniBilimselCalismalarAnahtarSozcukler" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.DilSinavAdi : "")" style="width: 100%;" id="TezDanismaniDilSinavAdi" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                    Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
+                                                </label>
+                                                <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                    <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.DilPuani : "")" style="width: 100%;" id="TezDanismaniDilPuani" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            @if (Model.IsDoktoraOrYL)
+                            {
+                                <div class="tab-pane" id="tab-TikUyesi1">
+                                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                                        <div class="panel panel-default form-horizontal">
+                                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                                <h3 class="panel-title" style="font-size:9pt;">1. Tik Üyesi Önerisi için Aşağıdaki Bilgileri Eksiksizce Doldurunuz Lütfen.</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated" style="padding:5px;">
+
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Adı Soyadı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="hidden" name="JuriTipAdi" value="TikUyesi1" />
+                                                        <input type="hidden" name="AnaTabAdi" value="tab-TikUyesi1" />
+                                                        <input type="hidden" name="DetayTabAdi" value="tab-TikUyesi1" />
+                                                        <input type="text" class="form-control upperCase" maxlength="128"  name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Unvanı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        @Html.DropDownList("UnvanAdi", TikUyesi1Bilgi.SlistUnvanAdi, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi1UnvanAdi" })
+                                                        @if (TikUyesi1Bilgi.UnvanAdi != null && TikUyesi1Bilgi.UnvanAdi != "")
+                                                        {
+                                                            <script>
+                                                            $(function () {
+                                                                $('#TikUyesi1UnvanAdi').val('@Html.Raw(TikUyesi1Bilgi.UnvanAdi)');
+                                                            })
+                                                            </script>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        E-Posta Adresi (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.EMail : "")" style="width: 100%;" id="TikUyesi1EMail" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Üniversitesi (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        @Html.DropDownList("UniversiteID", TikUyesi1Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi1UniversiteID" })
+                                                        @if (TikUyesi1Bilgi != null && TikUyesi1Bilgi.UniversiteID.HasValue)
+                                                        {
+                                                            <script>
+                                                                $(function () {
+                                                                    $('#TikUyesi1UniversiteID').val('67');
+                                                                })
+                                                            </script>
+                                                        }
+                                                        @*<input type="text" class="form-control" maxlength="128" name="UniversiteAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.UniversiteAdi : "")" style="width: 100%;" id="TikUyesi1UniversiteAdi" />*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Anabilimdalı / Program (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TikUyesi1AnabilimdaliProgramAdi" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Uzmanlık Alanı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.UzmanlikAlani : "")" style="width: 100%;" id="TikUyesi1UzmanlikAlani" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.BilimselCalismalarAnahtarSozcukler : "")" style="width: 100%;height:40px;" id="TikUyesi1BilimselCalismalarAnahtarSozcukler" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi1DilSinavAdi" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi1DilPuani" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab-TikUyesi2">
+                                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                                        <div class="panel panel-default form-horizontal">
+                                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                                <h3 class="panel-title" style="font-size:9pt;">2. Tik Üyesi Önerisi için Aşağıdaki Bilgileri Eksiksizce Doldurunuz Lütfen.</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated" style="padding:5px;">
+
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Adı Soyadı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="hidden" name="JuriTipAdi" value="TikUyesi2" />
+                                                        <input type="hidden" name="AnaTabAdi" value="tab-TikUyesi2" />
+                                                        <input type="hidden" name="DetayTabAdi" value="tab-TikUyesi2" />
+                                                        <input type="text" class="form-control upperCase" maxlength="128"  name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Unvanı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        @Html.DropDownList("UnvanAdi", TikUyesi2Bilgi.SlistUnvanAdi, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi2UnvanAdi" })
+                                                        @if (TikUyesi2Bilgi.UnvanAdi != null && TikUyesi2Bilgi.UnvanAdi != "")
+                                                        {
+                                                            <script>
+                                                            $(function () {
+                                                                $('#TikUyesi2UnvanAdi').val('@Html.Raw(TikUyesi2Bilgi.UnvanAdi)');
+                                                            })
+                                                            </script>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        E-Posta Adresi (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.EMail : "")" style="width: 100%;" id="TikUyesi2EMail" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Üniversitesi (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        @Html.DropDownList("UniversiteID", TikUyesi2Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi2UniversiteID" })
+                                                        @if (TikUyesi2Bilgi != null && TikUyesi2Bilgi.UniversiteID.HasValue)
+                                                        {
+                                                            <script>
+                                                                $(function () {
+                                                                    $('#TikUyesi2UniversiteID').val('67');
+                                                                })
+                                                            </script>
+                                                        }
+                                                        @*<input type="text" class="form-control" maxlength="128" name="UniversiteAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.UniversiteAdi : "")" style="width: 100%;" id="TikUyesi2UniversiteAdi" />*@
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Anabilimdalı / Program (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TikUyesi2AnabilimdaliProgramAdi" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Uzmanlık Alanı (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.UzmanlikAlani : "")" style="width: 100%;" id="TikUyesi2UzmanlikAlani" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.BilimselCalismalarAnahtarSozcukler : "")" style="width: 100%;height:40px;" id="TikUyesi2BilimselCalismalarAnahtarSozcukler" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi2DilSinavAdi" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                        Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi2DilPuani" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="tab-pane" id="tab-YtuIciJuri">
+                                <div class="panel panel-default nav-tabs-vertical">
+
+                                    <div class="tabs">
+                                        <ul class="nav nav-tabs">
+                                            @for (int i = 1; i <= 4; i++)
+                                            {
+                                                var ActiveCls = i == 1 ? "active" : "";
+                                                <li class="@ActiveCls">
+                                                    <a href="#tab-YtuIciJuri-@(i)" data-toggle="tab" aria-expanded="false">
+                                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="panel-body tab-content" style="padding:0px;">
+                                            @for (int i = 1; i <= 4; i++)
+                                            {
+                                                var ActiveCls = i == 1 ? "active" : "";
+                                                var RowData = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "YtuIciJuri" + i).FirstOrDefault();
+                                                <div class="tab-pane @ActiveCls" id="tab-YtuIciJuri-@i">
+                                                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                                                        <div class="panel panel-default form-horizontal">
+                                                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                                                <h3 class="panel-title" style="font-size:9pt;">
+                                                                    @(i + ".") @(Model.IsDoktoraOrYL ? "Yıldız Teknik Üniversitesi İçinden jüri Adayı Önerileri (Tik Haricinde)" : "Yıldız Teknik Üniversitesi İçinden jüri Adayı Önerileri (Anabilim Dalı İçerisinden Olmalı)") @(i == 4 ? ("(Zorunlu Değil)") : "")
+                                                                </h3>
+                                                            </div>
+                                                            <div class="panel-body form-group-separated" style="padding:5px;">
+
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Adı Soyadı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="hidden" name="JuriTipAdi" value="YtuIciJuri@(i)" />
+                                                                        <input type="hidden" name="AnaTabAdi" value="tab-YtuIciJuri" />
+                                                                        <input type="hidden" name="DetayTabAdi" value="tab-YtuIciJuri-@i" />
+                                                                        <input type="hidden" name="AdSoyad" maxlength="128" value="@(RowData!=null?RowData.AdSoyad:"")" id="YtuIciJuri@(i)AdSoyadVal" />
+                                                                        <input type="text" class="form-control egitmens" value="" style="width: 100%;" id="YtuIciJuri@(i)AdSoyad" />
+                                                                        @if (RowData != null)
+                                                                        {
+                                                                            <script>
+                                                                                setTimeout( function () {
+                                                                                   var secilen = @Html.Raw(Json.Encode(new { id = RowData.AdSoyad, text = RowData.AdSoyad }));
+                                                                                   $("#YtuIciJuri@(i)AdSoyad").select2('data', secilen);
+
+                                                                               },1200)
+                                                                            </script>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Unvanı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        @Html.Hidden("UnvanAdi", (RowData != null ? RowData.UnvanAdi : ""), new { id = "YtuIciJuri" + i + "UnvanAdi" })
+                                                                        @Html.DropDownList("xUnvanAdi", (RowData != null ? RowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = ("xYtuIciJuri" + i + "UnvanAdi") })
+                                                                        @if (RowData != null && RowData.UnvanAdi != null && RowData.UnvanAdi != "")
+                                                                        {
+                                                                            <script>
+                                                                                $(function () {
+                                                                                    $('#@("xYtuIciJuri" + i + "UnvanAdi")').val('@Html.Raw(RowData.UnvanAdi)');
+                                                                                });
+                                                                            </script>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        E-Posta Adresi (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text"  class="form-control" maxlength="128" name="EMail" value="@(RowData!=null?RowData.EMail:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)EMail" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Üniversitesi (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        @Html.Hidden("UniversiteID", (RowData != null ? RowData.UniversiteID.toStrObjEmptString() : ""), new { id = "YtuIciJuri" + i + "UniversiteID" })
+                                                                        @Html.DropDownList("xUniversiteID", (RowData != null ? RowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = "xYtuIciJuri" + i + "UniversiteID" })
+                                                                        @if (RowData != null && RowData.UniversiteID.HasValue)
+                                                                        {
+                                                                            <script>
+                                                                                $(function () {
+                                                                                    $('#@("xYtuIciJuri" + i + "UniversiteID")').val('@RowData.UniversiteID.Value');
+                                                                                });
+                                                                            </script>
+                                                                        }
+                                                                        @*<input type="text"  class="form-control" maxlength="128" name="UniversiteAdi" value="@(RowData!=null?RowData.UniversiteAdi:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)UniversiteAdi" />*@
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Anabilimdalı / Program (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text"  class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData!=null?RowData.AnabilimdaliProgramAdi:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)AnabilimdaliProgramAdi" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Uzmanlık Alanı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData!=null?RowData.UzmanlikAlani:"")" style="width: 100%;" id="YtuIciJuri@(i)UzmanlikAlani" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData!=null?RowData.BilimselCalismalarAnahtarSozcukler:"")" style="width: 100%;height:40px;" id="YtuIciJuri@(i)BilimselCalismalarAnahtarSozcukler" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(RowData!=null?RowData.DilSinavAdi:"")" style="width: 100%;" id="YtuIciJuri@(i)DilSinavAdi" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(RowData!=null?RowData.DilPuani:"")" style="width: 100%;" id="YtuIciJuri@(i)DilPuani" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane" id="tab-YtuDisiJuri">
+                                <div class="panel panel-default nav-tabs-vertical">
+
+                                    <div class="tabs">
+                                        <ul class="nav nav-tabs">
+                                            @for (int i = 1; i <= 4; i++)
+                                            {
+                                                var ActiveCls = i == 1 ? "active" : "";
+                                                <li class="@ActiveCls">
+                                                    <a href="#tab-YtuDisiJuri-@(i)" data-toggle="tab" aria-expanded="false">
+                                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="panel-body tab-content" style="padding:0px;">
+                                            @for (int i = 1; i <= 4; i++)
+                                            {
+                                                var ActiveCls = i == 1 ? "active" : "";
+                                                var RowData = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "YtuDisiJuri" + i).FirstOrDefault();
+
+                                                <div class="tab-pane @ActiveCls" id="tab-YtuDisiJuri-@i">
+                                                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                                                        <div class="panel panel-default form-horizontal">
+                                                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                                                <h3 class="panel-title" style="font-size:9pt;">
+                                                                    @(i + ".") @(Model.IsDoktoraOrYL ? "Yıldız Teknik Üniversitesi Dışından jüri Adayı Önerileri (Tik Haricinde)" : "Yıldız Teknik Üniversitesi Dışından jüri Adayı Önerileri") @(i == 4 ? ("(Zorunlu Değil)") : "")
+                                                                </h3>
+                                                            </div>
+                                                            <div class="panel-body form-group-separated" style="padding:5px;">
+
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Adı Soyadı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="hidden" name="JuriTipAdi" value="YtuDisiJuri@(i)" />
+                                                                        <input type="hidden" name="AnaTabAdi" value="tab-YtuDisiJuri" />
+                                                                        <input type="hidden" name="DetayTabAdi" value="tab-YtuDisiJuri-@i" />
+                                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(RowData!=null?RowData.AdSoyad:"")" style="width: 100%;" id="YtuDisiJuri@(i)AdSoyad" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Unvanı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        @Html.DropDownList("UnvanAdi", (RowData != null ? RowData.SlistUnvanAdi : Model.SListUnvanAdi), new { @class = "form-control", @style = "width:100%;color:black;", id = ("YtuDisiJuri" + i + "UnvanAdi") })
+                                                                        @if (RowData != null && RowData.UnvanAdi != null && RowData.UnvanAdi != "")
+                                                                        {
+                                                                            <script>
+                                                                                $(function () {
+                                                                                    $('#@("YtuDisiJuri" + i + "UnvanAdi")').val('@Html.Raw(RowData.UnvanAdi)');
+                                                                                });
+                                                                            </script>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        E-Posta Adresi (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(RowData!=null?RowData.EMail:"")" style="width: 100%;" id="YtuDisiJuri@(i)EMail" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Üniversitesi (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        @Html.DropDownList("UniversiteID", (RowData != null ? RowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", @style = "width:100%;color:black;", id = "YtuDisiJuri" + i + "UniversiteID" })
+                                                                        @if (RowData != null && RowData.UniversiteID.HasValue)
+                                                                        {
+                                                                            <script>
+                                                                                $(function () {
+                                                                                    $('#@("YtuDisiJuri" + i + "UniversiteID")').val('@RowData.UniversiteID.Value');
+                                                                                });
+                                                                            </script>
+                                                                        }
+                                                                        @*<input type="text" class="form-control" maxlength="128" name="UniversiteAdi" value="@(RowData!=null?RowData.UniversiteAdi:"")" style="width: 100%;" id="YtuDisiJuri@(i)UniversiteAdi" />*@
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Anabilimdalı / Program (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData!=null?RowData.AnabilimdaliProgramAdi:"")" style="width: 100%;" id="YtuDisiJuri@(i)AnabilimdaliProgramAdi" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Uzmanlık Alanı (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData!=null?RowData.UzmanlikAlani:"")" style="width: 100%;" id="YtuDisiJuri@(i)UzmanlikAlani" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData!=null?RowData.BilimselCalismalarAnahtarSozcukler:"")" style="width: 100%;height:40px;" id="YtuDisiJuri@(i)BilimselCalismalarAnahtarSozcukler" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(RowData != null ? RowData.DilSinavAdi : "")" style="width: 100%;" id="YtuDisiJuri@(i)DilSinavAdi" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                                                        Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
+                                                                    </label>
+                                                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(RowData != null ? RowData.DilPuani : "")" style="width: 100%;" id="YtuDisiJuri@(i)DilPuani" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="JOMsgContent" class="hide">
+    <div class="tasks ui-sortable">
+
+        <div class="task-item task-warning">
+            <div class="task-text ui-sortable-handle">
+                @if (Model.IsDoktoraOrYL)
+                {
+                    <div>
+                        Enstitü Yönetim Kurulu gerekli gördüğü takdirde önerilen liste dışından da jüri seçebilir.
+                        <p style="font-style:italic">Institute Board of Management can choose the committee apart from the list if found necessary.</p>
+                        En az 3’ü başka yükseköğretim kurumlarının Anabilim Dalları’ndan ve olabildiğince farklı üniversitelerden önerilmelidir.
+                        <p style="font-style:italic">At least three of the members must be proposed from the related departments of other higher education institutions and from various universities as much as possible.</p>
+                        En az 3’ü YTÜ’deki ilgili Anabilim Dalından önerilmelidir.
+                        <p style="font-style:italic">At least three of the members must be proposed from the related department of YTÜ.</p>
+                        Dil yeterliliğin YÖK yabancı dille eğitim-öğretim yapılmasında uyulacak esaslara ilişkin yönetmelik uyarınca
+                        -Mezun olunan üniversite yabancı dille eğitim yapıyor ise üniversitenin adı,    -Sınav ise sınavın adı ve alınan puan yazılmalıdır.
+                        <p style="font-style:italic">
+                            According to the YOK regulation on the principles to follow for education in a foreign language
+                            -If the lecturer’s graduation is from a university whose medium of instruction is the related foreign language, the name of the university,     -If there is a test, the title of the test must be stated.
+                        </p>
+                        Eş danışman jüri üyesi olamayacağından önerilmemesi gerekmektedir.
+                        <p style="font-style:italic">The co-Advisor cannot become a jury member. Therefore, they cannot be proposed as a member.</p>
+                        Yabancı dildeki başlığın Türkçe çevirisi, Türkçe başlığın ise İngilizce çevirisi yazılacaktır.
+                        <p style="font-style:italic">For titles in a foreign language Turkish translation is required, for titles in Turkish English translation is required.</p>
+
+                    </div>
+                }
+                else
+                {
+                    <div>
+
+                        Enstitü Yönetim Kurulu gerekli gördüğü takdirde önerilen liste dışından da jüri seçebilir.
+                        <p style="font-style:italic">
+                            Institute Board of Management can choose the committee apart from the list if found necessary.
+                        </p>
+
+                        En az 3’ü başka yükseköğretim kurumlarının Anabilim Dallarından ve olabildiğince farklı üniversitelerden önerilmelidir.
+                        <p style="font-style:italic">
+                            At least three of the members must be proposed from the related departments of other higher education institutions and from various universities as much as possible.
+                        </p>
+                        En az 3’ü YTÜ’deki ilgili Anabilim Dalından önerilmelidir.
+                        <p style="font-style:italic">
+                            At least three of the members are required to be proposed from the related department of YTÜ.
+                        </p>
+                        Dil yeterliliğin YÖK yabancı dille eğitim-öğretim yapılmasında uyulacak esaslara ilişkin yönetmelik uyarınca
+                        -Mezun olunan üniversite yabancı dille eğitim yapıyor ise üniversitenin adı, -Sınav ise sınavın adı ve alınan puan yazılmalıdır.
+                        <p style="font-style:italic">
+                            According to the YOK regulation on the principles to follow for education in a foreign language
+                            -If the lecturer’s graduation is from a university whose medium of instruction is the related foreign language, the name of the university,     -If there is a test, the ttile of the test must be stated.
+                        </p>
+                        Eş danışman jüri üyesi olamayacağından önerilmemesi gerekmektedir.
+                        <p style="font-style:italic">
+                            The co-Advisor cannot become a jury member. Therefore, they cannot be proposed as a member.
+                        </p>
+                        Yabancı dildeki başlığın Türkçe çevirisi, Türkçe başlığın ise İngilizce çevirisi yazılacaktır.
+                        <p style="font-style:italic"> For titles in a foreign language Turkish translation is required, for titles in Turkish English translation is required.
+
+                    </div>
+                }
+                <br />
+                <b>TİK: Tez İzleme Komitesi</b><br />
+                <b>TMC: Thesis Monitoring Committee</b>
+            </div> 
+        </div>
+    </div>
+
+</div>
+@if (Model.MezuniyetJuriOneriFormID <= 0)
+{
+    <script>
+        setTimeout(function () {
+            ShowNote();
+        }, 200);
+    </script>
+}
+else
+{
+    <script>
+        setTimeout(function () {
+            $('.btnKaydet').removeClass("btn-primary").addClass("btn-info");
+            $('.btnKaydet').text("Kaydet");
+        }, 200);
+    </script>
+}
+<script>
+
+
+    $(function () {
+        $('.upperCase').each(function (ix, inx) {
+            $(inx).attr('autocomplete', 'off');
+            $(inx).bind('keyup', function (e) {
+                var vl = $(inx).val();
+                $(inx).val(vl.replace("i", "İ").toUpperCase());
+            });
+        })
+        $('.egitmens').select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            multiple: false,
+            ajax: {
+                url: '@Url.Action("GetYTUOgretimEleman", "Ajax")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        'term': term
+                    }
+
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var cont2 =
+                    "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr><td>" + result.AdSoyad + "</td></tr>" +
+                    "<tr><td>Bölüm:" + result.BolumAdi + "</td></tr>" +
+                    "<tr><td>Ünvan: " + result.UnvanAdi + "</td></tr>" +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        }).on('change', function (e) {
+            var Inpid = $(this).prop("id");
+            var mID = Inpid.replace("AdSoyad", "");
+            $('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
+            $('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
+            $('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
+            $('#' + mID + 'AnabilimdaliProgramAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
+            $('#' + mID + 'UniversiteID').val(e.added == undefined ? "" : e.added.UniversiteID);
+            $('#x' + mID + 'UniversiteID').val(e.added == undefined ? "" : e.added.UniversiteID);
+            $('#x' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
+
+            //  var id = e.added.id;
+            });
+        //.data([{ "id": $(this).prev().val(), "text": $(this).prev().val() }]);
+        //$('.egitmens').each(function (inx, elem) {
+        //    var deger = $(elem).prev().val();
+        //    $(elem).select2('data', [{ "id": deger, "text": deger }]);
+        //});
+    });
+    function ShowNote() {
+        var noteContent = $('#JOMsgContent').html();
+        var btbxNt = bootbox.dialog({
+            message: noteContent,
+            title: "<i class='fa fa-info-circle'></i> ",
+            buttons: {
+                success: {
+                    label: 'Okudum',
+                    className: "btn-info",
+                    callback: function (event) {
+
+                    }
+                }
+            }
+        });
+        $(btbxNt).find('.modal-dialog').first().addClass('modal-lg');
+    }
+</script>

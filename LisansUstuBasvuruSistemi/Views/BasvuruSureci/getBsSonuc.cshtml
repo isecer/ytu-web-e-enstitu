@@ -1,0 +1,480 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model bsUrecDetay
+@{
+    Layout = null;
+    var IsDelete = Model.IsDelete;
+    var nowDate = DateTime.Now;
+    bool MulakatBilgiGirisAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
+    bool KayitYetki = RoleNames.BasvuruSureciKayit.InRoleCurrent();
+    bool MailGondermeYetkisi = RoleNames.MailGonder.InRoleCurrent();
+
+    string _colorAna = "#268a8b";
+    string _colorMul = "green";
+    string _colorYedk = "#917729";
+    string _colorKaznm = "maroon";
+    string _colorUyari = "red";
+
+    bool kayitOlanVar = Model.MulakatSonucu.MulakatSonucDetay.Any(a => a.ADKayitCount > 0 || a.AIKayitCount > 0);
+    var Otips = Json.Encode(Model.CmbOgrenimTipBilgi);
+}
+
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-sort-amount-desc"></i> Başvuru Sonuç Genel Bilgi
+        </h3>
+        <ul class="panel-controls">
+            <li>
+                @if (!MulakatBilgiGirisAcik && IsDelete == false && KayitYetki)
+                {
+                    if (true || (Model.SonucGirisBaslangicTarihi.HasValue == false && Model.SonucGirisBitisTarihi.HasValue == false) || (Model.SonucGirisBitisTarihi.HasValue && Model.SonucGirisBitisTarihi.Value < nowDate))
+                    {
+                        if (Model.MulakatSonucu.HesaplamaYapildi == false)
+                        {
+                            <span style="cursor:pointer;" onclick="getBSonucHesap(@Model.BasvuruSurecID)" class="label label-info label-form"><i class="fa fa-sort-amount-desc"></i> Hesapla</span>
+                        }
+                        else
+                        {
+                            if (Model.MulakatSonucu.TumProgramlarHesaplandi)
+                            {
+                                if (kayitOlanVar)
+                                {
+                                    <span style="cursor:pointer;" onclick="getBSonucHesap(@Model.BasvuruSurecID)" class="label label-info label-form"><i class="fa fa-sort-amount-desc"></i> Tekrar Hesapla (Kayıt alan programlar hariç)</span>
+                                }
+                                else
+                                {
+                                    <span style="cursor:pointer;" onclick="getBSonucHesap(@Model.BasvuruSurecID)" class="label label-info label-form"><i class="fa fa-sort-amount-desc"></i> Tekrar Hesapla</span>
+                                }
+
+                            }
+                            else
+                            {
+                                <span style="cursor:pointer;" onclick="getBSonucHesap(@Model.BasvuruSurecID)" class="label label-info label-form"><i class="fa fa-sort-amount-desc"></i> Tekrar Hesapla (Kayıt alan programlar hariç)</span>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <span>Mülakat not giriş süreci sona erdikten sonra hesaplama işlemi aktif olacaktır!</span>
+                    }
+                }
+            </li>
+        </ul>
+
+    </div>
+    <div class="portlet-body">
+        <div class="col-md-12 col-xs-12" style="text-align: left;font-size:9pt;font-weight:bold;">
+            <table style="width:100%;table-layout:fixed;text-align:center;font-weight:bold;background-color:gainsboro;border:1px solid;">
+
+                <tbody>
+                    <tr>
+                        <td colspan="3" style="border-bottom:1px solid;background-color:antiquewhite;">Hesaplama Sayısal Bilgi</td>
+                    </tr>
+                    <tr>
+                        <td width="200" style="font-size:8.2pt;border-bottom:1px solid;border-right:1px solid;">
+                            <span style="color:#268a8b;">Toplam Hesaplanan</span>
+                        </td>
+                        <td style="font-size:8.2pt;border-bottom:1px solid;border-right:1px solid;">
+                            <span style="color:#268a8b;">Alan İçi</span>
+                        </td>
+                        <td style="font-size:8.2pt;border-bottom:1px solid;border-right:1px solid;">
+                            <span style="color:green;">Alan Dışı</span>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td width="200" style="font-size:14pt;border-right:1px solid;">
+                            <table style="width:100%;table-layout:fixed">
+                                <tr>
+
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">Program</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:green;">Tercih</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width:100%;table-layout:fixed">
+                                <tr>
+
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">Kayıt</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:green;">Asil</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#917729;">Yedek</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:maroon;">Kazanamadı</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width:100%;table-layout:fixed;">
+                                <tr>
+
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">Kayıt</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:green;">Asil</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#917729;">Yedek</span>
+                                    </td>
+                                    <td style="font-size:8.2pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:maroon;">Kazanamadı</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td width="200" style="font-size:14pt;border-right:1px solid;">
+                            <table style="width:100%;table-layout:fixed">
+                                <tr>
+
+                                    <td style="font-size:14pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">@Model.MulakatSonucu.HesaplananProgramCount / @Model.MulakatSonucu.ToplamProgramCount</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;border-bottom:1px solid;width:25%;">
+                                        <span style="color:green;">@Model.MulakatSonucu.HesaplananTercihCount / @Model.MulakatSonucu.ToplamTercihCount</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width:100%;table-layout:fixed">
+                                <tr>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.AIKayitCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:green;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.AIAsilCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:#917729;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.AIYedekCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:maroon;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.AIKazanamayanCount)</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="width:100%;table-layout:fixed;">
+                                <tr>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:#268a8b;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.ADKayitCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:green;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.ADAsilCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;border-right:1px solid;width:25%;">
+                                        <span style="color:#917729;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.ADYedekCount)</span>
+                                    </td>
+                                    <td style="font-size:14pt;width:25%;">
+                                        <span style="color:maroon;">@Model.MulakatSonucu.MulakatSonucDetay.Sum(s => s.ADKazanamayanCount)</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </div>
+</div>
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-list-alt"></i> Başvuru Sonuçları
+            @if (Model.MulakatSonucu.HesaplamaYapildi && KayitYetki)
+            {
+                <a href="javascript:void(0);" style="color:#296cc8;" onclick="getReportType(@Model.BasvuruSurecID,'','','','@Otips')">
+                    <span style="font-size:14pt;color:#296cc8;" title="Yazdır" class="fa fa-print"></span> Tüm Liste
+                </a>
+
+            }
+            @if (MailGondermeYetkisi)
+            {
+                <a href="javascript:void(0);" title="Öğrencilere Toplu Mail Gönder" onclick="mGonder('', '', '', '', @Model.BasvuruSurecID, 'false', '','','true')"><img src="~/Images/mail_send_O.png" style="width:30px;height:25px;" /></a>
+
+            }
+        </h3>
+        <ul class="panel-controls">
+            <li>
+
+                @if (!MulakatBilgiGirisAcik && KayitYetki && Model.KayitOlmayanlarAnketID.HasValue)
+                {
+                    var bilgi = "";
+                    if (Model.KayitOlmayanOgrencilereAnketLinkiGonderildi)
+                    {
+                        bilgi = "Lisansüstü başvuruyu kazanıp kayıt olmayan öğrencilere anket doldurma bilgisi " + Model.KayitOlmayanOgrencilereAnketLinkiGonderimTarihi.Value.ToFormatDateAndTime() + " tarihinde mail olarak gönderildi";
+                    }
+                    if (IsDelete == false && Model.MulakatSonucu.HesaplamaYapildi)
+                    {
+                        <span style="cursor:pointer;" onclick="getBSSendMailBB(@Model.BasvuruSurecID,'@bilgi',false,'@Otips')" class="label label-success label-form"><i class="fa fa-envelope"></i>@(Model.KayitOlmayanOgrencilereAnketLinkiGonderildi ? " Anket bilgisini tekrar gönder" : " Anket bilgisini gönder")</span>
+                    }
+                }
+                @if (!MulakatBilgiGirisAcik && KayitYetki)
+                {
+                    var bilgi = "";
+                    if (Model.SinavSonucBilgisiOgrenciMailiGonderildi)
+                    {
+                        bilgi = "Sınav sonuç bilgileri " + Model.SinavSonucBilgisiOgrenciMailiGonderimTarihi.Value.ToFormatDateAndTime() + " tarihinde Öğrencilere mail olarak gönderildi";
+                    }
+                    if (IsDelete == false && Model.MulakatSonucu.HesaplamaYapildi)
+                    {
+                        <span style="cursor:pointer;" onclick="getBSSendMailBB(@Model.BasvuruSurecID,'@bilgi',true,'@Otips')" class="label label-success label-form"><i class="fa fa-envelope"></i>@(Model.SinavSonucBilgisiOgrenciMailiGonderildi ? " Sonuçları tekrar gönder" : " Sonuçları gönder")</span>
+                    }
+                }
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <table class="table" style="margin:0px;">
+                        <thead>
+                            <tr>
+                                <th style="background-color:gainsboro;" width="35"></th>
+                                <th style="background-color:gainsboro;" width="110" colspan="2">
+                                    <table>
+                                        <tr>
+                                            <td width="120">Öğr.Sev / ABD-Program</td>
+                                            <td>
+                                                <table style="width:100%; table-layout:fixed;width:100%;">
+                                                    <tr>
+
+                                                        <td class="text-center" id="filtreKelimeS_@Model.BasvuruSurecID"></td>
+                                                        <td style="width:150px;">
+                                                            <input style="color:red;width:150px;" type="text" name="search" id="filterInpS_@Model.BasvuruSurecID" onchange="" placeholder="ara...">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </th>
+                                <th width="40" style="border-left:1px solid;border-bottom:1px solid;padding:0px;text-align:center;background-color:gainsboro;">G.Topl</th>
+                                <th width="270" style="border-left:1px solid;border-right:1px solid;border-bottom:1px solid;padding:0px;">
+                                    <table style="width:100%;table-layout:fixed;text-align:center;font-weight:bold;background-color:gainsboro;">
+                                        <tr>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;">Alan İçi</td>
+                                            <td style="border-bottom:1px solid;">Alan Dışı</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-right:1px solid;">
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorAna;">Kyt</span>
+                                                        </td>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorMul;">Asl</span>
+                                                        </td>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorYedk;">Ydk</span>
+                                                        </td>
+                                                        <td>
+                                                            <span style="color:@_colorKaznm;">Kzm</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="border-left:1px solid;">
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorAna;">Kyt</span>
+                                                        </td>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorMul;">Asl</span>
+                                                        </td>
+                                                        <td style="border-right:1px solid;">
+                                                            <span style="color:@_colorYedk;">Ydk</span>
+                                                        </td>
+                                                        <td>
+                                                            <span style="color:@_colorKaznm;">Kzm</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </th>
+                                <th width="18"></th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td colspan="6" style="padding:0px;margin:0px;">
+                                <div style="margin:0px;padding:0px; height:336px; overflow-y:scroll;">
+                                    <table class="table-hover" style="width:100%;table-layout:fixed;margin:0px;" id="fltrS_@Model.BasvuruSurecID">
+
+                                        @if (Model.MulakatSonucu.MulakatSonucDetay.Count > 0)
+                                        {
+                                            int RowIndex = 0;
+                                            foreach (var item in Model.MulakatSonucu.MulakatSonucDetay)
+                                            {
+                                                RowIndex++;
+                                                <tr class="mainRow">
+                                                    <td width="35" style="border-bottom:1px solid;">@RowIndex</td>
+                                                    <td width="130" style="font-size:8pt;border-bottom:1px solid;">
+                                                        <span style="color:gray;" class="fltrAdS_@Model.BasvuruSurecID">
+                                                            @item.OgrenimTipAdi
+                                                        </span>
+                                                        <br />
+                                                        <span style="color:black;" title="Programa başvurabilecek öğrenci tipi" class="fltrAdS_@Model.BasvuruSurecID">
+                                                            @item.KullaniciTipAdi
+                                                        </span>
+                                                    </td>
+
+                                                    <td style="font-size:8pt;border-bottom:1px solid;">
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:22px; text-align:center;">
+                                                                    <i class="fa fa-eye" style="color:@(item.MulakatSurecineGirecek? _colorMul:_colorAna);font-size:16pt;cursor:pointer;" onclick="getBsncPrDetay(@Model.BasvuruSurecID,'@item.ProgramKod',@item.OgrenimTipKod)"></i>
+                                                                </td>
+                                                                <td>
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td title="Yazdır">
+                                                                                <a href="javascript:void(0);" onclick="getReportType(@Model.BasvuruSurecID,'@item.AnabilimDaliKod','')">
+                                                                                    <span style="font-size:10pt;" class="fa fa-print"></span>
+                                                                                </a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span style="color:gray;cursor:pointer;" onclick="getBsncPrDetay(@Model.BasvuruSurecID,'@item.ProgramKod', @item.OgrenimTipKod)" class="fltrAdS_@Model.BasvuruSurecID">@item.AnabilimDaliAdi</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td title="Yazdır">
+                                                                                <a href="javascript:void(0);" onclick="getReportType(@Model.BasvuruSurecID,'@item.AnabilimDaliKod','@item.ProgramKod','@item.OgrenimTipKod')">
+                                                                                    <span style="font-size:10pt;" class="fa fa-print"></span>
+                                                                                </a>
+                                                                            </td>
+                                                                            <td><span style="color:black;cursor:pointer;" onclick="getBsncPrDetay(@Model.BasvuruSurecID,'@item.ProgramKod', @item.OgrenimTipKod)" class="fltrAdS_@Model.BasvuruSurecID">@item.ProgramAdi (@item.ProgramKod)</span>(<span style="color:@(item.AIKayitCount < item.AIKota ? _colorUyari : _colorAna);">AI:@item.AIKota</span> <span style="color:@(item.ADKayitCount < item.ADKota ? _colorUyari : _colorAna);">AD:@item.ADKota</span>) </td>
+                                                                        </tr>
+                                                                    </table>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td width="20" style="border-bottom:1px solid;padding:0px;text-align:center;" title="@(item.Ucretli? "Ücretli Program. Ücret: "+ item.Ucret.Value.ToString("n2"):"")">
+                                                        @if (item.Ucretli)
+                                                        {
+                                                            <i class="fa fa-try" style="font-weight:bold;color:@(item.MulakatSurecineGirecek ? _colorMul : _colorAna);font-size:14pt;cursor:pointer;" onclick="getBsncPrDetay(@Model.BasvuruSurecID,'@item.ProgramKod',@item.OgrenimTipKod)"></i>
+                                                        }
+                                                    </td>
+                                                    <td width="42" style="border-left:1px solid;border-bottom:1px solid;padding:0px;text-align:center;">
+                                                        <span style="font-size:11pt;color:@_colorAna;font-weight:bold;">@item.ToplamBasvuru</span>
+                                                    </td>
+                                                    <td colspan="2" width="268" style="border-left:1px solid;border-right:1px solid;border-bottom:1px solid;padding:0px;">
+                                                        <table style="font-size:11pt;width:100%;table-layout:fixed;text-align:center;font-weight:bold;background-color:gainsboro;border-top:1px solid;border-bottom:1px solid;">
+                                                            <tr>
+                                                                <td style="border-right:1px solid;padding:0px;margin:0px;">
+                                                                    <table style="width:100%;table-layout:fixed;">
+                                                                        <tr>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@(item.AIKayitCount < item.AIKota ? _colorUyari:_colorAna);">@item.AIKayitCount</span></td>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@_colorMul;">@item.AIAsilCount</span></td>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@_colorYedk;">@item.AIYedekCount</span></td>
+                                                                            <td style="padding-top:2px;padding-bottom:2px;"><span style="color:@_colorKaznm;">@item.AIKazanamayanCount</span></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td style="border-left:1px solid;padding:0px;margin:0px;">
+                                                                    <table style="width:100%;table-layout:fixed;">
+                                                                        <tr>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@(item.ADKayitCount < item.ADKota ? _colorUyari:_colorAna);">@item.ADKayitCount</span></td>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@_colorMul;">@item.ADAsilCount</span></td>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@_colorYedk;">@item.ADYedekCount</span></td>
+                                                                            <td style="border-right:1px solid;padding-top:2px;padding-bottom:2px;"><span style="color:@_colorKaznm;">@item.ADKazanamayanCount</span></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="6" style="text-align: center;">
+                                                    [ Listelenen Kayıt Yok ]
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            <td />
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#filterInpS_@Model.BasvuruSurecID').bind('keypress', function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            flter2(this,@Model.BasvuruSurecID);
+        }
+    });
+    function flter2(sndr, mulID) {
+        var _val = $(sndr).val();
+        var tableName = "fltrS_" + mulID;
+        var fltrdCol = "fltrAdS_" + mulID;
+        var filtrDurum = "filtreKelimeS_" + mulID;
+
+        if (_val == null || _val.trim() == "")
+        {
+            $('#' + tableName).find('.mainRow').removeClass("hide");
+            $('#' + filtrDurum).html("");
+        }
+        else { 
+            _val = _val.trim().replaceAll('İ', 'i').toLowerCase();
+            var toplam = $('#' + tableName).find('.mainRow').length;
+            $('#' + tableName).find('.mainRow').each(function (inx, filtrx) { 
+                var show=false;
+                $(filtrx).find('.'+fltrdCol).each(function (inx2, filtrx2) {
+                    var gVal = $(filtrx2).text().trim().replaceAll('İ', 'i').toLowerCase();
+                    var AShow = gVal.indexOf(_val) > -1;
+                    if(AShow)show=true;
+                });
+                if (show) {
+                    $(filtrx).removeClass('hide');
+                }
+                else {
+                    $(filtrx).addClass('hide');
+                }
+            });
+            var Gizli = $('#'+tableName).find('.mainRow.hide').length;
+            var gosterilen = toplam - Gizli;
+            $('#' + filtrDurum).html("[Ara:  %<span style='color:red;'>" + _val + "</span>%] [Bulunan: <span style='color:red;'>" + gosterilen + "</span>]");
+        }
+
+    }
+
+</script>

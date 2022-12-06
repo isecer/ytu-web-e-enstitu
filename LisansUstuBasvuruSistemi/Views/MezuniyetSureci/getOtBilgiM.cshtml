@@ -1,0 +1,83 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model kmMezuniyetSureciOgrenimTipModel
+@{
+    Layout = null;
+}
+
+<div class="panel panel-default" style="padding: 0px; margin: 0px;">
+    <div class="panel-heading padding-0">
+        <h4 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Mezuniyet Başvurusu ve  Süreci için gerekli kriterler</h4>
+    </div>
+    <div class="panel-body padding-0">
+
+        <table class="table" style="width:100%;table-layout:fixed;">
+            <thead>
+                <tr>
+                    <th>Öğrenim Tipleri</th>
+                    <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
+                    <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
+                    <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
+                    <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
+                    <th width="50" title="Tez Sınavı Uzatma Süresi (Gün)">T.S.U.S</th>
+                    <th width="40" title="Tez Teslim Süresi (Gün)">T.T.S</th>
+                    <th width="40" title="EYK Tarihinden Sonra Salon Rezervasyonu Kaç Gün Sonra Alınabilir (Gün)">S.R.G</th>
+                </tr>
+            </thead>
+            <tbody id="Rw_tbody">
+                @foreach (var item in Model.OgrenimTipKriterList.OrderBy(t => t.OgrenimTipAdi))
+                {
+
+                <tr class="rw_bst">
+                    <td>
+                        <div class="form-group">
+                            <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
+                            <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
+                            <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
+                            @item.OgrenimTipAdi
+
+                        </div>
+                    <td>
+                        <div class="form-group">
+
+                            <input type="text" class="form-control" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBasvuruToplamKrediKriteri" value="@item.MBasvuruToplamKrediKriteri">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBasvuruAGNOKriteri" value="@item.MBasvuruAGNOKriteri">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBasvuruAKTSKriteri" value="@item.MBasvuruAKTSKriteri">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBSinavUzatmaSuresiGun" value="@item.MBSinavUzatmaSuresiGun">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBTezTeslimSuresiGun" value="@item.MBTezTeslimSuresiGun">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="MBSRTalebiKacGunSonraAlabilir" value="@item.MBSRTalebiKacGunSonraAlabilir">
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

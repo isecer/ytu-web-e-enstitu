@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://gsispaymentservice.net" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://gsispaymentservice.net" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://gsispaymentservice.net">
+      <s:element name="paymentControl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="stdid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="paymentControlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="paymentControlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProgramFee">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="programid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="edutypeid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProgramFeeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getProgramFeeResult" type="tns:FeeInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FeeInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="amount" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="firstpaymentdate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="lastpaymentdate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="returnInfo" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getFirstPaymentDate">
+        <s:complexType />
+      </s:element>
+      <s:element name="getFirstPaymentDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getFirstPaymentDateResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLastPaymentDate">
+        <s:complexType />
+      </s:element>
+      <s:element name="getLastPaymentDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getLastPaymentDateResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setPaymentInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="stdid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="amount" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="receiptno" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="paymentdate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="setPaymentInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="setPaymentInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="FeeInfo" nillable="true" type="tns:FeeInfo" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="paymentControlSoapIn">
+    <wsdl:part name="parameters" element="tns:paymentControl" />
+  </wsdl:message>
+  <wsdl:message name="paymentControlSoapOut">
+    <wsdl:part name="parameters" element="tns:paymentControlResponse" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeSoapIn">
+    <wsdl:part name="parameters" element="tns:getProgramFee" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeSoapOut">
+    <wsdl:part name="parameters" element="tns:getProgramFeeResponse" />
+  </wsdl:message>
+  <wsdl:message name="getFirstPaymentDateSoapIn">
+    <wsdl:part name="parameters" element="tns:getFirstPaymentDate" />
+  </wsdl:message>
+  <wsdl:message name="getFirstPaymentDateSoapOut">
+    <wsdl:part name="parameters" element="tns:getFirstPaymentDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="getLastPaymentDateSoapIn">
+    <wsdl:part name="parameters" element="tns:getLastPaymentDate" />
+  </wsdl:message>
+  <wsdl:message name="getLastPaymentDateSoapOut">
+    <wsdl:part name="parameters" element="tns:getLastPaymentDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:setPaymentInfo" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:setPaymentInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="paymentControlHttpGetIn">
+    <wsdl:part name="stdid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="paymentControlHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeHttpGetIn">
+    <wsdl:part name="programid" type="s:string" />
+    <wsdl:part name="edutypeid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeHttpGetOut">
+    <wsdl:part name="Body" element="tns:FeeInfo" />
+  </wsdl:message>
+  <wsdl:message name="getFirstPaymentDateHttpGetIn" />
+  <wsdl:message name="getFirstPaymentDateHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getLastPaymentDateHttpGetIn" />
+  <wsdl:message name="getLastPaymentDateHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoHttpGetIn">
+    <wsdl:part name="stdid" type="s:string" />
+    <wsdl:part name="amount" type="s:string" />
+    <wsdl:part name="receiptno" type="s:string" />
+    <wsdl:part name="paymentdate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="paymentControlHttpPostIn">
+    <wsdl:part name="stdid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="paymentControlHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeHttpPostIn">
+    <wsdl:part name="programid" type="s:string" />
+    <wsdl:part name="edutypeid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="getProgramFeeHttpPostOut">
+    <wsdl:part name="Body" element="tns:FeeInfo" />
+  </wsdl:message>
+  <wsdl:message name="getFirstPaymentDateHttpPostIn" />
+  <wsdl:message name="getFirstPaymentDateHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="getLastPaymentDateHttpPostIn" />
+  <wsdl:message name="getLastPaymentDateHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoHttpPostIn">
+    <wsdl:part name="stdid" type="s:string" />
+    <wsdl:part name="amount" type="s:string" />
+    <wsdl:part name="receiptno" type="s:string" />
+    <wsdl:part name="paymentdate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="setPaymentInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="paymentControl">
+      <wsdl:input message="tns:paymentControlSoapIn" />
+      <wsdl:output message="tns:paymentControlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <wsdl:input message="tns:getProgramFeeSoapIn" />
+      <wsdl:output message="tns:getProgramFeeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <wsdl:input message="tns:getFirstPaymentDateSoapIn" />
+      <wsdl:output message="tns:getFirstPaymentDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <wsdl:input message="tns:getLastPaymentDateSoapIn" />
+      <wsdl:output message="tns:getLastPaymentDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <wsdl:input message="tns:setPaymentInfoSoapIn" />
+      <wsdl:output message="tns:setPaymentInfoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServiceHttpGet">
+    <wsdl:operation name="paymentControl">
+      <wsdl:input message="tns:paymentControlHttpGetIn" />
+      <wsdl:output message="tns:paymentControlHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <wsdl:input message="tns:getProgramFeeHttpGetIn" />
+      <wsdl:output message="tns:getProgramFeeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <wsdl:input message="tns:getFirstPaymentDateHttpGetIn" />
+      <wsdl:output message="tns:getFirstPaymentDateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <wsdl:input message="tns:getLastPaymentDateHttpGetIn" />
+      <wsdl:output message="tns:getLastPaymentDateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <wsdl:input message="tns:setPaymentInfoHttpGetIn" />
+      <wsdl:output message="tns:setPaymentInfoHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServiceHttpPost">
+    <wsdl:operation name="paymentControl">
+      <wsdl:input message="tns:paymentControlHttpPostIn" />
+      <wsdl:output message="tns:paymentControlHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <wsdl:input message="tns:getProgramFeeHttpPostIn" />
+      <wsdl:output message="tns:getProgramFeeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <wsdl:input message="tns:getFirstPaymentDateHttpPostIn" />
+      <wsdl:output message="tns:getFirstPaymentDateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <wsdl:input message="tns:getLastPaymentDateHttpPostIn" />
+      <wsdl:output message="tns:getLastPaymentDateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <wsdl:input message="tns:setPaymentInfoHttpPostIn" />
+      <wsdl:output message="tns:setPaymentInfoHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="paymentControl">
+      <soap:operation soapAction="http://gsispaymentservice.net/paymentControl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <soap:operation soapAction="http://gsispaymentservice.net/getProgramFee" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <soap:operation soapAction="http://gsispaymentservice.net/getFirstPaymentDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <soap:operation soapAction="http://gsispaymentservice.net/getLastPaymentDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <soap:operation soapAction="http://gsispaymentservice.net/setPaymentInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="paymentControl">
+      <soap12:operation soapAction="http://gsispaymentservice.net/paymentControl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <soap12:operation soapAction="http://gsispaymentservice.net/getProgramFee" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <soap12:operation soapAction="http://gsispaymentservice.net/getFirstPaymentDate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <soap12:operation soapAction="http://gsispaymentservice.net/getLastPaymentDate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <soap12:operation soapAction="http://gsispaymentservice.net/setPaymentInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceHttpGet" type="tns:ServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="paymentControl">
+      <http:operation location="/paymentControl" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <http:operation location="/getProgramFee" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <http:operation location="/getFirstPaymentDate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <http:operation location="/getLastPaymentDate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <http:operation location="/setPaymentInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceHttpPost" type="tns:ServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="paymentControl">
+      <http:operation location="/paymentControl" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProgramFee">
+      <http:operation location="/getProgramFee" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirstPaymentDate">
+      <http:operation location="/getFirstPaymentDate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLastPaymentDate">
+      <http:operation location="/getLastPaymentDate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="setPaymentInfo">
+      <http:operation location="/setPaymentInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="https://193.140.1.237/gsisodeme/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="https://193.140.1.237/gsisodeme/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceHttpGet" binding="tns:ServiceHttpGet">
+      <http:address location="https://193.140.1.237/gsisodeme/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceHttpPost" binding="tns:ServiceHttpPost">
+      <http:address location="https://193.140.1.237/gsisodeme/Service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

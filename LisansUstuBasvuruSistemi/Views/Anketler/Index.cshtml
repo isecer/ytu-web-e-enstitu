@@ -1,0 +1,479 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmAnketler
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "Anketler", FormMethod.Post, new { id = "frmAnketler" }))
+    {
+
+
+
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Anket Listesi</h3>
+
+                    <ul class="panel-controls">
+                        <li><span class="label label-primary label-form"><a href="@Url.Action("Kayit")" style="color:white;"><i class="fa fa-plus fa-lg"></i> Yeni Anket Ekle</a></span></li>
+                        <li><span class="label label-info label-form">Toplam: <b>@IndexModel.Toplam</b></span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th class="sirala" field="EnstituAd" width="230">Enstitü</th>
+                                <th class="sirala" field="AnketAdi">Anket Adı</th>
+                                <th class="sirala" field="IsAktif" width="60">
+                                    Durum
+                                </th>
+                                <th width="50">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th>
+                                </th>
+                                <th>@Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" }) </th>
+                                <th>
+                                    <input name="Konu" type="text" value="@Model.AnketAdi" class="form-control" />
+                                </th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.AnketID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.AnketID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.EnstituAdi
+                                        </td>
+                                        <td>
+                                            @item.AnketAdi
+                                        </td> 
+                                        <td>
+                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                        </td>
+                                        <td>
+                                            <div class="hide" id="PnlAnk_@item.AnketID">
+                                                <div class="panel panel-default form-horizontal" style="margin:0px;padding:0px;">
+                                                    <div class="panel-body" style="margin:0px;padding:0px;">
+                                                        <div class="panel-body form-group-separated">
+                                                            <div class="form-group">
+                                                                <label class="col-md-2 col-xs-4 control-label">Anket Adı</label>
+                                                                <div class="col-md-10 col-xs-8">@item.AnketAdi</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-2 col-xs-4 control-label">Durum</label>
+                                                                <div class="col-md-10 col-xs-8" style="text-align: left;">
+                                                                    <span class="badge badge-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a href="@Url.Action("Kayit",new { id = item.AnketID })"><i class="fa fa-edit fa-lg tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.AnketID')"><i class="fa fa-trash-o fa-lg tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-ana-@item.AnketID" style="display:none">
+                                        <td id="cls-ana-@item.AnketID" colspan="6" style="padding: 1px 1px 2px 75px;">
+                                            <div class="panel" style="vertical-align:top;min-height:50px;" id="pnglAnk_@item.AnketID">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title" style="font-size:9pt;">Anket Soruları</h3>
+                                                    <ul class="panel-controls">
+                                                        <li>
+                                                            <span class="label label-primary" style="cursor:pointer;" title="Yeni Anket Sorusu Ekle" onclick="SoruEkleDialog(@item.AnketID,'')"><i class="fa fa-plus fa-lg"></i> Soru Ekle</span>
+                                                        </li>
+                                                        <li><a href="javascript:void(0);" onclick="GetDetail(@item.AnketID)" class=""><span class="fa fa-refresh"></span></a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="panel-body" style="margin: 0px; padding: 0px;" id="pnglAnkC_@item.AnketID">
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function ShowDetail(AnID) {
+        var rwID = $('#iShow_' + AnID);
+        var cls = 'cls-ana-' + AnID;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(AnID);
+    }
+    function ShowDetail2(id, IsShow) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var kid = id.split('_')[1];
+        if (IsShow) {
+            $('.' + cls).attr("style", "display:table-row;");
+            GetDetail2(kid);
+        }
+        else {
+            var unTogled = ($('.' + cls).css("display") == "none");
+            toggleByClass(rwID, cls, unTogled);
+            if (unTogled) GetDetail2(kid);
+        }
+    }
+    function GetDetail(AnID) {
+        var _panel = $('#pnglAnk_' + AnID);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetail", "Anketler")',
+            data: { 'AnketID': AnID },
+            async: false,
+            success: function (result) {
+                $('#pnglAnkC_' + AnID).html(result.page);
+                _pRefresh(_panel, true);
+
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+
+    }
+    function GetDetail2(AnsID) {
+        var _panel = $('#pnglAnks_' + AnsID);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetail2", "Anketler")',
+            data: { 'AnketSoruID': AnsID },
+            async: false,
+            success: function (result) {
+                $('#pnglAnks_' + AnsID).html(result.page);
+                _pRefresh(_panel, true);
+
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+
+    }
+    function SoruEkleDialog(AnID, AsID) {
+        var _pnl = $('#pnglAnk_' + AnID);
+        _pRefresh(_pnl, false);
+        $.ajax({
+            url: '@Url.Action("GetSoruEkle", "Anketler")',
+            type: 'POST',
+            cache: false,
+            data: { 'AnketID': AnID, 'AnketSoruID': AsID, },
+            success: function (result) {
+                ShowSoruEkle(result.page, AnID, AsID);
+
+                _pRefresh(_pnl, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_pnl, true);
+            }
+        });
+
+    }
+    function ShowSoruEkle(result, id, id2) {
+        var btbxxFS = bootbox.dialog({
+            message: result,
+            title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Kaydet',
+                    className: "btn-success",
+                    callback: function (event) {
+                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                        _pRefresh(pnlx, false);
+                        $('#FrmSoruEkle').ajaxForm({
+                            success: function (result) {
+                                if (result.IsSuccess) {
+
+                                    toastr[result.IsSuccess ? "success" : "error"](result.Messages[0], result.Title)
+                                    GetDetail(id);
+                                    $('#Rw_tbody').find('tr').remove();
+                                    if (id2 != null && id2 != "") {
+                                        var _clsBtn = $('.modal-header').find('button').first();
+                                        $(_clsBtn).click();
+                                    }
+                                    else {
+                                        $('#SiraNo').val(result.SiraNo);
+                                    }
+                                }
+                                else {
+                                    getMsg(result);
+                                    return false;
+                                }
+                                _pRefresh(pnlx, true);
+                            },
+                            complete: function (cmp) {
+                                _pRefresh(pnlx, true);
+                            },
+                            error: function (err) {
+                                _pRefresh(pnlx, true);
+                            }
+
+                        });
+                        $('#FrmSoruEkle').submit();
+                        return false;
+                    }
+                },
+                danger: {
+                    label: 'Kapat',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+    }
+
+    function SecenekEkleDialog(AsID, AssID) {
+        var _pnl = $('#pnglAnkS_' + AsID);
+        _pRefresh(_pnl, false);
+        $.ajax({
+            url: '@Url.Action("GetSoruSecenekEkle", "Anketler")',
+            type: 'POST',
+            cache: false,
+            data: { 'AnketSoruID': AsID, 'AnketSoruSecenekID': AssID, },
+            success: function (result) {
+                SecenekEkle(result.page, AsID, AssID);
+                _pRefresh(_pnl, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_pnl, true);
+            }
+        });
+
+    }
+    function SecenekEkle(result, id, id2) {
+        var btbxxFS = bootbox.dialog({
+            message: result,
+            title: "<i class='fa fa-pencil'></i> Anket Sorusu Şıkkı Ekleme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Kaydet',
+                    className: "btn-success",
+                    callback: function (event) {
+                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                        _pRefresh(pnlx, false);
+                        $('#FrmSoruSecenekEkle').ajaxForm({
+                            success: function (result) {
+                                if (result.IsSuccess) {
+
+                                    toastr[result.IsSuccess ? "success" : "error"](result.Messages[0], result.Title)
+                                    ShowDetail2("Ap_" + id, true);
+                                    $('#Rw_tbody').find('tr').remove();
+                                    if (id2 != null && id2 != "") {
+                                        var _clsBtn = $('.modal-header').find('button').first();
+                                        $(_clsBtn).click();
+                                    }
+                                    else {
+                                        $('#SiraNo').val(result.SiraNo);
+                                    }
+                                }
+                                else {
+                                    getMsg(result);
+                                    return false;
+                                }
+                                _pRefresh(pnlx, true);
+                            },
+                            complete: function (cmp) {
+                                _pRefresh(pnlx, true);
+                            },
+                            error: function (err) {
+                                _pRefresh(pnlx, true);
+                            }
+
+                        });
+                        $('#FrmSoruSecenekEkle').submit();
+                        return false;
+                    }
+                },
+                danger: {
+                    label: 'Kapat',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+    }
+
+    function SilmeOnay(sndr, id) {
+        var htmlCont = $("#PnlAnk_" + id).html();
+        var SoruHtml = "<table style='color:maroon;table-layout:fixed;width:100%;'><tr><td width='30' style='padding-left:10px;'><i class='fa fa-info fa-2x'></i></td><td style='padding-right:10px;'>Seçilen Anketi Silmek İstiyor Musunuz?</td></tr></table>";
+        bootbox.dialog({
+            message: htmlCont + SoruHtml,
+            title: "Anket Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Anketi Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        Sil(sndr, id);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function Sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "Anketler")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Anket Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-ana-" + id).remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function SilmeOnayAks(sndr, id) {
+        var htmlCont = $("#PnlAnkS_" + id).html();
+        var SoruHtml = "<table style='color:maroon;table-layout:fixed;width:100%;'><tr><td width='30' style='padding-left:10px;'><i class='fa fa-info fa-2x'></i></td><td style='padding-right:10px;'>Seçilen Soruyu Silmek İstiyor Musunuz?</td></tr></table>";
+        bootbox.dialog({
+            message: htmlCont + SoruHtml,
+            title: "Anket Sorusu Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Soruyu Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        SilAks(sndr, id);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function SilAks(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("SilSoru", "Anketler")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Anket Sorusu Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function SilmeOnayAkss(sndr, id) {
+        var htmlCont = $("#PnlAnkS_" + id).html();
+        var SoruHtml = "<table style='color:maroon;table-layout:fixed;width:100%;'><tr><td width='30' style='padding-left:10px;'><i class='fa fa-info fa-2x'></i></td><td style='padding-right:10px;'>Seçilen Soruy Şıkkını Silmek İstiyor Musunuz?</td></tr></table>";
+        bootbox.dialog({
+            message: htmlCont + SoruHtml,
+            title: "Anket Sorusu Şıkkı Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Soru Şıkkını Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        SilAkss(sndr, id);
+                    }
+                },
+                danger: {
+                    label: "Vazgeç",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function SilAkss(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("SilSoruSecenek", "Anketler")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Anket Sorus Şıkkı Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+</script>

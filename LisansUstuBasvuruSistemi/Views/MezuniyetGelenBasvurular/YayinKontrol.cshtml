@@ -1,0 +1,192 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model basvuruDetayModelMezuniyet
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var Color = Model.DurumColor;
+    Layout = null; 
+}      
+<div class="widget widget-default" style="margin:0px;padding:4px;">
+    <div class="panel panel-default form-horizontal" style="margin:0px;" id="yayinPopup">      
+        <div class="panel-body form-group-separated">
+            <table class="table" style="font-size:9pt;margin:0px;color:@Color;">
+                <tr>
+                    <td width="140" style="text-align:right;">Ad Soyad</td>
+                    <td width="5">:</td>
+                    <td>@Model.Ad @Model.Soyad</td>
+                </tr>
+                <tr>
+                    <td width="140" style="text-align:right;">Tez Başlığı (Türkçe)</td>
+                    <td width="5">:</td>
+                    <td>@Model.TezBaslikTr</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">Tez Başlığı (İngilizce)</td>
+                    <td>:</td>
+                    <td>@Model.TezBaslikEn</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">Danışman Adı</td>
+                    <td>:</td>
+                    <td>@Model.TezDanismanAdi</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;">Eş Danışman Adı</td>
+                    <td>:</td>
+                    <td>@Model.TezEsDanismanAdi</td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;vertical-align:top;">Tez Özeti</td>
+                    <td style="vertical-align:top;">:</td>
+                    <td>
+                        <div style="max-height:120px;overflow:auto;">
+                            @Html.Raw(Model.TezOzetHtml)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;vertical-align:top;">Abstract</td>
+                    <td style="vertical-align:top;">:</td>
+                    <td>
+                        <div style="max-height:120px;overflow:auto;">
+                            @Html.Raw(Model.TezAbstractHtml)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="panel panel-info" style="margin:0px;">
+
+                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body" style="margin: 0px; padding: 0px; padding-left:5px;">
+                        <table class="table" style="width:100%;table-layout:fixed;margin:0px;">
+                            <tbody>
+                                <tr>
+                                    <td width="150" style="font-weight:bold;">Yayın Türü</td>
+                                    <td width="5">:</td>
+                                    <td>
+                                        @Model.SelectedYayin.MezuniyetYayinTurAdi
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold;">Yayın Başlığı</td>
+                                    <td width="5">:</td>
+                                    <td>
+                                        @Model.SelectedYayin.YayinBasligi
+                                    </td>
+                                </tr>
+                                <tr class="@(Model.SelectedYayin.MezuniyetYayinBelgeTurZorunlu==false?"hide":"")">
+                                    <td style="font-weight:bold;">@Model.SelectedYayin.MezuniyetYayinBelgeTurAdi</td>
+                                    <td>:</td>
+                                    <td class="fileYayinBelge">
+                                        @if (Model.SelectedYayin.MezuniyetYayinBelgeDosyaYolu.IsNullOrWhiteSpace() == false)
+                                        {
+                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.SelectedYayin.MezuniyetYayinBelgeDosyaYolu)','@Model.SelectedYayin.MezuniyetYayinBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinBelgeAdi</a>
+                                        }
+                                        else
+                                        {
+                                            @Model.SelectedYayin.MezuniyetYayinBelgeAdi
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class="@(Model.SelectedYayin.MezuniyetYayinKaynakLinkTurZorunlu==false?"hide":"")">
+                                    <td style="font-weight:bold;">@Model.SelectedYayin.MezuniyetYayinKaynakLinkTurAdi</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if (Model.SelectedYayin.MezuniyetYayinKaynakLinki.IsNullOrWhiteSpace() == false && Model.SelectedYayin.MezuniyetYayinKaynakLinkIsUrl)
+                                        {
+                                            <a href="@(Model.SelectedYayin.MezuniyetYayinKaynakLinki.Contains("//") ? "" + Model.SelectedYayin.MezuniyetYayinKaynakLinki : "//" + Model.SelectedYayin.MezuniyetYayinKaynakLinki)" target="_blank">@Model.SelectedYayin.MezuniyetYayinKaynakLinki</a>
+                                        }
+                                        else
+                                        {
+                                            @Model.SelectedYayin.MezuniyetYayinKaynakLinki
+                                        }
+
+                                    </td>
+                                </tr>
+                                <tr class="@(Model.SelectedYayin.MezuniyetYayinMetinZorunlu==false?"hide":"")">
+                                    <td style="font-weight:bold;">@Model.SelectedYayin.MezuniyetYayinMetinTurAdi</td>
+                                    <td>:</td>
+                                    <td class="fileYayinMetni">
+                                        @if (Model.SelectedYayin.MezuniyetYayinMetniBelgeYolu.IsNullOrWhiteSpace() == false)
+                                        {
+                                            <a href="javascript:void(0);" onclick="PopupCenter('@Url.Content(Model.SelectedYayin.MezuniyetYayinMetniBelgeYolu)','@Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi',800,600);"><span class="fa fa-download" style="color: green;"></span> @Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi</a>
+                                        }
+                                        else
+                                        {
+                                            @Model.SelectedYayin.MezuniyetYayinMetniBelgeAdi
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr class="@(Model.SelectedYayin.MezuniyetYayinLinkiZorunlu==false?"hide":"")">
+                                    <td style="font-weight:bold;">@Model.SelectedYayin.MezuniyetYayinLinkTurAdi</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if (Model.SelectedYayin.MezuniyetYayinLinki.IsNullOrWhiteSpace() == false && Model.SelectedYayin.MezuniyetYayinLinkIsUrl)
+                                        {
+                                            <a href="@(Model.SelectedYayin.MezuniyetYayinLinki.Contains("//") ? "" + Model.SelectedYayin.MezuniyetYayinLinki : "//" + Model.SelectedYayin.MezuniyetYayinLinki)" target="_blank">@Model.SelectedYayin.MezuniyetYayinLinki</a>
+
+                                        }
+                                        else
+                                        {
+                                            @Model.SelectedYayin.MezuniyetYayinLinki
+                                        }
+                                    </td>
+                                </tr>
+
+                                <tr class="@(Model.SelectedYayin.MezuniyetYayinIndexTurZorunlu==false?"hide":"")">
+                                    <td style="font-weight:bold;">Index Bilgisi</td>
+                                    <td>:</td>
+                                    <td>
+                                        @Model.SelectedYayin.MezuniyetYayinIndexTurAdi
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" style="margin:0px;">
+                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body form-group-separated" style="margin: 0px; padding: 0px; padding-left:5px;">
+                        <div class="form-group">
+                            <label class="col-md-6 col-xs-6 control-label">Danışman İsmi Var Mı?</label>
+                            <div class="col-md-6 col-xs-6">
+                                <select id="DanismanIsmiVar" name="DanismanIsmiVar">
+                                    @foreach (var item in Management.cmbEvetHayirData(true))
+                                    {
+                                        <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.SelectedYayin.DanismanIsmiVar ? "selected" : "")>@item.Caption</option>
+                                    }
+                                </select>    
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 col-xs-6 control-label">Tez İçeriği ile Uyumlu mu?</label>
+                            <div class="col-md-6 col-xs-6">
+                                <select id="TezIcerikUyumuVar" name="TezIcerikUyumuVar">
+                                    @foreach (var item in Management.cmbEvetHayirData(true))
+                                    {
+                                        <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.SelectedYayin.TezIcerikUyumuVar ? "selected" : "")>@item.Caption</option>
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 col-xs-6 control-label">Yayın Şartı Onayı</label>
+                            <div class="col-md-6 col-xs-6">
+                                <select id="Onaylandi">
+                                    <option @(Model.SelectedYayin.Onaylandi.HasValue == false ? "selected" : "")></option>
+                                    <option value="true" @(Model.SelectedYayin.Onaylandi == true ? "selected" : "")>Onaylandı</option>
+                                    <option value="false" @(Model.SelectedYayin.Onaylandi == false ? "selected" : "")>Onaylanmadı</option>
+                                </select> 
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

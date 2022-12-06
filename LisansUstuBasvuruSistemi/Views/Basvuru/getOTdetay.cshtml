@@ -1,0 +1,128 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model kontenjanBilgiModel
+@{
+    Layout = null;
+    var color = ((Model.KontenjanBulunanProgramSayisi == 0 || Model.Kota == 0 || Model.ToplamKota == 0) ? "#b64645" : "#9bbb67");
+    
+}
+<div class="panel panel-@((Model.KontenjanBulunanProgramSayisi == 0 || Model.Kota == 0 || Model.ToplamKota == 0) ? "danger" : "success") push-up-0 push-down-0">
+    <div class="panel-body panel-body-pricing" style="padding-top: 2px; padding-bottom: 2px;">
+        @*<h2 style="margin: 0px;color:@color">
+            @Model.OgrenimTipAdi<br>
+        </h2>*@
+        <table class="table">
+            <tr>
+                <th width="5"></th>
+                <th><span style="font-weight:normal;font-size: 8pt;color:#337abb;">Öğrenim Seviyesi</span></th>
+                <th style="text-align:center;" width="80"><span style="font-weight:normal;font-size: 8pt;color:#337abb;">Program</span></th>
+                <th style="text-align:center;" width="110">
+                    <table style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td colspan="2" style="text-align:center;font-size: 8pt;color:#337abb;">Tercih Kotası</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:normal;font-size: 8pt;color:#337abb;">Kalan</td>
+                            <td style="font-weight:normal;font-size: 8pt;color:#337abb;">Kota</td>
+                        </tr>
+                    </table>
+                </th>
+                <th style="text-align:center;" width="110">
+                    <table style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td colspan="2" style="text-align:center;font-size: 8pt;color:#337abb;">Toplam Kota</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:normal;font-size: 8pt;color:#337abb;">Kalan</td>
+                            <td style="font-weight:normal;font-size: 8pt;color:#337abb;">Kota</td>
+                        </tr>
+                    </table>
+
+                </th>
+            </tr>
+            <tr>
+                <td><span class="fa fa-caret-right" style="font-size: 11pt;color:@color"></span></td>
+                <td>
+                    <span style="font-weight:normal;font-size: 11pt;color:@color;">@Model.OgrenimTipAdi</span>
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.KontenjanBulunanProgramSayisi</span>
+                </td>
+                <td style="text-align:center;" width="110">
+                    <table style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td><span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.KalanKota</span></td>
+                            <td><span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.Kota</span></td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td style="text-align:center;" width="110">
+                    <table style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td><span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.ToplamKalanKota</span></td>
+                            <td><span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.ToplamKota</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        @if (Model.OBOgrenimTipleri.Any(p => p.IsAktif))
+        {
+            <table class="table">
+                <tr>
+                    <th colspan="5" style="text-align:center;">
+                        <span style="font-weight:normal;font-size: 9pt;color:#337abb;">@Model.OgrenimTipAdi Öğrenim tipi ile beraber başvurulabilecek diğer öğrenimler</span>
+                    </th>
+
+                </tr>
+                @foreach (var item in Model.OBOgrenimTipleri)
+                {
+                    var color2 = ((item.KontenjanBulunanProgramSayisi == 0 || item.Kota == 0 || item.KalanKota == 0 || item.ToplamKalanKota == 0 || item.ToplamKota == 0) ? "#b64645" : "#337abb");
+                    <tr>
+                        <td width="5">
+                            <span class="fa fa-caret-right" style="font-size: 11pt;color:@color2"></span>
+                        </td>
+                        <td>
+                            <span style="font-weight:normal;font-size: 11pt;color:@color2;">@item.OgrenimTipAdi</span>
+                        </td>
+                        <td style="text-align:center;" width="80">
+                            <span style="font-weight:normal;font-size: 13pt;color:@color2;">@item.KontenjanBulunanProgramSayisi</span>
+                        </td>
+                        <td style="text-align:center;" width="110">
+                            <table style="width:100%;table-layout:fixed;">
+                                <tr>
+                                    <td><span style="font-weight:normal;font-size: 13pt;color:@color2;">@item.KalanKota</span></td>
+                                    <td><span style="font-weight:normal;font-size: 13pt;color:@color2;">@item.Kota</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="text-align:center;" width="110">
+                            <table style="width:100%;table-layout:fixed;">
+                                <tr>
+                                    <td><span style="font-weight:normal;font-size: 13pt;color:@color2;">@item.ToplamKalanKota</span></td>
+                                    <td><span style="font-weight:normal;font-size: 13pt;color:@color2;">@item.ToplamKota</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                } 
+            </table>
+        }
+
+    
+        <div class="hide ogrenimBilgisi">
+            <span class="BasvuruSurecKontrolTipID hide">@Model.BasvuruSurecKontrolTipID</span>
+            <span class="OgrenimTipKod hide">@Model.OgrenimTipKod</span>
+            <span class="OgrenimTipAdi hide">@Model.OgrenimTipAdi</span>
+            <span class="ToplamTercihKota hide">@Model.ToplamKota</span>
+            <span class="ToplamKalanTercihKota hide">@Model.ToplamKalanKota</span>
+            <span class="YLEgitimBilgisiIste hide">@Model.YLEgitimBilgisiIste.ToString().ToLower()</span>
+            <span class="FarkliOgrenimTipiEklenemez hide">@Model.FarkliOgrenimTipiEklenemez.ToString().ToLower()</span>
+            <span class="FarkliOgrenimTipiEklenemezAyniBasvuruda hide">@Model.FarkliOgrenimTipiEklenemezAyniBasvuruda.ToString().ToLower()</span>
+            <span class="FarkliOgrenimTipiEklenemezAds hide">@Model.FarkliOgrenimTipEklenemezAds</span>
+            <span class="TercihKota hide">@Model.Kota</span>
+            <span class="TercihKalanKota hide">@Model.KalanKota</span>
+            <span class="BasvurulabilecekDigerOgrenimTipleriKods hide">@(Model.OBOgrenimTipleri.Count > 0 ? Model.OgrenimTipKod + "," + string.Join(",", Model.OBOgrenimTipleri.Select(s => s.OgrenimTipKod).ToList()) : "")</span>
+        </div>
+    </div>
+</div> 

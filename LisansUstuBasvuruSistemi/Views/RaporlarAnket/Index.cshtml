@@ -1,0 +1,68 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-md-12">
+
+    <!-- START SIMPLE DATATABLE -->
+    <div class="panel panel-info" id="pnlFltr">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title">
+                <i class="fa fa-bar-chart-o"></i> Anket Sonuçları Raporu Alma İşlemi
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover" style="table-layout:fixed;">
+                <tr>
+
+                    <td width="120">Anket</td>
+                    <td>
+                        @Html.DropDownList("AnketID", null, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>Başlangıç Tarihi</td>
+                    <td>
+                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" name="BasTar" id="BasTar">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bitiş Tarihi</td>
+                    <td>
+                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" name="BitTar" id="BitTar">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <a href="javascript:void(0);" onclick="RaporAl();" class="btn btn-info"><i class="fa fa-bar-chart-o fa-lg"></i> Rapor Al</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.date-pickerx').datetimepicker({
+        lang: 'tr',
+        timepicker: false,
+        format: 'd-m-Y'
+    });
+    function RaporAl() {
+        var _AnketID = $("#AnketID").val();
+        var _BasTar = $("#BasTar").val();
+        var _BitTar = $("#BitTar").val();
+        if (_AnketID == "") {
+            alert("Anket Seçiniz.");
+            return;
+        }
+        else if (_BasTar == "" || _BitTar == "") {
+            alert("Başlangıç ve Bitiş Tarihi Giriniz.");
+            return;
+        } 
+        yeniDialogBB(null, 'Anket Sonuç Raporu', '@Url.Action("GetDxReport","Ajax")?RaporTipi=' + @RaporTipleri.Anketler + '&AnketID=' + _AnketID + '&BasTar=' + _BasTar + '&BitTar=' + _BitTar, 'auto', 'modal-dialog modal-lg');
+    }
+</script>

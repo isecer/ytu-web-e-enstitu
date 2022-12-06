@@ -1,0 +1,125 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model msUrecDetay
+@{
+    Layout = null;
+    string Color = "color=blue";
+    var nowDate = DateTime.Now;
+    bool BasvuruyaAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
+    string _colorMul = "green";
+    string _colorSG = "gray";
+    string _colorUyari = "red";
+
+    var tercihB = Model.ToplamBasvuruBilgisi.ListB.Where(p => p.ID == -1).FirstOrDefault();
+
+}
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-list-alt"></i>Mezuniyet Süreci Bilgisi
+        </h3>
+    </div>
+    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+            <div class="col-md-12" style="text-align: left; height: 345px; overflow: auto;">
+                <table class="table" style="font-size:9pt;margin:0px;@Color">
+                    <tr>
+                        <td style="text-align:right;" width="230">Enstitü Adı</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.EnstituAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Eğitim Öğretim Yılı</td>
+                        <td>:</td>
+                        <td style="font-weight:bold;"><span style="color:@(BasvuruyaAcik   ? _colorMul : _colorSG);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Başvuru Süreci</td>
+                        <td>:</td>
+                        <td style="font-weight:bold;">
+                            @if (BasvuruyaAcik)
+                            {
+                                <span style="color:@_colorMul;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
+                            }
+                            else
+                            {
+                                if (Model.BitisTarihi < nowDate)
+                                {
+                                    <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                }
+                                else if (Model.BaslangicTarihi > nowDate)
+                                {
+                                    <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                }
+
+                            }
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.ToplamBasvuruBilgisi.ListB.Where(p => p.ID > -1))
+                    {
+                        <tr>
+                            <td style="text-align:right;">@item.Key</td>
+                            <td>:</td>
+                            <td>
+                                <span style="color:@item.Color;">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></span>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="text-align:right;">İşlem Yapan</td>
+                        <td>:</td>
+                        <td>@Model.IslemYapan [@Model.IslemTarihi.ToFormatDateAndTime()]</td>
+                    </tr>
+                </table>
+
+                <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                    <div class="panel-heading padding-0">
+                        <h4 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Mezuniyet Başvurusu ve  Süreci için gerekli kriterler</h4>
+                    </div>
+                    <div class="panel-body padding-0">
+
+                        <table class="table" style="width:100%;table-layout:fixed;">
+                            <thead>
+                                <tr>
+                                    <th>Öğrenim Tipleri</th>
+                                    <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
+                                    <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
+                                    <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
+                                    <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
+                                    <th width="50" title="Tez Sınavı Uzatma Süresi (Gün)">T.S.U.S</th>
+                                    <th width="40" title="Tez Teslim Süresi (Gün)">T.T.S</th>
+                                    <th width="40" title="SR Kaç Gün Sonra Alınabilir (Gün)">S.R.G</th>
+                                </tr>
+                            </thead>
+                            <tbody id="Rw_tbody">
+                                @foreach (var item in Model.MezuniyetSureciOgrenimTipKriterleris)
+                                {
+
+                                    <tr class="rw_bst">
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
+                                                <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
+                                                <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
+                                                @item.OgrenimTipleri.OgrenimTipAdi
+                                            </div>
+                                        <td> @item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari</td>
+                                        <td> @item.MBasvuruToplamKrediKriteri</td>
+                                        <td> @item.MBasvuruAGNOKriteri </td>
+                                        <td> @item.MBasvuruAKTSKriteri</td>
+                                        <td> @item.MBSinavUzatmaSuresiGun  </td>
+                                        <td> @item.MBTezTeslimSuresiGun</td>
+                                        <td> @item.MBSRTalebiKacGunSonraAlabilir</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

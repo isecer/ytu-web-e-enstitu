@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+<div class="widget widget-default" style="margin:0px;padding:4px;">
+    <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;" id="TutanakRprContent">
+        <div class="panel-body">
+            @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
+            {
+            <div class="panel-body form-group-separated">
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-3 control-label">Tutanak Türünü Seçiniz</label>
+                    <div class="col-md-9 col-xs-9">
+                        <select id="RaporTipID" name="RaporTipID" class="form-control" onchange="RprTipChange()">
+                            <option value="@LisansUstuBasvuruSistemi.Models.RaporTipleri.MezuniyetTezJuriTutanakRaporu">Tez Jüri Tutanak Raporu</option>
+                            <option value="@LisansUstuBasvuruSistemi.Models.RaporTipleri.MezuniyetTutanakRaporu">Mezuniyet Tutanak Raporu</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-3 control-label">Öğrenim Tipleri</label>
+                    <div class="col-md-9 col-xs-9">
+                        <select id="OgrenimTipKods" name="OgrenimTipKods" class="form-control">
+                            <option selected="selected" value="@LisansUstuBasvuruSistemi.Models.OgrenimTipi.Doktra">Doktora</option>
+                            <option value="@LisansUstuBasvuruSistemi.Models.OgrenimTipi.TezliYuksekLisans">Tezli Yüksek Lisans</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-3 control-label">Çıktı Alım Şekli</label>
+                    <div class="col-md-9 col-xs-9">
+                        <select id="ExportWordOrExcel" name="ExportWordOrExcel" class="form-control">
+                            <option selected="selected" value="true">Word Belgesi</option>
+                            <option value="false">Excel Belgesi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
+                    <div class="col-md-9 col-xs-9">
+                        <table>
+                            <tr>
+                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
+                                <td>/</td>
+                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group hide" id="rprTarihi">
+                    <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
+                    <div class="col-md-9 col-xs-9">
+                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function RprTipChange() {
+        var _Rtip = $('#RaporTipID').val();
+        var _Otip = $('#OgrenimTipKods').val();
+
+        if (_Rtip == '@LisansUstuBasvuruSistemi.Models.RaporTipleri.MezuniyetTutanakRaporu' && _Otip == '@LisansUstuBasvuruSistemi.Models.OgrenimTipi.Doktra') {
+            $('#rprTarihi').removeClass('hide');
+        }
+        else $('#rprTarihi').addClass('hide');
+    }
+    $(function () {
+        $('#BasTar').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'd-m-Y'
+        });
+        $('#BitTar').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'd-m-Y'
+        });
+        $('#RaporTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'd-m-Y'
+        });
+
+    })
+</script>

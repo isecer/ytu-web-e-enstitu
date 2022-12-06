@@ -1,0 +1,113 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@{
+    Layout = null;
+
+    var root = Management.getRoot();
+    root = root.EndsWith("/") ? root : root + "/";
+
+    var apath = Request.Url.AbsolutePath.IndexOf("?") > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?")) : Request.Url.AbsolutePath;
+
+    var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
+    string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (spl.First().item.IsContainsEnstitu() ? spl.First().item : "FBE")).ToLower();
+    var enst = (selectedEnstKisAd + "/").ToLower();
+    root = root + enst;
+    var eKod = Management.getSelectedEnstitu(selectedEnstKisAd);
+    var menudata = Management.Menulers.Where(p => p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
+    menudata.Add(new Menuler
+    {
+        MenuID = 1000063309,
+        MenuAdi = "Başvuru",
+        BagliMenuID = 80000,
+        MenuCssClass = "fa fa-file-text-o",
+        MenuUrl = "Basvuru/Index",
+        DilCeviriYap = true,
+        YetkisizErisim = true,
+        AuthenticationControl = "authenticatedControl(this)",
+        SiraNo = 0
+
+
+    });
+    var mMenu = new List<Menuler>();
+
+    mMenu = Management.GetUserMenus().ToList();
+    mMenu.Add(new Menuler
+    {
+        MenuID = 1000063309,
+        MenuAdi = "Başvuru",
+        BagliMenuID = 80000,
+        MenuCssClass = "fa fa-file-text-o",
+        MenuUrl = "Basvuru/Index",
+        DilCeviriYap = true,
+        YetkisizErisim = true,
+        AuthenticationControl = "authenticatedControl(this)",
+        SiraNo = 0
+
+
+    });
+    IEnumerable<Menuler> eklenecekler = new Menuler[0];
+    do
+    {
+        var pids = mMenu.Where(p => p.BagliMenuID.HasValue && p.BagliMenuID.Value > 0).Select(s => s.BagliMenuID.Value);
+        var ids = mMenu.Select(s => s.MenuID);
+        var ekiskIds = pids.Except(ids);
+        eklenecekler = menudata.Where(p => ekiskIds.Contains(p.MenuID)).ToArray();
+
+        mMenu.AddRange(eklenecekler);
+    }
+    while (eklenecekler.Count() > 0);
+
+    mMenu.AddRange(menudata.Where(p => p.YetkisizErisim.HasValue && p.YetkisizErisim.Value && mMenu.Any(a => a.MenuID == p.MenuID) == false));
+    mMenu = mMenu.OrderBy(o => o.SiraNo).ToList();
+
+    var sb = new System.Text.StringBuilder();
+    Func<int?, bool> fxMenu = null;
+
+    fxMenu = new Func<int?, bool>((parentID) =>
+    {
+        Menuler[] menuler = null;
+        if (!parentID.HasValue)
+        {
+            menuler = mMenu.Where(p => p.BagliMenuID == 0).ToArray();
+        }
+        else
+        {
+            menuler = mMenu.Where(p => p.BagliMenuID == parentID).ToArray();
+        }
+        if (menuler.Count() > 0)
+        {
+            for (int i = 0; i < menuler.Count(); i++)
+            {
+                var menu = menuler[i];
+                string menuAdi =  menu.MenuAdi;
+                string MenuAD = (parentID.HasValue ? menuAdi : "<span class='xn-text'>" + menuAdi + "</span>");
+
+                string autC = menu.AuthenticationControl;
+                bool navAutC = !menu.AuthenticationControl.IsNullOrWhiteSpace();
+                var hrefUrl = navAutC || menu.MenuUrl.IsNullOrWhiteSpace() ? "javascript:void(0);" : (root + menu.MenuUrl);
+
+                var hassubmenu = (mMenu.Any(a => a.BagliMenuID == menu.MenuID));
+                sb.AppendLine("<li " + (hassubmenu ? "class='xn-openable'" : "") + ">" +
+                                    "<a href='" + hrefUrl + "' " + (navAutC ? ("onclick='" + autC + "'") : "") + " menuurl='" + root.ToLower() + (menu.MenuUrl.IndexOf("I") > -1 ? menu.MenuUrl.Replace("I", "i") : menu.MenuUrl).ToLower() + "'>" +
+                                       "<span class='" + menu.MenuCssClass + "'></span>" +
+                                        MenuAD +
+                                     "</a>");
+                if (hassubmenu)
+                {
+                    sb.AppendLine("<ul>");
+                    fxMenu(menu.MenuID);
+                    sb.AppendLine("</ul>");
+                }
+                sb.AppendLine("</li>");
+            }
+        }
+
+        return true;
+    });
+
+
+    fxMenu(null);
+
+}
+@Html.Raw(sb.ToString())
+

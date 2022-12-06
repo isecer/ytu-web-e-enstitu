@@ -1,0 +1,312 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  KmDekontBilgi
+@{
+    ViewBag.Title = "Index";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+     
+    bool IsPopup = (bool)ViewBag.IsPopup;
+    if (IsPopup)
+    {
+        Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="col-md-12">
+    @if (!IsPopup)
+    {
+        <div class="panel panel-danger">
+            <div class="panel-body">
+                <h3 style="color:darkred;font-weight:bold;">Dikkat</h3>
+                Başvuru işlemi ücretsizdir. Ödeme İşlemi, yalnızca 2.Öğretim Yüksek Lisans programlarına kayıt hakkı kazanan öğrenciler ve Uluslararası Öğrenciler için, kayıt işlemi öncesinde gerçekleştirilecektir.
+            </div>
+        </div>
+    }
+    <div class="panel panel-info pnlDekont">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title">
+                <i class="fa fa-list-alt"></i> Dekont Giriş
+            </h3>
+            <ul class="panel-controls"></ul>
+        </div>
+        <div class="portlet-body" style="padding:0px;">
+            <input type="hidden" name="KullaniciID" value="@Model.KullaniciID" style="width: 100%;" id="KullaniciID" />
+            @if (UserIdentity.Current.IsAdmin && IsPopup == false)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <td style="width: 150px; border: none;  text-align:right;">Öğrenci</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            <input type="text" name="OKullaniciID" value="" style="width: 100%;" id="OKullaniciID" />
+                        </td>
+                    </tr>
+                </table>
+                <script>
+                        $('#OKullaniciID').select2({
+                            tags: true,
+                            tokenSeparators: [",", " "],
+                            minimumInputLength: 2,
+                            maximumSelectionSize: 1,
+                            multiple: false,
+                            ajax: {
+                                url: '@Url.Action("GetEnstituOgrencileri", "Ajax")',
+                                dataType: "json",
+                                data: function (term, page) {
+                                    return {
+                                        'term': term,
+                                        'EnstituKod': '@Model.EnstituKod'
+                                    };
+
+                                },
+                                results: function (data, page) {
+                                    return {
+                                        results: data
+                                    };
+                                }
+                            },
+                            formatResult: function (result) {
+                                var src = result.Images.toString();
+                                var cont2 =
+                                    "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                                    "<tbody>" +
+                                    "<tr>" +
+                                    "<td style='vertical-align:middle;' width='40'>" +
+                                    "<span class='user' style='width: 40px;height:40px;margin-right:5px;'> " +
+                                    "<img style='width:40px;height:40px;' src='" + src + "' class='pull-left' alt='" + result.AdSoyad + "'>" +
+                                    "</span> " +
+                                    "</td>" +
+                                    "<td style='vertical-align:middle;'>" +
+                                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                                    "<tbody>" +
+                                    "<tr><td>" + result.KullaniciTipAdi + "</td></tr>" +
+                                    "<tr><td>" + result.AdSoyad + "</td></tr>" +
+                                    "<tr><td>Tc/Ps: " + result.TcKimlikNo + " ÖğrenciNo:" + result.OgrenciNo + "</td></tr>" +
+                                    "</tbody> " +
+                                    "</table> " +
+                                    "</td>" +
+                                    "</tr> " +
+                                    "</tbody>" +
+                                    "</table>";
+                                return cont2;
+                            }
+                        }).on('change', function (e) {
+                            var id = e.added.id;
+                            $('#KullaniciID').val(id);
+                            getGetKullaniciKontrol(id);
+                            });
+                </script>
+            }
+            <div id="OgrDetay">
+                <table class="table table-hover">
+                    <tr>
+                        <td style="width: 150px; border: none;  text-align:right;">Enstitü</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+
+                            <span>@Model.EnstituAdi</span>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; text-align:right;">Ad Soyad</td>
+                        <td style="border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">@Model.AdSoyad</td>
+                    </tr>
+
+                    <tr>
+                        <td style="border: none;  text-align:right;">@(Model.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci ? "Pasaport No" : "T.C. Kimlik No")</td>
+                        <td style="border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            @Model.TcPasaportNo
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="border: none;  text-align:right;">Kayıt Dönemi</td>
+                        <td style="border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            @Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control", onchange = "getPrograms(this);" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;  text-align:right;">Tercih</td>
+                        <td style="border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            @Html.DropDownList("UniqueID", null, new { @class = "form-control", onchange = "getOdemeKontrol();" })
+                        </td>
+                    </tr>
+                </table>
+                <div id="odemeDetay">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @if (IsPopup)
+    {
+        <script type="text/javascript" src="~/Content/js/actions.js"></script>
+    }
+</div>
+<script>
+    var Ispopup=@IsPopup.ToString().ToLower();
+    setTimeout(getOdemeKontrol(), 1000);
+    function getGetKullaniciKontrol(KullaniciID) {
+            var _panel = $('.pnlDekont');
+            if (true) {
+                _pRefresh(_panel, false);
+                $.ajax({
+                    url: '@Url.Action("getOgrenciDetay", "OnlineOdeme")',
+                    data: { 'KullaniciID': KullaniciID},
+                    success: function (result) {
+                        $('#OgrDetay').html(result);
+                        _pRefresh(_panel, true);
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                        $('#OgrDetay').html('');
+                        _pRefresh(_panel, true);
+
+                    }
+                });
+            }
+            else {
+                $('#odemeDetay').html('');
+            }
+        }
+    function getPrograms(sndr) {
+        var sndrVal = $(sndr).val();
+        var _panel = $('.pnlDekont');
+        $('#dekontDet').html('');
+        if (sndrVal != null && sndrVal != "") {
+            var _KulID = $('#KullaniciID').val();
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getProgramlar", "DekontBilgi")',
+                data: { 'BasvuruSurecID':sndrVal,'KullaniciID':_KulID},
+                success: function (result) {
+                    $('#UniqueID').empty();
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) {
+                        var valR = result[i].Value;
+                        var _value = "";
+                        if (valR != null) {
+                            _value = valR;
+                        }
+                        opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
+                    }
+                    $('#UniqueID').append(opt);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            $('#UniqueID').empty();
+        }
+    }
+    function getOdemeKontrol() {
+        var sndrVal = $('#UniqueID').val();
+        var _panel = $('.pnlDekont');
+        if (sndrVal != null && sndrVal != "") {
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getPRdetay", "DekontBilgi")',
+                data: { 'UniqueID': sndrVal },
+                success: function (result) {
+                    $('#odemeDetay').html(result);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    $('#odemeDetay').html('');
+                    _pRefresh(_panel, true);
+
+                }
+            });
+        }
+        else {
+            $('#odemeDetay').html('');
+        }
+    }
+    function _pRefresh(panel,IsRemove){
+        if(IsRemove){
+            panel.find(".panel-refresh-layer").remove();
+            panel.removeClass("panel-refreshing");
+        }
+        else {
+            panel_refresh(panel);
+        }
+
+
+    }
+</script>
+
+<script>
+
+    function Kaydet() {
+        var ID = $('.UniqueID').text().trim();
+        var Tarih = $('#DekontTarihi').val();
+        var DNO = $('#DekontNo').val();
+        var _panel = $('.pnlDekont');
+        if (ID != null && ID != "") {
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("Kayit", "DekontBilgi")',
+                data: { 'UniqueID': ID, 'DekontNo': DNO, 'DekontTarihi': Tarih },
+                type: 'POST',
+                enctype: "multipart/form-data",
+                cache: false,
+                dataType: "json",
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        setTimeout(getDekont(), 3000);
+                    }
+                    showMmMessage(result.Messages, 'Tamam');
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+
+                }
+            });
+        }
+        else {
+        }
+    }
+    function getDekont() {
+        var sndrVal = $('#UniqueID').val();
+        var _panel = $('.pnlDekont');
+        if (sndrVal != null && sndrVal != "") {
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getPRdetay", "DekontBilgi")',
+                data: { 'UniqueID': sndrVal },
+                success: function (result) {
+                    $('#dekontDet').html(result);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    $('#dekontDet').html('');
+                    _pRefresh(_panel, true);
+
+                }
+            });
+        }
+        else {
+            $('#dekontDet').html('');
+        }
+    }
+</script>   

@@ -1,0 +1,109 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@model SRTalepleriBezCiltFormu
+@{
+    Layout = null;
+}
+
+@using (Ajax.BeginForm("BezCiltFormPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "MezuniyetSRBezCiltForm" }))
+{
+    @Html.HiddenFor(p => p.SRTalepID)
+    @Html.HiddenFor(p => p.SRTalepleriBezCiltFormID)
+    <div class="panel panel-info" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal" id="_PnpEADP">
+                <div class="panel-body form-group-separated">
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
+                        <div class="col-md-9 col-xs-10">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <select class="form-control" name="IsTezDiliTr" id="IsTezDiliTr" onchange="tdChange(this)" style="color:black;">
+                                            <option value=""></option>
+                                            <option value="true" @( Model.IsTezDiliTr ? "selected" : "")>Türkçe</option>
+                                            <option value="false" @(!Model.IsTezDiliTr ? "selected" : "")>İngilizce</option>
+                                        </select>
+                                        <script>
+                                            function tdChange(sndr) {
+                                                if ($(sndr).val() == "true") {
+                                                    $('#digerDilGiris').addClass("hide");
+                                                }
+                                                else {
+                                                    $('#digerDilGiris').removeClass("hide");
+                                                }
+                                            }
+                                        </script>
+                                    </td>
+                                    <td width="5"></td>
+                                    <td class="@(Model.SRTalepleriBezCiltFormID<=0 || Model.IsTezDiliTr?"hide":"")" id="digerDilGiris">
+                                        <input type="text" name="TezDili" id="TezDili" maxlength="64" value="@Model.TezDili" class="form-control" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="400" value="@Model.TezBaslikTr"   style="color:black;" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="400" value="@Model.TezBaslikEn" style="color:black;" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Özeti (Türkçe)</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" style="display:none;" name="TezOzet" id="TezOzet" value="@Model.TezOzet" />
+                            <textarea style="min-height:100px;height:100px;" type="text" class="summernotex" name="TezOzetHtml" id="TezOzetHtml" autocomplete="off">@Html.Raw(Model.TezOzetHtml)</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Özeti (İngilizce)</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" style="display:none;" name="TezAbstract" id="TezAbstract" value="@Model.TezAbstract" />
+                            <textarea style="min-height:100px;height:100px;" type="text" class="summernotex" name="TezAbstractHtml" id="TezAbstractHtml" autocomplete="off">@Html.Raw(Model.TezAbstractHtml)</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        $('.summernotex').summernote({
+            height: 120,
+            lang: 'tr',
+            toolbar:
+                [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['Insert', ['link', 'table', 'hr']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['height', ['height']]
+                ],
+            codemirror: {
+                mode: 'text/html',
+                htmlMode: true,
+                lineNumbers: true,
+                theme: 'monokai'
+            }
+
+        });
+    });
+    $("#MezuniyetSRBezCiltForm").on("submit", function () {
+        var _TezOzetHtml = $('#TezOzetHtml').summernote('code');
+        $('#TezOzet').val($("<div />").html(_TezOzetHtml).text());
+        var _TezAbstractHtml = $('#TezAbstractHtml').summernote('code');
+        $('#TezAbstract').val($("<div />").html(_TezAbstractHtml).text());
+        return true;
+    });
+
+</script>
+

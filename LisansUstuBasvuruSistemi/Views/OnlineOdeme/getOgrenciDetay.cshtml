@@ -1,0 +1,53 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  KmDekontBilgi
+@{ 
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var EnstituKod = (string)ViewBag.EnstituKod; 
+    Layout = null;
+
+
+}
+
+<table class="table table-hover">
+    <tr>
+        <td style="width: 150px; border: none;  text-align:right;">Enstitü</td>
+        <td style="width: 5px; border: none; padding: 4px;">:</td>
+        <td style="border: none; padding: 4px;">
+
+            <span>@Model.EnstituAdi</span>
+
+        </td>
+    </tr>
+    <tr>
+        <td style="border: none; text-align:right;">Ad Soyad</td>
+        <td style="border: none; padding: 4px;">:</td>
+        <td style="border: none; padding: 4px;">@Model.AdSoyad</td>
+    </tr>
+
+    <tr>
+        <td style="border: none;  text-align:right;">@(Model.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci ? "Pasaport No" : "T.C. Kimlik No")</td>
+        <td style="border: none; padding: 4px;">:</td>
+        <td style="border: none; padding: 4px;">
+            @Model.TcPasaportNo
+        </td>
+    </tr>
+
+    <tr>
+        <td style="border: none;  text-align:right;">Kayıt Dönemi</td>
+        <td style="border: none; padding: 4px;">:</td>
+        <td style="border: none; padding: 4px;">
+            @Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control", onchange = "getPrograms(this);" })
+        </td>
+    </tr>
+    <tr>
+        <td style="border: none;  text-align:right;">Tercih</td>
+        <td style="border: none; padding: 4px;">:</td>
+        <td style="border: none; padding: 4px;">
+            @Html.DropDownList("UniqueID", null, new { @class = "form-control", onchange = "getOdemeKontrol();" })
+        </td>
+    </tr>
+</table>
+<div id="odemeDetay">
+
+</div>

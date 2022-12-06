@@ -1,0 +1,19 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using CaptchaMvc.HtmlHelpers
+@Html.Captcha(null, null, 4, null)
+@model UrlInfoModel
+<script>
+    $(function () {
+        // $("a[href*=CaptchaImage]").addClass('hide');
+        $('#cContent').find('#CaptchaInputText').addClass('form-control placeholder-no-fix');
+        $('#cContent').find('br').remove();
+        $('#cContent').find('#CaptchaImage').attr('style', 'width:99%;height:70px;');
+        var placeHolderText = 'Güvenlik Nodu'; 
+        $('#cContent').find('#CaptchaInputText').attr('style', 'margin-left:2px;').attr('tabindex', '3').attr('placeholder', placeHolderText);
+        $('#cContent').find("#CaptchaInputText").keyup(function (e) {
+            var code = e.which;
+            if (code == 13) loginControl();
+             
+        });
+    })
+</script>

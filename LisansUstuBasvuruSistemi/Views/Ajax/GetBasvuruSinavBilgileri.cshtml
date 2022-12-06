@@ -1,0 +1,187 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model BasvuruDetayModel
+@{
+    Layout = null;
+    var Color = Model.DurumColor;
+
+}
+
+<div class="widget widget-default" style="margin:0px;padding:4px;">
+
+    @if (!Model.Sinavlars.Any())
+    {
+        <table style="width:100%;table-layout:fixed;">
+            <tr>
+                <td style="font-size:16pt;font-weight:bold;text-align:center;"> Sınav Bilgisi Yok </td>
+            </tr>
+        </table>
+
+    }
+    else
+    {
+        foreach (var item in Model.Sinavlars)
+        {
+            <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt fa-lg" style="color:@Color;"></i>&nbsp; <span style="color:@Color;">@item.GrupAdi</span></h3>
+                </div>
+                <div class="panel-body form-group-separated">
+
+                    <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+                        <tr>
+                            <td width="140" style="font-weight:bold;text-align:right;">
+                                Sınav Türü
+                            </td>
+                            <td width="10" style="font-weight:bold;text-align:right;">:</td>
+                            <td style="text-align:left;">
+                                @item.SinavAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top;font-weight:bold;text-align:right;">Sınav bilgisi</td>
+                            <td style="vertical-align:top;font-weight:bold;text-align:right;">:</td>
+                            <td>
+                                <table style="table-layout:fixed;">
+                                    <tr>
+                                        <th colspan="4"><span style="font-weight:normal;font-size: 8pt;">@item.SinavAdi Sınavı bilgisi girişi kriterleri aşağıdaki gibidir.</span></th>
+                                    </tr>
+                                    @if (item.IsWebService)
+                                    {
+
+                                        <tr>
+                                            <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                            <td width="100">Yıl</td>
+                                            <td width="3">:</td>
+                                            <td style="font-weight:bold;">@item.Yil</td>
+                                        </tr>
+                                     
+                                        if (item.SinavTarihi.HasValue)
+                                        {
+                                            <tr>
+                                                <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                                <td>Sınav Tarihi</td>
+                                                <td>:</td>
+                                                <td style="font-weight:bold;">@item.SinavTarihi.ToDateString()</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        bool IsTarihIstensin = true;
+                                        if (item.SinavTipGrupID == SinavTipGrup.Tomer && ((Model.IsTurkceProgramVar && (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)) || !Model.IsTurkceProgramVar))
+                                        {
+                                            IsTarihIstensin = false;
+                                        }
+                                        if (IsTarihIstensin)
+                                        {
+
+                                            <tr>
+                                                <td width="10"><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                                <td width="100">Sınav Tarihi</td>
+                                                <td width="3">:</td>
+                                                <td>
+                                                    <span style="font-weight:bold;font-size: 9pt;">@item.SinavTarihi.ToDateString()</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                    @if (item.IsTaahhutVar != true && item.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                                    {
+                                        <tr>
+                                            <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                            <td>Sınav Dili</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span style="font-weight:bold;font-size: 9pt;">@item.SinavDilAdi</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (item.IsTaahhutVar != true && item.SinavSubPuani.HasValue)
+                                    {
+                                        <tr>
+                                            <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
+                                            <td>Sınav puanı</td>
+                                            <td>:</td>
+                                            <td style="font-weight:bold;">@item.SinavSubPuani</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                        @if (item.IsTaahhutVar == true)
+                        {
+                            <tr>
+                                <td style="font-weight:bold;text-align:right;">
+                                    Taahhüt
+                                </td>
+                                <td style="font-weight:bold;text-align:right;">:</td>
+                                <td style="text-align: left;">
+                                    @{
+                                        var locTaahhutkey = "Sınav bilgisinin açıklanması itibari ile 5 gün içinde ve mesai saatleri dahilinde başvuru Dil sınavı kriterlerine uyan sınav belgemi getirmeyi taahhüt ediyorum. Aksi halde başvurumun ve kaydımın iptal edilmesini onaylıyorum.";
+                                        if (item.SinavTipKod == 56) { locTaahhutkey = "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)"; }
+                                        else if (item.SinavTipGrupID == SinavTipGrup.Tomer)
+                                        {
+                                            if (Model.IsTurkceProgramVar)
+                                            {
+                                                if (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)
+                                                {
+                                                    locTaahhutkey = "Kayıt olana kadar, Türkiye'de Türkçe eğitim veren Lisans veya Lisansüstü programlarından mezun olduğumu gösteren karekodlu E'Devlet mezuniyet belgesini ibraz edeceğimi taahhür ederim. Not: Bu mezuniyet belgesi tomer belgesi yerine kabul edilecek.";
+                                                }
+
+                                                else
+                                                {
+                                                    locTaahhutkey = "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                locTaahhutkey = "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.";
+                                            }
+                                        }
+                                        @locTaahhutkey
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style="font-weight:bold;text-align:right;">
+                                   Puan
+                                </td>
+                                <td style="font-weight:bold;text-align:right;">:</td>
+                                <td style="text-align: left;">
+
+                                    @if (item.SinavTipGrupID == SinavTipGrup.Ales_Gree && item.IsWebService)
+                                    {
+                                        var mdlXml = item.AlesXmlModel;
+                                        if (item.EnstituKod == EnstituKodlari.FenBilimleri)
+                                        {
+                                            <span>Sayısal Puan: @mdlXml.SAY_PUAN.ToDouble().ToString("n2")</span>
+                                        }
+                                        else if (item.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                                        {
+                                            <span>Sayısal Puan::@mdlXml.SAY_PUAN.ToDouble().ToString("n2") ,Eşit Ağırlık Puanı:@mdlXml.EA_PUAN.ToDouble().ToString("n2") , Sözel Puan:@mdlXml.SOZ_PUAN.ToDouble().ToString("n2")</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @item.SinavPuani
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </table>
+                </div>
+            </div>
+        }
+
+
+    }
+</div>

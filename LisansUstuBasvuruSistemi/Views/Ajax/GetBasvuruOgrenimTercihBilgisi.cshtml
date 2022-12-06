@@ -1,0 +1,269 @@
+﻿@using LisansUstuBasvuruSistemi.Models 
+@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model BasvuruDetayModel
+@{
+    Layout = null;
+    var Color = Model.DurumColor; 
+
+}
+
+<div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title"><i class="fa fa-graduation-cap fa-lg " style="color:@Color;"></i>&nbsp; <span style="color:@Color;">Öğrenim Bilgisi</span></h3>
+    </div>
+    <div class="panel-body form-group-separated" style="padding:0px;">
+        <div class="col-md-@(Model.YLUniversiteID.HasValue == false || Model.DRUniversiteID.HasValue ? "12" : "6")" style="margin:0px auto;">
+            <table class="table" style="color:@Color;margin:2px;">
+                <tr>
+                    <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                        Lisans Eğitim Bilgisi
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;">
+                            <tr>
+                                <td style="text-align:right;" @(Model.YLUniversiteID.HasValue == false ? "" : "width=120")>Üniversite</td>
+                                <td style="width:10px;">:</td>
+                                <td>@Model.LUniversiteAdi</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">Fakülte</td>
+                                <td>:</td>
+                                <td>@Model.LFakulteAdi</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">Bölüm</td>
+                                <td>:</td>
+                                <td>@Model.LBolumAdi</td>
+                            </tr>
+                            @if (Model.LOgrenimDurumID.HasValue)
+                            {
+                                <tr>
+                                    <td style="text-align:right;">Öğrenim Durumu</td>
+                                    <td>:</td>
+                                    <td>@Model.OgrenimDurumAdi</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td style="text-align:right;">Not Sistemi</td>
+                                <td>:</td>
+                                <td>@Model.LNotSistemi</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">Not</td>
+                                <td>:</td>
+                                <td>@Model.LMezuniyetNotu</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right;">100'lük Karşılığı</td>
+                                <td>:</td>
+                                <td>@Model.LMezuniyetNotu100LukSistem</td>
+                            </tr>
+                            @if (Model.LEgitimDiliTurkce.HasValue)
+                            {
+                                <tr>
+                                    <td style="text-align:right;">Eğitim Dili</td>
+                                    <td>:</td>
+                                    <td>@Model.LegitimDilAdi</td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+        @if (Model.YLUniversiteID.HasValue)
+        {
+            <div class="col-md-@(Model.DRUniversiteID.HasValue ? "12" : "6")">
+                <table class="table" style="margin:0px;">
+                    <tr>
+                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                             Yüksek Lisans Eğitim Bilgisi
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                                <tr>
+                                    <td style="text-align:right;" @(Model.YLUniversiteID.HasValue == false ? "" : "width=120")>Üniversite</td>
+                                    <td style="width:10px;">:</td>
+                                    <td>@Model.YLUniversiteAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Enstitü</td>
+                                    <td>:</td>
+                                    <td>@Model.YLFakulteAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Anabilim Dalı</td>
+                                    <td>:</td>
+                                    <td>@Model.YLBolumAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Not Sistemi</td>
+                                    <td>:</td>
+                                    <td>@Model.YLNotSistemi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Not</td>
+                                    <td>:</td>
+                                    <td>@Model.YLMezuniyetNotu</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">100'Lük Karşılığı</td>
+                                    <td>:</td>
+                                    <td>@Model.YLMezuniyetNotu100LukSistem</td>
+                                </tr>
+                                @if (Model.YLEgitimDiliTurkce.HasValue)
+                                {
+                                    <tr>
+                                        <td style="text-align:right;">Eğitim Dili</td>
+                                        <td>:</td>
+                                        <td>@Model.YLegitimDilAdi</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        }
+        @if (Model.DRUniversiteID.HasValue)
+        {
+            <div class="col-md-12">
+                <table class="table" style="margin:0px;">
+                    <tr>
+                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                            Doktora Eğitim Bilgisi
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                                <tr>
+                                    <td style="text-align:right;" @(Model.YLUniversiteID.HasValue == false ? "" : "width=120")>Üniversite</td>
+                                    <td style="width:10px;">:</td>
+                                    <td>@Model.DRUniversiteAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Enstitü</td>
+                                    <td>:</td>
+                                    <td>@Model.DRFakulteAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Anabilim Dalı</td>
+                                    <td>:</td>
+                                    <td>@Model.DRBolumAdi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Not Sistemi</td>
+                                    <td>:</td>
+                                    <td>@Model.DRNotSistemi</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Not</td>
+                                    <td>:</td>
+                                    <td>@Model.DRMezuniyetNotu</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">100'Lük Karşılığı</td>
+                                    <td>:</td>
+                                    <td>@Model.DRMezuniyetNotu100LukSistem</td>
+                                </tr>
+                                @if (Model.DREgitimDiliTurkce.HasValue)
+                                {
+                                    <tr>
+                                        <td style="text-align:right;">Eğitim Dili</td>
+                                        <td>:</td>
+                                        <td>@Model.DRegitimDilAdi</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        }
+    </div>
+</div>
+<div class="panel panel-default" style="padding: 0px; margin: 0px;">
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title">
+            <i class="fa fa-plus " style="color:@Color;"></i>&nbsp; <span style="color:@Color;">Eklenen Tercihler</span>
+
+        </h3>
+        @if (Model.IsHesaplandi && false)
+        {
+            <a style="float:right; cursor:pointer;color:@Color;" onclick="yeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
+                <span style="font-size:12pt;margin-top:7px;" title="Sonuç Listesini Göster" class="fa fa-list"> Sonuç Listesini Göster</span>
+
+            </a>
+        }
+    </div>
+    <div class="panel-body" style="padding:2px;">
+        <div class="dd" id="ddLst" style="height: auto;">
+
+            @foreach (var item in Model.Tercihlers.OrderBy(o => o.SiraNo))
+            {
+                <ol class="dd-list " id="Rw_tbody">
+
+
+                    <li class="dd-item dd3-item ">
+                        <div class="dd3-content" style="margin:1px;padding :5px;">
+                            <table style="width:100%;table-layout:fixed;color:@Color;">
+                                <tbody>
+
+                                    <tr>
+                                        <td width="20" style="font-weight:bold;">@item.SiraNo)</td>
+                                        <td>
+                                            <table style="width:100%">
+                                                <tr>
+                                                    <td width="150">Öğrenim Seviyesi</td>
+                                                    <td width="5">:</td>
+                                                    <td>@item.OgrenimTipAdi</td>
+                                                    <td width="65">Ales Tipi</td>
+                                                    <td width="5">:</td>
+                                                    <td width="90">@item.AlesTipAdi</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Eğitim Dili</td>
+                                                    <td>:</td>
+                                                    <td><i class="tooltips flag @(item.Ingilizce ? " flag-gb" : "flag-tr" )"></i> @(item.Ingilizce ? "İngilizce" : "Türkçe") </td>
+                                                    <td width="65">Alan</td>
+                                                    <td width="5">:</td>
+                                                    <td width="90" style="@(item.AlanTipID==AlanTipi.AlanDisi ? " color:#b64645;" : "" )">@item.AlanTipAdi</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Anabilim Dalı / Program
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td colspan="4">
+
+
+
+                                                        <span>@item.AnabilimDaliAdi / @item.ProgramAdi</span>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                </ol>
+            }
+
+        </div>
+
+
+
+    </div>
+</div>

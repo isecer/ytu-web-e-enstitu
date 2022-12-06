@@ -1,0 +1,102 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model SRSalonSaatlerModel
+@{
+    Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading padding-0" style="padding:0px;">
+        <h3 class="panel-title">
+            <span>
+                @(Model.Tarih.ToString("yyyy.MM.dd") + " " + Model.HaftaGunAdi) Tarihine ait saatler 
+            </span>
+        </h3>
+        <div class="pull-right">
+            <span class="panel-refresh"></span>
+        </div>
+    </div>
+    <div class="panel-body" style="padding-top:2px;padding-bottom:2px;">
+        @if (Model.HaftaGunundeSaatlerVar)
+        {
+
+
+            <input type="text" style="display:none;" name="HaftaGunID" value="@Model.HaftaGunID" />
+
+            <table class="" style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th width="10px">
+
+                    </th>
+                    <th width="140">Saat Aralığı</th>
+                    <th width="90">Durum</th>
+                    <th>Açıklama</th>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding:0px;">
+                        <div class="scrlSaatler" style="height:206px;overflow:auto;">
+                            <table style="width:100%;table-layout:fixed;" cellpadding="0" cellspacing="0">
+                                @foreach (var item in Model.Data)
+                                {
+
+
+                                    <tr style="color:@item.Color">
+                                        <td width="10px">
+                                            <span style="font-size:17pt;font-weight:bold;" class="fa fa-caret-right"></span>
+                                        </td>
+                                        <td style="padding:1px;" width="140">
+                                            <label style="padding:0px;margin:1px;cursor:pointer;">
+                                                <input type="checkbox" name="Secildi" id="Secildi" onchange="_setSaat(this,'@item.SRSaatID','@item.BasSaat','@item.BitSaat')" value="true" @(item.Disabled ? "disabled" : "") @(item.SalonDurumID == SRSalonDurum.Alındı ? "checked=checked" : "") />
+                                                <span style="font-size:12pt;font-weight:bold;">
+                                                    @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                </span>
+                                            </label>
+                                            @if (item.SalonDurumID == SRSalonDurum.Alındı)
+                                            {
+                                                <input type="text" name="BasSaat" id="BasSaat_@item.SRSaatID" style="display:none;" value="@item.BasSaat" />
+                                                <input type="text" name="BitSaat" id="BitSaat_@item.SRSaatID" style="display:none;" value="@item.BitSaat" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" name="BasSaat" id="BasSaat_@item.SRSaatID" style="display:none;" />
+                                                <input type="text" name="BitSaat" id="BitSaat_@item.SRSaatID" style="display:none;" />
+                                            }
+                                        </td>
+                                        <td width="90" style="margin:0px;padding:0px;">
+                                            @item.SalonDurumAdi
+                                        </td>
+                                        <td>
+                                            <span>@item.Aciklama</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <div class="scrlSaatler" style="height:222px;overflow:auto;">
+                <table>
+                    <tr>
+                        <td>@Model.GenelAciklama</td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+    </div>
+</div>
+<script>
+    $('.scrlSaatler').slimScroll({
+        color: 'red',
+        height: '@(Model.HaftaGunundeSaatlerVar?"206px":"225px;")'
+    });
+    function _setSaat(sndr, stID, bassat, bitsaat) {
+        var chkD = $(sndr).prop("checked");
+        $('#BasSaat_' + stID).val(chkD ? bassat : "");
+        $('#BitSaat_' + stID).val(chkD ? bitsaat : "");
+    }
+</script>

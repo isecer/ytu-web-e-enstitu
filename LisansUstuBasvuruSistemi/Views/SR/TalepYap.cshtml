@@ -1,0 +1,418 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model kmSRTalep
+@{              
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";   
+    var IsTezSinavi = (bool)ViewBag.IsTezSinavi;
+    int? kID = (Model.SRTalepID <= 0 ? (int?)null : Model.SRTalepID);
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" id="frmTyap" role="form">
+        <input type="text" style="display:none;" id="SRTalepID" name="SRTalepID" value="@Model.SRTalepID" />
+        <input type="text" style="display:none;" id="TalepYapanID" name="TalepYapanID" value="@Model.TalepYapanID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.SRTalepID <= 0 ? "Yeni Rezervasyon Talebi Yap" : "Rezervasyon Talebi Düzenle")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("TalepYap","SR",  new { id = kID })" class=""><sp class=""><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Ad Soyad</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Model.AdSoyad                                                                      
+                                </div>
+                            </div>
+                            @if (Model.OgrenciNo.IsNullOrWhiteSpace()==false)
+                            {
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Öğrenci No</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Model.OgrenciNo                                                                      
+                                </div>
+                            </div>
+                            }
+                          
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Talep Tipi seçiniz</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Html.DropDownList("SRTalepTipID", null, new { @class = "form-control", onChange = "getTTChange(this)" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-2 control-label">Salon Seçiniz</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Html.DropDownList("SRSalonID", null, new { @class = "form-control", onChange = "getSaatler()" })
+                                </div>
+                            </div>
+                            <div class="form-group srTarih hide">
+                                <div class="col-md-12 col-xs-12 ">
+                                    <div class="panel panel-default pnlRfrsh" style="margin:0px;">
+                                        <div class="panel-body" style="padding:0px;">
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td width="260">
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading padding-0" style="padding:0px;">
+                                                                <h3 class="panel-title"><span class="glyphicon glyphicon-time myCaptionTd"></span> Rezervasyon Tarihi</h3>
+                                                                <div class="pull-right">
+                                                                    <span class="panel-refresh"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="panel-body" style="height:228px;padding:0px;">
+                                                                <input type="text" id="Tarih" name="Tarih" value="@Model.Tarih.ToString("yyyy-MM-dd")" />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:top;">
+                                                        <div class="form-group" id="saatLstContnt">
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tezX @(Model.SRTalepTipID<=0?"hide":(IsTezSinavi?"":"hide"))">   
+                                
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-2 control-label">Danışman Adı</label>
+                                    <div class="col-md-9 col-xs-10">
+                                        <input type="text" name="DanismanAdi" maxlength="200" value="@Model.DanismanAdi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-2 control-label">Eş Danışman Adı</label>
+                                    <div class="col-md-9 col-xs-10">
+                                        <input type="text" name="EsDanismanAdi" maxlength="200" value="@Model.EsDanismanAdi" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-2 control-label">Tez Özeti</label>
+                                    <div class="col-md-9 col-xs-10">
+                                        <input type="text" style="display:none;" name="TezOzeti" id="TezOzeti" value="@Model.TezOzeti" />
+                                        <textarea style="min-height:100px;" type="text" class="summernote" name="TezOzetiHtml" id="TezOzetiHtml" autocomplete="off">@Html.Raw(Model.TezOzetiHtml)</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-2 control-label"></label>
+                                    <div class="col-md-9 col-xs-10">
+                                        <div class="panel panel-default" id="pnlJuri" style="padding: 0px; margin: 0px;">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-group"></i> Jüri Bilgisi</h3>
+                                            </div>
+                                            <div class="panel-body" style="padding-left:2px;padding-right:2px;">
+
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-2 control-label"> Unvan / Jüri Adı</label>
+                                                    <div class="col-md-9 col-xs-10">
+                                                        <input type="text" id="_JuriAdi" name="_JuriAdi" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-2 control-label">Telefon</label>
+                                                    <div class="col-md-9 col-xs-10">
+                                                        <input type="text" id="_Telefon" name="_Telefon" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-2 control-label">Email</label>
+                                                    <div class="col-md-9 col-xs-10">
+                                                        <input type="text" id="_Email" name="_Email" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                                    <div class="panel-heading padding-0">
+                                                        <h3 class="panel-title"><i class="fa fa-plus"></i> Eklenen</h3>
+                                                        <a style="float: right;" onclick="EkleJuri()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <table style="width:100%;table-layout:fixed;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        Unvan / Jüri Adı
+                                                                    </th>
+                                                                    <th width="90">
+                                                                        Telefon
+                                                                    </th>
+                                                                    <th width="180">
+                                                                        Email
+                                                                    </th>
+                                                                    <th width="20"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="joriRw">
+                                                                @foreach (var item in Model.SRTaleplerJuris)
+                                                            {
+                                                                var gd = Guid.NewGuid().ToString().Substr(0, 4);
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <span>@item.JuriAdi</span>
+                                                                        <input type="hidden" name="JuriAdi" value="@item.JuriAdi" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span>@item.Telefon</span>
+                                                                        <input type="hidden" name="Telefon" value="@item.Telefon" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span>@item.Email</span>
+                                                                        <input type="hidden" name="Email" value="@item.Email" />
+                                                                    </td>
+                                                                    <td width="20"><a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i style="color:#808080;font-size:14pt;" class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Jüriyi Kaldır"></i></a></td>
+                                                                </tr>
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="digerX @(Model.SRTalepTipID<=0?"hide":(IsTezSinavi?"hide":""))">
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-2 control-label">Açıklama</label>
+                                    <div class="col-md-9 col-xs-10">
+                                        <input type="text" name="Aciklama" value="@Model.Aciklama" class="form-control" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group @(Model.SRTalepID<=0?"hide":"")">
+                                <label class="col-md-3 col-xs-2 control-label">Talep Durumu</label>
+                                <div class="col-md-9 col-xs-10">
+                                    @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        var dttme = $('#Tarih').datetimepicker({ 
+            inline: true,
+            timepicker: false,
+            format: 'Y-m-d', 
+            onSelectDate: function () {
+                getSaatler();
+            },
+            onChangeMonth: function (sndr) {
+                var date = new Date(sndr);
+                var qdate = getFormattedDate(date);
+                $('#Tarih').val(qdate); getSaatler();
+            },
+            onChangeYear: function (sndr) {
+                var date = new Date(sndr);
+                var qdate = getFormattedDate(date);
+                $('#Tarih').val(qdate);
+                getSaatler();
+            },
+        });
+         $.datetimepicker.setLocale('tr');
+        setTimeout(getTTChange($('#SRTalepTipID')), 250);
+
+        $('#TezOzetiHtml').summernote({
+            height: 120,
+            lang: 'tr',
+            toolbar:
+                [
+                   ['style', ['bold', 'italic', 'underline', 'clear']],
+                   ['fontsize', ['fontsize']],
+                   ['color', ['color']],
+                   ['Insert', ['link', 'table', 'hr']],
+                   ['para', ['ul', 'ol', 'paragraph']],
+                   ['font', ['strikethrough', 'superscript', 'subscript']],
+                   ['height', ['height']]
+                ],
+            codemirror: {
+                mode: 'text/html',
+                htmlMode: true,
+                lineNumbers: true,
+                theme: 'monokai'
+            }
+
+        });
+    });
+
+    $("#frmTyap").submit(function (event) {
+        var _AciklamaHtml = $('#TezOzetiHtml').summernote('code');
+        var text = $("<div />").html(_AciklamaHtml).text();
+        $('#TezOzeti').val(text);
+
+    });
+    function EkleJuri() {
+        var _JuriAdi = $('#_JuriAdi').val();
+        var _Telefon = $('#_Telefon').val();
+        var _Email = $('#_Email').val();
+       
+        var _panel = $('#pnlJuri');
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getJuriEkleKontrol", "Ajax")',
+            data: { 'JuriAdi': _JuriAdi,'Email': _Email },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    var jRow = "<tr>" +
+                                     "<td>" +
+                                         "<span>" + _JuriAdi + "</span> " +
+                                         "<input type='hidden' name='JuriAdi' value='" + _JuriAdi + "'/>" +
+                                     "</td>" +
+                                     "<td  width='140'>" +
+                                         "<span>" + _Telefon + "</span>" +
+                                         "<input type='hidden' name='Telefon' value='" + _Telefon + "'/> " +
+                                     "</td>" +
+                                      "<td width='220'>" +
+                                         "<span>" + _Email + "</span>" +
+                                         "<input type='hidden' name='Email' value='" + _Email + "'/>" +
+                                     "</td>" +
+                                     "<td width='20'><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i style='font-size:14pt;' class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Jüriyi Kaldır'></i></a></td>" +
+                                "</tr>";
+                    $('#joriRw').append(jRow);
+                    $('#_JuriAdi').val("");
+                    $('#_Telefon').val("");
+                    $('#_Email').val("");
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    showMmMessage(result.Messages, 'Tamam');
+                    validateControl(null, result.mmMessage);
+                }
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function removejuri(sndr){
+
+    }
+    function getSaatler(date) {
+        var tarih = $('#Tarih').val();
+        var salon = $('#SRSalonID').val();
+        var talepTip = $('#SRTalepTipID').val();
+        if (salon != "" && salon != null && talepTip != "" && talepTip != null) {
+            $('.srTarih').removeClass('hide');
+        }
+        else {
+            $('.srTarih').addClass('hide');
+        }
+        if (tarih != null && salon != null && tarih != "" && salon != "") {
+            $('#saatLstContnt').css("display", "block");
+            var _panel = $('.pnlRfrsh');
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("getSaatList", "Ajax")',
+                data: { 'SRSalonID': salon, 'IsPopupFrame': 'false', 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SRTalepID': '@(Model.SRTalepID<=0?"":Model.SRTalepID.ToString())' },
+                success: function (result) {
+                    $('#saatLstContnt').html(result.Deger);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            $('#saatLstContnt').css("display", "none");
+        }
+    }
+    function getTTChange(sndr) {  
+        var _val = $(sndr).val();
+        if (_val == "" || _val == null) {
+            $('#SRSalonID').empty();
+            getSaatler();
+            $('.tezX').addClass("hide");
+            $('.digerX').addClass("hide");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("getSalonlar", "Ajax")',
+            data: { 'EnstituKod': '@Model.EnstituKod', 'SRTalepTipID': _val,'TalepYapanID':@Model.TalepYapanID,'id':'@(Model.SRTalepID<=0?"":Model.SRTalepID.ToString())'},
+            success: function (result) {    
+                if (result.IsTezSinavi) {
+                    $('.tezX').removeClass("hide");
+                    $('.digerX').addClass("hide");
+
+                }
+                else {
+                    $('.digerX').removeClass("hide");
+                    $('.tezX').addClass("hide");
+                }
+                $('#SRSalonID').empty();
+                var opt = "";
+                for (var i = 0; i < result.data.length; i++) {
+                    var valR = result.data[i].Value;
+                    var _value = "";
+                    if (valR != null) {
+                        _value = valR;
+                    }            
+                    if('@Model.SRSalonID'==valR)  
+                        opt += "<option value=" + _value + " selected=selected>" + result.data[i].Caption + "</option>"
+                    else 
+                    opt += "<option value=" + _value + ">" + result.data[i].Caption + "</option>"
+                }
+                if(result.kotaBilgi.ValueB==false){
+                    bootbox.dialog({
+                        message: result.kotaBilgi.ValueS,
+                        title:'Uyarı',
+                        buttons: {
+                            danger: {
+                                label: 'Tamam',
+                                className: "btn-warning"
+                            }
+                        }
+                    });
+                }
+                else {
+                    $('#SRSalonID').append(opt);
+                    getSaatler();
+                }
+              
+            },
+            error: function (err) {
+                alert(err.responseText);
+                getSaatler();
+
+            }
+        });
+    }
+    function getFormattedDate(date) {
+        var year = date.getFullYear();
+        var month = (1 + date.getMonth()).toString();
+        month = month.length > 1 ? month : '0' + month;
+        var day = date.getDate().toString();
+        day = day.length > 1 ? day : '0' + day;
+        return year + "-" + month + "-" + day;
+    }
+
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+</script>

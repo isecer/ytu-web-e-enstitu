@@ -1,0 +1,160 @@
+﻿
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@model fmTalepSurec
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+
+
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger" id="pnlDnms">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Talep Süreci İşlemleri</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-primary label-form"><a href="@Url.Action("Kayit")" style="color:white;"><i class="fa fa-plus fa-lg"></i> Yeni</a></span></li>
+                        <li><span class="label label-info label-form">Toplam: <b>@IndexModel.Toplam</b></span></li>
+                        <li><span class="label label-success label-form">Aktif: <b>@IndexModel.Aktif</b></span></li>
+                        <li><span class="label label-danger label-form">Pasif: <b>@IndexModel.Pasif</b></span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body" style="padding-bottom:0px;">
+                    <table class="table table-hover padding-0">
+                        <thead>
+                            <tr>
+                                <th width="85"></th>
+                                <th width="160">Enstitü</th>
+                                <th width="240" class="sirala sorting" field="BaslangicTarihi">Başlangıç / Bitiş Tarihi</th>
+                                <th>Talep Tipleri</th>
+                                <th width="105" class="sirala sorting" field="IsAktif" style="text-align:center;">Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    <tr class="delrw_@item.TalepSurecID" style="@(item.AktifSurec?"color:green;font-weight:bold;":"")">
+                                        <td>
+                                            <table>
+                                                <tr style="@(item.AktifSurec?"color:green;font-weight:bold;":"")">
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 50px;">
+                                                        <div class="btn-group">
+                                                            <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs"></i></a>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li role="presentation" class="dropdown-header">İşlemler</li>
+                                                                <li>
+
+                                                                    <a href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i>Yeni</a>
+                                                                    <a href="@Url.Action("Kayit", new { id = item.TalepSurecID })"><i class="fa fa-edit fa-lg"></i>Düzenle</a>
+                                                                    <a href="javascript:void(0)" onclick="Sil(@item.TalepSurecID)"><i class="fa fa-trash-o fa-lg tooltips" data-style="blue" data-original-title="Sil"></i>Sil</a>
+
+                                                                </li>
+                                                            </ul>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.EnstituAdi</td>
+                                        <td>@item.BaslangicTarihi.ToFormatDateAndTime() / @item.BitisTarihi.ToFormatDateAndTime()</td>
+                                        <td>@Html.Raw(string.Join("<br/>", item.TalepSureciTalepTipleris.Select(s => s.TalepTipleri.TalepTipAdi)))</td>
+                                        <td style="text-align:center;">
+                                            <span class="badge badge-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
+                                        </td>
+
+
+                                    </tr>
+
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    function ShowDetail(rwGD, id) {
+        var rwID = $('#iShow_' + rwGD);
+        var cls = 'cls-' + rwGD;
+        var unTogled = ($('.' + cls).hasClass("hide"));
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function ShowDetail2(TalepSurecID, KayitID, rwGD, isBirimOrMadde) {
+        var rwID = $('#iShow_' + rwGD);
+        var cls = 'cls-' + rwGD;
+        var unTogled = ($('.' + cls).hasClass("hide"));
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) {
+            if (isBirimOrMadde) GetMaddeBirimleri(TalepSurecID, KayitID, rwGD);
+            else GetBirimMaddeleri(TalepSurecID, KayitID, rwGD);
+        }
+    }
+
+
+    function Sil(id) {
+        var btbx = bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Talep Süreci Bilgisini Silmek İstiyor Musunuz?</td></tr></table>",
+            title: "Süreç Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Süreci Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("Sil", "TalepSureci")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) {
+                                    $(".delrw_" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+
+
+</script>
+

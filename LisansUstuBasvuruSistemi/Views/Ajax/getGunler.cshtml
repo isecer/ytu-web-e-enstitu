@@ -1,0 +1,18 @@
+﻿@model List<LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos.CmbIntDto>
+@{
+    Layout = null;
+}
+<select id="HaftaGunIDs" name="HaftaGunIDs" multiple class="form-control select">
+    @foreach (var item2 in Model)
+    {
+        <option value="@item2.Value">@item2.Caption</option>
+    }
+</select>
+
+<script>
+    $(function () {
+         $("#HaftaGunIDs").selectpicker();
+    });
+
+</script>
+

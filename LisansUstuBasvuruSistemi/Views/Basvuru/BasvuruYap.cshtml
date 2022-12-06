@@ -1,0 +1,1930 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model kmBasvuru
+@{
+    string KullaniciTipAdi = Model.KullaniciTipAdi;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var ASinavTipleri = (SelectList)ViewBag.ASinavTipleri;
+    var DSinavTipleri = (SelectList)ViewBag.DSinavTipleri;
+    var TSinavTipleri = (SelectList)ViewBag.TSinavTipleri;
+    var _MmMessage = (MmMessage)ViewBag._MmMessage;
+    var BsvDurum = (basvuruDurumModel)ViewBag.BasvuruDurumu;
+    var prks = Model.BasvuruTercihleri.Select(d => d.ProgramKod).ToList();
+    var otsIds = Model.BasvuruTercihleri.Select(d => d.OgrenimTipKod).ToList();
+    var IngsIds = Model.BasvuruTercihleri.Select(d => d.Ingilizce).ToList();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form id="bsvrSbmtFrm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+
+                    <div class="widget widget-default" style="margin-bottom:5px;">
+                        <h3>LİSANS ÜSTÜ BAŞVURU FORMU</h3>
+
+                        <div id="myWizard" class="wizard">
+                            <ul class="tabsK steps_3 anchor">
+                                <li>
+                                    <a href="javascript:void(0);" data-step="1" class="selected">
+                                        <span class="stepNumber">1</span>
+                                        <span style="text-align:center;" class="stepDesc">
+                                            1. Adım
+                                            <small>Kimlik Bilgisi& </small><br />
+                                            <small>Adres Bilgisi</small>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" data-step="2" class="disabled">
+                                        <span class="stepNumber">2</span>
+                                        <span class="stepDesc" style="text-align:center;">
+                                            2. Adım
+                                            <small>Öğrenim Bilgisi & </small><br />
+                                            <small>Program Tercihi</small>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" data-step="3" class="disabled">
+                                        <span class="stepNumber">3</span>
+                                        <span class="stepDesc" style="text-align:center;">
+                                            3. Adım
+                                            <small>Sınav Bilgisi & </small><br />
+                                            <small>Kayıt İşlemi</small>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="widget widget-default" style="margin-bottom:4px;">
+                                <table class="table" style="width:100%;margin:0px;">
+                                    <tr>
+                                        <td style="width: 130px;">
+                                            <span class="user" style="width: 100px; height: 100px; margin-right: 5px;">
+                                                <img class="pImageD" style="width:100px;height:100px;" src="@Model.ResimAdi.toKullaniciResim()" alt="@Model.Ad @Model.Soyad">
+                                            </span>
+                                        </td>
+                                        <td>
+
+                                            <table style="width:100%;margin:0px;">
+                                                <tr>
+                                                    <td style="font-size:14pt;font-weight:bold;">@Model.Ad @Model.Soyad</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:11pt;">
+                                                        @if (Model.IsYerli)
+                                                        {
+                                                            <span>T.C. Kimlik No:@Model.TcKimlikNo</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Pasaport No:@Model.PasaportNo</span>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:11pt;">@KullaniciTipAdi</td>
+                                                </tr>
+
+                                            </table>
+                                        </td>
+                                        @{
+                                            <td style="text-align:right;width:220px;">
+                                                <table style="margin:0px;table-layout:fixed;width:100%;">
+                                                    <tr>
+                                                        <td style="font-size:14pt;font-weight:bold;text-align:right;">
+                                                            @if (!BsvDurum.ClassName.IsNullOrWhiteSpace())
+                                                            {
+                                                                var classname = BsvDurum.ClassName;
+                                                                var color = BsvDurum.Color;
+                                                                if (BsvDurum.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                                {
+                                                                    <span class="tooltips" data-style="blue" data-original-title="@Model.BasvuruDurumAciklamasi" style="cursor:pointer;color:@color;">
+                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @BsvDurum.DurumAdi
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span @(!color.IsNullOrWhiteSpace() ? (" style=color:" + color) : "" )>
+                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @BsvDurum.DurumAdi
+                                                                    </span>
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                if (BsvDurum.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                                {
+                                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@Model.BasvuruDurumAciklamasi">@BsvDurum.DurumAdi</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>@BsvDurum.DurumAdi</span>
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    @if (Model.BasvuruID > 0)
+                                                    {
+                                                        <tr>
+                                                            <td style="font-size:11pt;text-align:right;">
+                                                                <span>Başvuru Tarihi<br />@Model.BasvuruTarihi</span>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="stepContainer" style="margin:0px;">
+                                <div class="content" data-step="1" style="display:block;">
+                                    <div class="col-md-12">
+                                        <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@Model.EnstituKod" />
+                                        <input type="text" style="display:none;" id="TomerIstensinmi" name="TomerIstensinmi" value="@Model.TomerIstensinmi" />
+                                        <input type="text" style="display:none;" id="DilIstensinmi" name="DilIstensinmi" value="@Model.DilIstensinmi" />
+                                        <input type="text" style="display:none;" id="AlesIstensinmi" name="AlesIstensinmi" value="@Model.AlesIstensinmi" />
+                                        <input type="text" style="display:none;" id="YLDurum" name="YLDurum" value="@Model.YLDurum" />
+                                        <input type="text" style="display:none;" id="BasvuruSurecID" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
+                                        <input type="text" style="display:none;" id="BasvuruID" name="BasvuruID" value="@Model.BasvuruID" />
+                                        <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
+                                        <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
+                                        <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
+                                        <input type="text" style="display:none;" id="PasaportNo" name="PasaportNo" value="@Model.PasaportNo" />
+                                        <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
+                                        <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
+                                        <input type="text" style="display:none;" id="Ad" name="Ad" value="@Model.Ad" />
+                                        <input type="text" style="display:none;" id="Soyad" name="Soyad" value="@Model.Soyad" />
+                                        <div class="panel panel-default form-horizontal">
+                                            <div class="panel panel-default form-horizontal">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title"><i class="fa fa-book"></i>&nbsp; Kimlik Bilgisi</h3>
+                                                </div>
+                                                <div class="panel-body form-group-separated">
+                                                    <div class="col-md-6">
+                                                        @if (Model.IsYerli)
+                                                        {
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Cinsiyet</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("CinsiyetID", null, new { @class = "form-control", onchange = "KSoyadKontrol()" })
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Ana Adı</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" name="AnaAdi" id="AnaAdi" value="@Model.AnaAdi" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Baba Adı</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" name="BabaAdi" id="BabaAdi" value="@Model.BabaAdi" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group @(!Model.IsYerli ? " hide" : "" )">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Nüfus il/ilçe</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("NufusilIlceKod", null, new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Uyruk</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("UyrukKod", null, new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Cinsiyet</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("CinsiyetID", null, new { @class = "form-control", onchange = "KSoyadKontrol()" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Ana Adı</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" name="AnaAdi" id="AnaAdi" value="@Model.AnaAdi" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Baba Adı</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" name="BabaAdi" id="BabaAdi" value="@Model.BabaAdi" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        @if (Model.IsYerli)
+                                                        {
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Doğum Yeri</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("DogumYeriKod", null, new { @class = "form-control", id = "DogumYeriKod" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Doğum Tarihi</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input class="form-control form-control-inline input-medium date-pickerx" placeholder="Örnek Format: Gün-Ay-Yıl" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToString("dd-MM-yyyy"))" name="DogumTarihi" id="DogumTarihi">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group @(!Model.IsYerli ? " hide" : "" )">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Cilt No</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" class="form-control" name="CiltNo" id="CiltNo" value="@Model.CiltNo">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group @(!Model.IsYerli ? " hide" : "" )">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Aile No</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" class="form-control" name="AileNo" id="AileNo" value="@Model.AileNo">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group @(!Model.IsYerli ? " hide" : "" )">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Sıra No</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input type="text" class="form-control" name="SiraNo" id="SiraNo" value="@Model.SiraNo">
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Uyruk</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("UyrukKod", null, new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Doğum Yeri</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    @Html.DropDownList("DogumYeriKod", null, new { @class = "form-control" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label class="col-md-4 col-xs-5 control-label ">Doğum Tarihi</label>
+                                                                <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                    <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToString("dd-MM-yyyy"))" name="DogumTarihi" id="DogumTarihi">
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default form-horizontal">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title"><i class="fa fa-book"></i>&nbsp; İletişim Bilgileri</h3>
+                                                </div>
+                                                <div class="panel-body form-group-separated">
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">Yaşadığı Şehir</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                @Html.DropDownList("SehirKod", null, new { @class = "form-control" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">Adres</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="Adres" id="Adres" value="@Model.Adres" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">Adres 2</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="Adres2" id="Adres2" value="@Model.Adres2" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">Ev Tel</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="EvTel" id="EvTel" value="@Model.EvTel" placeholder="(0XXX) XXX-XXXX" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">Cep Tel</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="CepTel" id="CepTel" value="@Model.CepTel" placeholder="(0XXX) XXX-XXXX" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">İş Tel</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="IsTel" id="IsTel" value="@Model.IsTel" placeholder="(0XXX) XXX-XXXX" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-4 col-xs-5 control-label ">E-Posta Adresi</label>
+                                                            <div class="col-md-8 col-xs-7 " style="text-align: left;">
+                                                                <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content" data-step="2" style="display:none;">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-default form-horizontal">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title"><i class="fa fa-book"></i>&nbsp; Öğrenim Bilgisi</h3>
+
+                                                </div>
+                                                <div class="panel-body form-group-separated">
+                                                    <div class="col-md-@(Model.YLDurum?"6":"12") _LisansEğitimiAnadiv" style="margin:0px auto;">
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label _LisansEğitimiLbldiv" style="text-align: left"></label>
+                                                            <div class="col-md-9 col-xs-8 _LisansEğitimidiv">
+                                                                <span style="font-size: 9pt;color:#337abb;"> Lisans Eğitimi</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Üniversite</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("LUniversiteID", null, new { @class = "form-control", onchange = "tercihYLkontrol();" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label  padding-top-0 padding-bottom-0">Fakülte</label>
+                                                            <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                <input type="text" name="LFakulteAdi" id="LFakulteAdi" value="@Model.LFakulteAdi" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Bölüm</label>
+                                                            <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("LOgrenciBolumID", null, new { @class = "form-control", onchange = "getalanlariKontrolEt()" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group lOdurumBilgi @(Model.LUniversiteID==Management.UniversiteYtuKod && Model.BasvuruTercihleri.Any(a=>a.OgrenimTipKod==OgrenimTipi.TezliYuksekLisans && Model.ODurumIstensin)?" ":" hide")">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Öğrenim Durumu</label>
+                                                            <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("LOgrenimDurumID", null, new { @class = "form-control", onchange = "getODKontrolEt(this)" })
+                                                                <script>
+                                                                    function getODKontrolEt(sndr) {
+                                                                        var sVal = $(sndr).val();
+                                                                        if (sVal != null && sVal != "") {
+                                                                            $.ajax({
+                                                                                url: '@Url.Action("LoDKontrol", "Basvuru")',
+                                                                                type: 'POST',
+                                                                                enctype: "multipart/form-data",
+                                                                                cache: false,
+                                                                                dataType: "json",
+                                                                                data: { LOgrenimDurumID: sVal, BasvuruSurecID: '@Model.BasvuruSurecID' },
+                                                                                success: function (result) {
+                                                                                    if (result.ShowMsg == true) {
+                                                                                        var btbx = bootbox.dialog({
+                                                                                            message: result.Msg,
+                                                                                            title: ("<span class='fa fa-warning'></span> " + result.Capt),
+                                                                                            buttons: {
+                                                                                                success: {
+                                                                                                    label: 'Tamam',
+                                                                                                    className: "btn-success",
+                                                                                                    callback: function () {
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                        $(btbx).find(".modal-title").attr("style", "color:red;");
+                                                                                    }
+                                                                                    getProgramBilgi($('#ProgramKod'));
+                                                                                },
+                                                                                error: function (err) {
+                                                                                    alert(err.responseText);
+
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                </script>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not Sistemi</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("LNotSistemID", null, new { @class = "form-control", onchange = "getMNOtMask(this,'LMezuniyetNotu');getNotTipKontrol(this,'#LMezuniyetNotu100LukK');" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                <table style="width:100%;">
+                                                                    <tr>
+                                                                        <td style="width:100px;"><input type="text" name="LMezuniyetNotu" id="LMezuniyetNotu" autocomplete="off" onchange="MezuniyetNotConvert('','#LMezuniyetNotu100LukK')" value="@Model.LMezuniyetNotu" class="form-control notmask"></td>
+                                                                        <td id="LMezuniyetNotu100LukK">
+                                                                            @if (Model.LNotSistemID != NotSistemi.Not100LükSistem)
+                                                                            {
+                                                                                <span>100'lük karşılığı: @Model.LMezuniyetNotu100LukSistem</span>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                        <div id="dvLEgitimDiliTurkce" class="form-group @(Model.LEgitimDiliIstensinMi?" ":" hide")">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Eğitim Dili</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                <select id="LEgitimDiliTurkce" name="LEgitimDiliTurkce" class="form-control">
+                                                                    <option value="" @(Model.LEgitimDiliTurkce.HasValue == false ? "selected=selected" : "" )></option>
+                                                                    <option value="true" @(Model.LEgitimDiliTurkce == true ? "selected=selected" : "" )>Türkçe</option>
+                                                                    <option value="false" @(Model.LEgitimDiliTurkce == false ? "selected=selected" : "" )>İngilizce</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 @(Model.YLDurum?"":" hide")" id="ylBilgi">
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label" style="text-align: left"></label>
+                                                            <div class="col-md-9 col-xs-8">
+                                                                <span style="font-size: 9pt;color:#337abb;">Yüksel Lisans Eğitimi</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Üniversite</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("YLUniversiteID", null, new { @class = "form-control" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label  padding-top-0 padding-bottom-0">Enstitü</label>
+                                                            <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                <input type="text" name="YLFakulteAdi" id="YLFakulteAdi" value="@Model.YLFakulteAdi" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Anabilim Dalı</label>
+                                                            <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("YLOgrenciBolumID", null, new { @class = "form-control", onchange = "getalanlariKontrolEt()" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not Sistemi</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                @Html.DropDownList("YLNotSistemID", null, new { @class = "form-control", onchange = "getMNOtMask(this,'YLMezuniyetNotu');getNotTipKontrol(this,'#YLMezuniyetNotu100LukK');" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Not</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                <table style="width:100%;">
+                                                                    <tr>
+                                                                        <td style="width:100px;">
+                                                                            <input type="text" name="YLMezuniyetNotu" id="YLMezuniyetNotu" autocomplete="off" onchange="MezuniyetNotConvert('Y','#YLMezuniyetNotu100LukK')" value="@Model.YLMezuniyetNotu" class="form-control notmask" />
+                                                                        </td>
+                                                                        <td id="YLMezuniyetNotu100LukK">
+                                                                            @if (Model.YLNotSistemID != NotSistemi.Not100LükSistem)
+                                                                            {
+                                                                                <span>100'lük karşılığı: @Model.YLMezuniyetNotu100LukSistem</span>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                        <div id="dvYLEgitimDiliTurkce" class="form-group @(Model.YLEgitimDiliIstensinMi?" ":" hide")">
+                                                            <label class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">Eğitim Dili</label>
+                                                            <div class="col-md-9 col-xs-8 padding-top-0 padding-bottom-0">
+                                                                <select id="YLEgitimDiliTurkce" name="YLEgitimDiliTurkce" class="form-control">
+                                                                    <option value="" @(Model.YLEgitimDiliTurkce.HasValue == false ? "selected=selected" : "" )></option>
+                                                                    <option value="true" @(Model.YLEgitimDiliTurkce == true ? "selected=selected" : "" )>Türkçe</option>
+                                                                    <option value="false" @(Model.YLEgitimDiliTurkce == false ? "selected=selected" : "" )>İngilizce</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default form-horizontal" id="pnlProgramSecim">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i>&nbsp; Program Tercihi</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Öğrenim Seviyesi</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control", onChange = "getBolums(this);" })
+                                                        <div class="hide" id="otBilgi">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group hide" id="rwSubOT">
+                                                    <label class="col-md-3 col-xs-4 control-label">Alt Öğreim Seviyesi</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("SubOgrenimTipKod", null, new { @class = "form-control", onChange = "getBolums(this);" })
+                                                        <div class="hide" id="SotBilgi">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Anabilim Dalı</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("AnabilimdaliKod", null, new { @class = "form-control", onChange = "getPrograms(this);" })
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Program</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("ProgramKod", null, new { @class = "form-control", onChange = "getProgramBilgi(this);" })
+                                                        <div class="hide" id="prgBilgi">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-xs-12">
+                                                        <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                                            <div class="panel-heading padding-0">
+                                                                <h3 class="panel-title"><i class="fa fa-plus"></i> Eklenen Tercihler</h3>
+                                                            </div>
+                                                            <div class="panel-body" style="padding-left:2px;padding-right:2px;">
+                                                                <div class="dd" id="ddLst" style="height: auto;">
+                                                                    <ol class="dd-list " id="Rw_tbody">
+                                                                        @foreach (var item in Model.BasvuruTercihleri)
+                                                                        {
+
+                                                                            var strW = Management.GetTercihRowHtml(new TercihRowModel
+                                                                            {
+                                                                                UniqueID = item.UniqueID.ToString(),
+                                                                                SiraNo = item.SiraNo,
+                                                                                OgrenimTipKod = item.OgrenimTipKod,
+                                                                                OgrenimTipAdi = item.ProgramBilgileri.OgrenimTipAdi,
+                                                                                AnabilimDaliKod = item.ProgramBilgileri.AnabilimDaliKod,
+                                                                                AnabilimDaliAdi = item.ProgramBilgileri.AnabilimDaliAdi,
+                                                                                ProgramKod = item.ProgramKod,
+                                                                                ProgramAdi = item.ProgramBilgileri.ProgramAdi,
+                                                                                AlesTipID = item.AlanTipID,
+                                                                                AlesTipAdi = item.ProgramBilgileri.AlesTipAdi,
+                                                                                Ingilizce = item.ProgramBilgileri.Ingilizce,
+                                                                                MinAgnoAciklama = item.ProgramBilgileri.MinAgnoAciklama,
+                                                                                AlanTipID = item.AlanTipID,
+                                                                                AlanTipAdi = item.AlanTipAdi,
+                                                                                OrtakKota = item.ProgramBilgileri.OrtakKota,
+                                                                                Kota = item.ProgramBilgileri.OrtakKota ? item.ProgramBilgileri.OrtakKotaSayisi.Value : (item.AlanTipID == AlanTipi.AlanIci ? item.ProgramBilgileri.AlanIciKota : item.ProgramBilgileri.AlanDisiKota),
+                                                                                YLEgitimBilgisiIste = item.YlBilgiIste
+                                                                            });
+                                                                            @Html.Raw(strW);
+
+                                                                        }
+                                                                    </ol>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content" data-step="3" style="display:none;">
+                                    <div class="col-md-12">
+                                        <div id="pnlSnv_A" class="panel panel-default form-horizontal _Alessinavi @(Model.AlesIstensinmi?" ":" hide")">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> Ales/Gre/Gmat</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Sınav Türü</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("BasvurularSinavBilgi_A.SinavTipID", ASinavTipleri, new { id = "ASinavTipID", @class = "form-control", onChange = "getSinavTip(this," + SinavTipGrup.Ales_Gree + ");" })
+                                                    </div>
+                                                </div>
+                                                <div id="sinavTipBilgi_@SinavTipGrup.Ales_Gree">
+                                                    @if (Model.BasvurularSinavBilgi_A != null && Model.BasvurularSinavBilgi_A.SinavTipID > 0)
+                                                    {
+
+                                                        var sb_ = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_A.SinavTipID, otsIds, prks, IngsIds);
+                                                        sb_.BasvuruSinavData = Model.BasvurularSinavBilgi_A;
+                                                        Html.RenderPartial("getSinavTip", sb_);
+
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div id="pnlSnv_D" class="panel panel-default form-horizontal _dilsinavi @(Model.DilIstensinmi?" ":" hide")">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> Dil Sınavı</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Sınav Türü</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("BasvurularSinavBilgi_D.SinavTipID", DSinavTipleri, new { id = "DSinavTipID", @class = "form-control", onChange = "getSinavTip(this," + SinavTipGrup.DilSinavlari + ");" })
+
+                                                    </div>
+                                                    <script>
+                                                        function getDSinavTip(SinavTipID, sinavTipGrupID) {
+
+                                                            var _OgrenimTipKods = "[";
+                                                            var _ProgramKods = "[";
+                                                            var _Ingilizces = "[";
+                                                            $('#Rw_tbody').find('.blgTD').each(function (inx, tdx) {
+                                                                var _otipID = $(tdx).find('input[name=_OgrenimTipKod]').val();
+                                                                var _ing = $(tdx).find('input[name=_Ingilizce]').val();
+                                                                var _ProgramKod = $(tdx).find('input[name=_ProgramKod]').val();
+                                                                _OgrenimTipKods += (inx > 0 ? "," : "") + "'" + _otipID + "'";
+                                                                _Ingilizces += (inx > 0 ? "," : "") + "'" + _ing + "'";
+                                                                _ProgramKods += (inx > 0 ? "," : "") + "'" + _ProgramKod + "'";
+                                                            })
+                                                            _OgrenimTipKods += "]";
+                                                            _Ingilizces += "]";
+                                                            _ProgramKods += "]";
+                                                            var _selectedT = "";
+                                                            var frmD = {
+                                                                "SinavTipGrupID": sinavTipGrupID,
+                                                                "BasvuruSurecID":@Model.BasvuruSurecID,
+                                                            "OgrenimTipKods": eval(_OgrenimTipKods),
+                                                                "Ingilizces": eval(_Ingilizces),
+                                                                    "ProgramKods": eval(_ProgramKods)
+                                                        };
+                                                        var $dst = $('#DSinavTipID');
+                                                        var $dstV = $('#DWsSinavDonem');
+                                                        var $dstVs = $('#DWsIsWebService');
+                                                        if (sinavTipGrupID == '@SinavTipGrup.Ales_Gree') {
+                                                            $dst = $('#ASinavTipID');
+                                                            $dstV = $('#AWsSinavDonem');
+                                                            $dstVs = $('#AWsIsWebService');
+                                                        }
+                                                        else if (sinavTipGrupID == '@SinavTipGrup.DilSinavlari') {
+                                                            $dst = $('#DSinavTipID');
+                                                            $dstV = $('#DWsSinavDonem');
+                                                            $dstVs = $('#DWsIsWebService');
+                                                        }
+                                                        else {
+                                                            $dst = $('#TSinavTipID');
+                                                            $dstV = $('#TWsSinavDonem');
+                                                            $dstVs = $('#TWsIsWebService');
+                                                        }
+
+                                                        $dst.empty();
+                                                        $.ajax({
+                                                            url: '@Url.Action("dAktifSinavlar", "Ajax")',
+                                                            type: 'POST',
+                                                            enctype: "multipart/form-data",
+                                                            cache: false,
+                                                            dataType: "json",
+                                                            // async: false,
+                                                            data: frmD,
+                                                            success: function (result) {
+                                                                var opt = "";
+                                                                for (var i = 0; i < result.length; i++) {
+                                                                    opt += "<option " + (SinavTipID == result[i].Value ? "selected=selected" : "") + " value=" + result[i].Value + ">" + result[i].Caption + "</option>"
+                                                                }
+                                                                $dst.append(opt);
+                                                                if (sinavTipGrupID == '@SinavTipGrup.Ales_Gree') {
+                                                                    if (result.length == 0) {
+                                                                        $('#AlesIstensinmi').val("false");
+                                                                        $('._Alessinavi').addClass("hide");
+                                                                    }
+                                                                    else {
+                                                                        $('#AlesIstensinmi').val("true");
+                                                                        $('._Alessinavi').removeClass("hide");
+                                                                    }
+                                                                }
+                                                                if (sinavTipGrupID == '@SinavTipGrup.DilSinavlari') {
+                                                                    if (result.length == 0) {
+                                                                        $('#DilIstensinmi').val("false");
+                                                                        $('._dilsinavi').addClass("hide");
+                                                                    }
+                                                                    else {
+                                                                        $('#DilIstensinmi').val("true");
+                                                                        $('._dilsinavi').removeClass("hide");
+                                                                        //getSinavTip($dst,sinavTipGrupID,_selectedT);
+                                                                    }
+                                                                }
+
+                                                                _selectedT = $dstV.val();
+                                                                getSinavTip($dst,sinavTipGrupID,_selectedT);
+                                                                // if($dstVs.val()=="true")
+                                                              //  getSinavTip($dst, sinavTipGrupID, _selectedT);
+
+
+                                                            },
+                                                            error: function (err) {
+                                                                alert(err.responseText);
+
+                                                            }
+                                                        });
+                                                   }
+                                                    </script>
+                                                </div>
+                                                <div id="sinavTipBilgi_@SinavTipGrup.DilSinavlari">
+                                                    @if (Model.DilIstensinmi && Model.BasvurularSinavBilgi_D != null && Model.BasvurularSinavBilgi_D.SinavTipID > 0)
+                                                    {
+                                                        var sb = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_D.SinavTipID, otsIds, prks, IngsIds);
+                                                        sb.BasvuruSinavData = Model.BasvurularSinavBilgi_D;
+                                                        Html.RenderPartial("getSinavTip", sb);
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="pnlSnv_T" class="panel panel-default form-horizontal _tomerSinavi @(Model.TomerIstensinmi?" ":" hide")">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> Tomer</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Sınav Türü</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("BasvurularSinavBilgi_T.SinavTipID", TSinavTipleri, new { id = "TSinavTipID", @class = "form-control", onChange = "getSinavTip(this," + SinavTipGrup.Tomer + ");" })
+
+                                                    </div>
+                                                </div>
+                                                <div id="sinavTipBilgi_@SinavTipGrup.Tomer">
+                                                    @if (Model.TomerIstensinmi && Model.BasvurularSinavBilgi_T != null && Model.BasvurularSinavBilgi_T.SinavTipID > 0)
+                                                    {
+                                                        var sb = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_T.SinavTipID, otsIds, prks, IngsIds);
+                                                        sb.BasvuruSinavData = Model.BasvurularSinavBilgi_T;
+                                                        Html.RenderPartial("getSinavTip", sb);
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default form-horizontal">
+                                            <div class="panel-heading padding-0">
+                                                <h3 class="panel-title"><i class="fa fa-save"></i> Kayıt İşlemi</h3>
+                                            </div>
+                                            <div class="panel-body form-group-separated">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 col-xs-4 control-label">Kayıt Tipi</label>
+                                                    <div class="col-md-9 col-xs-8">
+                                                        @Html.DropDownList("BasvuruDurumID", null, new { id = "BasvuruDurumID", @class = "form-control", onchange = "durumKontrol(this)" })
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group chkOnayD @(Model.BasvuruDurumID == BasvuruDurumu.Onaylandı? " " : " hide")">
+                                                    <label class="col-md-3 col-xs-4 control-label">Başvuru Onayı</label>
+                                                    <div class="col-md-9 col-xs-8" style="text-align:center;">
+                                                        <div class="btn btn-success">
+                                                            <div class="checkbox">
+                                                                <label style="color:white;" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Bu formda beyan ettiğim bilgiler ile belgelerin uyuşmaması durumunda başvurumun iptal edilmesini kabul ediyorum.">
+                                                                    <input type="checkbox" onclick="chkOnayChange()" id="checkOnay" value="true" name="Onaylandi" @Model.Onaylandi.ToChecked() />
+                                                                    Onaylıyorum
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group itirazIptalBilgi @((Model.BasvuruDurumID==BasvuruDurumu.IptalEdildi)?" ":" hide")">
+                                                    <label class="col-md-3 col-xs-4 control-label lblBilgimsj">
+                                                        @if (Model.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                        {
+                                                            <span> İptal Açıklaması</span>
+                                                        }
+                                                    </label>
+                                                    <div class="col-md-9 col-xs-8" style="text-align:center;">
+                                                        <textarea id="BasvuruDurumAciklamasi" name="BasvuruDurumAciklamasi" class="form-control" rows="5">@Model.BasvuruDurumAciklamasi</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var nextTxt = 'İleri';
+    var prvText = 'Geri';
+    var kydet = 'Kaydet';
+
+    $('#myWizard').easyWizard({
+        'stepClassName': 'content',
+        'showSteps': false,
+        'stepsText': '{n}. {t}',
+        'showButtons': true,
+        'buttonIleriClass': 'btn btn-default pull-right',
+        'buttonGeriClass': 'btn btn-default pull-left',
+        'prevButton': prvText,
+        'nextButton': nextTxt,
+        'debug': false,
+        'submitButton': true,
+        'submitButtonText': kydet,
+        'submitButtonClass': 'btn btn-primary pull-right',
+    });
+
+
+
+    $(function () {
+        btnkKontrol();
+        $('#myWizard').find(".content").css("display", "");
+        $('._popover').popover({ trigger: 'hover' });
+        $('#CiltNo').simpleMask({ 'mask': '####' });
+        $('#AileNo').simpleMask({ 'mask': '#######' });
+        $('#SiraNo').simpleMask({ 'mask': '####' });
+
+
+
+    })
+    $('#bsvrSbmtFrm').find('input').each(function (ix, inx) {
+        $(inx).attr('autocomplete', 'off');
+        $(inx).bind('keyup', function (e) {
+            if (e.which >= 97 && e.which <= 122) {
+                var newKey = e.which - 32;
+                // I have tried setting those
+                e.keyCode = newKey;
+                e.charCode = newKey;
+
+            }
+            if (e.which != 91 && e.which != 32 && e.which != 8 && e.which != 46 && e.which != 39 && e.which != 37 && e.which != 38 && e.which != 40 && e.which != 16 && e.which != 17 && e.which != 18) {
+                if (inx.id != "EMail" && inx.id != "IsTel" && inx.id != "EvTel" && inx.id != "CepTel") {
+
+                    var vl = $(inx).val();
+                    $(inx).val(vl.replace("i", "İ").toUpperCase());
+                }
+            }
+        });
+    })
+    $("#CepTel").mask("(9999) 999-9999");
+    $("#EvTel").mask("(9999) 999-9999");
+    $("#IsTel").mask("(9999) 999-9999");
+    function getNotTipKontrol(sndr, propID) {
+        var not = $(sndr).val();
+        if (not == "100") {
+            $(propID).html("");
+            bootbox.dialog({
+                message: 'Bu seçim transkriptinde yalnızca 100 lük not ortalaması yer alan adaylar tarafından gerçekleştirilmelidir. Transkriptinde 100 lük not ortalaması ile birlikte 4 lük not ortalaması da yer aldığı halde 100 lük not girişi yapan adaylar kayıt haklarını kaybederler. Değerlendirmelerde Yükseköğretim Kurulu nun belirlediği karşılıklar esas alınmaktadır.',
+                title: 'Uyarı',
+                buttons: {
+                    danger: {
+                        label: 'Tamam',
+                        className: "btn-warning"
+                    }
+                }
+            });
+        }
+    }
+    function btnkKontrol() {
+        var drm = $('#BasvuruDurumID').val();
+        var onylnd =@BasvuruDurumu.Onaylandı;
+        var iptl =@BasvuruDurumu.IptalEdildi;
+        var tslk =@BasvuruDurumu.Taslak;
+        if (onylnd == drm) {
+            var chk = $('#checkOnay');
+            var chkd = $(chk).prop('checked');
+            if (chkd) $('.kaydet').removeClass("disabled");
+            else
+                $('.kaydet').addClass("disabled");
+        }
+        else if (iptl == drm) {
+            $('.kaydet').removeClass("disabled");
+        }
+        else if (tslk == drm) {
+            $('.kaydet').removeClass("disabled");
+        }
+        else if (drm == "") {
+            $('.kaydet').addClass("disabled");
+        }
+    }
+    function chkOnayChange() {
+        btnkKontrol();
+    }
+    function durumKontrol(sndr) {
+        var drm = $(sndr).val();
+        var onylnd =@BasvuruDurumu.Onaylandı;
+        var iptl =@BasvuruDurumu.IptalEdildi;
+        $('.chkOnayD').addClass("hide");
+        $('.itirazIptalBilgi').addClass("hide");
+        if (onylnd == drm) {
+            $('.chkOnayD').removeClass("hide");
+        }
+        else if (iptl == drm) {
+            $('.itirazIptalBilgi').removeClass("hide");
+            $('.lblBilgimsj').html('İptal Açıklaması');
+        }
+        btnkKontrol();
+
+    }
+
+    function sbmtFrm() {
+        var steps = new Array();
+        var _liA = $('.tabsK').find('a').each(function (inx, ax) {
+            var $_a = $(ax);
+            var _astp = parseInt($_a.attr("data-step"));
+            steps.push(_astp);
+        });
+        validationControl(steps[steps.length - 1]);
+    }
+    function stepControl(tp, stpNo) {
+        if (tp == 'bck') setActSelectedStep(stpNo);
+        else validationControl(parseInt(stpNo) - 1);
+
+    }
+
+
+    function setActSelectedStep(step) {
+        if (step == 3) {
+            var _kTip = $('#KullaniciTipID').val();
+
+
+            var AsinavTipID = $('#ASinavTipID').val();
+            getDSinavTip(AsinavTipID, '@SinavTipGrup.Ales_Gree');
+            var DsinavTipID = $('#DSinavTipID').val();
+            getDSinavTip(DsinavTipID, '@SinavTipGrup.DilSinavlari');
+            var TsinavTipID = $('#TSinavTipID').val();
+            getDSinavTip(TsinavTipID, '@SinavTipGrup.Tomer');
+
+        }
+        var scrlT = $('#myWizard').parents("div").first().offset().top - 5;
+        $('#myWizard').easyWizard('goToStep', step);
+        //$('#myWizard').find('.stepContainer').css('height','auto;');
+
+
+        onload();
+        $('html,body').animate({ scrollTop: parseInt(scrlT) }, 'slow');
+
+    }
+    $('.date-pickerx').datetimepicker({
+        timepicker: false,
+        format: 'd-m-Y'
+    });
+    $.datetimepicker.setLocale('tr');
+    $('#ddLst').nestable().on('change', function () {
+        tercihSiraNoDuzenle();
+    });
+    var maxLenth = 0;
+    var firstLength = 0;
+    var lastLength = 0;
+    var YmaxLenth = 0;
+    var YfirstLength = 0;
+    var YlastLength = 0;
+    function getMNOtMask(sndr, mskID, Resp) {
+        var val = $(sndr).val();
+        Resp = Resp == true;
+        if (!Resp) $('#' + mskID).val("");
+        if (val != "") {
+            $.ajax({
+                url: '@Url.Action("getNotSistemiKontrol", "Basvuru")',
+                data: { 'NotSistemID': val },
+                success: function (result) {
+                    if (mskID == "LMezuniyetNotu") {
+                        maxLenth = result.maxLenth;
+                        firstLength = result.firstLength;
+                        lastLength = result.lastLength;
+                    }
+                    else {
+                        YmaxLenth = result.maxLenth;
+                        YfirstLength = result.firstLength;
+                        YlastLength = result.lastLength;
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+
+        }
+    }
+
+    $('#LMezuniyetNotu').keydown(function (e) {
+        myMask(e, this, false, maxLenth, firstLength, lastLength);
+    });
+    $('#YLMezuniyetNotu').keydown(function (e) {
+        myMask(e, this, false, YmaxLenth, YfirstLength, YlastLength);
+    });
+    function getBolums(sndr) {
+        var _panel = $('#pnlProgramSecim');
+        _pRefresh(_panel, false);
+        $('#otBilgi').html('');
+        $('#SotBilgi').html('');
+        var sndrVal = $(sndr).val();
+        $('#ProgramKod').empty();
+        $('#prgBilgi').addClass('hide');
+        var _EnstituKod = '@Model.EnstituKod';
+        var _BasvuruSurecID = @Model.BasvuruSurecID;
+        var kTipID = $('#KullaniciTipID').val();
+        var rowID = "";
+        if ($(sndr).attr('id') != 'SubOgrenimTipKod') {
+            $('#rwSubOT').addClass('hide');
+            rowID = "otBilgi";
+            $('#otBilgi').removeClass('hide');
+            $('#SotBilgi').addClass('hide');
+
+        }
+        else {
+            rowID = "SotBilgi";
+            $('#otBilgi').addClass('hide');
+            $('#SotBilgi').removeClass('hide');
+            var otipKod = $('#SubOgrenimTipKod').val();
+            var oUniKod = $('#LUniversiteID').val();
+            if (otipKod == '@OgrenimTipi.TezliYuksekLisans' && oUniKod == '@Management.UniversiteYtuKod' && '@Model.ODurumIstensin.ToString().ToLower()' == 'true') $('.lOdurumBilgi').removeClass('hide');
+            else $('.lOdurumBilgi').addClass('hide');
+        }
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getBolumler", "Ajax")',
+                data: { 'BasvuruSurecID': _BasvuruSurecID, 'otKod': sndrVal, 'KTipID': kTipID },
+                success: function (result) {
+                    $('#AnabilimdaliKod').empty();
+                    var opt = "";
+                    for (var i = 0; i < result.data.length; i++) {
+                        var valR = result.data[i].Value;
+                        var _value = "";
+                        if (valR != null) {
+                            _value = valR;
+                        }
+                        opt += "<option value=" + _value + ">" + result.data[i].Caption + "</option>"
+                    }
+                    _pRefresh(_panel, true);
+                    if (result.IsSubOT) {
+                        $('#otBilgi').addClass('hide');
+                        $('#SotBilgi').removeClass('hide');
+                        $('#SubOgrenimTipKod').empty();
+                        $('#rwSubOT').removeClass("hide");
+                        $('#SubOgrenimTipKod').append(opt);
+                    }
+                    else {
+                        $('#AnabilimdaliKod').append(opt);
+                        getOgrenimSBilgi(sndrVal, rowID, result.YLShow);
+                    }
+                },
+                error: function (err) {
+                    $('#otBilgi').addClass('hide');
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+
+                }
+            });
+        }
+        else {
+            $('#otBilgi').addClass('hide');
+            if ($(sndr).attr("id") != "SubOgrenimTipKod") {
+                $('#SotBilgi').addClass('hide');
+                $('#rwSubOT').addClass('hide');
+            }
+            if ($(sndr).attr("id") != "AnabilimdaliKod") $('#AnabilimdaliKod').empty();
+            $('#ProgramKod').empty();
+            _pRefresh(_panel, true);
+            yLBilgisiIstendimi();
+        }
+    }
+
+    function yLBilgisiIstendimi() {
+        var YlIste = false;
+        $('#Rw_tbody').find('li').each(function (inx, trx) {
+            if ($(trx).find("input[name=_YLBilgiIste]").first().val() == "true")
+                YlIste = true;
+        });
+        if (YlIste == false) {
+            if ($('.YLEgitimBilgisiIste').length > 0) YlIste = $('.YLEgitimBilgisiIste').text() == 'true';
+        }
+        if (YlIste) {
+
+            $('._LisansEğitimiAnadiv').removeClass("col-md-12").addClass("col-md-6");
+            // $('#_LisansEğitimidiv');
+            $('#ylBilgi').removeClass("hide");
+        }
+        else {
+            $('#ylBilgi').addClass("hide");
+            $('._LisansEğitimiAnadiv').removeClass("col-md-6").addClass("col-md-12");
+        }
+        return YlIste;
+    }
+    function getOgrenimSBilgi(otID, rwID, YlVal, subOt) {
+        var _panel = $('#pnlProgramSecim');
+        _pRefresh(_panel, false);
+        var _BasvuruSurecID = @Model.BasvuruSurecID;
+        var _KullaniciID = @Model.KullaniciID;
+        var _BasvuruID = $('#BasvuruID').val();
+        var _tercihler = Array($('#Rw_tbody').find('li').length);
+        $('input[name=_OgrenimTipKod]').each(
+            function (inx, inptx) {
+                _tercihler[inx] = parseInt($(inptx).val());
+            });
+        $.ajax({
+            url: '@Url.Action("getOTdetay", "Basvuru")',
+            datatype: "json",
+            traditional: true,
+            data: { 'BasvuruSurecID': _BasvuruSurecID, 'otID': otID, 'KullaniciID': _KullaniciID, 'BasvuruID': _BasvuruID, 'ArrOtipIds': _tercihler },
+            success: function (result) {
+                $('#' + rwID).html(result);
+                _pRefresh(_panel, true);
+                yLBilgisiIstendimi();
+            },
+            error: function (err) {
+                alert(err.responseText);
+                $('#' + rwID).addClass('hide');
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function alesIstensinmi() {
+        var retval = false;
+        if ($('#AlesIstensinmi').val() == "true") retval = true;
+        return retval;
+    }
+    function dilIstensinmi() {
+        var retval = false;
+        if ($('#DilIstensinmi').val() == "true") retval = true;
+        //$('#Rw_tbody').find('li').each(function (inx, trx) {
+        //    var _ky = $(trx).attr("class").split(' ')[2];
+        //    var _otip = $(trx).find("." + _ky + "_OgrenimTipKod").first().text();
+        //    var _prdil = $(trx).find("." + _ky + "_Ingilizce").first().text();
+        //    if (_otip == "1" || _otip == "3")
+        //        retval = true;
+        //    else if (_otip == "2" && _prdil == "true")
+        //        retval = true;
+        //});
+        return retval;
+    }
+
+    function getProgramBilgi(sndr) {
+        var sndrVal = $(sndr).val();
+        var otID = "";
+        var bSurecID =@Model.BasvuruSurecID;
+        if ($('#rwSubOT').hasClass("hide")) {
+            otID = $('#OgrenimTipKod').val();
+        }
+        else {
+            otID = $('#SubOgrenimTipKod').val();
+        }
+        var _LOgrenimDurumID = $('#LOgrenimDurumID').val();
+        var _LUniversiteID = $('#LUniversiteID').val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getPRdetay", "Basvuru")',
+                data: {
+                    'prgID': sndrVal, 'otID': otID, 'BasvuruSurecID': bSurecID, 'KullaniciID':@Model.KullaniciID, 'BasvuruID': @Model.BasvuruID,'KullaniciTipID':@Model.KullaniciTipID, 'LOgrenimDurumID': _LOgrenimDurumID, 'LUniversiteID': _LUniversiteID
+        },
+        success: function (result) {
+            $('#prgBilgi').removeClass('hide');
+            $('#prgBilgi').html(result);
+
+        },
+        error: function (err) {
+            $('#prgBilgi').addClass('hide');
+            alert(err.responseText);
+        }
+    });
+        }
+        else {
+        $('#prgBilgi').addClass('hide');
+    }
+    }
+    function getPrograms(sndr) {
+        var sndrVal = $(sndr).val();
+        $('#prgBilgi').addClass('hide');
+        var otID = "";
+        if ($('#rwSubOT').hasClass("hide")) {
+            otID = $('#OgrenimTipKod').val();
+        }
+        else {
+            otID = $('#SubOgrenimTipKod').val();
+        }
+        var bSurecID =@Model.BasvuruSurecID;
+        var kulTipID =@Model.KullaniciTipID;
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getProgramlar", "Ajax")',
+                data: { 'bolID': sndrVal, 'otID': otID, 'BasvuruSurecID': bSurecID, 'KullaniciTipID': kulTipID },
+                success: function (result) {
+                    $('#ProgramKod').empty();
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) {
+                        var valR = result[i].Value;
+                        var _value = "";
+                        if (valR != null) {
+                            _value = valR;
+                        }
+                        opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
+                    }
+                    $('#ProgramKod').append(opt);
+                },
+                error: function (err) {
+                    $('#prgBilgi').addClass('hide');
+                    alert(err.responseText);
+
+                }
+            });
+
+        }
+        else {
+            $('#ProgramKod').empty();
+        }
+    }
+
+
+    function tercihSiraNoDuzenle() {
+        $('#Rw_tbody').find('input[name=_tSiraNo]').each(function (inx, inptx) {
+            var _sNo = inx + 1;
+            var siranoStr =  _sNo + ". Tercih";
+            $(inptx).val(_sNo);
+            $(inptx).parents('li').find('.tSiraNo').html(siranoStr);
+        })
+    }
+    function tercihiSil(sndr) {
+        $(sndr).parents('li').first().remove();
+
+        var subOtID = $('#rwSubOT').hasClass('hide') == false;
+        if (subOtID) {
+            var subOtVal = $('#SubOgrenimTipKod').val();
+            if (subOtVal != "") {
+                getBolums($('#SubOgrenimTipKod'));
+            }
+        }
+        else {
+            var OtVal = $('#OgrenimTipKod').val();
+            if (OtVal != "") {
+                getBolums($('#OgrenimTipKod'));
+            }
+        }
+        tercihSiraNoDuzenle();
+        tercihYLkontrol();
+
+    }
+    function tercihYLkontrol() {
+        var lUniID = $('#LUniversiteID').val();
+        var odurumShow = false;
+        if (lUniID == '@Management.UniversiteYtuKod' && '@Model.ODurumIstensin.ToString().ToLower()' == 'true') {
+
+            $('#Rw_tbody').find('li').each(function (inx, trx) {
+                var _rwClss = $(trx).attr("class").split(" ")[2];
+                var _gOtKod = $(trx).find('input[name=_OgrenimTipKod]').first().val();
+                if (_gOtKod == '@OgrenimTipi.TezliYuksekLisans') odurumShow = true;
+            });
+            var otipKod = $('#SubOgrenimTipKod').val();
+            if (otipKod == '@OgrenimTipi.TezliYuksekLisans') odurumShow = true;
+
+        }
+        if (odurumShow) $('.lOdurumBilgi').removeClass('hide');
+        else $('.lOdurumBilgi').addClass('hide');
+        var ShowLDilSecim = false;
+        return odurumShow;
+    }
+    function tercihBDOTkontrol(_OtKod) {
+        var trchKalankota = $('.TercihKalanKota').text();
+        var trchkota = $('.TercihKota').text();
+        var topkota = $('.ToplamKalanTercihKota').text();
+        var TipfkOtEklenemez = $('.BasvuruSurecKontrolTipID').text();
+        var fkOtEklenemez = $('.FarkliOgrenimTipiEklenemez').text();
+        var fkOtEklenemezAB = $('.FarkliOgrenimTipiEklenemezAyniBasvuruda').text();
+        var fkOtEklenemezAds = $('.FarkliOgrenimTipiEklenemezAds').text();
+        var bbOtKod = $('.BasvurulabilecekDigerOgrenimTipleriKods').text();
+        var bbOtIsSuccess = false;
+        var ayniCount = 0;
+        var toplRow = 0;
+        $('#Rw_tbody').find('li').each(function (inx, trx) {
+            var _rwClss = $(trx).attr("class").split(" ")[2];
+            var _gOtKod = $(trx).find('input[name=_OgrenimTipKod]').first().val();
+            if (_gOtKod == _OtKod) ayniCount++;
+            toplRow++;
+            if (bbOtKod != "" && bbOtKod != null) {
+                var bbotKods = bbOtKod.split(',');
+                for (var i = 0; i < bbotKods.length; i++) {
+                    var _gbbotKods = bbotKods[i];
+                    if (_gOtKod == _gbbotKods) bbOtIsSuccess = true;
+                }
+            }
+            else {
+                if (_gOtKod == _OtKod) bbOtIsSuccess = true;
+            }
+        });
+
+        if (bbOtIsSuccess == false && $('#Rw_tbody').find('li').length > 0) {
+            showMessage("warning", 'Dikkat', 'Eğer bu öğrenim tipinde bir başvuru tercihi yapacaksanız başka bir öğrenim tipinde tercih eklememiş olmanız gerekmektedir!');
+            return false;
+        }
+        if (fkOtEklenemez == "true") {
+            var msgVal = "";
+            if (TipfkOtEklenemez == '@KotaHesapTipleri.SeciliBasvuruSureci') {
+                msgVal = 'Bu öğrenim tipi tercih olarak seçilecekse bu başvuru sürecinde (' + fkOtEklenemezAds+') öğrenim tipi ile başvurunuzun olmaması gerekmektedir!';
+            }
+            else {
+                msgVal = '@Model.DonemAdi döneminde (' + fkOtEklenemezAds +') başvurunuzun olması sebebiyle bu öğrenim tipi ile başvuru tercihi ekleyemezsiniz!';
+
+            }
+            showMessage("warning", 'Dikkat', msgVal);
+            return false;
+        }
+        if (toplRow > parseInt(topkota)) {
+            var msgVal = "";
+            if (TipfkOtEklenemez == '@KotaHesapTipleri.SeciliBasvuruSureci') {
+                msgVal = 'Ekleyebileceğiniz toplam tercih sayısını doldurdunuz! Yeni tercih ekleyemezsiniz.';
+            }
+            else {
+                msgVal = '@Model.DonemAdi dönemi için ekleyebileceğiniz toplam tercih sayısını doldurdunuz. Yeni tercih ekleyemezsiniz!';
+            }
+            showMessage("warning", 'Dikkat', msgVal);
+            return false;
+        }
+        if ((ayniCount > parseInt(trchkota) || parseInt(trchKalankota) <= 0)) {
+            var msgVal = "";
+            if (TipfkOtEklenemez == '@KotaHesapTipleri.SeciliBasvuruSureci') {
+                msgVal = 'Seçtiğiniz öğrenim tipi için toplam tercih sayısını doldurdunuz! Yeni tercih ekleyemezsiniz.';
+            }
+            else {
+                msgVal = '@Model.DonemAdi dönemi için seçtiğiniz öğrenim tipine ait toplam tercih sayısını doldurdunuz. Yeni tercih ekleyemezsiniz!';
+            }
+            showMessage("warning", 'Dikkat', msgVal);
+            return false;
+        }
+        if (fkOtEklenemezAB == "true") {
+            var msgVal = 'Eğer bu öğrenim tipinde bir başvuru tercihi yapacaksanız bu başvuru için başka bir öğrenim tipinde tercih eklememiş olmanız gerekmektedir. Yeni bir başvuruda tercihinizi ekleyebilirsiniz.';
+            showMessage("warning", 'Dikkat', msgVal);
+            return false;
+        }
+        return true;
+    }
+    function getOgrenimBilgiKotnrol(ylIste) {
+        var drm1 = 0;
+        var drm2 = 0;
+        var Luni = $('#LUniversiteID').val();
+        var Lfak = $('#LFakulteAdi').val();
+        var LoB = $('#LOgrenciBolumID').val();
+        var LnotID = $('#LNotSistemID').val();
+        var Lnot = $('#LMezuniyetNotu').val();
+        if (Luni == "" || Lfak == "" || LoB == "" || LnotID == "" || Lnot == "") {
+            drm1 = 1;
+        }
+        if (ylIste == "true") {
+            var YLuni = $('#YLUniversiteID').val();
+            var YLfak = $('#YLFakulteAdi').val();
+            var YLoB = $('#YLOgrenciBolumID').val();
+            var YLnotID = $('#YLNotSistemID').val();
+            var YLnot = $('#YLMezuniyetNotu').val();
+            if (YLuni == "" || YLfak == "" || YLoB == "" || YLnotID == "" || YLnot == "") {
+                drm2 = 1;
+            }
+        }
+        if (drm1 == 1 && drm2 == 1) {
+            showMessage("warning", 'Dikkat', 'Lisans ve Yüksek Lisans Öğrenim Bilgilerini Eksiksiz Doldurunuz!');
+            return false;
+        }
+        else if (drm1 == 0 && drm2 == 1) {
+            showMessage("warning", 'Dikkat', 'Lisans ve Yüksek Lisans Öğrenim Bilgilerini Eksiksiz Doldurunuz!');
+            return false;
+        }
+        else if (drm1 == 1 && drm2 == 0) {
+            showMessage("warning", 'Dikkat', 'Lisans ve Yüksek Lisans Öğrenim Bilgilerini Eksiksiz Doldurunuz!');
+            return false;
+        }
+        return true;
+    }
+
+
+    function getalanlariKontrolEt() {
+        var bol = $('#LOgrenciBolumID').val();
+        var bol2 = $('.ylBilgi').hasClass("hide") ? null : $('#YLOgrenciBolumID').val();
+        var _KullaniciID = @Model.KullaniciID;
+        if (bol != "")
+            var bSurecID =@Model.BasvuruSurecID;
+        $('#Rw_tbody').find('li').each(function (inx, trx) {
+            var _rwClss = $(trx).attr("class").split(' ')[2];
+            var _gOtKod = $(trx).find('input[name=_OgrenimTipKod]').first().val();
+            var _gprKod = $(trx).find('input[name=_ProgramKod]').first().val();
+            $.ajax({
+                url: '@Url.Action("getAlanKontrol", "Basvuru")',
+                data: {
+                    'LOgrenciBolumID': bol, 'YLOgrenciBolumID': bol2, 'oTipKod': _gOtKod, 'tprog': _gprKod, 'BasvuruSurecID': bSurecID, 'KullaniciID': _KullaniciID, BasvuruID:@Model.BasvuruID
+        },
+            success: function (result) {
+                $(trx).find('input[name=_AlanTipID]').first().val(result.AlanTipID);
+                var $_atip = $(".td_At_" + _gOtKod + "_" + _gprKod);
+                var $_kota = $(".td_Kt_" + _gOtKod + "_" + _gprKod)
+                var color = result.AlanIci ? "#337abb" : "#b64645";
+                $_atip.css("color", color);
+                $_atip.text(result.AlanTipAdi);
+                $_kota.css("color", color);
+                $_kota.text(result.Kota);
+                var _trch = $_atip.parents('li').first();
+                if (result.Kota <= 0) {
+                    $(_trch).attr('style', 'border:1px solid red;');
+                }
+                else {
+                    $(_trch).attr('style', '');
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+            });
+        });
+    }
+
+
+    function getSinavTip(sndr, tp, selectedV) {
+        var _BasvuruSurecID = @Model.BasvuruSurecID;
+        var _panel = '';
+        if (tp == '@SinavTipGrup.Ales_Gree') {
+            _panel = $('#pnlSnv_A');
+        }
+        else if (tp == '@SinavTipGrup.DilSinavlari') {
+            _panel = $('#pnlSnv_D');
+        }
+        else if (tp == '@SinavTipGrup.Tomer') {
+            _panel = $('#pnlSnv_T');
+        }
+        _pRefresh(_panel, false);
+        var _SinavTipID = $(sndr).val();
+        if (_SinavTipID != "" && _SinavTipID != "null" && _SinavTipID != null) {
+            var _OtIDs = "[";
+            $('input[name=_OgrenimTipKod]').each(function (inx, otX) {
+                if (inx == 0)
+                    _OtIDs += "'" + $(otX).val().trim() + "'";
+                else _OtIDs += ",'" + $(otX).val().trim() + "'";
+            })
+            _OtIDs += "]";
+            var nOtIDs = eval(_OtIDs);
+            var _Ings = "[";
+            $('input[name=_Ingilizce]').each(function (inx, IngX) {
+                if (inx == 0)
+                    _Ings += "'" + $(IngX).val().trim() + "'";
+                else _Ings += ",'" + $(IngX).val().trim() + "'";
+            })
+            _Ings += "]";
+            var nIngs = eval(_Ings);
+
+            var _PRKods = "[";
+            $('input[name=_ProgramKod]').each(function (inx, prkX) {
+                if (inx == 0)
+                    _PRKods += "'" + $(prkX).val().trim() + "'";
+                else _PRKods += ",'" + $(prkX).val().trim() + "'";
+            })
+            _PRKods += "]";
+            var nPrkds = eval(_PRKods);
+
+            var YLDurum = ($('#ylBilgi').hasClass('hide') == false);
+            var EgitimDiliTurkce = $('#LEgitimDiliTurkce').val() == "true";
+            if (YLDurum && !EgitimDiliTurkce) {
+                EgitimDiliTurkce = $('#YLEgitimDiliTurkce').val() == "true";
+            }
+            $.ajax({
+                url: '@Url.Action("getSinavTip", "Basvuru")',
+                type: 'POST',
+                enctype: "multipart/form-data",
+                cache: false,
+                data: { 'BasvuruSurecID': _BasvuruSurecID, "EgitimDiliTurkce": EgitimDiliTurkce, 'SinavTipID': _SinavTipID, 'SelectedVal': selectedV, 'OgrenimTipKods': nOtIDs, 'Ingilizces': nIngs, 'ProgramKods': nPrkds, 'BasvuruID': '@(Model.BasvuruID>0?Model.BasvuruID.ToString():"")' },
+                success: function (result) {
+                    $('#sinavTipBilgi_' + tp).html(result);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            _pRefresh(_panel, true);
+            $('#sinavTipBilgi_' + tp).html("");
+        }
+    }
+    function validationControl(step) {
+        var frmD;
+        if (step == 1)
+        {
+            frmD = {
+                "StepNo": step,
+                "KullaniciID": @Model.KullaniciID,
+                "TcKimlikNo": $('#TcKimlikNo').val(),
+                "PasaportNo": $('#PasaportNo').val(),
+                "CinsiyetID": $('#CinsiyetID').val(),
+                "AnaAdi": $('#AnaAdi').val(),
+                "BabaAdi": $('#BabaAdi').val(),
+                "DogumYeriKod": $('#DogumYeriKod').val(),
+                "DogumTarihi": $('#DogumTarihi').val(),
+                "NufusilIlceKod": $('#NufusilIlceKod').val(),
+                "CiltNo": $('#CiltNo').val(),
+                "AileNo": $('#AileNo').val(),
+                "SiraNo": $('#SiraNo').val(),
+                "UyrukKod": $('#UyrukKod').val(),
+                "SehirKod": $('#SehirKod').val(),
+                "EvTel": $('#EvTel').val(),
+                "CepTel": $('#CepTel').val(),
+                "IsTel": $('#IsTel').val(),
+                "EMail": $('#EMail').val(),
+                "Adres": $('#Adres').val()
+            }
+        }
+        else if (step == 2) {
+            var kotaValid = false;
+            var _OtIDs = "[";
+            $('input[name=_OgrenimTipKod]').each(function (inx, otX) {
+                if (inx == 0)
+                    _OtIDs += "'" + $(otX).val().trim() + "'";
+                else _OtIDs += ",'" + $(otX).val().trim() + "'";
+            })
+            _OtIDs += "]";
+            var nOtIDs = eval(_OtIDs);
+            var _prKods = "[";
+            $('input[name=_ProgramKod]').each(function (inx, otX) {
+                var prK = $(otX).val();
+                if (inx == 0)
+                    _prKods += "'" + prK + "'";
+                else _prKods += ",'" + prK + "'";
+            })
+            _prKods += "]";
+            var prKods = eval(_prKods);
+            $('._trchKotas').each(function (inx, trx) {
+                var $_trcch = $(trx).parents('li').first();
+                if (parseInt($(trx).text()) <= 0) {
+                    kotaValid = true;
+                    $_trcch.attr('style', 'border:1px solid red;');
+                }
+                else {
+                    $_trcch.attr('style', '');
+                }
+            });
+            var _Ings = "[";
+            $('input[name=_Ingilizce]').each(function (inx, otX) {
+                var IngK = $(otX).val();
+                if (inx == 0)
+                    _Ings += "'" + IngK + "'";
+                else _Ings += ",'" + IngK + "'";
+            })
+            _Ings += "]";
+            var ingB = eval(_Ings);
+            var _LEgitimDiliTurkce = $("#LEgitimDiliTurkce").val();
+            var _YLEgitimDiliTurkce = $("#YLEgitimDiliTurkce").val();
+            frmD = {
+                "BasvuruSurecID": @Model.BasvuruSurecID,
+                "StepNo": step,
+                "KotaValid": kotaValid,
+                "LEgitimDiliTurkce": _LEgitimDiliTurkce,
+                "TercihSayisi": $('#Rw_tbody').find('li').length,
+                "KullaniciTipID": @Model.KullaniciTipID,
+                "KullaniciID": @Model.KullaniciID,
+                "YLDurum": ($('#ylBilgi').hasClass('hide') == false),
+                "LUniversiteID": $('#LUniversiteID').val(),
+                "LFakulteAdi": $('#LFakulteAdi').val(),
+                "LOgrenciBolumID": $('#LOgrenciBolumID').val(),
+                "LOgrenimDurumID": $('#LOgrenimDurumID').val(),
+                "LNotSistemID": $('#LNotSistemID').val(),
+                "LMezuniyetNotu": $('#LMezuniyetNotu').val(),
+                "YLUniversiteID": $('#YLUniversiteID').val(),
+                "YLFakulteAdi": $('#YLFakulteAdi').val(),
+                "YLOgrenciBolumID": $('#YLOgrenciBolumID').val(),
+                "YLNotSistemID": $('#YLNotSistemID').val(),
+                "YLMezuniyetNotu": $('#YLMezuniyetNotu').val(),
+                "YLEgitimDiliTurkce": _YLEgitimDiliTurkce,
+                "_OgrenimTipKod": nOtIDs,
+                "_ProgramKod": prKods,
+                "_Ingilizce": ingB
+            };
+        }
+        else if (step == 3) {
+            var _OtIDs = "[";
+            $('input[name=_OgrenimTipKod]').each(function (inx, otX) {
+                if (inx == 0)
+                    _OtIDs += "'" + $(otX).val().trim() + "'";
+                else _OtIDs += ",'" + $(otX).val().trim() + "'";
+            })
+            _OtIDs += "]";
+            var _prKods = "[";
+            $('input[name=_ProgramKod]').each(function (inx, otX) {
+                var prK = $(otX).val();
+                if (inx == 0)
+                    _prKods += "'" + prK + "'";
+                else _prKods += ",'" + prK + "'";
+            })
+            _prKods += "]";
+            var _Ings = "[";
+            $('input[name=_Ingilizce]').each(function (inx, otX) {
+                var IngK = $(otX).val();
+                if (inx == 0)
+                    _Ings += "'" + IngK + "'";
+                else _Ings += ",'" + IngK + "'";
+            })
+            _Ings += "]";
+            $('#Rw_tbody').find('li')
+            var nOtIDs = eval(_OtIDs);
+            var prKods = eval(_prKods);
+            var ingB = eval(_Ings);
+            frmD = {
+
+                "StepNo": step,
+                "BasvuruID":@Model.BasvuruID,
+                "BasvuruDurumID": $('#BasvuruDurumID').val(),
+                "BasvuruTarihi": '@Model.BasvuruTarihi.ToDateString()',
+                "Onaylandi": $('#checkOnay').prop("checked"),
+                "KullaniciID": @Model.KullaniciID,
+                "TercihSayisi": $('#Rw_tbody').find('li').length,
+                "BasvuruSurecID": @Model.BasvuruSurecID,
+                "KullaniciTipID": $('#KullaniciTipID').val(),
+                "LEgitimDiliTurkce": $('#LEgitimDiliTurkce').val(),
+                "YLEgitimDiliTurkce": $('#YLEgitimDiliTurkce').val(),
+                "AlesIstensinmi": alesIstensinmi(),
+                "DilIstensinmi": dilIstensinmi(),
+                "_OgrenimTipKod": nOtIDs,
+                "_Ingilizce": ingB,
+                "_ProgramKod": prKods,
+                "BasvurularSinavBilgi_A.SinavTipID": $('#ASinavTipID').length > 0 ? $('#ASinavTipID').val() : "",
+                "BasvurularSinavBilgi_A.SinavTipGrupID": $('#ASinavTipGrupID').length > 0 ? $('#ASinavTipGrupID').val() : "",
+                "BasvurularSinavBilgi_A.WsSinavYil": $('#AWsSinavYil').length > 0 ? $('#AWsSinavYil').val() : "",
+                "BasvurularSinavBilgi_A.WsSinavDonem": $('#AWsSinavDonem').length > 0 ? $('#AWsSinavDonem').val() : "",
+                "BasvurularSinavBilgi_A.WsAdSoyad": $('#AWsAdSoyad').length > 0 ? $('#AWsAdSoyad').val() : "",
+                "BasvurularSinavBilgi_A.WsSinavDili": $('#WsSinavDili').length > 0 ? $('#WsSinavDili').val() : "",
+                "BasvurularSinavBilgi_A.WsDogruSayisi": $('#AWsDogruSayisi').length > 0 ? $('#AWsDogruSayisi').val() : "",
+                "BasvurularSinavBilgi_A.WsYanlisSayisi": $('#AWsYanlisSayisi').length > 0 ? $('#AWsYanlisSayisi').val() : "",
+                "BasvurularSinavBilgi_A.WsXmlData": $('#AWsXmlData').length > 0 ? $('#AWsXmlData').val() : "",
+                "BasvurularSinavBilgi_A.SinavTarihi": $('#ASinavTarihi').length > 0 ? $('#ASinavTarihi').val() : "",
+                "BasvurularSinavBilgi_A.SinavDilID": "",
+                "BasvurularSinavBilgi_A.SubSinavAralikID": $('#ASubSinavAralikID').length > 0 ? $('#ASubSinavAralikID').val() : "",
+                "BasvurularSinavBilgi_A.BasvuruSurecSubNot": $('#ABasvuruSurecSubNot').length > 0 ? $('#ABasvuruSurecSubNot').val() : "",
+                "BasvurularSinavBilgi_A.SinavNotu": $('#ASinavNotu').length > 0 ? $('#ASinavNotu').val() : "",
+                "BasvurularSinavBilgi_D.SinavTipID": $('#DSinavTipID').length > 0 ? $('#DSinavTipID').val() : "",
+                "BasvurularSinavBilgi_D.SinavTipGrupID": $('#DSinavTipGrupID').length > 0 ? $('#DSinavTipGrupID').val() : "",
+                "BasvurularSinavBilgi_D.WsSinavYil": $('#DWsSinavYil').length > 0 ? $('#DWsSinavYil').val() : "",
+                "BasvurularSinavBilgi_D.WsSinavDonem": $('#DWsSinavDonem').length > 0 ? $('#DWsSinavDonem').val() : "",
+                //"BasvurularSinavBilgi_D.WsAdSoyad": $('#DWsAdSoyad').length > 0 ? $('#DWsAdSoyad').val() : "",
+                "BasvurularSinavBilgi_D.WsSinavDili": $('#DsSinavDili').length > 0 ? $('#DsSinavDili').val() : "",
+                //"BasvurularSinavBilgi_D.WsDogruSayisi": $('DWsDogruSayisi').length > 0 ? $('#DWsDogruSayisi').val() : "",
+                //"BasvurularSinavBilgi_D.WsYanlisSayisi": $('DWsYanlisSayisi').length > 0 ? $('#DWsYanlisSayisi').val() : "",
+                "BasvurularSinavBilgi_D.WsXmlData": $('#DWsXmlData').length > 0 ? $('#DWsXmlData').val() : "",
+                "BasvurularSinavBilgi_D.SinavTarihi": $('#DSinavTarihi').length > 0 ? $('#DSinavTarihi').val() : "",
+                "BasvurularSinavBilgi_D.SinavDilID": $('#DSinavDilID').length > 0 ? $('#DSinavDilID').val() : "",
+                "BasvurularSinavBilgi_D.SubSinavAralikID": "",
+                "BasvurularSinavBilgi_D.SinavNotu": $('#DSinavNotu').length > 0 ? $('#DSinavNotu').val() : "",
+                "BasvurularSinavBilgi_D.IsTaahhutVar": $('#IsTaahhutVarDil').length > 0 ? $('#IsTaahhutVarDil').prop("checked") : "",
+                "BasvurularSinavBilgi_T.SinavTipID": $('#TSinavTipID').length > 0 ? $('#TSinavTipID').val() : "",
+                "BasvurularSinavBilgi_T.SinavTipGrupID": $('#TSinavTipGrupID').length > 0 ? $('#TSinavTipGrupID').val() : "",
+                "BasvurularSinavBilgi_T.WsSinavYil": $('#TWsSinavYil').length > 0 ? $('#TWsSinavYil').val() : "",
+                "BasvurularSinavBilgi_T.WsSinavDonem": $('#TWsSinavDonem').length > 0 ? $('#TWsSinavDonem').val() : "",
+                "BasvurularSinavBilgi_T.WsAdSoyad": $('#TWsAdSoyad').length > 0 ? $('#TWsAdSoyad').val() : "",
+                "BasvurularSinavBilgi_T.WsSinavDili": $('#TsSinavDili').length > 0 ? $('#TsSinavDili').val() : "",
+                "BasvurularSinavBilgi_T.WsDogruSayisi": $('TWsDogruSayisi').length > 0 ? $('#TWsDogruSayisi').val() : "",
+                "BasvurularSinavBilgi_T.WsYanlisSayisi": $('TWsYanlisSayisi').length > 0 ? $('#TWsYanlisSayisi').val() : "",
+                "BasvurularSinavBilgi_T.WsXmlData": $('#TWsXmlData').length > 0 ? $('#TWsXmlData').val() : "",
+                "BasvurularSinavBilgi_T.SinavTarihi": $('#TSinavTarihi').length > 0 ? $('#TSinavTarihi').val() : "",
+                "BasvurularSinavBilgi_T.SinavDilID": $('#TSinavDilID').length > 0 ? $('#TSinavDilID').val() : "",
+                "BasvurularSinavBilgi_T.IsTaahhutVar": $('#IsTaahhutVar').length > 0 ? $('#IsTaahhutVar').prop("checked") : "",
+                "BasvurularSinavBilgi_T.SubSinavAralikID": "",
+                "BasvurularSinavBilgi_T.SinavNotu": $('#TSinavNotu').length > 0 ? $('#TSinavNotu').val() : ""
+            };
+
+        }
+
+    postD(frmD, step);
+
+    }
+    function postD(frmData, step) {
+        $.ajax({
+            url: '@Url.Action("ValidationControlSteps", "Ajax")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: frmData,
+            success: function (result) {
+                if (result.sbmtForm) {
+                    if (result.EkAciklamalar != "") {
+                        bootbox.dialog({
+                            message: result.EkAciklamalar,
+                            buttons: {
+                                danger: {
+                                    label: 'Başvuruyu Tamamla',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                        $('#bsvrSbmtFrm').submit();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else if (result.AnketGiris != "") {
+                        var btbxxFS = bootbox.dialog({
+                            message: result.AnketGiris,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
+                                success: {
+                                    label: 'Başvuruyu Tamamla',
+                                    className: "btn-primary",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        _pRefresh(pnlx, false);
+                                        $('#FrmAnket').ajaxForm({
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    var _clsBtn = $('.modal-header').find('button').first();
+                                                    $(_clsBtn).click();
+                                                    $('#bsvrSbmtFrm').submit();
+                                                }
+                                                else {
+                                                    getMsg(result);
+                                                    return false;
+                                                }
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                _pRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmAnket').submit();
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                    }
+                    else {
+
+                        $('#bsvrSbmtFrm').submit();
+                    }
+                }
+                else if (result._MmMessage.IsSuccess) {
+                    setActSelectedStep(parseInt(step) + 1);
+                }
+                if (step == 2) {
+                    getalanlariKontrolEt();
+                    if (result.ShowEgitimDili) {
+                        $('#dvLEgitimDiliTurkce').removeClass('hide');
+                        if (result.YLDurum) $('#dvYLEgitimDiliTurkce').removeClass('hide');
+                        else $('#dvYLEgitimDiliTurkce').addClass('hide');
+
+                            $('#pnlSnv_T').removeClass('hide');
+
+                    }
+                    else {
+                        $('#dvLEgitimDiliTurkce').addClass('hide');
+                        $('#dvYLEgitimDiliTurkce').addClass('hide');
+                        $('#pnlSnv_T').addClass('hide');
+                    }
+                }
+                getMsgb(result._MmMessage, step);
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+
+            }
+        });
+    }
+
+
+    function getMsgb(result, step) {
+        if (result.IsSuccess == false) {
+            var cls = result.MessageType == 1 ?
+                'success' : (result.MessageType == 3 ? 'warning' : (result.MessageType == 2 ? 'danger' : 'info'));
+            var pnlStrt = "<div class=panel panel-" + cls + "  style='margin-bottom:3px;'> <div class='panel-body panel-body-pricing'>";
+            if (result.Title != "") {
+                pnlStrt += "<h3 style='font-size:10pt;' class=text-" + cls + ">" + result.Title + "</h3>";
+            }
+            var _msgs = "";
+            for (var i = 0; i < result.Messages.length; i++) {
+
+                _msgs += "<p style='margin: 0px; padding: 0px;'><span style='color:red;' class='fa fa-caret-right'></span>&nbsp " + result.Messages[i] + "</p>";
+            }
+            var pnlEnd = "</div></div>";
+            $('#msgsB').html(pnlStrt + _msgs + pnlEnd);
+            bootbox.dialog({
+                message: $('#msgsB').html(),
+                buttons: {
+                    danger: {
+                        label: 'Tamam',
+                        className: "btn-success",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+
+        }
+        validateControl(null, result);
+    }
+
+
+
+
+    var model = '@Html.Raw(Json.Encode(_MmMessage))';
+    validateControl(model);
+
+</script>
+
+
+@if (Model.SetSelectedStep.HasValue)
+{
+
+    <script>
+    setTimeout(function () {
+        var stpselc_ = @Model.SetSelectedStep.Value;
+        setActSelectedStep(stpselc_);
+        getMNOtMask($('#LNotSistemID'), 'LMezuniyetNotu', true);
+        getMNOtMask($('#YLNotSistemID'), 'YLMezuniyetNotu', true);
+    }, 400);
+    </script>
+}
+<script>
+
+    //function gmatAlesConvert(IdN)
+    //{
+
+    //    $('.dvAlesK').removeClass('hide');
+    //    var strPuan = "";
+    //    if (Puan.indexOf('.') != -1) Puan = Puan.replace('.', ",")
+    //    Puan = parseFloat(Puan);
+    //    var cevrilen= 100 + (9/70 + (-(1/1750) - 3.14965*(10^ -6) *(-500 + Puan))* (-450 + Puan))* (-800 + Puan)
+    //    strPuan = cevrilen.toFixed(2).toString().replace('.', ",");
+    //    $('#alsKarsiligi').text(strPuan);
+    //    $('#'+IdN+'SinavNotu').val(strPuan);
+    //}
+    function NotConvert(IdN, BasvuruSurecSinavTipID) {
+        var tip = $('#' + IdN + 'SubSinavAralikID').val();
+        var Stip = BasvuruSurecSinavTipID;
+        var Puan = $('#' + IdN + 'BasvuruSurecSubNot').val();
+        if (Puan.trim() == "" || tip == "") {
+            $('#alsKarsiligi').text("");
+            $('#' + IdN + 'SinavNotu').val("");
+            $('.dvAlesK').addClass('hide');
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("getFormul", "Basvuru")',
+                data: { 'BasvuruSurecSinavTipID': Stip, 'SubSinavAralikID': tip, 'Puan': Puan },
+                success: function (result) {
+                    $('.dvAlesK').removeClass('hide');
+                    $('#alsKarsiligi').text(result.Sonuc);
+                    $('#' + IdN + 'SinavNotu').val(result.Sonuc);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+    }
+    function MezuniyetNotConvert(IdN, propID) {
+
+        var nsID = $('#' + IdN + 'LNotSistemID').val();
+        if (nsID == "100" || nsID == "") return;
+        var Puan = $('#' + IdN + 'LMezuniyetNotu').val();
+        if (Puan.trim() == "" || Puan.trim() == "0") {
+            $(propID).html("");
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("NotKontrol", "Basvuru")',
+                data: { 'NotSistemID': nsID, 'Puan': Puan.replace(",", ".") },
+                success: function (result) {
+                    $(propID).html("100'lük karşılığı: "  + result.Deger);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+    }
+</script>
+<div id="msgsB" style="display: none;">
+</div>

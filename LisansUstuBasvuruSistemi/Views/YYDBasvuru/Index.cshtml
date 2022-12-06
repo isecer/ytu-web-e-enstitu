@@ -1,0 +1,334 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmBasvurular
+@{
+    ViewBag.Title = "Index";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="row" id="RbbModel">
+</div>
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Başvurularım</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="BasvuruSurecAdi" width="160">Eğitim Öğretim Yılı</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th class="sirala" field="TercihSayisi" width="50">TS</th>
+                                <th class="sirala" field="BasvuruDurumAdi" width="110">Başvuru Durumu</th>
+                                <th width="65"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    <input name="AdSoyad" type="text" value="@Model.AdSoyad" class="form-control" />
+                                </th>
+                                <th>
+                                    @Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control" })
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th>
+                                    @Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })
+                                </th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    item.YLUniversiteID = 1;
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@item.DurumColor;" id="cls-@item.BasvuruID">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.BasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.BasvuruSurecAdi <br />@item.BasTar.ToDateString() - @item.BitTar.ToDateString()</td>
+                                        <td>
+                                            @item.BasvuruTarihi.ToString()
+                                        </td>
+                                        <td>
+                                            <span style="font-size:14pt;">@item.TercihSayisi</span>
+                                            @if (item.BasvuruDurumID == BasvuruDurumu.Onaylandı || item.BasvuruDurumID == BasvuruDurumu.Gonderildi)
+                                            {
+                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'BAŞVURU BİLGİSİ','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.Basvuru&BasvuruID=@item.BasvuruID' , 'auto', 'modal-dialog modal-lg' )">
+                                                    <span style="font-size:18pt;" title="Yazdır" class="fa fa-print"></span>
+                                                </a>
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @if (!item.DurumClassName.IsNullOrWhiteSpace())
+                                            {
+                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                {
+                                                    <span class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color: " + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=color:" + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @item.BasvuruDurumAdi
+                                                    </span>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if (item.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
+                                                {
+                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@item.BasvuruDurumAciklamasi">@item.BasvuruDurumAdi</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.BasvuruDurumAdi</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.IsNotDuzelt)
+                                            {
+                                                <a href="javascript:void(0);" onclick="getGBNDet(@item.BasvuruID)"><i style="font-size:11pt;color:@(item.LOgrenimDurumID==OgrenimDurum.Mezun?"blue":"red");" class="glyphicon glyphicon-pencil tooltips" data-style="blue" data-original-title="Lisans Notunu Düzelt"></i></a>
+                                            }
+                                            <a href="@Url.Action("BasvuruYap", "YYDBasvuru", new { BasvuruID = item.BasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="sil('@item.BasvuruID',true)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.BasvuruID" style="display:none">
+                                        <td id="cls-ana-@item.BasvuruID" colspan="7" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+
+    function newApp() {
+        showDuyuru(@DuyuruPopupTipleri.LisansustuBasvuru, '@Url.Action("BasvuruYap")');
+    } 
+    function showDetail(id, IsBelgeShow) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(id, IsBelgeShow); 
+    } 
+    function GetDetail(id, IsBelgeShow) { 
+        var tbName = "@TabAdlari.BasvuruDetayTN-" + id; 
+        var tID = getSelectedTabID(tbName);
+        if (IsBelgeShow == true) {
+            tID="4";
+        }
+        $.ajax({
+            url: '@Url.Action("GetBasvuruDetay", "Ajax")',
+            data: { 'id': id, 'tbInx': tID},
+            async: false,
+            success: function (result) { 
+                $('#cls-ana-' + id).html(result.page);
+                if (IsBelgeShow == true) {
+                    tabchangeSet("4");
+                }
+                SubData(id);
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+    }
+    function SubData(id,isDelete) {
+        var _panel = $('#bsvrDet_' + id);
+        var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if (isDelete) tID = 1;
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetBasvuruSubData", "Ajax")',
+            data: { 'id': id, 'tbInx': tID},
+            success: function (result) {
+                if (isDelete) {
+
+                    sil(id,result.page)
+                }
+                else {
+
+                    var _nme = tbName + "-" + tID;
+                    $('#' + _nme).html(result.page);
+                }
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+
+
+    function sil(id,result) {
+      
+        var btbx = bootbox.dialog({
+            message:" <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+            title: "Başvuru Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Başvuruyu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        var _panel = $(btbx).find('.panel').first();
+                        _pRefresh(_panel, true);
+                        $.ajax({
+                            url: '@Url.Action("Sil", "YYDBasvuru")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) { 
+                                    $("#cls-" + id).remove();
+                                    $(".cls-" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+
+                                _pRefresh(_panel, false);
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+
+                                _pRefresh(_panel, false);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+      
+    }
+    function getGBNDet(bsvID) {
+        $.ajax({
+            url: '@Url.Action("getGBNDetail", "Ajax")',
+            data: { id: bsvID },
+            success: function (result) {
+
+                var btbx = bootbox.dialog({
+                    message: result,
+                    title: "AGNO düzeltme işlemi",
+                    buttons: {
+                        success: {
+                            label: 'Kaydet',
+                            className: "btn-success",
+                            callback: function () {
+                                var retV=_kaydetGNBO();
+                                return retV;
+                            }
+                        },
+                        danger: {
+                            label: 'Vazgeç',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+    setTimeout(
+       function () {
+           getBBW();
+       }, 100);
+
+
+    function getBBW() {
+        $.ajax({
+            url: '@Url.Action("getbbModel", "YYDBasvuru")',
+            data: {'KullaniciID':'@Model.KullaniciID'},
+            success: function (result) {
+                $('#RbbModel').html(result);
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+    }
+</script>
+
+@if (Model.BelgeDetailBasvuruID.HasValue)
+{
+    <script>
+        setTimeout(function () {
+            showDetail(@Model.BelgeDetailBasvuruID,  true), 3000
+        });
+    </script>
+
+}

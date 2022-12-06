@@ -1,0 +1,78 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using BiskaUtil
+@model mailTableContent
+@{
+    Layout = null;
+}
+
+@if (Model.AciklamaBasligi.IsNullOrWhiteSpace() == false)
+{ 
+    <table style="width:100%;table-layout:fixed;">
+        <tr>
+            <td style="font-family:Tahoma;font-size:9pt;color:maroon;text-align:@(Model.AciklamaTextAlingCenter?"center":"left")">@Html.Raw(Model.AciklamaBasligi)</td>
+        </tr>
+    </table>
+}
+@if (Model.AciklamaDetayi.IsNullOrWhiteSpace() == false)
+{
+     
+    <table style="width:100%;table-layout:fixed;">
+        <tr>
+            <td style="font-family:Tahoma;font-size:9pt;color:maroon;text-align:@(Model.AciklamaTextAlingCenter?"center":"left")">@Html.Raw(Model.AciklamaDetayi)</td>
+        </tr>
+    </table>
+}
+@if (Model.Detaylar.Count > 0)
+{
+    <div style="background-color:#ffffff;width:100%;float:left;margin:0px;padding:0px;border:1px solid rgb(221,221,221);">
+        <div style="padding:0px 10px 2px;min-height:25px;background-color:rgb(238,238,238)">
+            <span style="color:maroon;float:left;">@Html.Raw(Model.GrupBasligi)</span>
+        </div>
+        <div style="padding:10px;">
+            @if (Model.IsJuriBilgi)
+            {
+                <table style="width:100%;table-layout:fixed;border:1px solid;">
+                    <tbody>
+                        <tr>
+                            <th style="width:50px;"></th>
+                            <th>Jür Adı</th>
+                            <th style="width:100px;">Asil/Yedek</th>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            }
+            @foreach (var item in Model.Detaylar)
+            {
+                <table style="width:100%;table-layout:fixed;background-color:#ffffff;border:1px solid;">
+                    <tbody>
+                        @if (Model.IsJuriBilgi)
+                        {
+                            <tr>
+                                <td style="width:50px;">@item.SiraNo</td>
+                                <td>@Html.Raw(item.Baslik)</td>
+                                <td style="width:100px;">@Html.Raw(item.Aciklama)</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                @if (item.Colspan2)
+                                {
+                                    <td colspan="2">@Html.Raw(item.Aciklama)</td>
+                                }
+                                else
+                                {
+                                    <td style="width:@(Model.CaptTdWidth)px;">@Html.Raw(item.Baslik)</td>
+                                    <td><b>:</b> @Html.Raw(item.Aciklama)</td>
+
+                                }
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}

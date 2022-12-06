@@ -1,0 +1,632 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmTIBasvuru
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+    var kyetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+}
+@if (!Model.IsDegerlendirme.HasValue)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                <table style="width:100%;">
+                    <tr>
+                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Biglisi</td>
+                    </tr>
+                    <tr>
+                        <td width="200">Enstitü</td>
+                        <td width="10">:</td>
+                        <td>
+                            @bilgiModel.Enstitü.EnstituAd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ad Soyad</td>
+                        <td>:</td>
+                        <td>@bilgiModel.Kullanici.Ad @bilgiModel.Kullanici.Soyad</td>
+                    </tr>
+                    @if (bilgiModel.KullaniciTipYetki)
+                    {
+                        <tr>
+                            <td>Öğrenci No / Öğrenim Seviyesi</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Anabilim Dalı / Program</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td></td>
+                            <td>:</td>
+                            <td> @bilgiModel.KullaniciTipYetkiYokMsj</td>
+                        </tr>
+                    }
+                    @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
+                    {
+                        if (Model.AktifOgrenimIcinBasvuruVar)
+                        {
+                            <tr>
+                                <td>Not</td>
+                                <td>:</td>
+                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez izleme başvurunuz bulunmaktadır. Yeni rapor oluşturmak için aşağıda bulunan Yeni Rapor Oluştur isimli mavi butona tıklayınız </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>Başvuru Durumu</td>
+                                <td>:</td>
+                                <td>Sistem Başvuru alımına açıktır. Başvuru yapmak için Yeni Başvuru butonuna tıklayınız.</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>:</td>
+                                <td>
+                                    <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                    else
+                    {
+                        if (bilgiModel.SistemBasvuruyaAcik == false)
+                        {
+                            <tr>
+                                <td>Başvuru Durumu</td>
+                                <td>:</td>
+                                <td>
+                                    Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                    <br />
+                                    <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                                </td>
+                            </tr>
+                        }
+
+
+                    }
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+}
+<div class="row">
+    @using (Html.BeginForm())
+    {
+
+        <div class="col-md-12">
+            @Html.Hidden("IsDegerlendirme", Model.IsDegerlendirme)
+            @if (Model.IsDegerlendirme.HasValue)
+            {
+                if (Model.RowCount > 0)
+                {
+                    <div id="cls-@Model.Data.First().TIBasvuruID"></div>
+                }
+                else
+                {
+                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;font-size:12pt;color:maroon;"> Değerlendirme yapılabilecek herhangi bir tez izleme raporu bulunamadı!</div>
+                }
+
+            }
+            else
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading padding-0">
+                        <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                        <ul class="panel-controls"></ul>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="75"></th>
+                                    <th>Ad Soyad</th>
+                                    <th>Aktif Rapor Dönemi</th>
+                                    <th width="180">Aktif Rapor Durumu</th>
+                                    <th width="45"></th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                                @if (Model.RowCount > 0)
+                                {
+
+                                    int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                    foreach (var item in Model.Data)
+                                    {
+                                        RowIndex++;
+                                        trCls = RowIndex % 2 == 1 ? "" : "even";
+                                        <tr style="color:@item.DurumColor;">
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 30px;">@RowIndex</td>
+                                                        <td>
+                                                            <ul class="panel-controls">
+                                                                <li id="iShow_@item.TIBasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TIBasvuruID')">
+                                                                    <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                    <tr>
+                                                        <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                        <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                @item.TIAraRaporAktifDonemAdi<br />@(item.AraRaporSayisi.HasValue ? item.AraRaporSayisi + ". Rapor" : "")
+                                            </td>
+                                            <td>
+                                                @item.TIAraRaporRaporDurumAdi <br />@Management.toTIDegerlendirmeSonucu(item.IsOyBirligiOrCouklugu, item.IsBasariliOrBasarisiz)
+                                            </td>
+
+                                            <td>
+                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { TIBasvuruID = item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.TIBasvuruID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="cls-@item.TIBasvuruID" style="display:none">
+                                            <td id="cls-@item.TIBasvuruID" class="clspTd" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="clspTd" style="text-align: center;">
+                                            Listelenen Kayıt Yok
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        @Model.ToPagerString()
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
+{
+    <script>
+        $(function () {
+            getDetailx('@Model.Data.First().TIBasvuruID');
+        },200)
+    </script>
+}
+else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
+{
+    <script>
+        $(function () {
+            showDetail('@(Model.TIBasvuruID ?? Model.Data.First().TIBasvuruID)');
+            if ('@(Model.TIBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTIAraRaporFormu(@Model.TIBasvuruID); }, 250);
+
+        },200)
+    </script>
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        Resized(window.innerWidth);
+    })
+    function Resized(screenwidth) {
+        if (screenwidth <= 800) {
+            $('.clsHide').addClass('hide');
+            $('.clspTd').attr("colspan", "4");
+            $('.ctWidth').removeAttr('width');
+        }
+        else {
+            $('.clsHide').removeClass('hide');
+            $('.clspTd').attr("colspan", "5");
+            $('.ctWidth').attr('width', '280');
+
+        }
+    }
+    window.addEventListener('resize', function (event) {
+        Resized(window.innerWidth);
+    });
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function newApp() {
+        showDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
+    }
+
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetailx(id);
+
+    }
+    function getDetailx(id, Isdelete, sndr) {
+
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetailTIBasvuru", "Ajax")',
+            data: { id: id, UniqueID: '@Model.IsDegerlendirme', IsDelete: (Isdelete == true)  },
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    Resized(window.innerWidth);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Başvuru Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Başvuruyu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    //$(btbx).find('.modal-dialog').addClass('modal-lg');
+
+                }
+                var $YnBtn = $('#YeniRaporBtn_' + id);
+                if ($YnBtn.length > 0) {
+                    $YnBtn.pulsate({
+                        color: "#fdbe41",
+                        reach: 60,
+                        repeat: 24,
+                        speed: 300,
+                        glow: true
+                    });
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "TIBasvuru")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        var btbx = bootbox.dialog({
+            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + RaporNo + " bilgisini silmek istiyor musunuz?</td></tr></table><br/>",
+            title: "Rapor Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Raporu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("DetaySil", "TIBasvuru")',
+                            data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.IsSuccess) {
+                                    $(sndr).closest("tr").remove();
+                                    $(".cls-Rpr_" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                _pRefresh(_panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                        _pRefresh(_panel, true);
+                    }
+                }
+            }
+        });
+
+
+    }
+     function DanismanEslestir(TIBasvuruID, OgrenciNo) {
+         var _panel = $('#bsvrDet_' + TIBasvuruID);
+        _pRefresh(_panel, false);
+
+        $.ajax({
+            url: '@Url.Action("DanismanEslestir", "TIBasvuru")',
+            data: {
+                'id': TIBasvuruID,
+                'OgrenciNo': OgrenciNo,
+
+            },
+            success: function (result) {
+                _pRefresh(_panel, true);
+                if (result.IsSuccess) {
+                    getDetailx(TIBasvuruID);
+
+                }
+                showMmMessage(result.Messages, 'Tamam');
+
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        });
+    }
+
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+
+    function showSRDialog(TIBasvuruID,TIBasvuruAraRaporID, SRTalepID) {
+        var _panel = $('#bsvrDet_' + TIBasvuruID);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("RezervasyonAl", "TIBasvuru")',
+            data: { 'TIBasvuruAraRaporID': TIBasvuruAraRaporID, 'SRTalepID': SRTalepID },
+            success: function (result) {
+
+                _pRefresh(_panel, true);
+                var btbxxFS = bootbox.dialog({
+                    message: result,
+                    title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez İzleme Toplantı Bilgi Girişi' : 'Tez İzleme Toplantı Bilgileri Düzenleme'),
+                    buttons: {
+                        success: {
+                            label: "Kaydet",
+                            className: "btn-primary",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#TIAraRaporSrForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                            getDetailx(result.DialogID);
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                });
+                                $('#TIAraRaporSrForm').submit();
+
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: "Kapat",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+      function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
+          var _panel = $('#bsvrDet_' + TIBasvuruID);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTIAraRaporFormu", "TIBasvuru")',
+                data: {
+                    'TIBasvuruID': TIBasvuruID,
+                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID
+                },
+                success: function (resultG) {
+                    _pRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
+
+                                success: {
+                                    label: 'İleri',
+                                    className: "btn-info btnKaydet",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        _pRefresh(pnlx, false);
+                                        $('#FrmTIAraRaporFormu').ajaxForm({
+                                            success: function (result) { 
+                                                if (result.mMessage.IsSuccess && result.SaveData) {
+                                                    if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    getDetailx(TIBasvuruID);
+
+                                                }
+                                                else {
+                                                    $('#SelectedTabID').val(result.SelectedTabID);
+
+                                                    if (result.SelectedTabID == "4" || !result.IsYeniJO) {
+                                                        
+                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                        $('.btnKaydet').text('Kaydet');
+                                                        $('#SaveData').val("true");
+
+                                                    }
+                                                    else { 
+                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                        $('.btnKaydet').text('İleri');
+                                                        $('#SaveData').val("false");
+                                                    }
+                                                    $("[href='#tab-" + result.SelectedTabID + "']").first().click();
+                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    return false;
+                                                }
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                _pRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmTIAraRaporFormu').submit();
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+    </script>
+@if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
+{
+    <script>
+
+        function AraRaporDegerlendir(UniqueID, IsDrBurs,TIBasvuruID) {
+            var IsTezIzlemeRaporuTezOnerisiUygun = $('#IsTezIzlemeRaporuTezOnerisiUygun_' + UniqueID).val();
+            var IsTezIzlemeRaporuAltAlanUygun = $('#IsTezIzlemeRaporuAltAlanUygun_' + UniqueID).val();
+            var IsBasarili = $('#IsBasarili_' + UniqueID).val();
+            var Aciklama = $('#Aciklama_' + UniqueID).val();
+            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            bootbox.dialog({
+                message: "Tez izleme rapor değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez İzleme Raporu Değerlendirmesi",
+                buttons: {
+                    success: {
+                        label: "Evet",
+                        className: "btn-success",
+                        callback: function (event) {
+                            _pRefresh(_panel, false);
+                            $.ajax({
+                                url: '@Url.Action("AraRaporDegerlendi", "TIBasvuru")',
+                                data: {
+                                    'UniqueID': UniqueID,
+                                    'IsTezIzlemeRaporuTezOnerisiUygun': IsTezIzlemeRaporuTezOnerisiUygun,
+                                    'IsDrBurs': IsDrBurs,
+                                    'IsTezIzlemeRaporuAltAlanUygun': IsTezIzlemeRaporuAltAlanUygun,
+                                    'IsBasarili': IsBasarili,
+                                    'Aciklama': Aciklama
+
+                                },
+                                success: function (result) {
+                                    _pRefresh(_panel, true);
+                                    if (result.IsSuccess || result.IsRefresh) {
+                                        getDetailx(TIBasvuruID);
+
+                                    }
+                                    showMmMessage(result.Messages, 'Tamam');
+
+                                },
+                                error: function (err) {
+                                    _pRefresh(_panel, true);
+                                    alert(err.responseText);
+
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: "Hayır",
+                        className: "btn-primary",
+                        callback: function () {
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+
+}

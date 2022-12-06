@@ -1,0 +1,14 @@
+::1	Guest	2021-08-31 11:01:37		http://localhost:57190/fbe/tr/Account/generatecaptcha?captchaRequestCode=3552d7d8d1404f55840996b035b91c7d
+::1	Guest	2021-08-31 11:01:38		http://localhost:57190/fbe/tr/KDuyurular/getDuyuruJson
+::1	Guest	2021-08-31 11:01:42		http://localhost:57190/fbe/tr/Home/AuthenticatedControl
+::1	Guest	2021-08-31 11:01:44		http://localhost:57190/fbe/tr/Ajax/LoginControl?UserName=&Password=&captchaRequestCode=3552d7d8d1404f55840996b035b91c7d&CaptchaText=&ReturnUrl=%2Ffbe%2Ftr%2Fbasvuru%2Findex
+::1	Guest	2021-08-31 11:01:44		http://localhost:57190/fbe/tr/Account/generatecaptcha?captchaRequestCode=432abd7660ee47ef98647ed971937575
+::1	Guest	2021-08-31 11:01:47		http://localhost:57190/fbe/tr/Home/AuthenticatedControl
+::1	Guest	2021-08-31 11:01:49		http://localhost:57190/fbe/tr/Home/AuthenticatedControl
+::1	Guest	2021-08-31 11:01:56		http://localhost:57190/fbe/tr/Ajax/LoginControl?UserName=isecer&Password=irfaa&captchaRequestCode=432abd7660ee47ef98647ed971937575&CaptchaText=3381&ReturnUrl=%2Ffbe%2Ftr%2Fmezuniyet%2Findex
+::1	isecer	2021-08-31 11:02:01		http://localhost:57190/fbe/tr/mezuniyet/index
+::1	isecer	2021-08-31 11:02:06		http://localhost:57190/fbe/tr/Ajax/getKullaniciDetay?KullaniciID=37920&DilKodu=tr
+::1	isecer	2021-08-31 11:02:08		http://localhost:57190/fbe/tr/Ajax/MailGonder
+::1	isecer	2021-08-31 11:02:15		http://localhost:57190/fbe/tr/Ajax/MailGonderPost?Length=4
+::1	isecer	2021-08-31 11:02:29		http://localhost:57190/fbe/tr/Kullanicilar/Index
+::1	isecer	2021-08-31 11:02:47		http://localhost:57190/fbe/tr/BasvuruSureci/Index

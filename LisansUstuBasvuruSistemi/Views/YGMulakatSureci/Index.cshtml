@@ -1,0 +1,347 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model fmMulakatSureci
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bilgiModel = (MulakatBilgiModel)ViewBag.bModel; 
+
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var kayit = RoleNames.YGMulakatKayıt.InRoleCurrent();
+    var silme = RoleNames.YGMulakatSil.InRoleCurrent();
+
+    string _colorAna = "#268a8b";
+    string _colorMul = "green";
+    string _colorSG = "gray";
+    string _colorUyari = "red";
+}
+<div class="col-md-12">
+    <div class="panel panel-info">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title">
+                <i class="fa fa-clock-o"></i> Mülakat Süreci
+            </h3>
+            <ul class="panel-controls"></ul>
+        </div>
+        <div class="portlet-body">
+            <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                        <div class="widget widget-default" style="margin:0px;">
+                            <div class="panel-body form-group-separated">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-xs-4 control-label">Enstitü Adı</label>
+                                        <div class="col-md-8 col-xs-8" style="text-align: left;">@bilgiModel.Enstitü.EnstituAd</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-xs-4 control-label">Ad Soyad</label>
+                                        <div class="col-md-8 col-xs-8" style="text-align: left;">@UserIdentity.Current.NameSurname</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-xs-4 control-label">Anabilim Dalı / Program Yetkileri (@bilgiModel.Programlar.Count Adet)</label>
+                                        <div class="col-md-8 col-xs-8" style="text-align: left;">
+                                            @if (bilgiModel.Programlar.Count > 0)
+                                            {
+                                                <div style="max-height:100px;overflow-x:auto;">
+                                                    <table>
+                                                        @foreach (var item in bilgiModel.Programlar)
+                                                        {
+                                                            <tr>
+                                                                <td>@item </td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span>Yetkili olduğunu Program bulunamadı!</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (bilgiModel.SistemBasvuruyaAcik || bilgiModel.SistemGirisSinavBilgiAcik)
+                                    {
+                                        var nowDate = DateTime.Now;
+                                        bool MulakatBilgiGirisAcik = bilgiModel.BasvuruSurec.BaslangicTarihi <= nowDate && bilgiModel.BasvuruSurec.BitisTarihi >= nowDate;
+                                        bool MulakatNotGirisAcik = bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.HasValue && bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi <= nowDate && bilgiModel.BasvuruSurec.SonucGirisBitisTarihi >= nowDate;
+
+
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label"> Eğitim Öğretim Yılı</label>
+                                            <div class="col-md-8 col-xs-8" style="text-align: left;font-weight:bold;">
+                                                <span style="color:@_colorMul;">@bilgiModel.BasvuruSurec.BaslangicYil / @bilgiModel.BasvuruSurec.BitisYil @bilgiModel.DonemAdi</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Başvuru Süreci</label>
+                                            <div class="col-md-8 col-xs-8" style="text-align: left;font-weight:bold;">
+                                                @if (MulakatBilgiGirisAcik)
+                                                {
+                                                    <span style="color:@_colorMul;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
+                                                }
+                                                else
+                                                {
+                                                    if (bilgiModel.BasvuruSurec.BitisTarihi < nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+                                                    else if (bilgiModel.BasvuruSurec.BaslangicTarihi > nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Mülakat Jüri&Yer Bilgisi Süreci</label>
+                                            <div class="col-md-8 col-xs-8" style="text-align: left;font-weight:bold;">
+                                                @if (MulakatBilgiGirisAcik)
+                                                {
+                                                    <span style="color:@_colorMul;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
+                                                }
+                                                else
+                                                {
+                                                    if (bilgiModel.BasvuruSurec.BitisTarihi < nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+                                                    else if (bilgiModel.BasvuruSurec.BaslangicTarihi > nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Mülakat Not Giriş Süreci</label>
+                                            <div class="col-md-8 col-xs-8" style="text-align: left;font-weight:bold;">
+                                                @if (MulakatNotGirisAcik)
+                                                {
+                                                    <span style="color:@_colorMul;">@bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
+                                                }
+                                                else
+                                                {
+                                                    if (bilgiModel.BasvuruSurec.SonucGirisBitisTarihi.HasValue && bilgiModel.BasvuruSurec.SonucGirisBitisTarihi.Value < nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+                                                    else if (bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.HasValue && bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.Value > nowDate)
+                                                    {
+                                                        <span style="color:@_colorSG;">@bilgiModel.BasvuruSurec.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @bilgiModel.BasvuruSurec.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="color:@_colorUyari;">Süreç Tarihleri Belirlenmedi</span>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        if (bilgiModel.SistemBasvuruyaAcik)
+                                        {
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label"> </label>
+                                                <div class="col-md-8 col-xs-8" style="text-align: left;">
+                                                    <button type="button" class="btn btn-success" onclick="window.location.href='@Url.Action("MulakatKayit")'"><i class="fa fa-plus tooltips"></i>Yeni mülakat bilgisi tanımla</button>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label" style="font-weight:bold;">Durum</label>
+                                            <div class="col-md-8 col-xs-8" style="text-align: left;">Aktif bir mülakat süreci bulunmuyor.</div>
+                                        </div>
+
+                                    }
+
+
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp; Süreç Kayıtları</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body" style="padding-bottom:0px;">
+                    <table class="table" style="margin:0px;">
+                        <thead>
+                            <tr>
+                                <th width="80"></th>
+                                <th width="220">Başvuru Süreci</th>
+                                <th class="sirala" field="ProgramAdi">Anabilim Dalı / Program Adı</th>
+                                <th width="135" class="sirala" field="OgrenimTipAdi">Öğrenim Seviyesi</th>
+                                <th width="40"></th>
+
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>@Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control", style = "padding:0px;" })</th>
+                                <th><input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" /></th>
+                                <th>@Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control", style = "padding:0px;" })</th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    <tr class="delrw_@item.MulakatID" style="@(item.BasvuruSurecID==bilgiModel.AktifSurecID?("color:"+_colorMul+";"+"font-weight:bold;"):"")">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.MulakatID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MulakatID,'ana-')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.BasvuruSurecAdi <br />
+                                            @item.BaslangicTarihi.ToFormatDateAndTime() - @item.BitisTarihi.ToFormatDateAndTime()
+                                        <td>
+                                            @item.AnabilimDaliAdi <br />
+                                            @item.ProgramAdi
+                                        </td>
+                                        <td>
+                                            @item.OgrenimTipAdi
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("MulakatKayit", "YGMulakatSureci", new {id=item.MulakatID })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="getMDDetail('@item.MulakatID',true,this)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-ana-@item.MulakatID delrw_@item.MulakatID" style="display:none">
+                                        <td id="cls-ana-@item.MulakatID" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function showDetail(id, tip) {
+        var rwID = $('#iShow-' + tip + id);
+        var cls = 'cls-' + tip + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled && tip == "ana-") getMDDetail(id);
+    } 
+    function getMDDetail(id, Isdelete, sndr) {
+        var _panel = $('#pndMD_' + id);
+        var tbName = "@TabAdlari.MulakatDetayTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getMulakatDetay", "YGMulakatSureci")',
+            data: { BasvuruSurecID: 0, OgrenimTipKod: 0, ProgramKod: 0, tbInx: tID, IsDelete: (Isdelete == true), MulakatID: id },
+            success: function (result) {
+                _pRefresh(_panel, true);
+                if (Isdelete != true) {
+                    $('#cls-ana-' + id).html(result); 
+                }
+                else {
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Mülakat Bilgisini Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Mülakat Bilgisi Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: "Mülakat Bilgisini Sil",
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+
+                            },
+                            danger: {
+                                label: "Vazgeç",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    $(btbx).find('.modal-dialog').addClass('modal-lg');
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    
+</script>
+
+<script type="text/javascript">
+
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "YGMulakatSureci")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(".delrw_" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+ 

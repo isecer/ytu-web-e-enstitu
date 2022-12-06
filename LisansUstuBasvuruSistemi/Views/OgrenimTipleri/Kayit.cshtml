@@ -1,0 +1,400 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model OgrenimTipleri
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var otLst = (List<CmbIntDto>)ViewBag.OgrenimTipleri;
+    var scID = (List<int>)ViewBag.secilenID;
+    var MulName = Model.MulakatSurecineGirecek ? "Mükalat+" : "";
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="OgrenimTipID" name="OgrenimTipID" value="@Model.OgrenimTipID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.OgrenimTipID <= 0 ? "Yeni öğrenim tipi tanımlama işlemi" : "Öğrenim tipi bilgisi düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("Kayit", Model.OgrenimTipID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group-separated">
+                        <div class="panel" style="margin:0px; margin:0px;">
+                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-gears"></i> Genel Ayarları
+                                </h3>
+
+                            </div>
+                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-4 control-label">Enstitü</label>
+                                    <div class="col-md-8 col-xs-8">
+                                        @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "getOgrenimTips(this);" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-4 control-label">Öğrenim Tip Kod</label>
+                                    <div class="col-md-8 col-xs-8">
+                                        <input type="text" name="OgrenimTipKod" id="OgrenimTipKod" value="@Model.OgrenimTipKod.toEmptyStringZero()" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-4 control-label">Öğrenim Tip Adı</label>
+                                    <div class="col-md-8 col-xs-8">
+                                        <input type="text" name="OgrenimTipAdi" id="OgrenimTipAdi" value="@Model.OgrenimTipAdi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 col-xs-4 control-label">Grup Bilgi</label>
+                                    <div class="col-md-8 col-xs-8">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    @Html.DropDownList("GrupGoster", null, new { style = "margin:0px;width:150px;float:left;", @class = "form-control", onChange = "grupBilgiKontrol(this);" })
+                                                </td>
+                                                <td>
+                                                    <div id="GrupKoduDiv" class="input-icon right @(Model.GrupGoster ? "" : "hide")" style="width: 90px;">
+                                                        <input type="text" name="GrupKodu" id="GrupKodu" placeholder="Grup Kodu" value="@Model.GrupKodu" maxlength="5" class="form-control">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group @(Model.GrupGoster?"":"hide")" id="trGrupAdi">
+
+                                                        <input type="text" name="GrupAdi" id="GrupAdi" placeholder="Grup Adı" value="@Model.GrupAdi" class="form-control" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                                @if (Model.OgrenimTipID > 0)
+                                {
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-xs-4 control-label">Durum</label>
+                                        <div class="col-md-8 col-xs-8">
+                                            <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                                <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="panel" style="margin:0px; margin-top:10px;">
+                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-gears"></i> Lisansüstü Başvuru Ayarları
+                                </h3>
+
+                            </div>
+                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                <div class="panel" style="margin:0px; margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                        <h3 class="panel-title" style="float:right;">
+                                            <i class="fa fa-gears"></i> Başvuru Kriterleri
+                                        </h3>
+
+                                    </div>
+                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                        @if (Model.OgrenimTipID > 0)
+                                        {
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Birlikte Başvurabileceği Diğer Öğrenim Tipleri</label>
+                                                <div class="col-md-8 col-xs-8" id="bagliOT">
+                                                    <select name="secilenID" multiple class="form-control select">
+                                                        @foreach (var item in otLst)
+                                                        {
+                                                            <option value="@item.Value.Value" @(scID.Contains(item.Value.Value) ? "selected=selected" : "")>@item.Caption</option>
+                                                        }
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Lisans Eğitim Bilgileri İstensin</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="LEgitimBilgisiIste" class="toggle" @Model.LEgitimBilgisiIste.ToChecked() />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Yüksek Lisans Eğitim Bilgileri İstensin</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="YLEgitimBilgisiIste" class="toggle" @Model.YLEgitimBilgisiIste.ToChecked() />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Kaç Program Tercihi Yapabilir</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="text" name="Kota" id="Kota" value="@Model.Kota.toEmptyStringZero()" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel" style="margin:0px; margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                        <h3 class="panel-title" style="float:right;">
+                                            <i class="fa fa-gears"></i> Mülakat Kriterleri
+                                        </h3>
+
+                                    </div>
+                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Mülakat Sürecine Girecek</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="MulakatSurecineGirecek" class="toggle" @Model.MulakatSurecineGirecek.ToChecked() onchange="if ($(this).prop('checked')) { $('#mlktFormulB').removeClass('hide'); } else { $('#mlktFormulB').addClass('hide'); }" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Alaniçi Bilimsel Hazırlık</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="AlanIciBilimselHazirlik" class="toggle" @Model.AlanIciBilimselHazirlik.ToChecked() />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Alandışı Bilimsel Hazırlık</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="AlanDisiBilimselHazirlik" class="toggle" @Model.AlanDisiBilimselHazirlik.ToChecked() />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="panel" style="margin:0px; margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                        <h3 class="panel-title" style="float:right;">
+                                            <i class="fa fa-gears"></i> Hesaplama ve Kayıt Kriterleri
+                                        </h3>
+
+                                    </div>
+                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Başarı Not Ortalaması</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="text" name="BasariNotOrtalamasi" id="BasariNotOrtalamasi" value="@Model.BasariNotOrtalamasi.toEmptyStringZero()" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">GNB Formülü (Ales+@(@MulName)Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormulu" id="GBNFormulu" autocomplete="off">@Model.GBNFormulu</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">GNB Formülü (@(@MulName)Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormuluAlessiz" id="GBNFormuluAlessiz" autocomplete="off">@Model.GBNFormuluAlessiz</textarea>
+                                            </div>
+                                        </div>
+                                        <div id="mlktFormulB" class="form-group @(!Model.MulakatSurecineGirecek?"hide":"")">
+                                            <label class="col-md-4 col-xs-4 control-label">GNB Formülü (Ales+Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormuluMulakatsiz" id="GBNFormuluMulakatsiz" autocomplete="off">@Model.GBNFormuluMulakatsiz</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Dosya GBN Formülü (Dosya+@(@MulName)Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormuluD" id="GBNFormuluD" autocomplete="off">@Model.GBNFormuluD</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Dosya GBN Formülü (@(@MulName)Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormuluDDosyasiz" id="GBNFormuluDDosyasiz" autocomplete="off">@Model.GBNFormuluDDosyasiz</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group @(!Model.MulakatSurecineGirecek?"hide":"")">
+                                            <label class="col-md-4 col-xs-4 control-label">Dosya GBN Formülü (Dosya+Agno)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <textarea style="min-height:40px;" type="text" class="form-control" name="GBNFormuluDMulakatsiz" id="GBNFormuluDMulakatsiz" autocomplete="off">@Model.GBNFormuluDMulakatsiz</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Hesaplamada Belirlenecek Yedek Öğrenci Sayısı</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                @Html.DropDownList("YedekOgrenciSayisiKotaCarpani", null, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Yök Öğrenci Kaydı Kontrol Yapılsın</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="YokOgrenciKontroluYap" class="toggle" @Model.YokOgrenciKontroluYap.ToChecked() onchange="if ($(this).prop('checked')) { $('#YokKontrolDv').removeClass('hide'); } else { $('#YokKontrolDv').addClass('hide'); }" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="YokKontrolDv">
+                                            <label class="col-md-4 col-xs-4 control-label">Katkı Payı Tutarı</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="text" name="IstenecekKatkiPayiTutari" id="IstenecekKatkiPayiTutari" value="@Model.IstenecekKatkiPayiTutari" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel" style="margin:0px; margin-top:10px;">
+                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-gears"></i> Mezuniyet Başvurusu Ayarları
+                                </h3>
+
+                            </div>
+                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                <div class="panel" style="margin:0px; margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                        <h3 class="panel-title" style="float:right;">
+                                            <i class="fa fa-gears"></i> Başvuru Kriterleri
+                                        </h3>
+
+                                    </div>
+                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Mezuniyet Başvurusu Yapabilir</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                    <input type="checkbox" value="true" name="IsMezuniyetBasvurusuYapabilir" class="toggle" @Model.IsMezuniyetBasvurusuYapabilir.ToChecked() onchange="if ($(this).prop('checked')) { $('.MBYapabilir').removeClass('hide'); } else { $('.MBYapabilir').addClass('hide'); }" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="MBYapabilir @(Model.IsMezuniyetBasvurusuYapabilir ? "" : "hide")">
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Son Dönem Kayıt Yaptırması Gereken Ders Kodları</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" id="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@Model.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Tüm Dönem Toplam Kredi Kriteri</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" name="MBasvuruToplamKrediKriteri" id="MBasvuruToplamKrediKriteri" value="@Model.MBasvuruToplamKrediKriteri" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Genel AGNO Kriteri</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" name="MBasvuruAGNOKriteri" id="MBasvuruAGNOKriteri" value="@Model.MBasvuruAGNOKriteri" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Genel AKTS Kriteri</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" name="MBasvuruAKTSKriteri" id="MBasvuruAKTSKriteri" value="@Model.MBasvuruAKTSKriteri" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">SR Talebini Kaç Gün Sonra Alabilir</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" name="MBSRTalebiKacGunSonraAlabilir" id="MBSRTalebiKacGunSonraAlabilir" value="@Model.MBSRTalebiKacGunSonraAlabilir" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel MBYapabilir @(Model.IsMezuniyetBasvurusuYapabilir?"":"hide")" style="margin:0px; margin:0px;">
+                                    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                        <h3 class="panel-title" style="float:right;">
+                                            <i class="fa fa-gears"></i> Tez Sınavı ve Tez Teslimi Kriterleri
+                                        </h3>
+
+                                    </div>
+                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Tez Sınavı Uzatma Süresi (Gün)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="text" name="MBSinavUzatmaSuresiGun" id="MBSinavUzatmaSuresiGun" value="@Model.MBSinavUzatmaSuresiGun" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-xs-4 control-label">Tez Teslim Süresi (Gün)</label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <input type="text" name="MBTezTeslimSuresiGun" id="MBTezTeslimSuresiGun" value="@Model.MBTezTeslimSuresiGun" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+           
+        </div>
+    </form>
+</div>
+<script>
+    function grupBilgiKontrol(sndr) {
+        var val = $(sndr).val().toLowerCase();
+        if (val == "true") {
+            $('#trGrupAdi').removeClass("hide");
+            $('#GrupKoduDiv').removeClass("hide");
+            if ($('#GrupKodu').val() == null || $('#GrupKodu').val() == "") {
+                var gd = (Math.random().toString(16) + "000000000").substr(2, 5)
+                $('#GrupKodu').val(gd.toUpperCase());
+            }
+        }
+        else if (val == "false") {
+            $('#trGrupAdi').addClass("hide");
+            $('#GrupKoduDiv').addClass("hide");
+        }
+    }
+    $('#Kota').keydown(function (e) {
+        myMask(e, this, true, 2, null, null);
+    });
+    $(function () {
+
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+    function getOgrenimTips(sndr) {
+        var sndrVal = $(sndr).val();
+
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getOts", "Ajax")',
+                data: { 'EnstituKod': sndrVal, 'bosSecimVar':'false','HaricOgreniTipKod':'@Model.OgrenimTipKod.toEmptyStringZero()' },
+                success: function (result) {
+                    var opt = "<select name='secilenID' id='secilenID' multiple class='form-control select'>";
+                    for (var i = 0; i < result.length; i++) {
+                        opt += "<option value=" + result[i].Value + ">" + result[i].Caption + "</option>"
+                    }
+                    opt += "</select>";
+                    $('#bagliOT').html(opt);
+                    $('#secilenID').selectpicker();
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    $('#bagliOT').html('');
+                }
+            });
+        }
+        else {
+            $('#bagliOT').html('');
+        }
+    }
+
+</script>

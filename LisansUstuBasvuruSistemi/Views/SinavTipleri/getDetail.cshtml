@@ -1,0 +1,511 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model frSinavTipleri
+@{
+
+    Layout = null;
+    var tbName = TabAdlari.SinavTipTN + "-" + Model.SinavTipID;
+}
+<div class="panel panel-success" id="STDetay_@Model.SinavTipID">
+    <div class="panel-heading  padding-0">
+        <div class="portlet-title">
+            <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+            <ul class="panel-controls">
+                <li><a href="javascript:void(0)" onclick="getDetail('@Model.SinavTipID')" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body" style="padding: 0px; min-height:600px;">
+        <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+            <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                <div class="panel-body" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body form-group-separated">
+                        <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
+                            <ul class="nav nav-tabs BsTabBtn_@Model.SinavTipID" role="tablist">
+                                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-file-text myCaptionTdx"></i>&nbsp; <span class="myCaptionTdx">Ana Not Kriterleri</span></a></li>
+
+                                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx"></i>&nbsp; <span class="myCaptionTdx">Programa Göre Not Kriteleri</span></a></li>
+
+                            </ul>
+                            <div class="panel-body tab-content BsTabCont_@Model.SinavTipID" style="padding:0px;">
+                                <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />
+                                <div class="tab-pane @(Model.SelectedTabIndex == 1 ? "active" : "")" id="@tbName-1">
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Enstitü</label>
+                                        <div class="col-md-8 col-sm-7">@Model.EnstituAd</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Grup Adı</label>
+                                        <div class="col-md-8 col-sm-7">@Model.SinavTipGrupAdi</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Sınav Tip Kodu</label>
+                                        <div class="col-md-8 col-sm-7">@Model.SinavTipKod</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Web servisi</label>
+                                        <div class="col-md-8 col-sm-7">
+                                            <span class="label label-@(Model.WebService ? "success" : "danger")">@Model.WebService.ToEvetHayir()</span>
+                                        </div>
+                                    </div>
+                                    @if (Model.WebService)
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-sm-5 control-label">Web servisi kodu</label>
+                                            <div class="col-md-8 col-sm-7">
+                                                @Model.WebServiceKod
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-sm-5 control-label">Web servisi dönemler</label>
+                                            <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                <table class="table" style="width:100%;table-layout:fixed;">
+                                                    @if (Model.krSinavTipleriDonems.Count == 0)
+                                                    {
+                                                        <tr>
+                                                            <td colspan="3" style="color:red;">Dönem Tanımlaması Yapılmamış! <br /> Lütfen Dönem Tanımlamas Yapınız!</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <th>Yıl</th> 
+                                                            <th width="110"></th>
+                                                        </tr>
+                                                        foreach (var kt in Model.krSinavTipleriDonems.OrderBy(o => o.Yil).ThenBy(t => t.WsDonemKod))
+                                                        {
+                                                            <tr>
+                                                                <td>@kt.Yil</td> 
+                                                                <td>@(kt.IsTaahhutVar ? "Taahhüt Var" : "Taahhüt Yok")</td>
+                                                            </tr>
+
+                                                        }
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.TarihGirisMaxGecmisYil.HasValue)
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-sm-5 control-label">Alınabilecek maksimum geçmiş yıl</label>
+                                            <div class="col-md-8 col-sm-7">
+                                                @Model.TarihGirisMaxGecmisYil
+                                            </div>
+                                        </div>
+
+                                    }
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Özel Tarih</label>
+                                        <div class="col-md-8 col-sm-7">
+                                            <span class="label label-@(Model.OzelTarih ? "success" : "danger")">@Model.OzelTarih.ToEvetHayir()</span>
+                                        </div>
+                                    </div>
+
+                                    @if (Model.OzelTarih)
+                                    {
+
+                                        <div class="form-group">
+                                            @if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarihler)
+                                            {
+                                                <label class="col-md-4 col-sm-5 control-label">Tanımlanan Özel Tarihler</label>
+                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                    <table class="table" style="width:100%;table-layout:fixed;">
+                                                        @if (Model.SinavTarihleris.Count == 0)
+                                                        {
+                                                            <tr>
+                                                                <td style="color:red;">Sınav Tarihi Tanımlaması Yapılmamış! <br /> Lütfen Sınav Tarihi Tanımlamas Yapınız!</td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <th>Tarih</th>
+                                                            </tr>
+
+                                                            foreach (var kt in Model.SinavTarihleris.OrderByDescending(o => o.SinavTarihi))
+                                                            {
+                                                                <tr>
+                                                                    <td>@kt.SinavTarihi.ToDateString()</td>
+                                                                </tr>
+
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            }
+                                            else if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarihdenOncesi)
+                                            {
+                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
+                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                    @Model.Tarih1.ToDateString() tarihi ve önceki sınavlar
+                                                </div>
+                                            }
+                                            else if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarhidenSonrasi)
+                                            {
+                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
+                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                    @Model.Tarih1.ToDateString() tarihi ve sonraki sınavlar
+                                                </div>
+                                            }
+                                            else if (Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi)
+                                            {
+                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
+                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                    Başlangıç tarihi @Model.Tarih1.ToDateString()  ile Bitiş tarihi @Model.Tarih2.ToDateString() aralığındaki sınavlar
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Özel Not</label>
+                                        <div class="col-md-8 col-sm-7">
+                                            <span class="label label-@(Model.OzelNot ? "success" : "danger")">@Model.OzelNot.ToEvetHayir()</span>
+                                        </div>
+                                    </div>
+
+                                    @if (Model.OzelNot)
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-sm-5 control-label">Tanımlanan Özel Notlar</label>
+                                            <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
+                                                <table class="table" style="width:100%;table-layout:fixed;">
+                                                    @if (Model.SinavNotlaris.Count > 0)
+                                                    {
+                                                        <tr>
+                                                            <th>Not Adı </th>
+                                                            <th width="80">Not Değeri</th>
+                                                        </tr>
+                                                        foreach (var kt in Model.SinavNotlaris.OrderBy(o => o.SinavNotAdi))
+                                                        {
+                                                            <tr>
+                                                                <td>@kt.SinavNotAdi</td>
+                                                                <td>@kt.SinavNotDeger</td>
+                                                            </tr>
+
+                                                        }
+                                                    }
+                                                    else if (Model.SinavTiplerSubSinavAraliks.Count > 0)
+                                                    {
+                                                        <tr>
+                                                            <th>Not Aralık Adı </th>
+                                                            <th width="80">Min</th>
+                                                            <th width="80">Max</th>
+                                                            <th width="120">Dönüşüm formülü</th>
+                                                        </tr>
+                                                        foreach (var kt in Model.SinavTiplerSubSinavAraliks.OrderBy(o => o.SubSinavAralikAdi))
+                                                        {
+                                                            <tr>
+                                                                <td>@kt.SubSinavAralikAdi</td>
+                                                                <td>@kt.SubSinavMin</td>
+                                                                <td>@kt.SubSinavMax</td>
+                                                                <td>
+                                                                    <img src="~/Images/formul.jpg" style="width:20px;height:20px;cursor:pointer" title="@kt.NotDonusumFormulu" />
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                    }
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-md-4 col-sm-5 control-label">Küsürat Girişi</label>
+                                            <div class="col-md-8 col-sm-7">
+                                                <span class="label label-@(Model.KusuratVar ? "success" : "danger")">@Model.KusuratVar.ToEvetHayir()</span>
+                                            </div>
+                                        </div>
+
+                                    }
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Sınavın isteneceği Öğrenim Seviyeleri ve Not Aralıkları / Sınavın gözükmeyeceği programlar</label>
+                                        <div class="col-md-8 col-sm-7">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Öğrenim Tipi</th>
+                                                        <th width="30">Dil</th>
+                                                        <th width="60">Geçerli</th>
+                                                        <th width="60">İstensin</th>
+                                                        <th width="70">Min</th>
+                                                        <th width="70">Max</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item2 in Model.SinavTipleriOTNotAraliklariList)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item2.OgrenimTipAdi
+                                                            </td>
+                                                            <td>
+                                                                @(item2.Ingilizce ? "En" : "Tr")
+                                                            </td>
+                                                            <td>
+                                                                <span class="label label-@(item2.IsGecerli ? "success" : "danger")">@item2.IsGecerli.ToEvetHayir()</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="label label-@(item2.IsIstensin ? "success" : "danger")">@item2.IsIstensin.ToEvetHayir()</span>
+                                                            </td>
+
+                                                            <td>
+                                                                @if (item2.IsOzelNotAralik || item2.Min.HasValue)
+                                                                {
+                                                                    <span>@item2.Min</span>
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                @if (item2.IsOzelNotAralik || item2.Min.HasValue)
+                                                                {
+                                                                    <span>@item2.Max</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        if (item2.IstenmeyenProgramlar.Count > 0)
+                                                        {
+                                                            <tr>
+                                                                <td colspan="6">
+                                                                    <table style="width:100%;table-layout:fixed;">
+                                                                        <tr>
+                                                                            <td style="width:40px;"></td>
+                                                                            <td>* @Model.SinavAdi sınavı @item2.OgrenimTipAdi @(item2.Ingilizce ? "İngilizce" : "Türkçe") eğitim dilini kapsayan aşağıdaki program başvurularında gözükmeyecek</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="width:40px;"></td>
+                                                                            <td>
+                                                                                <table style="width:100%;table-layout:fixed;" class="table">
+                                                                                    @foreach (var itemIP in item2.IstenmeyenProgramlar)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td style="width:40px;">
+                                                                                                @itemIP.Value
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                @itemIP.Caption
+                                                                                            </td>
+
+                                                                                        </tr>
+                                                                                    }
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+
+
+                                                                    </table>
+                                                                </td>
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+ 
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">Not Dönüşümü</label>
+                                        <div class="col-md-8 col-sm-7">
+                                            <span class="label label-@(Model.NotDonusum ? "success" : "danger")">@Model.NotDonusum.ToEvetHayir()</span>
+                                            @if (Model.NotDonusum)
+                                            {
+                                                <span> Formül: @Model.NotDonusumFormulu </span>
+                                            }
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="form-group">
+                                        <label class="col-md-4 col-sm-5 control-label">İşlem Yapan</label>
+                                        <div class="col-md-8 col-sm-7">@Model.IslemYapan [@Model.IslemTarihi.ToFormatDateAndTime()]</div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "")" id="@tbName-2">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading  padding-0">
+                                            <div class="portlet-title">
+                                                <ul class="panel-controls">
+                                                    <li><a href="javascript:void(0)" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("STProgramaOzelNotKriterEkle", "SinavTipleri", new { id = "", SinavTipID = Model.SinavTipID })')" class="panel-refresh" title="Yeni Ekle"><span class="fa fa-plus"></span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding: 0px;">
+                                        <div class="col-md-12" style="text-align: left;  height: 464px; overflow: auto;">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="75"></th>
+                                                        <th>Kriter</th>
+                                                        <th width="150">Toplam Program</th>
+                                                        <th width="30"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.frSinavTipleriSPA.Count > 0)
+                                                    {
+                                                        int RowIndex = 0; string trCls = "odd";
+                                                        foreach (var item in Model.frSinavTipleriSPA)
+                                                        {
+                                                            RowIndex++;
+                                                            trCls = RowIndex % 2 == 1 ? "" : "even";
+                                                            <tr>
+                                                                <td>
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td style="width: 30px;">@RowIndex</td>
+                                                                            <td>
+                                                                                <ul class="panel-controls">
+                                                                                    <li id="iShow-@item.SinavTipleriOT_SNAID" onclick="showDetailx('@item.SinavTipleriOT_SNAID')">
+                                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td>Kriter @RowIndex</td>
+                                                                <td style="text-align:center;">@item.SinavTipleriOT_SNA_PR.Count</td>
+                                                                <td>
+                                                                    <a href="javascript:void(0);" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("STProgramaOzelNotKriterEkle", "SinavTipleri", new { id = item.SinavTipleriOT_SNAID, SinavTipID = Model.SinavTipID })')"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                                    <a href="javascript:void(0);" onclick="STPKSil('@item.SinavTipleriOT_SNAID',@Model.SinavTipID)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="cls-@item.SinavTipleriOT_SNAID" style="display:none">
+                                                                <td id="cls-@item.SinavTipleriOT_SNAID" colspan="4">
+                                                                    <div class="panel panel-success">
+                                                                        <div class="panel-heading  padding-0">
+                                                                            <div class="portlet-title">
+                                                                                <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="panel-body" style="padding: 0px;">
+                                                                            <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+                                                                                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                                                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                                        <div class="panel-body form-group-separated">
+
+                                                                                            <div class="form-group">
+                                                                                                <label class="col-md-3 control-label">Ö.S. Bilgi</label>
+                                                                                                <div class="col-md-9">
+                                                                                                    <table class="table">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th>Öğrenim Tipi</th>
+                                                                                                                <th width="30">Dil</th>
+                                                                                                                <th width="80">Geçerli</th>
+                                                                                                                <th width="80">İstensin</th>
+                                                                                                                <th width="70">Min</th>
+                                                                                                                <th width="70">Max</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            @foreach (var item2 in item.SinavTipleriOTNotAraliklariList)
+                                                                                                            {
+                                                                                                                <tr>
+                                                                                                                    <td>
+                                                                                                                        @item2.OgrenimTipAdi
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        @(item2.Ingilizce ? "En" : "Tr")
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        <span class="label label-@(item2.IsGecerli ? "success" : "danger")">@(item2.IsGecerli ? "Geçerli" : "Geçersiz")</span>
+
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        <span class="label label-@(item2.IsIstensin ? "success" : "danger")">@(item2.IsIstensin ? "İstensin" : "İstenmesin")</span>
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        @item2.Min
+                                                                                                                    </td>
+                                                                                                                    <td>
+                                                                                                                        @item2.Max
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            }
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="form-group">
+                                                                                                <label class="col-md-3 control-label">Programlar</label>
+                                                                                                <div class="col-md-9" style="max-height: 150px; overflow: auto;">
+                                                                                                    <table class="table" style="width:100%;table-layout:fixed;">
+                                                                                                        <tr>
+                                                                                                            <th width="80">Kod</th>
+                                                                                                            <th>Program Adı</th>
+                                                                                                        </tr>
+                                                                                                        @foreach (var kt in item.SinavTipleriOT_SNA_PR)
+                                                                                                        {
+                                                                                                            <tr>
+                                                                                                                <td>@kt.ProgramKod</td>
+                                                                                                                <td>@kt.Programlar.ProgramAdi</td>
+                                                                                                            </tr>
+
+                                                                                                        }
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td colspan="4" style="text-align: center;">
+                                                                [ Listelenen Kayıt Yok ]
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+    function showDetailx(id) {
+        var sndr = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(sndr, cls, unTogled);
+    }
+
+
+</script>
+
+

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0e627b69ebd249c39d55ddb35390f018" Name="Diagram1" ZoomLevel="52">
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlanTipleri" Width="1.5" PointX="5.25" PointY="206.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="175.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnabilimDallari" Width="1.5" PointX="5.25" PointY="242.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Anket" Width="1.5" PointX="10.5" PointY="197.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketCevaplari" Width="1.5" PointX="7.5" PointY="184.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoru" Width="1.5" PointX="12.75" PointY="220.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoruSecenek" Width="1.5" PointX="15" PointY="220.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Ayarlar" Width="1.5" PointX="5.25" PointY="171.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Aylar" Width="1.5" PointX="29.75" PointY="243" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="8.25" PointY="180.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleri" Width="1.5" PointX="5.25" PointY="213.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="7.5" PointY="214.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruDurumlari" Width="1.5" PointX="5.25" PointY="201.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Basvurular" Width="1.5" PointX="5.25" PointY="183.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularSinavBilgi" Width="1.5" PointX="10.5" PointY="189.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleri" Width="1.5" PointX="7.5" PointY="194" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="15.75" PointY="183.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="7.5" PointY="200.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurec" Width="1.5" PointX="27.75" PointY="213.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="36" PointY="218" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="38.25" PointY="221.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="25.5" PointY="229.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKotalar" Width="1.5" PointX="24.75" PointY="217.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="33" PointY="218.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="38" PointY="200" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOtoMail" Width="1.5" PointX="33" PointY="222" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="30" PointY="233.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="12.75" PointY="181.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="41.25" PointY="220.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="41.25" PointY="218" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="39" PointY="208.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="44.25" PointY="211.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="41.25" PointY="211" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="36" PointY="211.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="38.25" PointY="217.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="18.75" PointY="216.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="33" PointY="212.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="21.75" PointY="218.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="41.25" PointY="214.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecTipleri" Width="1.5" PointX="25.5" PointY="226.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeDurumlari" Width="1.5" PointX="5.25" PointY="217.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepAyarlar" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepleri" Width="1.5" PointX="20.75" PointY="222" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetay" Width="1.5" PointX="13.5" PointY="200.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetayBelgeler" Width="1.5" PointX="17.75" PointY="223.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetaySaatler" Width="1.5" PointX="26.75" PointY="191.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipleri" Width="1.5" PointX="5.25" PointY="231.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Birimler" Width="1.5" PointX="5.25" PointY="235.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BolumEslestir" Width="1.5" PointX="18.75" PointY="187.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Cinsiyetler" Width="1.5" PointX="0.75" PointY="201.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Donemler" Width="1.5" PointX="25.5" PointY="231.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.DuyuruEkleri" Width="1.5" PointX="15.75" PointY="200.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Duyurular" Width="1.5" PointX="13.5" PointY="205.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Enstituler" Width="1.5" PointX="5.25" PointY="221.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailEkleri" Width="1.5" PointX="9.75" PointY="220.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailKullanicilar" Width="1.5" PointX="12.75" PointY="197.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailler" Width="1.5" PointX="7.5" PointY="205.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.HaftaGunleri" Width="1.5" PointX="29.75" PointY="237.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kampusler" Width="1.5" PointX="27.75" PointY="166" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KayitDurumlari" Width="1.5" PointX="13.5" PointY="174.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kotalar" Width="1.5" PointX="24.75" PointY="210.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciEnstituYetkileri" Width="1.5" PointX="15.5" PointY="196" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kullanicilar" Width="1.5" PointX="3" PointY="179.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciLisansBilgileri" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciProgramlari" Width="1.5" PointX="18.75" PointY="203.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciTipleri" Width="1.5" PointX="0.75" PointY="189.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.LisansTipleri" Width="1.5" PointX="5.25" PointY="168.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Log" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlari" Width="1.5" PointX="16.5" PointY="212.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlariEkleri" Width="1.5" PointX="18.75" PointY="213.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonTipleri" Width="1.5" PointX="14.25" PointY="234.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MedeniHaller" Width="1.5" PointX="3" PointY="175.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Menuler" Width="1.5" PointX="8" PointY="169" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajEkleri" Width="1.5" PointX="32" PointY="196.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajKategorileri" Width="1.5" PointX="13.5" PointY="215.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mesajlar" Width="1.5" PointX="29.75" PointY="194.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetAyarlar" Width="1.5" PointX="2.75" PointY="4.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Width="1.5" PointX="23.75" PointY="191.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="26" PointY="173.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="33" PointY="185.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="26" PointY="178.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="28.25" PointY="178" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSinavDurumlari" Width="1.5" PointX="33" PointY="182" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureci" Width="1.5" PointX="26.75" PointY="195.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="35" PointY="206.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailTezTeslim" Width="1.5" PointX="4.75" PointY="4.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="7.5" PointY="270.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="15.5" PointY="229.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail" Width="1.5" PointX="29" PointY="183.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="30.75" PointY="170.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="30.75" PointY="160.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="21.5" PointY="181.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="30.75" PointY="166.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="30.75" PointY="163" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="30.75" PointY="191.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinTurleri" Width="1.5" PointX="13.25" PointY="187.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleri" Width="1.5" PointX="10.5" PointY="214.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="29.5" PointY="201.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mulakat" Width="1.5" PointX="21.75" PointY="186.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatDetay" Width="1.5" PointX="30" PointY="188" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatJuri" Width="1.5" PointX="24" PointY="185" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSinavTurleri" Width="1.5" PointX="27.75" PointY="169.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonuclari" Width="1.5" PointX="15.75" PointY="188.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonucTipleri" Width="1.5" PointX="13.5" PointY="177.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.NotSistemleri" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenciBolumleri" Width="1.5" PointX="5.25" PointY="164.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="182" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleri" Width="1.5" PointX="16.5" PointY="203.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleriOrtBasvr" Width="1.5" PointX="8.75" PointY="4.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelNotTipleri" Width="1.5" PointX="16.25" PointY="177.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelTarihTipleri" Width="1.5" PointX="16.25" PointY="174.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramKullaniciTipleri" Width="1.5" PointX="18.75" PointY="210.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Programlar" Width="1.5" PointX="10.5" PointY="202.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="12.75" PointY="184.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlesEslesmeleri" Width="1.5" PointX="18.75" PointY="184.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarEkBilgi" Width="1.5" PointX="4.75" PointY="8.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Roller" Width="1.5" PointX="10.25" PointY="185.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Sehirler" Width="1.5" PointX="5.25" PointY="209.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SikcaSorulanSorular" Width="1.5" PointX="6.75" PointY="8.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavDilleri" Width="1.5" PointX="8.25" PointY="176.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavNotlari" Width="1.5" PointX="20.75" PointY="197.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavSonuclari" Width="1.5" PointX="8.75" PointY="7.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTarihleri" Width="1.5" PointX="20.75" PointY="200.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipGruplari" Width="1.5" PointX="8.25" PointY="173.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleri" Width="1.5" PointX="18.5" PointY="192.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDil" Width="1.5" PointX="24.75" PointY="188.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDonem" Width="1.5" PointX="27.75" PointY="188" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA" Width="1.5" PointX="20.75" PointY="206.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="23" PointY="206.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="27" PointY="209.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="29.75" PointY="209.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="17.75" PointY="219.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="20.75" PointY="191.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemBilgilendirme" Width="1.5" PointX="5.25" PointY="239.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemDilleri" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRAyarlar" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRDurumlari" Width="1.5" PointX="29.75" PointY="173.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimGunler" Width="1.5" PointX="12.75" PointY="224.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimlar" Width="1.5" PointX="7.5" PointY="224" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimSaatler" Width="1.5" PointX="9.75" PointY="233.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimTipleri" Width="1.5" PointX="5.25" PointY="247.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSaatler" Width="1.5" PointX="23.75" PointY="223.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonDurumlari" Width="1.5" PointX="10.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonlar" Width="1.5" PointX="13.5" PointY="211.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonTalepTipleri" Width="1.5" PointX="15.75" PointY="226.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepleri" Width="1.5" PointX="32" PointY="199.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepleriBezCiltFormu" Width="1.5" PointX="34.25" PointY="226.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTaleplerJuri" Width="1.5" PointX="35.25" PointY="189.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipKullanicilar" Width="1.5" PointX="8" PointY="190.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleri" Width="1.5" PointX="29.75" PointY="227.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleriAktifAylar" Width="1.5" PointX="32" PointY="227.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.sysdiagram" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepArGorStatuleri" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepDurumlari" Width="1.5" PointX="7.5" PointY="229.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="12" PointY="227.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepler" Width="1.5" PointX="9.75" PointY="225.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSureciTalepTipleri" Width="1.5" PointX="9.75" PointY="275.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSurecleri" Width="1.5" PointX="7.5" PointY="275.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepTipleri" Width="1.5" PointX="7.5" PointY="232.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOAyarlar" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuru" Width="1.5" PointX="21.75" PointY="210.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruDanisman" Width="1.5" PointX="30" PointY="214.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruEsDanisman" Width="1.5" PointX="32.25" PointY="231.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDODanismanTalepTipleri" Width="1.5" PointX="27.75" PointY="232.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIAyarlar" Width="1.5" PointX="4.75" PointY="12.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuru" Width="1.5" PointX="26.75" PointY="201.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRapor" Width="1.5" PointX="35" PointY="196.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="32.75" PointY="179.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="40.25" PointY="198" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Universiteler" Width="1.5" PointX="26" PointY="161.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Unvanlar" Width="1.5" PointX="0.75" PointY="178.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Uyruklar" Width="1.5" PointX="0.75" PointY="194.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekimTipleri" Width="1.5" PointX="16.25" PointY="170.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekipTipDetay" Width="1.5" PointX="12.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGruplari" Width="1.5" PointX="0.75" PointY="198.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGrupRolleri" Width="1.5" PointX="15.5" PointY="180.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ZamanTipleri" Width="1.5" PointX="30.75" PointY="240.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="6.75" PointY="12.75" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleri_AlanTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_AlanTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AlesTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Programlar_AlesTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramlarAlesEslesmeleri_AlesTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnabilimDallari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Programlar_AnabilimDallari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_AnabilimDallari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Anket_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Anket_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_Anket" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketSoru_Anket" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_Anket" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureci_Anket" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_AnketSoru" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_AnketSoruSecenek" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_BelgeTalepleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketCevaplari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AnketSoruSecenek_AnketSoru" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Ayarlar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepTipleriAktifAylar_Aylar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Programlar_BasvuruAgnoAlimTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruBelgeTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruBelgeTipleriYuklemeSekli_BasvuruBelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularYuklenenBelgeler_BasvuruBelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecBelgeTipleri_BasvuruBelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecBelgeTipleriYuklemeSekli_BasvuruBelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruDurumlari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_BasvuruDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_Cinsiyetler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Basvurular_MedeniHaller" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularSinavBilgi_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleri_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularYuklenenBelgeler_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailler_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_Basvurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularSinavBilgi_SinavDilleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularSinavBilgi_SinavTipGruplari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularSinavBilgi_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleri_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleriKayitOdemeleri_BasvurularTercihleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_BasvurularTercihleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleriKayitOdemeleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_BasvuruSurecKontrolTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_BasvuruSurecTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurec_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecBelgeTipleri_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecKotalar_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecMulakatSinavTurleri_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOgrenimTipleri_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOtoMail_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOTOrtBasvr_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOT_SNA_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOTNotAraliklari_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mulakat_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_BasvuruSurec" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecBelgeTipleriYuklemeSekli_BasvuruSurecBelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecKotalar_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecMulakatSinavTurleri_MulakatSinavTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOgrenimTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOtoMail_ZamanTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_OgrenciBolumleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecProgramlarAlandisiBolumKisitlamalari_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavNotlari_BasvuruSurecSinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTarihleri_BasvuruSurecSinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_OzelNotTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_OzelTarihTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_SinavTipGruplari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_WsSinavCekimTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriDil_BasvuruSurecSinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriDonem_BasvuruSurecSinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTiplerSubSinavAralik_BasvuruSurecSinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriDil_SinavDilleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriDonem_SinavDilleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOT_SNA_OT_BasvuruSurecSinavTipleriOT_SNA" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_BasvuruSurecSinavTipleriOT_SNA" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOT_SNA_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOT_SNA_PR_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOTNotAraliklari_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_BasvuruSurecSinavTipleriOTNotAraliklari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kotalar_BasvuruSurecTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeDurumlari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_BelgeDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_BelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetay_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetay_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetay_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetayBelgeler_BelgeTipDetay" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetaySaatler_BelgeTipDetay" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetayBelgeler_BelgeTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipDetaySaatler_HaftaGunleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BelgeTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Birimler_Birimler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Birimler_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Birimler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BolumEslestir_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BolumEslestir_OgrenciBolumleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BolumEslestir_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Cinsiyetler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureci_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleri_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleri_Donemler1" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRapor_Donemler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_DuyuruEkleri_Duyurular" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Duyurular_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Duyurular_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Enstituler_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailler_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kotalar_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_KullaniciEnstituYetkileri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MailSablonlari_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MesajKategorileri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mesajlar_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureci_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_OgrenimTipleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOTNotAraliklari_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimlar_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSalonlar_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepSurecleri_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_Enstituler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailEkleri_GonderilenMailler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailKullanicilar_GonderilenMailler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailKullanicilar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailler_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_GonderilenMailler_Mesajlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimGunler_HaftaGunleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSaatler_HaftaGunleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_HaftaGunleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatDetay_Kampusler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_KayitDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kotalar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kotalar_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_KullaniciEnstituYetkileri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_KullanicilarDanisman" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Sehirler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Sehirler1" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Sehirler2" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Unvanlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Uyruklar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Kullanicilar_YetkiGruplari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_KullaniciProgramlari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_LisansTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MailSablonlari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MesajKategorileri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mesajlar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureci_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYayinTurleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mulakat_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_OgrenciBolumleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_OgrenimTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Programlar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Sehirler_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SistemBilgilendirme_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSalonlar_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepler_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRapor_Kullanicilar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_KullaniciProgramlari_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramKullaniciTipleri_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Programlar_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepTipKullanicilar_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_KullaniciTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MailSablonlari_MailSablonTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MailSablonlariEkleri_MailSablonlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MesajEkleri_Mesajlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mesajlar_MesajKategorileri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mesajlar_Mesajlar1" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_MezuniyetSureci" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_MezuniyetYayinKontrolDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinBelgeTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinIndexTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinLinkTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinMetinTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinProjeTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetYayinTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_MezuniyetJuriOneriFormlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_Universiteler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_MezuniyetSinavDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_MezuniyetSinavDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_MezuniyetSureci" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSurecOtoMail_MezuniyetSureci" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetSureciYonetmelikleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciYonetmelikleriOT_MezuniyetYayinTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYayinTurleri_MezuniyetYayinLinkTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYayinTurleri_MezuniyetYayinLinkTurleri1" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYayinTurleri_MezuniyetYayinMetinTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYayinTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetYonetmelikleriOT_MezuniyetYonetmelikleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_Mulakat_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatDetay_Mulakat" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatJuri_Mulakat" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_Mulakat" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatDetay_MulakatSinavTurleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_MulakatSonucTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_OgrenciBolumleri_OgrenciBolumleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramlarAlandisiBolumKisitlamalari_OgrenciBolumleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_OgrenimDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_OzelNotTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_OzelTarihTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramKullaniciTipleri_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramlarAlandisiBolumKisitlamalari_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_ProgramlarAlesEslesmeleri_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOT_SNA_PR_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_Programlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_YetkiGrupRolleri_Roller" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriDil_SinavDilleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriDonem_SinavDilleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavNotlari_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTarihleri_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_SinavTipGruplari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleri_WsSinavCekimTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriDil_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriDonem_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOT_SNA_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOTNotAraliklari_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTiplerSubSinavAralik_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_SinavTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOT_SNA_OT_SinavTipleriOT_SNA" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOT_SNA_PR_SinavTipleriOT_SNA" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SinavTipleriOTNotAraliklariGecersizProgramlar_SinavTipleriOTNotAraliklari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_SRDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimGunler_SROzelTanimlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimlar_SROzelTanimTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimlar_SRTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SROzelTanimSaatler_SROzelTanimlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSaatler_SRSalonlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSalonTalepTipleri_SRSalonlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_SRSalonlar" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRSalonTalepTipleri_SRTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_SRTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_TIBasvuruAraRapor" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleriBezCiltFormu_SRTalepleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_SRTalepleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepTipKullanicilar_SRTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepTipleriAktifAylar_SRTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepler_TalepDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepBelgeleri_TalepGelenTalepler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepler_TalepSurecleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepler_TalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepSureciTalepTipleri_TalepSurecleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TalepSureciTalepTipleri_TalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_TDOBasvuruDanisman" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_TDOBasvuru" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruDanisman_TDODanismanTalepTipleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TDOBasvuruEsDanisman_TDOBasvuruDanisman2" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuru_TIBasvuruAraRapor" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRapor_TIBasvuru" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRapor_TIBasvuruAraRaporDurumlari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRaporKomite_TIBasvuruAraRapor" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRaporKomite_Universiteler" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_YetkiGrupRolleri_YetkiGruplari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.KullaniciRolleri" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.MenuRollleri" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

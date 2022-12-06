@@ -1,0 +1,107 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model BasvuruBilgiModel
+@{
+    Layout = null; 
+    var kul = (Kullanicilar)ViewBag.Kullanici;
+    var kulTip = kul.KullaniciTipleri.KullaniciTipAdi;
+}
+
+<div class="col-md-12">
+    <div class="panel panel-info">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title">
+                <i class="fa fa-bullhorn"></i> Başvuru Bilgisi
+            </h3>
+            <ul class="panel-controls"></ul>
+        </div>
+        <div class="portlet-body">
+
+            <table class="table table-hover">
+                <tr>
+                    <td style="width: 220px; border: none; text-align:right;">Ad Soyad</td>
+                    <td style="width: 5px; border: none; padding: 4px;">:</td>
+                    <td style="border: none; padding: 4px;">@UserIdentity.Current.NameSurname</td>
+                </tr>
+             
+                <tr>
+                    <td style="width: 220px; border: none; text-align:right;">Kullanıcı Tipi</td>
+                    <td style="width: 5px; border: none; padding: 4px;">:</td>
+                    <td style="border: none; padding: 4px;">@kulTip</td>
+                </tr>
+                <tr>
+                    <td style="width: 220px; border: none;  text-align:right;">Enstitü</td>
+                    <td style="width: 5px; border: none; padding: 4px;">:</td>
+                    <td style="border: none; padding: 4px;">
+                        @{
+                            <span>@Model.Enstitü.EnstituAd</span>
+                        }
+                    </td>
+                </tr>
+                @if (!Model.SistemBasvuruyaAcik)
+                {
+
+                    <tr>
+                        <td style="width: 220px; border: none; text-align:right;">Başvuru Durumu</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                            <br />
+                            <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td style="width: 220px; border: none;  text-align:right;">Eğitim Öğretim Yılı</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">@Model.BasvuruSurec.BaslangicYil / @Model.BasvuruSurec.BitisYil @Model.DonemAdi</td>
+                    </tr>
+
+                    <tr>
+                        <td style="width: 220px; border: none; padding: 4px;text-align:right;">Başvuru Süreci</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">@Model.BasvuruSurec.BaslangicTarihi.ToFormatDateAndTime() / @Model.BasvuruSurec.BitisTarihi.ToFormatDateAndTime()</td>
+                    </tr>
+
+                    if (!(kul.KullaniciTipleri.BasvuruYapabilir))
+                    {
+                        <tr>
+                            <td style="width: 220px; border: none;  text-align:right;"></td>
+                            <td style="width: 5px; border: none; padding: 4px;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                @kulTip kullanıcı tipi için başvuru işlemi kapalıdır.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="width: 220px; border: none;  text-align:right;">Başvuru Durumu</td>
+                            <td style="width: 5px; border: none; padding: 4px;">:</td>
+                            <td style="border: none; padding: 4px;">Sistem Başvuru alımına açıktır. Başvuru yapmak için Yeni Başvuru butonuna tıklayınız.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 220px; border: none;  text-align:right;"></td>
+                            <td style="width: 5px; border: none; padding: 4px;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                            </td>
+                        </tr>
+                    }
+
+
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+</script>
+
+

@@ -1,0 +1,275 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var roller = (IEnumerable<CheckObjectX<Roller>>)ViewBag.Roller;
+    var user = (Kullanicilar)ViewBag.Kullanici;
+    var cats = (List<CmbIntDto>)ViewBag.cats;
+    var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var ProgramYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var EnstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+
+}
+
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="portlet-title">
+                    <div class="panel-heading padding-0">
+                        <h3 class="panel-title"><i class="fa fa-user"></i>Erişim Yetkileri: @user.Ad @user.Soyad [@user.KullaniciAdi] </h3>
+
+                        <ul class="panel-controls">
+                            @if (kullaniciKayit)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Kayit", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Kullanıcı</span></li>
+
+                            }
+                            @if (ProgramYetki)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("KullaniciProgramYetkileri", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Program Yetkileri</span></li>
+
+                            }
+                            @if (EnstituYetki)
+                            {
+                                <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("YetkilendirmeEnstitu", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Enstitü Yetkileri</span></li>
+                            }
+                            <li><a href="@Url.Action("Yetkilendirme","Kullanicilar",new {id= user.KullaniciID })" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body form">
+                    <input type="hidden" name="KullaniciID" value="@user.KullaniciID" />
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Yetkileri Hazır Listeden Seç</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("YetkiGrupID", null, new { style = "width:100%;", @class = "form-control", onchange = "setYetkiGrubu()" })
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    @foreach (var cat in cats.OrderBy(o => o.Value))
+                    {
+                        var roles = roller.Where(p => p.Value.Kategori == cat.Caption).ToArray();
+                        var allchecked = roles.All(a => a.Checked.Value);
+                        <div class="col-md-4">
+
+                            <!-- DEFAULT LIST GROUP -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading padding-0">
+                                    <h3 class="panel-title" style="font-size:9pt;">@cat.Caption</h3>
+                                    <ul class="panel-controls">
+                                        <li>
+                                            Tümü:<div class="make-switch switch-small" data-on-label="Evet" data-off-label="Hayır">
+                                                <input type="checkbox" value="true" name="IsAdmin" onchange="tumunusec(this)" class="toggle" @allchecked.ToChecked() />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="panel-body padding-0" style="height: 300px; overflow: auto;">
+                                    <table class="chks" style="width:100%;table-layout:fixed;">
+                                        @foreach (var role in roles.OrderBy(o => o.Value.GorunurAdi))
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox pull-left">
+                                                        <label style="color:@(role.Disabled==true?RenkTiplier.Danger:(role.Checked==true?RenkTiplier.Info:""))">
+                                                            <input type="checkbox" class="icheckbox" @(role.Disabled ? "disabled" : "") name="RolID" value="@role.Value.RolID" @role.Checked.ToChecked()>
+                                                            @role.Value.GorunurAdi
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- END DEFAULT LIST GROUP -->
+
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                    @if (ProgramYetki)
+                    {
+                        <input type="hidden" id="ProgramYetkilerineGit" name="ProgramYetkilerineGit" value="false" />
+                        <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#ProgramYetkilerineGit').val('true'); $('form').submit();"><i class="fa fa-save">&nbsp</i>Kaydet ve Program Yetkilerine Git</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+    }
+</div>
+<script type="text/javascript">
+    function setYetkiGrubu() {
+        var id = $('#YetkiGrupID').val();
+        if (id == null || id == "") {
+            var kategori = $('.chks');
+            $(kategori).find(":checkbox").each(function (inx, itmx) {
+                $(itmx).parent().removeClass("checked");
+                $(itmx).parent().removeClass("disabled");
+                $(itmx).prop("checked", false);
+            });
+        }
+        else
+            $.ajax({
+            url: '@Url.Action("getYetkiGrubuRolIDs", "Kullanicilar")',
+            data: { id: id,KullaniciID:'@user.KullaniciID' },
+            success: function (result) {
+                var kategori = $('.chks');
+                $(kategori).find(":checkbox").each(function (inx, itmx) {
+                    $(itmx).parent().removeClass("checked");
+                    $(itmx).parent().removeClass("disabled");
+                    $(itmx).prop("checked", false);
+                    $(itmx).removeAttr("disabled");
+                    $(itmx).parents('label').first().removeAttr('style');
+                    for (var i = 0; i < result.length; i++) {
+                        var Rol = result[i];
+                        var val = $(itmx).val();
+                        if (val == Rol.Value) {
+                            $(itmx).parent().addClass("checked");
+                            if (Rol.Caption != '@RenkTiplier.Info') {
+
+                                $(itmx).parent().addClass("disabled");
+                                $(itmx).attr("disabled", "disabled");
+                            }
+                            $(itmx).prop("checked", true);
+                            $(itmx).parents('label').first().attr('style', 'color:' + Rol.Caption);
+                        }
+                    }
+                });
+
+                $(kategori).each(function (inx, itmx) {
+                    var checkedLength = $(itmx).find(":checkbox:checked").length;
+                    var allLength = $(itmx).find(":checkbox").length;
+                    var $rootCheckB = $(itmx).parents('.panel').first().find('.panel-controls .switch-animate').first();
+                    if (allLength == checkedLength)
+                        $rootCheckB.removeClass('switch-off').addClass('switch-on');
+                    else $rootCheckB.removeClass('switch-on').addClass('switch-off');
+                    $rootCheckB.find(':checkbox').first().prop('checked', allLength == checkedLength);
+                })
+                toastr["success"](result.length + " Adet Rol Seçildi", "Yetki Gruplari Rol Seçim");
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+    }
+
+    function tumunusec(sndr) {
+        var kategori = $(sndr).parents(".panel").first().find('.chks').first();
+        var disabledLength = $(kategori).find(":checkbox:disabled").length;
+        var chkD = $(sndr).prop("checked");
+        var allLength = $(kategori).find(":checkbox").length;
+        if (allLength == disabledLength) {
+            $(sndr).parents('.switch-animate').first().removeClass('switch-off').addClass('switch-on');
+            return;
+        }
+        $(kategori).find(":checkbox").each(function (inx, itmx) {
+            if ($(itmx).is(':disabled') == false) {
+                if (chkD) { $(itmx).parent().addClass("checked"); }
+                else { $(itmx).parent().removeClass("checked"); }
+                $(itmx).prop("checked", chkD);
+                $(itmx).parents('label').first().attr('style','color:@RenkTiplier.Info');
+            }
+        });
+
+
+    }
+</script>
+@*<script type="text/javascript">
+
+    function setYetkiGrubu() {
+        var id = $('#YetkiGrupID').val();
+        if (id == null || id == "") {
+            var kategori = $('.chks');
+            $(kategori).find(":checkbox").each(function (inx, itmx) {
+                $(itmx).parent().removeClass("checked");
+                $(itmx).parent().removeClass("disabled");
+                $(itmx).prop("checked", false);
+            });
+        }
+        else
+            $.ajax({
+            url: '@Url.Action("getYetkiGrubuRolIDs", "Kullanicilar")',
+                data: { 'id': id,'KullaniciID':@user.KullaniciID },
+            success: function (result) {
+                var kategori = $('.chks');
+                $(kategori).find(":checkbox").each(function (inx, itmx) {
+                    $(itmx).parent().removeClass("checked");
+                    $(itmx).parent().removeClass("disabled");
+                    $(itmx).prop("checked", false);
+                    $(itmx).removeAttr("disabled");
+                    $(itmx).parents('label').first().removeAttr('style');
+                    for (var i = 0; i < result.length; i++) {
+                        var RolID = result[i].RolID;
+                        var val = $(itmx).val();
+                        if (val == RolID) {
+                            if (result.Checked) {
+                                $(itmx).parent().addClass("checked");
+                                $(itmx).prop("checked", true);
+                                $(itmx).parents('label').first().attr('style', 'color:@RenkTiplier.Info');
+                            }
+                            if (result.Disabled) {
+                                $(itmx).parent().addClass("disabled"); $(itmx).attr("disabled", "disabled");
+                                $(itmx).parents('label').first().attr('style', 'color:@RenkTiplier.Danger');
+                            }
+                        }
+                    }
+                });
+
+                $(kategori).each(function (inx, itmx) {
+                    var checkedLength = $(itmx).find(":checkbox:checked").length;
+                    var allLength = $(itmx).find(":checkbox").length;
+                    var $rootCheckB = $(itmx).parents('.panel').first().find('.panel-controls .switch-animate').first();
+                    if (allLength == checkedLength)
+                        $rootCheckB.removeClass('switch-off').addClass('switch-on');
+                    else $rootCheckB.removeClass('switch-on').addClass('switch-off');
+                    $rootCheckB.find(':checkbox').first().prop('checked', allLength == checkedLength);
+                })
+                toastr["success"](result.length + " Adet Rol Seçildi", "Yetki Gruplari Rol Seçim");
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+    }
+
+    function tumunusec(sndr) {
+        var kategori = $(sndr).parents(".panel").first().find('.chks').first();
+        var disabledLength = $(kategori).find(":checkbox:disabled").length;
+        var chkD = $(sndr).prop("checked");
+        var allLength = $(kategori).find(":checkbox").length;
+        if (allLength == disabledLength) {
+            $(sndr).parents('.switch-animate').first().removeClass('switch-off').addClass('switch-on');
+            return;
+        }
+        $(kategori).find(":checkbox").each(function (inx, itmx) {
+            if ($(itmx).is(':disabled') == false) {
+                if (chkD) { $(itmx).parent().addClass("checked"); }
+                else { $(itmx).parent().removeClass("checked"); }
+                $(itmx).prop("checked", chkD);
+                $(itmx).parents('label').first().attr('style','color:@RenkTiplier.Info');
+            }
+        });
+
+
+    }
+</script>*@
+
+

@@ -1,0 +1,506 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model kmMulakat
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool isYuzdeGirisBolum = (bool)ViewBag.isYuzdeGirisBolum;
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="MulakatID" name="MulakatID" value="@Model.MulakatID" />
+        <input type="text" style="display:none;" id="BasvuruSurecID" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.MulakatID <= 0 ? "Yeni mülakat bilgisi tanımlama işlemi" : "Mülakat bilgisi düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("MulakatKayit", Model.MulakatID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-4 control-label">Program</label>
+                                <div class="col-md-8 col-xs-8">
+                                    @Html.DropDownList("ProgramKod", null, new { @class = "form-control", onchange = "getOT(this);" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-4 control-label">Öğrenim Seviyesi</label>
+                                <div class="col-md-8 col-xs-8">
+                                    @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="panel panel-default" id="mDetayG" style="padding: 0px; margin: 0px;">
+                                        <div class="panel-heading padding-0">
+                                            <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Sınav Bilgisi</h3>
+                                        </div>
+                                        <div class="panel-body padding-0">
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Sınav Türü</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    @Html.DropDownList("_MulakatSinavTurID", null, new { @class = "form-control", id = "_MulakatSinavTurID" })
+                                                </div>
+                                            </div>
+                                            @if (isYuzdeGirisBolum)
+                                            {
+                                                <div class="form-group">
+                                                    <label class="col-md-4 col-xs-4 control-label">% Oranı</label>
+                                                    <div class="col-md-8 col-xs-8">
+                                                        <input type="text" autocomplete="off" id="_YuzdeOran" name="_YuzdeOran" class="form-control" />
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Sınav Tarihi/Saati</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="input-group bootstrap-timepicker">
+                                                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" name="_SinavTarihi" id="_SinavTarihi">
+                                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group clockpicker _SinavSaati pull-center" data-placement="bottom" data-align="top" data-autoclose="true">
+                                                                    <input type="text" name="_SinavSaati" id="_SinavSaati" class="form-control" value="">
+                                                                    <span class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-time"></span>
+                                                                    </span>
+                                                                </div>
+
+                                                                <script type="text/javascript">
+                                                                    $('._SinavSaati').clockpicker();
+                                                                </script>
+
+                                                                @*@Html.DropDownList("_MulakatSaatleri", null, new { @class = "form-control", id = "_MulakatSaatleri" })*@
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Kampüs</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    @Html.DropDownList("_KampusID", null, new { @class = "form-control", id = "_KampusID" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Sınav Yeri</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" id="_YerAdi" name="_YerAdi" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title"><i class="fa fa-plus"></i>&nbsp; Eklenenler</h3>
+                                                    <a style="float: right;" onclick="EkleDetay()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
+                                                </div>
+                                                <div class="panel-body padding-5">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="90">Sınav Türü</th>
+                                                                @if (isYuzdeGirisBolum)
+                                                                {
+                                                                    <th width="70">% Oranı</th>}
+                                                                <th width="110">S Tarihi</th>
+                                                                <th width="140">Kampüs</th>
+                                                                <th>Sınav Yer Adı</th>
+                                                                <th width="20"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="Rw_tbodyD">
+                                                            @foreach (var item in Model.MulakatDetayi)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="hidden" name="MulakatDetayID" value="@item.MulakatDetayID" />
+                                                                        <input type="hidden" name="MulakatSinavTurID" value="@item.MulakatSinavTurID" />
+                                                                        @item.MulakatSinavTurAdi
+                                                                    </td>
+                                                                    @if (isYuzdeGirisBolum)
+                                                                    {
+                                                                        <td id="yuzdeRw_@item.MulakatSinavTurID">
+                                                                            <span>%@item.YuzdeOran</span>
+                                                                            <input type="hidden" name="YuzdeOran" value="@item.YuzdeOran" />
+                                                                        </td>
+                                                                    }
+                                                                    <td>
+                                                                        <input type="hidden" name="SinavTarihi" value="@item.SinavTarihi" />
+                                                                        @item.SinavTarihi.ToString("dd-MM-yyyy HH:mm")
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="hidden" name="KampusID" value="@item.KampusID" />
+                                                                        @item.KampusAdi
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="hidden" name="YerAdi" value="@item.YerAdi" />
+                                                                        @item.YerAdi
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Detayı Kaldır"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                        <div class="panel-heading padding-0">
+                                            <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Jüri Bilgisi</h3>
+                                        </div>
+                                        <div class="panel-body" style="padding-left:2px;padding-right:2px;">
+
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Jüri Adı</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input type="text" id="_JuriAdi" name="_JuriAdi" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label padding-top-0 padding-bottom-0">Asil/Yedek</label>
+                                                <div class="col-md-8 col-xs-8 padding-top-0 padding-bottom-0">
+                                                    <div class="make-switch" data-on-label="Asil" data-off-label="Yedek" data-on="info" data-off="default">
+                                                        <input type="checkbox" value="true" id="_IsAsil" name="_IsAsil" class="toggle" @(true.ToChecked()) />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                                <div class="panel-heading padding-0">
+                                                    <h3 class="panel-title"><i class="fa fa-plus"></i>&nbsp; Eklenen</h3>
+                                                    <a style="float: right;" onclick="EkleJuri()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
+                                                </div>
+                                                <div class="panel-body">
+
+                                                    <div class="dd" id="ddLst" style="height: auto;">
+                                                        <ol class="dd-list " id="Rw_tbodyJAsil">
+                                                            @foreach (var item in Model.MulakatJuris.Where(p => p.IsAsil))
+                                                            {
+                                                                var gd = Guid.NewGuid().ToString().Substr(0, 4);
+                                                                <li class="dd-item dd3-item rw_@gd" data-id="@gd">
+                                                                    <div class="dd-handle dd3-handle" title="Taşı"></div>
+                                                                    <div class="dd3-content">
+                                                                        <table style="width:100%;table-layout:fixed;">
+                                                                            <tbody>
+                                                                                <tr style="font-size:13pt;">
+                                                                                    <td width="90" style="font-weight:bold;">
+                                                                                        <span class="itmSNO">@item.SiraNo)</span>
+                                                                                        <input type="hidden" name="SiraNo" value="@item.SiraNo" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span>@item.JuriAdi</span>
+                                                                                        <input type="hidden" name="JuriAdi" value="@item.JuriAdi" />
+                                                                                    </td>
+                                                                                    <td width="90">
+                                                                                        <span>@(item.IsAsil ? "Asil" : "Yedek")</span>
+                                                                                        <input type="hidden" name="IsAsil" value="@item.IsAsil.ToString().ToLower()" />
+                                                                                    </td>
+                                                                                    <td width="20"><a href="javascript:void(0)" onclick="juriSil(this,true);"><i style="color:#1591e4;font-size:14pt;" class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Jüriyi Kaldır"></i></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ol>
+                                                    </div>
+                                                    <div class="ddYedek" id="ddLstYedek" style="height: auto;">
+                                                        <ol class="dd-list" id="Rw_tbodyJYedek">
+                                                            @foreach (var item in Model.MulakatJuris.Where(p => p.IsAsil == false))
+                                                            {
+                                                                var gd = Guid.NewGuid().ToString().Substr(0, 4);
+                                                                <li class="dd-item dd3-item rw_@gd" data-id="@gd">
+                                                                    <div class="dd-handle dd3-handle" title="Taşı"></div>
+                                                                    <div class="dd3-content">
+                                                                        <table style="width:100%;table-layout:fixed;">
+                                                                            <tbody>
+                                                                                <tr style="color:#beb9b9;font-size:13pt;">
+                                                                                    <td width="90" style="font-weight:bold;">
+                                                                                        <span class="itmSNO">@item.SiraNo)</span>
+                                                                                        <input type="hidden" name="SiraNo" value="@item.SiraNo" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span>@item.JuriAdi</span>
+                                                                                        <input type="hidden" name="JuriAdi" value="@item.JuriAdi" />
+                                                                                    </td>
+                                                                                    <td width="90">
+                                                                                        <span>@(item.IsAsil ? "Asil" : "Yedek")</span>
+                                                                                        <input type="hidden" name="IsAsil" value="@item.IsAsil.ToString().ToLower()" />
+                                                                                    </td>
+                                                                                    <td width="20"><a href="javascript:void(0)" onclick="juriSil(this,false);"><i style="color:#808080;font-size:14pt;" class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Jüriyi Kaldır"></i></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function ayniKayitVarmi(gVal) {
+        var kVar = false;
+        $('#Rw_tbodyD').find('tr').each(function (inx, trx) {
+            var $inpmsT = $(trx).find('input[name=MulakatSinavTurID]').first();
+            if ($inpmsT.val() == gVal) {
+                kVar = true;
+            }
+        });
+        return kVar;
+    }
+    function EkleDetay() {
+        var _panel = $('#mDetayG');
+        _pRefresh(_panel, false);
+        var _MulakatSinavTurID = $('#_MulakatSinavTurID').val();
+        var _MulakatSinavTurAdi = $('#_MulakatSinavTurID option:selected').text();
+        var _YuzdeOran = $('#_YuzdeOran').val();
+        var isYuzdeGirisBolum = '@isYuzdeGirisBolum.ToString().ToLower()'
+        var _SinavTarihi = $('#_SinavTarihi').val();
+        var _SinavSaati = $('#_SinavSaati').val();
+        var _KampusID = $('#_KampusID').val();
+        var _KampusAdi = $('#_KampusID option:selected').text();
+        var _YerAdi = $('#_YerAdi').val();
+
+        var _MulakatSinavTurIDx = "[";
+        var _YuzdeOranix = "[";
+
+        $('#Rw_tbodyD').find('tr').each(function (inx, trx) {
+            var _mID = $(trx).find('input[name=MulakatSinavTurID]').first().val();
+            var _yoY = $(trx).find('input[name=YuzdeOran]').first().val();
+            if (inx > 0) {
+                _MulakatSinavTurIDx += ",'" + _mID + "'";
+                _YuzdeOranix += ",'" + _yoY + "'";
+            }
+            else {
+                _MulakatSinavTurIDx += "'" + _mID + "'";
+                _YuzdeOranix += "'" + _yoY + "'";
+            }
+
+        })
+        _MulakatSinavTurIDx += "]";
+        _YuzdeOranix += "]";
+        frmD = {
+            "MulakatSinavTurID": _MulakatSinavTurID,
+            "BasvuruSurecID": '@Model.BasvuruSurecID',
+            "YuzdeOran": _YuzdeOran,
+            "SinavTarihi": _SinavTarihi,
+            "SinavSaati": _SinavSaati,
+            "YerAdi": _YerAdi,
+            "KampusID": _KampusID,
+            "LMulakatSinavTurID": eval(_MulakatSinavTurIDx),
+            "LYuzdeOrani": eval(_YuzdeOranix)
+        }; 
+        $.ajax({
+            url: '@Url.Action("getSdetayKontrtol", "MulakatSureci")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: frmD,
+            success: function (result) {
+                if (result.IsSuccess) { 
+                    if (result.degisenSinavTurID != null) { 
+                        $('#yuzdeRw_' + result.degisenSinavTurID).find('span').html("%" + result.degisenYuzdeOran);
+                        $('#yuzdeRw_' + result.degisenSinavTurID).find('input').val(result.degisenYuzdeOran);
+                    }
+                    var rwDetay = "<tr>" +
+                                    "<td id='yuzdeRw_' "+ _MulakatSinavTurID+"'>" +
+                                        "<input type='hidden' name='MulakatDetayID' value='' />" +
+                                        "<input type='hidden' name='MulakatSinavTurID' value='" + _MulakatSinavTurID + "' />" + _MulakatSinavTurAdi +
+                                    "</td>" +
+                                    (isYuzdeGirisBolum == 'true' ? (
+                                    "<td>%" + _YuzdeOran + "<input type='hidden' name='YuzdeOran' value='" + _YuzdeOran + "' />") : "") +
+                                    "</td>" +
+                                    "<td>" +
+                                        "<input type='hidden' name='SinavTarihi' value='" + _SinavTarihi + " " + _SinavSaati + "' />" + _SinavTarihi + " " + _SinavSaati +
+                                    "</td>" +
+                                     "<td>" +
+                                        "<input type='hidden' name='KampusID' value='" + _KampusID + "' />" + _KampusAdi +
+                                    "</td>" +
+                                    "<td>" +
+                                        "<input type='hidden' name='YerAdi' value='" + _YerAdi + "' />" + _YerAdi +
+                                    "</td>" +
+                                    "<td>" +
+                                        "<a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Detayı Kaldır'></i></a>" +
+                                    "</td>" +
+                                "</tr> ";
+                    $('#Rw_tbodyD').append(rwDetay);
+                    $('#_MulakatSinavTurID').val("");
+                    $('#_YuzdeOran').val("");
+                    $('#_SinavTarihi').val("");
+                    $('#_SinavSaati').val("")
+                    $('#_KampusID').val("");
+                    $('#_YerAdi').val("");
+                    _pRefresh(_panel, true);
+                }
+                else {
+
+                    _pRefresh(_panel, true);
+                    showMmMessage(result.Messages, 'Tamam');
+                    validateControl(null, result.mmMessage);
+                }
+
+            },
+            error: function (err) {
+                _pRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        });
+
+    }
+    function EkleJuri() {
+        var _JuriAdi = $('#_JuriAdi').val();
+        var _IsAsil = $('#_IsAsil').prop("checked");
+        if (_JuriAdi == null || _JuriAdi.trim() == "") {
+            alert("Jüri adını giriniz!");
+            return;
+        }
+        var _siraNo = sirano(_IsAsil);
+        var _gd = guid().substring(0, 4);
+        var _color = (_IsAsil ? "" : "color:#beb9b9;");
+        var jRow = "<li class='dd-item dd3-item rw_" + _gd + "' data-id='" + _gd + "'>" +
+                     "<div class='dd-handle dd3-handle' title='Taşı'></div>" +
+                     "<div class='dd3-content'>" +
+                         "<table style='width:100%;table-layout:fixed;'>  " +
+                             "<tbody>" +
+                                 "<tr style='font-size:13pt;" + _color + "'>" +
+                                     "<td width='90' style='font-weight:bold;'>" +
+                                         "<span class='itmSNO'>" + _siraNo + ")</span> " +
+                                         "<input type='hidden' name='SiraNo' value='" + _siraNo + "'/>" +
+                                     "</td>" +
+                                     "<td>" +
+                                         "<span>" + _JuriAdi + "</span>" +
+                                         "<input type='hidden' name='JuriAdi' value='" + _JuriAdi + "'/> " +
+                                     "</td>" +
+                                      "<td width='90'>" +
+                                         "<span>" + (_IsAsil ? 'Asil' : 'Yedek') + "</span>" +
+                                         "<input type='hidden' name='IsAsil' value='" + _IsAsil + "'/>" +
+                                     "</td>" +
+                                     "<td width='20'><a href='javascript:void(0)' onclick='juriSil(this," + _IsAsil + ");'><i style='" + _color + ";font-size:14pt;' class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Jüriyi Kaldır'></i></a></td>" +
+                                 "</tr>" +
+                             "</tbody>" +
+                         "</table>" +
+                     "</div>" +
+                   "</li>";
+        var _trgtID = _IsAsil ? "#Rw_tbodyJAsil" : "#Rw_tbodyJYedek";
+        $(_trgtID).append(jRow);
+        $('#_JuriAdi').val("");
+    }
+
+    function sirano(IsAsil) {
+        var _trgtID = IsAsil ? "#Rw_tbodyJAsil" : "#Rw_tbodyJYedek";
+        return $(_trgtID).find('li').length + 1;
+    }
+    function juriSil(sndr, IsAsil) {
+        $(sndr).parents('li').first().remove();
+        juriSiraDuzenle(IsAsil);
+    }
+    function juriSiraDuzenle(IsAsil) {
+        var _trgtID = IsAsil ? "#Rw_tbodyJAsil" : "#Rw_tbodyJYedek";
+        $(_trgtID).find('li').each(function (inx, lix) {
+            var $spn = $(lix).find('.itmSNO').first();
+            $spn.html((inx + 1) + ")");
+            var $srNo = $(lix).find('input[name=SiraNo]').first();
+            $srNo.val(inx + 1);
+        })
+    }
+    $(function () {
+        $('#_SinavTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'd-m-Y'
+        });
+
+        $('#ddLst').nestable().on('change', function () {
+            juriSiraDuzenle(true);
+
+        });
+        $('#ddLstYedek').nestable({ rootClass: 'ddYedek' }).on('change', function (sndr) {
+            juriSiraDuzenle(false);
+        });
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+    function getOT(sndr) {
+        var sndrVal = $(sndr).val();
+        var BasvuruSurecID = $('#BasvuruSurecID').val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getOT", "MulakatSureci")',
+                data: { 'BasvuruSurecID': BasvuruSurecID, 'ProgramKod': sndrVal, 'MulakatID': '@(Model.MulakatID<=0?(int?)null:Model.MulakatID)' },
+                success: function (result) {
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) {
+                        opt += "<option value=" + result[i].Value + ">" + result[i].Caption + "</option>"
+                    }
+                    $('#OgrenimTipKod').empty();
+                    $('#OgrenimTipKod').append(opt);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+        else {
+            $('#OgrenimTipKod').empty();
+        }
+    }
+    @*function getST(sndr) {
+        var sndrVal = $(sndr).val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getST", "MulakatSureci")',
+                data: { 'MulakatSinavTurID': sndrVal },
+                success: function (result) {
+                        $('#_YuzdeOran').val("");
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+        else {
+            $('#_yuzdeOranY').addClass('hide');
+            $('#_yuzdeOranS').addClass('hide');
+        }
+    }*@
+   
+</script>

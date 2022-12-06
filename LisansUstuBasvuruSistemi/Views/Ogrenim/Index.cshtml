@@ -1,0 +1,619 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmMezuniyetBasvurulari
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+    var kyetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title">
+                    <i class="fa fa-bullhorn"></i> Aktif Başvuru Bilgisi
+                </h3>
+                <ul class="panel-controls"></ul>
+            </div>
+            <div class="portlet-body">
+
+                <table class="table table-hover">
+                    <tr>
+                        <td style="width: 220px; border: none;  text-align:right;">Enstitü</td>
+                        <td style="width: 5px; border: none; padding: 4px;">:</td>
+                        <td style="border: none; padding: 4px;">
+                            @bilgiModel.Enstitü.EnstituAd
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;  text-align:right;">Ad Soyad</td>
+                        <td style="border: none;">:</td>
+                        <td style="border: none; padding: 4px;">@UserIdentity.Current.NameSurname</td>
+                    </tr>
+                    @if (bilgiModel.KullaniciTipYetki)
+                    {
+                        <tr>
+                            <td style="border: none; text-align:right;">Öğrenci No</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">@bilgiModel.OgrenciNo</td>
+                        </tr>
+
+                        <tr>
+                            <td style="border: none; text-align:right;">Öğrenim Seviyesi</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                @bilgiModel.OgrenimTipAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; text-align:right;">Anabilim Dalı</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                @bilgiModel.AnabilimdaliAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; padding: 4px; text-align:right;">Program</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                @bilgiModel.ProgramAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;  text-align:right;">Öğrenim Durumu</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                @bilgiModel.OgrenimDurumAdi
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="border: none;  text-align:right;">Kayıt Tarihi</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;"> @bilgiModel.KayitDonemi</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="border: none;  text-align:right;"></td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;"> @bilgiModel.KullaniciTipYetkiYokMsj</td>
+                        </tr>
+                    }
+
+                    @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
+                    {
+                        <tr>
+                            <td style="border: none; text-align:right;">Eğitim Öğretim Yılı</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">@bilgiModel.DonemAdi (@bilgiModel.MezuniyetSurec.BaslangicTarihi.ToString("dd-MM-yyyy HH:mm") - @bilgiModel.MezuniyetSurec.BitisTarihi.ToString("dd-MM-yyyy HH:mm"))</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 220px; border: none;  text-align:right;">Başvuru Durumu</td>
+                            <td style="width: 5px; border: none; padding: 4px;">:</td>
+                            <td style="border: none; padding: 4px;">Sistem Başvuru alımına açıktır. Başvuru yapmak için Yeni Başvuru butonuna tıklayınız.</td>
+                        </tr>
+                        <tr>
+                            <td style="border: none; padding: 4px;  text-align:right;"></td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        if (bilgiModel.SistemBasvuruyaAcik == false)
+                        {
+                            <tr>
+                                <td style="width: 220px; border: none; text-align:right;">Başvuru Durumu</td>
+                                <td style="width: 5px; border: none; padding: 4px;">:</td>
+                                <td style="border: none; padding: 4px;">
+                                    Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                    <br />
+                                    <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                                </td>
+                            </tr>
+                        }
+                        else if (bilgiModel.EnstituYetki == false)
+                        {
+                            <tr>
+                                <td style="border: none;  text-align:right;">Başvuru Durumu</td>
+                                <td style="border: none;">:</td>
+                                <td style="border: none; padding: 4px;">Seçili enstitü için mezuniyet başvurusu yapamazsınız!</td>
+                            </tr>
+                        }
+
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    @using (Html.BeginForm())
+    {
+
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Başvurularım</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="MezuniyetSurecAdi" width="180">Eğitim Öğretim Yılı</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th class="sirala" field="MezuniyetYayinKontrolDurumAdi" width="150">Yayın Kontrol Durumu</th>
+                                <th class="sirala" field="MezuniyetSinavDurumAdi" width="210">Mezuniyet Durumu</th>
+                                <th width="35"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@item.DurumColor;">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.MezuniyetBasvurulariID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.MezuniyetBasvurulariID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.MezuniyetSurecAdi <br />@item.BasTar.ToDateString() - @item.BitTar.ToDateString()</td>
+                                        <td>
+                                            @item.BasvuruTarihi.ToString()
+                                        </td>
+                                        <td>
+                                            @if (!item.DurumClassName.IsNullOrWhiteSpace())
+                                            {
+                                                if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi)
+                                                {
+                                                    <span class="tooltips" data-style="blue" data-original-title="@item.MezuniyetYayinKontrolDurumAciklamasi" @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=cursor:pointer;color:" + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:13pt;font-weight:bold;"></i> @item.MezuniyetYayinKontrolDurumAdi
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=color:" + item.DurumColor) : "")>
+                                                        <i class="@item.DurumClassName" style="font-size:13pt;font-weight:bold;"></i> @item.MezuniyetYayinKontrolDurumAdi
+                                                    </span>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi)
+                                                {
+                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@item.MezuniyetYayinKontrolDurumAciklamasi">@item.MezuniyetYayinKontrolDurumAdi</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.MezuniyetYayinKontrolDurumAdi</span>
+                                                }
+                                            }
+                                            @if (item.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                                            {
+                                                <br />
+                                                <a @(!item.DurumColor.IsNullOrWhiteSpace() ? (" style=color:" + item.DurumColor) : "") href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Başvuru Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetBasvuruRaporu&MezuniyetBasvurulariID=@item.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
+                                                    <i class="fa fa-print" style="font-size:13pt;font-weight:bold;"></i>  Yazdır
+                                                </a>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (item.MezuniyetSinavDurumID.HasValue)
+                                            {
+
+                                                <table>
+                                                    <tr @(!item.SDurumColor.IsNullOrWhiteSpace() ? (" style=color:" + item.SDurumColor) : "")>
+                                                        <td width="17"><i class="@item.SDurumClassName" style="font-size:13pt;font-weight:bold;"></i></td>
+                                                        <td width="60" title="Sınav Durumu">S.Durumu</td>
+                                                        <td width="5">:</td>
+                                                        <td>
+                                                            @item.MezuniyetSinavDurumAdi
+                                                            @if (item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                            {
+                                                                <span>(@item.SrTalebi.Tarih.AddDays(item.UzatmaSuresiGun).ToDateString())</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    @if (item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                    {
+                                                        var colorMzd = (item.IsMezunOldu.HasValue ? (item.IsMezunOldu.Value ? "Green" : "Maroon") : "Gray");
+                                                        <tr style="color:@colorMzd">
+                                                            <td><i class="@(item.IsMezunOldu.HasValue?(item.IsMezunOldu.Value?"fa fa-thumbs-o-up":"fa fa-thumbs-o-down"):"glyphicon glyphicon-time")" style="font-size:13pt;font-weight:bold;"></i></td>
+                                                            <td>M.Durum</td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                @if (item.IsMezunOldu.HasValue)
+                                                                {
+                                                                    <span>
+                                                                        @(item.IsMezunOldu.Value ? "Mezun Oldu" : "Mezun Olamadı")
+                                                                        @(item.IsMezunOldu == true ? " (" + item.MezuniyetTarihi.ToDateString() + ")" : "")
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (item.SrTalebi != null)
+                                                                    {
+                                                                        <span>@(item.SrTalebi.SRTalepleriBezCiltFormus.Any() ? "Teslim Formu Oluşturuldu" : "Teslim Formu Oluşturulmadı")</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>Sonuç Girilmedi</span>
+                                                                    }
+                                                                }
+
+
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+                                                </table>
+                                            }
+                                            else
+                                            {
+                                                <span style="color:black;"><i class="fa fa-calendar-o" style="font-size:13pt;"></i> Sınav Talebi Yok</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.MezuniyetBasvurulariID" style="display:none">
+                                        <td id="cls-@item.MezuniyetBasvurulariID" colspan="7" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function newApp() {
+        showDuyuru(@DuyuruPopupTipleri.MezuniyetBasvuru, '@Url.Action("BasvuruYap")');
+    }
+
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetailx(id);
+
+    }
+    function getDetailx(id, Isdelete, sndr) {
+
+        var _panel = $('#bsvrDet_' + id);
+
+
+        var tbName = "@TabAdlari.MezuniyetBasvurulariTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
+            data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Başvuru Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Başvuruyu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    $(btbx).find('.modal-dialog').addClass('modal-lg');
+
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "Mezuniyet")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+
+    function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
+        $.ajax({
+            url: '@Url.Action("RezervasyonAl", "Mezuniyet")',
+            data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID, 'SRTalepID': SRTalepID },
+            success: function (result) {
+
+                var btbxxFS = bootbox.dialog({
+                    message: result,
+                    title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Rezervasyon Talebi Yap' : 'Rezervasyon Talebini Düzelt'),
+                    buttons: {
+                        success: {
+                            label: 'Kaydet',
+                            className: "btn-success",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#MezuniyetSRForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            toastr["success"](result.Messages[0], result.Title);
+                                            getDetailx(MezuniyetBasvurulariID);
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                });
+                                $('#MezuniyetSRForm').submit();
+
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: 'Kapat',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function showSRBCiltDialog(MezuniyetBasvurulariID, SRTalepID, SRTalepleriBezCiltFormID) {
+        $.ajax({
+            url: '@Url.Action("BezCiltForm", "Mezuniyet")',
+            data: { 'SRTalepID': SRTalepID, 'SRTalepleriBezCiltFormID': SRTalepleriBezCiltFormID },
+            success: function (result) {
+
+                var btbxxFS = bootbox.dialog({
+                    message: result,
+                    title: "<i class='fa fa-file-text-o'></i> " + (SRTalepleriBezCiltFormID <= 0 ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzenle'),
+                    buttons: {
+                        success: {
+                            label: 'Kaydet',
+                            className: "btn-success",
+                            callback: function (event) {
+                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                _pRefresh(pnlx, false);
+                                $('#MezuniyetSRBezCiltForm').ajaxForm({
+                                    success: function (result) {
+                                        if (result.IsSuccess) {
+                                            toastr["success"](result.Messages[0], result.Title);
+                                            getDetailx(MezuniyetBasvurulariID);
+                                            var _clsBtn = $('.modal-header').find('button').first();
+                                            $(_clsBtn).click();
+                                        }
+                                        else {
+                                            getMsg(result);
+                                            return false;
+                                        }
+                                        _pRefresh(pnlx, true);
+
+                                    },
+                                    complete: function (cmp) {
+                                        _pRefresh(pnlx, true);
+                                    },
+                                    error: function (err) {
+                                        _pRefresh(pnlx, true);
+                                    }
+
+                                });
+                                $('#MezuniyetSRBezCiltForm').submit();
+
+                                return false;
+                            }
+                        },
+                        danger: {
+                            label: 'Kapat',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+                //$(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+@if (kyetki)
+{
+    <script>
+        function SrDurumKaydet(MezuniyetBasvurulariID, SRTalepID) {
+            var ibtID = $('#SRDurumID_' + SRTalepID).val();
+            var ibTipAciklama = $('#SRDurumAciklamasi_' + SRTalepID).val();
+            $.ajax({
+                url: '@Url.Action("SRDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': SRTalepID,
+                    'SRDurumID': ibtID,
+                    'SRDurumAciklamasi': ibTipAciklama
+                },
+                success: function (result) {
+                    getDetailx(MezuniyetBasvurulariID);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+        function SrSnvDurumKaydet(MezuniyetBasvurulariID, SRTalepID) {
+            var snvDrmID = $('#MezuniyetSinavDurumID_' + SRTalepID).val();
+            var _TTSTarih = $('#InpTTSt_' + SRTalepID).val();
+            var dt = null;
+            if (_TTSTarih != "" && _TTSTarih != null && _TTSTarih != undefined) {
+                var _yil = _TTSTarih.split("-")[2];
+                var _ay = _TTSTarih.split("-")[1];
+                var _gun = _TTSTarih.split("-")[0];
+                dt = _ay + "-" + _gun + "-" + _yil;
+            }
+            $.ajax({
+                url: '@Url.Action("SRSinavDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': SRTalepID,
+                    'MezuniyetSinavDurumID': snvDrmID,
+                    'TezTeslimSonTarih': dt
+                },
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        getDetailx(MezuniyetBasvurulariID);
+
+
+                    }
+                    else {
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+        function MzDurumKaydet(MezuniyetBasvurulariID) {
+            var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
+            var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();
+            $.ajax({
+                url: '@Url.Action("MezuniyetDurumKaydet", "MezuniyetGelenBasvurular")',
+                data: {
+                    'id': MezuniyetBasvurulariID,
+                    'IsMezunOldu': _IsMezunOldu,
+                    'Tarih': _MezuniyetTarihi
+                },
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        getDetailx(MezuniyetBasvurulariID);
+
+                    }
+                    else {
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            })
+        }
+    </script>
+
+}

@@ -1,0 +1,818 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmTDOBasvuru
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var danismanOnayYetki = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
+    var mKids = (List<int>)ViewBag.kIds;
+    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
+    var kayitYetki = RoleNames.TDOGelenBasvuruKayit.InRoleCurrent();
+    var silmeYetki = RoleNames.TDOGelenBasvuruSil.InRoleCurrent();
+    var eykOnayYetki = kayitYetki || RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
+
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "TDOGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
+                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+                        @if (eykOnayYetki)
+                        {
+                            if (Model.RowCount > 0 && !Model.AktifDonemID.IsNullOrWhiteSpace())
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" onclick="EYKYaGonderimOnay()" title="Kontrol Aşamasında Olan Başvuruları Onayla"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i></a>
+                                    <div id="BbOnayContent" class="hide">
+                                        <table class="table" style="width:100%;table-layout:fixed;">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="120">Gönderilecek Açıklama</td>
+                                                    <td>
+                                                        <textarea style="max-width:462px; min-height:100px; width:100%;" id="OAciklama"> </textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Kontrol aşamasında olan '16' adet başvuruyu onaylamak istiyor musunuz?</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <script>
+                                        function EYKYaGonderimOnay() {
+                                            var DonemAdi = '@Model.Data.First().AktifDonemAdi';
+                                            var btbx = bootbox.dialog({
+                                                message: DonemAdi + " döneminde <b>EYK'ya gönderilmeyen</b> Danışman öneri formlarını <b>EYK'ya gönderimini</b> onaylamak istiyor musunuz?",
+                                                title: "Toplu EYK'ya gönderme işlemi",
+                                                buttons: {
+                                                    success: {
+                                                        label: "Onayla",
+                                                        className: "btn-info",
+                                                        callback: function () {
+                                                            var _panel = $(btbx).find('.modal-content');
+                                                            _pRefresh(_panel, false);
+                                                            toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'ya Gönderim İşlemi Başlatıldı");
+                                                            $.ajax({
+                                                                url: '@Url.Action("EYKGonderimOnay","TDOGelenBasvurular")',
+                                                                cache: false,
+                                                                data: { 'AktifDonemID': '@Model.AktifDonemID' },
+                                                                success: function (result) {
+                                                                    _pRefresh(_panel, true);
+                                                                    toastr["info"](result.Count + " adet başvuru eyk'ya gönderildi olarak kayıt edildi.", "Toplu Onaylama İşlemi Tamamlandı");
+                                                                    $(btbx).find('.close').first().click();
+                                                                },
+                                                                error: function (err) {
+                                                                    _pRefresh(_panel, true);
+                                                                    alert(err.responseText);
+                                                                }
+                                                            });
+                                                            return false;
+                                                        }
+                                                    },
+                                                    danger: {
+                                                        label: "Vazgeç",
+                                                        className: "btn-primary",
+                                                        callback: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </li>
+                            }
+                            <li>
+                                <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <script>
+
+                                    function showDialogTutanakRpr() {
+                                        var _panel = $('#pnlFltr');
+
+                                        _pRefresh(_panel, false);
+                                        $.ajax({
+                                            url: '@Url.Action("GetTutanakRaporu", "TDOGelenBasvurular")',
+                                            data: {},
+                                            success: function (result) {
+                                                _pRefresh(_panel, true);
+                                                var btbxxFS = bootbox.dialog({
+                                                    message: result,
+                                                    title: "<i class='fa fa-bar-chart-o'></i> Tutanak Çıktısı Oluşturma İşlemi",
+                                                    buttons: {
+                                                        success: {
+                                                            label: 'Çıktı Al',
+                                                            className: "btn btn-info",
+                                                            callback: function (event) {
+
+                                                                toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
+
+                                                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                                                _pRefresh(pnlx, false);
+                                                                $('#TutanakRprForm').ajaxForm({
+                                                                    success: function (result) {
+
+                                                                        _pRefresh(pnlx, true);
+                                                                            if (result.IsSuccess) {
+
+                                                                                var _Bastar = $('#BasTar').val();
+                                                                                var _Bittar = $('#BitTar').val();
+                                                                                var _RaporTarihi = $('#BitTar').val();
+                                                                                var _Sayi = $('#Sayi').val();
+
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' +_Sayi;
+
+                                                                            }
+                                                                            else {
+                                                                                getMsg(result);
+                                                                            }
+
+
+                                                                    },
+                                                                    complete: function (cmp) {
+                                                                        _pRefresh(pnlx, true);
+                                                                    },
+                                                                    error: function (err) {
+                                                                        _pRefresh(pnlx, true);
+                                                                    }
+
+                                                                });
+                                                                $('#TutanakRprForm').submit();
+                                                                return false;
+                                                            }
+                                                        },
+                                                        danger: {
+                                                            label: 'Kapat',
+                                                            className: "btn-primary",
+                                                            callback: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            },
+                                            error: function (err) {
+                                                alert(err.responseText);
+                                                _pRefresh(_panel, true);
+                                            }
+                                        });
+
+                                    }
+                                </script>
+                            </li>
+                        }
+                        @if (Model.RowCount > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+                        }
+                        @if (mailYetki && mKids.Count > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
+                            </li>
+                        }
+                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Başvuru Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("DonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Başvuru Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("DurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Genel Başvuru Durumu Eş Danışman</td>
+                                            <td>
+                                                @Html.DropDownList("EsDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aktif Başvuru Durumu Eş Danışman</td>
+                                            <td>
+                                                @Html.DropDownList("AktifEsDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="120">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'false' : 'true')); $('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvurular</h3>
+                    <ul class="panel-controls"></ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th>Ad Soyad</th>
+                                <th width="160">Aktif Başvuru Dönemi</th>
+                                <th width="350">Aktif Başvuru Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@item.DurumColor;">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TDOBasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.AktifDonemAdi
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td width="80">Danışman:</td>
+                                                    <td>
+                                                        @if (!item.AktifTDOBasvuruDanismanID.HasValue)
+                                                        {
+                                                            <span> Danışman Formu Oluşturulmadı </span>
+                                                        } 
+
+                                                        else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !item.VarolanDanismanOnayladi.HasValue)
+                                                        {
+                                                            <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayı Bekleniyor</span>
+                                                        }
+                                                        else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && item.VarolanDanismanOnayladi == true && !item.DanismanOnayladi.HasValue)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Tarafından Onayladı</span>
+                                                        }
+                                                        else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && item.VarolanDanismanOnayladi == false)
+                                                        {
+                                                            <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i>Varolan Danışman Tarafından Onaylamanmadı</span>
+                                                        }
+                                                        else if (!item.DanismanOnayladi.HasValue)
+                                                        {
+                                                            <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor</span>
+                                                        }
+                                                        else if (item.DanismanOnayladi == true && !item.EYKYaGonderildi.HasValue)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Danışman Tarafından Onayladı</span>
+                                                        }
+                                                        else if (item.DanismanOnayladi == false)
+                                                        {
+                                                            <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Danışman Tarafından Onaylamanmadı</span>
+                                                        }
+                                                        else if (item.EYKYaGonderildi == true && !item.EYKDaOnaylandi.HasValue)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı</span>
+                                                        }
+                                                        else if (item.EYKYaGonderildi == false)
+                                                        {
+                                                            <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı</span>
+                                                        }
+                                                        else if (item.EYKDaOnaylandi == true)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı</span>
+                                                        }
+                                                        else if (item.EYKDaOnaylandi == false)
+                                                        {
+                                                            <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Eş Danışman:</td>
+                                                    <td>
+                                                        @if (!item.EsDanismanOnerisiVar)
+                                                        {
+                                                            <span>Eş Danışman Formu Oluşturulmadı </span>
+                                                        }
+                                                        else if (!item.Es_EYKYaGonderildi.HasValue)
+                                                        {
+                                                            <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Bekleniyor</span>
+                                                        }
+                                                        else if (item.Es_EYKYaGonderildi == true && !item.Es_EYKDaOnaylandi.HasValue)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı</span>
+                                                        }
+                                                        else if (item.Es_EYKYaGonderildi == false)
+                                                        {
+                                                            <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı</span>
+                                                        }
+                                                        else if (item.Es_EYKDaOnaylandi == true)
+                                                        {
+                                                            <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı</span>
+                                                        }
+                                                        else if (item.Es_EYKDaOnaylandi == false)
+                                                        {
+                                                            <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı</span>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+
+                                        <td>
+                                            @if ((kayitYetki || silmeYetki) || item.KullaniciID == UserIdentity.Current.Id)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.TDOBasvuruID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Sil"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.TDOBasvuruID" style="display:none">
+                                        <td id="cls-@item.TDOBasvuruID" class="clspTd" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="clspTd" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+@if (danismanOnayYetki && !eykOnayYetki && (Model.RowCount > 0 || Model.TDOBasvuruID.HasValue))
+{
+    if (!Model.TDOBasvuruID.HasValue && Model.RowCount > 0) { Model.TDOBasvuruID = Model.Data.First().TDOBasvuruID; }
+    <script>
+        $(function () {
+        showDetail('@Model.TDOBasvuruID');
+    },200)
+    </script>
+}
+<script type="text/javascript">
+    $(function () {
+        Resized(window.innerWidth);
+    })
+    function Resized(screenwidth) {
+        if (screenwidth <= 800) {
+            $('.clsHide').addClass('hide');
+            $('.clspTd').attr("colspan", "4");
+            $('.ctWidth').removeAttr('width');
+        }
+        else {
+            $('.clsHide').removeClass('hide');
+            $('.clspTd').attr("colspan", "5");
+            $('.ctWidth').attr('width', '280');
+
+        }
+    }
+    window.addEventListener('resize', function (event) {
+        Resized(window.innerWidth);
+    });
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetailx(id);
+
+    }
+    function getDetailx(id, Isdelete, sndr) {
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetailTDOBasvuru", "Ajax")',
+            data: { id: id, IsDelete: (Isdelete == true) },
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    Resized(window.innerWidth);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'> Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Başvuru Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Başvuruyu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    //$(btbx).find('.modal-dialog').addClass('modal-lg');
+
+                }
+                var $YnBtn = $('#YeniRaporBtn_' + id);
+                if ($YnBtn.length > 0) {
+                    $YnBtn.pulsate({
+                        color: "#fdbe41",
+                        reach: 60,
+                        repeat: 24,
+                        speed: 300,
+                        glow: true
+                    });
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+
+    }
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+     function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "TDOBasvuru")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    function silDetay(sndr, id, TDOBasvuruDanismanID, tarih) {
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        var btbx = bootbox.dialog({
+            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
+            title: "Danışman Öneri Formu Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Danışman Öneri Formunu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("DetaySil", "TDOBasvuru")',
+                            data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.IsSuccess) {
+                                    getDetailx(id);
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                _pRefresh(_panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                        _pRefresh(_panel, true);
+                    }
+                }
+            }
+        });
+
+
+    }
+    function silDetayEs(sndr, id, uniqueID, tarih) {
+        var _panel = $('#bsvrDet_' + id);
+        _pRefresh(_panel, false);
+        var btbx = bootbox.dialog({
+            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli eş danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
+            title: "Eş Danışman Öneri Formu Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Eş Danışman Öneri Formunu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
+                            data: { id: id, uniqueID: uniqueID },
+                            success: function (result) {
+                                _pRefresh(_panel, true);
+                                if (result.IsSuccess) {
+                                    getDetailx(id);
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                _pRefresh(_panel, true);
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                        _pRefresh(_panel, true);
+                    }
+                }
+            }
+        });
+    }
+
+    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDODanismanTalepTipID) {
+          var _panel = $('#bsvrDet_' + TDOBasvuruID);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTdoDanismanFormu", "TDOBasvuru")',
+                data: {
+                    'TDOBasvuruID': TDOBasvuruID,
+                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
+                    'TDODanismanTalepTipID': TDODanismanTalepTipID
+                },
+                success: function (resultG) {
+                    _pRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
+
+                                success: {
+                                    label: 'Kaydet',
+                                    className: "btn-info",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        _pRefresh(pnlx, false);
+                                        $('#FrmTDODanismanFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    getDetailx(TDOBasvuruID);
+
+                                                }
+                                                else {
+                                                    if (result.Messages.length > 0) getMsg(result);
+                                                    return false;
+                                                }
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                _pRefresh(pnlx, true);
+                                            }
+
+                                        }).submit();
+                                        return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Kapat',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                            }
+
+                        }
+                        });
+
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+      function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
+          var _panel = $('#bsvrDet_' + TDOBasvuruID);
+            _pRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
+                data: {
+                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
+                    'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,
+                    'IsDegisiklikTalebi': IsDegisiklikTalebi
+                },
+                success: function (resultG) {
+                    _pRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            buttons: {
+
+                                success: {
+                                    label: 'Kaydet',
+                                    className: "btn-info",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        _pRefresh(pnlx, false);
+                                        $('#FrmTDOEsDanismanFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    getDetailx(TDOBasvuruID);
+                                                }
+                                                else {
+                                                    if (result.Messages.length > 0) getMsg(result);
+                                                    return false;
+                                                }
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                _pRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                _pRefresh(pnlx, true);
+                                            }
+
+                                        }).submit();
+                                        return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Kapat',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                            }
+
+                        }
+                        });
+
+                       // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    _pRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+</script>

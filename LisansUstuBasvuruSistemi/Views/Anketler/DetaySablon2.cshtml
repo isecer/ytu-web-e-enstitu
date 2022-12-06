@@ -1,0 +1,52 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model List<frAnketSecenekDetay>
+@{
+    Layout = null;
+}
+
+<table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
+    @{
+        int RowIndex = 0;
+        foreach (var item in Model)
+        {
+            RowIndex++;
+            <tr class="MainRow">
+                <td width="55">@item.SiraNo</td>
+                <td>@item.SecenekAdi</td> 
+                <td width="140"><span class="label label-@(item.IsEkAciklamaGir ? "success" : "info")">@(item.IsEkAciklamaGir?"Ek Açıklama İsteniyor":"Ek Açıklama İstenmiyor")</span></td>
+                <td width="35">
+                    <div class="hide" id="PnlAnkSs_@item.AnketSoruSecenekID">
+                        <div class="panel panel-default form-horizontal" style="margin:0px;padding:0px;">
+                            <div class="panel-body" style="margin:0px;padding:0px;">
+                                <div class="panel-body form-group-separated">
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label">Sıra No</label>
+                                        <div class="col-md-10 col-xs-8">@item.SiraNo</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label">Şık</label>
+                                        <div class="col-md-10 col-xs-8">@item.SecenekAdi</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-xs-4 control-label"></label>
+                                        <div class="col-md-10 col-xs-8"><span class="label label-@(item.IsEkAciklamaGir ? "success" : "info")">@(item.IsEkAciklamaGir ? "Ek Açıklama İsteniyor" : "Ek Açıklama İstenmiyor")</span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" onclick="SecenekEkleDialog(@item.AnketSoruID,@item.AnketSoruSecenekID)"><i class="fa fa-edit fa-lg" title="Anket Sorusu Şıkkını Düzelt"></i></a>
+                    <a href="javascript:void(0)" onclick="SilmeOnayAkss(this,@item.AnketSoruSecenekID)"><i class="fa fa-trash-o fa-lg" title="Sil"></i></a>
+                </td>
+            </tr>  
+        }
+        if (RowIndex == 0)
+        {
+            <tr>
+                <td colspan="4" style="color:maroon;font-size:12pt; text-align:center;height:30px;">Soruya ait herhangi bir şık bulunamadı.</td>
+            </tr>
+        }
+    }
+</table>
+

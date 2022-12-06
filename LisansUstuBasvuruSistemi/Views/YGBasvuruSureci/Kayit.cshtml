@@ -1,0 +1,320 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model kmBasvuruSurec
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var kmBsOtoMail = (List<kmBsOtoMail>)ViewBag.BsOtoMmail;
+}
+
+<div class="row">
+    <form id="FrmBasvuruSurec" method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+        <input type="text" style="display:none;" id="BasvuruSurecID" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-time"></i>&nbsp; Başvuru süreç kaydı</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit", "BasvuruSureci", new { id = Model.BasvuruSurecID })';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+
+
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Enstitü</label>
+                                <div class="col-md-8 col-xs-7">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "getOtBilgi(this);" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Öğretim Yılı</label>
+                                <div class="col-md-8 col-xs-7">
+                                    @Html.DropDownList("OgretimYili", null, "", new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Başlangıç / Bitiş Tarihi</label>
+                                <div class="col-md-8 col-xs-7">
+                                    <table>
+                                        <tr>
+                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi == DateTime.MinValue ? "" : Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td style="width:5px;text-align:center;">/</td>
+                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi == DateTime.MinValue ? "" : Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Başvuruda Doldurulması İstenen Anket</label>
+                                <div class="col-md-8 col-xs-7">
+                                    @Html.DropDownList("AnketID", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Kayıt Olmayanlar İçin İstenen Anket</label>
+                                <div class="col-md-8 col-xs-7">
+                                    @Html.DropDownList("KayitOlmayanlarAnketID", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                             
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Başvuru Kota Hesap Tipi</label>
+                                <div class="col-md-8 col-xs-7">
+                                    @Html.DropDownList("Kota_BasvuruSurecKontrolTipID", null, new { @class = "form-control", style = "padding:0px;" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Toplam Tercih Kotası</label>
+                                <div class="col-md-8 col-xs-7">
+                                    <input type="text" name="ToplamKota" id="ToplamKota" value="@Model.ToplamKota.toEmptyStringZero()" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0" title="Farklı öğrenim tipleri aynı başvuruda alınabilsin">Farklı Ö.T aynı başvuruda alınabilsin</label>
+                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="FarkliOgrenimTipleriAyniBasvurudaAlinabilsin" class="toggle" @Model.FarkliOgrenimTipleriAyniBasvurudaAlinabilsin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0">Öğrenciler sonuç listesini alırken puanları gözüksün</label>
+                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsOgrenciSonucListesindePuanGozuksun" class="toggle" @Model.IsOgrenciSonucListesindePuanGozuksun.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0">Kayıt için belge yüklemesi istensin</label>
+                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsBelgeYuklemeVar" onchange="if ($(this).prop('checked')) { $('.IsBelgeYuklemeVar').removeClass('hide'); } else { $('.IsBelgeYuklemeVar').addClass('hide'); }" class="toggle" @Model.IsBelgeYuklemeVar.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group IsBelgeYuklemeVar @(Model.IsBelgeYuklemeVar?"":"hide")">
+                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0">Kayıt için belge onayı zorunlu</label>
+                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsKayittaBelgeOnayiZorunlu" class="toggle" @Model.IsKayittaBelgeOnayiZorunlu.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12" id="_otBilgi">
+                                    @{Html.RenderPartial("getOtBilgi", Model.OgrenimTipModel); }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                        <div class="panel-heading padding-0">
+                                            <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Mülakat Sonuc Bilgisi Girişi</h3>
+                                        </div>
+                                        <div class="panel-body padding-0">
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0">% Oranını Bölümler Girsin</label>
+                                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                        <input type="checkbox" value="true" name="isYuzdeGirisBolum" class="toggle" @Model.isYuzdeGirisBolum.ToChecked() onchange="yGiridDurumChg(this)" />
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    function yGiridDurumChg(sndr) {
+                                                        var chkD = $(sndr).prop("checked");
+                                                        if (chkD) {
+                                                            $('#oranCapt').html("Min Yüzde Oranı");
+                                                            $('input[name=YuzdeOran]').val("");
+                                                        }
+                                                        else {
+                                                            $('#oranCapt').html("Yüzde Oranı");
+                                                        }
+                                                    }
+                                                </script>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-5 control-label">Başlangıç / Bitiş Tarihi</label>
+                                                <div class="col-md-8 col-xs-7">
+                                                    <table>
+                                                        <tr>
+                                                            <td><input class="mlkT form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.SonucGirisBaslangicTarihi.HasValue == false || Model.SonucGirisBaslangicTarihi.Value == DateTime.MinValue ? "" : Model.SonucGirisBaslangicTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="SonucGirisBaslangicTarihi" id="SonucGirisBaslangicTarihi"></td>
+                                                            <td style="width:5px;text-align:center;">/</td>
+                                                            <td><input class="mlkT form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.SonucGirisBitisTarihi.HasValue == false || Model.SonucGirisBitisTarihi.Value == DateTime.MinValue ? "" : Model.SonucGirisBitisTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="SonucGirisBitisTarihi" id="SonucGirisBitisTarihi"></td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-5 control-label">AGNO Giriş Başlangıç/Bitiş Tarihi</label>
+                                                <div class="col-md-8 col-xs-7">
+                                                    <table>
+                                                        <tr>
+                                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(!Model.AGNOGirisBaslangicTarihi.HasValue ? "" : Model.AGNOGirisBaslangicTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="AGNOGirisBaslangicTarihi" id="AGNOGirisBaslangicTarihi"></td>
+                                                            <td style="width:5px;text-align:center;">/</td>
+                                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.AGNOGirisBitisTarihi.HasValue==false ? "" : Model.AGNOGirisBitisTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="AGNOGirisBitisTarihi" id="AGNOGirisBitisTarihi"></td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-5 control-label">Giriş Sınav Türleri</label>
+                                                <div class="col-md-8 col-xs-7">
+                                                    <table class="table" style="width:100%;table-layout:fixed;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="80">Zorunlu</th>
+                                                                <th>Sınav Adı</th>
+                                                                <th width="115" id="oranCapt">@(Model.isYuzdeGirisBolum ? "Min Yüzde Oranı" : "Yüzde Oranı")</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.MulakatSTurModel)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
+                                                                            <div class="checkbox pull-left">
+                                                                                <label>
+                                                                                    <input type="checkbox" class="icheckbox" name="MulakatSinavTurIDSecilen" value="@item.MulakatSinavTurID" @item.Zorunlu.ToChecked()>
+                                                                                </label>
+                                                                            </div>
+                                                                            <input type="hidden" class="form-control" name="MulakatSinavTurID" value="@item.MulakatSinavTurID">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span onclick="$(this).parent().prev().find('label').click();" style="cursor:pointer;">@item.SinavTurAdi</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
+                                                                            <input type="text" class="form-control yuzdOrnMsk" name="YuzdeOran" value="@item.YuzdeOran">
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label">Taslak Başvuru Otomatik Mail Gönderme</label>
+                                <div class="col-md-8 col-xs-7">
+                                    <table class="table" style="width:100%;table-layout:fixed;">
+
+                                        <tbody>
+                                            @foreach (var item in kmBsOtoMail)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox pull-left">
+                                                            <label>
+                                                                <input type="checkbox" class="icheckbox" name="gID" value="@(item.gID)" @item.Checked.ToChecked()>
+                                                                Başvuru süreci bitimine @item.Zaman @item.ZamanTipAdi kala Taslak durumundaki başvurulara mail gönder
+                                                            </label>
+                                                        </div>
+                                                        <input type="hidden" class="form-control" name="BasvuruSurecOtoMailID" value="@(item.gID+"_"+item.BasvuruSurecOtoMailID)">
+                                                        <input type="hidden" class="form-control" name="ZamanTipID" value="@(item.gID+"_"+item.ZamanTipID)">
+                                                        <input type="hidden" class="form-control" name="Zaman" value="@(item.gID+"_"+item.Zaman)">
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-5 control-label padding-top-0 padding-bottom-0">Durum</label>
+                                <div class="col-md-8 col-xs-7 padding-top-0 padding-bottom-0">
+                                    <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+ 
+    $(function () {
+      //  getOtBilgi($('#EnstituKod'));
+        $('#BaslangicTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#BitisTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#AGNOGirisBaslangicTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#AGNOGirisBitisTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#SonucGirisBaslangicTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $('#SonucGirisBitisTarihi').datetimepicker({
+            lang: 'tr',
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+    function getOtBilgi(sndr) {
+      
+        var _panel = $('#_otBilgi');
+        _pRefresh(_panel, false);
+        var sndrVal = $(sndr).val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getOtBilgi", "YGBasvuruSureci")',
+                data: { EnstituKod: sndrVal, BasvuruSurecID: '@Model.BasvuruSurecID' },
+                success: function (result) {
+                    $("#_otBilgi").html(result);
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            $("#_otBilgi").html('');
+            _pRefresh(_panel, true);
+        }
+    }
+</script>

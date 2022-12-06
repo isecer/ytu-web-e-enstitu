@@ -1,0 +1,343 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model KmTDOBasvuruDanisman
+@{
+    Layout = null;
+    var yeniTezDanismani = Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi || Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi;
+    var tezBasligiDegisikligi = Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi;
+}
+<div class="panel" style="margin:0px;margin-top:5px;" id="bbTdoForm">
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title"> Tez/Danışman İşlemi (@Model.OgrenciAdSoyad)</h3>
+        <ul class="panel-controls"></ul>
+    </div>
+    <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
+
+
+        @using (Ajax.BeginForm("TdoDanismanFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTDODanismanFormu" }))
+        {
+            @Html.HiddenFor(p => p.TDOBasvuruID);
+            @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
+            @Html.HiddenFor(p => p.VarolanTezDanismanID);
+            @Html.HiddenFor(p => p.TDODanismanTalepTipID);
+            @Html.HiddenFor(p => p.UniqueID);
+            <div class="panel panel-default form-horizontal">
+                <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                </div>
+                <div class="panel-body form-group-separated" style="padding:5px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-5 control-label">Talep Tipi</label>
+                        <div class="col-md-8 col-xs-7">
+                            @Html.DropDownList("TDODanismanTalepTipIDCmb", Model.SListTDoDanismanTalepTip, new { @class = "form-control", @disabled = "disabled", style = "color:black;" })
+                        </div>
+                    </div>
+                    @if (Model.TDODanismanTalepTipID != TDODanismanTalepTip.TezDanismaniDegisikligi)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Tez Dili</label>
+                            <div class="col-md-8 col-xs-7">
+                                <select name="IsTezDiliTr" id="IsTezDiliTr" class="form-control" onchange="YRefreshReplace();">
+                                    <option value="" @(Model.IsTezDiliTr.HasValue == false ? "selected" : "")></option>
+                                    <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
+                                    <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(p => p.IsTezDiliTr);
+                    }
+                    @if (Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Tez Başlığı Türkçe</label>
+                            <div class="col-md-8 col-xs-7">
+                                <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" class="form-control upperCase" style="color:black;" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Tez Başlığı İngilizce</label>
+                            <div class="col-md-8 col-xs-7">
+                                <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" class="form-control upperCase" style="color:black;" />
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi || Model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Yeni Tez Başlığı Türkçe</label>
+                            <div class="col-md-8 col-xs-7">
+                                <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control upperCase" style="color:black;" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Yeni Tez Başlığı İngilizce</label>
+                            <div class="col-md-8 col-xs-7">
+                                <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control upperCase" style="color:black;" />
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TDODanismanTalepTipID != TDODanismanTalepTip.TezDanismaniDegisikligi)
+                    {
+                        <div class="form-group dilRow @(Model.IsTezDiliTr == false ? "" : "hide")">
+                            <label class="col-md-4 col-xs-5 control-label">Öğrenci Yabancı Dil Yeterliliği</label>
+                            <div class="col-md-8 col-xs-7">
+                                <table>
+                                    <tr>
+                                        <td>Sınav Adı</td>
+                                        <td>Sınav Yılı</td>
+                                        <td>Sınav Puanı</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-group">
+                                            @Html.DropDownList("SinavTipID", Model.SListSinav, new { @class = "form-control", @style = "width:147px;color:black;", id = "SinavTipID", onchange = "stTdKontrol(this,'SinavPuani','TdESpInp');" })
+                                        </td>
+                                        <td class="form-group"> <input type="text" name="SinavYili" id="SinavYili" autocomplete="off" maxlength="4" value="@Model.SinavYili" class="form-control" style="color:black;" /></td>
+                                        <td class="form-group TdESpInp">
+                                            @if (Model.SListSinavNot == null)
+                                            {
+                                                <input type="text" name="SinavPuani" id="SinavPuani" autocomplete="off" maxlength="64" value="@Model.SinavPuani" class="form-control" style="color:black;" />
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("SinavPuani", Model.SListSinavNot, new { @class = "form-control", id = "SinavPuani" })
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    @if (tezBasligiDegisikligi)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-5 control-label">Not:</label>
+                            <div class="col-md-8 col-xs-7" style="color:maroon;">
+                                Önerilen danışmanın ismi listede yer almıyor ise kendisiyle irtibata geçerek https://lisansustu.yildiz.edu.tr/ adresinde bir hesap oluşturmasını talep ediniz.
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni" : "") Danışman</label>
+                        <div class="col-md-8 col-xs-7">
+                            <input type="text" class="form-control" value="" style="width: 100%;color:black;" name="TezDanismanID" id="TezDanismanID" @(tezBasligiDegisikligi ? "readonly" : "") />
+                            @if (Model.TezDanismanID > 0)
+                            {
+                                <script>
+                                            setTimeout(function () {
+                                                var secilen = @Html.Raw(Json.Encode(new { id =Model.TezDanismanID , text = Model.TDAdSoyad }));
+                                                $("#TezDanismanID").select2('data', secilen);
+
+                                            }, 1200);
+                                </script>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni" : "") Danışman Anabilim Dalı</label>
+                        <div class="col-md-8 col-xs-7">
+                            @if (tezBasligiDegisikligi)
+                            {
+                                @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);", disabled = "disabled" });
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" });
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni Danışman" : "") Programı</label>
+                        <div class="col-md-8 col-xs-7">
+                            @if (tezBasligiDegisikligi)
+                            {
+                                @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod", disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group dilRow @(Model.IsTezDiliTr==false?"":"hide")">
+                        <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni" : "") Danışman Yabancı Dil Yeterliliği</label>
+                        <div class="col-md-8 col-xs-7">
+                            <table>
+                                <tr>
+                                    <td>Sınav Adı</td>
+                                    <td class="TdSinavUni @(Model.TDSinavTipID==-1?"":"hide")">Üniversite Adı</td>
+                                    <td class="TdSp @(Model.TDSinavTipID==-1?"hide":"")">Sınav Yılı</td>
+                                    <td class="TdSp @(Model.TDSinavTipID==-1?"hide":"")">Sınav Puanı</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-group">
+                                        @Html.DropDownList("TDSinavTipID", Model.SListTDSinav, new { @class = "form-control", @style = "width:147px;color:black;", id = "TDSinavTipID", onchange = "stTdKontrol(this,'TDSinavPuani','TdSpInp');" })
+                                    </td>
+                                    <td class="form-group TdSinavUni @(Model.TDSinavTipID==-1?"":"hide")"> <input type="text" name="TDUniversiteAdi" id="TDUniversiteAdi" maxlength="256" autocomplete="off" value="@Model.TDUniversiteAdi" class="form-control" style="color:black;" /></td>
+                                    <td class="form-group TdSp @(Model.TDSinavTipID==-1?"hide":"")"> <input type="text" name="TDSinavYili" id="TDSinavYili" maxlength="4" autocomplete="off" value="@Model.TDSinavYili" class="form-control" style="color:black;" /></td>
+                                    <td class="form-group TdSp TdSpInp @(Model.TDSinavTipID==-1?"hide":"")">
+                                        @if (Model.SListTDSinavNot == null)
+                                        {
+                                            <input type="text" name="TDSinavPuani" id="TDSinavPuani" maxlength="64" autocomplete="off" value="@Model.TDSinavPuani" class="form-control" style="color:black;" />
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownList("TDSinavPuani", Model.SListTDSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
+                                        }
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+<script>
+    YRefreshReplace();
+    function stTdKontrol(sndr,inp,cls) {
+        if ($(sndr).val() == "-1") {
+            $('.TdSp').addClass('hide');
+            $('.TdSinavUni').removeClass('hide');
+        }
+        else {
+            $('.TdSp').removeClass('hide');
+            $('.TdSinavUni').addClass('hide');
+        }
+        var _panel = $('#bbTdoForm');
+        _pRefresh(_panel, false);
+        var sndrVal = $(sndr).val();
+        if (sndrVal != null && sndrVal != "" && sndrVal != "-1") {
+            $.ajax({
+                url: '@Url.Action("GetSinavTip", "TDOBasvuru")',
+                data: { 'TDOBasvuruID': @Model.TDOBasvuruID, 'SinavTipID': sndrVal },
+                success: function (result) {
+                     if (result.OzelNot == true) {
+                        var SnotSlct = '<select class="form-control" id="' + inp + '" name="' + inp +'">';
+
+                        for (var i = 0; i < result.Notlar.length; i++) {
+                            var valR = result.Notlar[i].Value;
+                            var _value = "";
+                            if (valR != null) {
+                                _value = valR;
+                            }
+                            SnotSlct += "<option value=" + _value + ">" + result.Notlar[i].Caption + "</option>"
+                        }
+                        SnotSlct += "</select>";
+                        $('.' + cls).html(SnotSlct);
+                    }
+                    else {
+                        $('.' + cls).html('<input type="text" name="' + inp + '" id="' + inp + '" maxlength="64" autocomplete="off" class="form-control" style="color:black;">');
+                    }
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            _pRefresh(_panel, true);
+            $('#' + inp +'').val();
+            $('#' + inp +'').empty();
+        }
+    }
+    function YRefreshReplace() {
+        var tezDiliVal = $('#IsTezDiliTr').val();
+        if (tezDiliVal.toLocaleLowerCase() == 'false') {
+            $('.dilRow').removeClass('hide');
+        }
+        else {
+            $('.dilRow').addClass('hide');
+        }
+    }
+
+    $(function () {
+        $('#TezDanismanID').select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            multiple: false,
+            ajax: {
+                url: '@Url.Action("GetYTULUBOgretimEleman", "Ajax")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        'term': term
+                    }
+
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var cont2 =
+                    "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr><td>" + result.AdSoyad + "</td></tr>" +
+                    "<tr><td>Ünvan: " + result.UnvanAdi + "</td></tr>" +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        })
+            .on('change', function (e) {
+            });
+
+    });
+    function getPrograms(sndr) {
+        var _panel = $('#bbTdoForm');
+        _pRefresh(_panel, false);
+        var sndrVal = $(sndr).val();
+        if (sndrVal != null && sndrVal != "") {
+            $.ajax({
+                url: '@Url.Action("getProgramlar", "TDOBasvuru")',
+                data: { 'TDAnabilimDaliID': sndrVal },
+                success: function (result) {
+                    $('#TDProgramKod').empty();
+                    var opt = "";
+                    for (var i = 0; i < result.length; i++) {
+                        var valR = result[i].Value;
+                        var _value = "";
+                        if (valR != null) {
+                            _value = valR;
+                        }
+                        opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
+                    }
+                    $('#TDProgramKod').append(opt);
+
+                    _pRefresh(_panel, true);
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(_panel, true);
+                }
+            });
+        }
+        else {
+            _pRefresh(_panel, true);
+            $('#TDProgramKod').empty();
+        }
+    }
+
+
+</script>

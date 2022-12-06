@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=301880
+  -->
+<configuration>
+
+  <configSections>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+    <sectionGroup name="devExpress">
+      <section name="themes" type="DevExpress.Web.ThemesConfigurationSection, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" requirePermission="false" />
+      <section name="compression" type="DevExpress.Web.CompressionConfigurationSection, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" requirePermission="false" />
+      <section name="settings" type="DevExpress.Web.SettingsConfigurationSection, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" requirePermission="false" />
+      <section name="errors" type="DevExpress.Web.ErrorsConfigurationSection, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" requirePermission="false" />
+      <section name="resources" type="DevExpress.Web.ResourcesConfigurationSection, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" requirePermission="false" />
+    </sectionGroup>
+  </configSections>
+  <location path="Content">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <location path="Scripts">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <location path="fonts">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <location path="Views/Shared/Error.cshtml">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <location path="AppEvent/PageNotFound">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <location path="AppEvent/Error">
+    <system.web>
+      <authorization>
+        <allow users="*" />
+      </authorization>
+    </system.web>
+  </location>
+  <appSettings>
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="ldapServicePassword" value="9cb6a23d-7863-4a1d-95ac-cbd93c7a1acd" />
+    <add key="aspnet:RequestQueueLimitPerSession" value="800" /> 
+  </appSettings>
+  <system.web>
+    <httpHandlers>
+      <add path="Reserved.ReportViewerWebControl.axd" verb="*" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" validate="false" />
+      <add type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" verb="GET,POST" path="DX.ashx" validate="false" />
+      <add verb="GET,POST" path="ASPxUploadProgressHandlerPage.ashx" type="DevExpress.Web.ASPxUploadProgressHttpHandler, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add validate="false" verb="GET,POST" path="DXXRDV.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add validate="false" verb="GET,POST" path="DXXRD.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add validate="false" verb="GET,POST" path="DXQB.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    </httpHandlers>
+    <authentication mode="Forms">
+      <forms name="LisansUstuBasvuruSistemi.ASPXAUTH" loginUrl="/fbe/tr/Account/Login" timeout="60" cookieless="UseCookies" />
+    </authentication>
+    <customErrors mode="Off" defaultRedirect="~/AppEvent/PageNotFound" redirectMode="ResponseRedirect">
+      <error statusCode="404" redirect="~/AppEvent/PageNotFound" />
+      <error statusCode="403" redirect="~/AppEvent/PageNotFound" />
+    </customErrors>
+    <httpRuntime targetFramework="4.5.2" requestValidationMode="2.0" maxRequestLength="1048576" />
+    <compilation debug="true">
+      <assemblies>
+        <add assembly="Microsoft.Build.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A" />
+        <add assembly="DevExpress.Utils.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Data.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Web.ASPxThemes.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.RichEdit.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Printing.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Web.Mvc5.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.XtraReports.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.XtraReports.v21.1.Web, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.XtraReports.v21.1.Web.WebForms, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Pdf.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Web.Resources.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Charts.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.CodeParser.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.DataAccess.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Office.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.PivotGrid.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Sparkline.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.Xpo.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.XtraCharts.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+        <add assembly="DevExpress.XtraGauges.v21.1.Core, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      </assemblies>
+      <buildProviders>
+        <add extension=".rdlc" type="Microsoft.Reporting.RdlBuildProvider, Microsoft.ReportViewer.WebForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+      </buildProviders>
+    </compilation>
+    <httpModules>
+      <add type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" name="ASPxHttpHandlerModule" />
+    </httpModules>
+  </system.web>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" culture="neutral" publicKeyToken="30ad4fe6b2a6aeed" />
+        <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Optimization" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-1.1.0.0" newVersion="1.1.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-1.5.2.14234" newVersion="1.5.2.14234" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Helpers" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:6 /nowarn:1659;1699;1701" />
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:14 /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" />
+    </compilers>
+  </system.codedom>
+  <system.webServer>
+
+    <validation validateIntegratedModeConfiguration="false" />
+    <security>
+      <requestFiltering>
+        <requestLimits maxAllowedContentLength="1073741824" />
+      </requestFiltering>
+    </security>
+    <handlers>
+      <add name="ReportViewerWebControlHandler" preCondition="integratedMode" verb="*" path="Reserved.ReportViewerWebControl.axd" type="Microsoft.Reporting.WebForms.HttpHandler, Microsoft.ReportViewer.WebForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+      <add type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" verb="GET,POST" path="DX.ashx" name="ASPxHttpHandlerModule" preCondition="integratedMode" />
+      <remove name="ExtensionlessUrlHandler-Integrated-4.0" />
+      <remove name="OPTIONSVerbHandler" />
+      <remove name="TRACEVerbHandler" />
+      <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
+      <add name="ASPxWebDocumentViewerHandlerModule" preCondition="integratedMode" verb="GET,POST" path="DXXRDV.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add name="ASPxReportDesignerHandlerModule" preCondition="integratedMode" verb="GET,POST" path="DXXRD.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add name="ASPxQueryBuilderDesignerHandlerModule" preCondition="integratedMode" verb="GET,POST" path="DXQB.axd" type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+      <add type="DevExpress.Web.ASPxUploadProgressHttpHandler, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" verb="GET,POST" path="ASPxUploadProgressHandlerPage.ashx" name="ASPxUploadProgressHandler" preCondition="integratedMode" />
+    </handlers>
+    <modules>
+      <add type="DevExpress.Web.ASPxHttpHandlerModule, DevExpress.Web.v21.1, Version=21.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" name="ASPxHttpHandlerModule" />
+    </modules>
+    <staticContent>
+      <remove fileExtension=".woff2" />
+      <mimeMap fileExtension=".woff2" mimeType="font/woff2" />
+    </staticContent>
+    <!--<rewrite>
+      <rules>
+        <rule name="CanonicalHostNameRule1">
+          <match url="(.*)" />
+          <conditions>
+            <add input="{HTTP_HOST}" pattern="^lisansustu\.yildiz\.edu\.tr$" negate="true" />
+          </conditions>
+          <action type="Redirect" url="http://lisansustu.yildiz.edu.tr/{R:1}" />
+        </rule>
+        <rule name="HTTP TO HTTPS" stopProcessing="true">
+          <match url="(.*)" />
+          <conditions>
+            <add input="{HTTPS}" pattern="^OFF$" />
+          </conditions>
+          <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="SeeOther" />
+        </rule>
+      </rules>
+    </rewrite>-->
+    <!--<serverRuntime uploadReadAheadSize="1048576" enabled="true"/>-->
+  </system.webServer>
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
+      <parameters>
+        <parameter value="mssqllocaldb" />
+      </parameters>
+    </defaultConnectionFactory>
+    <providers>
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+    </providers>
+  </entityFramework>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="WebServiceSoap" maxBufferSize="999999" maxReceivedMessageSize="999999">
+          <security mode="Transport" />
+        </binding>
+        <binding name="ServiceSoap">
+          <security mode="Transport" />
+        </binding>
+        <binding name="ServiceSoap1" />
+        <binding name="KPSPublicV2Soap">
+          <security mode="Transport" />
+        </binding>
+        <binding name="KPSPublicV2Soap1" />
+        <binding name="BasicHttpBinding_ISonuc">
+          <security mode="Transport" />
+        </binding>
+        <binding name="BasicHttpBinding_ISonuc1" />
+        <binding name="ServiceSoap2">
+          <security mode="Transport" />
+        </binding>
+        <binding name="DanismanServiceSoap" maxReceivedMessageSize="2147483647">
+          <security mode="TransportCredentialOnly">
+            <transport clientCredentialType="Ntlm" />
+            <message clientCredentialType="UserName" algorithmSuite="Default" />
+          </security>
+        </binding>
+        <binding name="Service1Soap">
+          <security mode="Transport" />
+        </binding>
+        <binding name="Service1Soap1" />
+        <binding name="SecureSoap">
+          <security mode="Transport" />
+        </binding>
+        <binding name="SecureSoap1" />
+        <binding name="YuksekOgretimEgitimBilgisiPortSoap11" />
+      </basicHttpBinding>
+      <customBinding>
+        <binding name="ServiceSoap12">
+          <textMessageEncoding messageVersion="Soap12" />
+          <httpsTransport />
+        </binding>
+      </customBinding>
+    </bindings>
+    <client>
+      <endpoint address="https://193.140.1.237/kontenjanlar/WebService.asmx" binding="basicHttpBinding" bindingConfiguration="WebServiceSoap" contract="Ws_Kotalar.WebServiceSoap" name="WebServiceSoap" />
+      <endpoint address="https://tckimlik.nvi.gov.tr/Service/KPSPublicV2.asmx" binding="basicHttpBinding" bindingConfiguration="KPSPublicV2Soap" contract="Ws_KimlikDogrula.KPSPublicV2Soap" name="KPSPublicV2Soap" />
+      <endpoint address="https://vps.osym.gov.tr:443/Ext/Provider/BilgiServisi/Sonuc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_ISonuc" contract="Ws_Osym_1.ISonuc" name="BasicHttpBinding_ISonuc" />
+      <endpoint address="https://193.140.1.237/GSISKayit/Service.asmx" binding="basicHttpBinding" bindingConfiguration="ServiceSoap" contract="Ws_GsisAktarim.ServiceSoap" name="ServiceSoap" />
+      <endpoint address="https://193.140.1.237/gsisodeme/Service.asmx" binding="basicHttpBinding" bindingConfiguration="ServiceSoap2" contract="Ws_GsisOdeme.ServiceSoap" name="ServiceSoap1" />
+      <endpoint address="https://193.140.1.237/gsisodeme/Service.asmx" binding="customBinding" bindingConfiguration="ServiceSoap12" contract="Ws_GsisOdeme.ServiceSoap" name="ServiceSoap12" />
+      <endpoint address="https://persis.yildiz.edu.tr/enstituservis/service1.asmx" binding="basicHttpBinding" bindingConfiguration="Service1Soap" contract="Ws_Persis.Service1Soap" name="Service1Soap" />
+      <endpoint address="https://adservice.yildiz.edu.tr/DCQueryWService/Secure.asmx" binding="basicHttpBinding" bindingConfiguration="SecureSoap" contract="LdapService.SecureSoap" name="SecureSoap" />
+      <endpoint address="http://servisler.yok.gov.tr/ws/yuksekogretim/egitim" binding="basicHttpBinding" bindingConfiguration="YuksekOgretimEgitimBilgisiPortSoap11" contract="Ws_YokOgrenciSorgula.YuksekOgretimEgitimBilgisiPort" name="YuksekOgretimEgitimBilgisiPortSoap11" />
+      <endpoint address="http://193.140.1.237/danismanservice/danismanservice.asmx" binding="basicHttpBinding" bindingConfiguration="DanismanServiceSoap" contract="Ws_GsisMezuniyetBilgi.DanismanServiceSoap" name="DanismanServiceSoap" />
+    </client>
+  </system.serviceModel>
+  <connectionStrings>
+    <!--<add name="LubsDBEntities" connectionString="metadata=res://*/Models.LubsDB.csdl|res://*/Models.LubsDB.ssdl|res://*/Models.LubsDB.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=193.140.1.226;initial catalog=LisansustuBasvuruSistemi;Connection Timeout=240;user id=isecer;password=irfaa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />-->
+     <add name="LubsDBEntities" connectionString="metadata=res://*/Models.LubsDB.csdl|res://*/Models.LubsDB.ssdl|res://*/Models.LubsDB.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=.;initial catalog=LisansustuBasvuruSistemi;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  </connectionStrings>
+  <devExpress>
+    <themes enableThemesAssembly="true" theme="" customThemeAssemblies="" />
+    <compression enableHtmlCompression="false" enableCallbackCompression="true" enableResourceCompression="true" enableResourceMerging="true" />
+    <settings embedRequiredClientLibraries="true" rightToLeft="false" checkReferencesToExternalScripts="true" doctypeMode="Html5" accessibilityCompliant="false" />
+    <errors callbackErrorRedirectUrl="" />
+  </devExpress>
+</configuration>

@@ -1,0 +1,312 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model basvuruDetayModelMezuniyet
+@{
+
+
+    Layout = null;
+    bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    bool JuriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
+    bool JuriOneriFormuOnayYetkiEYKDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEYKOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
+
+    var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
+    var IsTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
+    var itemOnaylananSR = Model.MezuniyetSRModel.SalonRezervasyonlari.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili).FirstOrDefault();
+    var BezCiltForm = itemOnaylananSR != null ? itemOnaylananSR.SRTalepleriBezCiltFormus.FirstOrDefault() : null;
+
+
+}
+<style>
+
+    .CaptionTd {
+        font-weight: bold;
+        font-size: 9pt;
+        margin: 0px;
+    }
+
+    .ValueTd {
+        font-size: 9pt;
+        margin: 0px;
+        text-align: left;
+    }
+</style>
+@if (!Model.IsDelete)
+{
+    <div class="panel" id="bsvrDet_@Model.MezuniyetBasvurulariID">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+            <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
+
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Başvuru Kabulü</span></a></li>
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                    {
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-group fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> EYK Süreci</span></a></li>
+                    }
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
+                    {
+                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-edit fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Sınav Süreci</span></a></li>
+                    }
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                    {
+                        <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@tbName-4" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Tez Kontrol Süreci</span></a></li>
+                    }
+                    @if ((Model.KullaniciID == UserIdentity.Current.Id || KayitYetki) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && (IsTdYuklemeKapali || BezCiltForm != null))
+                    {
+                        <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span></a></li>
+                    }
+                    <li><a href="javascript:void(0);" onclick="getDetailx('@Model.MezuniyetBasvurulariID');" title="Detay Sayfasını Yenile" class="panel-refresh"><span class="fa fa-refresh myValueTd"></span></a></li>
+
+                </ul>
+
+                <div class="panel-body tab-content" id="yayinContent_@Model.MezuniyetBasvurulariID" style="padding:0px;">
+                    <input type="text" id="SelectedTb-@tbName" style="display:none;" value="@Model.SelectedTabIndex" />
+                    <table style="margin:0px;">
+                        <tr>
+                            <td width="110" style="text-align:center;">
+                                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                            </td>
+                            <td style="padding-left:10px;text-align:left;">
+
+                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                    <tr>
+                                        <td width="160">Ad Soyad</td>
+                                        <td width="10">:</td>
+                                        <td>
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td>@Model.Ad @Model.Soyad (@Model.OgrenciNo)</td>
+                                                    <td width="220px;" style="text-align:right;">
+                                                        Başvuru Tarihi: @Model.BasvuruTarihi.ToString()
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Öğrenim Seviyesi</td>
+                                        <td>:</td>
+                                        <td>@Model.OgrenimTipAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Program</td>
+                                        <td>:</td>
+                                        <td>@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kayıt Tarihi</td>
+                                        <td>:</td>
+                                        <td>@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                                    </tr>
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                                    {
+                                        <tr>
+                                            <td>Danışman</td>
+                                            <td>:</td>
+                                            <td>
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tr>
+                                                        <td>
+                                                            @if (Model.TezDanismanID.HasValue)
+                                                            {
+                                                                <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
+                                                            }
+
+                                                        </td> 
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                                    {
+                                        <tr class="@(Model.EYKTarihi.HasValue ? "success" : "danger")">
+                                            <td>EYK Tarihi</td>
+                                            <td>:</td>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td id="eykLbl_@Model.MezuniyetBasvurulariID">
+                                                            @(Model.EYKTarihi.HasValue ? Model.EYKTarihi.Value.ToDateString() : "EYK Tarihi Girilmedi")
+                                                        </td>
+                                                        <td id="eykInp_@Model.MezuniyetBasvurulariID" class="hide">
+                                                            <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToString("dd-MM-yyyy"))" id="InpEyk_@Model.MezuniyetBasvurulariID">
+                                                        </td>
+                                                        @if (KayitYetki)
+                                                        {
+                                                            <td width="25" style="text-align:right;font-size:10pt;">
+                                                                <a href="javascript:void(0)" onclick="ShowEykTarih(@Model.MezuniyetBasvurulariID,this)"><i class="fa fa-edit fa-lg" title="EYK Tarihini Düzenle"></i></a>
+                                                                <script>
+                                                                    $('.date-pickerx').datetimepicker({
+                                                                        timepicker: false,
+                                                                        format: 'd-m-Y'
+                                                                    });
+                                                                    function ShowEykTarih(id, sndr) {
+                                                                        if ($('#eykLbl_' + id).hasClass('hide')) {
+                                                                            $('#eykLbl_' + id).removeClass('hide');
+                                                                            $('#eykInp_' + id).addClass('hide');
+                                                                            $('#eykSv_' + id).addClass('hide');
+
+                                                                        }
+                                                                        else {
+                                                                            $('#eykLbl_' + id).addClass('hide');
+                                                                            $('#eykInp_' + id).removeClass('hide');
+                                                                            $('#eykSv_' + id).removeClass('hide');
+                                                                        }
+                                                                    }
+
+                                                                </script>
+                                                            </td>
+                                                            <td id="eykSv_@Model.MezuniyetBasvurulariID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                                <a href="javascript:void(0)" onclick="SaveEykTarihi(@Model.MezuniyetBasvurulariID,this)"><i class="fa fa-save fa-lg" title="EYK Tarihini Kaydet"></i></a>
+                                                                <script>
+
+                                                                function SaveEykTarihi(id, sndr) {
+                                                                    var val = $('#InpEyk_' + id).val();
+                                                                    var dt = null;
+                                                                    if (val != "" && val != null) {
+                                                                        var _yil = val.split("-")[2];
+                                                                        var _ay = val.split("-")[1];
+                                                                        var _gun = val.split("-")[0];
+                                                                        dt = _ay + "-" + _gun + "-" + _yil ;
+                                                                    }
+                                                                    $.ajax({
+                                                                        url: '@Url.Action("EYKTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                        data: { 'id': id, 'EYKTarihi': dt },
+                                                                        success: function (result) {
+                                                                            getMsg(result.MmMessage);
+                                                                            if (result.IsSuccess) {
+                                                                                getDetailx(id);
+                                                                            }
+                                                                        },
+                                                                        error: function (err) {
+                                                                            alert(err.responseText);
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                                </script>
+                                                            </td>
+
+
+
+                                                        }
+                                                    </tr>
+                                                </table>
+
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    @Model.ToMezuniyetDetayBasvuru()
+
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+                    {
+                        @Model.ToMezuniyetDetayEYKSureci()
+                    }
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
+                    {
+                        @Model.ToMezuniyetDetaySinavSureci()
+                    }
+                    @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                    {
+                        @Model.ToMezuniyetDetayTezKontrolSureci()
+                        if ((Model.KullaniciID == UserIdentity.Current.Id || KayitYetki) && (IsTdYuklemeKapali || BezCiltForm != null))
+                        {
+                            @Model.ToMezuniyetDetayMezuniyetSureci()
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <span id="MD_html_@Model.MezuniyetBasvurulariID" class="hide">
+        @Model.BasvuruDurumHtml
+    </span>
+    <script>
+
+    $(function () {
+        $('.tooltips').tooltip();
+        jQuery('._popover').popover({ trigger: 'hover' });
+
+        $('.openFl').click(function (itmx) {
+            var FPath = $(this).attr("FPath");
+            var FName = $(this).attr("FName");
+            PopupCenter(FPath, FName, 800, 600);
+        });
+        var HtmlString = $('#MD_html_@Model.MezuniyetBasvurulariID').html();
+        $('#MDurum_@Model.MezuniyetBasvurulariID').html(HtmlString);
+
+    });
+    function DurumKontrol(id) {
+        var secimval = $('#SRDurumID_' + id).val();
+        if (secimval == '@SRTalepDurum.Reddedildi') {
+            $('#aciklamabilgi_' + id).removeClass("hide");
+        }
+        else {
+            $('#aciklamabilgi_' + id).addClass("hide")
+        }
+    }
+    function TTStVChange(sndr, rwid) {
+        if ($(sndr).val() != "@MezuniyetSinavDurum.Basarili") {
+            $('#InpTTSt_' + rwid).addClass("hide");
+            $('.tt_Title_' + rwid).addClass("hide");
+        }
+        else {
+
+            $('#InpTTSt_' + rwid).removeClass("hide");
+            $('.tt_Title_' + rwid).removeClass("hide");
+        }
+    }
+
+    </script>
+}
+else
+{
+    <table style="margin:0px;">
+        <tr>
+            <td width="100" style="text-align:center;">
+                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+            </td>
+            <td style="padding-left:10px;text-align:left;">
+
+                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                    <tr>
+                        <td width="100">Ad Soyad</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.Ad @Model.Soyad (@Model.OgrenciNo)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Başvuru Tarihi</td>
+                        <td>:</td>
+                        <td>@Model.BasvuruTarihi.ToString()</td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>@Model.OgrenimTipAdi </td>
+                    </tr>
+                    <tr>
+                        <td>Anabilim Dalı</td>
+                        <td>:</td>
+                        <td>@Model.AnabilimdaliAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Program</td>
+                        <td>:</td>
+                        <td>@Model.ProgramAdi</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+}

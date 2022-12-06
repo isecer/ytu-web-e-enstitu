@@ -1,0 +1,461 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model fmKullanicilar
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var kayit = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var silme = RoleNames.KullanicilarSil.InRoleCurrent();
+    var yetkilendirme = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var adinaBasvuru = RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent();
+    var adinaBasvuruM = RoleNames.KullaniciAdinaMezuniyetBasvurusuYap.InRoleCurrent();
+    var adinaBasvuruTI = RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent();
+    var adinaBasvuruTDO = RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent();
+    var gbKayit = RoleNames.GelenBasvurularKayit.InRoleCurrent();
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var mailGonder = RoleNames.MailGonder.InRoleCurrent();
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    var mezuniyetBAcik = new List<string>();
+    var TIBAcik = new List<string>();
+    var TDOBAcik = new List<string>();
+    if (MezuniyetAyar.getAyarMZ(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    {
+        mezuniyetBAcik.Add(EnstituKodlari.FenBilimleri);
+    }
+    if (MezuniyetAyar.getAyarMZ(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    {
+        mezuniyetBAcik.Add(EnstituKodlari.SosyalBilimleri);
+    }
+    if (TIAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    {
+        TDOBAcik.Add(EnstituKodlari.FenBilimleri);
+    }
+    if (TIAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    {
+        TDOBAcik.Add(EnstituKodlari.SosyalBilimleri);
+    }
+    if (TIAyar.BasvurusuAcikmi.getAyarTI(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    {
+        TIBAcik.Add(EnstituKodlari.SosyalBilimleri);
+    }
+    if (TIAyar.BasvurusuAcikmi.getAyarTI(EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    {
+        TIBAcik.Add(EnstituKodlari.FenBilimleri);
+    }
+    var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "Kullanicilar", FormMethod.Post, new { id = "frmKullanicilar" }))
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info @(Model.Expand?" ":" panel-toggled")" id="pnlFltr">
+                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+                        <li><a href="javasctipr:void(0)" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'true' :'false' )); " class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Enstitü</td>
+                                        <td>
+                                            @Html.DropDownList("EnstituKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Öğrenim Seviyesi</td>
+                                        <td>
+                                            @Html.DropDownList("OgrenimTipKod", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Kullanıcı Tipi</td>
+                                        <td>
+                                            @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Öğrenim Durumu</td>
+                                        <td>
+                                            @Html.DropDownList("OgrenimDurumID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Cinsiyet</td>
+                                        <td>
+                                            @Html.DropDownList("CinsiyetID", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Birim</td>
+                                        <td>
+                                            @Html.DropDownList("BirimID", null, "", new { @class = "form-control", style = "padding:0px;", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Yetki Grubu</td>
+                                        <td>
+                                            @Html.DropDownList("YetkiGrupID", null, "", new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Aranacak Kelime</td>
+                                        <td>
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td><input name="AdSoyad" id="AdSoyad" type="text" onkeypress="if (event.which == 13) { $('#frmKullanicilar').submit(); }" value="@Model.AdSoyad" class="form-control" /></td>
+                                                    <td width="110px;"><a href="javascript:void(0);" onclick="$('#frmKullanicilar').submit();" class="btn btn-info"><i class="glyphicon glyphicon-filter"> Filtrele</i></a></td>
+                                                </tr>
+                                            </table>
+                                            @if (Model.AdSoyad.IsNullOrEmpty() == false)
+                                            {
+                                                <script>
+                                                    $(function () {
+                                                        SetCaretAtEnd(document.getElementById('AdSoyad'));
+                                                    });
+
+                                                </script>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tr>
+                                        <td width="120">Ek Yetki</td>
+                                        <td>
+                                            @Html.DropDownList("IsAdmin", null, new { @class = "form-control", onchange = "$('#frmKullanicilar').submit();" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-left:10px;"></td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-danger" id="kulPnl">
+                <div class="panel-heading padding-0">
+                    <table style="table-layout:fixed;width:100%;">
+                        <tr>
+                            <td><h3 class="panel-title"><i class="fa fa-user fa-lg"></i>&nbsp; Kullanıcı Listesi</h3> </td>
+                            <td>
+                                <ul class="panel-controls">
+                                    @if (kayit)
+                                    {
+                                        <li><span class="label label-primary label-form"><a style="width:54px;color:white;" href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i> Yeni</a></span></li>
+                                    }
+                                    <li><span class="label label-info label-form">Toplam: <b>@IndexModel.Toplam</b></span></li>
+                                    <li><span class="label label-success label-form">Aktif: <b>@IndexModel.Aktif</b></span></li>
+                                    <li><span class="label label-danger label-form">Pasif: <b>@IndexModel.Pasif</b></span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.data)
+                                {
+
+                                    <tr id="row_@item.KullaniciID">
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs fa-lg"></i></a>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li role="presentation" class="dropdown-header" style="color:maroon;"><i class="fa fa-cogs fa-lg"></i> İşlemler</li>
+                                                    @if (kayit)
+                                                    {
+                                                        <li>
+                                                            <a href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i> Yeni</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.Action("Kayit", new { id=item.KullaniciID })"><i class="fa fa-edit fa-lg"></i>Düzenle</a>
+                                                        </li>
+
+                                                    }
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="detayGor(@item.KullaniciID,'#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>
+                                                    </li>
+                                                    @if (item.KtipBasvuruYapabilir)
+                                                    {
+                                                        if (adinaBasvuru)
+                                                        {
+                                                            <li>
+                                                                <a href="@Url.Action("BasvuruYap", "Basvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Başvuru Yap</a>
+                                                            </li>
+                                                        }
+                                                        if (item.YtuOgrencisi)
+                                                        {
+                                                            if (adinaBasvuruTDO && TDOBAcik.Contains(item.EnstituKod))
+                                                            {
+                                                                <li>
+                                                                    <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Tez Danışmanı Önerisi Yap</a>
+                                                                </li>
+                                                            }
+                                                            if (adinaBasvuruTI && TIBAcik.Contains(item.EnstituKod))
+                                                            {
+                                                                <li>
+                                                                    <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Tez izleme Başvurusu Yap</a>
+                                                                </li>
+                                                            }
+                                                            if (adinaBasvuruM && mezuniyetBAcik.Contains(item.EnstituKod))
+                                                            {
+                                                                <li>
+                                                                    <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Mezuniyet Başvurusu Yap</a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                    }
+                                                    @if (mailGonder)
+                                                    {
+                                                        <li>
+                                                            <a href="javascript:void(0)" onclick="mGonder('@item.KullaniciID')"><i class="fa fa-envelope"></i>Mail Gönder</a>
+                                                        </li>
+                                                    }
+                                                    @if (yetkilendirme)
+                                                    {
+                                                        <li>
+                                                            <a href="@Url.Action("Yetkilendirme", new { id = item.KullaniciID })"><i class="fa fa-cog"></i>Erişim Yetkileri</a>
+                                                        </li>
+                                                    }
+                                                    @if (enstituYetki)
+                                                    {
+                                                        <li>
+                                                            <a href="@Url.Action("YetkilendirmeEnstitu", new { id = item.KullaniciID })"><i class="fa fa-cog"></i>Enstitü Yetkileri</a>
+                                                        </li>
+                                                    }
+                                                    @if (programYetkileri)
+                                                    {
+                                                        <li>
+                                                            <a href="@Url.Action("KullaniciProgramYetkileri", new { id = item.KullaniciID })"><i class="fa fa-cog"></i>Program Yetkileri</a>
+                                                        </li>
+                                                    }
+                                                    @if (silme)
+                                                    {
+                                                        <li>
+                                                            <a href="javascript:void(0)" onclick="silmeOnay(this,@item.KullaniciID)"><i class="fa fa-trash-o"></i>Sil</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <table class="table-hover" style="width:100%;table-layout:fixed;font-size:8pt;">
+                                                <tr>
+                                                    <td width="60">
+                                                        <span class="user" style="width: 50px; height: 50px; margin-right: 5px;">
+                                                            <img style="width: 50px; height: 50px;cursor:pointer;margin:0px;" onclick="detayGor(@item.KullaniciID,'#kulPnl')" src="@item.ResimAdi.toKullaniciResim()">
+                                                        </span>
+                                                    </td>
+
+                                                    <td style="vertical-align:top;padding:0px;">
+                                                        <table style="width:100%;margin:0px;padding:0px;">
+
+                                                            <tr>
+                                                                <td width="60">Ad Soyad</td>
+                                                                <td width="5">:</td>
+                                                                <td>@item.Ad @item.Soyad</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Yetki Grubu</td>
+                                                                <td>:</td>
+                                                                <td>@item.YetkiGrupAdi</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Kullanıcı T.</td>
+                                                                <td>:</td>
+                                                                <td>@item.KullaniciTipAdi</td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </td>
+                                                    <td width="260" style="vertical-align:top;padding:0px;">
+                                                        <table style="width:100%;margin:0px;padding:0px;">
+
+                                                            <tr>
+                                                                <td width="35">K. Adı</td>
+                                                                <td width="5">:</td>
+                                                                <td>@item.KullaniciAdi</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Email</td>
+                                                                <td>:</td>
+                                                                <td>@item.EMail</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cep T</td>
+                                                                <td>:</td>
+                                                                <td>@item.CepTel</td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </td>
+                                                    <td width="200" style="vertical-align:top;padding:0px;">
+                                                        <table style="width:100%;margin:0px;padding:0px;">
+
+                                                            <tr>
+                                                                <td width="75">Oluşturma T</td>
+                                                                <td width="5">:</td>
+                                                                <td>@item.OlusturmaTarihi.ToFormatDateAndTime()</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Son Oturum T</td>
+                                                                <td>:</td>
+                                                                <td>@item.LastLogonDate.ToFormatDateAndTime()</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Durum</td>
+                                                                <td>:</td>
+                                                                <td><span class="badge badge-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<script>
+
+
+    $(function () {
+        var sProgs = '@Html.Raw(Json.Encode(SelectedPrograms))';
+        var nVal = JSON.parse(sProgs);
+
+        setTimeout(function () {
+            $('#ProgramKod').selectpicker('val', nVal);
+            $('#ProgramKod').selectpicker("refresh");
+        }, 1400);
+
+
+    });
+</script>
+<script type="text/javascript">
+
+    function silmeOnay(sndr, id) {
+        setTimeout(function () {
+            $.ajax({
+                url: '@Url.Action("getKullaniciDetay", "Ajax")',
+                data: { 'KullaniciID': id },
+                success: function (result) {
+                    bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Kullanıcıyı Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Kullanıcı Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: "Kullanıcıyı Sil",
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: "Vazgeç",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }, 120);
+    }
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "Kullanicilar")',
+            data: { id: id },
+            success: function (result) {
+                toastr[result.success ? "success" : "error"](result.message, "Kullanıcı Silme İşlemi")
+                if (result.success) {
+                    $(sndr).closest("tr").remove();
+                    // $(".cls-" + id).remove();
+                }
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+
+
+</script>

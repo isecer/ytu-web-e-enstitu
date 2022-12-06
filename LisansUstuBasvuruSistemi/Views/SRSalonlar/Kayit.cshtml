@@ -1,0 +1,273 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model kmSalonlar
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var haftaGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
+    var SRTalepTipID = (List<CmbIntDto>)ViewBag.SRTalepTipID;
+    var SelectedTTID = (List<int>)ViewBag.SelectedTTID;
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="SRSalonID" name="SRSalonID" value="@Model.SRSalonID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="fa fa-pencil"></i>&nbsp; @(Model.SRSalonID <= 0 ? "Yeni salon tanımlama işlemi" : "Salon bilgisi düzenleme işlemi")
+                    </h3>
+                    <ul class="panel-controls">
+                        <li>
+                            <a href="@Url.Action("Kayit", Model.SRSalonID)" class=""><span class="fa fa-refresh panel-refresh"></span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
+                                <div class="col-md-9 col-xs-8">
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Salon Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="SalonAdi" id="SalonAdi" value="@Model.SalonAdi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Talep Tipleri</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <select id="SRTalepTipIDs" name="SRTalepTipIDs" multiple class="form-control select">
+                                        @foreach (var item2 in SRTalepTipID)
+                                        {
+                                            <option value="@item2.Value" @(SelectedTTID.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            @if (Model.SRSalonID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Saat kriterleri</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="panel panel-default padding-0" id="pnlSaatler" style="padding: 0px; margin: 0px;">
+                                        <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                            <h3 class="panel-title">
+                                                <i class="glyphicon glyphicon-time"></i>&nbsp; Saat Kriteri Ekle
+                                            </h3>
+                                            <a style="float: right;" id="btntarihekle" onclick="saatEkle()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
+                                        </div>
+                                        <div class="form-group">
+
+                                            <table class="table" style="width:100%;table-layout:fixed;">
+
+                                                <tr>
+                                                    <td>
+                                                        <table style="width:100%;table-layout:fixed;">
+                                                            <tr>
+                                                                <td>
+                                                                    Hafta Günleri
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <select id="_haftaGunu" multiple class="form-control select">
+                                                                        @foreach (var item2 in haftaGunleri)
+                                                                        {
+                                                                            <option value="@item2.Value">@item2.Caption</option>
+                                                                        }
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+
+                                                    </td>
+                                                    <td width="180">
+                                                        <table style="width:100%;table-layout:fixed;">
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    Saat aralığı
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+
+                                                                    <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                        <input id="_BasSaat" type="text" class="form-control hours" value="">
+                                                                        <span class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-time"></span>
+                                                                        </span>
+                                                                    </div>
+
+                                                                </td>
+                                                                <td>
+                                                                    <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                        <input id="_BitSaat" type="text" class="form-control hours" value="">
+                                                                        <span class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-time"></span>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div class="panel-body" id="belirliTarihList">
+                                            <table class="table" style="width:100%;table-layout:fixed;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hafta Günleri</th>
+                                                        <th width="130">Saat Aralığı</th>
+                                                        <th width="20"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="_Saatler">
+                                                    @foreach (var item in Model.Saatler)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <input name="HaftaGunleri" value="@string.Join(",", item.GunNos.Select(s=>s.Value.Value))" class="hide" />
+                                                                @string.Join(", ", item.GunNos.Select(s => s.Caption))
+                                                            </td>
+                                                            <td>
+                                                                <input name="BasSaat" value="@item.BasSaat" class="hide" />
+                                                                <input name="BitSaat" value="@item.BitSaat" class="hide" />
+                                                                @(item.BasSaat)-@(item.BitSaat)
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        $.mask.definitions['H'] = "[0-2]";
+        $.mask.definitions['h'] = "[0-9]";
+        $.mask.definitions['M'] = "[0-5]";
+        $.mask.definitions['m'] = "[0-9]";
+        $.mask.definitions['S'] = "[0-5]";
+        $.mask.definitions['s'] = "[0-9]";
+        //$.mask.definitions['P'] = "[AaPp]";
+        //$.mask.definitions['p'] = "[Mm]";
+        $('.hours').mask("Hh:Mm");
+       
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+
+
+    function saatEkle() {                  
+        var _panel = $('#pnlSaatler');
+        var haftaGunleri = $('#_haftaGunu').val();
+        var haftaGunleriText = $('#_haftaGunu').parents('td').first().find('button').first().attr("title");
+        var tBaslangicSaati = $('#_BasSaat').val() + ":00";
+        var tBitisSaati = $('#_BitSaat').val() + ":00";
+        var _tBaslangicSaati = "[";
+        var _tBitisSaati = "[";
+        var splhaftaGunleri = "";
+        var splhaftaGunleriList = "[";
+        for (var i = 0; i < haftaGunleri.length; i++) {
+            splhaftaGunleri += i == 0 ? haftaGunleri[i] : ("," + haftaGunleri[i]);
+        }
+
+        $('#_Saatler').find('tr').each(function (inx, trx) {
+            var _TalepBaslangicSaat = $(trx).find('input[name=BasSaat]').first().val();
+            var _TalepBitisSaat = $(trx).find('input[name=BitSaat]').first().val();
+            var _HaftaGunleriList = $(trx).find('input[name=HaftaGunleri]').first().val();
+            _tBaslangicSaati += (inx > 0 ? "," : "") + "'" + _TalepBaslangicSaat + "'";
+            _tBitisSaati += (inx > 0 ? "," : "") + "'" + _TalepBitisSaat + "'";
+            splhaftaGunleriList += inx == 0 ? ("'" + _HaftaGunleriList + "'") : (",'" + _HaftaGunleriList + "'");
+        });
+        _tBaslangicSaati += "]";
+        _tBitisSaati += "]";
+        splhaftaGunleriList += "]";
+        var frmD = {
+            "HaftaGunleri": splhaftaGunleri,
+            "HaftaGunleriList": eval(splhaftaGunleriList),
+            "BasSaat": tBaslangicSaati,
+            "BitSaat": tBitisSaati,
+            "BasSaatList": eval(_tBaslangicSaati),
+            "BitSaatList": eval(_tBitisSaati)
+        };
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("saatEkleKontrol", "SRSalonlar")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: frmD,
+            success: function (result) {
+                if (result.IsSuccess) {
+                    //$('#_haftaGunu').val("");
+                    //$('#_BasSaat').val("");
+                    //$('#_BitSaat').val("");
+                    //$('#_EklenecekGun').val("");
+                    var _row = "<tr>" +
+                                  "<td>"
+                                  + haftaGunleriText +
+                                   "<input name='HaftaGunleri'  value='" + splhaftaGunleri + "' class='hide' />" +
+                                  "</td>" +
+                                  "<td>" + tBaslangicSaati + "-" + tBitisSaati +
+                                      "<input name='BasSaat'  value='" + tBaslangicSaati + "' class='hide' />" +
+                                      "<input name='BitSaat' value='" + tBitisSaati + "' class='hide' />" +
+                                  "</td>" +
+                                   "<td>" +
+                                        "<a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a>" +
+                                   "</td>" +
+                                  "</tr>";
+                    $('#_Saatler').append(_row);
+                }
+                else {
+                    showMmMessage(result.Messages, 'Tamam');
+                }
+                _pRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+
+            }
+        });
+    }
+</script>

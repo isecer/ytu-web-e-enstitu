@@ -1,0 +1,143 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model OnlineOdemeProgramDetayModel
+@{
+    Layout = null;
+    var DekontGirisiAcik = (!Model.MulakatSonuclari.KayitDurumID.HasValue && Model.MulakatSonuclari.MulakatSonucTipID == MulakatSonucTipi.Asil) || (Model.MulakatSonuclari.KayitDurumID == KayitDurumu.OnKayit && Model.MulakatSonuclari.MulakatSonucTipID == MulakatSonucTipi.Yedek);
+}
+@if (Model != null)
+{
+    <div class="panel-body panel-body-pricing pnlDekont" style="padding:0px;margin:0px;">
+
+
+        @if (Model.IsOgrenimUcretiOrKatkiPayi.HasValue)
+        {
+
+            var IlkDekont = Model.OdemeListesi.Where(p => p.DonemNo == 1).FirstOrDefault();
+            <div class="panel-body" style="padding:0px;">
+                <div class="panel panel-default form-horizontal">
+                    <div class="panel-body form-group-separated" style="font-size:10pt;">
+                        <table class="table" style="margin:0px;">
+
+
+
+
+                            @if (Model.KayitOldu == false)
+                            {
+                                <tr>
+                                    <td width="150px;" style="text-align:right;line-height:30px;">Ödeme İşlemi Adı</td>
+                                    <td width="5px" style="padding: 4px;">:</td>
+                                    <td style="padding: 4px;"> @Model.AciklamaSelectedLng</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Ödenene Tutar</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        @(Model.OdenecekUcret.ToString("n2")) TL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;line-height:30px;">Dekont No</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        <input type="text" name="DekontNo" id="DekontNo" maxlength="32" style="font-size:14pt;" class="form-control" value="@(IlkDekont!=null?IlkDekont.DekontNo:"")" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;line-height:30px;">Dekont Tarihi</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        <input type="text" name="DekontTarihi" id="DekontTarihi" maxlength="12" autocomplete="off" size="16" placeholder="Örnek Format: @DateTime.Now.ToString("dd-MM-yyyy")" style="font-size:14pt;" class="form-control form-control-inline input-medium date-picker" value="@(IlkDekont==null || IlkDekont.DekontTarih.HasValue == false ? "" : IlkDekont.DekontTarih.ToString("dd-MM-yyyy"))" />
+                                    </td>
+                                </tr>
+
+                            }
+                            else if (IlkDekont != null && !IlkDekont.DekontNo.IsNullOrWhiteSpace())
+                            {
+                                <tr>
+                                    <td width="150px;" style="text-align:right;line-height:30px;">Ödeme İşlemi Adı</td>
+                                    <td width="5px" style="padding: 4px;">:</td>
+                                    <td style="padding: 4px;"> @Model.AciklamaSelectedLng</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;">Ödenen Tutar</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        @(Model.OdenecekUcret.ToString("n2")) TL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;line-height:30px;">Dekont No</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        @(IlkDekont != null ? IlkDekont.DekontNo : "")
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;line-height:30px;">Dekont Tarihi</td>
+                                    <td style="padding: 4px;">:</td>
+                                    <td style="font-weight:bold;font-size:13pt;padding: 4px;">
+                                        @(IlkDekont != null ? IlkDekont.DekontTarih.ToDateString() : "")
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="text-align:center;">
+                                        <span style="color:#268a8b">
+                                            <i class="fa fa-check" style="font-size:16pt;font-weight:bold;color:#268a8b"></i> Dekont Bilgisi Girildi
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="alert alert-success" role="alert" style="text-align:center;">
+                                            <strong>Dikkat!</strong> Seçtiğiniz program için herhangi bir ödeme işlemi gözükmemektedir.
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+            if (Model.KayitOldu == false)
+            {
+                if (DekontGirisiAcik)
+                {
+                    <div class="hide programBilgisi">
+                        <span class="UniqueID hide">@Model.UniqueID</span>
+                    </div>
+
+
+                    <div class="panel-footer" style="padding-top: 1px; padding-bottom: 1px;">
+                        <a style="width: 90px; margin: 0px auto;" href="javascript:void(0);" class="btn btn-success btn-block" onclick="Kaydet()">Kaydet</a>
+                    </div>
+                    <script>
+                        $('.date-picker').datetimepicker({
+                            timepicker: false,
+                            format: 'd-m-Y'
+                        });
+                        $.datetimepicker.setLocale('tr');
+                    </script>
+                }
+                else
+                {
+                    <div class="alert alert-success" role="alert" style="text-align:center;">
+                        <strong>Dikkat!</strong> @(Model.MulakatSonuclari.MulakatSonucTipID == MulakatSonucTipi.Asil ? "Kayıt süreci tamamlanmış Asil adaylar dekont giriş işlemi yapamazlar. Lütfen ön kayıt işleminizi bekleyiniz." : "Ön Kaydı yapılmayan Yedek adaylar dekont giriş işlemi yapamazlar. Lütfen ön kayıt işleminizi bekleyiniz.")
+                    </div>
+                }
+
+            }
+        }
+        else
+        {
+            <div class="alert alert-success" role="alert" style="text-align:center;">
+                <strong>Dikkat!</strong> Seçtiğiniz program için herhangi bir ödeme işlemi gözükmemektedir.
+            </div>
+        }
+    </div>
+
+}

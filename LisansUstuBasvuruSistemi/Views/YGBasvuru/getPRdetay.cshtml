@@ -1,0 +1,215 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@model kontenjanProgramBilgiModel
+@{
+
+    Layout = null; 
+    var color = (Model.AlanIciKota > 0 || Model.AlanDisiKota > 0 || (Model.OrtakKota && Model.OrtakKotaSayisi > 0) ? "#9bbb67" : "#b64645");
+}
+<div class="panel panel-success push-up-0 push-down-0">
+    <div class="panel-body panel-body-pricing" style="padding-top: 2px; padding-bottom: 2px; margin: 0px;">
+
+        <table class="table">
+            <tr>
+                <th width="5"></th>
+                <th><span style="font-weight:normal;font-size: 8pt;color:#337abb;">Program</span></th>
+                <th style="text-align:center;" width="70"><span style="font-weight:normal; font-size: 8pt;color:#337abb;">Ales Tipi</span></th>
+                <th style="text-align:center;" width="70"><span style="font-weight:normal; font-size: 8pt;color:#337abb;">Eğitim Dili</span></th>
+                @if (Model.OrtakKota)
+                {
+
+                    <th style="text-align:center;" width="70"><span style="font-weight:normal; font-size: 8pt;color:#337abb;">Kota</span></th>
+                }
+                else
+                {
+                    <th style="text-align:center;" width="70"><span style="font-weight:normal; font-size: 8pt;color:#337abb;">Alan İçi Kota</span></th>
+                    <th style="text-align:center;" width="80"><span style="font-weight:normal; font-size: 8pt;color:#337abb;">Alan Dışı Kota</span></th>
+                }
+            </tr>
+            <tr>
+                <td><span class="fa fa-caret-right" style="font-weight:normal;font-size: 11pt;color:@color"></span></td>
+                <td>
+                    <span style="font-weight:normal;font-size: 9pt;color:@color;">@Model.ProgramAdi</span>
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-weight:normal;font-size: 9pt;color:@color;">@Model.AlesTipAdi</span>
+                </td>
+                <td style="text-align:center;">
+                    <span style="font-weight:normal;font-size: 9pt;color:@color;">@(Model.Ingilizce ? "İngilizce" : "Türkçe")</span>
+                </td>
+                @if (Model.OrtakKota)
+                {
+                    <td style="text-align:center;">
+                        <span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.OrtakKotaSayisi.Value</span>
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align:center;">
+                        <span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.AlanIciKota</span>
+                    </td>
+                    <td style="text-align:center;">
+                        <span style="font-weight:normal;font-size: 13pt;color:@color;">@Model.AlanDisiKota</span>
+                    </td>
+                }
+            </tr>
+            @if (Model.MinAgno.HasValue)
+            {
+                <tr>
+                    <td colspan="@(Model.OrtakKota ? "5" : "6")" style="color:maroon;"><span style="font-weight:bold;">Dikkat : </span>  @Model.MinAgnoAciklama</td>
+                </tr>
+            } 
+        </table>
+
+    </div>
+    <div class="panel-footer" style="padding-top: 1px; padding-bottom: 1px;">
+        <a style="width: 90px; margin: 0px auto;" href="javascript:void(0);" class="btn btn-success btn-block" onclick="tercihiEkle()">Tercihi Ekle</a>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function ekle() {
+
+
+        var model = {
+            IsNewRow:true, 
+            BasvuruSurecID:@Model.BasvuruSurecID,
+            BasvuruID:@Model.BasvuruID,
+            KullaniciID:@Model.KullaniciID,
+            SiraNo: $('#Rw_tbody').find('li').length + 1,
+            MinAgnoAciklama: '@Html.Raw(Model.MinAgnoAciklama??"")',
+            OgrenimTipKod:@Model.OgrenimTipKod,
+            OgrenimTipAdi: '@Html.Raw(Model.OgrenimTipAdi)',
+            AnabilimDaliKod: '@Model.AnabilimDaliKod',
+            AnabilimDaliAdi: '@Html.Raw(Model.AnabilimDaliAdi)',
+            ProgramKod: '@Model.ProgramKod',
+            ProgramAdi: '@Html.Raw(Model.ProgramAdi)',
+            Ingilizce:'@Model.Ingilizce.ToString().ToLower()'=='true',
+            LOgrenciBolumID: $('#LOgrenciBolumID').val(),
+            YLEgitimBilgisiIste: $('.YLEgitimBilgisiIste').text() == "true",
+            YLOgrenciBolumID: $('.ylBilgi').hasClass("hide") ? null : $('#YLOgrenciBolumID').val(),
+            AlanTipID: '',
+            AlanTipAdi:'',
+            AlesTipID:@Model.AlesTipID,
+            AlesTipAdi:'@Model.AlesTipAdi',
+            OrtakKota:'@Model.OrtakKota.ToString().ToLower()'=='true',
+            Kota:'',
+            IsOncedenMezuniyetiVar: '',
+            MezuniyetBelgesiYolu: '',
+            MezuniyetBelgesiAdi: '',
+
+
+
+        }
+        var BolumIDs = new Array();
+        var YLDurum = $('#DrBilgi').hasClass("hide") == false;
+        if (YLDurum) {
+            BolumIDs.push(parseInt($('#LOgrenciBolumID').val()));
+            BolumIDs.push(parseInt($('#YLOgrenciBolumID').val()));
+            BolumIDs.push(parseInt($('#DROgrenciBolumID').val()));
+        }
+        else {
+            BolumIDs.push(parseInt($('#LOgrenciBolumID').val()));
+            BolumIDs.push(parseInt($('#YLOgrenciBolumID').val()));
+        } 
+        $.ajax({
+            url: '@Url.Action("getAlanKontrol", "YGBasvuru")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            dataType: "json",
+            data: { 'BolumIDs': BolumIDs, 'oTipKod': model.OgrenimTipKod, 'tprog': model.ProgramKod, 'BasvuruSurecID': model.BasvuruSurecID, 'KullaniciID': model.KullaniciID, BasvuruID:model.BasvuruID },
+            success: function (result) { 
+                var _rws = $('#ddLst').find('.rw_' + model.OgrenimTipKod + "_" +model.ProgramKod).length;
+                if (_rws > 0) {
+                    showMessage("warning", 'Dikkat', 'Eklemeye çalıştığınız program zaten eklidir. tekrar eklenemez!');
+                    return;
+                }
+                if (result.AyniProgramBasvurusu) {
+                    showMessage("warning", 'Dikkat', 'Eklemeye çalıştığınız program bu başvuru sürecinde başka bir başvurunuzda kullandığınız için tekrar tercih olarak ekleyemezsiniz!');
+                    return;
+                }
+                debugger
+                model.AlanTipAdi = result.AlanTipAdi;
+                model.AlanTipID = result.AlanTipID;
+                model.Kota = result.Kota;
+                $.ajax({
+                    url: '@Url.Action("CreateTercihRowHtml", "YGBasvuru")',
+                    data: model,
+                    success: function (result) {
+                        $('#Rw_tbody').append(result);
+                        
+                        $('#OgrenimTipKod').val("");
+                        getBolums($('#OgrenimTipKod'));
+                        $('._YLBilgiIste').remove();
+                        $('.tooltips').tooltip();
+                        tercihYLkontrol();
+                        jQuery('._popover').popover({ trigger: 'hover' });
+                        jQuery('.pp_' + model.SiraNo).popover('show');
+                        setTimeout(function () { jQuery('.pp_' + model.SiraNo).popover('toggle') }, 3000);
+                    }
+                });
+
+
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+
+
+    }
+
+    function tercihiEkle() {
+        var _OgrenimTipKod = $('.OgrenimTipKod').text();
+        var _BasvuruID =@Model.BasvuruID; 
+        var _tercihBBDOtSuccess = tercihBDOTkontrol(_OgrenimTipKod);
+        if (_tercihBBDOtSuccess == false) return; 
+        var YLDurum = $('#DrBilgi').hasClass('hide') == false;
+        $('#YLDurum').val(YLDurum);
+        var frmD = {
+            "YLDurum": YLDurum,
+            "BasvuruSurecID": @Model.BasvuruSurecID,
+            "LUniversiteID": $('#LUniversiteID').val(),
+            "LFakulteAdi": $('#LFakulteAdi').val(),
+            "LOgrenciBolumID": $('#LOgrenciBolumID').val(),
+            "LOgrenimDurumID": $('#LOgrenimDurumID').val(),
+            "LNotSistemID": $('#LNotSistemID').val(),
+            "LMezuniyetNotu": $('#LMezuniyetNotu').val(),
+            "YLUniversiteID": $('#YLUniversiteID').val(),
+            "YLFakulteAdi": $('#YLFakulteAdi').val(),
+            "YLOgrenciBolumID": $('#YLOgrenciBolumID').val(),
+            "YLNotSistemID": $('#YLNotSistemID').val(),
+            "YLMezuniyetNotu": $('#YLMezuniyetNotu').val(),
+            "DRUniversiteID": $('#DRUniversiteID').val(),
+            "DRFakulteAdi": $('#DRFakulteAdi').val(),
+            "DROgrenciBolumID": $('#DROgrenciBolumID').val(),
+            "DRNotSistemID": $('#DRNotSistemID').val(),
+            "DRMezuniyetNotu": $('#DRMezuniyetNotu').val(),
+            "OgrenimTipKod": _OgrenimTipKod,
+            "ProgramKod": $('#ProgramKod').val(),
+            "KullaniciTipID": $('#KullaniciTipID').val(), 
+        };
+        $.ajax({
+            url: '@Url.Action("OgrenimBilgisiKontrolEt", "Ajax")',
+            type: 'POST',
+            enctype: "multipart/form-data",
+            cache: false,
+            dataType: "json",
+            data: { kModel: frmD, BasvuruID: _BasvuruID },
+            success: function (result) {
+                if (result.IsSuccess == true) { 
+                    ekle();
+                }
+                getMsgb(result);
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+
+            }
+        });
+    }
+</script>

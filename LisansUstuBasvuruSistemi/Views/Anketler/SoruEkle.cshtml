@@ -1,0 +1,60 @@
+﻿@using BiskaUtil
+@model LisansUstuBasvuruSistemi.Models.AnketSoru
+@{
+    Layout = null;
+}
+@using (Ajax.BeginForm("SoruEklePost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmSoruEkle" }))
+{
+    @Html.HiddenFor(p => p.AnketID)
+    @Html.HiddenFor(p => p.AnketSoruID)
+    <div class="panel panel-info" style="margin: 0px; padding: 0px;" id="_PnpAsoruEkle">
+
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel-body form-group-separated">
+                    <div id="cmbContent">
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-3 control-label">Sıra No</label>
+                            <div class="col-md-10 col-xs-9">
+                                <input type="text" name="SiraNo" id="SiraNo" value="@Model.SiraNo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-3 control-label">Soru</label>
+                            <div class="col-md-10 col-xs-9">
+                                <input type="text" name="SoruAdi" id="SoruAdi" value="@Model.SoruAdi" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-3 control-label">Tablo Verisi Olarak İstensin</label>
+                            <div class="col-md-10 col-xs-9">
+                                <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                    <input type="checkbox" value="true" name="IsTabloVeriGirisi" class="toggle" @Model.IsTabloVeriGirisi.ToChecked() onchange="VGChange(this)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group maxVG @(Model.IsTabloVeriGirisi?"":"hide")">
+                            <label class="col-md-2 col-xs-3 control-label">Max Cevap Sayısı</label>
+                            <div class="col-md-10 col-xs-9">
+                                <input type="text" name="IsTabloVeriMaxSatir" id="IsTabloVeriMaxSatir" value="@Model.IsTabloVeriMaxSatir" class="form-control" />
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <script>
+        $(function () {
+            $('.make-switch')['bootstrapSwitch']();
+        })
+        function VGChange(snd) {
+            if ($(snd).prop('checked')) {
+                $('.maxVG').removeClass("hide");
+            }
+            else {
+                $('.maxVG').addClass("hide");
+            }
+        }
+    </script> 
+}

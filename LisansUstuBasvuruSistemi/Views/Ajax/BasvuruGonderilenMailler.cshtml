@@ -1,0 +1,69 @@
+﻿@using LisansUstuBasvuruSistemi.Models 
+@model Basvurular
+@{
+    Layout = null;
+    var MailList = Model.GonderilenMaillers.OrderByDescending(o => o.Tarih).ToList();
+} 
+<div style="max-height:500px;overflow-y:auto;">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th width="45"></th>
+
+                <th>Göderilen Kişi / Konu</th>
+
+                <th width="60">Ek S</th>
+                <th width="140">Gönderen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in MailList)
+            {
+
+
+                <tr id="mn_Rw_@item.GonderilenMailID">
+                    <td>
+
+                        <ul class="panel-controls">
+                            <li id="iShow_md_@item.GonderilenMailID" onclick="showDetailMd(@item.GonderilenMailID)">
+                                <a href="javascript:void(0)"><span class="fa fa-angle-up" aria-hidden="true"></span></a>
+                            </li>
+                        </ul>
+
+                    </td>
+
+                    <td>
+                        @item.Basvurular.Ad @item.Basvurular.Soyad <br />
+                        @item.Konu
+                    </td>
+
+                    <td>@item.GonderilenMailEkleris.Count</td>
+                    <td>
+                        @item.Tarih <br>
+                        @item.Kullanicilar.Ad @item.Kullanicilar.Soyad
+                    </td>
+                </tr>
+                <tr class="cls-md-@item.GonderilenMailID" style="display:none">
+                    <td id="cls-md-@item.GonderilenMailID" colspan="6" style="padding: 1px 1px 2px 2px;">
+                        <div class="panel panel-primary" style="margin:0px;padding:0px;">
+                            <div id="panel-body-Md-@item.GonderilenMailID" class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
+                                @Html.Raw(item.AciklamaHtml)
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    function showDetailMd(id) {
+        var sndr = $('#iShow_md_' + id);
+        var cls = 'cls-md-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(sndr, cls, unTogled);
+
+    }
+</script>

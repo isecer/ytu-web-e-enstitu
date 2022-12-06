@@ -1,0 +1,162 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@model SinavSonucBilgiModel
+@{
+    /**/
+
+    Layout = null;
+    var IdN = (Model.SinavTipGrupID == SinavTipGrup.Ales_Gree ? "A" : (Model.SinavTipGrupID == SinavTipGrup.DilSinavlari ? "D" : "T"));
+    var color = (Model.Durum == OsymSonucTip.BuAdayaAitSinavSonucuMevcut ? "#9bbb67" : "#b64645");
+  
+}
+
+@if (Model.IsSinavSonucuVar || !Model.ShowIsTaahhutVar)
+{
+    <div class="form-group">
+        <label class="col-md-3 col-xs-4 control-label"> Sınav Sonucu</label>
+        <div class="col-md-9 col-xs-8">
+            <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsDurum" id="@(IdN)WsDurum" value="@Model.Durum" />
+            @if (Model.Durum == OsymSonucTip.BuAdayaAitSinavSonucuMevcut)
+            {
+                <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).SinavNotu" id="@(IdN)SinavNotu" value="@Model.Puan" />
+                if (Model.SinavTipGrupID != SinavTipGrup.Ales_Gree)
+                {
+                    <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).SinavTarihi" id="@(IdN)SinavTarihi" value="@Model.AciklanmaTarihi" />
+                    <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsSonucID" id="@(IdN)WsSonucID" value="@Model.WsSonucID" />
+                    <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsSinavYil" id="@(IdN)WsSinavYil" value="@Model.SinavYili" />
+                }
+                <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsAciklanmaTarihi" id="@(IdN)WsAciklanmaTarihi" value="@Model.AciklanmaTarihi" />
+                <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsXmlData" id="@(IdN)WsXmlData" value="@Model.WsXmlData" />
+            }
+            else
+            {
+                <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).SinavNotu" id="@(IdN)SinavNotu" value="" />
+                <input class="hide" type="text" name="BasvurularSinavBilgi_@(IdN).WsXmlData" id="@(IdN)WsXmlData" value="" />
+            }
+            <table style="width:100%;">
+                <tr>
+                    <th colspan="3"><span style="font-weight:normal;font-size: 8pt;color:#337abb;">@Model.SinavAdi</span></th>
+                </tr>
+                @if (Model.Durum == OsymSonucTip.BuAdayaAitSinavSonucuMevcut)
+                {
+
+
+                    @*<tr>
+                        <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Ad Soyad</td>
+                        <td width="5">:</td>
+                        <td>
+                            @if (Model.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                            {
+                                <span style="font-size: 9pt;">@Model.jSonValDilSinavi.AD @Model.jSonValDilSinavi.SOYAD</span>
+                            }
+                            else
+                            {
+                                <span style="font-size: 9pt;">@Model.jSonValAlesSinavi.AD @Model.jSonValAlesSinavi.SOYAD</span>
+                            }
+                        </td>
+                    </tr>*@
+                if (Model.SinavTipGrupID == SinavTipGrup.DilSinavlari)
+                { 
+                        <tr>
+                            <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Sınav Dili</td>
+                            <td width="5">:</td>
+                            <td>
+                                <input type="text" name="BasvurularSinavBilgi_@(IdN).SinavDilID" id="@(IdN)SinavDilID" value="@Model.SinavDilID" class="form-control hide" />
+                                <input type="text" name="BasvurularSinavBilgi_@(IdN).WsSinavDili" id="@(IdN)WsSinavDili" value="@Model.jSonValDilSinavi.DIL" class="form-control hide" />
+                                <span style="font-size: 9pt;">@Model.jSonValDilSinavi.DIL</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Puan</td>
+                            <td width="5">:</td>
+                            <td>
+                                <span style="font-size: 9pt;">@Model.Puan</span>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+
+                        if (Model.EnstituKod == EnstituKodlari.FenBilimleri)
+                        {
+                            <tr>
+                                <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Sayısal Puan</td>
+                                <td width="5">:</td>
+                                <td>
+                                    <span style="font-size: 9pt;">@Model.jSonValAlesSinavi.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value</span>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+
+                            <tr>
+                                <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Sayısal Puan</td>
+                                <td width="5">:</td>
+                                <td>
+                                    <span style="font-size: 9pt;">@Model.jSonValAlesSinavi.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Eşit Ağırlık Puanı</td>
+                                <td width="5">:</td>
+                                <td>
+                                    <span style="font-size: 9pt;">@Model.jSonValAlesSinavi.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"></span> Sözel Puan</td>
+                                <td width="5">:</td>
+                                <td>
+                                    <span style="font-size: 9pt;">@Model.jSonValAlesSinavi.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td width="140"><span class="fa fa-caret-right" style="font-size: 9pt;color:#b64645"> Bilgi</span></td>
+                        <td width="5">:</td>
+                        <td>
+                            <span style="font-size: 9pt;color:#b64645">Sınav Sonucu Yok @(Model.Aciklama.IsNullOrWhiteSpace() == false ? "(" + Model.Aciklama + ")" : "")</span>
+                        </td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+    </div>
+}
+@if (Model.ShowIsTaahhutVar)
+{
+
+    <div class="form-group">
+        <label class="col-md-3 col-xs-4 control-label"> Taahhüt</label>
+        <div class="col-md-9 col-xs-8">
+            <table>
+                <tr>
+                    <td style="text-align:center;color:maroon;"> Sınav bilgisinin açıklanması itibari ile 5 gün içinde ve mesai saatleri dahilinde başvuru Dil sınavı kriterlerine uyan sınav belgemi getirmeyi taahhüt ediyorum. Aksi halde başvurumun ve kaydımın iptal edilmesini onaylıyorum.</td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <div class="checkbox">
+                            <label style="color:white;" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="">
+                                <input type="checkbox" onclick="chkOnayChange()" id="IsTaahhutVarDil" value="true" name="BasvurularSinavBilgi_@(IdN).IsTaahhutVar" @Model.IsTaahhutVar.ToChecked() />
+                                <span style="color:maroon;">Onaylıyorum</span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+           
+          
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $("#IsTaahhutVarDil").iCheck({ checkboxClass: 'icheckbox_minimal-grey', radioClass: 'iradio_minimal-grey' });
+        })
+    </script>
+}

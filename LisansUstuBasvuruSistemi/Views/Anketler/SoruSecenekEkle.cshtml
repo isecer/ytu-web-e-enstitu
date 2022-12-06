@@ -1,0 +1,62 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@model AnketSoruSecenek
+@{
+    Layout = null;
+}
+@using (Ajax.BeginForm("SoruSecenekEklePost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmSoruSecenekEkle" }))
+{
+    @Html.HiddenFor(p => p.AnketSoruID)
+    @Html.HiddenFor(p => p.AnketSoruSecenekID)
+    <div class="panel panel-info" style="margin: 0px; padding: 0px;" id="_PnpAsoruSEkle">
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal">
+                <div class="panel-body form-group-separated">
+                    <div id="cmbContent">
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-3 control-label">Sıra No</label>
+                            <div class="col-md-10 col-xs-9">
+                                <input type="text" name="SiraNo" id="SiraNo" value="@Model.SiraNo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 col-xs-3 control-label">Seçenek</label>
+                            <div class="col-md-10 col-xs-9">
+                                <input type="text" name="SecenekAdi" id="SecenekAdi" value="@Model.SecenekAdi" class="form-control" />
+                            </div>
+                        </div>
+                        @if (!Model.AnketSoru.IsTabloVeriGirisi)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-2 col-xs-3 control-label">Ek Açıklama İstensin</label>
+                                <div class="col-md-10 col-xs-9">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsEkAciklamaGir" class="toggle" @Model.IsEkAciklamaGir.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <label class="col-md-2 col-xs-3 control-label">Veri Giriş Tipi</label>
+                                <div class="col-md-10 col-xs-9">
+                                    <div class="make-switch" data-on-label="Yazı" data-off-label="Sayı" data-on="info" data-off="success">
+                                        <input type="checkbox" value="true" name="IsYaziOrSayi" class="toggle" @Model.IsYaziOrSayi.ToChecked() />
+                                    </div>
+                                </div>
+                            </div> 
+                        }
+                         
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        $('.make-switch')['bootstrapSwitch']();
+    })
+</script>

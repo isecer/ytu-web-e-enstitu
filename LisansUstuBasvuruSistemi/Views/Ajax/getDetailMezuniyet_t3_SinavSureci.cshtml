@@ -1,0 +1,1109 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model basvuruDetayModelMezuniyet
+@{
+
+
+    Layout = null;
+    bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    bool SrTalepYetki = Model.KullaniciID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSRTalebiYap.InRoleCurrent();
+    var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+    var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + Model.MezuniyetBasvurulariID.ToString();
+
+    var IsOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
+    var IsDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
+    var IsTezliYlOrDr = Model.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans;
+    var SonSR = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault();
+
+    bool IsJuriDegerlendirmeVar = false;
+    bool IsSrTalebiYapilabilir = false;
+    if (SonSR != null)
+    {
+        IsJuriDegerlendirmeVar = SonSR.SRTaleplerJuris.Any(a => !a.UnvanAdi.IsNullOrWhiteSpace() || a.IsLinkGonderildi == true);
+        if (SonSR.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+        {
+            if (IsJuriDegerlendirmeVar) { IsSrTalebiYapilabilir = SonSR.IsDanismanUzatmaSonrasiOnay == true; }
+            else { IsSrTalebiYapilabilir = true; }
+        }
+        else if (SonSR.SRDurumID == SRTalepDurum.IptalEdildi || SonSR.SRDurumID == SRTalepDurum.Reddedildi) { IsSrTalebiYapilabilir = true; }
+    }
+    else { IsSrTalebiYapilabilir = true; }
+
+}
+
+<div class="tab-pane @(Model.SelectedTabIndex == 3 ? "active" : "") " id="@tbName-3">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-edit fa-lg"></i> Sınav Süreci</td>
+                        <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
+                            @if (IsSrTalebiYapilabilir)
+                            {
+                                <span class="label label-primary" style="cursor:pointer;" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,0)">Yeni Sınav Talebi Oluştur</span>
+                            }
+                            else if (Model.EYKTarihi.HasValue == false)
+                            {
+                                <span class="label label-danger" style="cursor:pointer;">Enstitü tarafından EYK Tarihi girilmeden rezervasyon işlemi yapılamaz</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+
+                            @if (Model.MezuniyetSRModel.SalonRezervasyonlari.Count == 0)
+                            {
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">
+
+                                                @if (IsSrTalebiYapilabilir)
+                                                {
+                                                    if (Model.MezuniyetSRModel.IsSrEykSureAsimi)
+                                                    {
+                                                        @("Belirlenen Eyk tarihine göre salon rezervasyonu " + Model.MezuniyetSRModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar alınmamış ve rezervasyon için belirlenen süre aşılmıştır.")
+                                                    }
+                                                    else
+                                                    {
+                                                        @("Belirlenen Eyk tarihine göre salon rezervasyonu işlemi en geç " + Model.MezuniyetSRModel.EykIlkSrMaxTarih.ToFormatDate() + " tarihine kadar yapılması gerekmektedir.")
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @("Kayıtlı Salon Rezervasyonu Bilgisi Bulunamadı.")
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <table class="table" style="width:100%;table-layout:fixed; font-size:9pt;margin:0px;">
+
+                                    <thead>
+                                        <tr class="info">
+                                            <th height="30" width="50"></th>
+                                            <th width="145" style="font-size:9pt;">Sınav Tarihi</th>
+                                            <th width="130" style="font-size:9pt;">Rezervasyon Onayı</th>
+                                            <th style="font-size:9pt;">Jüri Değerlendirme Sonucu</th>
+                                            <th style="font-size:9pt;">Değerlendirme Enstitü Onayı</th>
+                                            <th width="40" style="padding-right:12px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" style="padding:0px;">
+                                                <table class="table table-hover" style="width:100%;table-layout:fixed;@Model.DurumColor;margin:0px;">
+                                                    @{
+                                                        int RowIndex = Model.MezuniyetSRModel.SalonRezervasyonlari.Count;
+                                                        foreach (var item in Model.MezuniyetSRModel.SalonRezervasyonlari)
+                                                        {
+                                                            var JuriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
+                                                            var IsJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                            var IsJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
+                                                            var IsEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                            var IsSrTalebiDuzeltilebilir = item.SRDurumID == SRTalepDurum.TalepEdildi && item.IsSonSRTalebi && !IsEnstituSonucuGirdi && (IsJuriDegerlendirmeVar ? !IsJuriDegerlendirmeBasladi : true);
+                                                            <tr>
+                                                                <td width="55">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td style="width:20px;font-size:12pt;">@RowIndex)</td>
+                                                                            <td>
+                                                                                <ul class="panel-controls">
+                                                                                    <li id="iShow_Ap_@item.SRTalepID" onclick="showDetailY('Ap_@item.SRTalepID')">
+                                                                                        <a href="javascript:void(0)"><span class="fa @(RowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                                <td width="145">
+                                                                    @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi <br />@string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                                </td>
+                                                                <td width="130" style="color:@item.Color">
+
+                                                                    @if (!item.SRDurumAciklamasi.IsNullOrWhiteSpace())
+                                                                    {
+                                                                        <span data-style="blue" title="@item.SRDurumAciklamasi">
+                                                                            <i class="@item.ClassName"></i>
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <i class="@item.ClassName"></i>
+                                                                    }
+                                                                    @Html.Raw(item.DurumListeAdi)
+
+                                                                </td>
+                                                                <td style="color:@item.SColor">
+
+                                                                    @if (item.SRDurumID != SRTalepDurum.Onaylandı)
+                                                                    {
+
+                                                                    }
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                    {
+                                                                        <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarılı</span>
+                                                                    }
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                    {
+                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarısız</span>
+
+                                                                    }
+                                                                    else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                    {
+                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Uzatma</span>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (IsEnstituSonucuGirdi)
+                                                                        {
+                                                                            <i class="@item.SClassName"></i> @item.SDurumListeAdi
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span aria-hidden="true"><i class="fa fa-clock-o"></i> Değerlendirme Sürecinde.</span>
+
+                                                                        }
+
+                                                                    }
+                                                                </td>
+                                                                <td style="color:@item.SColor">
+                                                                    @if (item.SRDurumID == SRTalepDurum.Onaylandı)
+                                                                    {
+                                                                        <i class="@item.SClassName"></i> <span>@item.SDurumListeAdi</span>
+                                                                    }
+                                                                </td>
+                                                                <td width="40">
+                                                                    @if (IsSrTalebiDuzeltilebilir)
+                                                                    {
+                                                                        <a href="javascript:void(0)" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Rezervasyonu Düzenle"></i></a>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr class="MainRow2 cls-Ap_@item.SRTalepID" style="@(RowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "" : "display:none;")">
+                                                                <td id="cls-Ap_@item.SRTalepID" colspan="6" style="padding: 1px 1px 2px 50px;">
+
+                                                                    <div class="widget widget-default" style="border-top:1px solid;color:@item.Color;border-top-color:@item.Color; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                        <table style="width:100%;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg" aria-hidden="true"></i> Rezervasyon Bilgisi</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table style="width:100%;">
+
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Salon Adı</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    @item.SalonAdi
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Sınav Tarihi</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+
+                                                                                                    <table>
+                                                                                                        <tr>
+                                                                                                            <td id="SrSinavTarihLblContent_@item.SRTalepID">
+                                                                                                                @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi  @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+
+                                                                                                            </td>
+                                                                                                            <td id="SrSinavTarihiContent_@item.SRTalepID" class="hide">
+                                                                                                                <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@item.Tarih.AddHours(item.BasSaat.Hours).AddMinutes(item.BasSaat.Minutes).ToString("dd-MM-yyyy HH:mm")" id="SrSinavTarihiIInput_@item.SRTalepID">
+                                                                                                            </td>
+                                                                                                            @if (KayitYetki)
+                                                                                                            {
+                                                                                                                <td width="25" style="text-align:right;font-size:10pt;">
+                                                                                                                    <a href="javascript:void(0)" onclick="ShowSinavTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="EYK Tarihini Düzenle"></i></a>
+                                                                                                                    <script>
+                                                                                                                        $('#SrSinavTarihiIInput_@item.SRTalepID').datetimepicker({
+                                                                                                                            lang: 'tr',
+                                                                                                                            timepicker: true,
+                                                                                                                            format: 'd-m-Y H:i'
+                                                                                                                        });
+
+                                                                                                                        function ShowSinavTarihi(id) {
+                                                                                                                            if ($('#SrSinavTarihLblContent_' + id).hasClass('hide')) {
+                                                                                                                                $('#SrSinavTarihLblContent_' + id).removeClass('hide');
+                                                                                                                                $('#SrSinavTarihiContent_' + id).addClass('hide');
+                                                                                                                                $('#SrSinavTarihiIKayitContent_' + id).addClass('hide');
+
+                                                                                                                            }
+                                                                                                                            else {
+                                                                                                                                $('#SrSinavTarihLblContent_' + id).addClass('hide');
+                                                                                                                                $('#SrSinavTarihiContent_' + id).removeClass('hide');
+                                                                                                                                $('#SrSinavTarihiIKayitContent_' + id).removeClass('hide');
+                                                                                                                            }
+                                                                                                                        }
+
+                                                                                                                    </script>
+                                                                                                                </td>
+                                                                                                                <td id="SrSinavTarihiIKayitContent_@item.SRTalepID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                                                                                    <a href="javascript:void(0)" onclick="SaveSinavTarihiTarihi(@item.SRTalepID)"><i class="fa fa-save fa-lg" title="Sınav Tarihini Kaydet"></i></a>
+                                                                                                                    <script>
+
+                                                                                                                            function SaveSinavTarihiTarihi(id) {
+                                                                                                                                var val = $('#SrSinavTarihiIInput_' + id).val();
+                                                                                                                                var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                                                _pRefresh(_panel, false);
+                                                                                                                                $.ajax({
+                                                                                                                                    url: '@Url.Action("SinavTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                                                    data: { 'id': id, 'SinavTarihi': val },
+                                                                                                                                    success: function (result) {
+                                                                                                                                        _pRefresh(_panel, true);
+                                                                                                                                        getMsg(result.MmMessage);
+                                                                                                                                        if (result.IsSuccess) {
+                                                                                                                                            getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                                        }
+                                                                                                                                    },
+                                                                                                                                    error: function (err) {
+                                                                                                                                        _pRefresh(_panel, true);
+                                                                                                                                        alert(err.responseText);
+                                                                                                                                    }
+                                                                                                                                });
+                                                                                                                            }
+
+                                                                                                                    </script>
+                                                                                                                </td>
+
+
+
+                                                                                                            }
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Salon Talep Durumu</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    @if (KayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi && (IsJuriDegerlendirmeVar ? !IsJuriDegerlendirmeBasladi : true) && !IsEnstituSonucuGirdi)
+                                                                                                    {
+                                                                                                        @Html.DropDownList("SRDurumID", item.SrDurumSelectList.SRDurumID, new { id = "SRDurumID_" + item.SRTalepID, onchange = "DurumKontrol(" + item.SRTalepID + ")", style = "width:120px;" })
+                                                                                                        <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @item.DurumListeAdi
+                                                                                                    }
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="@(item.SRDurumID == SRTalepDurum.Reddedildi ? "" : "hide")" id="aciklamabilgi_@item.SRTalepID">
+                                                                                                <td class="CaptionTd">Açıklama</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    @if (KayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi)
+                                                                                                    {
+                                                                                                        <textarea style="width:100%;resize:vertical;" id="SRDurumAciklamasi_@item.SRTalepID" name="SRDurumAciklamasi_">@item.SRDurumAciklamasi.toStrObjEmptString().Trim()</textarea>
+
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @item.SRDurumAciklamasi
+                                                                                                    }
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    @if (item.SRDurumID == SRTalepDurum.Onaylandı)
+                                                                    {
+                                                                        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+                                                                            <table style="width:100%;">
+                                                                                <tr>
+                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i> Tez Bilgileri</td>
+                                                                                </tr>
+                                                                                @if (item.IsTezBasligiDegisti.HasValue)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="140">Tez Başlığı Değişti Mi</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @(item.IsTezBasligiDegisti == true ? "Tez Başlığı Değişti" : "Tez Başlığı Değişmedi")
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                                <tr>
+                                                                                    <td class="CaptionTd" width="140">Tez Dili</td>
+                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                    <td class="ValueTd">
+                                                                                        @(item.IsTezDiliTr == true ? "Türkçe" : "İngilizce")
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı Türkçe</td>
+                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                    <td class="ValueTd">
+                                                                                        @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikTr : item.TezBaslikTr)
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                <tr>
+                                                                                    <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı İngilizce</td>
+                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                    <td class="ValueTd">
+                                                                                        @(item.IsTezBasligiDegisti == true ? item.YeniTezBaslikEn : item.TezBaslikEn)
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                <tr>
+                                                                                    <td class="CaptionTd" width="300">Tez Sanayi İş Birliği Kapsamında Mı Gerçekleşti?</td>
+                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                    <td class="ValueTd">
+                                                                                        @if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
+                                                                                        {
+                                                                                            <span>
+                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapılması Bekleniyor.</span>
+                                                                                            </span>
+                                                                                        }
+                                                                                        else if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
+                                                                                        {
+                                                                                            <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</span>
+
+                                                                                        }
+                                                                                        else if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
+                                                                                        {
+                                                                                            <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</span>
+                                                                                        }
+                                                                                    </td>
+                                                                                </tr>
+                                                                                @if (new List<int> { OgrenimTipi.Doktra, OgrenimTipi.ButunlesikDoktora }.Contains(Model.OgrenimTipKod) && item.IsYokDrBursiyeriVar.HasValue)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="140">100/2000 YÖK Bursiyeri</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @(item.IsYokDrBursiyeriVar == true ? "Var " : "Yok")
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    if (item.IsYokDrBursiyeriVar == true)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" width="140">Öncelikli Alt Alan Adı</td>
+                                                                                            <td class="CaptionTd" width="10">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                @item.YokDrOncelikliAlan
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
+                                                                            </table>
+                                                                            <br />
+                                                                            <table class="table" style="width:100%;margin:0px;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Jüri Üyeleri Değerlendirme Bilgileri</td>
+                                                                                        <td width="40" style=" border-bottom:1px solid;">
+                                                                                            @if (KayitYetki && !IsJuriSonucGirildi && !IsEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && !a.MezuniyetSinavDurumID.HasValue))
+                                                                                            {
+                                                                                                <span class="label label-info" style="cursor:pointer;font-size:8pt;" onclick="SrJuriDegistir(@Model.MezuniyetBasvurulariID,'@item.UniqueID')"><i class="fa fa-group"></i> Jüri Değiştir</span>
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td colspan="2">
+
+                                                                                            <table class="table" style="width:100%;margin:0px;">
+                                                                                                <tr class="info">
+                                                                                                    <th width="35"></th>
+                                                                                                    <th width="100" class="clsHide">Unvanı</th>
+                                                                                                    <th width="220">Ad Soyad</th>
+                                                                                                    @if (!JuriOnayiOlmayacak)
+                                                                                                    {
+                                                                                                        <th>Tez Sınavı Değerlendirmesi</th>
+                                                                                                        <th width="25"></th>
+                                                                                                    }
+                                                                                                </tr>
+                                                                                                <tbody>
+                                                                                                    @foreach (var itemJuri in item.SRTaleplerJuris)
+                                                                                                    {
+                                                                                                        var IsJuriDanisman = itemJuri.JuriTipAdi == "TezDanismani";
+                                                                                                        var IsJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                                                                        var ShowDanismanRow = IsDanismani && IsJuriDanisman && !IsJuriSonucGirildi;
+                                                                                                        var UzatmaSonrasiOgrenciTaahhutu = item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : false;
+
+                                                                                                        <tr>
+                                                                                                            <td>
+                                                                                                                <ul class="panel-controls">
+                                                                                                                    <li id="iShow_SJo_@itemJuri.SRTalepJuriID" onclick="showDetailY('SJo_@itemJuri.SRTalepJuriID')">
+                                                                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-@(ShowDanismanRow ? "down" : "up")" aria-hidden="true"></span> </a>
+                                                                                                                    </li>
+                                                                                                                </ul>
+                                                                                                            </td>
+                                                                                                            <td class="clsHide">
+                                                                                                                @itemJuri.UnvanAdi
+                                                                                                                <br>
+                                                                                                                @itemJuri.JuriTipAdi
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @itemJuri.JuriAdi
+                                                                                                                <br><span style="font-size:7pt;">@itemJuri.UniversiteAdi</span>
+                                                                                                            </td>
+                                                                                                            @if (!JuriOnayiOlmayacak)
+                                                                                                            {
+                                                                                                                <td>
+                                                                                                                    @if (IsOgrenci && !KayitYetki)
+                                                                                                                    {
+                                                                                                                        //Öğrenci göremeyecek
+                                                                                                                    }
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                                                                    {
+                                                                                                                        <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;"></i> Başarılı</span>
+                                                                                                                        <br />
+                                                                                                                        <span style="font-size:8pt;color:green;">@itemJuri.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJuri.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+                                                                                                                    }
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                                                                    {
+                                                                                                                        <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Başarısız</span>
+                                                                                                                        <br />
+                                                                                                                        <span style="font-size:8pt;color:maroon;">@itemJuri.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJuri.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+                                                                                                                    }
+                                                                                                                    else if (itemJuri.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                                                                    {
+                                                                                                                        <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-calendar" style="font-size:12pt;"></i> Uzatma</span>
+                                                                                                                        <br />
+                                                                                                                        <span style="font-size:8pt;color:maroon;">@itemJuri.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJuri.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        if (itemJuri.IsLinkGonderildi == true)
+                                                                                                                        {
+                                                                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+                                                                                                                            if ((!IsDanismani || !IsJuriDanisman))
+                                                                                                                            {
+                                                                                                                                <br />
+                                                                                                                                <span style="font-size:7pt;color:green;">@itemJuri.LinkGonderimTarihi.Value.ToLongDateString()  @itemJuri.LinkGonderimTarihi.Value.ToString("HH:mm") Saatinde Değerlendirme lnki gönderildi.</span>
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            if (IsJuriDanisman)
+                                                                                                                            {
+                                                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Linki Gönderilmesi Bekleniyor.</span>
+
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    @if ((KayitYetki || IsDanismani) && !IsEnstituSonucuGirdi && IsJuriDegerlendirmeVar)
+                                                                                                                    {
+                                                                                                                        <span class="fa fa-envelope" style="cursor:pointer;font-size:16pt;" title="Değerlendirme Linkini Tekrar Gönder" onclick="showDLinkGonder(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');" aria-hidden="true"></span><span class="sr-only">Değerlendirme Linkini Tekrar Gönder</span>
+                                                                                                                    }
+                                                                                                                </td>
+                                                                                                            }
+                                                                                                        </tr>
+                                                                                                        <tr class="MainRow2 cls-SJo_@itemJuri.SRTalepJuriID" style="@(ShowDanismanRow ? "" : "display: none;")">
+                                                                                                            <td id="cls-SJo_@itemJuri.SRTalepJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                                                                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                                                                    <table style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                                                                        <tbody>
+                                                                                                                            <tr>
+                                                                                                                                <td class="CaptionTd" width="150">E-Posta Adresi</td>
+                                                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                                                <td class="ValueTd">@itemJuri.Email</td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td class="CaptionTd">Üniversitesi</td>
+                                                                                                                                <td class="CaptionTd">:</td>
+                                                                                                                                <td class="ValueTd">@itemJuri.UniversiteAdi</td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td class="CaptionTd">Anabilim Dalı</td>
+                                                                                                                                <td class="CaptionTd">:</td>
+                                                                                                                                <td class="ValueTd">@itemJuri.AnabilimdaliProgramAdi</td>
+                                                                                                                            </tr>
+                                                                                                                        </tbody>
+                                                                                                                    </table>
+                                                                                                                </div>
+                                                                                                                @if ((!IsOgrenci || IsDanismani || KayitYetki) && !JuriOnayiOlmayacak && !IsEnstituSonucuGirdi)
+                                                                                                                {
+                                                                                                                    var JuriVeriGirisYetki = item.IsSonSRTalebi && IsJuriDegerlendirmeVar && ((IsJuriDanisman && IsDanismani && !IsJuriDegerlendirmeYapti && !IsEnstituSonucuGirdi) || (KayitYetki && !IsEnstituSonucuGirdi));
+
+                                                                                                                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                                                                        <table style="width:100%;">
+                                                                                                                            <tbody>
+                                                                                                                                <tr>
+                                                                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Sınavı Değerlendirmesi</td>
+                                                                                                                                </tr>
+                                                                                                                                @if (JuriVeriGirisYetki)
+                                                                                                                                {
+
+                                                                                                                                    if (IsJuriDanisman)
+                                                                                                                                    {
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="CaptionTd" width="300">Sınavda Tez Başlığı Değişti mi?</td>
+                                                                                                                                            <td class="CaptionTd" width="10">:</td>
+                                                                                                                                            <td class="ValueTd">
+                                                                                                                                                <select class="form-control" style="width:100%;" id="IsTezBasligiDegisti_@itemJuri.UniqueID" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari_@itemJuri.SRTalepJuriID').removeClass('hide'); }else{$('.RwtezBasliklari_@itemJuri.SRTalepJuriID').addClass('hide');}">
+                                                                                                                                                    <option @((item.IsTezBasligiDegisti == null).ToSelected()) value=""></option>
+                                                                                                                                                    <option @((item.IsTezBasligiDegisti == true).ToSelected()) value="true">Tez Başlığı Değişti</option>
+                                                                                                                                                    <option @((item.IsTezBasligiDegisti == false).ToSelected()) value="false">Tez Başlığı Değişmedi</option>
+                                                                                                                                                </select>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr class="@(item.IsTezBasligiDegisti == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
+                                                                                                                                            <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
+                                                                                                                                            <td class="CaptionTd">:</td>
+                                                                                                                                            <td class="ValueTd">
+                                                                                                                                                <textarea class="form-control" style="width:100%;height:40px;resize: vertical;" id="YeniTezBaslikTr_@itemJuri.UniqueID">@item.YeniTezBaslikTr</textarea>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr class="@(item.IsTezBasligiDegisti == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
+                                                                                                                                            <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
+                                                                                                                                            <td class="CaptionTd">:</td>
+                                                                                                                                            <td class="ValueTd">
+                                                                                                                                                <textarea class="form-control" style="width:100%;height:40px; resize: vertical;" id="YeniTezBaslikEn_@itemJuri.UniqueID">@item.YeniTezBaslikEn</textarea>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="CaptionTd">Tez Sanayi İş Birliği Kapsamında Mı Gerçekleşti?</td>
+                                                                                                                                            <td class="CaptionTd">:</td>
+                                                                                                                                            <td class="ValueTd">
+                                                                                                                                                <select class="form-control" style="width:100%;" id="IsTezSanayiVeIsBirligiKapsamindaGerceklesti_@itemJuri.UniqueID">
+                                                                                                                                                    <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null).ToSelected()) value=""></option>
+                                                                                                                                                    <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true).ToSelected()) value="true">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</option>
+                                                                                                                                                    <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false).ToSelected()) value="false">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</option>
+                                                                                                                                                </select>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        if (new List<int> { OgrenimTipi.Doktra, OgrenimTipi.ButunlesikDoktora }.Contains(Model.OgrenimTipKod))
+                                                                                                                                        {
+                                                                                                                                            <tr>
+                                                                                                                                                <td class="CaptionTd">100/2000 YÖK Bursiyeri Var Mı?</td>
+                                                                                                                                                <td class="CaptionTd">:</td>
+                                                                                                                                                <td class="ValueTd">
+                                                                                                                                                    <select class="form-control" style="width:100%;" id="IsYokDrBursiyeriVar_@itemJuri.UniqueID" onchange="if ($(this).val()=='true') { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').removeClass('hide'); } else { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').addClass('hide'); }">
+                                                                                                                                                        <option></option>
+                                                                                                                                                        <option value="true" @(item.IsYokDrBursiyeriVar == true ? "selected" : "")>Evet</option>
+                                                                                                                                                        <option value="false" @(item.IsYokDrBursiyeriVar == false ? "selected" : "")>Hayır</option>
+                                                                                                                                                    </select>
+                                                                                                                                                </td>
+                                                                                                                                            </tr>
+                                                                                                                                            <tr class="@(item.IsYokDrBursiyeriVar == true ? "" : "hide") IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID">
+                                                                                                                                                <td class="CaptionTd">Öncelikli Alt Alan Adı</td>
+                                                                                                                                                <td class="CaptionTd">:</td>
+                                                                                                                                                <td class="ValueTd">
+                                                                                                                                                    <input type="text" style="width:100%;" id="YokDrOncelikliAlan_@itemJuri.UniqueID" autocomplete="off" name="YokDrOncelikliAlan" value="@item.YokDrOncelikliAlan" maxlength="128" class="form-control" />
+                                                                                                                                                </td>
+                                                                                                                                            </tr>
+                                                                                                                                        }
+
+                                                                                                                                    }
+                                                                                                                                    <tr>
+                                                                                                                                        <td class="CaptionTd" width="300">Tez Sınavı Değerlendirme Sonucu</td>
+                                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                                        <td class="ValueTd">
+                                                                                                                                            <select style="width:100%;" class="form-control" onchange="if($(this).val()!='1'){ $('.RwJAck_@itemJuri.SRTalepJuriID').removeClass('hide'); }else{$('.RwJAck_@itemJuri.SRTalepJuriID').addClass('hide');$('#IsTezSanayiVeIsBirligiKapsamindaGerceklesti_@itemJuri.UniqueID').val('');}" id="MezuniyetSinavDurumID_@itemJuri.UniqueID">
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 1).ToSelected()) value="1"></option>
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 2).ToSelected()) value="2">Başarılı</option>
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 3).ToSelected()) value="3">Uzatma</option>
+                                                                                                                                                <option @((itemJuri.MezuniyetSinavDurumID == 4).ToSelected()) value="4">Başarısız</option>
+                                                                                                                                            </select>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                    <tr class="RwJAck_@itemJuri.SRTalepJuriID @(IsJuriDegerlendirmeYapti ? "" : "hide")">
+                                                                                                                                        <td colspan="3">
+                                                                                                                                            <table style="width:100%;margin-top:5px;">
+                                                                                                                                                <tbody>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td class="CaptionTd" width="280"></td>
+                                                                                                                                                    </tr>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td class="ValueTd">
+                                                                                                                                                            <textarea placeholder="Tez Sınavı Değerlendirme Açıklaması" id="Aciklama_@itemJuri.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJuri.Aciklama</textarea>
+                                                                                                                                                        </td>
+                                                                                                                                                    </tr>
+                                                                                                                                                </tbody>
+                                                                                                                                            </table>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                    <tr class="RwKBtn_@itemJuri.SRTalepJuriID" style="border-top:1px solid;">
+                                                                                                                                        <td class="CaptionTd"></td>
+                                                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                                                        <td class="ValueTd" style="padding-top:5px;font-size:11pt;">
+                                                                                                                                            <span class="label label-primary" style="cursor:pointer;" onclick="SinavDegerlendir('@itemJuri.UniqueID',@Model.MezuniyetBasvurulariID,@(IsJuriDanisman))"><i class="fa fa-save" aria-hidden="true"></i> Değerlendirmeyi Kaydet</span>
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+
+                                                                                                                                    <tr>
+                                                                                                                                        <td class="CaptionTd" width="300">Tez Sınavı Değerlendirme Sonucu</td>
+                                                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                                                        <td class="ValueTd">
+                                                                                                                                            @if (itemJuri.MezuniyetSinavDurumID == 1)
+                                                                                                                                            {
+                                                                                                                                                <span>Sonuç Girilmedi</span>
+                                                                                                                                            }
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 2)
+                                                                                                                                            {
+                                                                                                                                                <span>Başarılı</span>
+
+                                                                                                                                            }
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 3)
+                                                                                                                                            {
+                                                                                                                                                <span>Uzatma</span>
+                                                                                                                                            }
+                                                                                                                                            else if (itemJuri.MezuniyetSinavDurumID == 4)
+                                                                                                                                            {
+                                                                                                                                                <span>Başarısız</span>
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+                                                                                                                                                <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+
+                                                                                                                                            }
+                                                                                                                                        </td>
+                                                                                                                                    </tr>
+                                                                                                                                    if (itemJuri.Aciklama.IsNullOrWhiteSpace() == false)
+                                                                                                                                    {
+                                                                                                                                        <tr>
+                                                                                                                                            <td colspan="3" class="ValueTd">
+                                                                                                                                                <b>Açıklama:</b><br />
+                                                                                                                                                <span style="font-size:10pt;">@itemJuri.Aciklama</span>
+                                                                                                                                            </td>
+
+                                                                                                                                        </tr>
+                                                                                                                                    }
+
+                                                                                                                                }
+                                                                                                                            </tbody>
+                                                                                                                        </table>
+                                                                                                                    </div>
+                                                                                                                }
+
+                                                                                                            </td>
+                                                                                                        </tr>
+
+                                                                                                    }
+
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+
+                                                                            </table>
+
+                                                                            @if (IsJuriSonucGirildi || IsEnstituSonucuGirdi)
+                                                                            {
+                                                                                <br />
+                                                                                <table style="width:100%;">
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="140">Sınav Sonucu</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td>
+                                                                                            @if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
+                                                                                            {
+                                                                                                <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarılı</span>
+                                                                                            }
+                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
+                                                                                            {
+                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarısız</span>
+
+                                                                                            }
+                                                                                            else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
+                                                                                            {
+                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Uzatma</span>
+
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd">Tutanak Formu</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(IsTezliYlOrDr?"FR-0342 Yüksek Lisas":"FR-0377 Doktora") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                <i class="fa fa-file-pdf-o"></i> @(IsTezliYlOrDr ? "FR-0342 Yüksek Lisas" : "FR-0377 Doktora") Tez Sınav Sonuç Tutanağı Formunu İndir
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                </table>
+                                                                            }
+                                                                        </div>
+
+
+
+                                                                        if (KayitYetki || (IsEnstituSonucuGirdi || IsJuriSonucGirildi))
+                                                                        {
+                                                                            var EnstituDegerlendirmeYetki = (KayitYetki && (IsJuriDegerlendirmeVar ? IsJuriSonucGirildi : true) && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
+
+                                                                            <div class="widget widget-default" style="border-top:1px solid;color:@item.SColor;border-top-color:@item.SColor; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                                <table style="width:100%;">
+                                                                                    <tbody>
+
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <table style="width:100%;">
+                                                                                                    <tr>
+                                                                                                        <td class="CaptionTd" width="140">Enstitü Onayı</td>
+                                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                                        <td class="ValueTd">
+                                                                                                            @if (EnstituDegerlendirmeYetki)
+                                                                                                            {
+                                                                                                                @Html.DropDownList("MezuniyetSinavDurumID", item.SrDurumSelectList.MezuniyetSinavDurumID, new { id = "MezuniyetSinavDurumID_" + item.SRTalepID, style = "width:120px;", onchange = "TTStVChange(this," + item.SRTalepID + ");" })
+                                                                                                                <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrSnvDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID);"><i class="fa fa-save" aria-hidden="true"></i>  Kaydet</span>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                @item.SDurumListeAdi
+                                                                                                            }
+                                                                                                        </td>
+                                                                                                    </tr>
+
+                                                                                                    <tr id="InpTTSt_@item.SRTalepID" class="@(item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili ? "" : "hide")">
+                                                                                                        <td class="CaptionTd">Tez Teslim Son Tarihi</td>
+                                                                                                        <td class="CaptionTd">:</td>
+                                                                                                        <td class="ValueTd">
+                                                                                                            @if (EnstituDegerlendirmeYetki)
+                                                                                                            {
+                                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" style="max-width:90px;height:22px;float:left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToString("dd-MM-yyyy")" />
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                if (KayitYetki)
+                                                                                                                {
+                                                                                                                    <table>
+                                                                                                                        <tr>
+                                                                                                                            <td id="SrTezTeslimSonTrLblRw_@item.SRTalepID">@item.TeslimSonTarih.ToString("dd-MM-yyyy")</td>
+                                                                                                                            <td id="SrTezTeslimTarihiContent_@item.SRTalepID" class="hide"><input class="form-control form-control-inline input-medium" id="SrTezTeslimTarihiIInput_@item.SRTalepID" style="max-width: 90px; height: 22px; float: left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToString("dd-MM-yyyy")" /></td>
+                                                                                                                            <td style="padding-left: 3px;">
+                                                                                                                                <a href="javascript:void(0)" onclick="ShowTezTeslimTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Son Tarih Kriterini Düzenle"></i></a>
+                                                                                                                                <script>
+                                                                                                                                    $('#SrTezTeslimTarihiIInput_@item.SRTalepID').datetimepicker({
+                                                                                                                                        lang: 'tr',
+                                                                                                                                        timepicker: false,
+                                                                                                                                        format: 'd-m-Y'
+                                                                                                                                    });
+                                                                                                                                    function ShowTezTeslimTarihi(id) {
+                                                                                                                                        if ($('#SrTezTeslimSonTrLblRw_' + id).hasClass('hide')) {
+                                                                                                                                            $('#SrTezTeslimSonTrLblRw_' + id).removeClass('hide');
+                                                                                                                                            $('#SrTezTeslimTarihiContent_' + id).addClass('hide');
+                                                                                                                                            $('#SrTezTeslimTarihiKayitContent_' + id).addClass('hide');
+
+                                                                                                                                        }
+                                                                                                                                        else {
+                                                                                                                                            $('#SrTezTeslimSonTrLblRw_' + id).addClass('hide');
+                                                                                                                                            $('#SrTezTeslimTarihiContent_' + id).removeClass('hide');
+                                                                                                                                            $('#SrTezTeslimTarihiKayitContent_' + id).removeClass('hide');
+                                                                                                                                        }
+                                                                                                                                    }
+
+                                                                                                                                </script>
+                                                                                                                            </td>
+                                                                                                                            <td id="SrTezTeslimTarihiKayitContent_@item.SRTalepID" width="25" style="text-align:right;font-size:10pt;" class="hide">
+                                                                                                                                <a href="javascript:void(0)" onclick="SaveTezTeslimSonTarihi(@item.SRTalepID)"><i class="fa fa-save fa-lg" title="Tez Teslim Tarihini Kaydet"></i></a>
+                                                                                                                                <script>
+
+                                                                                                                                        function SaveTezTeslimSonTarihi(id) {
+                                                                                                                                            var val = $('#SrTezTeslimTarihiIInput_' + id).val();
+                                                                                                                                            var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
+                                                                                                                                            _pRefresh(_panel, false);
+                                                                                                                                            $.ajax({
+                                                                                                                                                url: '@Url.Action("TezTeslimSonTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                                                                                                data: { 'id': id, 'tezTeslimSonTarih': val },
+                                                                                                                                                success: function (result) {
+                                                                                                                                                    _pRefresh(_panel, true);
+                                                                                                                                                    getMsg(result.MmMessage);
+                                                                                                                                                    if (result.IsSuccess) {
+                                                                                                                                                        getDetailx(@Model.MezuniyetBasvurulariID);
+                                                                                                                                                    }
+                                                                                                                                                },
+                                                                                                                                                error: function (err) {
+                                                                                                                                                    _pRefresh(_panel, true);
+                                                                                                                                                    alert(err.responseText);
+                                                                                                                                                }
+                                                                                                                                            });
+                                                                                                                                        }
+                                                                                                                                </script>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    </table>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    @item.TeslimSonTarih.ToString("dd-MM-yyyy")
+                                                                                                                }
+
+
+                                                                                                            }
+                                                                                                        </td>
+                                                                                                    </tr>
+
+
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        }
+                                                                        if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && (IsEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
+                                                                        {
+                                                                            var ShowKayitOgrenci = (IsOgrenci || KayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSRTalebi;
+                                                                            <br />
+
+                                                                            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:40px;">
+                                                                                <table style="width:100%;">
+                                                                                    <tr>
+                                                                                        <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Öğrenci İçin Uzatma Sonrası Düzeltilmiş Tez Teslimi Taahhütü</td>
+                                                                                    </tr>
+                                                                                    @if (ShowKayitOgrenci)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" width="140">Taahhüt Metni</td>
+                                                                                            <td class="CaptionTd" width="10">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                Tez savunma sınavında jüri üyeleri tarfından verilen uzatma sonrası düzeltilmiş tezimi danışmana ve diğer jüri üyelerine teslim ettiğimi taahhüt ederim.
+                                                                                                <br />
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd">Onay Durumu</td>
+                                                                                            <td class="CaptionTd">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                <select id="IsOgrenciUzatmaSonrasiOnay_@item.SRTalepID">
+                                                                                                    <option></option>
+                                                                                                    <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option>
+                                                                                                    <option value="false" @(item.IsOgrenciUzatmaSonrasiOnay == false ? "selected" : "")>Taahhütü Ret Ediyorum</option>
+                                                                                                </select>  <a href="javascript:void(0);" onclick="OgrenciUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (item.IsOgrenciUzatmaSonrasiOnay == true)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Taahhüt Metni</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    Tez savunma sınavında jüri üyeleri tarfından verilen uzatma sonrası düzeltilmiş tezimi danışmana ve diğer jüri üyelerine teslim ettiğimi taahhüt ederim.
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd" width="140">Onay Durumu</td>
+                                                                                            <td class="CaptionTd" width="10">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                @if (item.IsOgrenciUzatmaSonrasiOnay == true)
+                                                                                                {
+                                                                                                    <span style="color:green;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Öğrenci Tarafından Onaylandı (@item.OgrenciOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                                }
+                                                                                                else if (item.IsOgrenciUzatmaSonrasiOnay == false)
+                                                                                                {
+                                                                                                    <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Öğrenci Tarafından Ret Edildi (@item.OgrenciOnayTarihi.ToFormatDateAndTime())</span>
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <i class="fa fa-clock-o" aria-hidden="true"> Öğrenci Tarafından Onay İşlemi Henüz Yapılmadı.</i>
+                                                                                                }
+
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+
+                                                                                </table>
+                                                                                @if (item.IsOgrenciUzatmaSonrasiOnay == true)
+                                                                                {
+                                                                                    var ShowKayitDanisman = (IsDanismani || KayitYetki) && item.IsSonSRTalebi;
+                                                                                    <br />
+                                                                                    <table style="width:100%;">
+                                                                                        <tr>
+                                                                                            <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Danışman Tez Kontrol Taahhütü</td>
+                                                                                        </tr>
+                                                                                        @if (ShowKayitDanisman)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Onay Durumu</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    <select id="IsDanismanUzatmaSonrasiOnay_@item.SRTalepID" onchange="TaahhutDanOnayChange(this);">
+                                                                                                        <option></option>
+                                                                                                        <option value="true" @(item.IsDanismanUzatmaSonrasiOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum</option>
+                                                                                                        <option value="false" @(item.IsDanismanUzatmaSonrasiOnay == false ? "selected" : "")>Öğrenci Başvurusunu Ret Ediyorum</option>
+                                                                                                    </select> <a href="javascript:void(0);" onclick="DanismanUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
+                                                                                                    <script>
+                                                                                                        function TaahhutDanOnayChange(sndr) {
+                                                                                                            var SndrVal = $(sndr).val();
+                                                                                                            if (SndrVal == 'false') {
+                                                                                                                $('#UzatmaDanismanOnayAciklamaRw_@item.SRTalepID').removeClass('hide');
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                $('#UzatmaDanismanOnayAciklamaRw_@item.SRTalepID').addClass('hide');
+                                                                                                            }
+                                                                                                            if (SndrVal == 'true') {
+                                                                                                                $('.UzatmaDanismanOnayTaahhutRw_@item.SRTalepID').removeClass('hide');
+                                                                                                            }
+                                                                                                            else {
+                                                                                                                $('.UzatmaDanismanOnayTaahhutRw_@item.SRTalepID').addClass('hide');
+                                                                                                            }
+                                                                                                        }
+                                                                                                    </script>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
+                                                                                                <td class="CaptionTd">Taahhüt 1</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    <br />
+                                                                                                    Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="UzatmaDanismanOnayTaahhutRw_@item.SRTalepID @(item.IsDanismanUzatmaSonrasiOnay == true ? "" : "hide")">
+                                                                                                <td class="CaptionTd">Taahhüt 2</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    <br />
+                                                                                                    Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                                                                    <br />
+                                                                                                    <br />
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr id="UzatmaDanismanOnayAciklamaRw_@item.SRTalepID" class="@(item.IsDanismanUzatmaSonrasiOnay == false ? "" : "hide")">
+                                                                                                <td class="CaptionTd">Açıklama</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    <textarea placeholder="Onaylanmama Sebebi" id="DanismanUzatmaSonrasiOnayAciklama_@item.SRTalepID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@item.DanismanUzatmaSonrasiOnayAciklama</textarea>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            if (item.IsDanismanUzatmaSonrasiOnay == true)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd">Tez Teslim Formu</td>
+                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                            <i class="fa fa-file-pdf-o"></i> FR-0338 Düzeltilmiş Mezuniyet Tez Teslim Formunu İndir
+                                                                                                        </a>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
+
+
+
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            if (item.IsDanismanUzatmaSonrasiOnay == true)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd" width="140">Taahhüt 1</td>
+                                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        <br />
+                                                                                                        Öğrencinin başvurusunda belirtilen yayınlar tezden üretilmiş olup öğrenci, kaydolduğu tarihte yürürlükte olan YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen yayın şartlarını sağlamaktadır. Lisansüstü tezin bilimsel, şekilsel ve etik kurallar çerçevesinde incelenmesi sonucunda, tez savunma sınavında savunulabilir olduğu görülmüş olup öğrencinin lisansüstü tezini teslim ederek savunabileceği kanaatine varılmıştır.
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd">Taahhüt 2</td>
+                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        <br />
+                                                                                                        Tez Çalışması Orijinallik Raporu Uygulama Esasları uyarınca, belirtilen azami benzerlik oranlarına göre öğrencinin lisansüstü tezi herhangi bir intihal içermemekte olup aksinin tespit edileceği muhtemel durumda tüm hukuki sorumluğu kabul ediyorum.
+                                                                                                        <br />
+                                                                                                        <br />
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="140">Onay Durumu</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">
+                                                                                                    @if (item.IsDanismanUzatmaSonrasiOnay == true)
+                                                                                                    {
+                                                                                                        <span style="color:green;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Danışman Tarafından Onaylandı (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                                    }
+                                                                                                    else if (item.IsDanismanUzatmaSonrasiOnay == false)
+                                                                                                    {
+                                                                                                        <span style="color:maroon;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Danışman Tarafından Ret Edildi (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <i class="fa fa-clock-o" aria-hidden="true"> Danışman Tarafından Onay İşlemi Henüz Yapılmadı.</i>
+                                                                                                    }
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            if (item.IsDanismanUzatmaSonrasiOnay == false && !item.DanismanUzatmaSonrasiOnayAciklama.IsNullOrWhiteSpace())
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd">Açıklama</td>
+                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        @item.DanismanUzatmaSonrasiOnayAciklama
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                            if (item.IsDanismanUzatmaSonrasiOnay == true)
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td class="CaptionTd">Tez Teslim Formu</td>
+                                                                                                    <td class="CaptionTd">:</td>
+                                                                                                    <td class="ValueTd">
+                                                                                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0338 Mezuniyet Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezTeslimFormu&UniqueID=@Model.RowID&IlkTeslim=false' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                            <i class="fa fa-file-pdf-o"></i> FR-0338 Mezuniyet Tez Teslim Formunu İndir
+                                                                                                        </a>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                        }
+
+                                                                                    </table>
+                                                                                }
+                                                                            </div>
+
+                                                                        }
+                                                                    }
+                                                                </td>
+                                                            </tr>
+
+                                                            RowIndex--;
+                                                        }
+
+                                                    }
+                                                </table>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                            }
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

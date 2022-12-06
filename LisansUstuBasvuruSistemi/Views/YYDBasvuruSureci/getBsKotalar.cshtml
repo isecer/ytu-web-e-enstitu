@@ -1,0 +1,172 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model bsUrecDetay
+@{
+    Layout = null;
+}
+
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-list-alt"></i> Program Kotaları
+        </h3>
+    </div>
+    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="75"></th>
+                        <th width="160">Öğrenim Tipi</th>
+                        <th>Anabilim Dalı / P Adı</th>
+                        <th width="60">A içi</th>
+                        <th width="60">A Dışı</th>
+                        <th width="70" title="Mulakat Var Mı?">Mulkt?</th>
+                        <th width="70" title="Mulakat Var Mı?">Dsy Notu?</th>
+                        <th width="20"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="8">
+                            <div style="text-align: left; height: 420px; overflow-y: scroll;">
+                                <table class="table" style="width:100%;">
+                                    @if (Model.ProgramKotaLst.Count() > 0)
+                                    {
+                                        int RowIndex = 0; string trCls = "odd";
+                                        foreach (var item in Model.ProgramKotaLst)
+                                        {
+                                            RowIndex++;
+                                            trCls = RowIndex % 2 == 1 ? "" : "even";
+                                            <tr>
+                                                <td width="75">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="width: 30px;">@RowIndex</td>
+                                                            <td>
+                                                                <ul class="panel-controls">
+                                                                    <li id="iShow-kota-@Model.BasvuruSurecID-@item.KotaID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.KotaID','kota-@Model.BasvuruSurecID-')">
+                                                                        <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td width="160">@item.OgrenimTipAdi<br />@item.KullaniciTipAdi</td>
+                                                <td>
+                                                    @item.AnabilimDaliAdi <br />
+                                                    @item.ProgramAdi (@item.ProgramKod)
+                                                </td>
+                                                @if (item.OrtakKota)
+                                                {
+                                                    <td width="120" colspan="2" style="text-align:center;">
+                                                        Ortak:<br /> <span style="font-size:17pt;color:@(item.OrtakKotaSayisi.Value > 0 ? "green" : "maroon")">@item.OrtakKotaSayisi.Value</span>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td width="60">
+                                                        <span style="font-size:17pt;color:@(item.AlanIciKota > 0 ? "green" : "maroon")">@item.AlanIciKota</span>
+                                                    </td>
+                                                    <td width="60">
+                                                        <span style="font-size:17pt;color:@(item.AlanDisiKota > 0 ? "green" : "maroon")">@item.AlanDisiKota</span>
+                                                    </td>
+                                                }
+                                                <td width="70">
+                                                    <span style="font-size:13pt;color:@(item.MulakatSurecineGirecek ? "green" : "maroon")">@(item.MulakatSurecineGirecek ? "Var" : "Yok")</span>
+                                                </td>
+                                                <td width="70">
+                                                    <span style="font-size:13pt;color:@(item.IsAlesYerineDosyaNotuIstensin ? "green" : "maroon")">@(item.IsAlesYerineDosyaNotuIstensin ? "Var" : "Yok")</span>
+                                                </td>
+                                            </tr>
+                                            <tr class="cls-kota-@Model.BasvuruSurecID-@item.KotaID" style="display:none">
+                                                <td id="cls-kota-@Model.BasvuruSurecID-@item.KotaID" colspan="8" style="padding: 1px 1px 2px 75px;">
+
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading padding-0">
+                                                            <div class="portlet-title">
+                                                                <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body" style="padding: 0px;">
+                                                            <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+                                                                <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                                                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                        <div class="panel-body form-group-separated">
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Ales Tipi</label>
+                                                                                <div class="col-md-8" style="text-align: left; max-height: 200px; overflow: auto;">@item.AlesTipAdi</div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Anabilim Dalı Adı</label>
+                                                                                <div class="col-md-8">@item.AnabilimDaliAdi</div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Alan dışı öğrenci bölüm kısıtlaması</label>
+                                                                                <div class="col-md-8">
+                                                                                    <span class="label label-@(item.IsAlandisiBolumKisitlamasi ? "success" : "danger")">@(item.IsAlandisiBolumKisitlamasi ? "Var" : "Yok")</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label class="col-md-4 control-label">Eğitim Dili Ing</label>
+                                                                                <div class="col-md-8" style="text-align: left;">
+                                                                                    <span class="label label-@(item.Ingilizce ? "success" : "danger")">@(item.Ingilizce ? "Evet" : "Hayır")</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            @if (item.OrtakKota)
+                                                                            {
+                                                                                <div class="form-group">
+                                                                                    <label class="col-md-4 control-label">Ortak Kota Sayısı Bilgi</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <span style="font-size:13pt;color:@(item.OrtakKotaSayisi.Value > 0 ? "green" : "maroon")">@item.OrtakKotaSayisi.Value</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                <div class="form-group">
+                                                                                    <label class="col-md-4 control-label">Kota Bilgi</label>
+                                                                                    <div class="col-md-8">
+                                                                                        <span style="font-size:13pt;color:@(item.AlanIciKota > 0 ? "green" : "maroon")">Alaniçi: @item.AlanIciKota</span>, <span style="font-size:13pt;color:@(item.AlanDisiKota > 0 ? "green" : "maroon")">Alandışı:@item.AlanDisiKota</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            }
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="8" style="text-align: center;">
+                                                [ Listelenen Kayıt Yok ]
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

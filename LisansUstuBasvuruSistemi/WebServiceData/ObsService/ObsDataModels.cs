@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Ws_ObsService;
+
+namespace LisansUstuBasvuruSistemi.Models.ObsService
+{
+    public class StudentControl
+    {
+        public bool KayitVar { get; set; }
+        public bool Hata { get; set; }
+        public string HataMsj { get; set; }
+        public int? BaslangicYil { get; set; }
+        public int? BitisYil { get; set; }
+        public int? DonemID { get; set; }
+        public DateTime? KayitTarihi { get; set; }
+
+
+        public StudentDersModel AktifDonemDers = new StudentDersModel();
+        public Ogrenci OgrenciInfo { get; set; }
+        public bool IsTezDiliTr { get; set; }
+        public OgrenciTez OgrenciTez { get; set; }
+
+        public int AraRaporMaxNo => this.SonTezIzlemeBilgileri.TEZ_IZL_SIRA.ToEmptyStringToZero() + 1;
+
+        public TezIzlemeBilgileri SonTezIzlemeBilgileri { get; set; }
+        public List<TezIzlJuriBilgileri> TezIzlJuriBilgileri { get; set; }
+        public Personel DanismanInfo { get; set; }
+    }
+
+
+    public class StudentDersModel
+    {
+        public StudentDersModel()
+        {
+            DersKodNums = new List<string>();
+            DersKodus = new List<string>();
+        }
+        public int ToplamKredi { get; set; }
+        public int ToplamAkts { get; set; }
+        public double Agno { get; set; }
+        public string EtikDersNotu { get; set; }
+        public string SeminerDersNotu { get; set; }
+        public int ZorunluDersSayisi { get; set; }
+        public int AbdDersSayisi { get; set; }
+        public List<string> DersKodus { get; set; }
+        public List<string> DersKodNums { get; set; }
+    }
+
+
+
+}

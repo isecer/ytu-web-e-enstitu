@@ -1,0 +1,99 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil;
+@model bsUrecDetay
+@{
+    Layout = null;
+}
+
+<table style="width:100%;table-layout:fixed;"> 
+        @foreach (var item in Model.AnketDetay.OrderBy(o => o.SiraNo))
+        {
+            <tr style="color:#268a8b; font-size:12pt;">
+                <td width="35">@item.SiraNo )</td>
+                <td>@item.SoruAdi </td>
+            </tr>
+            <tr style="font-size:11pt;">
+                <td width="35"></td>
+                <td>
+                    <table class="table-hover" style="width:100%;table-layout:fixed;margin:0px;font-size:11pt;">
+
+
+                        @if (item.IsTabloVeriGirisi)
+                        {
+                            int inx = 0;
+                            <tr>
+                                <th width="35" style="text-align:left;">#</th>
+                                @foreach (var item2 in item.frAnketSecenekDetay.OrderBy(o => o.SiraNo))
+                                {
+                                    <th style="text-align:left;font-size:10pt;">@item2.SecenekAdi</th>
+                                }
+                            </tr>
+                            foreach (var itemR in item.AnketCevaplaris)
+                            {
+                                inx++;
+                                <tr>
+                                    <td width="35" style="text-align:left;">
+                                        @inx
+                                    </td>
+                                    @for (int i = 1; i <= item.frAnketSecenekDetay.Count; i++)
+                                    {
+                                        <td style="text-align:left;">@itemR.GetType().GetProperty("TabloVeri" + i).GetValue(itemR, null)</td>
+                                    }
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item2 in item.frAnketSecenekDetay.OrderBy(o => o.SiraNo))
+                            {
+
+                                <tr>
+                                    <td style="border-top:1px solid;">
+
+
+                                        @if (item2.IsEkAciklamaGir)
+                                        {
+                                            <table style="table-layout:fixed;width:100%;margin:0px;">
+                                                <tr>
+                                                    <td width="120" style="vertical-align:top;">@item2.SecenekAdi</td>
+                                                    <td>
+                                                        <table class="table" style="width:100%;table-layout:fixed;margin:0px;">
+
+                                                            @foreach (var itemC in item2.AnketCevaplaris.Select((s, inx) => new { s.EkAciklama, inx = inx + 1 }).OrderBy(o => o.inx))
+                                                            {
+                                                                <tr>
+                                                                    <td style="border-top:1px solid;">@itemC.inx) @itemC.EkAciklama</td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        }
+                                        else
+                                        {
+                                            @item2.SecenekAdi
+                                        }
+                                    </td>
+                                    @if (!item2.IsEkAciklamaGir)
+                                    {
+                                    <td width="35" style="text-align:right;color:#268a8b; font-size:12pt;border-top:1px solid;border-color:#268a8b;">@item2.Count</td>
+
+                                    <td width="5" style="border-top:1px solid;border-color:#268a8b;"></td>
+                                    }
+                                    else
+                                    {
+                                        <td width="35" style="border-top:1px solid;border-color:#268a8b;"></td>
+                                        <td width="5" style="border-top:1px solid;border-color:#268a8b;"></td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+                </td>
+            </tr>
+
+        } 
+</table>

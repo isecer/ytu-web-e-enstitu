@@ -1,0 +1,116 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@model kmMezuniyetYonetmelik
+@{
+    Layout = null;
+    var ots = Model.krMezuniyetYonetmelikOT.Where(p => p.IsGecerli).Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
+
+}
+
+<div class="panel panel-info" style="margin:0px;">
+    <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+        <h3 class="panel-title">
+            <i class="fa fa-list-alt"></i>Mezuniyet Yönetmelik Bilgisi
+        </h3>
+    </div>
+    <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+        <div class="panel-body" style="margin: 0px; padding: 0px;">
+            <div class="col-md-12" style="text-align: left; ">
+                <table class="table" style="font-size:9pt;margin:0px;">
+                    <tr>
+                        <td style="text-align:right;" width="230">Enstitü Adı</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.EnstituAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;" width="230">Tarih Kriteri</td>
+                        <td width="10">:</td>
+                        <td>
+                            @Model.TarihKriterAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Öğretim Yılı</td>
+                        <td>:</td>
+                        <td style="font-weight:bold;"><span>@Model.OgretimYili</span></td>
+                    </tr>
+                    @if (Model.TarihKriterID == TarihKriterSecim.SecilenTarihAraligi)
+                    {
+                        <tr>
+                            <td style="text-align:right;">Öğretim Yılı Bitiş</td>
+                            <td>:</td>
+                            <td style="font-weight:bold;"><span>@Model.OgretimYiliB</span></td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td colspan="3">                                
+                                @foreach (var Otip in ots)
+                                {
+                                    var modelOt = Model.krMezuniyetYonetmelikOT.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-xs-12" id="_otBilgi">
+                                            <div class="panel panel-default" style="padding: 0px; margin: 0px;">
+                                                <div class="panel-heading padding-0">
+                                                    <h4 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @Otip.OgrenimTipAdi Öğrenim tipi için belirlenen kriterler</h4>
+                                                </div>
+                                                <div class="panel-body padding-0">
+
+                                                    <table class="table table-hover" style="width:100%;table-layout:fixed;color=blue;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Yayın Türü</th>
+                                                                <th width="105">Geçerli</th>
+                                                                <th width="105">Zorunlu</th>
+                                                                <th width="105">Grp.Kodu</th>
+                                                                <th width="105">Ve/Veya</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="Rw_tbody">
+                                                            @foreach (var item in modelOt)
+                                                            {
+                                                                var gID = item.OgrenimTipKod + "_" + item.MezuniyetYayinTurID;
+
+                                                                <tr class="rw_bst">
+                                                                    <td>
+                                                                        @item.MezuniyetYayinTurAdi
+                                                                    <td>
+                                                                        @(item.IsGecerli ? "Geçerli" : "Geçerli Değil")
+                                                                    </td>
+                                                                    <td>
+                                                                        @(item.IsZorunlu ? "Zorunlu" : "Zorunlu Değil")
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.GrupKodu
+                                                                    </td>
+                                                                    <td>
+                                                                        @(item.IsVeOrVeya.HasValue ? (item.IsVeOrVeya.Value ? "Ve" : "Veya") : "")
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">İşlem Yapan</td>
+                        <td>:</td>
+                        <td>@Model.IslemYapan [@Model.IslemTarihi.ToFormatDateAndTime()]</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        jQuery('._popover').popover({ trigger: 'hover' });
+    })
+</script>

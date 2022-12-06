@@ -1,0 +1,106 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using BiskaUtil;
+@{
+    Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
+    System.Collections.IEnumerator e = Request.Form.GetEnumerator();
+    var Detaylar = new Dictionary<string, string>();
+    Detaylar.Add("Response", null);
+    Detaylar.Add("ReturnOid", null);
+    Detaylar.Add("rnd", null);
+    Detaylar.Add("taksit", null);
+    Detaylar.Add("amount", null);
+    Detaylar.Add("MaskedPan", null);
+    Detaylar.Add("EXTRA.TRXDATE", null);
+    Detaylar.Add("ErrMsg", null);
+    Detaylar.Add("mdErrorMsg", null);
+    Detaylar.Add("mdStatus", null);
+    while (e.MoveNext())
+    {
+        string xkey = e.Current as string;
+        if (Detaylar.Any(a => a.Key == xkey))
+        {
+            string xval = Request.Form.Get(xkey);
+            Detaylar[xkey] = xval;
+        }
+    }
+    var _3dSonrasiOnay = Detaylar["Response"] == "Approved"; 
+}
+
+@if (_3dSonrasiOnay)
+{
+
+    var siparisNo = Detaylar["ReturnOid"];
+    var rnd = Detaylar["rnd"].ToString();
+    var Amount = Detaylar["amount"];
+    var taksit = Detaylar["taksit"];
+    var CardNo = Detaylar["MaskedPan"];
+    var tarihY = Detaylar["EXTRA.TRXDATE"].Substring(0, 4);
+    var tarihA = Detaylar["EXTRA.TRXDATE"].Substring(4, 2);
+    var tarihG = Detaylar["EXTRA.TRXDATE"].Substring(6, 2);
+    if (Detaylar["EXTRA.TRXDATE"].Length >= 19)
+    {
+        tarihG += " " + Detaylar["EXTRA.TRXDATE"].Substring(9, 8);
+    }
+    var TarihSon = tarihY + "-" + tarihA + "-" + tarihG;
+    var DekontTarihi = Convert.ToDateTime(TarihSon);
+    var msg = Management.DekontOdemeIsle(siparisNo, DekontTarihi, Amount, taksit, CardNo);
+    if (UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated)
+    {
+        Layout = null;
+        @Html.Raw("Approved!")
+    }
+    else
+    {
+        <div class="panel panel-success panel-hidden-controls">
+
+            <div class="panel-body">
+                @Html.Raw(msg)
+            </div>
+        </div>
+        <script>
+            $(function () {
+                window.parent.getOdemeKontrol();
+            })
+        </script>
+    }
+}
+else
+{
+    if (true)
+    {
+        Layout = null;
+        <span style="display:none;"> @Html.Raw("Approved!")</span>
+
+        <br />
+        <div class="panel panel-success panel-hidden-controls">
+            <div class="panel-body">
+                <br /><br /><br />
+                <div class="col-md-12">
+                    <div class="icon-preview"><i style="color:darkred;" class="fa fa-exclamation-triangle fa-lg"></i></div>
+                </div>
+                <br />
+                <div class="col-md-12" style="text-align:center;color:darkred;">
+                    <h3 style="color:darkred;">Ödeme İşlemi bşarısız</h3>
+                    <br />
+
+                    @if (Detaylar.Any(a => a.Key == "Response" && !a.Value.IsNullOrWhiteSpace()))
+                    {
+                        <br /><span>Response: @Detaylar["Response"]</span>
+                    }
+                    @if (Detaylar.Any(a => a.Key == "mdStatus" && !a.Value.IsNullOrWhiteSpace()))
+                    {
+                        <br /><span>mdStatus: @Detaylar["mdStatus"]</span>
+                    }
+                    @if (Detaylar.Any(a => a.Key == "ErrMsg" && !a.Value.IsNullOrWhiteSpace()))
+                    {
+                        <br /><span>ErrMsg: @Detaylar["ErrMsg"]</span>
+                    }
+                    @if (Detaylar.Any(a => a.Key == "mdErrorMsg" && !a.Value.IsNullOrWhiteSpace()))
+                    {
+                        <br /><span>mdErrorMsg: @Detaylar["mdErrorMsg"]</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

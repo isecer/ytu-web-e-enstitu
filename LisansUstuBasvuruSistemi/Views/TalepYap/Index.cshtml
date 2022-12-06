@@ -1,0 +1,453 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmTalep
+@{
+    ViewBag.Title = "Index";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Talep Biglisi</td>
+                </tr>
+                <tr>
+                    <td width="200">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @bilgiModel.Enstitü.EnstituAd
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@bilgiModel.Kullanici.Ad @bilgiModel.Kullanici.Soyad</td>
+                </tr>
+                @if (bilgiModel.Kullanici.YtuOgrencisi)
+                {
+                    <tr>
+                        <td>Öğrenci No / Öğrenim Seviyesi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Anabilim Dalı / Program</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                        <td>:</td>
+                        <td>
+                            @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                        </td>
+                    </tr>
+                }
+                
+
+                @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Talep Durumu</td>
+                        <td>:</td>
+                        <td>Sistem Talep İşlemine Açık</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i> Yeni Talep Yap</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    if (bilgiModel.SistemBasvuruyaAcik == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>
+                                Sistem talep işlemlerine kapalıdır. Detaylı bilgi almak için duyurular sayfasını ziyaret edebilirsiniz.
+                                <br />
+                                <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfasına Git</a>
+                            </td>
+                        </tr>
+                    }
+
+
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div> 
+ 
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Taleplerim</h3>
+                    <ul class="panel-controls">
+                        @foreach (var item in IndexModel.ListB)
+                        {
+                            <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
+                        }
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th width="220">Ad Soyad</th>
+                                <th>Talep Tipi</th>
+                                <th width="160">Tarih</th>
+                                <th width="120">Talep Durumu</th>
+                                <th width="40"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr class="mColor_@item.TalepGelenTalepID delrw_@item.TalepGelenTalepID" style="color:@item.Color">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TalepGelenTalepID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;">
+                                                        @item.AdSoyad
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.TalepTipAdi </td>
+                                        <td>@item.TalepTarihi.ToString("dd-MM-yyyy HH:mm:ss") </td>
+                                        <td>
+                                            <table style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+
+                                                    <td>@item.DurumListeAdi </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@item.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss")</td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("TalepYap", "TalepYap", new { TalepGelenTalepID = item.TalepGelenTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="SilmeOnay(this,'@item.TalepGelenTalepID')"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.TalepGelenTalepID delrw_@item.TalepGelenTalepID" style="display:none">
+                                        <td id="cls-@item.TalepGelenTalepID" colspan="6" style="padding: 1px 1px 2px 2px;">
+                                            <div class="panel panel-success" id="btDetay_@item.TalepGelenTalepID" style="color:@item.Color;">
+
+                                                <div class="panel-body" style="padding: 0px;">
+                                                    <table style="margin:0px;">
+                                                        <tr>
+                                                            <td width="150" style="text-align:center;">
+                                                                <img src="@(item.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                                                            </td>
+                                                            <td style="padding-left:10px;text-align:left;">
+
+                                                                <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                    <tr>
+                                                                        <td width="200">Talep Tipi</td>
+                                                                        <td width="10">:</td>
+                                                                        <td>@item.TalepTipAdi</td>
+                                                                    </tr>
+                                                                    @if (!item.TalepTipAciklama.IsNullOrWhiteSpace())
+                                                                    {
+                                                                        <tr>
+                                                                            <td>Talep Tipi Açıklaması</td>
+                                                                            <td>:</td>
+                                                                            <td>@item.TalepTipAciklama</td>
+                                                                        </tr>
+                                                                    }
+                                                                    <tr>
+                                                                        <td>Talep Tarihi</td>
+                                                                        <td>:</td>
+                                                                        <td>@item.IslemTarihi.ToFormatDateAndTime()</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Ad Soyad</td>
+                                                                        <td>:</td>
+                                                                        <td>
+                                                                            @item.AdSoyad
+                                                                        </td>
+                                                                    </tr>
+                                                                    @if (item.YtuOgrencisi)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>Öğrenci No</td>
+                                                                            <td>:</td>
+                                                                            <td>
+                                                                                @item.OgrenciNo
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td>Öğrenim Seviyesi</td>
+                                                                            <td>:</td>
+                                                                            <td>@item.OgrenimTipAdi</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Program</td>
+                                                                            <td>:</td>
+                                                                            <td>@item.ProgramAdi</td>
+                                                                        </tr>
+                                                                    }
+                                                                    @if (item.OgrenimTipKod == OgrenimTipi.Doktra && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                                                                    {
+                                                                        <tr>
+                                                                            <td>Tez Önerisi Yapıldı Mı?</td>
+                                                                            <td>:</td>
+                                                                            <td>@(item.IsTezOnerisiYapildi == true ? "Evet" : "Hayır")</td>
+                                                                        </tr>
+                                                                        if (item.IsTezOnerisiYapildi == true)
+                                                                        {
+
+                                                                            <tr>
+                                                                                <td>Tez Öneri Tarihi</td>
+                                                                                <td>:</td>
+                                                                                <td>@item.DoktoraTezOneriTarihi.Value.ToShortDateString()</td>
+                                                                            </tr>
+
+                                                                            foreach (var bl in item.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi))
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@(bl.IsDanismanOnayDosyasi ? "Danışman Onaylı Belge" : "Yüklenen Dosya")</td>
+                                                                                    <td>:</td>
+                                                                                    <td>
+
+                                                                                        <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    }
+
+
+                                                                    @if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>YTÜ'de Araştırma Görevlisi</td>
+                                                                            <td>:</td>
+                                                                            <td>@item.IsYtuArGor.ToEvetHayir()</td>
+                                                                        </tr>
+                                                                        if (item.IsYtuArGor == true)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>Araştırma Görevlisi Statüsü</td>
+                                                                                <td>:</td>
+                                                                                <td>@item.StatuAdi</td>
+                                                                            </tr>
+                                                                        }
+                                                                        if (item.OgrenimTipKod != OgrenimTipi.Doktra)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>Ders Yükü Tamamlandı Mı?</td>
+                                                                                <td>:</td>
+                                                                                <td>@item.IsDersYukuTamamlandi.ToEvetHayir()</td>
+                                                                            </tr>
+                                                                            if (item.IsDersYukuTamamlandi == true)
+                                                                            {
+                                                                                foreach (var bl in item.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi))
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td>@(bl.IsDanismanOnayDosyasi ? "Danışman Onaylı Dilekçe" : "Yüklenen Dosya")</td>
+                                                                                        <td>:</td>
+                                                                                        <td>
+
+                                                                                            <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>Ödenmeyen Harç Borcu Var Mı?</td>
+                                                                                <td>:</td>
+                                                                                <td>@item.IsHarcBorcuVar.ToEvetHayir()</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                    @foreach (var bl in item.TalepGelenTalepBelgeleris.Where(p => !p.IsDanismanOnayDosyasi))
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@(bl.IsDanismanOnayDosyasi ? "Danışman Onaylı Belge" : "Yüklenen Dosya")</td>
+                                                                            <td>:</td>
+                                                                            <td>
+
+                                                                                <a href="javascript:void(0);" onclick="PopupCenter('@bl.DosyaYolu','@bl.DosyaAdi',800,600);"><span class="fa fa-download" style="color: green;" aria-hidden="true"></span>&nbsp;@bl.DosyaAdi</a>
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                    @if (!item.TaahhutAciklama.IsNullOrWhiteSpace())
+                                                                    {
+                                                                        <tr>
+                                                                            <td>Taahhüt</td>
+                                                                            <td>:</td>
+                                                                            <td> <input type="checkbox" style="font-size:12pt;" @item.IsTaahut.ToChecked(false) /> @item.TaahhutAciklama</td>
+                                                                        </tr>
+                                                                    }
+                                                                    <tr>
+                                                                        <td>Talep Durumu</td>
+                                                                        <td>:</td>
+                                                                        <td>
+                                                                            @{
+
+                                                                                <table style="width:100%;table-layout:fixed;">
+                                                                                    <tr>
+                                                                                        <td style="width:30px;">
+                                                                                            @if (!item.ClassName.IsNullOrWhiteSpace())
+                                                                                            {
+                                                                                                <span class="tooltips mColor_@item.TalepGelenTalepID" data-style="blue" data-original-title="@item.TalepDurumAciklamasi" style="color: @item.Color">
+                                                                                                    <i id="bticon_@item.TalepGelenTalepID" class="@item.ClassName" style="font-size:17pt;font-weight:bold;"></i>
+                                                                                                </span>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <i class="@item.ClassName mColor_@item.TalepGelenTalepID" style="font-size:17pt;font-weight:bold;@item.Color"></i>
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <span>@item.DurumListeAdi</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                    @if (item.TalepDurumID == TalepDurumu.Rededildi)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>Red Açıklaması</td>
+                                                                            <td>:</td>
+                                                                            <td>@item.TalepDurumAciklamasi</td>
+                                                                        </tr>
+                                                                    }
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function newApp() {
+        showDuyuru(@DuyuruPopupTipleri.TalepYap, '@Url.Action("TalepYap")');
+    }
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+
+    }
+
+    function SilmeOnay(sndr, id)
+    {
+        var btbx = bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Talebi Silmek İstiyor Musunuz?</td></tr></table>",
+            title: "Talep Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Talebi Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("Sil", "TalepYap")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) {
+                                    $(".delrw_" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+
+
+</script>
+
+

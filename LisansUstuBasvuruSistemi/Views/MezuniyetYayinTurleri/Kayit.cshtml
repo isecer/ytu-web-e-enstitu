@@ -1,0 +1,198 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model MezuniyetYayinTurleri
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="MezuniyetYayinTurID" name="MezuniyetYayinTurID" value="@Model.MezuniyetYayinTurID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.MezuniyetYayinTurID <= 0 ? "Yeni yayın türü tanımlama işlemi" : "Yayın türü düzenleme işlemi")</h3>
+
+                </div>
+                <div class="panel-body" id="prgPbody">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yayın Türü Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="MezuniyetYayinTurAdi" id="MezuniyetYayinTurAdi" value="@Model.MezuniyetYayinTurAdi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Tarih İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="TarihIstensin" class="toggle" @Model.TarihIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yayın Belgesi</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <table class="table" style="width:100%;table-layout:fixed;margin:2px;">
+                                        <tr>
+                                            <td>@Html.DropDownList("MezuniyetYayinBelgeTurID", null, new { @class = "form-control" })</td>
+                                            <td><label class="check"><input type="checkbox" class="icheckbox" name="BelgeZorunlu" value="true" @Model.BelgeZorunlu.ToChecked() /> Zorunlu</label></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Kaynak URL</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <table class="table" style="width:100%;table-layout:fixed;margin:2px;">
+                                        <tr>
+                                            <td>@Html.DropDownList("KaynakMezuniyetYayinLinkTurID", null, new { @class = "form-control" })</td>
+                                            <td><label class="check"><input type="checkbox" class="icheckbox" name="KaynakLinkiZorunlu" value="true" @Model.KaynakLinkiZorunlu.ToChecked() /> Zorunlu</label></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yayın Metni</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <table class="table" style="width:100%;table-layout:fixed;margin:2px;">
+                                        <tr>
+                                            <td>@Html.DropDownList("MezuniyetYayinMetinTurID", null, new { @class = "form-control" })</td>
+                                            <td><label class="check"><input type="checkbox" class="icheckbox" name="MetinZorunlu" value="true" @Model.MetinZorunlu.ToChecked() /> Zorunlu</label></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yayın URL</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <table class="table" style="width:100%;table-layout:fixed;margin:2px;">
+                                        <tr>
+                                            <td>@Html.DropDownList("YayinMezuniyetYayinLinkTurID", null, new { @class = "form-control" })</td>
+                                            <td><label class="check"><input type="checkbox" class="icheckbox" name="YayinLinkiZorunlu" value="true" @Model.YayinLinkiZorunlu.ToChecked() /> Zorunlu</label></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">İndex Türü İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinIndexTurIstensin" class="toggle" @Model.YayinIndexTurIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Kabul Edilmiş Makale İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinKabulEdilmisMakaleIstensin" class="toggle" @Model.YayinKabulEdilmisMakaleIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Dergi Adı İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinDergiAdiIstensin" class="toggle" @Model.YayinDergiAdiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yazarlar İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinYazarlarIstensin" class="toggle" @Model.YayinYazarlarIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yıl/Cilt/Sayı/ss İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinYilCiltSayiIstensin" class="toggle" @Model.YayinYilCiltSayiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Proje Türü İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinProjeTurIstensin" class="toggle" @Model.YayinProjeTurIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Proje Durumu İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinMevcutDurumIstensin" class="toggle" @Model.YayinMevcutDurumIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Proje Dest. Kuruluş İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinDeatKurulusIstensin" class="toggle" @Model.YayinDeatKurulusIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Proje Ekibi İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinProjeEkibiIstensin" class="toggle" @Model.YayinProjeEkibiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Tarih Aralığı İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsTarihAraligiIstensin" class="toggle" @Model.IsTarihAraligiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Etkinlik Adı İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinEtkinlikAdiIstensin" class="toggle" @Model.YayinEtkinlikAdiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Yer Bilgisi İstensin</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="YayinYerBilgisiIstensin" class="toggle" @Model.YayinYerBilgisiIstensin.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.MezuniyetYayinTurID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>

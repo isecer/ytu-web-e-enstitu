@@ -1,0 +1,253 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model fmMezuniyetSureci
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var kayit = RoleNames.BasvuruSureciKayit.InRoleCurrent();
+    var silme = RoleNames.BasvuruSureciSil.InRoleCurrent();
+
+
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Mezuniyet Süreçleri</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="125"></th>
+                                <th class="sirala" field="EnstituAd">Enstitu</th>
+                                <th width="190" class="sirala" field="OgretimYili">Öğretim Yılı</th>
+                                <th width="105" class="sirala" field="BaslangicTarihi">Başlangıç Tar.</th>
+                                <th width="105" class="sirala" field="BitisTarihi">Bitiş Tar.</th>
+
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th>
+                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
+                                </th>
+                                <th>
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    bool suanAktif = (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now);
+                                    RowIndex++;
+                                    <tr class="delrw_@item.MezuniyetSurecID" style="@(suanAktif?"color:green;font-weight:bold;":"")">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 50px;">
+                                                        <div class="btn-group">
+                                                            <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs"></i></a>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li role="presentation" class="dropdown-header">İşlemler</li>
+                                                                @*<li class="divider" style="padding-top: 0px; margin-top: 4px;"></li>*@
+
+                                                                @if (kayit)
+                                                                {
+                                                                    <li>
+                                                                        <a href="@Url.Action("Kayit")"><i class="fa fa-pencil"></i>Yeni</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@Url.Action("Kayit", new { id = item.MezuniyetSurecID })"><i class="fa fa-edit"></i>Düzenle</a>
+                                                                    </li>
+                                                                }
+                                                                @if (silme)
+                                                                {
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" onclick="SilmeOnay(@item.MezuniyetSurecID)"><i class="fa fa-trash-o"></i>Sil</a>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow-ana-@item.MezuniyetSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MezuniyetSurecID,'ana-')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.EnstituAdi</td>
+                                        <td>@item.BaslangicYil / @item.BitisYil @item.DonemAdi @item.SiraNo</td>
+                                        <td>
+                                            @item.BaslangicTarihi.ToFormatDateAndTime()
+                                        </td>
+                                        <td>
+                                            @item.BitisTarihi.ToFormatDateAndTime()
+                                        </td>
+
+
+                                    </tr>
+                                    <tr class="cls-ana-@item.MezuniyetSurecID delrw_@item.MezuniyetSurecID" style="display:none;">
+                                        <td id="cls-ana-@item.MezuniyetSurecID" colspan="5" style="height:350px;vertical-align:top;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function showDetail(id, tip) {
+        var rwID = $('#iShow-' + tip + id);
+        var cls = 'cls-' + tip + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
+    }
+    function showDetailX(id, tip) {
+        var rwID = $('#iShow-' + tip + id);
+        var cls = 'cls-' + tip + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+    function getDetail(id, Isdelete, sndr) {
+
+        var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if ($('#SelectedTb-' + tbName).length > 0) {
+            subData(id, Isdelete, sndr);
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("getMsDetail", "MezuniyetSureci")',
+                data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
+                async: false,
+                success: function (result) { 
+                    if (Isdelete != true) {
+                        $('#cls-ana-' + id).html(result);
+                        subData(id, Isdelete);
+                    }
+                    else {
+                        subData(id, Isdelete, result);
+                    }
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                }
+            });
+        }
+
+    }
+
+
+    
+    function subData(id, IsDelete) {
+
+        var _panel = $('#pnglDB_' + id);
+        var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
+        var tID = getSelectedTabID(tbName);
+        if (IsDelete == true) tID = 1;
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getMsSubData", "MezuniyetSureci")',
+            data: { id: id, tbInx: tID  }, 
+            success: function (result) {
+
+                $('#' + tbName + '-' + tID).html(result);
+                _pRefresh(_panel, true);
+
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    function SilmeOnay(id) {
+        var btbx = bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Mezuniyet Sürecini Silmek İstiyor Musunuz?</td></tr></table>",
+            title: "Mezuninet Süreci Silme İşlemi",
+            buttons: {
+                success: {
+                    label: "Mezuniyet Sürecini Sil",
+                    className: "btn-danger",
+                    callback: function () {
+                        sil(id);
+                    }
+                },
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+    function sil(id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "MezuniyetSureci")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(".delrw_" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+
+
+
+     function showDetailSna(id) {
+         var sndr = $('#iShow_' + id);
+         var cls = 'cls-' + id;
+         var unTogled = ($('.' + cls).css("display") == "none");
+         toggleByClass(sndr, cls, unTogled);
+     }
+</script>

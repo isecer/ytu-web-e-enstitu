@@ -1,0 +1,103 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model List<krSinavTipleriOTNotAraliklari>
+@{
+    Layout = null;
+    var xIPProgramKod = (List<CmbStringDto>)ViewBag.IPProgramKod;
+}
+
+<table class="table" style="width:100%;table-layout:fixed;">
+    <thead>
+        <tr>
+            <th width="90">Öğrenim Tipi</th>
+            <th width="30">Dil</th>
+            <th width="100">Geçerlilik</th>
+            <th width="100">İstensin</th>
+            <th width="80" class="NANotG">Min</th>
+            <th width="80" class="NANotG">Max</th>
+            <th>Seçilen programlarda gözükmeyecek</th>
+        </tr>
+    </thead>
+    <tbody id="_ozelNotRow">
+        @foreach (var item in Model)
+        {
+            var dil = item.Ingilizce ? "En" : "Tr";
+            <tr>
+                <td>
+                    <div class="form-group" title="@item.OgrenimTipAdi">
+                        <input type="text" class="hide" name="NAOgrenimTipKod" value="@item.OgrenimTipKod" />
+                        @{
+                            var otSpl = item.OgrenimTipAdi.Split(' ');
+                            string kAd = "";
+                            for (int i = 0; i < otSpl.Length; i++)
+                            {
+                                if (i == 0)
+                                {
+                                    kAd += otSpl[i] + " ";
+
+                                }
+                                else
+                                {
+                                    kAd += otSpl[i].Substring(0, 1) + " ";
+
+                                }
+                            }
+                            @Html.Raw(kAd)
+                        }
+                    </div>
+                </td>
+                <td>
+                    <input type="text" class="hide" name="NAIngilizce" value="@(item.Ingilizce.ToString().ToLower())" />
+                    @dil
+                </td>
+                <td>
+                    <div class="make-switch mSwitch" data-on-label="Gçrli" data-off-label="Gçrsz" data-on="info" data-off="danger">
+                        <input type="checkbox" id="chkIsGecerli_@(item.OgrenimTipKod)_@dil" onchange="NANotGKontrol2(this,'@(item.OgrenimTipKod)_@dil')" class="toggle" @item.IsGecerli.ToChecked() />
+                    </div>
+                    <input type="text" class="hide" name="NAIsGecerli" id="NAIsGecerli_@(item.OgrenimTipKod)_@dil" value="@(item.IsGecerli ? 1 : 0)" />
+                </td>
+                <td>
+                    <div class="make-switch mSwitch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                        <input type="checkbox" id="chkIsIstensil_@(item.OgrenimTipKod)_@dil" onchange="NANotGKontrol(this,'@(item.OgrenimTipKod)_@dil')" class="toggle" @item.IsIstensin.ToChecked() />
+                    </div>
+                    <input type="text" class="hide" name="NAIsIstensin" id="NAIsIstensin_@(item.OgrenimTipKod)_@dil" value="@(item.IsIstensin ? 1 : 0)" />
+                </td>
+                <td class="NANotG">
+                    <div class="form-group NANotG_@(item.OgrenimTipKod)_@dil  @(item.SuccessRow.HasValue && item.PropName.Contains("NAMin") && item.SuccessRow.Value == false ? "has-error" : "")">
+                        <input type="text" class="form-control" name="NAMin" value="@item.Min" />
+                    </div>
+                </td>
+                <td class="NANotG">
+                    <div class="form-group NANotG_@(item.OgrenimTipKod)_@dil  @(item.SuccessRow.HasValue && item.PropName.Contains("NAMax") && item.SuccessRow.Value == false ? "has-error" : "")">
+                        <input type="text" class="form-control" name="NAMax" value="@item.Max" />
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-md-12 col-xs-12">
+                            @{
+                                var xID = ("ProgramKod-" + item.OgrenimTipKod + "-" + (item.Ingilizce ? "En" : "Tr"));
+                                <select name="IPProgramKod" id="@xID" multiple class="form-control selectpicker" data_live_search="true" data_live_search_placeholder="Search" data_actions_box="true">
+                                    @foreach (var item2 in xIPProgramKod)
+                                    {
+                                        bool contains = item.ProgramKods.Contains(item2.Value);
+                                        <option value="@(xID + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
+                                    }
+                                </select>
+                            }
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+                                }
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $('.selectpicker').selectpicker();
+        $('.mSwitch')['bootstrapSwitch']();
+    })
+</script>

@@ -1,0 +1,53 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- START SIMPLE DATATABLE -->
+        <div class="panel panel-info">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title">
+                    <i class="fa fa-bar-chart-o"></i> Başvuru Süreci Sayısal Raporu
+                </h3>
+                <ul class="panel-controls">
+                    <li><a href="javascript:void(0)" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <div class="panel panel-primary padding-0" style="margin: 0px; padding: 0px;">
+                    <div class="panel-body" style="margin: 0px; padding: 0px;">
+                        <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;">
+                            <tr>
+                                <td style="text-align:right;" width="180">Akademik Dönem</td>
+                                <td width="10">:</td>
+                                <td>
+                                   @Html.DropDownList("BasvuruSurecID", null, new { @class = "form-control" })
+                                </td>
+                            </tr>  
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer" style="text-align:center;padding-top:1px;padding-bottom:1px;">
+                <a href="javascript:void(0);" onclick="bsSayisalRapor()" class="btn btn-success"><span class="fa fa-bar-chart-o"></span> Rapor Al</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function bsSayisalRapor() {
+        var id = $('#BasvuruSurecID').val();
+        if (id == null || id == "") {
+            alert("Akademik Tarih Seçiniz");
+            return;
+        } 
+        yeniDialogBBRprLansCape(null, 'Başvuru Süreci Sayısal Raporu', '@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=' +@RaporTipleri.BasvuruSonucSayisal +'&BasvuruSurecID=' + id, 'auto','1200', 'modal-dialog modal-lg')
+               
+    }
+</script>

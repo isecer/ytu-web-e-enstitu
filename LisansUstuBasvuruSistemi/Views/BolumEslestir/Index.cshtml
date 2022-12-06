@@ -1,0 +1,202 @@
+﻿@using LisansUstuBasvuruSistemi.Models.FilterModel
+@model  fmBolumEslestir
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "BolumEslestir", FormMethod.Post, new { id = "frmBEslestirme" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Bölüm Eşleştirme Listesi</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-success label-form" onclick="$('#export').val('true'); $('#frmBEslestirme').submit(); $('#export').val('false');" style="cursor:pointer;">Eşleştirme Listesini İndir</span></li>
+                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th class="sirala" field="EnstituAdi" width="200">Enstitu Adı</th>
+                                <th class="sirala" field="ProgramAdi">P Adı</th>
+                                <th class="sirala" field="EslestirmeSayisi" width="40">E.S</th>
+                                <th width="20"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                </th>
+                                <th>
+                                    <input name="ProgramAdi" type="text" value="@Model.ProgramAdi" class="form-control" />
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.ProgramKod"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.ProgramKod')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>@item.EnstituAd</td>
+
+                                        <td>
+                                            <span style="font-weight:bold; color: @(item.OgrenciBolumAdlari.Count > 0 ? "green" : "red");">Bölüm:</span> @item.AnabilimDaliAdi<br />
+                                            <span style="font-weight:bold; color: @(item.OgrenciBolumAdlari.Count > 0 ? "green" : "red");">Program:</span> @item.ProgramAdi
+                                        </td>
+                                        <td>
+                                            <span style="font-size:16pt;color:@(item.OgrenciBolumAdlari.Count > 0 ? "green" : "red")">@item.OgrenciBolumAdlari.Count</span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Kayit", "BolumEslestir", new { id = item.ProgramKod,EnstituKod=item.EnstituKod })"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.ProgramKod" style="display:none">
+                                        <td id="cls-@item.ProgramKod" colspan="5" style="padding: 1px 1px 2px 75px;">
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading padding-0">
+                                                    <div class="portlet-title">
+                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="padding: 0px;">
+                                                    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+                                                        <div class="panel panel-primary" style="margin: 0px; padding: 0px;">
+                                                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                <div class="panel-body form-group-separated">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Enstitü</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">@item.EnstituAd</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Anabilim Dalı Adı</label>
+                                                                        <div class="col-md-9">@item.AnabilimDaliAdi</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">P Kod</label>
+                                                                        <div class="col-md-9">@item.ProgramKod</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Program Adı</label>
+                                                                        <div class="col-md-9">@item.ProgramAdi</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Ales Tipi</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">@item.AlesTipAdi</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Eşleştirilen Öğrenci Bölümü</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            @if (item.OgrenciBolumAdlari.Count > 0)
+                                                                            {
+                                                                                <table>
+                                                                                    @foreach (var oba in item.OgrenciBolumAdlari)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td style="color:green;font-weight:bold;">
+                                                                                                @oba
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                </table>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color: red;">
+                                                                                    Eşleşen Öğrenci Bölümü Yok!
+                                                                                    <br />
+                                                                                    Lütfen Eşleştirme Yapınız!
+                                                                                </span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Başvurabilecek Öğrenci</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            @item.KullaniciTipAdi
+                                                                        </div>
+                                                                    </div> 
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Eğitim Dili İngilizce Mi?</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            <span class="label label-@(item.Ingilizce ? "success" : "danger")">@(item.Ingilizce ? "Evet" : "Hayır")</span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 control-label">Durum</label>
+                                                                        <div class="col-md-9" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            <span class="label label-@(item.IsAktif ? "success" : "danger")">@(item.IsAktif ? "Aktif" : "Pasif")</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function showDetail(id) {
+            var sndr = $('#iShow_' + id);
+            var cls = 'cls-' + id;
+            var unTogled = ($('.' + cls).css("display") == "none");
+            toggleByClass(sndr, cls, unTogled);
+        }
+</script>

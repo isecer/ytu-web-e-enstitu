@@ -1,0 +1,403 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model  fmTalepler
+@{
+    ViewBag.Title = "Index";
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+    var kYetki = RoleNames.SRTalepDuzelt.InRoleCurrent();
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Salon Rezervasyonu Talep İşlemi</td>
+                </tr>
+                <tr>
+                    <td width="200">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @bilgiModel.Enstitü.EnstituAd
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@UserIdentity.Current.NameSurname</td>
+                </tr>
+                @if (bilgiModel.KullaniciTipYetki)
+                {
+                    if (bilgiModel.OgrenciNo.IsNullOrWhiteSpace() == false)
+                    {
+                        <tr>
+                            <td>Öğrenci No / Öğrenim Seviyesi</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.OgrenciNo /  @bilgiModel.OgrenimTipAdi
+                            </td>
+                        </tr>
+                    }
+                    if (bilgiModel.ProgramAdi.IsNullOrWhiteSpace() == false)
+                    {
+                        <tr>
+                            <td>Anabilim Dalı / Program</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.AnabilimdaliAdi / @bilgiModel.ProgramAdi
+                            </td>
+                        </tr>
+                    }
+                    if (bilgiModel.OgrenimDurumAdi.IsNullOrWhiteSpace() == false)
+                    {
+                        <tr>
+                            <td>Öğrenim Durumu / Kayıt Tarihi</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.OgrenimDurumAdi / @bilgiModel.KayitDonemi
+                            </td>
+                        </tr>
+                    }
+                    if (bilgiModel.BirimAdi.IsNullOrWhiteSpace() == false)
+                    {
+                        <tr>
+                            <td>Birim</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.BirimAdi
+                            </td>
+                        </tr>
+                    }
+                    if (bilgiModel.UnvanAdi.IsNullOrWhiteSpace() == false)
+                    {
+                        <tr>
+                            <td>Unvan</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.UnvanAdi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sicil No</td>
+                            <td>:</td>
+                            <td>
+                                @bilgiModel.SicilNo
+                            </td>
+                        </tr>
+
+                    }
+                }
+
+                @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.EnstituYetki && bilgiModel.KullaniciTipYetki)
+                {
+                    <tr>
+                        <td>Eğitim Öğretim Yılı</td>
+                        <td>:</td>
+                        <td>@bilgiModel.DonemAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Talep Durumu</td>
+                        <td>:</td>
+                        <td>Sistem salon rezervasyon işlemine açıktır.Salon rezervasyonu için Yeni rezervasyon talebi butonuna tıklayınız.</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="window.location.href='@Url.Action("TalepYap")'"><i class="fa fa-plus tooltips"></i> Yeni Rezervasyon Talebi Yap</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    if (bilgiModel.SistemBasvuruyaAcik == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>Sistem salon rezervasyon talebi işlemine kapalıdır.</td>
+                        </tr>
+                    }
+                    else if (bilgiModel.EnstituYetki == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>Seçili enstitü için salon rezervasyon talebi yapamazsınız!</td>
+                        </tr>
+                    }
+                    else if (bilgiModel.KullaniciTipYetki == false)
+                    {
+                        <tr>
+                            <td>Talep Durumu</td>
+                            <td>:</td>
+                            <td>@bilgiModel.KullaniciTipYetkiYokMsj</td>
+                        </tr>
+                    }
+
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Salon Rezervasyon Taleplerim</h3>
+                    <ul class="panel-controls">
+                        @foreach (var item in IndexModel.ListB)
+                        {
+                            <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
+                        }
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table" style="width:100%;table-layout:fixed;">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th class="sirala" field="AdiSoyadi">Ad Soyad</th>
+                                <th class="sirala" field="SalonAdi">Salon Bilgisi</th>
+                                <th class="sirala" field="Tarih" width="140">Talep Tarihi</th>
+                                <th class="sirala" field="DurumListeAdi" width="100">Durum</th>
+                                <th width="40"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th>
+
+                                </th>
+                                <th>
+                                    <input name="Aciklama" type="text" value="@Model.Aciklama" class="form-control" />
+                                </th>
+                                <th>@Html.DropDownList("SRSalonID", null, new { @class = "form-control" })</th>
+                                <th></th>
+                                <th>@Html.DropDownList("SRDurumID", null, new { @class = "form-control" })</th>
+                                <th></th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr class="mColor_@item.SRTalepID" style="color:@item.Color">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.SRTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SRTalepID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor('@item.TalepYapanID')" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;">
+                                                        @item.TalepYapan
+                                                        <br />
+                                                        @if (item.OgrenciNo.IsNullOrWhiteSpace() == false)
+                                                        {
+                                                            <span>Öğrenci No:@item.OgrenciNo</span>
+                                                        }
+                                                        else if (item.SicilNo.IsNullOrWhiteSpace() == false)
+                                                        {
+                                                            <span>Sicil No:@item.SicilNo</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>@item.SalonAdi</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi <br />
+                                            @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                        </td>
+                                        <td>
+                                            <table style="width:100%;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="width:30px;">
+                                                        @if (!item.SRDurumAciklamasi.IsNullOrWhiteSpace())
+                                                        {
+                                                            <span class="tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="@item.SRDurumAciklamasi" style="color:@item.Color;">
+                                                                <i id="bticon_@item.SRTalepID" class="@item.ClassName" style="font-size:17pt;font-weight:bold;"></i>
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="@item.ClassName mColor_@item.SRTalepID" style="font-size:17pt;font-weight:bold;color:@item.Color"></i>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <span id="btCapt_@item.SRTalepID">@Html.Raw(item.DurumListeAdi)</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("TalepYap", "SR" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="getDetail('@item.SRTalepID',true,this)"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.SRTalepID" style="display:none">
+                                        <td id="cls-@item.SRTalepID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@if (kYetki)
+{
+    <script>
+        function kaydet(id) {
+            var ibtID = $('#SRDurumID_' + id).val();
+            var ibTipAciklama = $('#SRDurumAciklamasi_' + id).val();
+            $.ajax({
+                url: '@Url.Action("Istenenkaydet", "SRGelenTalepler")',
+                data: {
+                    'id': id,
+                    'SRDurumID': ibtID,
+                    'SRDurumAciklamasi': ibTipAciklama
+                },
+                success: function (result) {
+                    getDetail(id, false, null);
+                    $(".mColor_" + id).each(function (inx, itmx) {
+                        $(itmx).attr("style", result.Color);
+                    });
+                    $("#btCapt_" + id).html(result.IslemTipListeAdi);
+                    $("#bticon_" + id).attr("Class", "");
+                    $("#bticon_" + id).addClass(result.ClassName); 
+                },
+                error: function (err) {
+                    alert(err.responseText);
+
+                }
+            });
+        }
+    </script>
+}
+
+
+
+    <script type="text/javascript">
+
+    function showDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) getDetail(id);
+    }
+    function getDetail(id, Isdelete, sndr) {
+
+        var _panel = $('#SRDetay_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetail", "SR")',
+            data: { id: id, IsDelete: (Isdelete == true)},
+            success: function (result) {
+                if (Isdelete != true) {
+                    $('#cls-' + id).html(result);
+                    _pRefresh(_panel, true);
+                }
+                else {
+                    _pRefresh(_panel, true);
+                    var btbx = bootbox.dialog({
+                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Salon Rezervasyon Talebini Silmek İstiyor Musunuz?</td></tr></table>",
+                        title: "Salon Rezervasyonu Silme İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Rezervasyonu Sil',
+                                className: "btn-danger",
+                                callback: function () {
+                                    sil(sndr, id);
+                                }
+                            },
+                            danger: {
+                                label: 'Vazgeç',
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    $(btbx).find('.modal-dialog').addClass('modal-lg');
+
+                }
+                onload();
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function sil(sndr, id) {
+        $.ajax({
+            url: '@Url.Action("Sil", "SR")',
+            data: { id: id },
+            success: function (result) {
+                if (result.IsSuccess) {
+                    $(sndr).closest("tr").remove();
+                    $(".cls-" + id).remove();
+                }
+                showMmMessage(result.Messages, 'Tamam');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        });
+    }
+    </script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        jQuery('.popovers').popover();
+    });
+</script>

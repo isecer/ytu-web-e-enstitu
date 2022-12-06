@@ -1,0 +1,252 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model  fmSalonBilgi
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var haftaGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
+    var Salonlar = (List<CmbIntDto>)ViewBag.Salonlar;
+}
+
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="fa fa-list-alt"></i> Arama İşlemi
+                    </h3>
+                    <ul class="panel-controls"></ul>
+                </div>
+                <div class="portlet-body">
+
+                    <table class="table table-hover">
+                        <tr>
+                            <td style="width: 220px; border: none;  text-align:right;">Tarih kriteri</td>
+                            <td style="width: 5px; border: none; padding: 4px;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Başlangıç</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BasTarih.HasValue==false ? "" : Model.BasTarih.ToString("yyyy-MM-dd"))" name="BasTarih" id="BasTarih">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="col-md-4 col-xs-4 control-label">Bitiş</label>
+                                                <div class="col-md-8 col-xs-8">
+                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitTarih.HasValue==false ? "" : Model.BitTarih.ToString("yyyy-MM-dd"))" name="BitTarih" id="BitTarih">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;  text-align:right;">Hafta Gün Kriteri</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                <select id="HaftaGunID" name="HaftaGunID" multiple class="form-control select">
+                                    @foreach (var item2 in haftaGunleri)
+                                    {
+                                        <option value="@item2.Value" @(Model.HaftaGunID.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;  text-align:right;">Salon Kriteri</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">
+                                <select id="SRSalonID" name="SRSalonID" multiple class="form-control select">
+                                    @foreach (var item2 in Salonlar)
+                                    {
+                                        <option value="@item2.Value" @(Model.SRSalonID.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;  text-align:right;">Salon Durumu</td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;">@Html.DropDownList("IsDolu", null, new { @class = "form-control" })</td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;  text-align:right;"></td>
+                            <td style="border: none;">:</td>
+                            <td style="border: none; padding: 4px;"><button class="btn btn-success" type="submit">Sorgula</button></td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Salon Rezervasyon Bilgileri</h3>
+                    <ul class="panel-controls">
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="75">  </th>
+                                <th field="SalonAdi" width="220">Salon</th>
+                                <th field="Tarih" width="120">Tarih</th>
+                                <th field="Saat" width="100">Saat</th>
+                                <th field="Durum" width="90">Durum</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                string trCls = "odd";
+                                foreach (var item in Model.data)
+                                {
+                                    RowIndex++;
+                                    bool dolu = item.OTID > 0 || item.GTID > 0;
+
+                                    var rowID = "";
+                                    if (item.GTID > 0) { item.KayitID = item.GTID.Value; rowID = "GT"; }
+                                    else if (item.OTID > 0) { item.KayitID = item.OTID.Value; rowID = "OT_" + RowIndex; }
+
+
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr style="color:@(dolu?"maroon":"green");">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    @if (rowID.IsNullOrWhiteSpace() == false)
+                                                    {
+                                                        <td>
+                                                            <ul class="panel-controls">
+                                                                <li id="iShow_@(rowID)_@item.KayitID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@rowID','@item.KayitID','@item.EnstituKod')">
+                                                                    <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.SalonAdi
+                                        </td>
+                                        <td>
+                                            @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi
+                                        </td>
+                                        <td>@string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)</td>
+                                        <td>
+                                            @(dolu ? "Dolu" : "Boş")
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@(rowID)_@item.KayitID" style="display:none">
+                                        <td id="cls-@(rowID)_@item.KayitID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Html.Raw(Model.ToPagerString())
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+</div>
+
+<script type="text/javascript">
+
+    function showDetail(rwIDx, id, EKD) {
+        var rwID = $('#iShow_' + rwID + "_" + id);
+        var cls = 'cls-' + rwIDx + "_" + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) {
+            if (rwIDx == "GT") getDetail(id, EKD);
+            else {
+                getDetail2(id, rwIDx);
+            }
+        }
+    }
+    function getDetail(id, EKD) {
+        var _panel = $('#SRDetay_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetail", "SR")',
+            data: { id: id, 'IsDelete': true, 'EnstituKod': EKD},
+            success: function (result) {
+                $('#cls-GT_' + id).html(result);
+                _pRefresh(_panel, true);
+                onload();
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+    function getDetail2(id, rwnx) { 
+        var _panel = $('#dvDetay_' + id);
+        _pRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("getDetail", "SROzelTanimlar")',
+            data: { id: id },
+            success: function (result) {
+                $('#cls-' + rwnx + '_' + id).html(result);
+                _pRefresh(_panel, true);
+                onload();
+            },
+            error: function (err) {
+                alert(err.responseText);
+                _pRefresh(_panel, true);
+            }
+        });
+    }
+
+</script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#BasTarih').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+        $('#BitTarih').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+        jQuery('.popovers').popover();
+    });
+</script>

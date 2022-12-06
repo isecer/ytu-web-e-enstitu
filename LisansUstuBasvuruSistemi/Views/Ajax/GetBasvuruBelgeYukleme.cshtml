@@ -1,0 +1,645 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@model BasvuruDetayModel
+@{
+    Layout = null;
+    var Color = Model.DurumColor;
+    var mGonder = RoleNames.MailGonder.InRoleCurrent();
+    var TSecimColorA = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Asil) ? "#2f8c8d" : "";
+    var TSecimColorY = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Yedek) ? "#2f8c8d" : "";
+    var SecilenTercihVar = Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (Model.IsYedekCokluTercih ? p.IsSeciliBasvuruyaAitTercih : true) && p.IsSecilenTercih == true);
+    var Kayityetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
+    var FileDialogShow = true;
+    if (Model.KayitIslemiGordu)
+    {
+        FileDialogShow = false;
+    }
+
+}
+<div class="panel panel-default" style="padding: 0px; margin: 0px;">
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title"></h3>
+        @if (mGonder)
+        {
+            <ul class="panel-controls">
+                @if (Model.IsGonderilenMaillerVar)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="mGonderilenListeBK('@Model.RowID.ToString()');" style="cursor:pointer;"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Gönderilen Mailleri Gör</span>
+                    </li>
+                }
+                <li>
+
+                    <span class="label label-primary label-form" onclick="mGonderBK('@Model.RowID.ToString()',@Model.BasvuruID);" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Mail Gönder</span>
+                </li>
+
+            </ul>
+        }
+    </div>
+    <div class="panel-body" style="padding:2px;">
+        @if (!Model.IsHesaplandi)
+        {
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Başvuru henüz hesaplanmamıştır. Hesaplama işleminden sonra tercih edilen programlarda Asil ya da Yedek hakkı kazanıldığı taktirde Belge yükleme işlemleri açılacaktır.</td>
+                </tr>
+            </table>
+        }
+        else if (!Model.IsKayitHakkiVar)
+        {
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Hesaplama sonucunda bu başvuru için kayıt hakkı kazanılan herhangi bir program bulunmamaktadır.</td>
+                </tr>
+            </table>
+
+        }
+        else if (!Kayityetki && !Model.IsBelgeYuklemeAktif && !Model.Tercihlers.Any(a => a.IsSecilenTercih == true))
+        {
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Kayıt hakkı kazandığınız programlar için belge yüklemesi aktif değildir.</td>
+                </tr>
+            </table>
+        }
+        else
+        {
+
+            <input type="text" class="hide" id="IsSave_@Model.BasvuruID" value="@(Model.IsSave.ToString().ToLower())" />
+            <div class="dd" id="ddLst" style="height: auto;">
+
+                <ol class="dd-list" id="Rw_tbody">
+                    @if (!Model.IsYedekCokluTercih)
+                    {
+                        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipi.Asil && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+                        {
+                            bool IsBelgeYuklemeAktif = false;
+                            <li class="dd-item dd3-item">
+                                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@TSecimColorA;">
+                                    <table style="width:100%;table-layout:fixed;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td width="240" style="color:@TSecimColorA;font-weight:bold;text-align:right;">Asil kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                                <td width="10" style="color:@TSecimColorA;font-weight:bold;text-align:right;">:</td>
+                                                <td style="text-align:left; color:@TSecimColorA;padding-right:4px;">
+                                                    <select id="KayitTercihUniqueIDA_@Model.BasvuruID" class="form-control" style="width:100%;color:@TSecimColorA">
+                                                        <option value="">@(Model.IsSecilenTercihVarAsil ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
+                                                        @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).OrderBy(o => o.SiraNo))
+                                                        {
+                                                            IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
+                                                            var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                                            <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td width="125">
+                                                    @if (IsBelgeYuklemeAktif)
+                                                    {
+                                                        var tRowID = "";
+                                                        if (Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).Count() == 1)
+                                                        {
+                                                            tRowID = Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).First().UniqueID.ToString();
+                                                        }
+                                                        <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@TSecimColorA" onclick="KayitOlunacakTercihiKaydet(@Model.BasvuruID,'KayitTercihUniqueIDA_','@tRowID')"><span class="fa fa-save fa-lg"></span> Seç ve Kaydet</span>
+
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </li>
+                        }
+                        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipi.Yedek && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+                        {
+                            bool IsBelgeYuklemeAktif = false;
+                            <li class="dd-item dd3-item">
+
+                                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@TSecimColorY;">
+                                    <table style="width:100%;table-layout:fixed;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td width="240" style="color:@TSecimColorY;font-weight:bold;text-align:right;">Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                                <td width="10" style="color:@TSecimColorY;font-weight:bold;text-align:right;">:</td>
+                                                <td style="text-align:left; color:@TSecimColorY;padding-right:4px;">
+                                                    <select id="KayitTercihUniqueIDY_@Model.BasvuruID" class="form-control" style="width:100%;color:@TSecimColorY">
+                                                        <option value="">@(Model.IsSecilenTercihVarYedek ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
+                                                        @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).OrderBy(o => o.SiraNo))
+                                                        {
+                                                            IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
+                                                            var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                                            <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td width="125">
+                                                    @if (IsBelgeYuklemeAktif)
+                                                    {
+                                                        var tRowID = "";
+                                                        if (Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).Count() == 1)
+                                                        {
+                                                            tRowID = Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).First().UniqueID.ToString();
+                                                        }
+                                                        <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@TSecimColorY" onclick="KayitOlunacakTercihiKaydet(@Model.BasvuruID,'KayitTercihUniqueIDY_','@tRowID')"><span class="fa fa-save fa-lg"></span> Seç ve Kaydet</span>
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="dd-item dd3-item">
+                            <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
+                                <table style="width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding:5px;"> Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left:10px;text-align:left;">
+                                                <table style="width:100%;" id="tercihS_@Model.BasvuruID">
+                                                    <tr>
+                                                        <th>Program</th>
+                                                        <th width="90">Kayıt Seçeneği</th>
+                                                        <th width="90">Kayıt Önceliği</th>
+
+                                                    </tr>
+                                                    @foreach (var item in Model.Tercihlers)
+                                                    {
+                                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumu.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(Kayıt İşlemi Bekleniyor)" : ""));
+
+                                                        <tr>
+                                                            <td class="TRowPrName">@item.ProgramKod @item.ProgramAdi (@item.OgrenimTipAdi) @(durum)</td>
+                                                            <td style="text-align:center;">
+                                                                <input class="TRowUnID hide" value="@item.UniqueID" />
+                                                                <select class="KsCls" style="font-weight:bold; color:@(item.IsSecilenTercih==true?"green":"maroon")" id="KayitSecenek_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
+                                                                    <option value="" onchange=""></option>
+                                                                    <option value="true" style="font-weight:bold;color:green;" @(item.IsSecilenTercih == true ? "selected" : "")>Kayıt Olmak İstiyorum</option>
+                                                                    <option value="false" style="font-weight:bold;color:maroon;" @(item.IsSecilenTercih == false ? "selected" : "")>Kayıt Olmak İstemiyorum</option>
+                                                                </select>
+
+                                                            </td>
+                                                            <td style="text-align:center;">
+                                                                <select class="KoCls @(item.IsSecilenTercih!=true?"hide":"")" id="KayitOncelik_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
+                                                                    <option value=""></option>
+                                                                    <option value="1" @(item.KayitSiraNo == 1 ? "selected" : "")>1. Öncelik</option>
+                                                                    <option value="2" @(item.KayitSiraNo == 2 ? "selected" : "")>2. Öncelik</option>
+                                                                </select>
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+
+                                                </table>
+                                            </td>
+                                            <td width="100" style="vertical-align:middle;">
+                                                <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@TSecimColorY" onclick="KayitOlunacakTercihiKaydet2(@Model.BasvuruID)"><span class="fa fa-save fa-lg"></span> Kaydet</span>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </li>
+                    }
+                    @if (!Kayityetki && SecilenTercihVar)
+                    {
+                        <li class="dd-item dd3-item">
+                            <div class="dd3-content" style="margin:1px;padding :5px;">Aşağıya ekleyeceğiniz belgeler kayıt esnasında yetkililer tarafından kontol edilip onaylanacaktır. Belgelerin pdf olarak eklenmesi gerekmektedir.</div>
+                        </li>
+                    }
+                    @if (SecilenTercihVar)
+                    {
+                        var TBasvuruIDCount = Model.Tercihlers.Select(s => s.BasvuruID).Distinct().Count();
+
+                        foreach (var itemT in Model.Tercihlers.Where(p => p.IsSecilenTercih == true).Take(TBasvuruIDCount))
+                        {
+                            <li>
+
+                                <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
+                                    <table style="width:100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-weight:bold;font-size:9pt; border-bottom:1px solid;padding:5px;">
+                                                    @if (!Model.IsYedekCokluTercih || TBasvuruIDCount == 1)
+                                                    {
+                                                        <i class="fa fa-file-pdf-o fa-lg" style="color:@Color;"></i> <span style="color:@Color;">Kayıt işlemi sırasında gerekli olacak belgeler aşağıda listelenmiştir</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-file-pdf-o fa-lg" style="color:@Color;"></i> <span style="color:@Color;">@(itemT.KayitSiraNo + " .Öncelik >") @itemT.ProgramKod @itemT.ProgramAdi (@itemT.OgrenimTipAdi) programı için istenen belgeler</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <ol class="dd-list">
+                                                        @foreach (var item in Model.Belgelers.Where(p => p.BasvuruID == itemT.BasvuruID))
+                                                        {
+
+                                                            var BelgeVar = !item.BelgeAdi.IsNullOrWhiteSpace();
+                                                            var colorKb = !BelgeVar ? "" : "#2f8c8d";
+                                                            var colorOb = !item.IsOnaylandi ? "#8d4a2f" : "#2f8c8d";
+
+                                                            var RwID = item.BasvuruID + "_" + item.BasvuruBelgeTipID;
+                                                            var frmID = "BasvuruDosyaEklePost_" + RwID;
+
+                                                            <li class="dd-item dd3-item">
+
+                                                                <div class="dd3-content" style="margin:2px;padding :0px;border-color:@colorKb;">
+
+                                                                    @using (Ajax.BeginForm("BasvuruDosyaEklePost", "Ajax", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmID }))
+                                                                    {
+                                                                        <table style="width:100%;table-layout:fixed;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td width="34">
+                                                                                        @if (!item.Not.IsNullOrWhiteSpace())
+                                                                                        {
+                                                                                            <button style="padding-left:8px;padding-right:5px;" type="button" class="btn btn-info popover-dismiss" title="Bilgi" data-content="@item.Not"><i class="fa fa-info-circle fa-lg"></i></button>
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td width="240" style="color:@colorKb;font-weight:bold;text-align:right;">
+                                                                                        @if (item.BasvuruBelgeTipID == BasvuruBelgeTipi.KimlikBelgesi)
+                                                                                        {
+                                                                                            @(Model.IsYerli ? "Kimlik Belgesi" : "Pasaport Belgesi")
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            @item.BasvuruBelgeTipAdi
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td width="10" style="color:@colorKb;text-align:right;">:</td>
+                                                                                    <td style="text-align:left; color:@colorKb;">
+                                                                                        <div class="input-group">
+                                                                                            <table style="width:100%;table-layout:fixed;">
+                                                                                                <tr>
+                                                                                                    @if (BelgeVar)
+                                                                                                    {
+                                                                                                        <td width="35">
+                                                                                                            <span class="input-group-addon" id="BelgeIcon_@RwID" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@RwID" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(BelgeVar ? item.BelgeAdi :"Belge Seçilmedi, Lütfen belge seçiniz.")">
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td width="35">
+                                                                                                            <span class="input-group-addon" id="BelgeIcon_@RwID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@RwID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@(BelgeVar ? item.BelgeAdi :(Model.IsSave ? "Belge öğrenci tarafından yüklenmedi." : "Belge Seçilmedi, Lütfen belge seçiniz."))">
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    <td width="120" style="padding:1px;" class="@(!FileDialogShow || item.IsOnaylandi ? "hide" : "")">
+                                                                                                        <span class="input-group-addon" id="DosyaSec_@RwID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@RwID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
+                                                                                                    </td>
+
+                                                                                                    <td width="120" style="padding:1px;">
+                                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@RwID" style="background-color:@colorKb;cursor:pointer" onclick="BasvuruBelgeKaydet('@frmID')"><span class="fa fa-save fa-lg"></span> Kaydet</span>
+
+                                                                                                        <table class="@(!BelgeVar ? "hide" : "")" id="yOnayChk_@RwID">
+                                                                                                            <tr>
+                                                                                                                @if (Kayityetki && !Model.KayitIslemiGordu)
+                                                                                                                {
+                                                                                                                    <td style="vertical-align:middle;">
+                                                                                                                        <input type="checkbox" id="yOnayChkInpt_@RwID" style="cursor:pointer;margin:5px;width:18px;height:18px;color:@colorOb;" onchange="BasvuruBelgeOnayla(@Model.BasvuruID,@item.BasvuruBelgeTipID,$(this).prop('checked'))" value="true" @item.IsOnaylandi.ToChecked() />
+                                                                                                                    </td>
+
+                                                                                                                    <td style="cursor:pointer;font-size:10pt;color:@colorOb;" onclick="$('#yOnayChkInpt_@RwID').click();">
+                                                                                                                        Onaylandı
+                                                                                                                    </td>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    <td style="vertical-align:middle;">
+                                                                                                                        <input type="checkbox" id="yOnayChkInpt_@RwID" style="margin:3px;width:18px;height:18px;color:@colorOb" disabled="disabled" value="true" @item.IsOnaylandi.ToChecked() />
+                                                                                                                    </td>
+
+                                                                                                                    <td style="font-size:9pt;color:@colorOb">
+                                                                                                                        @(item.IsOnaylandi ? "Onaylandı" : "Onaylanmadı")
+                                                                                                                    </td>
+                                                                                                                }
+
+                                                                                                            </tr>
+                                                                                                        </table>
+                                                                                                    </td>
+
+                                                                                                </tr>
+
+                                                                                            </table>
+                                                                                            <input type="text" class="hide" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
+                                                                                            <input type="text" class="hide" name="BasvuruID" value="@item.BasvuruID" />
+                                                                                            <input type="text" class="hide" name="KullaniciID" value="@Model.KullaniciID" />
+                                                                                            <input type="text" class="hide" name="BasvuruBelgeTipID" value="@item.BasvuruBelgeTipID" />
+                                                                                            <input class="hide" type="file" accept="application/pdf" name="BelgeDosyasi" id="Belge_@RwID" onchange="ChangeFile(this,'@RwID');" />
+
+
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                
+                                                                            </tbody>
+                                                                        </table>
+                                                                    }
+                                                                </div>
+                                                            </li>
+
+                                                        }
+
+                                                    </ol>
+
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                        }
+                        if (Model.IsSave)
+                        {
+                            <li class="dd-item dd3-item ">
+                                <div class="dd3-content" style="margin:1px;padding :5px;">
+                                    @("* Yukarıda bulunan belgelerin isimlerinin bulunduğu kutucuğa tıklayıp belgeleri kontrol ediniz. Eksik, hatalı veya uygun olmayan bir belge yükelendi ise öğrenciye mail atıp belgelerin uygun bir şekilde yüklenmesini talep ediniz.")<br />
+                                    @("* Belgeler düzgün yüklenmiş ise Onaylandı seçeneğine tıklayıp belgeleri onaylayınız ve kaydı tamamlayınız.")<br />
+
+                                    @if (!Model.IsKayittaBelgeOnayiZorunlu)
+                                    {
+                                        <span style="color:maroon;"><b>Not:</b> Olası istisna durumlar için belge yükleme ve onaylama işlemleri yapılmadan kayıt işlemi gerçekleştirilebilir. Lütfen istisna harici durumlar için belge kontrolünü dikkatli yapınız.</span>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+
+                        <li>
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="height:220px;vertical-align:middle;color:maroon;text-align:center;">
+                                        @(Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (Model.IsYedekCokluTercih ? p.IsSeciliBasvuruyaAitTercih : true) && p.IsSecilenTercih.HasValue) ? "Kayıt olunmak istenen tercih yok" : "Tercih seçiminizi yapınız.")
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+
+                    }
+                </ol>
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.IsBelgeYuklemeAktif)
+{
+    <script>
+        $('.popover-dismiss').pulsate({
+            color: "#850e27",
+            reach: 60,
+            repeat: 48,
+            speed: 300,
+            glow: true
+        });
+        function KayitOlunacakTercihiKaydet(bID, tID,uID) {
+            var pldID = $('#bsvrDet_' + bID);
+            var UniqueID = $('#' + tID + bID).val();
+            var IsSecildi = true;
+            if (UniqueID == "") {
+                UniqueID = uID;
+                IsSecildi = null;
+            }
+            _pRefresh(pldID, false);
+            $.ajax({
+                url: '@Url.Action("BasvuruKayitOlunacakTercihSet", "Ajax")',
+                data: { id: bID, 'UniqueID': UniqueID, 'IsSecildi': IsSecildi },
+                success: function (result) {
+                    showMmMessage(result.Messages, 'Tamam');
+                    _pRefresh(pldID, true);
+                    SubData('@Model.BasvuruID', false);
+
+                },
+                error: function (err) {
+                    alert(err.responseText);
+                    _pRefresh(pldID, true);
+                }
+            });
+        }
+
+        function KayitOlunacakTercihiKaydet2(bID) {
+            var pldID = $('#bsvrDet_' + bID);
+           _pRefresh(pldID, false);
+            var $KsL = $('#tercihS_' + bID).first();
+            var arrName = $KsL.find('.TRowPrName').map(function () { return $.trim($(this).text()); }).get();
+            var arrUnID = $KsL.find('.TRowUnID').map(function () { return $.trim($(this).val()); }).get();
+            var arrKs = $KsL.find('.KsCls').map(function () { return $.trim($(this).val()); }).get();
+            var arrKo = $KsL.find('.KoCls').map(function () { return $.trim($(this).val()); }).get();
+            var Msg = "";
+            if (arrKs[0] == "") {
+                $KsL.find('.KsCls').first().pulsate({
+                    color: "#fdbe41",
+                    reach: 60,
+                    repeat: 14,
+                    speed: 300,
+                    glow: true
+                });
+                Msg = arrName[0] + " programı için kayıt seçeneğini seçiniz.";
+            }
+            if (arrKs[1] == "") {
+
+                $KsL.find('.KsCls').last().pulsate({
+                    color: "#fdbe41",
+                    reach: 60,
+                    repeat: 14,
+                    speed: 300,
+                    glow: true
+                });
+                Msg += (Msg!=""?"<br/>":"")+ arrName[1] + " programı için kayıt seçeneğini seçiniz.";
+
+            }
+            if (Msg == "") {
+                if (arrKs[0] == "true" && arrKo[0] == "") {
+                    Msg += (Msg != "" ? "<br/>" : "") + arrName[0] + " programı için kayıt önceliğini seçiniz.";
+                }
+                if (arrKs[1] == "true" && arrKo[1] == "") {
+                    Msg += (Msg != "" ? "<br/>" : "") + arrName[1] + " programı için kayıt önceliğini seçiniz.";
+                }
+            }
+            if (Msg != "") {
+                _pRefresh(pldID, false);
+                showMmMessage(Msg, 'Tamam');
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("BasvuruKayitOlunacakTercihSet2", "Ajax")',
+                    type: 'POST',
+                    dataType: "json",
+                    enctype: "multipart/form-data",
+                    data: { id: bID, 'UniqueIDs': arrUnID, 'IsSecildis': arrKs, 'Onceliks': arrKo },
+                    success: function (result) {
+                        showMmMessage(result.Messages, 'Tamam');
+                        _pRefresh(pldID, true);
+                        SubData('@Model.BasvuruID', false);
+
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                        _pRefresh(pldID, true);
+                    }
+                });
+            }
+        }
+
+        function KayitSecenekKontrol(BasvuruTercihID) {
+            var $Ks = $('#KayitSecenek_' + BasvuruTercihID);
+            var $Ks2 = $('#KayitSecenek_' + BasvuruTercihID).parents('table').first().find('.KsCls').not('#KayitSecenek_' + BasvuruTercihID).first();
+            var $Ko = $('#KayitOncelik_' + BasvuruTercihID);
+            var $Ko2 = $('#KayitOncelik_' + BasvuruTercihID).parents('table').first().find('.KoCls').not('#KayitOncelik_' + BasvuruTercihID).first();
+            $Ko.addClass('hide');
+            $Ko2.addClass('hide');
+
+            if ($Ks.val() == "true" && $Ks2.val() == "true") {
+                $Ko.removeClass('hide');
+                $Ko2.removeClass('hide');
+
+                if ($Ko2.val() != "" && $Ko.val() != "") {
+                    $Ko2.val($Ko.val() == "1" ? "2" : "1");
+                }
+                else if ($Ko2.val() != "" && $Ko.val() == "") {
+                    $Ko.val($Ko2.val() == "1" ? "2" : "1");
+                }
+            }
+            else if ($Ks.val() == "true" && $Ks2.val() != "true") {
+                $Ko.removeClass('hide');
+                $Ko.val("1");
+                $Ko2.val("");
+
+            }
+            else if ($Ks.val() != "true" && $Ks2.val() == "true") {
+                $Ko2.removeClass('hide');
+                $Ko2.val("1");
+                $Ko.val("");
+            }
+
+            $Ks.css("color", $Ks.val() == "true" ? "green" : "maroon");
+            $Ks2.css("color", $Ks2.val() == "true" ? "green" : "maroon");
+        }
+
+
+    </script>
+}
+<script>
+    $(function () {
+        jQuery('.popover-dismiss').popover();
+    });
+
+</script>
+@if (Model.IsBelgeYuklemeVar && Model.IsKayitHakkiVar)
+{
+    if (Kayityetki)
+    {
+        <script>
+            function BasvuruBelgeOnayla(BasvuruID, BasvuruBelgeTipID, IsOnaylandi) {
+                var pldID = $('#bsvrDet_@Model.BasvuruID');
+                _pRefresh(pldID, false);
+                $.ajax({
+                    url: '@Url.Action("BasvuruDosyaOnayla", "Ajax")',
+                    data: { 'BasvuruID': BasvuruID, 'BasvuruBelgeTipID': BasvuruBelgeTipID, 'IsOnaylandi': IsOnaylandi },
+                    success: function (result) {
+                        showMmMessage(result.Messages, 'Tamam');
+                        _pRefresh(pldID, true);
+                        SubData('@Model.BasvuruID');
+
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                        _pRefresh(pldID, true);
+                    }
+                });
+            }
+        </script>
+    }
+    <script>
+            function ChangeFile(sndr, BTipID) {
+                var _BelgeIconID = '#BelgeIcon_' + BTipID;
+                var _BelgeAdiID = '#BelgeAdi_' + BTipID;
+                var _DosyaSecID = '#DosyaSec_' + BTipID;
+                var _BelgeyiKaydetID = '#BelgeyiKaydet_' + BTipID;
+                var _ChkInptTbl = '#yOnayChk_' + BTipID;
+                $(_BelgeAdiID).removeAttr("onclick");
+                $(_BelgeIconID).removeAttr("onclick");
+                var isSuccessFSize = true;
+                if (sndr.files[0].size > (1024 * 1024 * 5)) {
+                    isSuccessFSize = false;
+                    var btbx = bootbox.dialog({
+                        message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 5 MB olabilir.</td></tr></table>",
+                        title: "Belge Kayıt İşlemi",
+                        buttons: {
+                            success: {
+                                label: 'Tamam',
+                                className: "btn-success",
+                                callback: function () {
+                                }
+                            }
+
+                        }
+                    });
+                }
+                if (sndr.files.length > 0 && isSuccessFSize) {
+
+
+                    $(_BelgeAdiID).val(sndr.files[0].name);
+                    $(_BelgeyiKaydetID).removeClass('hide');
+                    $(_ChkInptTbl).addClass('hide');
+
+                }
+                else {
+                    $(sndr).val("");
+                    $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
+                    $(_BelgeyiKaydetID).addClass('hide');
+
+                }
+            }
+
+            function BasvuruBelgeKaydet(frmID) {
+                var pldID = $('#bsvrDet_@Model.BasvuruID');
+                _pRefresh(pldID, false);
+                var aFrm = $('#' + frmID).ajaxForm({
+                    success: function (result) {
+                        showMmMessage(result.Messages, 'Tamam');
+                        _pRefresh(pldID, true);
+                        SubData('@Model.BasvuruID');
+
+                    },
+                    complete: function (cmp) {
+                        _pRefresh(pldID, true);
+                    },
+                    error: function (err) {
+                        _pRefresh(pldID, true);
+                    }
+
+                });
+                $(aFrm).submit();
+
+
+            }
+
+
+    </script>
+}

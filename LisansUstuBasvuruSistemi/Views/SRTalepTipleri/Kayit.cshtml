@@ -1,0 +1,121 @@
+﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos
+@model SRTalepTipleri
+@{
+    var MmMessage = ViewBag.MmMessage as MmMessage;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Aylars = (List<CmbIntDto>)ViewBag.Aylars;
+    var KullaniciTipleris = (List<CmbIntDto>)ViewBag.KullaniciTipleris;
+
+}
+<div class="row">
+    <form method="post" class="form-horizontal" role="form">
+        <input type="text" style="display:none;" id="SRTalepTipID" name="SRTalepTipID" value="@Model.SRTalepTipID" />
+        <div class="col-md-12 col-md-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.SRTalepTipID <= 0 ? "Yeni talep tipi tanımlama işlemi" : "Talep tipi bilgisi düzenleme işlemi")</h3>
+                    <ul class="panel-controls">
+                        <li><a href="@Url.Action("Kayit", Model.SRTalepTipID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default form-horizontal">
+                        <div class="panel-body form-group-separated">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Talep Tip Adı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="TalepTipAdi" id="TalepTipAdi" value="@Model.TalepTipAdi" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Tez Sınavı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsTezSinavi" onchange="TzChange(this);" class="toggle" @Model.IsTezSinavi.ToChecked() />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group isTezSinavi @(Model.IsTezSinavi ?"":"hide")">
+                                <label class="col-md-3 col-xs-4 control-label">Zorunlu Eklenecen Doktora Jüri Sayısı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="IstenenJuriSayisiDR" id="IstenenJuriSayisiDR" value="@Model.IstenenJuriSayisiDR" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group isTezSinavi @(Model.IsTezSinavi ?"":"hide")">
+                                <label class="col-md-3 col-xs-4 control-label">Zorunlu Eklenecen TYL Jüri Sayısı</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="IstenenJuriSayisiYL" id="IstenenJuriSayisiYL" value="@Model.IstenenJuriSayisiYL" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Maks Talep</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="MaxCevaplanmamisTalep" id="MaxCevaplanmamisTalep" value="@Model.MaxCevaplanmamisTalep" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Kullanıcı Tipleri</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <select id="KullaniciTipIDs" name="KullaniciTipIDs" multiple class="form-control select">
+                                        @foreach (var itemKt in KullaniciTipleris)
+                                        {
+                                            <option value="@itemKt.Value" @(Model.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == itemKt.Value) ? "selected=selected" : "")>@itemKt.Caption</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Aktif Aylar</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <select id="AyIDs" name="AyIDs" multiple class="form-control select">
+                                        @foreach (var itemAy in Aylars)
+                                        {
+                                            <option value="@itemAy.Value" @(Model.SRTalepTipleriAktifAylars.Any(a => a.AyID == itemAy.Value) ? "selected=selected" : "")>@itemAy.Caption</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            @if (Model.SRTalepTipID > 0)
+                            {
+                                <div class="form-group">
+                                    <label class="col-md-3 col-xs-4 control-label">Durum</label>
+                                    <div class="col-md-9 col-xs-8">
+                                        <div class="make-switch" data-on-label="Aktif" data-off-label="Pasif" data-on="info" data-off="danger">
+                                            <input type="checkbox" value="true" name="IsAktif" class="toggle" @Model.IsAktif.ToChecked() />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
+                    <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function TzChange(sndr) {
+        if ($(sndr).prop('checked') == true) {
+            $('.isTezSinavi').removeClass('hide');
+        }
+        else {
+            $('.isTezSinavi').addClass('hide');
+        }
+        wozelNot($('#OzelNot'));
+        wozelTarih($('#OzelTarih'));
+        wozelNotD($('#NotDonusum'));
+    }
+    $(function () {
+        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        validateControl(model);
+    });
+</script>
+

@@ -1,0 +1,224 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+@model  fmSistemBilgilendirme
+@{
+    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bilgiTipleri = new BilgiTipleri();
+
+}
+ 
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-envelope"></i>&nbsp; Bilgi Mesajları</h3>
+                    <ul class="panel-controls">
+                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="85"></th>
+                                <th class="sirala" field="BilgiTipi" width="120">Bilgi Tipi</th>
+                                <th class="sirala" field="IslemZamani" width="120">Tarih</th>
+                                <th class="sirala" field="AdSoyad">İşlem Yapan</th>
+                                <th>Mesaj</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtrele">
+                                <th></th>
+                                <th>
+                                    @Html.DropDownList("BilgiTipi", null, "", new { @class = "form-control" })
+                                </th>
+                                <th>
+                                    <input type="text" name="IslemZamani" value="@Model.IslemZamani.ToDateString()" class="form-control" />
+                                </th>
+                                <th>
+                                    <input type="text" name="AdSoyad" value="@Model.AdSoyad" class="form-control" />
+                                </th>
+                                <th>
+                                    <input type="text" name="Message" value="@Model.Message" class="form-control" />
+                                </th>
+                            </tr>
+                            @if (Model.RowCount > 0)
+                            {
+                                int RowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.data.Select((s, Inx) => new { data = s, Index = Inx }))
+                                {
+                                    RowIndex += 1;
+                                    var BilgiTip = bilgiTipleri.BilgiTip.Where(p => p.BilgiTipID == item.data.BilgiTipi.Value).First();
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 60px;">
+                                                        <span class="fa fa-circle text-@BilgiTip.BilgiTipCls"></span>
+                                                        @RowIndex
+                                                    </td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.data.SistemBilgiID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.data.SistemBilgiID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <span style="cursor:pointer;">@BilgiTip.BilgiTipAdi</span>
+                                        </td>
+                                        <td>
+                                            @item.data.IslemZamani
+                                        </td>
+                                        <td>
+                                            @if (item.data.KullaniciAdi.IsNullOrWhiteSpace() == false)
+                                            {
+                                                <span>@item.data.AdSoyad</span><br /><span>@item.data.KullaniciAdi</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Kullanıcı Yok</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.data.Message.Contains("zararlı"))
+
+                                            {
+                                                <span>Zararlı olabilecek istek!</span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    @Html.Raw(item.data.Message.Length > 60 ? item.data.Message.Substr(0, 60) + "..." : item.data.Message)
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.data.SistemBilgiID" style="display:none">
+                                        <td id="cls-@item.data.SistemBilgiID" colspan="5" style="padding: 1px 1px 2px 85px;">
+
+                                            <div class="panel panel-@(BilgiTip.BilgiTipCls=="default"?"primary":BilgiTip.BilgiTipCls)">
+                                                <div class="panel-heading padding-0">
+                                                    <div class="portlet-title">
+                                                        <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Detay</h3>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body" style="padding: 0px;">
+                                                    <div class="panel panel-default form-horizontal" style="margin-bottom: 0px;">
+
+                                                        <div class="panel panel-@(BilgiTip.BilgiTipCls=="default"?"primary":BilgiTip.BilgiTipCls)" style="margin: 0px; padding: 0px;">
+                                                            <div class="panel-body" style="margin: 0px; padding: 0px;">
+                                                                <div class="panel-body form-group-separated">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">Bilgi Tipi</label>
+                                                                        <div class="col-md-10">
+                                                                            <button type="button" class="btn btn-@BilgiTip.BilgiTipCls btn-rounded">@BilgiTip.BilgiTipAdi</button>
+                                                                            <input type="hidden" value="@item.data.Message" />
+                                                                        </div>
+                                                                    </div>       
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">Mesaj</label>
+                                                                        <div class="col-md-10 ">
+                                                                            <div class="panel panel-@(BilgiTip.BilgiTipCls=="default"?"primary":BilgiTip.BilgiTipCls)" style="margin:0px;padding:0px;">
+                                                                                <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
+                                                                                    <div class="scrolkikko" style="max-height: 250px; width:100%; overflow:hidden;word-break: break-word;">
+                                                                                        @if (item.data.Message.Contains("zararlı"))
+                                                                                        {
+                                                                                            <textarea readonly="readonly" style="width:100%;">@item.data.Message</textarea>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <span>@Html.Raw(item.data.Message.Replace("\r\n", "<br/>"))</span>
+
+                                                                                        }
+                                                                                     
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">Konum Bilgisi</label>
+                                                                        <div class="col-md-10">
+                                                                            <div class="panel panel-@(BilgiTip.BilgiTipCls=="default"?"primary":BilgiTip.BilgiTipCls)" style="margin:0px;padding:0px;">
+                                                                                <div class="panel-body" style="padding-right:0px;padding-top:2px;padding-bottom:2px;">
+                                                                                    <div class="scrolkikko" style="max-height: 250px; width:100%; overflow:hidden;word-break: break-all;">
+                                                                                        @Html.Raw(item.data.StackTrace.Replace("\r\n", "<br/>").Replace("  ",""))
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">İşlem Zamanı</label>
+                                                                        <div class="col-md-10">@item.data.IslemZamani</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">İşlem Yapan Ip</label>
+                                                                        <div class="col-md-10">@item.data.IpAdresi</div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">İşlem Yapan</label>
+                                                                        <div class="col-md-10">
+                                                                            @if (item.data.KullaniciAdi.IsNullOrWhiteSpace() == false)
+                                                                            {
+                                                                                <span style="cursor:pointer;" onclick="detayGor(@item.data.IslemYapanID)"><i class="fa fa-user"></i> @item.data.AdSoyad</span><br /><span>@item.data.KullaniciAdi</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span>Kullanıcı Yok</span>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center">
+                                        [ Listelenen Kayıt Yok ]
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+
+    function showDetail(id) {
+        var sndr = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(sndr, cls, unTogled);
+
+    } 
+</script>

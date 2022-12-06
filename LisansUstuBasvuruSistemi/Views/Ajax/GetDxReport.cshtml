@@ -1,0 +1,33 @@
+﻿
+@model DevExpress.XtraReports.UI.XtraReport
+
+@{
+    Layout = null;
+}
+@*<script type="text/javascript">
+
+    function ReportDesigner_Init(s, e) { 
+        s.GetDesignerModel().reportPreviewModel.reportPreview.zoom(1);
+    }
+</script>*@  
+@Html.DevExpress().GetStyleSheets(
+                new StyleSheet { ExtensionSuite = ExtensionSuite.Report }
+            )
+@Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.Report}
+    )
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+
+    settings.Name = "WebDocumentViewer";
+    //settings.ClientSideEvents.Init = "ReportDesigner_Init";
+}).Bind(Model).GetHtml()
+
+
+
+
+
+
+
+
+

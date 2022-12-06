@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sch="http://www.yok.gov.tr/yuksekogretimegitimbilgisi/2019/10" xmlns:tns="http://www.yok.gov.tr/yuksekogretimegitimbilgisi/2019/10" targetNamespace="http://www.yok.gov.tr/yuksekogretimegitimbilgisi/2019/10" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.yok.gov.tr/yuksekogretimegitimbilgisi/2019/10" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="HazirlikDetayRequest" type="tns:HazirlikDetayRequestType" />
+      <xsd:complexType name="HazirlikDetayRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="HazirlikDetayResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="HazirlikDetay" type="tns:HazirlikDetay" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="HazirlikDetay">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Id" type="xsd:long" />
+          <xsd:element minOccurs="0" name="TcKimlikNo" type="xsd:long" />
+          <xsd:element minOccurs="0" name="BirimId" type="xsd:long" />
+          <xsd:element minOccurs="0" name="HazirlikTuru" type="xsd:int" />
+          <xsd:element minOccurs="0" name="OgretimDili" type="xsd:int" />
+          <xsd:element minOccurs="0" name="HazirlikDonemNo" type="xsd:int" />
+          <xsd:element minOccurs="0" name="HazirlikNotu" type="xsd:int" />
+          <xsd:element minOccurs="0" name="MuafiyetDurumu" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BasarmaDurumu" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BitirmeTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="MuafiyetNedeni" type="xsd:string" />
+          <xsd:element minOccurs="0" name="MuafiyetTarihi" type="tns:TarihSaat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DenklikBilgisiRequest" type="tns:DenklikBilgisiRequestType" />
+      <xsd:complexType name="DenklikBilgisiRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DenklikBilgisiResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="DenklikBilgisi" type="tns:DenklikBilgisi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DenklikBilgisi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TcKimlikNo" type="xsd:long" />
+          <xsd:element minOccurs="0" name="Ad" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Soyad" type="xsd:string" />
+          <xsd:element minOccurs="0" name="UlkeId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Ulke" type="xsd:string" />
+          <xsd:element minOccurs="0" name="UniversiteId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Universite" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BolumId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Bolum" type="xsd:string" />
+          <xsd:element minOccurs="0" name="EgitimId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="EgitimTuru" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DenklikSeriNo" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DenklikKararTarihi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="IptalBilgisi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="YuksekLisansTezDurumu" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SerhId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SerhAciklama" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="OgrenciOzetRequest" type="tns:OgrenciOzetRequestType" />
+      <xsd:complexType name="OgrenciOzetRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="OgrenciOzetResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="OgrenciOzetBilgi" type="tns:OgrenciOzetBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="OgrenciOzetBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TcKimlikNo" type="xsd:long" />
+          <xsd:element minOccurs="0" name="Adi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Soyadi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="UniversiteAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="OgrencilikHakkiVarMi" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="OgrencilikHakkiRequest" type="tns:OgrencilikHakkiRequestType" />
+      <xsd:complexType name="OgrencilikHakkiRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="OgrencilikHakkiResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="OgrencilikHakkiKayit" type="tns:OgrencilikHakkiBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="OgrencilikHakkiBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TcKimlikNo" type="xsd:long" />
+          <xsd:element minOccurs="0" name="OgrencilikHakkiVarMi" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiRequest" type="tns:EgitimBilgisiRequestType" />
+      <xsd:complexType name="EgitimBilgisiRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="EgitimBilgisiKayit" type="tns:EgitimBilgisi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="EgitimBilgisi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="KisiselBilgi" type="tns:KisiselBilgi" />
+          <xsd:element minOccurs="0" name="OgrencilikBilgi" type="tns:OgrencilikBilgi" />
+          <xsd:element minOccurs="0" name="MezunBilgi" type="tns:MezunBilgi" />
+          <xsd:element minOccurs="0" name="BirimBilgi" type="tns:BirimBilgi" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiOgrenciRequest" type="tns:EgitimBilgisiOgrenciRequestType" />
+      <xsd:complexType name="EgitimBilgisiOgrenciRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiOgrenciResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="EgitimBilgisiOgrenciKayit" type="tns:EgitimBilgisiOgrenci" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="EgitimBilgisiOgrenci">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="KisiselBilgi" type="tns:KisiselBilgi" />
+          <xsd:element minOccurs="0" name="OgrencilikBilgi" type="tns:OgrencilikBilgi" />
+          <xsd:element minOccurs="0" name="BirimBilgi" type="tns:BirimBilgi" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiMezunRequest" type="tns:EgitimBilgisiMezunRequestType" />
+      <xsd:complexType name="EgitimBilgisiMezunRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="TcKimlikNo" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="EgitimBilgisiMezunResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="EgitimBilgisiMezunKayit" type="tns:EgitimBilgisiMezun" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="EgitimBilgisiMezun">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="KisiselBilgi" type="tns:KisiselBilgi" />
+          <xsd:element minOccurs="0" name="MezunBilgi" type="tns:MezunBilgi" />
+          <xsd:element minOccurs="0" name="BirimBilgi" type="tns:BirimBilgi" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="KisiselBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="TcKimlikNo" type="xsd:long" />
+          <xsd:element minOccurs="0" name="Adi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Soyadi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BabaAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="AnneAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DogumTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="Cinsiyeti" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Uyrugu" type="tns:Referans" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OgrencilikBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="OgrenciId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="IlgiliOgrenciId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="OgrenciNo" type="xsd:string" />
+          <xsd:element minOccurs="0" name="GirisTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="GirisPuanTuru" type="tns:ReferansGirisPuanTuru" />
+          <xsd:element minOccurs="0" name="KayitTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="Sinifi" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Gano" type="tns:ReferansGano" />
+          <xsd:element minOccurs="0" name="OgrencilikStatusu" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="OgrencilikHakki" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="OgrencilikHakkiBittigiTarih" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="AyrilmaNedeni" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="AyrilmaTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="Akts" type="xsd:double" />
+          <xsd:element minOccurs="0" name="AktifDonemNo" type="xsd:int" />
+          <xsd:element minOccurs="0" name="EngelTuru" type="tns:ReferansEngelTuru" />
+          <xsd:element minOccurs="0" name="GaziSehitYakini" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="EklemeGuncellemeTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="AyniProgramOkumaNedeni" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="YerlesmeUUId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Denklik" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Durum" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MezunBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="OgrenciId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="IlgiliOgrenciId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="OgrenciNo" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Gano" type="tns:ReferansGano" />
+          <xsd:element minOccurs="0" name="OgrencilikStatusu" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="KayitTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="AyrilmaNedeni" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="AyrilmaTarihi" type="tns:TarihSaat" />
+          <xsd:element minOccurs="0" name="DiplomaNo" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Akts" type="xsd:double" />
+          <xsd:element minOccurs="0" name="AltProgram" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="AyniProgramOkumaNedeni" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="YerlesmeUUId" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Durum" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BirimBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="UniversiteTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Universite" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="FakulteYoMyoEnstitu" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="BirimId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BirimTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="BagliOlduguBirimId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BirimAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="OgrenimSuresi" type="xsd:int" />
+          <xsd:element minOccurs="0" name="OgrenimTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="OgrenimDili" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Il" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Ilce" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="KilavuzKodu" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirimGrubu" type="tns:Referans" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimRequest" type="tns:BirimRequestType" />
+      <xsd:element name="BirimProgramRequest" type="tns:BirimRequestType" />
+      <xsd:element name="BirimAltRequest" type="tns:BirimRequestType" />
+      <xsd:element name="BirimTumAltRequest" type="tns:BirimRequestType" />
+      <xsd:element name="BirimProgramYerlesimBilgisiRequest" type="tns:BirimRequestType" />
+      <xsd:complexType name="BirimRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="BirimId" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:BirimAgaciBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BirimProgramResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:BirimAgaciBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BirimAltResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:BirimAgaciBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BirimTumAltResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:BirimAgaciBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BirimProgramYerlesimBilgisiResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:ProgramYerlesimBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BirimAgaciBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="UzunAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="IngilizceAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BagliOlduguBirimId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="OgrenimSuresi" type="xsd:int" />
+          <xsd:element minOccurs="0" name="KilavuzKodu" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Universite" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="UniversiteTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="FakulteYoMyoEnstitu" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Birim" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Turu" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Aktiflik" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="OgrenimDili" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="OgrenimTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Il" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Ilce" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="KodBid" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="DegisenBirimId" type="xsd:long" />
+          <xsd:element minOccurs="0" name="IliskiliOlduguBirimId" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ProgramYerlesimBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Universite" type="xsd:string" />
+          <xsd:element minOccurs="0" name="FakulteYoMyoEnstitu" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Program" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Sinif" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Il" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Ilce" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="HazirlikZorunluMu" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimDegisiklikRequest" type="tns:BirimDegisiklikRequestType" />
+      <xsd:complexType name="BirimDegisiklikRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="Gun" type="xsd:int" />
+          <xsd:element name="Ay" type="xsd:int" />
+          <xsd:element name="Yil" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimDegisiklikResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:BirimDegisiklik" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BirimDegisiklik">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="BirimId" type="xsd:long" />
+          <xsd:element minOccurs="0" name="BirimAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BagliOlduguBirimId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BirimTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Aktiflik" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Degisiklik" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="DegisiklikTarihi" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimUniversiteRequest" type="tns:BirimUniversiteRequestType" />
+      <xsd:complexType name="BirimUniversiteRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimUniversiteResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Universite" type="tns:UniversiteBilgi" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="UniversiteBilgi">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="BirimId" type="xsd:long" />
+          <xsd:element minOccurs="0" name="BirimAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BirimIngilizceAdi" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Telefon" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Fax" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Adres" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Web" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Eposta" type="xsd:string" />
+          <xsd:element minOccurs="0" name="UniversiteTuru" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Aktiflik" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Il" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Ilce" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="Buyuksehir" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="DenizKiyisi" type="tns:Referans" />
+          <xsd:element minOccurs="0" name="DegisenBirimId" type="xsd:long" />
+          <xsd:element minOccurs="0" name="IliskiliOlduguBirimId" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimIdariRequest" type="tns:BirimIdariRequestType" />
+      <xsd:complexType name="BirimIdariRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BirimIdariResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Birim" type="tns:IdariBirim" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="IdariBirim">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="BirimId" type="xsd:int" />
+          <xsd:element minOccurs="0" name="BirimAdi" type="xsd:string" />
+          <xsd:element name="BagliOlduguBirimId" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferansParametreRequest" type="tns:ReferansParametreRequestType" />
+      <xsd:complexType name="ReferansParametreRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferansDegerRequest" type="tns:ReferansDegerRequestType" />
+      <xsd:complexType name="ReferansDegerRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="Kod" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferansAltDegerRequest" type="tns:ReferansAltDegerRequestType" />
+      <xsd:complexType name="ReferansAltDegerRequestType">
+        <xsd:sequence>
+          <xsd:element name="Istek" type="tns:IstekBilgiTip" />
+          <xsd:element name="Kod" type="xsd:int" />
+          <xsd:element name="Id" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReferansDegerResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Referans" type="tns:Referans" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReferansAltDegerResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Referans" type="tns:Referans" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReferansParametreResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="Referans" type="tns:Referans" />
+            <xsd:element name="Sonuc" type="tns:SonucBilgiTip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ReferansEngelTuru">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Kod" type="xsd:int" />
+          <xsd:element minOccurs="0" name="Ad" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Oran" type="xsd:int" />
+          <xsd:element minOccurs="0" name="Aciklama" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReferansGirisPuanTuru">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Kod" type="xsd:int" />
+          <xsd:element minOccurs="0" name="Ad" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Puan" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Aciklama" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Referans">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Kod" type="xsd:int" />
+          <xsd:element minOccurs="0" name="Ad" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Aciklama" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="TarihSaat">
+        <xsd:annotation>
+          <xsd:documentation>Tarih Saat formati. dd/MM/yyyy SS:dd:ss.mmm</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:token">
+          <xsd:pattern value="[0-3][0-9]/[0-1][0-9]/[1-9][0-9]{3} [0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{3})?" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ReferansGano">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Not" type="xsd:double" />
+          <xsd:element minOccurs="0" name="NotSistem" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Aciklama" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SonucBilgiTip">
+        <xsd:sequence>
+          <xsd:element name="SonucKod" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>Sonuc Kod. 1: basarili Diger: hata</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="DisSistemSonucKod" type="xsd:token" />
+          <xsd:element minOccurs="0" name="SonucMesaj" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="IstekBilgiTip">
+        <xsd:annotation>
+          <xsd:documentation>Istek genel bilgi</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="IstekTarihi" type="tns:TarihSaat">
+            <xsd:annotation>
+              <xsd:documentation>Istek Tarihi</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="IstekId">
+            <xsd:annotation>
+              <xsd:documentation>Istek ID</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="64" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="KullaniciAdi" type="xsd:token" />
+          <xsd:element minOccurs="0" name="UygulamaAdi" type="xsd:token" />
+          <xsd:element minOccurs="0" name="UygulamaSunucuAdi" type="xsd:token" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="BirimAltRequest">
+    <wsdl:part name="BirimAltRequest" element="tns:BirimAltRequest" />
+  </wsdl:message>
+  <wsdl:message name="ReferansDegerResponse">
+    <wsdl:part name="ReferansDegerResponse" element="tns:ReferansDegerResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimIdariRequest">
+    <wsdl:part name="BirimIdariRequest" element="tns:BirimIdariRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimAltResponse">
+    <wsdl:part name="BirimAltResponse" element="tns:BirimAltResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrencilikHakkiRequest">
+    <wsdl:part name="OgrencilikHakkiRequest" element="tns:OgrencilikHakkiRequest" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiOgrenciRequest">
+    <wsdl:part name="EgitimBilgisiOgrenciRequest" element="tns:EgitimBilgisiOgrenciRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimResponse">
+    <wsdl:part name="BirimResponse" element="tns:BirimResponse" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiMezunResponse">
+    <wsdl:part name="EgitimBilgisiMezunResponse" element="tns:EgitimBilgisiMezunResponse" />
+  </wsdl:message>
+  <wsdl:message name="HazirlikDetayResponse">
+    <wsdl:part name="HazirlikDetayResponse" element="tns:HazirlikDetayResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReferansParametreRequest">
+    <wsdl:part name="ReferansParametreRequest" element="tns:ReferansParametreRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimProgramYerlesimBilgisiResponse">
+    <wsdl:part name="BirimProgramYerlesimBilgisiResponse" element="tns:BirimProgramYerlesimBilgisiResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimProgramRequest">
+    <wsdl:part name="BirimProgramRequest" element="tns:BirimProgramRequest" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciOzetResponse">
+    <wsdl:part name="OgrenciOzetResponse" element="tns:OgrenciOzetResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReferansDegerRequest">
+    <wsdl:part name="ReferansDegerRequest" element="tns:ReferansDegerRequest" />
+  </wsdl:message>
+  <wsdl:message name="ReferansAltDegerRequest">
+    <wsdl:part name="ReferansAltDegerRequest" element="tns:ReferansAltDegerRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimUniversiteRequest">
+    <wsdl:part name="BirimUniversiteRequest" element="tns:BirimUniversiteRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimRequest">
+    <wsdl:part name="BirimRequest" element="tns:BirimRequest" />
+  </wsdl:message>
+  <wsdl:message name="ReferansAltDegerResponse">
+    <wsdl:part name="ReferansAltDegerResponse" element="tns:ReferansAltDegerResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimIdariResponse">
+    <wsdl:part name="BirimIdariResponse" element="tns:BirimIdariResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReferansParametreResponse">
+    <wsdl:part name="ReferansParametreResponse" element="tns:ReferansParametreResponse" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiMezunRequest">
+    <wsdl:part name="EgitimBilgisiMezunRequest" element="tns:EgitimBilgisiMezunRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimTumAltRequest">
+    <wsdl:part name="BirimTumAltRequest" element="tns:BirimTumAltRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimProgramResponse">
+    <wsdl:part name="BirimProgramResponse" element="tns:BirimProgramResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimDegisiklikResponse">
+    <wsdl:part name="BirimDegisiklikResponse" element="tns:BirimDegisiklikResponse" />
+  </wsdl:message>
+  <wsdl:message name="DenklikBilgisiResponse">
+    <wsdl:part name="DenklikBilgisiResponse" element="tns:DenklikBilgisiResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimUniversiteResponse">
+    <wsdl:part name="BirimUniversiteResponse" element="tns:BirimUniversiteResponse" />
+  </wsdl:message>
+  <wsdl:message name="OgrenciOzetRequest">
+    <wsdl:part name="OgrenciOzetRequest" element="tns:OgrenciOzetRequest" />
+  </wsdl:message>
+  <wsdl:message name="BirimProgramYerlesimBilgisiRequest">
+    <wsdl:part name="BirimProgramYerlesimBilgisiRequest" element="tns:BirimProgramYerlesimBilgisiRequest" />
+  </wsdl:message>
+  <wsdl:message name="HazirlikDetayRequest">
+    <wsdl:part name="HazirlikDetayRequest" element="tns:HazirlikDetayRequest" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiOgrenciResponse">
+    <wsdl:part name="EgitimBilgisiOgrenciResponse" element="tns:EgitimBilgisiOgrenciResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimDegisiklikRequest">
+    <wsdl:part name="BirimDegisiklikRequest" element="tns:BirimDegisiklikRequest" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiRequest">
+    <wsdl:part name="EgitimBilgisiRequest" element="tns:EgitimBilgisiRequest" />
+  </wsdl:message>
+  <wsdl:message name="EgitimBilgisiResponse">
+    <wsdl:part name="EgitimBilgisiResponse" element="tns:EgitimBilgisiResponse" />
+  </wsdl:message>
+  <wsdl:message name="DenklikBilgisiRequest">
+    <wsdl:part name="DenklikBilgisiRequest" element="tns:DenklikBilgisiRequest" />
+  </wsdl:message>
+  <wsdl:message name="OgrencilikHakkiResponse">
+    <wsdl:part name="OgrencilikHakkiResponse" element="tns:OgrencilikHakkiResponse" />
+  </wsdl:message>
+  <wsdl:message name="BirimTumAltResponse">
+    <wsdl:part name="BirimTumAltResponse" element="tns:BirimTumAltResponse" />
+  </wsdl:message>
+  <wsdl:portType name="YuksekOgretimEgitimBilgisiPort">
+    <wsdl:operation name="BirimAlt">
+      <wsdl:input name="BirimAltRequest" message="tns:BirimAltRequest" />
+      <wsdl:output name="BirimAltResponse" message="tns:BirimAltResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReferansDeger">
+      <wsdl:input name="ReferansDegerRequest" message="tns:ReferansDegerRequest" />
+      <wsdl:output name="ReferansDegerResponse" message="tns:ReferansDegerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimIdari">
+      <wsdl:input name="BirimIdariRequest" message="tns:BirimIdariRequest" />
+      <wsdl:output name="BirimIdariResponse" message="tns:BirimIdariResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrencilikHakki">
+      <wsdl:input name="OgrencilikHakkiRequest" message="tns:OgrencilikHakkiRequest" />
+      <wsdl:output name="OgrencilikHakkiResponse" message="tns:OgrencilikHakkiResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisiOgrenci">
+      <wsdl:input name="EgitimBilgisiOgrenciRequest" message="tns:EgitimBilgisiOgrenciRequest" />
+      <wsdl:output name="EgitimBilgisiOgrenciResponse" message="tns:EgitimBilgisiOgrenciResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Birim">
+      <wsdl:input name="BirimRequest" message="tns:BirimRequest" />
+      <wsdl:output name="BirimResponse" message="tns:BirimResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisiMezun">
+      <wsdl:input name="EgitimBilgisiMezunRequest" message="tns:EgitimBilgisiMezunRequest" />
+      <wsdl:output name="EgitimBilgisiMezunResponse" message="tns:EgitimBilgisiMezunResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="HazirlikDetay">
+      <wsdl:input name="HazirlikDetayRequest" message="tns:HazirlikDetayRequest" />
+      <wsdl:output name="HazirlikDetayResponse" message="tns:HazirlikDetayResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReferansParametre">
+      <wsdl:input name="ReferansParametreRequest" message="tns:ReferansParametreRequest" />
+      <wsdl:output name="ReferansParametreResponse" message="tns:ReferansParametreResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimProgramYerlesimBilgisi">
+      <wsdl:input name="BirimProgramYerlesimBilgisiRequest" message="tns:BirimProgramYerlesimBilgisiRequest" />
+      <wsdl:output name="BirimProgramYerlesimBilgisiResponse" message="tns:BirimProgramYerlesimBilgisiResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimProgram">
+      <wsdl:input name="BirimProgramRequest" message="tns:BirimProgramRequest" />
+      <wsdl:output name="BirimProgramResponse" message="tns:BirimProgramResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciOzet">
+      <wsdl:input name="OgrenciOzetRequest" message="tns:OgrenciOzetRequest" />
+      <wsdl:output name="OgrenciOzetResponse" message="tns:OgrenciOzetResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReferansAltDeger">
+      <wsdl:input name="ReferansAltDegerRequest" message="tns:ReferansAltDegerRequest" />
+      <wsdl:output name="ReferansAltDegerResponse" message="tns:ReferansAltDegerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimUniversite">
+      <wsdl:input name="BirimUniversiteRequest" message="tns:BirimUniversiteRequest" />
+      <wsdl:output name="BirimUniversiteResponse" message="tns:BirimUniversiteResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimTumAlt">
+      <wsdl:input name="BirimTumAltRequest" message="tns:BirimTumAltRequest" />
+      <wsdl:output name="BirimTumAltResponse" message="tns:BirimTumAltResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BirimDegisiklik">
+      <wsdl:input name="BirimDegisiklikRequest" message="tns:BirimDegisiklikRequest" />
+      <wsdl:output name="BirimDegisiklikResponse" message="tns:BirimDegisiklikResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DenklikBilgisi">
+      <wsdl:input name="DenklikBilgisiRequest" message="tns:DenklikBilgisiRequest" />
+      <wsdl:output name="DenklikBilgisiResponse" message="tns:DenklikBilgisiResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisi">
+      <wsdl:input name="EgitimBilgisiRequest" message="tns:EgitimBilgisiRequest" />
+      <wsdl:output name="EgitimBilgisiResponse" message="tns:EgitimBilgisiResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="YuksekOgretimEgitimBilgisiPortSoap11" type="tns:YuksekOgretimEgitimBilgisiPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="BirimAlt">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimAltRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimAltResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReferansDeger">
+      <soap:operation soapAction="" />
+      <wsdl:input name="ReferansDegerRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ReferansDegerResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimIdari">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimIdariRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimIdariResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrencilikHakki">
+      <soap:operation soapAction="" />
+      <wsdl:input name="OgrencilikHakkiRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="OgrencilikHakkiResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisiOgrenci">
+      <soap:operation soapAction="" />
+      <wsdl:input name="EgitimBilgisiOgrenciRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="EgitimBilgisiOgrenciResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Birim">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisiMezun">
+      <soap:operation soapAction="" />
+      <wsdl:input name="EgitimBilgisiMezunRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="EgitimBilgisiMezunResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HazirlikDetay">
+      <soap:operation soapAction="" />
+      <wsdl:input name="HazirlikDetayRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="HazirlikDetayResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReferansParametre">
+      <soap:operation soapAction="" />
+      <wsdl:input name="ReferansParametreRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ReferansParametreResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimProgramYerlesimBilgisi">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimProgramYerlesimBilgisiRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimProgramYerlesimBilgisiResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimProgram">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimProgramRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimProgramResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OgrenciOzet">
+      <soap:operation soapAction="" />
+      <wsdl:input name="OgrenciOzetRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="OgrenciOzetResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReferansAltDeger">
+      <soap:operation soapAction="" />
+      <wsdl:input name="ReferansAltDegerRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="ReferansAltDegerResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimUniversite">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimUniversiteRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimUniversiteResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimTumAlt">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimTumAltRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimTumAltResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BirimDegisiklik">
+      <soap:operation soapAction="" />
+      <wsdl:input name="BirimDegisiklikRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="BirimDegisiklikResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DenklikBilgisi">
+      <soap:operation soapAction="" />
+      <wsdl:input name="DenklikBilgisiRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="DenklikBilgisiResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EgitimBilgisi">
+      <soap:operation soapAction="" />
+      <wsdl:input name="EgitimBilgisiRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="EgitimBilgisiResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="YuksekOgretimEgitimBilgisiPortService">
+    <wsdl:port name="YuksekOgretimEgitimBilgisiPortSoap11" binding="tns:YuksekOgretimEgitimBilgisiPortSoap11">
+      <soap:address location="http://servisler.yok.gov.tr/ws/yuksekogretim/egitim" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
