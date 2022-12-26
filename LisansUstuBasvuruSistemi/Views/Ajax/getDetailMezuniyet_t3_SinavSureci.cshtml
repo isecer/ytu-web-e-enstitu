@@ -889,7 +889,7 @@
                                                                                                 <select id="IsOgrenciUzatmaSonrasiOnay_@item.SRTalepID">
                                                                                                     <option></option>
                                                                                                     <option value="true" @(item.IsOgrenciUzatmaSonrasiOnay == true ? "selected" : "")>Taahhütü Onaylıyorum</option>
-                                                                                                    <option value="false" @(item.IsOgrenciUzatmaSonrasiOnay == false ? "selected" : "")>Taahhütü Ret Ediyorum</option>
+                                                                                                    <option value="false" @(item.IsOgrenciUzatmaSonrasiOnay == false ? "selected" : "")>Taahhütü Reddediyorum</option>
                                                                                                 </select>  <a href="javascript:void(0);" onclick="OgrenciUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
 
                                                                                             </td>
@@ -948,7 +948,7 @@
                                                                                                     <select id="IsDanismanUzatmaSonrasiOnay_@item.SRTalepID" onchange="TaahhutDanOnayChange(this);">
                                                                                                         <option></option>
                                                                                                         <option value="true" @(item.IsDanismanUzatmaSonrasiOnay == true ? "selected" : "")>Öğrenci Başvurusunu Onaylıyorum</option>
-                                                                                                        <option value="false" @(item.IsDanismanUzatmaSonrasiOnay == false ? "selected" : "")>Öğrenci Başvurusunu Ret Ediyorum</option>
+                                                                                                        <option value="false" @(item.IsDanismanUzatmaSonrasiOnay == false ? "selected" : "")>Öğrenci Başvurusunu Reddediyorum</option>
                                                                                                     </select> <a href="javascript:void(0);" onclick="DanismanUzatmaOnayKayit(@item.SRTalepID,@Model.MezuniyetBasvurulariID)" class="btn btn-info btn-xs"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</a>
                                                                                                     <script>
                                                                                                         function TaahhutDanOnayChange(sndr) {

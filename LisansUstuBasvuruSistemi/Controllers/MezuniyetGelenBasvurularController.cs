@@ -534,7 +534,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (IsDanismanOnay == false && BasvuruDanismanOnayAciklama.IsNullOrWhiteSpace())
                 {
-                    mmMessage.Messages.Add("Öğrenci Başvurusunu Ret Ediyorum seçeneği seçilirse Açıklama girilmesi zorunludur.");
+                    mmMessage.Messages.Add("Öğrenci Başvurusunu Reddediyorum seçeneği seçilirse Açıklama girilmesi zorunludur.");
                 }
                 bool SendMail = false;
                 if (mmMessage.Messages.Count == 0)
@@ -665,7 +665,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (IsDanismanUzatmaSonrasiOnay == false && DanismanUzatmaSonrasiOnayAciklama.IsNullOrWhiteSpace())
                 {
-                    mmMessage.Messages.Add("Öğrenci Başvurusunu Ret Ediyorum seçeneği seçilirse Açıklama girilmesi zorunludur.");
+                    mmMessage.Messages.Add("Öğrenci Başvurusunu Reddediyorum seçeneği seçilirse Açıklama girilmesi zorunludur.");
                 }
                 bool SendMail = false;
                 if (mmMessage.Messages.Count == 0)
@@ -1194,22 +1194,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (ogrenciInfo.TezIzlJuriBilgileri.Count == 2)
                         mMessage.Messages.Add("'2.Tik Üyesi' Bilgisi Çekilemedi.");
-                }
-                if (ogrenciInfo.OgrenciTez.TEZ_BASLIK.IsNullOrWhiteSpace() && ogrenciInfo.OgrenciTez.TEZ_BASLIK_ENG.IsNullOrWhiteSpace())
-                {
-                    mMessage.Messages.Add("Tez Orjinal Başlığı Çekilemedi");
-                }
-
+                }  
                 if (mMessage.Messages.Count > 0)
                 {
                     mMessage.MessageType = Msgtype.Warning;
                     mMessage.Messages.Add("Jüri öneri formunu oluşturabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
                 }
 
-            }
-
-
-
+            } 
             if (mMessage.Messages.Count == 0)
             {
                 Model.OgrenciAdSoyad = MB.Ad + " " + MB.Soyad + " - " + MB.OgrenciNo;
@@ -2111,59 +2103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
-
-
-        public ActionResult DanismanEslestir(int id, string OgrenciNo)
-        {
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = true;
-            mmMessage.Title = "Danışman bilgisini GSIS'den alma işlemi";
-
-
-            if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEYKOnay.InRoleCurrent())
-            {
-                string msg = "Danışman bilgisini GSIS'den alma işlemi için yetkili değilsiniz.";
-                mmMessage.Messages.Add(msg);
-                mmMessage.IsSuccess = false;
-            }
-
-            if (mmMessage.IsSuccess)
-            {
-
-                var kayit = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == id).FirstOrDefault();
-                try
-                {
-                    var DanismanBilgi = Management.KullaniciKayitBilgisiGuncelle(kayit.KullaniciID);
-                    var Kul = db.Kullanicilars.Where(p => p.KullaniciID == kayit.KullaniciID).First();
-                    if (!Kul.DanismanID.HasValue)
-                    {
-                        string msg = "OBS sisteminden alınan verilere göre sistemde herhangi bir danışman ile eşleştirilemedi.";
-                        mmMessage.Messages.Add(msg);
-                        mmMessage.IsSuccess = false;
-                    }
-                    else
-                    {
-                        kayit.TezDanismanID = Kul.DanismanID;
-                        db.SaveChanges();
-                        mmMessage.Messages.Add("Danışman bilgisi başvuru ile eşleştirildi.");
-                        mmMessage.IsSuccess = true;
-                    }
-
-                }
-                catch (Exception ex)
-                {
-
-                    mmMessage.IsSuccess = false;
-                    var msg = "GSIS sisteminden danışman bilgisi çekilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
-                    mmMessage.Messages.Add(msg);
-                    mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(msg, "MezuniyetGelenBasvurular/DanismanEslestir<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
-                }
-            }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
+         
 
 
 

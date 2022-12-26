@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "GSIS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                        bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
                     }
                     else
                     {
@@ -1620,52 +1620,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return new { mMessage, MessageType = (mMessage.IsSuccess ? "success" : "error") }.toJsonResult();
         }
-        [Authorize(Roles = RoleNames.TIGelenBasvuruKayit)]
-        public ActionResult DanismanEslestir(int id, string OgrenciNo)
-        {
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = true;
-            mmMessage.Title = "Danışman bilgisini GSIS'den alma işlemi";
-
-
-            if (mmMessage.IsSuccess)
-            {
-
-                var kayit = _db.TIBasvurus.Where(p => p.TIBasvuruID == id).FirstOrDefault();
-                var ogrenciBilgisiGuncelle = Management.KullaniciKayitBilgisiGuncelle(kayit.KullaniciID);
-                var kul = _db.Kullanicilars.Where(p => p.KullaniciID == kayit.KullaniciID).First();
-                try
-                {
-
-                    if (!kul.DanismanID.HasValue)
-                    {
-                        string msg = "GSIS sisteminden alınan verilere göre sistemde herhangi bir danışman ile eşleştirilemedi.";
-                        mmMessage.Messages.Add(msg);
-                        mmMessage.IsSuccess = false;
-                    }
-                    else
-                    {
-                        kayit.TezDanismanID = kul.KullaniciID;
-                        _db.SaveChanges();
-                        mmMessage.Messages.Add("Danışman bilgisi başvuru ile eşleştirildi.");
-                        mmMessage.IsSuccess = true;
-                    }
-
-                }
-                catch (Exception ex)
-                {
-
-                    mmMessage.IsSuccess = false;
-                    var msg = "OBS sisteminden danışman bilgisi çekilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
-                    mmMessage.Messages.Add(msg);
-                    mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(msg, "TIBasvuru/DanismanEslestir<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
-                }
-            }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
+     
 
         [Authorize]
         public ActionResult Sil(int id)

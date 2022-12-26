@@ -567,34 +567,7 @@
 }
 @if (kyetki)
 {
-    <script>
-        function DanismanEslestir(TIBasvuruID, OgrenciNo) {
-            var _panel = $('#bsvrDet_' + TIBasvuruID);
-            _pRefresh(_panel, false);
-
-            $.ajax({
-                url: '@Url.Action("DanismanEslestir", "TIBasvuru")',
-                data: {
-                    'id': TIBasvuruID,
-                    'OgrenciNo': OgrenciNo,
-
-                },
-                success: function (result) {
-                    _pRefresh(_panel, true);
-                    if (result.IsSuccess) {
-                        getDetailx(TIBasvuruID);
-
-                    }
-                    showMmMessage(result.Messages, 'Tamam');
-
-                },
-                error: function (err) {
-                    _pRefresh(_panel, true);
-                    alert(err.responseText);
-
-                }
-            });
-        }
+    <script> 
         function sil(sndr, id) {
             $.ajax({
                 url: '@Url.Action("Sil", "TIBasvuru")',

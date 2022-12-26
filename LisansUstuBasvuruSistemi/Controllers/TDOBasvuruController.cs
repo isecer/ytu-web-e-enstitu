@@ -114,7 +114,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join k in _db.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     join o in _db.OgrenimTipleris on new { s.OgrenimTipKod, en.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
                     join pr in _db.Programlars on s.ProgramKod equals pr.ProgramKod
-                    join ab in _db.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod 
+                    join ab in _db.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join ktip in _db.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
                     join ard in _db.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
                     from Ard in defard.DefaultIfEmpty()
@@ -371,9 +371,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize]
-        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, int tDODanismanTalepTipID)
+        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, int? tDODanismanTalepTipID)
         {
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, TDODanismanTalepTipID = tDODanismanTalepTipID };
+            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, TDODanismanTalepTipID = tDODanismanTalepTipID ?? TDODanismanTalepTip.TezDanismaniOnerisi };
             var mMessage = new MmMessage();
             string view = "";
             var formYetki = RoleNames.TDOFormOlusturmaYetkisi.InRoleCurrent();
@@ -384,7 +384,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Tez Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
             }
-            else if (!UserIdentity.Current.IsAdmin && tdoBasvuruDanismanId.HasValue && tdoBas.TDOBasvuruDanismen.Any(a => a.TDOBasvuruDanismanID == tdoBasvuruDanismanId && a.DanismanOnayladi == true && a.EYKYaGonderildi != false))
+            else if (!UserIdentity.Current.IsAdmin && tdoBasvuruDanismanId.HasValue && tdoBas.TDOBasvuruDanismen.Any(a => a.TDOBasvuruDanismanID == tdoBasvuruDanismanId && a.DanismanOnayladi == true))
             {
                 mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
             }
@@ -457,7 +457,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.YeniTezBaslikTr = null;
                         model.YeniTezBaslikEn = null;
                     }
-                    else if(model.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi)
+                    else if (model.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi)
                     {
                         model.YeniTezBaslikTr = null;
                         model.YeniTezBaslikEn = null;
@@ -530,7 +530,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    if (tdoBas.TDOBasvuruDanisman.DanismanOnayladi == true && tdoBas.TDOBasvuruDanisman.EYKYaGonderildi != false)
+                    if (tdoBas.TDOBasvuruDanisman.DanismanOnayladi == true)
                     {
                         mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
                     }
@@ -605,7 +605,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TDProgramKod.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TDProgramKod" });
                     if (isTezDiliTr == false)
-                    { 
+                    {
                         if (!kModel.TDSinavTipID.HasValue) mMessage.Messages.Add("Tez danışmanı yabancı dil yeterlilik sınav bilginizi seçiniz.");
                         else if (kModel.TDSinavTipID.HasValue)
                         {

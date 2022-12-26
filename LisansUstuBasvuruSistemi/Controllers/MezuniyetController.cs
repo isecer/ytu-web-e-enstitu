@@ -485,6 +485,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MBasvuru.BasvuruTarihi = DateTime.Now;
                         sendMail = true;
                     }
+                    if (MBasvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.KabulEdildi)
+                    {
+                        MBasvuru.IsDanismanOnay = null; 
+                    }
                     MBasvuru.MezuniyetSurecID = kModel.MezuniyetSurecID;
                     MBasvuru.BasvuruTarihi = kModel.BasvuruTarihi;
                     MBasvuru.MezuniyetYayinKontrolDurumID = kModel.MezuniyetYayinKontrolDurumID;
@@ -1078,7 +1082,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
             var model = new kmSRTalep();
-            model.IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod == OgrenimTipi.Doktra;
+            model.IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvuru.MezuniyetSureci.EnstituKod==EnstituKodlari.FenBilimleri;
             if (SRTalepID > 0)
             {
                 var srTalebi = mezuniyetBasvuru.SRTalepleris.First(p => p.SRTalepID == SRTalepID);
@@ -1121,7 +1125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             kModel.SRTalepTipID = 1;
-            kModel.IsSalonSecilsin = mezuniyetBasvurusu.OgrenimTipKod == OgrenimTipi.Doktra;
+            kModel.IsSalonSecilsin = mezuniyetBasvurusu.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvurusu.MezuniyetSureci.EnstituKod!=EnstituKodlari.SosyalBilimleri;
             kModel.EnstituKod = mezuniyetBasvurusu.MezuniyetSureci.EnstituKod;
             if (!srTalebiYetkisi)
             {
@@ -1236,10 +1240,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kModel.IslemTarihi = DateTime.Now;
                         kModel.IslemYapanID = UserIdentity.Current.Id;
                         kModel.IslemYapanIP = UserIdentity.Ip;
-                        kModel.Tarih = kModel.Tarih.Date;
                         kModel.HaftaGunID = (int)kModel.Tarih.DayOfWeek;
                         kModel.BasSaat = kModel.IsSalonSecilsin ? kModel.BasSaat.Value : kModel.Tarih.TimeOfDay;
                         kModel.BitSaat = kModel.IsSalonSecilsin ? kModel.BitSaat.Value : kModel.BasSaat.Value.Add(new TimeSpan(2, 0, 0));
+                        kModel.Tarih = kModel.Tarih.Date;
 
 
                         kModel.DanismanAdi = mezuniyetBasvurusu.TezDanismanAdi;

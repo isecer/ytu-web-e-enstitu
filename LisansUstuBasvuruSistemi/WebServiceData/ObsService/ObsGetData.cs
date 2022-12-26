@@ -101,8 +101,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 
                             }
                             var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, ogrenciNo, tcKimlikNo);
-                            model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
-
+                            model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>(); 
 
                             if (!model.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {

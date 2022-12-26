@@ -3185,10 +3185,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return progs.Select(s => new { s.Value, s.Caption }).toJsonResult();
         }
 
-        [Authorize]
+        [AllowAnonymous]
         public ActionResult getMsjKategoris(string EnstituKod)
-        {
-            var KulID = UserIdentity.Current.Id;
+        { 
             var Ots = Management.cmbGetMesajKategorileri(EnstituKod, true, true);
             return Ots.Select(s => new { s.Value, s.Caption }).toJsonResult();
         }
@@ -3460,10 +3459,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYTUOgretimEleman(string term)
         {
             var Data = Management.getWsPersisOE(term);
-            var YtuUni = db.Universitelers.Where(p => p.UniversiteID == 67).FirstOrDefault();
-
-            var UnvanList = Management.cmbMezuniyetJofUnvanlar().Select(s => s.Value).ToList();
-            var Kul2 = Data.Table.Where(p => UnvanList.Contains(p.AKADEMIKUNVAN.ToMezuniyetJuriUnvanAdi())).Select(s => new
+            var YtuUni = db.Universitelers.Where(p => p.UniversiteID == 67).FirstOrDefault(); 
+            var Kul2 = Data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
                 AdSoyad = s.ADSOYAD,

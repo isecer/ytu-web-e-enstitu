@@ -1125,35 +1125,7 @@
 
             }
         })
-    }
-
-    function DanismanEslestir(MezuniyetBasvurulariID, OgrenciNo) {
-         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
-
-        $.ajax({
-            url: '@Url.Action("DanismanEslestir", "MezuniyetGelenBasvurular")',
-            data: {
-                'id': MezuniyetBasvurulariID,
-                'OgrenciNo': OgrenciNo,
-
-            },
-            success: function (result) {
-                _pRefresh(_panel, true);
-                if (result.IsSuccess) {
-                    getDetailx(MezuniyetBasvurulariID);
-
-                }
-                showMmMessage(result.Messages, 'Tamam');
-
-            },
-            error: function (err) {
-                _pRefresh(_panel, true);
-                alert(err.responseText);
-
-            }
-        });
-    }
+    } 
 </script>
 
 @if (true)

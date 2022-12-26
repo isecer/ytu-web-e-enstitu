@@ -18,8 +18,8 @@
         FixedHeader = false;
         FixedSidebar = false;
     }
-     
-    var Enstituler = Management.GetEnstituler(); 
+
+    var Enstituler = Management.GetEnstituler();
     var lImage = "/Content/assets/images/ytu_logo_tr.gif";
 }
 
@@ -144,8 +144,8 @@
                                         </script>
                                     </div>
                                     <ul>
-                                        <li style="cursor: pointer;" class="active"> 
-                                            <a href="javasscript:void(0); " style="text-align: center; font-size: 12pt; color: #ffd559; padding: 0px;"> 
+                                        <li style="cursor: pointer;" class="active">
+                                            <a href="javasscript:void(0); " style="text-align: center; font-size: 12pt; color: #ffd559; padding: 0px;">
                                                 @{
                                                     var enst2 = Enstituler.Where(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd)).First();
                                                     <span>@enst2.EnstituAd</span>
@@ -155,8 +155,8 @@
                                                 <li style="padding: 0px; margin: 0px;">
                                                     @foreach (var itm in Enstituler.Where(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd) == false))
                                                     {
-                                                        <a href="@(urlInfo.Root + itm.EnstituKisaAd.ToLower() +  "/" + urlInfo.LastPath+urlInfo.Query)" style="text-align:center;padding:0px;margin:0px;"> 
-                                                             @itm.EnstituAd'ne geç
+                                                        <a href="@(urlInfo.Root + itm.EnstituKisaAd.ToLower() +  "/" + urlInfo.LastPath+urlInfo.Query)" style="text-align:center;padding:0px;margin:0px;">
+                                                            @itm.EnstituAd'ne geç
                                                         </a>
                                                     }
                                                 </li>
@@ -292,7 +292,7 @@
                         </li>
                         <!--END PROFILE -->
 
-                    } 
+                    }
                     @if (UserIdentity.Current.IsAuthenticated && RoleNames.Mesajlar.InRoleCurrent())
                     {
                         var enstituKod = Management.getSelectedEnstitu(urlInfo.EnstituKisaAd);
@@ -532,11 +532,11 @@
                                         <div class="registration-footer">
                                             <div class="registration-title"><strong>Şifremi Unuttum</strong>?</div>
                                             @*<div class="pull-left">
-                                        © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
-                                    </div>
-                                    <div class="pull-right">
-                                       <a href="javascript:void(0);">Contact Us</a>
-                                </div>*@
+                                                        © @DateTime.Now.Year Enstitü Online Başvuru Sistemi
+                                                    </div>
+                                                    <div class="pull-right">
+                                                       <a href="javascript:void(0);">Contact Us</a>
+                                                </div>*@
                                         </div>
                                         <div class="registration-body">
                                             <div class="registration-subtitle">Şifrenizi unuttuysanız aşağıdaki mail giriş alanına sisteme kayıt olduğunuz mail adresinizi giriniz ve enter tuşuna basınız. Bu işlemi yaptığınız zaman sistem mail adresinize şifrenizi sıfırlama linki gönderecektir!</div>
@@ -870,11 +870,11 @@
         gtag('config', 'UA-122393038-1');
     </script>
     <script>
-        function HesapKayit(id) { 
+        function HesapKayit(id) {
             if (id == undefined) id = "";
             var IsAuthenticated = '@UserIdentity.Current.IsAuthenticated' == 'True';
             if (IsAuthenticated && id == "") return;
-            else if (!IsAuthenticated && id != "") return; 
+            else if (!IsAuthenticated && id != "") return;
             $.ajax({
                 url: '@Url.Action("HesapKayit", "Account")',
                 data: { 'id': id },
@@ -890,10 +890,10 @@
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                     _pRefresh(pnlx, false);
                                     $('#frmHesapKayit').ajaxForm({
-                                        success: function (result) { 
-                                            if (result.IsSuccess) { 
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
                                                 if (id == "") {
-                                                    getMsg(result); 
+                                                    getMsg(result);
                                                 }
                                                 else {
                                                     toastr["success"](result.Messages[0], result.Title);
@@ -906,7 +906,7 @@
                                             if (result.IsCloseDialog) {
                                                 var _clsBtn = $('.modal-header').find('button').first();
                                                 $(_clsBtn).click();
-                                            } 
+                                            }
                                             _pRefresh(pnlx, true);
 
                                         },
@@ -1675,7 +1675,7 @@
                         $('#' + id).val($('#' + id).val().replace('.', ","));
                     }
                 }, 150);
-            } 
+            }
         function getMsg(mMessage) {
 
             if (mMessage.Messages.length > 0)
@@ -1762,7 +1762,7 @@
 
 
                 }, 120);
-            } 
+            }
 
 
             var site_settings = '<div class="ts-button">'
@@ -2002,6 +2002,23 @@
                 $(TableID).parents('.MainTable').find('.footerInfo').html('Toplam: ' + Rows + ',  Seçilen: ' + CheckedR);
             else
                 $(TableID).parents('.MainTable').find('.footerInfo').html('Toplam: ' + Rows);
+        }
+    </script>
+    <script>
+        function ShowMessageAjaxRequest(status, textStatus) {
+            if (status == 401) {
+                showMessage("info", "Oturumunuz sonlanmıştır.", "<strong>5 sn</strong> içinde giriş sayfasına yönlendirileceksiniz."); 
+                setTimeout(function () { window.location.href = "@Url.Action("LogIn","Account")?returnurl=" + window.location.href }, 5000);
+            }
+            else if (status == 403) {
+                showMessage("danger", "Yetki Hatası", "Bu işlem için yetkiniz bulunmamaktadır."); 
+            }
+            else if (status == 404) {
+                showMessage("warning", "Sayfa Hatası", "Aranılan sayfa bulunamadı."); 
+            }
+            else if (status != 0 && status != 200) {
+                showMessage("danger", "İşlem Hatası", "İşlem yapılırken bir hata oluştu."); 
+            } 
         }
     </script>
     @RenderSection("scripts", required: false)

@@ -9015,7 +9015,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
 
                 model.IsYeniDanismanOneriOrDegisiklik = true;
-               // model.IsYeniDanismanOneriOrDegisiklik = !model.TDOBasvuruDanismanList.Any(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true);
+                // model.IsYeniDanismanOneriOrDegisiklik = !model.TDOBasvuruDanismanList.Any(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true);
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -9086,7 +9086,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         kModel.DanismanOnayladi = true;
                         kModel.EYKYaGonderildi = true;
                         kModel.EYKDaOnaylandi = true;
-
+                        kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezDanismaniOnerisi;
 
                         kModel.IslemTarihi = DateTime.Now;
                         kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -9176,6 +9176,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                    TalepTipAdi = tt.TalepTipAdi,
                                    SRTalepTipID = sR.SRTalepTipID,
                                    SRSalonID = sR.SRSalonID,
+                                   IsOnline=sR.IsOnline,
                                    SalonAdi = sR.SRSalonID.HasValue ? defSl.SalonAdi : sR.SalonAdi,
                                    Tarih = sR.Tarih,
                                    HaftaGunID = sR.HaftaGunID,
@@ -9201,8 +9202,8 @@ namespace LisansUstuBasvuruSistemi.Models
                 model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).First().DonemAdi;
                 model.KullaniciTipID = basvuru.KullaniciTipID;
                 model.ResimAdi = basvuru.ResimAdi;
-                model.Ad = basvuru.Ad;
-                model.Soyad = basvuru.Soyad;
+                model.Ad = basvuru.Kullanicilar.Ad;
+                model.Soyad = basvuru.Kullanicilar.Soyad;
                 model.TcKimlikNo = basvuru.TcKimlikNo;
                 model.PasaportNo = basvuru.PasaportNo;
                 model.UyrukKod = basvuru.UyrukKod;
@@ -9324,10 +9325,10 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
                             SistemBilgisiKaydet("Başka bir kullanıcıya ait Mezuniyet başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", BilgiTipi.Saldırı);
                         }
-                        else if (KayitYetki == false && (basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak))
+                        else if (KayitYetki == false && (basvuru.IsDanismanOnay == true))
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Başvuru durumu '" + basvuru.MezuniyetYayinKontrolDurumlari.MezuniyetYayinKontrolDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız!");
+                            msg.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
                         }
 
                     }
@@ -9368,8 +9369,8 @@ namespace LisansUstuBasvuruSistemi.Models
                             }
 
                             var basvuruVar = db.MezuniyetBasvurularis.Any(p => p.MezuniyetSurecID == MezuniyetSurecID &&
-                                                                        p.KullaniciID == KullaniciID && (MezuniyetBasvurulariID.HasValue ? p.MezuniyetBasvurulariID != MezuniyetBasvurulariID.Value : true));//aynı başvuru sürecindeki başvurular baz alınsın
-                            if (basvuruVar)// toplam başvuru kontrol
+                                                                        p.KullaniciID == KullaniciID);
+                            if (basvuruVar)
                             {
                                 msg.IsSuccess = false;
                                 msg.Messages.Add("Bu mezuniyet süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
