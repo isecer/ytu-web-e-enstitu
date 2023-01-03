@@ -422,7 +422,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var DonemBilgi = (TIBasvuruAraRapor == null ? DateTime.Now : TIBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
 
-                var ogrenciBilgi = Management.StudentControl(TIBasvuru.OgrenciNo, TIBasvuru.TcKimlikNo);
+                var ogrenciBilgi = Management.StudentControl(TIBasvuru.TcKimlikNo);
 
                 var sondonemKayitolmasiGerekenDersKodlari = TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(TIBasvuru.EnstituKod, "");
 
@@ -655,7 +655,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsYeniJO = TIBasvuruAraRapor == null;
                 bool IsDegisiklikVar = false;
                 var DonemBilgi = (IsYeniJO ? DateTime.Now : TIBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
-                var DonemdeVerilenDersBilgileri = IsYeniJO ? Management.StudentControl(TIBasvuru.OgrenciNo.Trim(), TIBasvuru.TcKimlikNo) : new StudentControl();
+                var DonemdeVerilenDersBilgileri = IsYeniJO ? Management.StudentControl(TIBasvuru.TcKimlikNo) : new StudentControl();
                 var KayitYapilacakDersKodlaris = IsYeniJO ? TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(TIBasvuru.EnstituKod, "").Split(',').ToList() : new List<string>();
 
                 if (TIBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == DonemBilgi.BaslangicYil && p.DonemID == DonemBilgi.DonemID))
@@ -668,7 +668,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (TIBasvuruAraRapor != null && TIBasvuruAraRapor.TIBasvuruAraRaporDurumID > TIAraRaporDurumu.ToplantiBilgileriGirildi)
                 {
-                    mMessage.Messages.Add("Komite üyelerine değerlendirme linki gönderildikten sonra rapor bilgisinde değişiklik yapamazsınız. ");
+                    mMessage.Messages.Add("Komite üyelerine değerlendirme yaptıktan sonra rapor bilgisinde değişiklik yapamazsınız. ");
                 }
                 if (mMessage.Messages.Count == 0)
                 {

@@ -728,7 +728,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
-                        var ogrenciBilgi = Management.StudentControl(kModel.OgrenciNo, kModel.TcKimlikNo);
+                        var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj())
                         {
                             var Program = db.Programlars.Where(p => p.ProgramKod == kModel.ProgramKod).First();

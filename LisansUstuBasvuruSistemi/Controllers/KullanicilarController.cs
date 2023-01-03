@@ -504,7 +504,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
-                        var ogrenciBilgi = Management.StudentControl(kModel.OgrenciNo, kModel.TcKimlikNo);
+                        var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.KayitVar &&
                             kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj())
                         {
@@ -941,6 +941,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.YeniSifreTekrar = YeniSifreTekrar;
             return View();
         }
+
+
+         
 
         [Authorize(Roles = RoleNames.KullanicilarSil)]
         public ActionResult Sil(int id)

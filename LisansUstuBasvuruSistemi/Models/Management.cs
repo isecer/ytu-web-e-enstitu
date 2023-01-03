@@ -88,10 +88,10 @@ namespace LisansUstuBasvuruSistemi.Models
         #region gsisData
 
 
-        public static StudentControl StudentControl(string OgrenciNo, string TcKimlikNo = null)
+        public static StudentControl StudentControl(string TcKimlikNo = null)
         {
             ObsGetData obsData = new ObsGetData();
-            return obsData.GetObsStudentControl(OgrenciNo, TcKimlikNo);
+            return obsData.GetObsStudentControl(TcKimlikNo);
         }
 
         public static string gsisKayitAktar(string kayit)
@@ -8825,7 +8825,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                 var sondonemKayitOlmasiGerekenDersKodlari = TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(EnstituKod, "");
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').ToList();
-                                var ogrenciBilgi = Management.StudentControl(kul.OgrenciNo, kul.TcKimlikNo);
+                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
 
                                 var BkMsg = new List<string>();
                                 if (sondonemKayitOlmasiGerekenDersKodlariList.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Where(p => sondonemKayitOlmasiGerekenDersKodlariList.Any(a => a == p)).Count() != sondonemKayitOlmasiGerekenDersKodlariList.Count)
@@ -9041,7 +9041,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                 var ogr = db.Kullanicilars.First(p => p.KullaniciID == kullaniciID);
 
-                var ogrenciInfo = Management.StudentControl(ogr.OgrenciNo, ogr.TcKimlikNo);
+                var ogrenciInfo = Management.StudentControl(ogr.TcKimlikNo);
 
                 if (ogrenciInfo.DanismanInfo != null)
                 {
@@ -9392,7 +9392,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             {
                                 var BasvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.Where(p => p.MezuniyetSurecID == MezuniyetSurecID.Value && p.OgrenimTipKod == kul.OgrenimTipKod).First();
                                 var BasvuruSonDonemSecilecekDersKodlari = BasvuruKriterleri.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',').ToList();
-                                var ogrenciBilgi = Management.StudentControl(kul.OgrenciNo, kul.TcKimlikNo);
+                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
                                 var BkMsg = new List<string>();
                                 if (BasvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Where(p => BasvuruSonDonemSecilecekDersKodlari.Any(a => a == p)).Count() != BasvuruSonDonemSecilecekDersKodlari.Count)
                                 {

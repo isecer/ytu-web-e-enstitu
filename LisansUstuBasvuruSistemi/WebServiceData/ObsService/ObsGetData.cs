@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
     {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
-        public StudentControl GetObsStudentControl(string ogrenciNo, string tcKimlikNo = null)
+        public StudentControl GetObsStudentControl(string tcKimlikNo)
         {
             var model = new StudentControl();
             try
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                 using (Ws_ObsService.proliz_ytu_enstitu_minerSoapClient service =
                        new Ws_ObsService.proliz_ytu_enstitu_minerSoapClient())
                 {
-                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, ogrenciNo, tcKimlikNo);
+                    var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
 
                     if (ogrencis.Any())
                     {
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 
 
                             var ogrenciDersler =
-                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenciNo, tcKimlikNo);
+                                service.OgrenciDersBilgileriGetir(UserName, Password, null, tcKimlikNo);
 
                             if (ogrenciDersler[0].Sucess)
                             {
@@ -79,7 +79,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                     model.AktifDonemDers.DersKodNums = dersler.Select(s => s.Substring(s.Length - 4, 4)).ToList();
                                 }
                             }
-                            var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, ogrenciNo, tcKimlikNo);
+                            var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, null, tcKimlikNo);
                             if (ogrenciTez.Any())
                             {
                                 var tezBilgi = ogrenciTez[0];
@@ -100,8 +100,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                 }
 
                             }
-                            var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, ogrenciNo, tcKimlikNo);
-                            model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>(); 
+                            var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, null, tcKimlikNo);
+                            model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
 
                             if (!model.OgrenciInfo.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
