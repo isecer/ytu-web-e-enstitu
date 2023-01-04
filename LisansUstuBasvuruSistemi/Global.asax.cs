@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BiskaUtil.Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             BiskaUtil.SystemInformation.OnEvent += SystemInformation_OnEvent;
-            Management.Update();
+            //Management.Update();
 
             Management.SistemDilleris = Management.GetDiller();
             Management.Enstitulers = Management.GetEnstituler();

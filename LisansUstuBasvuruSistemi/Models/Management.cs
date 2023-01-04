@@ -13255,7 +13255,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public static TarihAralikModel ToAraRaporDonemBilgi(this DateTime date)
         {
             var model = new TarihAralikModel();
-            if (date.Month <= 6)
+            if (date.Month < 6)
             {
                 model.BaslangicYil = date.Year - 1;
                 model.DonemID = 2;
