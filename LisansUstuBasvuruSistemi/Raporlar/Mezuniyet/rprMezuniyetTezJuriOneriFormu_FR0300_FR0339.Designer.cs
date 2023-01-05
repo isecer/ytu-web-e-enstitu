@@ -2507,7 +2507,6 @@
             this.xrTableCell20,
             this.cellTezBaslikEn});
             this.xrTableRow17.Name = "xrTableRow17";
-            this.xrTableRow17.Visible = false;
             this.xrTableRow17.Weight = 1D;
             // 
             // xrTableCell20
@@ -5222,7 +5221,7 @@
             // rprLogo
             // 
             this.rprLogo.BackColor = System.Drawing.Color.Transparent;
-            this.rprLogo.Image = ((System.Drawing.Image)(resources.GetObject("rprLogo.Image")));
+            this.rprLogo.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("rprLogo.ImageSource"));
             this.rprLogo.LocationFloat = new DevExpress.Utils.PointFloat(528.2501F, 0F);
             this.rprLogo.Name = "rprLogo";
             this.rprLogo.SizeF = new System.Drawing.SizeF(67.29163F, 60.00001F);
@@ -5293,7 +5292,7 @@
             this.PageHeight = 827;
             this.PageWidth = 1169;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4Rotated;
-            this.Version = "17.1";
+            this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.tableYtuDisiJuri)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable36)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable37)).EndInit();

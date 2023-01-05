@@ -3376,6 +3376,7 @@
     <Content Include="Views\Ajax\getEkAciklamaContent.cshtml" />
     <Content Include="Views\Mezuniyet\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\SRJuriDegistir.cshtml" />
+    <Content Include="Views\Ajax\ObsOgrenciSorgula.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

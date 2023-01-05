@@ -57,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
 
 
                 TbRowYeniTB.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikTr.IsNullOrWhiteSpace();
-                TbRowYeniTBCeviri.Visible = !mezuniyetJuriOneriFormu.IsTezBasligiDegisti == true;
+                TbRowYeniTBCeviri.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikEn.IsNullOrWhiteSpace();
                 if (MBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri)
                 {
                     txtMudurlukAdiTr.Text = "FEN BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
@@ -83,10 +83,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Different than TMC)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri (Tik Haricinde)";
                     txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals (Different than TMC)";
-                    lblTezBasligi.Text = "Tezin Orjinal Başlığı";
-                    lblTezBasligiEn.Text = "Thesis Original Title";
-                    lblTezBasligiCeviri.Text = "Başlığın Çevirisi";
-                    lblTezBasligiCeviriEn.Text = "Translation of the title";
+                   
                     cellAcklama1.Text = "Yukarıda adı yazılı doktora öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir.\r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above mentioned doctoral student is stated below. \r\nI respectfully submit for your consideration.";
                     this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0300 Doktora Tez Jüri Öneri Formu";
@@ -104,11 +101,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Obligatorily from the Department)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri";
                     txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals";
-                    lblTezBasligi.Text = "Tezin Mevcut Başlığı";
-                    lblTezBasligiEn.Text = "Thesis Original Title";
-
-                    lblTezBasligiCeviri.Text = "Tezin Mevcut Başlığının Çevirisi";
-                    lblTezBasligiCeviriEn.Text = "Translation of the title";
+                   
                     cellAcklama1.Text = "Yukarıda adı yazılı yüksek lisans öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir. \r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above-mentioned master’s student is stated below. \r\nI respectfully submit for your consideration.";
                     this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0339 Yüksek Lisans Tez Jüri Öneri Formu";

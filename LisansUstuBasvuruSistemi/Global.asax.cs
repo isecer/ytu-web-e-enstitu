@@ -3,7 +3,8 @@ using CaptchaMvc.Infrastructure;
 using CaptchaMvc.Interface;
 using CaptchaMvc.Models;
 using DevExpress.XtraReports.Security;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +59,7 @@ namespace LisansUstuBasvuruSistemi
              
             try
             {
-                DevExpress.XtraReports.Web.Native.ClientControls.Services.DefaultLoggingService.SetInstance(new MyLoggingService());
+                //DevExpress.XtraReports.Web.Native.ClientControls.Services.DefaultLoggingService.SetInstance(new MyLoggingService());
             }
             catch 
             {

@@ -536,18 +536,15 @@
                         $.ajax({
                             url: '@Url.Action("DetaySil", "TIBasvuru")',
                             data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
-                            success: function (result) {
-                                _pRefresh(_panel, true);
+                            success: function (result) { 
                                 if (result.IsSuccess) {
-                                    $(sndr).closest("tr").remove();
-                                    $(".cls-Rpr_" + id).remove();
+                                    getDetailx(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) {
+                            }, complete: function (httpObj, textStatus) { 
                                 _pRefresh(_panel, true);
-                                alert(err.responseText);
-                            }
+                                ShowMessageAjaxRequest(httpObj.status, textStatus);
+                            } 
                         });
                     }
                 },

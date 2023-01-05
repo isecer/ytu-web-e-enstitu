@@ -1,0 +1,99 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using Newtonsoft.Json
+@using BiskaUtil
+@model LisansUstuBasvuruSistemi.Models.ObsService.ObsOgrenciSorgulaModel
+@{
+    Layout = null;
+}
+
+<div class="panel panel-danger" style="padding-bottom: 0px;">
+    <div class="panel-body" style="padding: 0px;">
+        <div class="panel panel-default form-horizontal" style="margin: 0px;">
+            <div class="panel-body form-group-separated">
+                <table>
+                    <tr>
+                        <td>Tc veya Öğrenci No:</td>
+                        <td style="padding-left:5px;"><input type="text" id="_Tc" class="form-control" value="@Model.Tc"></td>
+                        <td><button data-bb-handler="danger" type="button" class="btn btn-primary" onclick="submitOgrenciNo();">Sorgula</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Ogrenci == null || Model.Ogrenci.TCKIMLIKNO.IsNullOrWhiteSpace())
+{
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel panel-default form-horizontal" style="margin: 0px;text-align:center;font-size:13pt;color:maroon;">
+                Listelenen öğrenci yok
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Bilgisi</h3>
+        </div>
+        <div class="panel-body" style="padding: 0px;">
+
+            <div class="panel-body form-group-separated">
+                <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.Ogrenci, Newtonsoft.Json.Formatting.Indented)</textarea>
+            </div>
+        </div>
+    </div>
+    if (Model.OgrenciDersNot != null)
+    {
+        <div class="panel panel-danger" style="padding-bottom: 0px;">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Ders Bilgisi</h3>
+            </div>
+            <div class="panel-body" style="padding: 0px;">
+
+                <div class="panel-body form-group-separated">
+                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciDersNot, Newtonsoft.Json.Formatting.Indented)</textarea>
+                </div>
+            </div>
+        </div>
+    }
+    if (Model.OgrenciTez != null)
+    {
+        <div class="panel panel-danger" style="padding-bottom: 0px;">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Tez Bilgisi</h3>
+            </div>
+            <div class="panel-body" style="padding: 0px;">
+
+                <div class="panel-body form-group-separated">
+                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciTez, Newtonsoft.Json.Formatting.Indented)</textarea>
+                </div>
+            </div>
+        </div>
+    }
+    if (Model.OgrenciTezJuri != null)
+    {
+        <div class="panel panel-danger" style="padding-bottom: 0px;">
+            <div class="panel-heading padding-0">
+                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Tez Jüri Şablonu</h3>
+            </div>
+            <div class="panel-body" style="padding: 0px;">
+
+                <div class="panel-body form-group-separated">
+                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciTezJuri, Newtonsoft.Json.Formatting.Indented)</textarea>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+<script>
+    function submitOgrenciNo() {
+        var tc = $('#_Tc').val();
+        var view = OgrenciSorgulaView(tc);
+        $('#obsOgrenciPanel').html(view);
+    }
+</script>

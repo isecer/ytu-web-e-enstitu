@@ -1620,7 +1620,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return new { mMessage, MessageType = (mMessage.IsSuccess ? "success" : "error") }.toJsonResult();
         }
-     
+
 
         [Authorize]
         public ActionResult Sil(int id)
@@ -1692,31 +1692,34 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qKayit = _db.TIBasvuruAraRapors.Where(p => p.TIBasvuruID == id && p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).AsQueryable();
             if (!TITezDegerlendirmeYap && !TITezDegerlendirmeDuzeltme) qKayit = qKayit.Where(p => p.TIBasvuru.KullaniciID == UserIdentity.Current.Id);
             else if (TITezDegerlendirmeYap && !TITezDegerlendirmeDuzeltme) qKayit = qKayit.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
-            var TIbasvuruAraRapor = qKayit.FirstOrDefault();
+            var araRapor = qKayit.FirstOrDefault();
 
 
-            if (TIbasvuruAraRapor == null)
+            if (araRapor == null)
             {
                 mmMessage.Messages.Add("Silinmek istenen kayıt sistemde bulunamadı.");
             }
-            else if (TIbasvuruAraRapor.SRTalepleris.Any())
+            else if (araRapor != null && araRapor.TIBasvuruAraRaporDurumID > TIAraRaporDurumu.ToplantiBilgileriGirildi)
             {
-                mmMessage.Messages.Add(TIbasvuruAraRapor.AraRaporSayisi + ". Rapor için salon toplantı tarihi belirlendiği için silme işlemi yapılamaz.");
+                mmMessage.Messages.Add("Komite üyelerine değerlendirme yaptıktan sonra rapor bilgisi silinemez. ");
             }
-            {
+            else
+            { 
                 try
                 {
-                    TIbasvuruAraRapor.TIBasvuru.AktifTIBasvuruAraRaporID = TIbasvuruAraRapor.TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID != TIBasvuruAraRaporID).OrderByDescending(o => o.AraRaporSayisi).Select(s => s.AraRaporSayisi).FirstOrDefault().toNullIntZero();
-                    _db.TIBasvuruAraRapors.Remove(TIbasvuruAraRapor);
+                    _db.SRTalepleris.RemoveRange(araRapor.SRTalepleris);
+                    _db.TIBasvuruAraRaporKomites.RemoveRange(araRapor.TIBasvuruAraRaporKomites);
+                    araRapor.TIBasvuru.AktifTIBasvuruAraRaporID = araRapor.TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID != TIBasvuruAraRaporID).OrderByDescending(o => o.AraRaporSayisi).Select(s => s.TIBasvuruAraRaporID).FirstOrDefault().toNullIntZero();
+                    _db.TIBasvuruAraRapors.Remove(araRapor);
                     _db.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("TIbasvuruAraRapor", IslemTipi.Delete, TIbasvuruAraRapor.ToJson());
-                    mmMessage.Messages.Add(TIbasvuruAraRapor.AraRaporSayisi + ". Rapor sistemden silindi.");
+                    LogIslemleri.LogEkle("TIbasvuruAraRapor", IslemTipi.Delete, araRapor.ToJson());
+                    mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silindi.");
 
                 }
                 catch (Exception ex)
                 {
-                    mmMessage.Messages.Add(TIbasvuruAraRapor.AraRaporSayisi + ". Rapor sistemden silinemedi.");
+                    mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silinemedi.");
                     Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
                 }
             }

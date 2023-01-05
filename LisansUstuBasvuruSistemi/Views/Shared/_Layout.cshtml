@@ -293,6 +293,7 @@
                         <!--END PROFILE -->
 
                     }
+
                     @if (UserIdentity.Current.IsAuthenticated && RoleNames.Mesajlar.InRoleCurrent())
                     {
                         var enstituKod = Management.getSelectedEnstitu(urlInfo.EnstituKisaAd);
@@ -387,6 +388,7 @@
                             </script>
                         </li>
                     }
+
                     @if (UserIdentity.Current.IsAuthenticated && RoleNames.KullanicilarOnlineKullanicilar.InRoleCurrent())
                     {
 
@@ -446,6 +448,45 @@
 
                         </li>
 
+                    }
+                    @if (RoleNames.Kullanicilar.InRoleCurrent())
+                    {
+                        <li class="xn-icon-button pull-right">
+                            <a href="javascript:void(0);" onclick="OgrenciSorgula();"><span class="fa fa-search"></span></a>
+                            <script type="text/javascript">
+                                function OgrenciSorgulaView(tc) {
+                                    var view = "";
+                                    $.ajax({
+                                        url: '@Url.Action("ObsOgrenciSorgula", "Ajax")',
+                                        async: false,
+                                        data: {tc:tc  },
+                                        success: function (result) {
+                                            view = result;
+                                        },
+                                        error: function (err) {
+                                            alert(err.responseText);
+                                        }
+                                    });
+                                    return view;
+                                }
+                                function OgrenciSorgula(tc) {
+                                    var view = OgrenciSorgulaView(tc);  
+                                    var btbxxFS = bootbox.dialog({
+                                        message:'<div id="obsOgrenciPanel" style="max-height:700px;overflow-x:scroll;">'+ view+'</div>',
+                                        title: "Obs Öğrenci Sorgulama",
+                                        buttons: {
+                                            danger: {
+                                                label: 'Kapat',
+                                                className: "btn-primary",
+                                                callback: function () {
+                                                }
+                                            }
+                                        }
+                                    }); 
+                                }
+
+                            </script>
+                        </li>
                     }
                     <!-- LOGIN BLOCk -->
                     @if (!BiskaUtil.UserIdentity.Current.IsAuthenticated && !urlInfo.LastPath.ToLower().Contains("account/login"))
@@ -2007,18 +2048,18 @@
     <script>
         function ShowMessageAjaxRequest(status, textStatus) {
             if (status == 401) {
-                showMessage("info", "Oturumunuz sonlanmıştır.", "<strong>5 sn</strong> içinde giriş sayfasına yönlendirileceksiniz."); 
+                showMessage("info", "Oturumunuz sonlanmıştır.", "<strong>5 sn</strong> içinde giriş sayfasına yönlendirileceksiniz.");
                 setTimeout(function () { window.location.href = "@Url.Action("LogIn","Account")?returnurl=" + window.location.href }, 5000);
             }
             else if (status == 403) {
-                showMessage("danger", "Yetki Hatası", "Bu işlem için yetkiniz bulunmamaktadır."); 
+                showMessage("danger", "Yetki Hatası", "Bu işlem için yetkiniz bulunmamaktadır.");
             }
             else if (status == 404) {
-                showMessage("warning", "Sayfa Hatası", "Aranılan sayfa bulunamadı."); 
+                showMessage("warning", "Sayfa Hatası", "Aranılan sayfa bulunamadı.");
             }
             else if (status != 0 && status != 200) {
-                showMessage("danger", "İşlem Hatası", "İşlem yapılırken bir hata oluştu."); 
-            } 
+                showMessage("danger", "İşlem Hatası", "İşlem yapılırken bir hata oluştu.");
+            }
         }
     </script>
     @RenderSection("scripts", required: false)

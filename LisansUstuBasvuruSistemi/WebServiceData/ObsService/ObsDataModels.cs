@@ -49,6 +49,15 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         public List<string> DersKodNums { get; set; }
     }
 
+    public class ObsOgrenciSorgulaModel
+    {
+        public string Tc { get; set; }
+        public Ogrenci Ogrenci { get; set; }
+        public OgrenciDersNot OgrenciDersNot { get; set; }
+        public OgrenciTez OgrenciTez { get; set; }
+        public List<TezIzlJuriBilgileri> OgrenciTezJuri { get; set; }
+    }
+
 
 
 }

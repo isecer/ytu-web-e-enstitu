@@ -8,7 +8,7 @@
     Layout = null;
 
     var IsDelete = (bool)ViewBag.IsDelete;
-    string DColor = Model.DurumColor; 
+    string DColor = Model.DurumColor;
     var IsDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var IsOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
     bool ToplantiYetki = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
@@ -359,7 +359,7 @@
                                         <td class="CaptionTd">:</td>
                                         <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
                                     </tr>
-                                } 
+                                }
                             </table>
                         </td>
                         <td class="clsHide" width="100" style="text-align:center;">
@@ -401,7 +401,7 @@
                                         <th width="120">Rapor Dönemi</th>
                                         <th class="clsHide" width="120">Oluşturma Tarihi</th>
                                         <th>Rapor Durumu</th>
-                                        <th width="60"></th>
+                                        <th width="120"></th>
                                     </tr>
                                     @foreach (var item in Model.TIBasvuruAraRaporList)
                                     {
@@ -430,11 +430,10 @@
                                             <td>
                                                 @if (inxRw == 1 && FormOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TIAraRaporDurumu.DegerlendirmeSureciBaslatildi)
                                                 {
-                                                    <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Raporu Düzelt"></i></a>
-                                                    if (!SrTalebiYapildi)
-                                                    {
-                                                        <a href="javascript:void(0)" onclick="silDetay(this,'@item.TIBasvuruID',@item.TIBasvuruAraRaporID,'@(item.AraRaporSayisi + ". Rapor")')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Raporu Sil"></i></a>
-                                                    }
+                                                    <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-original-title="Raporu Düzelt"></i> Düzelt</a>
+
+                                                    <a href="javascript:void(0)" onclick="silDetay(this,'@item.TIBasvuruID',@item.TIBasvuruAraRaporID,'@(item.AraRaporSayisi + ". Rapor")')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Raporu Sil"></i> Sil</a>
+
                                                 }
                                             </td>
                                         </tr>
@@ -560,7 +559,7 @@
                                                         </tr>
                                                         <tbody>
 
-                                                            @foreach (var itemJr in item.TIBasvuruAraRaporKomites.OrderBy(o=>o.JuriTipAdi))
+                                                            @foreach (var itemJr in item.TIBasvuruAraRaporKomites.OrderBy(o => o.JuriTipAdi))
                                                             {
                                                                 var IsKomiteTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
                                                                 var OpenRow = (IsDanismani && IsKomiteTezDanismani);
@@ -954,6 +953,6 @@
         $('.tooltips').tooltip();
         jQuery('._popover').popover({ trigger: 'hover' });
 
-    }) 
+    })
 
 </script>

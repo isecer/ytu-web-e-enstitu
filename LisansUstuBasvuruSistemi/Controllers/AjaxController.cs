@@ -4,6 +4,7 @@ using CaptchaMvc.HtmlHelpers;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
 using System;
@@ -81,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.ReturnUrl = ReturnUrl;
             MmMessage.UserName = UserName;
             MmMessage.Password = Password;
-            RememberMe = RememberMe ?? false; 
+            RememberMe = RememberMe ?? false;
 
             Kullanicilar loginUser = null;
             string Hata = null;
@@ -1622,7 +1623,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.BasvuruDurumHtml = ModelBasvuruDurum.ToRenderPartialViewHtml("Mezuniyet", "BasvuruDurumView");
 
             DateTime? OnayTarihi = null;
-            if (ModelBasvuruDurum.MezuniyetJuriOneriFormu != null) OnayTarihi = ModelBasvuruDurum.MezuniyetJuriOneriFormu.EYKYaGonderildi==true ? ModelBasvuruDurum.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi : null;
+            if (ModelBasvuruDurum.MezuniyetJuriOneriFormu != null) OnayTarihi = ModelBasvuruDurum.MezuniyetJuriOneriFormu.EYKYaGonderildi == true ? ModelBasvuruDurum.MezuniyetJuriOneriFormu.EYKYaGonderildiIslemTarihi : null;
 
 
             model.IsDelete = IsDelete;
@@ -3187,7 +3188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [AllowAnonymous]
         public ActionResult getMsjKategoris(string EnstituKod)
-        { 
+        {
             var Ots = Management.cmbGetMesajKategorileri(EnstituKod, true, true);
             return Ots.Select(s => new { s.Value, s.Caption }).toJsonResult();
         }
@@ -3419,7 +3420,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-
+        [Authorize(Roles = RoleNames.Kullanicilar)]
+        public ActionResult ObsOgrenciSorgula(string tc = "")
+        {
+            var obsGetData = new ObsGetData();
+            var model = new ObsOgrenciSorgulaModel();
+            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc);
+            model.Tc = tc;
+            var view = Management.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
+            return view.toJsonResult();
+        }
 
 
         [Authorize]
@@ -3459,7 +3469,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetYTUOgretimEleman(string term)
         {
             var Data = Management.getWsPersisOE(term);
-            var YtuUni = db.Universitelers.Where(p => p.UniversiteID == 67).FirstOrDefault(); 
+            var YtuUni = db.Universitelers.Where(p => p.UniversiteID == 67).FirstOrDefault();
             var Kul2 = Data.Table.Select(s => new
             {
                 id = s.ADSOYAD,

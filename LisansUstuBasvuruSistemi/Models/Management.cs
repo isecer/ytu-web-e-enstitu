@@ -5870,7 +5870,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 var kulls = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
                 if (kulls.YtuOgrencisi)
                 {
-                    kayitBilgi = Management.StudentControl(kulls.OgrenciNo);
+                    kayitBilgi = Management.StudentControl(kulls.TcKimlikNo);
                     if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj() == kulls.OgrenimTipKod)
                     {
                         kulls.KayitDonemID = kayitBilgi.DonemID;
