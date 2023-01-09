@@ -356,7 +356,7 @@
                                                         @if (!item.AktifTDOBasvuruDanismanID.HasValue)
                                                         {
                                                             <span> Danışman Formu Oluşturulmadı </span>
-                                                        } 
+                                                        }
 
                                                         else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !item.VarolanDanismanOnayladi.HasValue)
                                                         {
@@ -566,7 +566,7 @@
             }
         });
 
-    } 
+    }
      function sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "TDOBasvuru")',
@@ -662,7 +662,7 @@
         });
     }
 
-    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDODanismanTalepTipID) {
+    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
             _pRefresh(_panel, false);
             $.ajax({
@@ -670,6 +670,7 @@
                 data: {
                     'TDOBasvuruID': TDOBasvuruID,
                     'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
+                    'isCopy': isCopy,
                     'TDODanismanTalepTipID': TDODanismanTalepTipID
                 },
                 success: function (resultG) {

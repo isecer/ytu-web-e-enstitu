@@ -24,7 +24,8 @@
             @using (Ajax.BeginForm("JuriOneriFormuPost", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmJuriOneriFormu" }))
             { 
                 @Html.HiddenFor(p => p.MezuniyetBasvurulariID);
-                @Html.HiddenFor(p => p.MezuniyetJuriOneriFormID); 
+                @Html.HiddenFor(p => p.MezuniyetJuriOneriFormID);
+                @Html.HiddenFor(p => p.IsTezDiliTr);
                 @Html.Hidden("PostDetayTabAdi", "tab-TezDanismani");
                 @Html.Hidden("SaveData", (Model.MezuniyetJuriOneriFormID > 0 ? "true" : "false"));
             <div class="panel-body form-group-separated">
@@ -38,6 +39,24 @@
                     <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
                     <div class="col-md-9 col-xs-10">
                         @Model.OgrenciAdSoyad
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
+                    <div class="col-md-9 col-xs-10">
+                        @(Model.IsTezDiliTr?"Türkçe":"İngilizce")
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Tez Başlığı Türkçe</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Model.TezBaslikTr
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-2 control-label">Tez Başlığı İngilizce</label>
+                    <div class="col-md-9 col-xs-10">
+                        @Model.TezBaslikEn
                     </div>
                 </div>
                 <div class="form-group">

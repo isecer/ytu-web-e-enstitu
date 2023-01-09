@@ -846,6 +846,12 @@
     <Compile Include="Models\ZamanTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.Designer.cs">
+      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
     <Compile Include="Utilities\Dtos\DmDtos\PagerIndexDto.cs" />
     <Compile Include="Utilities\Dtos\KmDtos\kmKotalar.cs" />
@@ -1180,11 +1186,11 @@
     <Compile Include="Raporlar\TezDanismanOneri\rprTezEsDanismaniOneriFormu_FR0320.Designer.cs">
       <DependentUpon>rprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.cs">
+    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.Designer.cs">
-      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.Designer.cs">
+      <DependentUpon>rprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormuDetay_FR0307.cs">
       <SubType>Component</SubType>
@@ -3403,6 +3409,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\rprAnket.resx">
       <DependentUpon>rprAnket.cs</DependentUpon>
     </EmbeddedResource>
@@ -3482,11 +3489,14 @@
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTDOEYK.resx">
       <DependentUpon>RprTDOEYK.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.resx">
+      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezEsDanismaniOneriFormu_FR0320.resx">
       <DependentUpon>rprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.resx">
-      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.resx">
+      <DependentUpon>rprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormuDetay_FR0307.resx">
       <DependentUpon>rprTIDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>

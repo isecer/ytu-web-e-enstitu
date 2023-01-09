@@ -39,20 +39,7 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             return new List<string>() { ".jpg", ".jpeg", ".tif", ".bmp", ".png", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".rtf", ".pptx" };
         }
-        public static SistemDilleri[] SistemDilleris { get; set; }
 
-        public static SistemDilleri[] GetDiller()
-        {
-            if (SistemDilleris == null)
-            {
-                using (var db = new LisansustuBasvuruSistemiEntities())
-                {
-                    SistemDilleris = db.SistemDilleris.ToArray();
-
-                }
-            }
-            return SistemDilleris;
-        }
 
         public static List<Enstituler> Enstitulers = new List<Enstituler>();
 
@@ -3397,11 +3384,14 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            foreach (var item in SistemDilleris)
+            using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                dct.Add(new CmbStringDto { Value = item.DilKodu, Caption = item.DilAdi });
-            }
-
+                var diller = db.SistemDilleris.ToList();
+                foreach (var item in diller)
+                {
+                    dct.Add(new CmbStringDto { Value = item.DilKodu, Caption = item.DilAdi });
+                }
+            } 
             return dct;
 
         }
@@ -8925,8 +8915,8 @@ namespace LisansUstuBasvuruSistemi.Models
                                                     IslemYapanID = s.IslemYapanID,
                                                     IslemYapanIP = s.IslemYapanIP,
                                                     IsDuzeltSilYapabilir = s.DanismanOnayladi != true && s.VarolanDanismanOnayladi != true,
-                                                    TDOBasvuruEsDanismen = s.TDOBasvuruEsDanismen.OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).ToList(),
-                                                    EsDanismanBilgi = s.TDOBasvuruEsDanismen.OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()
+                                                    TDOBasvuruEsDanismen = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).ToList(),
+                                                    EsDanismanBilgi = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()
 
                                                 }).Where(p => p.TezDanismanID == (ShowAllRow ? p.TezDanismanID : UserIdentity.Current.Id) || p.VarolanTezDanismanID == (ShowAllRow ? p.VarolanTezDanismanID : UserIdentity.Current.Id)).OrderByDescending(o => o.BasvuruTarihi).ToList();
                 if (model.TDOBasvuruDanismanList.Any() && !basvuru.AktifTDOBasvuruDanismanID.HasValue)
@@ -8950,8 +8940,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     if (inx == 1)
                     {
-                        item.IsYeniEsDanismanOneriOrDegisiklik = true;
-                        //item.IsYeniEsDanismanOneriOrDegisiklik = !item.TDOBasvuruEsDanismen.Any(ae => ae.EYKDaOnaylandi == true);
+                        item.IsYeniEsDanismanOneriOrDegisiklik = !item.TDOBasvuruEsDanismen.Any(ae => ae.EYKDaOnaylandi == true);
                         if (item.IsYeniEsDanismanOneriOrDegisiklik)
                         {
                             item.TdoEsBasvurusuYapabilir = (item.EsDanismanBilgi == null ||
@@ -9014,8 +9003,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
 
-                model.IsYeniDanismanOneriOrDegisiklik = true;
-                // model.IsYeniDanismanOneriOrDegisiklik = !model.TDOBasvuruDanismanList.Any(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true);
+                model.IsYeniDanismanOneriOrDegisiklik = !model.TDOBasvuruDanismanList.Any(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true);
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -9176,7 +9164,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                    TalepTipAdi = tt.TalepTipAdi,
                                    SRTalepTipID = sR.SRTalepTipID,
                                    SRSalonID = sR.SRSalonID,
-                                   IsOnline=sR.IsOnline,
+                                   IsOnline = sR.IsOnline,
                                    SalonAdi = sR.SRSalonID.HasValue ? defSl.SalonAdi : sR.SalonAdi,
                                    Tarih = sR.Tarih,
                                    HaftaGunID = sR.HaftaGunID,

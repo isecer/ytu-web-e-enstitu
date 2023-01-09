@@ -31,8 +31,7 @@ namespace LisansUstuBasvuruSistemi
             BiskaUtil.Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             BiskaUtil.SystemInformation.OnEvent += SystemInformation_OnEvent;
             //Management.Update();
-
-            Management.SistemDilleris = Management.GetDiller();
+             
             Management.Enstitulers = Management.GetEnstituler();
             Management.Roles = Management.GetAllRoles();
             Management.Menulers = Management.GetAllMenu();

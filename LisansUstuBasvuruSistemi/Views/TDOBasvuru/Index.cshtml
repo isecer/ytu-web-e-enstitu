@@ -154,7 +154,7 @@
                                                         {
                                                             <span> Danışman Formu Oluşturulmadı </span>
                                                         }
-                                                        else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID==TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !item.VarolanDanismanOnayladi.HasValue)
+                                                        else if ((item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || item.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !item.VarolanDanismanOnayladi.HasValue)
                                                         {
                                                             <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayı Bekleniyor</span>
                                                         }
@@ -464,9 +464,9 @@
             }
         });
     }
-     
 
-    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDODanismanTalepTipID ) {
+
+    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID ) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
             _pRefresh(_panel, false);
             $.ajax({
@@ -474,6 +474,7 @@
                 data: {
                      TDOBasvuruID,
                      TDOBasvuruDanismanID,
+                      isCopy,
                      TDODanismanTalepTipID
                 },
                 success: function (resultG) {
@@ -571,7 +572,7 @@
                                                     if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    getDetailx(TDOBasvuruID); 
+                                                    getDetailx(TDOBasvuruID);
                                                 }
                                                 else {
                                                     if (result.Messages.length > 0) getMsg(result);

@@ -372,6 +372,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         public const byte TezIzlemeDegerlendirmeFormu = 30;
         public const byte TezDanismanOneriFormu = 35;
+        public const byte TezDanismanDegisiklikFormu = 38;
         public const byte TezEsDanismanOneriFormu = 36; 
         public const byte TezEsDanismanOneriTutanakRaporu = 37;
 

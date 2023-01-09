@@ -4681,6 +4681,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     RprX = rpr;
                 }
+                else if (RaporTipi == RaporTipleri.TezDanismanDegisiklikFormu)
+                {
+                    var ID = Request["UniqueID"].ToString();
+                    var UniqueID = new Guid(ID);
+                    var Rapor = db.TDOBasvuruDanismen.Where(p => p.UniqueID == UniqueID).FirstOrDefault();
+
+                    var rpr = new rprTezDanismaniDegisiklikFormu_FR0308(Rapor.TDOBasvuruDanismanID);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = Rapor.TDOBasvuru.Ad + " " + Rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName; 
+                    RprX = rpr;
+                }
 
                 else if (RaporTipi == RaporTipleri.TezEsDanismanOneriFormu)
                 {

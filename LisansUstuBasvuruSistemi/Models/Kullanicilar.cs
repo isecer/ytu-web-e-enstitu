@@ -61,6 +61,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.SRTalepleris = new HashSet<SRTalepleri>();
             this.TalepGelenTaleplers = new HashSet<TalepGelenTalepler>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
+            this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TIBasvuruAraRapors = new HashSet<TIBasvuruAraRapor>();
             this.Rollers = new HashSet<Roller>();
@@ -228,6 +229,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TalepGelenTalepler> TalepGelenTaleplers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TDOBasvuru> TDOBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TDOBasvuruDanisman> TDOBasvuruDanismen { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -2435,6 +2435,7 @@ namespace LisansUstuBasvuruSistemi.Models.FilterModel
     }
     public class KmTDOBasvuruDanisman : TDOBasvuruDanisman
     {
+        public bool? isCopy { get; set; }
         public bool? IsTezDiliTr { get; set; }
         public string OgrenciAdSoyad { get; set; }
         public SelectList SListTDoDanismanTalepTip { get; set; }
@@ -2895,7 +2896,9 @@ namespace LisansUstuBasvuruSistemi.Models.FilterModel
         public bool IsDoktoraOrYL { get; set; }
         public string OgrenciAnabilimdaliProgramAdi { get; set; }
         public string OgrenciAdSoyad { get; set; }
-        public bool IsTezDiliTr { get; set; } 
+        public bool IsTezDiliTr { get; set; }
+        public string TezBaslikTr { get; set; }
+        public string TezBaslikEn { get; set; }
         public Kullanicilar Danisman { get; set; }
         public List<string> AnaTabAdi { get; set; }
         public List<string> DetayTabAdi { get; set; }
@@ -2917,7 +2920,7 @@ namespace LisansUstuBasvuruSistemi.Models.FilterModel
 
         public MezuniyetJuriOneriFormuModel()
         {
-        AnaTabAdi = new List<string>();
+           AnaTabAdi = new List<string>();
             DetayTabAdi = new List<string>();
             JuriTipAdi = new List<string>();
             AdSoyad = new List<string>();

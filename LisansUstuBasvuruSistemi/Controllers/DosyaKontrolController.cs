@@ -1,4 +1,5 @@
-﻿using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+﻿using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,10 +108,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var TDOBasvuruDanisman = db.TDOBasvuruDanismen.Where(p => p.UniqueID == RowID).FirstOrDefault();
                     if (TDOBasvuruDanisman != null)
                     {
-                        var rpr = new rprTezDanismaniOneriFormu_FR0347(TDOBasvuruDanisman.TDOBasvuruDanismanID);
-                        rpr.CreateDocument();
-                        rpr.DisplayName = rpr.DisplayName + ".pdf";
-                        RprX = rpr;
+                        if (TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi)
+                        {
+                            var rpr = new rprTezDanismaniOneriFormu_FR0347(TDOBasvuruDanisman.TDOBasvuruDanismanID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName = rpr.DisplayName + ".pdf";
+                            RprX = rpr;
+                        }
+                        else
+                        {
+                            var rpr = new rprTezDanismaniDegisiklikFormu_FR0308(TDOBasvuruDanisman.TDOBasvuruDanismanID);
+                            rpr.CreateDocument();
+                            rpr.DisplayName = rpr.DisplayName + ".pdf";
+                            RprX = rpr;
+
+                        }
                     }
                 }
                 else if (KodArr[0] == "TDOEF")
