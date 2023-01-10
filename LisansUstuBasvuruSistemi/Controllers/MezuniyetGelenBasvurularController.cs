@@ -690,7 +690,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var MB = SrTalep.MezuniyetBasvurulari;
                         var BasvuruSurec = MB.MezuniyetSureci;
                         var Enstitu = BasvuruSurec.Enstituler;
-                        var SablonTipID = SrTalep.IsOgrenciUzatmaSonrasiOnay == true ? MailSablonTipi.Mez_DanismanOnayladiOgrenci : MailSablonTipi.Mez_DanismanOnaylamadiOgrenci; 
+                        var SablonTipID = SrTalep.IsOgrenciUzatmaSonrasiOnay == true ? MailSablonTipi.Mez_DanismanOnayladiOgrenci : MailSablonTipi.Mez_DanismanOnaylamadiOgrenci;
                         var Sablonlar = db.MailSablonlaris.Where(p => p.EnstituKod == Enstitu.EnstituKod).ToList();
 
                         var mModel = new List<SablonMailModel>();
@@ -1194,14 +1194,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (ogrenciInfo.TezIzlJuriBilgileri.Count == 2)
                         mMessage.Messages.Add("'2.Tik Üyesi' Bilgisi Çekilemedi.");
-                }  
+                }
                 if (mMessage.Messages.Count > 0)
                 {
                     mMessage.MessageType = Msgtype.Warning;
                     mMessage.Messages.Add("Jüri öneri formunu oluşturabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
                 }
 
-            } 
+            }
             if (mMessage.Messages.Count == 0)
             {
                 Model.OgrenciAdSoyad = MB.Ad + " " + MB.Soyad + " - " + MB.OgrenciNo;
@@ -1832,7 +1832,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 ? MB.TezBaslikTr
                                 : MB.TezBaslikEn;
 
-                            var Enstitu = MB.MezuniyetSureci.Enstituler; 
+                            var Enstitu = MB.MezuniyetSureci.Enstituler;
                             var Sablonlar = db.MailSablonlaris.Where(p => p.EnstituKod == Enstitu.EnstituKod).ToList();
 
                             var mModel = new List<SablonMailModel> {
@@ -2005,56 +2005,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var SRTalep = db.SRTalepleris.Where(p => p.UniqueID == UniqueID).First();
             if (YtuIciMezuniyetJuriOneriFormuJuriID.HasValue)
             {
-                var SRYtuIciJuris = SRTalep.SRTaleplerJuris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri") && p.MezuniyetJuriOneriFormuJuriID != YtuIciMezuniyetJuriOneriFormuJuriID).ToList();
-                db.SRTaleplerJuris.RemoveRange(SRYtuIciJuris);
-                if (SRYtuIciJuris.Any())
+                var SRYtuIciJuri = SRTalep.SRTaleplerJuris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri") && p.MezuniyetJuriOneriFormuJuriID != YtuIciMezuniyetJuriOneriFormuJuriID).FirstOrDefault();
+                if (SRYtuIciJuri != null)
                 {
                     var Juri = db.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == YtuIciMezuniyetJuriOneriFormuJuriID).First();
-
-                    SRTalep.SRTaleplerJuris.Add(new SRTaleplerJuri
-                    {
-                        UniqueID = Guid.NewGuid(),
-                        MezuniyetJuriOneriFormuJuriID = YtuDisiMezuniyetJuriOneriFormuJuriID,
-                        UniversiteAdi = Juri.UniversiteAdi,
-                        AnabilimdaliProgramAdi = Juri.AnabilimdaliProgramAdi,
-                        JuriTipAdi = Juri.JuriTipAdi,
-                        UnvanAdi = Juri.UnvanAdi,
-                        JuriAdi = Juri.AdSoyad,
-                        Email = Juri.EMail,
-                        IsLinkGonderildi = false,
-                        MezuniyetSinavDurumID = null,
-                        IslemTarihi = DateTime.Now,
-                        IslemYapanID = UserIdentity.Current.Id,
-                        IslemYapanIP = UserIdentity.Ip
-                    });
+                    SRYtuIciJuri.UniqueID = Guid.NewGuid();
+                    SRYtuIciJuri.MezuniyetJuriOneriFormuJuriID = YtuDisiMezuniyetJuriOneriFormuJuriID;
+                    SRYtuIciJuri.UniversiteAdi = Juri.UniversiteAdi;
+                    SRYtuIciJuri.AnabilimdaliProgramAdi = Juri.AnabilimdaliProgramAdi;
+                    SRYtuIciJuri.JuriTipAdi = Juri.JuriTipAdi;
+                    SRYtuIciJuri.UnvanAdi = Juri.UnvanAdi;
+                    SRYtuIciJuri.JuriAdi = Juri.AdSoyad;
+                    SRYtuIciJuri.Email = Juri.EMail;
+                    SRYtuIciJuri.IsLinkGonderildi = false;
+                    SRYtuIciJuri.MezuniyetSinavDurumID = null;
+                    SRYtuIciJuri.IslemTarihi = DateTime.Now;
+                    SRYtuIciJuri.IslemYapanID = UserIdentity.Current.Id;
+                    SRYtuIciJuri.IslemYapanIP = UserIdentity.Ip; 
                 }
                 mmMessage.Messages.Add("YTÜ İçi Jüri Değişikliği Yapıldı.");
             }
             if (YtuDisiMezuniyetJuriOneriFormuJuriID.HasValue)
             {
-                var SRYtuIciJuris = SRTalep.SRTaleplerJuris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri") && p.MezuniyetJuriOneriFormuJuriID != YtuDisiMezuniyetJuriOneriFormuJuriID).ToList();
-                db.SRTaleplerJuris.RemoveRange(SRYtuIciJuris);
-                if (SRYtuIciJuris.Any())
+                var YtuDisiJuri = SRTalep.SRTaleplerJuris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri") && p.MezuniyetJuriOneriFormuJuriID != YtuDisiMezuniyetJuriOneriFormuJuriID).FirstOrDefault();
+                if (YtuDisiJuri != null)
                 {
-                    var Juri = db.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == YtuDisiMezuniyetJuriOneriFormuJuriID).First();
-
-                    SRTalep.SRTaleplerJuris.Add(new SRTaleplerJuri
-                    {
-                        UniqueID = Guid.NewGuid(),
-                        MezuniyetJuriOneriFormuJuriID = YtuDisiMezuniyetJuriOneriFormuJuriID,
-                        UniversiteAdi = Juri.UniversiteAdi,
-                        AnabilimdaliProgramAdi = Juri.AnabilimdaliProgramAdi,
-                        JuriTipAdi = Juri.JuriTipAdi,
-                        UnvanAdi = Juri.UnvanAdi,
-                        JuriAdi = Juri.AdSoyad,
-                        Email = Juri.EMail,
-                        Telefon = "",
-                        IsLinkGonderildi = false,
-                        MezuniyetSinavDurumID = null,
-                        IslemTarihi = DateTime.Now,
-                        IslemYapanID = UserIdentity.Current.Id,
-                        IslemYapanIP = UserIdentity.Ip
-                    });
+                    var Juri = db.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == YtuDisiMezuniyetJuriOneriFormuJuriID).First(); 
+                    YtuDisiJuri.UniqueID = Guid.NewGuid();
+                    YtuDisiJuri.MezuniyetJuriOneriFormuJuriID = YtuDisiMezuniyetJuriOneriFormuJuriID;
+                    YtuDisiJuri.UniversiteAdi = Juri.UniversiteAdi;
+                    YtuDisiJuri.AnabilimdaliProgramAdi = Juri.AnabilimdaliProgramAdi;
+                    YtuDisiJuri.JuriTipAdi = Juri.JuriTipAdi;
+                    YtuDisiJuri.UnvanAdi = Juri.UnvanAdi;
+                    YtuDisiJuri.JuriAdi = Juri.AdSoyad;
+                    YtuDisiJuri.Email = Juri.EMail;
+                    YtuDisiJuri.IsLinkGonderildi = false;
+                    YtuDisiJuri.MezuniyetSinavDurumID = null;
+                    YtuDisiJuri.IslemTarihi = DateTime.Now;
+                    YtuDisiJuri.IslemYapanID = UserIdentity.Current.Id;
+                    YtuDisiJuri.IslemYapanIP = UserIdentity.Ip; 
                     mmMessage.Messages.Add("YTÜ Dışı Jüri Değişikliği Yapıldı.");
                 }
             }
@@ -2103,7 +2092,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
-         
+
 
 
 

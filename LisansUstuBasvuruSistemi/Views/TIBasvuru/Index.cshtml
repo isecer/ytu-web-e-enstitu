@@ -364,8 +364,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                         $.ajax({
                             url: '@Url.Action("DetaySil", "TIBasvuru")',
                             data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
-                            success: function (result) {
-                                debugger
+                            success: function (result) { 
                                 if (result.IsSuccess) {
                                     getDetailx(id);
                                 }
