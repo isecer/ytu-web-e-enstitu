@@ -186,24 +186,12 @@
                 <div class="panel-body">
                     <table class="table table-hover" style="width:100%;table-layout:fixed;">
                         <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="120">Genel Başvuru Dönemi</td>
-                                            <td>
-                                                @Html.DropDownList("DonemID", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
 
-                            </td>
                             <td style="padding-left:10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="120">Aktif Başvuru Dönemi</td>
+                                            <td width="160">Başvuru Dönemi</td>
                                             <td>
                                                 @Html.DropDownList("AktifDonemID", null, new { @class = "form-control" })
                                             </td>
@@ -211,25 +199,11 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="120">Genel Başvuru Durumu</td>
-                                            <td>
-                                                @Html.DropDownList("DurumID", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
                             <td style="padding-left:10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="120">Aktif Başvuru Durumu</td>
+                                            <td width="160">Başvuru Durumu</td>
                                             <td>
                                                 @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
                                             </td>
@@ -239,23 +213,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <table style="width:100%;table-layout:fixed;">
-                                    <tbody>
-                                        <tr>
-                                            <td width="120">Genel Başvuru Durumu Eş Danışman</td>
-                                            <td>
-                                                @Html.DropDownList("EsDurumID", null, new { @class = "form-control" })
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
+
                             <td style="padding-left:10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="120">Aktif Başvuru Durumu Eş Danışman</td>
+                                            <td width="160">Başvuru Durumu Eş Danışman</td>
                                             <td>
                                                 @Html.DropDownList("AktifEsDurumID", null, new { @class = "form-control" })
                                             </td>
@@ -263,14 +226,11 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr>
-                        <tr>
-                            <td></td>
                             <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="120">Aranacak Kelime</td>
+                                            <td width="160">Aranacak Kelime</td>
                                             <td>
 
                                                 <table style="width:100%;table-layout:fixed;">
@@ -288,7 +248,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr>
+                        </tr> 
                     </table>
                 </div>
             </div>
