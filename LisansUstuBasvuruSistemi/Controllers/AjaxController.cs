@@ -130,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 MmMessage.IsSuccess = false;
                                 msg = "Active Directory Kontrolünden Geçilemedi!";
-                                Management.SistemBilgisiKaydet("Active Directory Kontrolünden Geçilemedi! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
+                                // Management.SistemBilgisiKaydet("Active Directory Kontrolünden Geçilemedi! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
                             }
                         }
                         if (loginUser != null && !loginUser.IsAktif)
@@ -4689,18 +4689,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var rpr = new rprTezDanismaniDegisiklikFormu_FR0308(Rapor.TDOBasvuruDanismanID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = Rapor.TDOBasvuru.Ad + " " + Rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName; 
+                    rpr.DisplayName = Rapor.TDOBasvuru.Ad + " " + Rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName;
                     RprX = rpr;
                 }
-
                 else if (RaporTipi == RaporTipleri.TezEsDanismanOneriFormu)
                 {
                     var ID = Request["UniqueID"].ToString();
                     var UniqueID = new Guid(ID);
-                    var Rapor = db.TDOBasvuruDanismen.Where(p => p.UniqueID == UniqueID).FirstOrDefault();
-                    var rpr = new rprTezEsDanismaniOneriFormu_FR0320(Rapor.TDOBasvuruDanismanID);
+                    var Rapor = db.TDOBasvuruEsDanismen.Where(p => p.UniqueID == UniqueID).FirstOrDefault();
+                    var rpr = new rprTezEsDanismaniOneriFormu_FR0320(Rapor.TDOBasvuruEsDanismanID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = Rapor.TDOBasvuru.Ad + " " + Rapor.TDOBasvuru.Soyad + " " + rpr.DisplayName;
+                    rpr.DisplayName = Rapor.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + Rapor.TDOBasvuruDanisman.TDOBasvuru.Soyad + " " + rpr.DisplayName;
                     RprX = rpr;
                 }
             }

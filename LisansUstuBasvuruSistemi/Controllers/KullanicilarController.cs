@@ -14,6 +14,7 @@ using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using System.Web.Security;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -974,8 +975,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
         }
+        [AllowAnonymous]
+        public ActionResult SetLogin(int kullaniciId,string key="")
+        {
+            if (!key.IsNullOrWhiteSpace())
+            {
+                kullaniciId = UserIdentity.Current.Informations.Where(p=>p.Key==key).Select(s=>s.Value).FirstOrDefault().toIntObj().Value;
+            }
+            else if (!RoleNames.KullanicilarKayit.InRoleCurrent()) return RedirectToAction("Index", "Home");
+            var kullanici = db.Kullanicilars.Where(p => p.KullaniciID == kullaniciId).First();
+        
+            var prevUserKey = Guid.NewGuid().ToString();
 
+            FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, "", false);
+            var ui = Management.GetUserIdentity(kullanici.KullaniciAdi); 
+            ui.Informations.Add("PrevUserKey", prevUserKey);
+            ui.Informations.Add(prevUserKey, UserIdentity.Current.Id);
+            Session["UserIdentity"] = ui;
+            UserIdentity.SetCurrent();
 
+           
+            return RedirectToAction("Index");
+        }
 
         protected override void Dispose(bool disposing)
         {

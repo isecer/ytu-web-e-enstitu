@@ -1158,6 +1158,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MezuniyetBasvurulariID = MezuniyetBasvurulariID,
                 IsTezDiliTr = MB.IsTezDiliTr == true,
+                TezBaslikTr=MB.TezBaslikTr,
+                TezBaslikEn=MB.TezBaslikEn,
                 Danisman = db.Kullanicilars.First(p => p.KullaniciID == MB.TezDanismanID),
                 SListUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption"),
                 SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption"),
@@ -1169,7 +1171,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mMessage.IsSuccess = true;
             string View = "";
             var MBJO = MB.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-            var ogrenciInfo = Management.StudentControl(MB.OgrenciNo);
+            var ogrenciInfo = Management.StudentControl(MB.TcKimlikNo);
 
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())
             {

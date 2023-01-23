@@ -57,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 }
                 #region YayinBilgi
 
-                var YayinSartiVar = Management.MezuniyetAktifYonetmelik(MBasvuru.MezuniyetSurecID, MBasvuru.KullaniciID).MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == MBasvuru.OgrenimTipKod && a.IsZorunlu);
+                var YayinSartiVar = Management.MezuniyetAktifYonetmelik(MBasvuru.MezuniyetSurecID, MBasvuru.KullaniciID,MBasvuru.MezuniyetBasvurulariID).MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == MBasvuru.OgrenimTipKod && a.IsZorunlu);
                 chkYayinSartiVardir.Checked = YayinSartiVar;
                 chkYayinSartYoktur.Checked = !YayinSartiVar;
 

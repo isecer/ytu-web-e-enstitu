@@ -156,8 +156,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             if (export && model.RowCount > 0)
-            {
-                db.Database.CommandTimeout = 240;
+            { 
                 GridView gv = new GridView();
                 var BasvuruIDs = q.Select(s => s.BasvuruID).ToList();
                 var qx = (from s in db.Basvurulars.Where(p => BasvuruIDs.Contains(p.BasvuruID))

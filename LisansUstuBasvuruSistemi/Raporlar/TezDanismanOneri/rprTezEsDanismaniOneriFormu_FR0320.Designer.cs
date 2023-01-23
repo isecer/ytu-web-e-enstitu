@@ -85,8 +85,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             this.xrTableCell17 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow13 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell19 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell20 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableCell28 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.cellAtamaDurum = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -747,7 +746,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             this.xrTable5.Name = "xrTable5";
             this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow14});
-            this.xrTable5.SizeF = new System.Drawing.SizeF(749.9029F, 34.69351F);
+            this.xrTable5.SizeF = new System.Drawing.SizeF(749.903F, 34.69351F);
             this.xrTable5.StylePriority.UseBorders = false;
             this.xrTable5.StylePriority.UseFont = false;
             // 
@@ -755,8 +754,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             // 
             this.xrTableRow14.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell26,
-            this.xrTableCell20,
-            this.xrTableCell28});
+            this.cellAtamaDurum});
             this.xrTableRow14.Name = "xrTableRow14";
             this.xrTableRow14.Weight = 1D;
             // 
@@ -827,35 +825,20 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             this.xrTableCell19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
             this.xrTableCell19.Weight = 1D;
             // 
-            // xrTableCell20
+            // cellAtamaDurum
             // 
-            this.xrTableCell20.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
+            this.cellAtamaDurum.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell20.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableCell20.Name = "xrTableCell20";
-            this.xrTableCell20.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
-            this.xrTableCell20.StylePriority.UseBorders = false;
-            this.xrTableCell20.StylePriority.UseFont = false;
-            this.xrTableCell20.StylePriority.UsePadding = false;
-            this.xrTableCell20.StylePriority.UseTextAlignment = false;
-            this.xrTableCell20.Text = "Yeni Atama";
-            this.xrTableCell20.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell20.Weight = 0.30257854703598519D;
-            // 
-            // xrTableCell28
-            // 
-            this.xrTableCell28.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Top | DevExpress.XtraPrinting.BorderSide.Right) 
-            | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell28.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
-            this.xrTableCell28.Name = "xrTableCell28";
-            this.xrTableCell28.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
-            this.xrTableCell28.StylePriority.UseBorders = false;
-            this.xrTableCell28.StylePriority.UseFont = false;
-            this.xrTableCell28.StylePriority.UsePadding = false;
-            this.xrTableCell28.StylePriority.UseTextAlignment = false;
-            this.xrTableCell28.Text = "Designation";
-            this.xrTableCell28.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
-            this.xrTableCell28.Weight = 2.2499789049748982D;
+            this.cellAtamaDurum.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellAtamaDurum.Name = "cellAtamaDurum";
+            this.cellAtamaDurum.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
+            this.cellAtamaDurum.StylePriority.UseBorders = false;
+            this.cellAtamaDurum.StylePriority.UseFont = false;
+            this.cellAtamaDurum.StylePriority.UsePadding = false;
+            this.cellAtamaDurum.StylePriority.UseTextAlignment = false;
+            this.cellAtamaDurum.Text = "Yeni Atama";
+            this.cellAtamaDurum.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
+            this.cellAtamaDurum.Weight = 2.5525575345443783D;
             // 
             // xrTable4
             // 
@@ -2013,8 +1996,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             // xrPictureBox1
             // 
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrPictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("xrPictureBox1.Image")));
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
+            this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 24.99256F);
             this.xrPictureBox1.Name = "xrPictureBox1";
             this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.75F, 62.99999F);
@@ -2236,8 +2219,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell17;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow13;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell19;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell20;
-        private DevExpress.XtraReports.UI.XRTableCell xrTableCell28;
+        private DevExpress.XtraReports.UI.XRTableCell cellAtamaDurum;
         private DevExpress.XtraReports.UI.XRTable xrTable4;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow8;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell10;

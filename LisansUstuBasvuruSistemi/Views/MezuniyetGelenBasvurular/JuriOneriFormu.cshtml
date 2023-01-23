@@ -22,66 +22,66 @@
 
 
             @using (Ajax.BeginForm("JuriOneriFormuPost", "MezuniyetGelenBasvurular", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmJuriOneriFormu" }))
-            { 
+            {
                 @Html.HiddenFor(p => p.MezuniyetBasvurulariID);
                 @Html.HiddenFor(p => p.MezuniyetJuriOneriFormID);
                 @Html.HiddenFor(p => p.IsTezDiliTr);
                 @Html.Hidden("PostDetayTabAdi", "tab-TezDanismani");
                 @Html.Hidden("SaveData", (Model.MezuniyetJuriOneriFormID > 0 ? "true" : "false"));
-            <div class="panel-body form-group-separated">
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Anabilimdalı / Program</label>
-                    <div class="col-md-9 col-xs-10">
-                        @Model.OgrenciAnabilimdaliProgramAdi
+                <div class="panel-body form-group-separated">
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Anabilimdalı / Program</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.OgrenciAnabilimdaliProgramAdi
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.OgrenciAdSoyad
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
+                        <div class="col-md-9 col-xs-10">
+                            @(Model.IsTezDiliTr ? "Türkçe" : "İngilizce")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı Türkçe</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.TezBaslikTr
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Tez Başlığı İngilizce</label>
+                        <div class="col-md-9 col-xs-10">
+                            @Model.TezBaslikEn
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-2 control-label">Sınavda Tez Başlığı Değişecek Mi?</label>
+                        <div class="col-md-9 col-xs-10">
+                            <select class="form-control" style="width:100%;" name="IsTezBasligiDegisti" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari').removeClass('hide'); }else{$('.RwtezBasliklari').addClass('hide');}">
+                                <option @((Model.IsTezBasligiDegisti == null).ToSelected()) value=""></option>
+                                <option @((Model.IsTezBasligiDegisti == true).ToSelected()) value="true">Tez Başlığı Değişecek</option>
+                                <option @((Model.IsTezBasligiDegisti == false).ToSelected()) value="false">Tez Başlığı Değişmeyecek</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
+                        <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı Türkçe</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
+                        <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı İngilizce</label>
+                        <div class="col-md-9 col-xs-10">
+                            <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control" />
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
-                    <div class="col-md-9 col-xs-10">
-                        @Model.OgrenciAdSoyad
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
-                    <div class="col-md-9 col-xs-10">
-                        @(Model.IsTezDiliTr?"Türkçe":"İngilizce")
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Tez Başlığı Türkçe</label>
-                    <div class="col-md-9 col-xs-10">
-                        @Model.TezBaslikTr
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Tez Başlığı İngilizce</label>
-                    <div class="col-md-9 col-xs-10">
-                        @Model.TezBaslikEn
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-2 control-label">Sınavda Tez Başlığı Değişecek Mi?</label>
-                    <div class="col-md-9 col-xs-10">
-                        <select class="form-control" style="width:100%;" name="IsTezBasligiDegisti" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari').removeClass('hide'); }else{$('.RwtezBasliklari').addClass('hide');}">
-                            <option @((Model.IsTezBasligiDegisti == null).ToSelected()) value=""></option>
-                            <option @((Model.IsTezBasligiDegisti == true).ToSelected()) value="true">Tez Başlığı Değişecek</option>
-                            <option @((Model.IsTezBasligiDegisti == false).ToSelected()) value="false">Tez Başlığı Değişmeyecek</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
-                    <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı Türkçe</label>
-                    <div class="col-md-9 col-xs-10">
-                        <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group RwtezBasliklari @(Model.IsTezBasligiDegisti == true ? "" : "hide")">
-                    <label class="col-md-3 col-xs-2 control-label">Yeni Tez Başlığı İngilizce</label>
-                    <div class="col-md-9 col-xs-10">
-                        <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control" />
-                    </div>
-                </div>
-            </div>
                 <div class="panel panel-primary" style="margin:0px;margin-top:0px;">
                     <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
                         <ul class="nav nav-tabs">
@@ -131,7 +131,7 @@
                                                     <input type="hidden" name="JuriTipAdi" value="TezDanismani" />
                                                     <input type="hidden" name="AnaTabAdi" value="tab-TezDanismani" />
                                                     <input type="hidden" name="DetayTabAdi" value="tab-TezDanismani" />
-                                                    <input type="text" class="form-control upperCase"  name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.AdSoyad : "")" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
+                                                    <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.AdSoyad : "")" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -139,7 +139,7 @@
                                                     Unvanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control upperCase hide"  name="xUnvanAdi" maxlength="128" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UnvanAdi : "")" style="width: 100%;color:black;" />
+                                                    <input type="text" class="form-control upperCase hide" name="xUnvanAdi" maxlength="128" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UnvanAdi : "")" style="width: 100%;color:black;" />
 
                                                     @Html.DropDownList("UnvanAdi", TezDanismaniBilgi.SlistUnvanAdi, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUnvanAdi" })
 
@@ -242,7 +242,7 @@
                                                         <input type="hidden" name="JuriTipAdi" value="TikUyesi1" />
                                                         <input type="hidden" name="AnaTabAdi" value="tab-TikUyesi1" />
                                                         <input type="hidden" name="DetayTabAdi" value="tab-TikUyesi1" />
-                                                        <input type="text" class="form-control upperCase" maxlength="128"  name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
+                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -346,7 +346,7 @@
                                                         <input type="hidden" name="JuriTipAdi" value="TikUyesi2" />
                                                         <input type="hidden" name="AnaTabAdi" value="tab-TikUyesi2" />
                                                         <input type="hidden" name="DetayTabAdi" value="tab-TikUyesi2" />
-                                                        <input type="text" class="form-control upperCase" maxlength="128"  name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
+                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -473,7 +473,7 @@
                                                                         <input type="hidden" name="JuriTipAdi" value="YtuIciJuri@(i)" />
                                                                         <input type="hidden" name="AnaTabAdi" value="tab-YtuIciJuri" />
                                                                         <input type="hidden" name="DetayTabAdi" value="tab-YtuIciJuri-@i" />
-                                                                        <input type="hidden" name="AdSoyad" maxlength="128" value="@(RowData!=null?RowData.AdSoyad:"")" id="YtuIciJuri@(i)AdSoyadVal" />
+                                                                        <input type="hidden" name="AdSoyad" maxlength="128" value="@(RowData != null ? RowData.AdSoyad : "")" id="YtuIciJuri@(i)AdSoyadVal" />
                                                                         <input type="text" class="form-control egitmens" value="" style="width: 100%;" id="YtuIciJuri@(i)AdSoyad" />
                                                                         @if (RowData != null)
                                                                         {
@@ -509,7 +509,7 @@
                                                                         E-Posta Adresi (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text"  class="form-control" maxlength="128" name="EMail" value="@(RowData!=null?RowData.EMail:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)EMail" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(RowData != null ? RowData.EMail : "")" style="width: 100%;color:black;" id="YtuIciJuri@(i)EMail" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -535,7 +535,7 @@
                                                                         Anabilimdalı / Program (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text"  class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData!=null?RowData.AnabilimdaliProgramAdi:"")" style="width: 100%;color:black;" id="YtuIciJuri@(i)AnabilimdaliProgramAdi" />
+                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData != null ? RowData.AnabilimdaliProgramAdi : "")" style="width: 100%;color:black;" id="YtuIciJuri@(i)AnabilimdaliProgramAdi" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -543,7 +543,7 @@
                                                                         Uzmanlık Alanı (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData!=null?RowData.UzmanlikAlani:"")" style="width: 100%;" id="YtuIciJuri@(i)UzmanlikAlani" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData != null ? RowData.UzmanlikAlani : "")" style="width: 100%;" id="YtuIciJuri@(i)UzmanlikAlani" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -551,7 +551,7 @@
                                                                         Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData!=null?RowData.BilimselCalismalarAnahtarSozcukler:"")" style="width: 100%;height:40px;" id="YtuIciJuri@(i)BilimselCalismalarAnahtarSozcukler" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData != null ? RowData.BilimselCalismalarAnahtarSozcukler : "")" style="width: 100%;height:40px;" id="YtuIciJuri@(i)BilimselCalismalarAnahtarSozcukler" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -559,7 +559,7 @@
                                                                         Dil Yeterliliği Sınavı Adı @(Model.IsTezDiliTr ? "" : "*")
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(RowData!=null?RowData.DilSinavAdi:"")" style="width: 100%;" id="YtuIciJuri@(i)DilSinavAdi" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilSinavAdi" value="@(RowData != null ? RowData.DilSinavAdi : "")" style="width: 100%;" id="YtuIciJuri@(i)DilSinavAdi" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -567,7 +567,7 @@
                                                                         Dil Yeterliliği Sınavı Puanı @(Model.IsTezDiliTr ? "" : "*")
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(RowData!=null?RowData.DilPuani:"")" style="width: 100%;" id="YtuIciJuri@(i)DilPuani" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="DilPuani" value="@(RowData != null ? RowData.DilPuani : "")" style="width: 100%;" id="YtuIciJuri@(i)DilPuani" />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -621,7 +621,7 @@
                                                                         <input type="hidden" name="JuriTipAdi" value="YtuDisiJuri@(i)" />
                                                                         <input type="hidden" name="AnaTabAdi" value="tab-YtuDisiJuri" />
                                                                         <input type="hidden" name="DetayTabAdi" value="tab-YtuDisiJuri-@i" />
-                                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(RowData!=null?RowData.AdSoyad:"")" style="width: 100%;" id="YtuDisiJuri@(i)AdSoyad" />
+                                                                        <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(RowData != null ? RowData.AdSoyad : "")" style="width: 100%;" id="YtuDisiJuri@(i)AdSoyad" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -645,7 +645,7 @@
                                                                         E-Posta Adresi (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(RowData!=null?RowData.EMail:"")" style="width: 100%;" id="YtuDisiJuri@(i)EMail" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@(RowData != null ? RowData.EMail : "")" style="width: 100%;" id="YtuDisiJuri@(i)EMail" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -670,7 +670,7 @@
                                                                         Anabilimdalı / Program (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData!=null?RowData.AnabilimdaliProgramAdi:"")" style="width: 100%;" id="YtuDisiJuri@(i)AnabilimdaliProgramAdi" />
+                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(RowData != null ? RowData.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="YtuDisiJuri@(i)AnabilimdaliProgramAdi" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -678,7 +678,7 @@
                                                                         Uzmanlık Alanı (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData!=null?RowData.UzmanlikAlani:"")" style="width: 100%;" id="YtuDisiJuri@(i)UzmanlikAlani" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="UzmanlikAlani" value="@(RowData != null ? RowData.UzmanlikAlani : "")" style="width: 100%;" id="YtuDisiJuri@(i)UzmanlikAlani" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -686,7 +686,7 @@
                                                                         Bilimsel Çalışmalara Ait Anahtar Sözcükler (3 adet) (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData!=null?RowData.BilimselCalismalarAnahtarSozcukler:"")" style="width: 100%;height:40px;" id="YtuDisiJuri@(i)BilimselCalismalarAnahtarSozcukler" />
+                                                                        <input type="text" class="form-control" maxlength="128" name="BilimselCalismalarAnahtarSozcukler" value="@(RowData != null ? RowData.BilimselCalismalarAnahtarSozcukler : "")" style="width: 100%;height:40px;" id="YtuDisiJuri@(i)BilimselCalismalarAnahtarSozcukler" />
                                                                     </div>
                                                                 </div>
 
@@ -786,7 +786,7 @@
                 <br />
                 <b>TİK: Tez İzleme Komitesi</b><br />
                 <b>TMC: Thesis Monitoring Committee</b>
-            </div> 
+            </div>
         </div>
     </div>
 

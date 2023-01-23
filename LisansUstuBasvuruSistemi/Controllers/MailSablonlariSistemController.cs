@@ -1,5 +1,6 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +83,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else sEnstituKod = Management.getSelectedEnstitu(EKD);
             ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == model.MailSablonTipID).FirstOrDefault();
             ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true), "Value", "Caption", model.MailSablonTipID);
+            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true, id > 0 ? false : true), "Value", "Caption", model.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -108,7 +109,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                select new { s.inx, DosyaEkAdi = s.s, MailSablonlariEkiID = sid.s });
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            { 
+            {
                 MmMessage.Messages.Add("Şablonun Ekleneceği Enstitüyü Seçiniz");
                 MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
 
@@ -116,20 +117,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
 
             if (kModel.MailSablonTipID <= 0)
-            { 
+            {
                 MmMessage.Messages.Add("Şablon Tipini Seçiniz");
                 MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MailSablonTipID" });
             }
             else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MailSablonTipID" });
             if (kModel.SablonAdi.IsNullOrWhiteSpace())
-            { 
+            {
                 MmMessage.Messages.Add("Mail Konusu Giriniz.");
                 MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SablonAdi" });
             }
             else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SablonAdi" });
 
             if (kModel.Sablon.IsNullOrWhiteSpace() && kModel.SablonHtml.IsNullOrWhiteSpace())
-            { 
+            {
                 MmMessage.Messages.Add("Sablon Açıklaması Giriniz.");
             }
             #endregion
@@ -137,7 +138,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (MmMessage.Messages.Count == 0)
             {
                 if (db.MailSablonlaris.Any(p => p.EnstituKod == kModel.EnstituKod && p.MailSablonlariID != kModel.MailSablonlariID && p.MailSablonTipleri.SistemMaili && p.MailSablonTipID == kModel.MailSablonTipID))
-                { 
+                {
                     MmMessage.Messages.Add("Sistem mail şablonu bir Enstitü için aynı dilde bir kere tanımlanabilir!");
                 }
             }
@@ -217,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = MmMessage;
             ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == kModel.MailSablonTipID).FirstOrDefault();
             ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true), "Value", "Caption", kModel.MailSablonTipID); 
+            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true, kModel.MailSablonTipID > 0 ? false : true), "Value", "Caption", kModel.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }

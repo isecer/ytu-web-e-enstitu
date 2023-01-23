@@ -10,6 +10,7 @@
         bool SaveError = true;
         if (ExceltionMessage.Contains("1- The controller for path"))
         {
+            SaveError = false;
             var SplitMesssages = ExceltionMessage.Split('\'');
             if (SplitMesssages.Count() >= 3)
             {

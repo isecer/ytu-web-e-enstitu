@@ -130,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var TDOBasvuruEsDanisman = db.TDOBasvuruEsDanismen.Where(p => p.UniqueID == RowID).FirstOrDefault();
                     if (TDOBasvuruEsDanisman != null)
                     {
-                        var rpr = new rprTezEsDanismaniOneriFormu_FR0320(TDOBasvuruEsDanisman.TDOBasvuruDanismanID);
+                        var rpr = new rprTezEsDanismaniOneriFormu_FR0320(TDOBasvuruEsDanisman.TDOBasvuruEsDanismanID);
                         rpr.CreateDocument();
                         rpr.DisplayName = rpr.DisplayName + ".pdf";
                         RprX = rpr;

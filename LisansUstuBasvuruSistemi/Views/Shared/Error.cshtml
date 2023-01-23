@@ -17,9 +17,8 @@
         bool SaveError = true;
         var ExceltionMessage = err.ToExceptionMessage();
         if (ExceltionMessage.Contains("1- The controller for path"))
-        {
-            var x = "1 - The controller for path '/fbe/tr/Account/Login' was not found or does not implement IController.";
-            var SplitMesssages = ExceltionMessage.Split('\'');
+        { 
+              var SplitMesssages = ExceltionMessage.Split('\'');
             if (SplitMesssages.Count() >= 3)
             {
                 var Path = SplitMesssages[1];

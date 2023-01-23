@@ -25,101 +25,102 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     {
                         ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcKimlikNo, null);
                     }
+
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
 
                         model.KayitVar = true;
-                        var ogrenci = ogrencis[0].ogrenci[0];
-
-                        if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
+                        var ogrenci = ogrencis[0].ogrenci.Where(p => p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8").FirstOrDefault();
+                        if (ogrenci != null)
                         {
-                            model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                            var donem = Management.ToAraRaporDonemBilgi(model.KayitTarihi.Value);
-                            model.BaslangicYil = donem.BaslangicYil;
-                            model.BitisYil = donem.BitisYil;
-                            model.DonemID = donem.DonemID;
-                        }
-
-                        model.OgrenciInfo = ogrenci;
-
-                        switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
-                        {
-                            case "2":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID = "1";
-                                break;
-                            case "4":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID = "2";
-                                break;
-                            case "5":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID = "4";
-                                break;
-                            case "8":
-                                model.OgrenciInfo.OGRENIMSEVIYE_ID = "5";
-                                break;
-                        }
-
-
-                        var ogrenciDersler =
-                            service.OgrenciDersBilgileriGetir(UserName, Password, null, ogrenci.TCKIMLIKNO);
-
-                        if (ogrenciDersler[0].Sucess)
-                        {
-                            var ogrenciDers = ogrenciDersler[0].ogrencidersnot[0];
-                            model.AktifDonemDers.ToplamKredi = ogrenciDers.TOP_KREDI.toIntObj().Value;
-                            model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.toDecimalObj().toIntObj().Value;
-                            model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.toDoubleObj().Value;
-                            model.AktifDonemDers.EtikDersNotu = ogrenciDers.B_ETIK_DERS_NOTU;
-                            model.AktifDonemDers.SeminerDersNotu = ogrenciDers.SEMINER_DERS_NOTU;
-                            model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.toIntObj().Value;
-                            model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.toIntObj().Value;
-                            var dersler = ogrenciDers.AKTIF_DNM_DERS.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
-
-                            if (dersler.Any())
+                            if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
-                                model.AktifDonemDers.DersKodus = dersler.Select(s => s).ToList();
-                                model.AktifDonemDers.DersKodNums = dersler.Select(s => s.Substring(s.Length - 4, 4)).ToList();
+                                model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
+                                var donem = Management.ToAraRaporDonemBilgi(model.KayitTarihi.Value);
+                                model.BaslangicYil = donem.BaslangicYil;
+                                model.BitisYil = donem.BitisYil;
+                                model.DonemID = donem.DonemID;
                             }
-                        }
-                        var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, null, ogrenci.TCKIMLIKNO);
-                        if (ogrenciTez.Any())
-                        {
-                            var tezBilgi = ogrenciTez[0];
-                            if (tezBilgi.Sucess)
-                            {
-                                var tez = tezBilgi.ogrencitez.LastOrDefault();
-                                if (tez != null)
-                                {
-                                    model.IsTezDiliTr = tez.TEZ_DILI.ToLower() == "türkçe";
-                                    model.OgrenciTez = tez;
 
-                                    var sonTezIzlemeBilgiler = tez.tezizlemebilgileri
-                                        .OrderByDescending(o => o.TEZ_IZL_SIRA.toIntObj()).FirstOrDefault();
-                                    if (sonTezIzlemeBilgiler != null)
-                                        model.SonTezIzlemeBilgileri = sonTezIzlemeBilgiler;
+                            model.OgrenciInfo = ogrenci;
+
+                            switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
+                            {
+                                case "2":
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "1";
+                                    break;
+                                case "4":
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "2";
+                                    break;
+                                case "5":
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "4";
+                                    break;
+                                case "8":
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "5";
+                                    break;
+                            }
+
+
+                            var ogrenciDersler =
+                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+
+                            if (ogrenciDersler[0].Sucess)
+                            {
+                                var ogrenciDers = ogrenciDersler[0].ogrencidersnot[0];
+                                model.AktifDonemDers.ToplamKredi = ogrenciDers.TOP_KREDI.toIntObj().Value;
+                                model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.toDecimalObj().toIntObj().Value;
+                                model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.toDoubleObj().Value;
+                                model.AktifDonemDers.EtikDersNotu = ogrenciDers.B_ETIK_DERS_NOTU;
+                                model.AktifDonemDers.SeminerDersNotu = ogrenciDers.SEMINER_DERS_NOTU;
+                                model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.toIntObj().Value;
+                                model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.toIntObj().Value;
+                                var dersler = ogrenciDers.AKTIF_DNM_DERS.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
+
+                                if (dersler.Any())
+                                {
+                                    model.AktifDonemDers.DersKodus = dersler.Select(s => s).ToList();
+                                    model.AktifDonemDers.DersKodNums = dersler.Select(s => s.Substring(s.Length - 4, 4)).ToList();
+                                }
+                            }
+                            var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+                            if (ogrenciTez.Any())
+                            {
+                                var tezBilgi = ogrenciTez[0];
+                                if (tezBilgi.Sucess)
+                                {
+                                    var tez = tezBilgi.ogrencitez.LastOrDefault();
+                                    if (tez != null)
+                                    {
+                                        model.IsTezDiliTr = tez.TEZ_DILI.ToLower() == "türkçe";
+                                        model.OgrenciTez = tez;
+
+                                        var sonTezIzlemeBilgiler = tez.tezizlemebilgileri
+                                            .OrderByDescending(o => o.TEZ_IZL_SIRA.toIntObj()).FirstOrDefault();
+                                        if (sonTezIzlemeBilgiler != null)
+                                            model.SonTezIzlemeBilgileri = sonTezIzlemeBilgiler;
+                                    }
+
                                 }
 
                             }
+                            var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+                            model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
 
-                        }
-                        var tezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, null, ogrenci.TCKIMLIKNO);
-                        model.TezIzlJuriBilgileri = tezJuri[0].Sucess ? tezJuri[0].tezIzljuribilgileri.ToList() : new List<TezIzlJuriBilgileri>();
-
-                        if (!ogrenci.DANISMAN_TC1.IsNullOrWhiteSpace())
-                        {
-                            var danismanResult =
-                                service.AkademikPersonelBilgiGetir(UserName, Password, null, ogrenci.DANISMAN_TC1);
-                            if (danismanResult.Any())
+                            if (!ogrenci.DANISMAN_TC1.IsNullOrWhiteSpace())
                             {
-                                var danismanBilgi = danismanResult[0];
-                                if (danismanBilgi.Sucess)
+                                var danismanResult =
+                                    service.AkademikPersonelBilgiGetir(UserName, Password, null, ogrenci.DANISMAN_TC1);
+                                if (danismanResult.Any())
                                 {
-                                    model.DanismanInfo = danismanBilgi.personel.FirstOrDefault();
+                                    var danismanBilgi = danismanResult[0];
+                                    if (danismanBilgi.Sucess)
+                                    {
+                                        model.DanismanInfo = danismanBilgi.personel.FirstOrDefault();
 
+                                    }
                                 }
                             }
                         }
-
-
 
                     }
 
@@ -159,19 +160,19 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     }
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
-                        model.Ogrenci = ogrencis[0].ogrenci[0];
-                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, null, model.Ogrenci.TCKIMLIKNO);
+                        model.Ogrenci = ogrencis[0].ogrenci.Where(p => p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8").FirstOrDefault();
+                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];
                         }
-                        var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, null, model.Ogrenci.TCKIMLIKNO);
+                        var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)
                         {
                             model.OgrenciTez = ogrenciTez[0].ogrencitez[0];
                         }
 
-                        var ogrenciTezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, null, model.Ogrenci.TCKIMLIKNO);
+                        var ogrenciTezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
                         if (ogrenciTezJuri.Any() && ogrenciTezJuri[0].Sucess)
                         {
                             model.OgrenciTezJuri = ogrenciTezJuri[0].tezIzljuribilgileri.ToList();

@@ -90,12 +90,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             else
                             {
                                 msg = "Active Directory Kontrolünden Geçilemedi!";
-                                Management.SistemBilgisiKaydet("Active Directory Kontrolünden Geçilemedi! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
+                               // Management.SistemBilgisiKaydet("Active Directory Kontrolünden Geçilemedi! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
                             }
                         }
 
                         if (loginUser != null && loginUser.IsAktif == true)
                         {
+                            try
+                            {
+                                var lastTdo = db.TDOBasvurus.OrderByDescending(p => p.KullaniciID == loginUser.KullaniciID).FirstOrDefault();
+                                if (lastTdo != null) Management.getSecilenBasvuruTDODetay(lastTdo.TDOBasvuruID, null);
+                            }
+                            catch (Exception ex)
+                            {
+                            }
                             RememberMe = RememberMe ?? false;
                             FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", RememberMe.Value);
                             Management.SetLastLogon();
@@ -319,7 +327,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     MmMessage.MessageType = Msgtype.Error;
                     MmMessage.Title = "Şifre değiştirme işlemi başarısız!";
-                    Management.SistemBilgisiKaydet("Şifre değiştirme işlemi başarısız! Hata:" + string.Join("\r\n", MmMessage.Messages) + "\r\n KullanıcıAdı:" + kul.KullaniciAdi, "Account/ParolaSifirla", BilgiTipi.Bilgi);
+                   // Management.SistemBilgisiKaydet("Şifre değiştirme işlemi başarısız! Hata:" + string.Join("\r\n", MmMessage.Messages) + "\r\n KullanıcıAdı:" + kul.KullaniciAdi, "Account/ParolaSifirla", BilgiTipi.Bilgi);
                 }
                 kul.ResimAdi = kul.ResimAdi.toKullaniciResim();
             }

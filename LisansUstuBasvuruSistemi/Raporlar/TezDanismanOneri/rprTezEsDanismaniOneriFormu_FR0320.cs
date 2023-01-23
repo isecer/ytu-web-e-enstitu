@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -18,8 +19,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             {
                 this.DisplayName = "FR-0320 TEZ EŞ DANIŞMANI ÖNERİ FORMU";
 
-                var qData = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == id)
-                             join ed in db.TDOBasvuruEsDanismen on s.TDOBasvuruDanismanID equals ed.TDOBasvuruDanismanID
+                var qData = (from s in db.TDOBasvuruDanismen
+                             join ed in db.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruEsDanismanID == id) on s.TDOBasvuruDanismanID equals ed.TDOBasvuruDanismanID
                              join b in db.TDOBasvurus on s.TDOBasvuruID equals b.TDOBasvuruID
                              join k in db.Kullanicilars on b.KullaniciID equals k.KullaniciID
                              join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod
@@ -36,7 +37,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                                  abd.AnabilimDaliAdi,
                                  ot.OgrenimTipAdi,
                                  b.KayitOgretimYiliBaslangic,
-                                 dn.DonemAdi, 
+                                 dn.DonemAdi,
+                                 s.TDODanismanTalepTipID,
+                                 s.VarolanTDUnvanAdi,
+                                 s.VarolanTDAdSoyad,
+                                 s.VarolanTDAnabilimDaliAdi,
+                                 s.VarolanTDProgramAdi,
                                  s.TDAdSoyad,
                                  s.TDUnvanAdi,
                                  s.TDAnabilimDaliAdi,
@@ -52,6 +58,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                                  s.TDSinavYili,
                                  s.TDSinavPuani,
                                  ed.BasvuruTarihi,
+                                 ed.IsDegisiklikTalebi,
                                  EdAdSoyad = ed.AdSoyad,
                                  EdUniversiteAdi = ed.UniversiteAdi,
                                  EdUnvanAdi = ed.UnvanAdi,
@@ -59,7 +66,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                                  EdAnabilimDaliAdi = ed.AnabilimDaliAdi,
                                  ed.Gerekce,
                                  s.FormKodu,
-                                 urlAdd = e.SistemErisimAdresi  +"/DosyaKontrol/Index?Kod=" + "TDOEF_" + s.TDOBasvuruDanismanID + "_" + ed.UniqueID,
+                                 urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TDOEF_" + ed.TDOBasvuruEsDanismanID + "_" + ed.UniqueID,
                              }).FirstOrDefault();
 
                 cellFormKodu.Text = "Form Kodu: " + qData.FormKodu;
@@ -73,15 +80,23 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 cellOgrenciProgramAdi.Text = qData.ProgramAdi;
                 cellOgrenciOgrenimSeviyesi.Text = qData.OgrenimTipAdi;
                 cellOgrenciKayitDonemi.Text = qData.KayitOgretimYiliBaslangic + "/" + (qData.KayitOgretimYiliBaslangic + 1) + " " + qData.DonemAdi;
+                cellAtamaDurum.Text = qData.IsDegisiklikTalebi ? "Değişiklik Talebi" : "Yeni Atama";
+
 
                 cellDanismanAdSoyad.Text = qData.TDUnvanAdi + " " + qData.TDAdSoyad;
                 cellDanismanAnabilimDaliAdi.Text = qData.TDAnabilimDaliAdi;
                 cellDanismanProgramAdi.Text = qData.TDProgramAdi;
+
+
+
+
                 cellEsDanismanAdSoyad.Text = qData.EdUnvanAdi + " " + qData.EdAdSoyad;
                 cellEsDanismanAnabilimDaliAdi.Text = qData.EdAnabilimDaliAdi;
                 cellEsDanismanProgramAdi.Text = qData.ProgramAdi;
                 cellEsDanismanUniversiteAdi.Text = qData.EdUniversiteAdi;
                 cellEsGerekce.Text = qData.Gerekce;
+
+
 
                 cellDanismanAdSoyadImza.Text = qData.TDAdSoyad;
                 cellDanismanTarihImza.Text = qData.BasvuruTarihi.ToFormatDateAndTime();

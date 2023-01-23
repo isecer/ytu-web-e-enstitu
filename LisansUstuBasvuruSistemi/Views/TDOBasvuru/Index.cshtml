@@ -492,7 +492,7 @@
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         _pRefresh(pnlx, false);
                                         $('#FrmTDODanismanFormu').ajaxForm({
-                                            success: function (result) {
+                                            success: function (result) { 
                                                 if (result.IsSuccess) {
                                                     if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                                     var _clsBtn = $('.bootbox-close-button').first();

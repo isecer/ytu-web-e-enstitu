@@ -365,7 +365,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 model.KayitVar = false;
                 model.Hata = true;
                 model.Mesaj = "YÖK Servisinden Öğrenci Bilgisi kontrol edilirken bir hata oluştu.Hata:" + ex.ToExceptionMessage();
-                SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", BilgiTipi.Kritik);
+                SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
             }
 
             return model;
@@ -916,9 +916,9 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static URoles GetUserRoles()
+        public static URoles GetUserRoles(string userName = null)
         {
-            string UserName = HttpContext.Current.User.Identity.Name;
+            string UserName = userName ?? HttpContext.Current.User.Identity.Name;
             var rolls = new URoles();
             using (LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities())
             {
@@ -1112,9 +1112,9 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static frKullanicilar GetUser()
+        public static frKullanicilar GetUser(string userName = null)
         {
-            string UserName = HttpContext.Current.User.Identity.Name;
+            string UserName = userName ?? HttpContext.Current.User.Identity.Name;
             using (LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -1382,7 +1382,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public static UserIdentity GetUserIdentity(string UserName)
         {
 
-            var kull = Management.GetUser();
+            var kull = Management.GetUser(UserName);
             if (kull == null)
             {
                 FormsAuthenticationUtil.SignOut();
@@ -1390,7 +1390,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
 
 
-            var roller = Management.GetUserRoles();
+            var roller = Management.GetUserRoles(UserName);
 
             UserIdentity ui = new UserIdentity(UserName);
 
@@ -2514,13 +2514,13 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbMailSablonTipleri(bool? SistemMaili = null, bool bosSecimVar = false)
+        public static List<CmbIntDto> cmbMailSablonTipleri(bool? SistemMaili = null, bool bosSecimVar = false, bool? IsOlusturulmayanlar = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.MailSablonTipleris.Where(p => p.SistemMaili == (SistemMaili.HasValue ? SistemMaili.Value : p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
+                var data = db.MailSablonTipleris.Where(p => IsOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : true && p.SistemMaili == (SistemMaili.HasValue ? SistemMaili.Value : p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
@@ -2530,6 +2530,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
+
         public static BelgeTipDetay getBtipDetay(int BelgeTipID, int OgrenimDurumID, string _EnstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -3391,7 +3392,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     dct.Add(new CmbStringDto { Value = item.DilKodu, Caption = item.DilAdi });
                 }
-            } 
+            }
             return dct;
 
         }
@@ -7504,12 +7505,21 @@ namespace LisansUstuBasvuruSistemi.Models
                 return db.MezuniyetSureciYonetmelikleris.Any(p => p.MezuniyetSurecID == MezuniyetSurecID && p.MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == kul.OgrenimTipKod && a.IsGecerli));
             }
         }
-        public static MezuniyetSureciYonetmelikleri MezuniyetAktifYonetmelik(int MezuniyetSurecID, int KullaniciID)
+        public static MezuniyetSureciYonetmelikleri MezuniyetAktifYonetmelik(int MezuniyetSurecID, int KullaniciID, int? MezuniyetBasvurulariID)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
-                var baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
+                 decimal baslangic = 0;
+                if (MezuniyetBasvurulariID > 0)
+                {
+                    var MBasvuru = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == MezuniyetBasvurulariID).First(); 
+                    baslangic = Convert.ToDecimal(MBasvuru.KayitOgretimYiliBaslangic + "," + MBasvuru.KayitOgretimYiliDonemID.Value);
+                }
+                else
+                {
+                    var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
+                    baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
+                }
                 var kriter = db.MezuniyetSureciYonetmelikleris.Include("MezuniyetSureciYonetmelikleriOTs").Where(p => p.MezuniyetSurecID == MezuniyetSurecID).ToList().First(f =>
                                                                              f.TarihKriterID == TarihKriterSecim.SecilenTarihVeOncesi ?
                                                                                  (Convert.ToDecimal(f.BaslangicYil + "," + f.DonemID) >= baslangic)
@@ -7555,7 +7565,7 @@ namespace LisansUstuBasvuruSistemi.Models
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 //var kriterSecim=db.MezuniyetSureciYonetmelikleris.Where(p=>p.BaslangicYil)
-                var kriter = MezuniyetAktifYonetmelik(kModel.MezuniyetSurecID, kModel.KullaniciID);
+                var kriter = MezuniyetAktifYonetmelik(kModel.MezuniyetSurecID, kModel.KullaniciID,kModel.MezuniyetBasvurulariID);
                 var yturAds = db.MezuniyetYayinTurleris.ToList();
                 var kul = db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).First();
                 var kriterDetay = (from s in kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == kul.OgrenimTipKod).ToList()
@@ -8851,8 +8861,10 @@ namespace LisansUstuBasvuruSistemi.Models
             var model = new BasvuruDetayModelTDO() { TDOBasvuruID = TDOBasvuruID };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-
+                var IsYoneticiYetki = RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
+                var IsDanismanOnayYetki = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
                 var basvuru = db.TDOBasvurus.Where(p => p.TDOBasvuruID == TDOBasvuruID).First();
+                KullaniciKayitBilgisiGuncelle(basvuru.KullaniciID);
                 var enstitu = db.Enstitulers.Where(p => p.EnstituKod == basvuru.EnstituKod).First();
                 var ShowAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TDOEYKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
             tekrarYukle:
@@ -8898,7 +8910,6 @@ namespace LisansUstuBasvuruSistemi.Models
                                                     TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
                                                     TDTezSayisiDR = s.TDTezSayisiDR,
                                                     TDTezSayisiYL = s.TDTezSayisiYL,
-
                                                     DanismanOnayladi = s.DanismanOnayladi,
                                                     DanismanOnayTarihi = s.DanismanOnayTarihi,
                                                     DanismanOnaylanmadiAciklama = s.DanismanOnaylanmadiAciklama,
@@ -8914,7 +8925,6 @@ namespace LisansUstuBasvuruSistemi.Models
                                                     IslemTarihi = s.IslemTarihi,
                                                     IslemYapanID = s.IslemYapanID,
                                                     IslemYapanIP = s.IslemYapanIP,
-                                                    IsDuzeltSilYapabilir = s.DanismanOnayladi != true && s.VarolanDanismanOnayladi != true,
                                                     TDOBasvuruEsDanismen = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).ToList(),
                                                     EsDanismanBilgi = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()
 
@@ -8952,7 +8962,13 @@ namespace LisansUstuBasvuruSistemi.Models
                             item.TdoEsBasvurusuYapabilir = item.EsDanismanBilgi == null || (item.EsDanismanBilgi.EYKYaGonderildi == false ||
                                                              item.EsDanismanBilgi.EYKDaOnaylandi.HasValue);
                         }
-
+                        if (item.TdoEsBasvurusuYapabilir)
+                        {
+                            if (model.TDOBasvuruDanisman != null)
+                            {
+                                item.TdoEsBasvurusuYapabilir = IsYoneticiYetki || model.TDOBasvuruDanisman.TezDanismanID == UserIdentity.Current.Id;
+                            }
+                        }
 
                     }
                 }
@@ -8987,7 +9003,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 model.IslemYapanIP = basvuru.IslemYapanIP;
                 model.DegerlendirenUniqueID = UniqueID;
 
-                if (!model.TDOBasvuruDanismanList.Any())
+                if (!model.TDOBasvuruDanismanList.Any(a => a.TezDanismanID == basvuru.Kullanicilar.DanismanID))
                 {
                     var Eslestirildi = ObsDanismanBasvurBilgiEslestir(model.KullaniciID, model.TDOBasvuruID);
                     if (Eslestirildi)
@@ -8997,13 +9013,31 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
 
                 }
+                if (model.TDOBasvuruDanismanList.Any())
+                {
+                    var firstRow = model.TDOBasvuruDanismanList.First();
+                    firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                    firstRow.VarolanDanismanOnayIslemiAcik = (IsDanismanOnayYetki && firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || IsYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
+                    if (firstRow.VarolanDanismanGozuksun)
+                    {
+                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (IsDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || IsYoneticiYetki) && !firstRow.IsObsData && !firstRow.EYKYaGonderildi.HasValue;
+                    }
+                    else
+                    {
+                        firstRow.YeniDanismanOnayIslemiAcik = (IsDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || IsYoneticiYetki) && !firstRow.IsObsData && !firstRow.EYKYaGonderildi.HasValue;
+
+                    }
+                    firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi;
+
+                    firstRow.IsDuzeltSilYapabilir = firstRow.DanismanOnayladi != true && firstRow.VarolanDanismanOnayladi != true;
+                }
+
 
                 TDOBasvuruEsDanisman lastEsBasvuru = null;
                 if (basvuru.TDOBasvuruDanisman != null)
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
-
-                model.IsYeniDanismanOneriOrDegisiklik = !model.TDOBasvuruDanismanList.Any(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true);
+                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null;
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -9015,6 +9049,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman.VarolanDanismanOnayladi == false || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi.HasValue);
 
                     if (model.TdoBasvurusuYapabilir) model.TdoBasvurusuYapabilir = (lastEsBasvuru == null || lastEsBasvuru.EYKYaGonderildi == false || lastEsBasvuru.EYKDaOnaylandi.HasValue);
+                    if (model.TdoBasvurusuYapabilir)
+                    {
+                        if (model.TDOBasvuruDanisman != null)
+                        {
+                            model.TdoBasvurusuYapabilir = IsYoneticiYetki || model.TDOBasvuruDanisman.TezDanismanID == UserIdentity.Current.Id || model.KullaniciID == UserIdentity.Current.Id;
+                        }
+                    }
                 }
 
 
@@ -9028,19 +9069,15 @@ namespace LisansUstuBasvuruSistemi.Models
             {
 
                 var ogr = db.Kullanicilars.First(p => p.KullaniciID == kullaniciID);
-
-                var ogrenciInfo = Management.StudentControl(ogr.TcKimlikNo);
-
-                if (ogrenciInfo.DanismanInfo != null)
+                var ogrenciInfo = StudentControl(ogr.TcKimlikNo);
+                if (ogr.DanismanID.HasValue)
                 {
-                    var dansimanBasvurusuVar = (from s in db.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciID)
-                                                join kul in db.Kullanicilars.Where(p => p.TcKimlikNo == ogrenciInfo.DanismanInfo.TCKIMLIKNO) on s.TezDanismanID equals kul.KullaniciID
-                                                select kul).Any();
-                    var Danisman = db.Kullanicilars.Where(p => p.TcKimlikNo == ogrenciInfo.DanismanInfo.TCKIMLIKNO)
-                        .FirstOrDefault();
-                    if (!dansimanBasvurusuVar && Danisman != null)
-                    {
 
+                    var sonBasvuru = db.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciID).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
+
+                    if (sonBasvuru == null || sonBasvuru.TezDanismanID != ogr.DanismanID)
+                    {
+                        var Danisman = db.Kullanicilars.Where(p => p.KullaniciID == ogr.DanismanID).First();
                         var kModel = new TDOBasvuruDanisman();
                         kModel.IsObsData = true;
                         kModel.BasvuruTarihi = DateTime.Now;
@@ -10492,7 +10529,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -10675,7 +10712,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -10691,7 +10728,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     var TDOBasvuruDanisman = db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID == TDOBasvuruDanismanID).First();
                     var TDOBasvuru = TDOBasvuruDanisman.TDOBasvuru;
-                    var Danisman = db.Kullanicilars.Where(p => p.KullaniciID == TDOBasvuruDanisman.TezDanismanID).First();
+                    Kullanicilar Danisman = db.Kullanicilars.Where(p => p.KullaniciID == TDOBasvuruDanisman.TezDanismanID).First();
                     var Ogrenci = TDOBasvuruDanisman.TDOBasvuru.Kullanicilar;
                     var SablonTipIDs = new List<int>();
                     var mModel = new List<SablonMailModel>();
@@ -10814,7 +10851,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -10952,7 +10989,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11102,7 +11139,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11366,7 +11403,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez İzleme toplantısı için Komite üyelerine mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11559,7 +11596,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 var message = "";
                 if (IsLinkOrSonuc) message = "Tez İzleme değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
                 else message = "Tez İzleme değerlendirmesi sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -11758,7 +11795,7 @@ namespace LisansUstuBasvuruSistemi.Models
             {
                 var message = "";
                 message = "Tez Sınavı değerlendirmesi için Jüri üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetDegerlendirmeLink", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -11983,7 +12020,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Salon rezervasyonuna ait jürilere mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavYerBilgisi", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavYerBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -12136,7 +12173,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez sınav sonucu bilgisi mail olarak gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavSonucu", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavSonucu \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -12259,7 +12296,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (SablonTipID == MailSablonTipi.Mez_TezKontrolTezDosyasiYuklendi)
                     Msg = "Tez şablon dosyası yüklendi bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + MezuniyetBasvurulariTezDosyaID;
 
-                Management.SistemBilgisiKaydet(Msg + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetTezSablonKontrol", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(Msg + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetTezSablonKontrol \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
                 mmMessage.Messages.Add(Msg + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;

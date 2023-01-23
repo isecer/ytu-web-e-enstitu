@@ -170,8 +170,11 @@
                                             @item.ToMezuniyetDurum()
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            @if (item.IsDanismanOnay != true)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { MezuniyetBasvurulariID = item.MezuniyetBasvurulariID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="getDetailx('@item.MezuniyetBasvurulariID',true,null,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            }
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.MezuniyetBasvurulariID" style="display:none">

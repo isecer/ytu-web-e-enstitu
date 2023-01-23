@@ -69,11 +69,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
+                        bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
                     }
+                    else bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
 
                 }
-                if (bbModel.KullaniciTipYetki) bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
 
             }
             else
@@ -487,7 +487,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (MBasvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.KabulEdildi)
                     {
-                        MBasvuru.IsDanismanOnay = null; 
+                        MBasvuru.IsDanismanOnay = null;
                     }
                     MBasvuru.MezuniyetSurecID = kModel.MezuniyetSurecID;
                     MBasvuru.BasvuruTarihi = kModel.BasvuruTarihi;
@@ -523,14 +523,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     MBasvuru.IslemYapanID = UserIdentity.Current.Id;
                     MBasvuru.IslemYapanIP = UserIdentity.Ip;
 
-                    var yayins = db.MezuniyetBasvurulariYayins.Where(p => kModel._MezuniyetBasvurulariYayinID.Contains(p.MezuniyetBasvurulariYayinID) == false && p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID).ToList();
+                    var SilinecekYayins = db.MezuniyetBasvurulariYayins.Where(p => kModel._MezuniyetBasvurulariYayinID.Contains(p.MezuniyetBasvurulariYayinID) == false && p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID).ToList();
+                    var GuncellenecekYayins = db.MezuniyetBasvurulariYayins.Where(p => kModel._MezuniyetBasvurulariYayinID.Contains(p.MezuniyetBasvurulariYayinID) && p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID).ToList();
                     var fFList = new List<string>();
-                    foreach (var item in yayins)
+                    foreach (var item in SilinecekYayins)
                     {
                         if (item.MezuniyetYayinBelgeDosyaYolu.IsNullOrWhiteSpace() == false) fFList.Add(item.MezuniyetYayinBelgeDosyaYolu);
                         if (item.MezuniyetYayinMetniBelgeYolu.IsNullOrWhiteSpace() == false) fFList.Add(item.MezuniyetYayinMetniBelgeYolu);
                     }
-                    db.MezuniyetBasvurulariYayins.RemoveRange(yayins).ToList();
+                    db.MezuniyetBasvurulariYayins.RemoveRange(SilinecekYayins).ToList();
                     if (kModel.DanismanImzaliFormDosya != null)
                     {
                         var path = Server.MapPath("~" + MBasvuru.DanismanImzaliFormDosyaYolu);
@@ -542,6 +543,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             MBasvuru.DanismanImzaliFormDosyaAdi = kModel.DanismanImzaliFormDosya.FileName.GetFileName().ReplaceSpecialCharacter();
                             MBasvuru.DanismanImzaliFormDosyaYolu = yBDosyaYolu;
                         }
+                    }
+                    foreach (var item in GuncellenecekYayins)
+                    {
+                        item.Onaylandi = null; 
                     }
                     db.SaveChanges();
                     foreach (var item in fFList)
@@ -778,7 +783,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MezuniyetYayinTurID = new SelectList(Management.cmbMezuniyetSurecYayinTurleri(kModel.MezuniyetSurecID, kModel.KullaniciID, true), "Value", "Caption");
 
 
-            if (kModel.MezuniyetBasvurulariID > 0)
+            if (kModel.MezuniyetYayinKontrolDurumID > 0)
             {
                 ViewBag.MezuniyetYayinKontrolDurumu = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.MezuniyetYayinKontrolDurumID == kModel.MezuniyetYayinKontrolDurumID).Select(s => new mezuniyetYayinKontrolDurumModel { MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.MezuniyetYayinKontrolDurumAdi }).First();
             }
@@ -1082,7 +1087,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
             var model = new kmSRTalep();
-            model.IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvuru.MezuniyetSureci.EnstituKod==EnstituKodlari.FenBilimleri;
+            model.IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri;
             if (SRTalepID > 0)
             {
                 var srTalebi = mezuniyetBasvuru.SRTalepleris.First(p => p.SRTalepID == SRTalepID);
@@ -1125,7 +1130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             kModel.SRTalepTipID = 1;
-            kModel.IsSalonSecilsin = mezuniyetBasvurusu.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvurusu.MezuniyetSureci.EnstituKod!=EnstituKodlari.SosyalBilimleri;
+            kModel.IsSalonSecilsin = mezuniyetBasvurusu.OgrenimTipKod == OgrenimTipi.Doktra && mezuniyetBasvurusu.MezuniyetSureci.EnstituKod != EnstituKodlari.SosyalBilimleri;
             kModel.EnstituKod = mezuniyetBasvurusu.MezuniyetSureci.EnstituKod;
             if (!srTalebiYetkisi)
             {

@@ -230,7 +230,12 @@
                                                         <li>
                                                             <a href="@Url.Action("Kayit", new { id=item.KullaniciID })"><i class="fa fa-edit fa-lg"></i>Düzenle</a>
                                                         </li>
-
+                                                        if (UserIdentity.Current.IsAdmin)
+                                                        {
+                                                            <li>
+                                                                <a href="@Url.Action("SetLogin", new { item.KullaniciID })"  target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
+                                                            </li>
+                                                        }
                                                     }
                                                     <li>
                                                         <a href="javascript:void(0)" onclick="detayGor(@item.KullaniciID,'#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>

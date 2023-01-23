@@ -1160,6 +1160,10 @@ namespace LisansUstuBasvuruSistemi.Models.FilterModel
         public bool IsDuzeltSilYapabilir { get; set; }
         public string VarolanDanismanAd { get; set; }
         public string TalepTipAdi { get; set; }
+        public bool VarolanDanismanGozuksun { get; set; }
+        public bool VarolanDanismanOnayIslemiAcik { get; set; } 
+        public bool YeniDanismanOnayIslemiAcik { get; set; }
+        public bool IsYeniTezBasligiGozuksun { get; set; }
         public bool TdoEsBasvurusuYapabilir { get; set; }
         public bool IsYeniEsDanismanOneriOrDegisiklik { get; set; }
         public TDOBasvuruEsDanisman EsDanismanBilgi { get; set; }

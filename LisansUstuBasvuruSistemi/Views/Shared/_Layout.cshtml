@@ -220,6 +220,7 @@
 
                     @if (BiskaUtil.UserIdentity.Current.IsAuthenticated)
                     {
+                        var prevUserKey = UserIdentity.Current.Informations.FirstOrDefault(p => p.Key == "PrevUserKey");
                         <!-- PROFILE -->
                         <li class="dropdown user pull-right" style="padding-top: 0px; padding-bottom: 0px;">
                             <a style="padding-bottom: 0px;" href="javascript:void(0)" class="dropdown-toggle" data-close-others="true">
@@ -232,6 +233,10 @@
                                 <li><a href="javascript:void(0)" onclick="detayGor(@UserIdentity.Current.Id)"><i class="fa fa-user"></i> Profil Bilgileri</a></li>
                                 <li><a href="javascript:void(0);" onclick="HesapKayit(@UserIdentity.Current.Id)"><span class="fa fa-id-card-o fa-lg"></span>Hesap Bilgilerini Düzenle</a></li>
                                 <li><a href="javascript:void(0);" onclick="yetkiYenile();"><span class="fa fa-refresh"></span>Yetkilerimi Yenile</a></li>
+                                @if (prevUserKey.Key != null)
+                                {
+                                    <li><a href="@Url.Action("SetLogin","Kullanicilar",new {kullaniciId=UserIdentity.Current.Id,key=prevUserKey.Value })"  target="_blank"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
+                                }
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)
                                 {
@@ -470,7 +475,7 @@
                                     return view;
                                 }
                                 function OgrenciSorgula(tc) {
-                                    var view = OgrenciSorgulaView(tc);  
+                                    var view = OgrenciSorgulaView(tc);
                                     var btbxxFS = bootbox.dialog({
                                         message:'<div id="obsOgrenciPanel" style="max-height:700px;overflow-x:scroll;">'+ view+'</div>',
                                         title: "Obs Öğrenci Sorgulama",
@@ -482,7 +487,7 @@
                                                 }
                                             }
                                         }
-                                    }); 
+                                    });
                                 }
 
                             </script>

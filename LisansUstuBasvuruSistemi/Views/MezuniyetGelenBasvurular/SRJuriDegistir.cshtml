@@ -46,7 +46,7 @@
                         <select class="form-control" id="YtuIciJuri_@Model.UniqueID">
                             @foreach (var item in YtuIciJuris)
                             {
-                                <option value="@item.MezuniyetJuriOneriFormuJuriID">@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
+                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== YtuIciJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
                             }
 
                         </select>
@@ -62,7 +62,7 @@
                         <select class="form-control" id="YtuDisiJuri_@Model.UniqueID">
                             @foreach (var item in YtuDisiJuris)
                             {
-                                <option value="@item.MezuniyetJuriOneriFormuJuriID">@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
+                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== YtuDisiJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
                             }
 
                         </select>
@@ -75,74 +75,3 @@
 
 
 </div>
-<script>
-
-        function SrJuriDegistir(MBID, UniqueID) {
-
-            var _panel = $('#bsvrDet_' + MBID);
-            _pRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("SRJuriDegistir", "MezuniyetGelenBasvurular")',
-                data: {
-                    'UniqueID': UniqueID,
-                },
-                success: function (result) {
-                    _pRefresh(_panel, true);
-                    var btbxxFS = bootbox.dialog({
-                        message: result,
-                        title: "<i class='fa fa-envelope fa-lg'></i> Tez Sınavı Jüri Değişikliği İşlemi",
-                        buttons: {
-                            success: {
-                                label: "Kaydet",
-                                className: "btn-info",
-                                callback: function (event) { 
-                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    _pRefresh(pnlx, false);
-
-                                    var YtuIciMezuniyetJuriOneriFormuJuriID = $('#YtuIciJuri_' + UniqueID).val();
-                                    var YtuDisiMezuniyetJuriOneriFormuJuriID = $('#YtuDisiJuri_' + UniqueID).val();
-                                      $.ajax({
-                                         url: '@Url.Action("SRJuriDegistirPost", "MezuniyetGelenBasvurular")',
-                                          data: {
-                                              'UniqueID': UniqueID,
-                                              'YtuIciMezuniyetJuriOneriFormuJuriID': YtuIciMezuniyetJuriOneriFormuJuriID,
-                                              'YtuDisiMezuniyetJuriOneriFormuJuriID': YtuDisiMezuniyetJuriOneriFormuJuriID,
-                                         },
-                                         success: function (result) {
-                                             _pRefresh(pnlx, true);
-                                             if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                             getDetailx(MBID);
-                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
-                                             $(_clsBtn).click();
-
-                                         },
-                                         error: function (err) {
-                                             _pRefresh(pnlx, true);
-                                             alert(err.responseText);
-
-                                         }
-                                     });
-
-
-
-                                }
-                            },
-                            danger: {
-                                label: "Kapat",
-                                className: "btn-primary",
-                                callback: function () {
-                                    _pRefresh(_panel, true);
-                                }
-                            }
-                        }
-                    });
-
-                },
-                error: function (err) {
-                    _pRefresh(_panel, true);
-                    alert(err.responseText);
-
-                }
-            });
-        }
-</script>

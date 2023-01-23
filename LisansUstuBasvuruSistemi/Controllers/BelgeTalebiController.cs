@@ -45,14 +45,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         bbModel.KullaniciTipYetki = true;
 
                     }
-                    else bbModel.KullaniciTipYetkiYokMsj = "GSIS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                    else bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
 
                 }
                 else bbModel.KullaniciTipYetki = true;
                 if (bbModel.KullaniciTipYetki)
                 {
                     var otb = db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod && p.OgrenimTipKod == Kul.OgrenimTipKod).First();
-                    bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
+                  //  bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
                     bbModel.OgrenimDurumAdi = Kul.OgrenimDurumlari.OgrenimDurumAdi;
                     bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
                     bbModel.AnabilimdaliAdi = Kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
@@ -382,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
-                        var ogrenciBilgi = Management.StudentControl(kul.OgrenciNo);
+                        var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
                         if (ogrenciBilgi.KayitVar)
                         {
                             kul.KayitTarihi = ogrenciBilgi.KayitTarihi;
