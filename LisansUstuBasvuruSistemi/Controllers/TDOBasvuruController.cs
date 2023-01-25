@@ -241,11 +241,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
                 }
-                model.OgrenimTipAdi = _db.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
-                var progLng = kul.Programlar;
-                model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
-                model.ProgramAdi = progLng.ProgramAdi;
-
+                if (kul.OgrenimTipKod.HasValue)
+                {
+                    model.OgrenimTipAdi = _db.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
+                    var progLng = kul.Programlar;
+                    model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
+                    model.ProgramAdi = progLng.ProgramAdi;
+                }
 
                 ViewBag._MmMessage = mmMessage;
             }
@@ -1435,7 +1437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (sendMail)
                 {
                     LogIslemleri.LogEkle("TDOBasvuruEsDanisman", insertOrUpdate ? IslemTipi.Insert : IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
-                    Management.sendMailTDOESBilgisi(kModel.TDOBasvuruDanismanID);
+                    Management.sendMailTDOESBilgisi(tdoBasvuruEsDanis.TDOBasvuruEsDanismanID);
                 }
 
 

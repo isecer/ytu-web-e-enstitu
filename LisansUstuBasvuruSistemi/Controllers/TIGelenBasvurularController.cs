@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD)
         {
 
-            var model = new fmTIBasvuru() { PageSize = 10 }; 
+            var model = new fmTIBasvuru() { PageSize = 50 }; 
             //var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
             //if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent())
             //{

@@ -243,16 +243,41 @@ namespace LisansUstuBasvuruSistemi.Models
         public const byte TDO_DanismanOnerisiEYKDaOnaylandiDanisman = 126;
         public const byte TDO_DanismanOnerisiEYKDaReddedildiOgrenciDanisman = 127;
 
+        public const byte TDO_TezBasligiDegisikligiDanisman = 200;
+        public const byte TDO_TezBasligiDegisikligiOgrenci = 201;
+        public const byte TDO_TezBasligiDegisikligiOnaylandiDanisman = 202;
+        public const byte TDO_TezBasligiDegisikligiOnaylandiOgrenci = 203;
+        public const byte TDO_TezBasligiDegisikligiRetEdildiDanisman = 204;
+        public const byte TDO_TezBasligiDegisikligiRetEdildiOgrenci = 205;
+        public const byte TDO_TezBasligiDegisikligiEYKDaOnaylandiDanisman = 206;
+        public const byte TDO_TezBasligiDegisikligiEYKDaOnaylandiOgrenci = 207;
+        public const byte TDO_TezBasligiDegisikligiEYKDaRetEdildiDanisman = 208;
+        public const byte TDO_TezBasligiDegisikligiEYKDaRetEdildiOgrenci = 209;
 
-        public const byte TDO_TezKonuDilDegisikligiOgrenci = 152;
-        public const byte TDO_TezKonuDilDegisikligiVarolanDanisman = 153;
-        public const byte TDO_TezKonuDilDegisikligiVarolanDanismanOnayladiYeniDanisman = 154; 
-        public const byte TDO_TezKonuDilDegisikligiVarolanDanismanRetEttiOgrenci = 155;
-        public const byte TDO_TezKonuDilDegisikligiYeniDanismanOnayladiOgrenci = 156;
-        public const byte TDO_TezKonuDilDegisikligiYeniDanismanRetEttiOgrenci = 157;
-        public const byte TDO_TezKonuDilDegisikligiEYKDaOnaylandiOgrenci = 158;
-        public const byte TDO_TezKonuDilDegisikligiEYKDaOnaylandiYeniDanisman = 159;
-        public const byte TDO_TezKonuDilDegisikligiEYKDaOnaylandiOgrenciDanisman = 160; 
+        public const byte TDO_TezDanismanDegisikligiVarolanDanisman = 210;
+        public const byte TDO_TezDanismanDegisikligiYeniDanisman = 211;
+        public const byte TDO_TezDanismanDegisikligiOgrenci = 212;
+        public const byte TDO_TezDanismanDegisikligiOnaylandiYeniDanisman = 213;
+        public const byte TDO_TezDanismanDegisikligiOnaylandiOgrenci = 214;
+        public const byte TDO_TezDanismanDegisikligiRetEdildiYeniDanisman = 215;
+        public const byte TDO_TezDanismanDegisikligiRetEdildiOgrenci = 216;
+        public const byte TDO_TezDanismanDegisikligiEYKDaOnaylandiYeniDanisman = 217;
+        public const byte TDO_TezDanismanDegisikligiEYKDaOnaylandiOgrenci = 218;
+        public const byte TDO_TezDanismanDegisikligiEYKDaRetEdildiYeniDanisman = 219;
+        public const byte TDO_TezDanismanDegisikligiEYKDaRetEdildiOgrenci = 220;
+
+        public const byte TDO_TezDanismanVeBaslikDegisikligiVarolanDanisman = 221;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiYeniDanisman = 222;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiOgrenci = 223;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiOnaylandiYeniDanisman = 224;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiOnaylandiOgrenci = 225;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiRetEdildiYeniDanisman = 226;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiRetEdildiOgrenci = 227;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiEYKDaOnaylandiYeniDanisman = 228;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiEYKDaOnaylandiOgrenci = 229;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiEYKDaRetEdildiYeniDanisman = 230;
+        public const byte TDO_TezDanismanVeBaslikDegisikligiEYKDaRetEdildiOgrenci = 231;
+
 
         public const byte TDO_EsDanismanOnerisiYapildiOgrenci = 128;
         public const byte TDO_EsDanismanOnerisiYapildiDanisman = 129; 
@@ -260,6 +285,13 @@ namespace LisansUstuBasvuruSistemi.Models
         public const byte TDO_EsDanismanOnerisiEYKDaOnaylandiDanisman = 131;
         public const byte TDO_EsDanismanOnerisiEYKDaReddedildiOgrenciDanisman = 132;
         public const byte TDO_EsDanismanOnerisiEYKDaOnaylandiEsDanisman = 133;
+
+        public const byte TDO_EsDanismanDegisikligiYapildiOgrenci = 134;
+        public const byte TDO_EsDanismanDegisikligiYapildiDanisman = 135;
+        public const byte TDO_EsDanismanDegisikligiEYKDaOnaylandiOgrenci = 136;
+        public const byte TDO_EsDanismanDegisikligiEYKDaOnaylandiDanisman = 137;
+        public const byte TDO_EsDanismanDegisikligiEYKDaRetEdildiOgrenciDanisman = 138;
+        public const byte TDO_EsDanismanDegisikligiEYKDaOnaylandiEsDanisman = 139;
     }
     public static class ModalSizeClass
     {

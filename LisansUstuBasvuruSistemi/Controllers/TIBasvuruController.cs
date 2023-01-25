@@ -442,7 +442,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mMessage.Messages.Count == 0)
                 {
-
+                    if (ogrenciBilgi.Hata)
+                    {
+                        mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
+                    }
                     var Tiks = ogrenciBilgi.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
                     if (Tiks.Count < 2)
                     {
@@ -1704,7 +1707,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Komite üyelerine değerlendirme yaptıktan sonra rapor bilgisi silinemez. ");
             }
             else
-            { 
+            {
                 try
                 {
                     _db.SRTalepleris.RemoveRange(araRapor.SRTalepleris);

@@ -21,6 +21,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                        new Ws_ObsService.proliz_ytu_enstitu_minerSoapClient())
                 {
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
+
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
                     {
                         ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, tcKimlikNo, null);
@@ -30,7 +31,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     {
 
                         model.KayitVar = true;
-                        var ogrenci = ogrencis[0].ogrenci.Where(p => p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8").FirstOrDefault();
+                        var ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
                         if (ogrenci != null)
                         {
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
@@ -123,8 +124,13 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                         }
 
                     }
-
+                    if (ogrencis.Any() && !ogrencis[0].Sucess)
+                    {
+                        model.Hata = true;
+                        model.HataMsj = ogrencis[0].Error;
+                    }
                 }
+
             }
             catch (Exception ex)
             {
@@ -160,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     }
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
-                        model.Ogrenci = ogrencis[0].ogrenci.Where(p => p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8").FirstOrDefault();
+                        model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
                         var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {

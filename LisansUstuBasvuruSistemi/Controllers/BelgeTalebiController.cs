@@ -1,4 +1,5 @@
-﻿using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+﻿using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (bbModel.KullaniciTipYetki)
                 {
                     var otb = db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod && p.OgrenimTipKod == Kul.OgrenimTipKod).First();
-                  //  bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
+                    //  bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
                     bbModel.OgrenimDurumAdi = Kul.OgrenimDurumlari.OgrenimDurumAdi;
                     bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
                     bbModel.AnabilimdaliAdi = Kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
@@ -204,7 +205,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        public ActionResult getdetay(int id,string EKD)
+        public ActionResult getdetay(int id, string EKD)
         {
             var kYetki = RoleNames.BelgeTalebiDuzelt.InRoleCurrent();
             var belgeTalebi = (from s in db.BelgeTalepleris
@@ -278,7 +279,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             belgeTalebi.BelgeTalepID = belh.BelgeTalepID;
             ViewBag.VerilenBelgeSayisi = new SelectList(getBelgeSayisi(), "Value", "Caption", belgeTalebi.BelgeDurumID == BelgeTalepDurum.Verildi ? belgeTalebi.VerilenBelgeSayisi : belgeTalebi.IstenenBelgeSayisi);
             ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurum(true, kYetki), "Value", "Caption", belgeTalebi.BelgeDurumID);
-          
+
             return View(belgeTalebi);
         }
         public static List<CmbIntDto> getBelgeSayisi(int MaxBelgeS = 10)
@@ -383,17 +384,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
                         var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
-                        if (ogrenciBilgi.KayitVar)
+                        if (ogrenciBilgi.Hata)
                         {
-                            kul.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                            kul.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                            kul.KayitDonemID = ogrenciBilgi.DonemID;
-                            db.SaveChanges();
+                            MmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
                         }
                         else
                         {
-                            MmMessage.Messages.Add("Öğrenci Bilgileriniz Doğrulanamadı!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                            if (ogrenciBilgi.KayitVar)
+                            {
+                                kul.KayitTarihi = ogrenciBilgi.KayitTarihi;
+                                kul.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
+                                kul.KayitDonemID = ogrenciBilgi.DonemID;
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                MmMessage.Messages.Add("Öğrenci Bilgileriniz Doğrulanamadı!");
+                                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                            }
                         }
                     }
 
@@ -803,14 +811,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return new { IsSubmitOrAnketShow = AnketGiris == "", AnketGiris = AnketGiris }.toJsonResult();
         }
-        public ActionResult getBilgi(int? BelgeTalepID, int BelgeTipID,  int miktar, string EKD)
+        public ActionResult getBilgi(int? BelgeTalepID, int BelgeTipID, int miktar, string EKD)
         {
             BelgeTalepID = BelgeTalepID <= 0 ? null : BelgeTalepID;
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             int OgrenimDurumID;
             string OgrenciNo = "";
-            
-            
+
+
             if (BelgeTalepID.HasValue && BelgeTalepID.Value > 0)
             {
                 var Talep = db.BelgeTalepleris.Where(p => p.BelgeTalepID == BelgeTalepID.Value).First();
@@ -1106,8 +1114,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
             mmMessage.IsSuccess = true;
-            var kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First(); 
-            var belge = db.BelgeTalepleris.Where(p => p.BelgeTalepID == id && p.OgrenciNo == kul.OgrenciNo).FirstOrDefault(); 
+            var kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
+            var belge = db.BelgeTalepleris.Where(p => p.BelgeTalepID == id && p.OgrenciNo == kul.OgrenciNo).FirstOrDefault();
             if (mmMessage.IsSuccess)
             {
                 try
@@ -1122,7 +1130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add("Belge Talebi Silinemedi."); 
+                    mmMessage.Messages.Add("Belge Talebi Silinemedi.");
                     Management.SistemBilgisiKaydet(ex, BilgiTipi.OnemsizHata);
                 }
             }

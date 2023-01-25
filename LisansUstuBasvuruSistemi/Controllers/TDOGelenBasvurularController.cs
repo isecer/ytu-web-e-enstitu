@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD, int? TDOBasvuruID, int? KullaniciID)
         {
 
-            return Index(new fmTDOBasvuru() { TDOBasvuruID = TDOBasvuruID, KullaniciID = KullaniciID, PageSize = 10 }, EKD);
+            return Index(new fmTDOBasvuru() { TDOBasvuruID = TDOBasvuruID, KullaniciID = KullaniciID, PageSize = 50 }, EKD);
         }
         [HttpPost]
         public ActionResult Index(fmTDOBasvuru model, string EKD, bool export = false)

@@ -108,14 +108,14 @@
                                 </script>
                             </li>
                         }
-                        @if (Model.RowCount > 0)
+                        @if (kYetki && Model.RowCount > 0)
                         {
                             <li>
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
 
                         }
-                        @if (mailYetki && mKids.Count > 0)
+                        @if (kYetki && mKids.Count > 0)
                         {
                             <li>
                                 <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>

@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurular)]
         public ActionResult Index(string EKD, int? SMezuniyetBID, int? STabID)
         {
-            var model = new fmMezuniyetBasvurulari() { PageSize = 10 };
+            var model = new fmMezuniyetBasvurulari() { PageSize = 50 };
             var JoFormKayitYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
             var MBGelenBKayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             if (MBGelenBKayitYetki)
@@ -917,7 +917,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    if (kModel.IsOnaylandiOrDuzeltme.HasValue) talep.Aciklama = kModel.Aciklama.Trim();
+                    if (kModel.IsOnaylandiOrDuzeltme.HasValue) talep.Aciklama = kModel.Aciklama.IsNullOrWhiteSpace() ? null : kModel.Aciklama.Trim();
                     else talep.Aciklama = null;
                     talep.IsOnaylandiOrDuzeltme = kModel.IsOnaylandiOrDuzeltme;
                     talep.OnayTarihi = DateTime.Now;
@@ -1158,8 +1158,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MezuniyetBasvurulariID = MezuniyetBasvurulariID,
                 IsTezDiliTr = MB.IsTezDiliTr == true,
-                TezBaslikTr=MB.TezBaslikTr,
-                TezBaslikEn=MB.TezBaslikEn,
+                TezBaslikTr = MB.TezBaslikTr,
+                TezBaslikEn = MB.TezBaslikEn,
                 Danisman = db.Kullanicilars.First(p => p.KullaniciID == MB.TezDanismanID),
                 SListUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption"),
                 SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption"),
@@ -1185,22 +1185,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (mMessage.Messages.Count == 0 && MBJO == null)
             {
-                if (ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
-                    mMessage.Messages.Add("Danışman Bilgisi Çekilemedi.");
-
-                if (Model.IsDoktoraOrYL)
+                if (ogrenciInfo.Hata)
                 {
-                    if (ogrenciInfo.TezIzlJuriBilgileri.Count == 1)
-                    {
-                        mMessage.Messages.Add("'1.Tik Üyesi' Bilgisi Çekilemedi.");
-                    }
-                    if (ogrenciInfo.TezIzlJuriBilgileri.Count == 2)
-                        mMessage.Messages.Add("'2.Tik Üyesi' Bilgisi Çekilemedi.");
+                    mMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");
                 }
-                if (mMessage.Messages.Count > 0)
+                else
                 {
-                    mMessage.MessageType = Msgtype.Warning;
-                    mMessage.Messages.Add("Jüri öneri formunu oluşturabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                    if (ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
+                        mMessage.Messages.Add("Danışman Bilgisi Çekilemedi.");
+
+                    if (Model.IsDoktoraOrYL)
+                    {
+                        if (ogrenciInfo.TezIzlJuriBilgileri.Count == 1)
+                        {
+                            mMessage.Messages.Add("'1.Tik Üyesi' Bilgisi Çekilemedi.");
+                        }
+                        if (ogrenciInfo.TezIzlJuriBilgileri.Count == 2)
+                            mMessage.Messages.Add("'2.Tik Üyesi' Bilgisi Çekilemedi.");
+                    }
+                    if (mMessage.Messages.Count > 0)
+                    {
+                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.Messages.Add("Jüri öneri formunu oluşturabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                    }
                 }
 
             }
@@ -1235,106 +1242,112 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DilPuani = s.DilPuani,
                         IsAsilOrYedek = s.IsAsilOrYedek
                     }).ToList();
-                    if (!ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
+                    if (!ogrenciInfo.Hata)
                     {
-                        var tD = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TezDanismani").First();
-                        tD.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tD.UniversiteID);
-                        tD.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tD.UnvanAdi);
-                        if (tD.AdSoyad.ToUpper().Trim() != ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().ToUpper().Trim() || tD.UnvanAdi.ToUpper().Trim() != ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi())
+                        if (!ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
                         {
-                            tD.AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper();
-                            tD.UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi();
-                        }
-                    }
-                    var Tiks = ogrenciInfo.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
-                    if (Model.IsDoktoraOrYL && Tiks.Count >= 2)
-                    {
-                        var obsTik1 = Tiks[0];
-                        var obsTik2 = Tiks[1];
-
-                        var varOlanTik1 = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi1").First();
-                        varOlanTik1.SListUniversiteID =
-                            new SelectList(cmbUniversiteList, "Value", "Caption", varOlanTik1.UniversiteID);
-                        varOlanTik1.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", varOlanTik1.UnvanAdi);
-                        if (varOlanTik1.AdSoyad.ToUpper() != obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper() ||
-                            varOlanTik1.UnvanAdi.ToUpper().Trim() != obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi())
-                        {
-                            varOlanTik1.AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper();
-                            varOlanTik1.UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
-                        }
-                        var varOlanTik2 = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi2").First();
-                        varOlanTik2.SListUniversiteID =
-                            new SelectList(cmbUniversiteList, "Value", "Caption", varOlanTik2.UniversiteID);
-                        varOlanTik2.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", varOlanTik2.UnvanAdi);
-                        if (varOlanTik2.AdSoyad.ToUpper() != obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper() ||
-                            varOlanTik2.UnvanAdi.ToUpper().Trim() != obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi())
-                        {
-                            varOlanTik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper();
-                            varOlanTik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
-
+                            var tD = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TezDanismani").First();
+                            tD.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tD.UniversiteID);
+                            tD.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tD.UnvanAdi);
+                            if (tD.AdSoyad.ToUpper().Trim() != ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().ToUpper().Trim() || tD.UnvanAdi.ToUpper().Trim() != ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi())
+                            {
+                                tD.AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper();
+                                tD.UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi();
+                            }
                         }
 
+                        var Tiks = ogrenciInfo.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
+                        if (Model.IsDoktoraOrYL && Tiks.Count >= 2)
+                        {
+                            var obsTik1 = Tiks[0];
+                            var obsTik2 = Tiks[1];
 
+                            var varOlanTik1 = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi1").First();
+                            varOlanTik1.SListUniversiteID =
+                                new SelectList(cmbUniversiteList, "Value", "Caption", varOlanTik1.UniversiteID);
+                            varOlanTik1.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", varOlanTik1.UnvanAdi);
+                            if (varOlanTik1.AdSoyad.ToUpper() != obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper() ||
+                                varOlanTik1.UnvanAdi.ToUpper().Trim() != obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi())
+                            {
+                                varOlanTik1.AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper();
+                                varOlanTik1.UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
+                            }
+                            var varOlanTik2 = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TikUyesi2").First();
+                            varOlanTik2.SListUniversiteID =
+                                new SelectList(cmbUniversiteList, "Value", "Caption", varOlanTik2.UniversiteID);
+                            varOlanTik2.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", varOlanTik2.UnvanAdi);
+                            if (varOlanTik2.AdSoyad.ToUpper() != obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper() ||
+                                varOlanTik2.UnvanAdi.ToUpper().Trim() != obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi())
+                            {
+                                varOlanTik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper();
+                                varOlanTik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
+
+                            }
+
+
+                        }
                     }
 
                 }
                 else
                 {
 
-                    if (!ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
+                    if (!ogrenciInfo.Hata)
                     {
-                        var TdBilgi = new KrMezuniyetJuriOneriFormuJurileri
+                        if (!ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.IsNullOrWhiteSpace())
                         {
-                            JuriTipAdi = "TezDanismani",
-                            UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi(),
-                            AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper(),
+                            var TdBilgi = new KrMezuniyetJuriOneriFormuJurileri
+                            {
+                                JuriTipAdi = "TezDanismani",
+                                UnvanAdi = ogrenciInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi(),
+                                AdSoyad = ogrenciInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper(),
 
-                        };
-                        TdBilgi.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", TdBilgi.UnvanAdi);
-                        TdBilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", TdBilgi.UniversiteID);
-                        Model.JoFormJuriList.Add(TdBilgi);
-                    }
-                    else
-                    {
-                        Model.JoFormJuriList.Add(new KrMezuniyetJuriOneriFormuJurileri { JuriTipAdi = "TezDanismani", SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption"), SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption") });
-                    }
-
-                    var Tiks = ogrenciInfo.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
-                    if (Model.IsDoktoraOrYL && Tiks.Count >= 2)
-                    {
-
-
-                        var obsTik1 = Tiks[0];
-                        var obsTik2 = Tiks[1];
-
-                        var Tk1Bilgi = new KrMezuniyetJuriOneriFormuJurileri
+                            };
+                            TdBilgi.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", TdBilgi.UnvanAdi);
+                            TdBilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", TdBilgi.UniversiteID);
+                            Model.JoFormJuriList.Add(TdBilgi);
+                        }
+                        else
                         {
-                            JuriTipAdi = "TikUyesi1",
-                            AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY,
-                            UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi()
-                        };
-                        Tk1Bilgi.SlistUnvanAdi =
-                            new SelectList(cmbUnvanList, "Value", "Caption", Tk1Bilgi.UnvanAdi);
-                        Tk1Bilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption",
-                            Tk1Bilgi.UniversiteID);
-                        Model.JoFormJuriList.Add(Tk1Bilgi);
+                            Model.JoFormJuriList.Add(new KrMezuniyetJuriOneriFormuJurileri { JuriTipAdi = "TezDanismani", SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption"), SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption") });
+                        }
 
-
-
-                        var Tk2Bilgi = new KrMezuniyetJuriOneriFormuJurileri
+                        var Tiks = ogrenciInfo.TezIzlJuriBilgileri.Where(p => p.TEZ_DANISMAN != "1").ToList();
+                        if (Model.IsDoktoraOrYL && Tiks.Count >= 2)
                         {
-                            JuriTipAdi = "TikUyesi2",
-                            AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY,
-                            UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi()
-                        };
-                        Tk2Bilgi.SlistUnvanAdi =
-                            new SelectList(cmbUnvanList, "Value", "Caption", Tk2Bilgi.UnvanAdi);
-                        Tk2Bilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption",
-                            Tk2Bilgi.UniversiteID);
-                        Model.JoFormJuriList.Add(Tk2Bilgi);
 
+
+                            var obsTik1 = Tiks[0];
+                            var obsTik2 = Tiks[1];
+
+                            var Tk1Bilgi = new KrMezuniyetJuriOneriFormuJurileri
+                            {
+                                JuriTipAdi = "TikUyesi1",
+                                AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY,
+                                UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi()
+                            };
+                            Tk1Bilgi.SlistUnvanAdi =
+                                new SelectList(cmbUnvanList, "Value", "Caption", Tk1Bilgi.UnvanAdi);
+                            Tk1Bilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption",
+                                Tk1Bilgi.UniversiteID);
+                            Model.JoFormJuriList.Add(Tk1Bilgi);
+
+
+
+                            var Tk2Bilgi = new KrMezuniyetJuriOneriFormuJurileri
+                            {
+                                JuriTipAdi = "TikUyesi2",
+                                AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY,
+                                UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi()
+                            };
+                            Tk2Bilgi.SlistUnvanAdi =
+                                new SelectList(cmbUnvanList, "Value", "Caption", Tk2Bilgi.UnvanAdi);
+                            Tk2Bilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption",
+                                Tk2Bilgi.UniversiteID);
+                            Model.JoFormJuriList.Add(Tk2Bilgi);
+
+                        }
                     }
-
                 }
 
 
@@ -2023,7 +2036,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     SRYtuIciJuri.MezuniyetSinavDurumID = null;
                     SRYtuIciJuri.IslemTarihi = DateTime.Now;
                     SRYtuIciJuri.IslemYapanID = UserIdentity.Current.Id;
-                    SRYtuIciJuri.IslemYapanIP = UserIdentity.Ip; 
+                    SRYtuIciJuri.IslemYapanIP = UserIdentity.Ip;
                 }
                 mmMessage.Messages.Add("YTÜ İçi Jüri Değişikliği Yapıldı.");
             }
@@ -2032,7 +2045,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var YtuDisiJuri = SRTalep.SRTaleplerJuris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri") && p.MezuniyetJuriOneriFormuJuriID != YtuDisiMezuniyetJuriOneriFormuJuriID).FirstOrDefault();
                 if (YtuDisiJuri != null)
                 {
-                    var Juri = db.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == YtuDisiMezuniyetJuriOneriFormuJuriID).First(); 
+                    var Juri = db.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == YtuDisiMezuniyetJuriOneriFormuJuriID).First();
                     YtuDisiJuri.UniqueID = Guid.NewGuid();
                     YtuDisiJuri.MezuniyetJuriOneriFormuJuriID = YtuDisiMezuniyetJuriOneriFormuJuriID;
                     YtuDisiJuri.UniversiteAdi = Juri.UniversiteAdi;
@@ -2045,7 +2058,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     YtuDisiJuri.MezuniyetSinavDurumID = null;
                     YtuDisiJuri.IslemTarihi = DateTime.Now;
                     YtuDisiJuri.IslemYapanID = UserIdentity.Current.Id;
-                    YtuDisiJuri.IslemYapanIP = UserIdentity.Ip; 
+                    YtuDisiJuri.IslemYapanIP = UserIdentity.Ip;
                     mmMessage.Messages.Add("YTÜ Dışı Jüri Değişikliği Yapıldı.");
                 }
             }

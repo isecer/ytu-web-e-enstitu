@@ -1,4 +1,5 @@
-﻿using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+﻿using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.ProgramKod,
                         s.TcKimlikNo,
                         s.PasaportNo,
-                        s.OgrenciNo, 
+                        s.OgrenciNo,
                         s.CepTel,
                         s.EMail,
                         s.IsAktif,
@@ -83,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
             if (model.BirimID.HasValue) q = q.Where(p => p.BirimID == model.BirimID.Value);
-            if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod.Value); 
+            if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod.Value);
             if (model.IsAdmin.HasValue)
             {
                 if (model.IsAdmin.Value) q = q.Where(p => p.YetkiSayisi > 0);
@@ -135,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 OgrenimDurumID = s.OgrenimDurumID,
                 ProgramKod = s.ProgramKod,
                 TcKimlikNo = s.TcKimlikNo,
-                PasaportNo = s.PasaportNo, 
+                PasaportNo = s.PasaportNo,
                 CepTel = s.CepTel,
                 EMail = s.EMail,
                 IsAktif = s.IsAktif,
@@ -191,7 +192,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.ResimVar = ResimVar;
             ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID); 
+            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
@@ -312,7 +313,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CinsiyetID" });
 
-            
+
 
             if (kModel.CepTel.IsNullOrWhiteSpace())
             {
@@ -483,7 +484,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var cSicil = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo).Count();
                     if (cSicil > 0)
                     {
-
                         MmMessage.Messages.Add("Tanımlamak istediğiniz Sicil No sistemde zaten mevcut!");
                         MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SicilNo" });
                     }
@@ -506,28 +506,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
                         var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
-                        if (ogrenciBilgi.KayitVar &&
-                            kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj())
+                        if (ogrenciBilgi.Hata)
                         {
-                            var Program = db.Programlars.Where(p => p.ProgramKod == kModel.ProgramKod).First();
-                            kModel.ProgramKod = Program.ProgramKod;
-                            kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj().Value;
-                            kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                            kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                            kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                            MmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
                         }
                         else
                         {
-                            MmMessage.Messages.Add(
-                                "Girdiğiniz Öğrenci bilgileri doğrulanamadı. OBS sisteminde bulunan bilgilerinizi lisansüstü sistemine doğru girdiğinizden emin olunuz.");
-                            MmMessage.Messages.Add(
-                                "Lisansüstü sistemine girdiğiniz öğrenci numaranız ve öğrenim seviyeniz OBS sistemi ile aynı olması gerekmektedir.");
-                            MmMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
-                            MmMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                            MmMessage.MessagesDialog.Add(new MrMessage
-                            { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                            if (ogrenciBilgi.KayitVar &&
+                          kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj())
+                            {
+                                var Program = db.Programlars.Where(p => p.ProgramKod == kModel.ProgramKod).First();
+                                kModel.ProgramKod = Program.ProgramKod;
+                                kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj().Value;
+                                kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
+                                kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
+                                kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                            }
+                            else
+                            {
+                                MmMessage.Messages.Add("Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
+                                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                            }
                         }
                     }
 
@@ -557,15 +556,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.UnvanID = null;
                     kModel.SicilNo = "";
                     if (!IsYerli)
-                    { 
+                    {
                         kModel.TcKimlikNo = null;
                     }
                     else { kModel.PasaportNo = null; }
                     kModel.ABDKoordinatoru = false;
                 }
                 else
-                { 
-                    kModel.Adres = ""; 
+                {
+                    kModel.Adres = "";
 
                 }
                 if (!kModel.YtuOgrencisi)
@@ -639,7 +638,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Soyad = kModel.Soyad;
                     data.TcKimlikNo = kModel.TcKimlikNo;
                     data.PasaportNo = kModel.PasaportNo;
-                    data.CinsiyetID = kModel.CinsiyetID; 
+                    data.CinsiyetID = kModel.CinsiyetID;
                     data.CepTel = kModel.CepTel;
                     data.EMail = kModel.EMail;
                     data.Adres = kModel.Adres;
@@ -702,7 +701,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.ResimVar = kModel.ResimAdi.IsNullOrWhiteSpace() == false;
-            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID); 
+            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
             ViewBag.BirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", kModel.BirimID);
             ViewBag.MmMessage = MmMessage;
@@ -944,7 +943,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-         
+
 
         [Authorize(Roles = RoleNames.KullanicilarSil)]
         public ActionResult Sil(int id)
@@ -976,25 +975,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [AllowAnonymous]
-        public ActionResult SetLogin(int kullaniciId,string key="")
+        public ActionResult SetLogin(int kullaniciId, string key = "")
         {
             if (!key.IsNullOrWhiteSpace())
             {
-                kullaniciId = UserIdentity.Current.Informations.Where(p=>p.Key==key).Select(s=>s.Value).FirstOrDefault().toIntObj().Value;
+                kullaniciId = UserIdentity.Current.Informations.Where(p => p.Key == key).Select(s => s.Value).FirstOrDefault().toIntObj().Value;
             }
             else if (!RoleNames.KullanicilarKayit.InRoleCurrent()) return RedirectToAction("Index", "Home");
             var kullanici = db.Kullanicilars.Where(p => p.KullaniciID == kullaniciId).First();
-        
+
             var prevUserKey = Guid.NewGuid().ToString();
 
             FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, "", false);
-            var ui = Management.GetUserIdentity(kullanici.KullaniciAdi); 
+            var ui = Management.GetUserIdentity(kullanici.KullaniciAdi);
             ui.Informations.Add("PrevUserKey", prevUserKey);
             ui.Informations.Add(prevUserKey, UserIdentity.Current.Id);
             Session["UserIdentity"] = ui;
             UserIdentity.SetCurrent();
 
-           
+
             return RedirectToAction("Index");
         }
 
