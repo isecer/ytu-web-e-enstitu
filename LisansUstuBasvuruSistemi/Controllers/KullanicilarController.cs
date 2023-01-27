@@ -75,9 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.LastLogonIP,
                         s.IslemTarihi,
                         s.IslemYapanIP,
-                        s.YtuOgrencisi,
-                        ProgramKods = s.KullaniciProgramlaris.Select(s => s.ProgramKod),
-                        RollIds = s.Rollers.Select(sr => sr.RolID).ToList()
+                        s.YtuOgrencisi   
                     };
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.PasaportNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad);
@@ -95,11 +93,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.YetkiGrupID.HasValue)
             {
                 q = q.Where(p => p.YetkiGrupID == model.YetkiGrupID.Value);
-            }
-            if (ProgramKod.Count > 0)
-            {
-                q = q.Where(p => p.ProgramKods.Any(p2 => ProgramKod.Contains(p2)));
-            }
+            } 
             model.RowCount = q.Count();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
@@ -979,7 +973,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!key.IsNullOrWhiteSpace())
             {
-                kullaniciId = UserIdentity.Current.Informations.Where(p => p.Key == key).Select(s => s.Value).FirstOrDefault().toIntObj().Value;
+                var skullaniciId = UserIdentity.Current.Informations.Where(p => p.Key == key).Select(s => s.Value.toIntObj()).FirstOrDefault();
+                kullaniciId = skullaniciId ?? UserIdentity.Current.Id;
+
             }
             else if (!RoleNames.KullanicilarKayit.InRoleCurrent()) return RedirectToAction("Index", "Home");
             var kullanici = db.Kullanicilars.Where(p => p.KullaniciID == kullaniciId).First();

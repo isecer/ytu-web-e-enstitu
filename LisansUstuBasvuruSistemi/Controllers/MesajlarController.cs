@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using BiskaUtil;
 using System.Web.UI.WebControls;
 using System.IO;
@@ -26,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.Mesajlars.Where(p => EnstKods.Contains(p.EnstituKod) && p.UstMesajID.HasValue == false)
+            var q = from s in db.Mesajlars.Where(p => EnstKods.Contains(p.EnstituKod) && p.UstMesajID.HasValue == false && (model.Konu != null && model.Konu.Trim() != "" ? p.Aciklama.Contains(model.Konu) : true))
                     join ens in db.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
                     join mk in db.MesajKategorileris on s.MesajKategoriID equals mk.MesajKategoriID
                     join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID into defK
@@ -42,9 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.UstMesajID,
                         Tarih = s.SonMesajTarihi,
                         s.Konu,
-                        Email = kul != null ? kul.EMail : s.Email,
-                        s.Aciklama,
-                        s.AciklamaHtml,
+                        Email = kul != null ? kul.EMail : s.Email, 
                         s.AdSoyad,
                         ResimAdi = kul != null ? kul.ResimAdi : null,
                         s.IslemYapanIP,
@@ -57,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.MesajKategoriID.HasValue) q = q.Where(p => p.MesajKategoriID == model.MesajKategoriID.Value);
-            if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu) || p.Aciklama.Contains(model.Konu));
+            if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu));
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.Email.Contains(model.AdSoyad));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (model.IsDosyaEkDurum.HasValue) q = q.Where(p => model.IsDosyaEkDurum.Value ? p.EkSayisi > 0 : p.EkSayisi == 0);
@@ -139,9 +138,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 KategoriAdi = s.KategoriAdi,
                 MesajID = s.MesajID,
                 Konu = s.Konu,
-                Email = s.Email,
-                Aciklama = s.Aciklama,
-                AciklamaHtml = s.AciklamaHtml,
+                Email = s.Email, 
                 Tarih = s.Tarih,
                 AdSoyad = s.AdSoyad,
                 ResimAdi = s.ResimAdi,

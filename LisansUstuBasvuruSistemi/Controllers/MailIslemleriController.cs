@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 using BiskaUtil;
 using System.Net.Mail;
 using System.IO;
@@ -24,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(fmMailGonderme model)
         {
-            var q = from s in db.GonderilenMaillers
+            var q = from s in db.GonderilenMaillers.Where(p => model.Aciklama != null && model.Aciklama.Trim() != "" ? p.Aciklama.Contains(model.Aciklama): true)
                     join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     where s.Silindi == false && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
@@ -35,16 +36,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.EnstituKod,
                         e.EnstituAd,
                         s.Konu,
-                        s.Aciklama,
-                        s.AciklamaHtml,
-                        MailGonderen = k.Ad + " " + k.Soyad, 
+                        MailGonderen = k.Ad + " " + k.Soyad,
                         s.Gonderildi,
                         s.HataMesaji
                     };
 
             if (!model.Konu.IsNullOrWhiteSpace()) q = q.Where(p => p.Konu.Contains(model.Konu));
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
-            if (!model.Aciklama.IsNullOrWhiteSpace()) q = q.Where(p => p.Aciklama.Contains(model.Aciklama));
             if (!model.MailGonderen.IsNullOrWhiteSpace()) q = q.Where(p => p.MailGonderen.Contains(model.MailGonderen));
             if (model.Tarih.HasValue)
             {
@@ -61,9 +59,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Tarih = s.Tarih,
                 EnstituAdi = s.EnstituAd,
                 Konu = s.Konu,
-                Aciklama = s.Aciklama,
-                AciklamaHtml = s.AciklamaHtml,
-                MailGonderen = s.MailGonderen, 
+                MailGonderen = s.MailGonderen,
                 Gonderildi = s.Gonderildi,
                 HataMesaji = s.HataMesaji
 

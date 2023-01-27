@@ -235,7 +235,7 @@
                                 <li><a href="javascript:void(0);" onclick="yetkiYenile();"><span class="fa fa-refresh"></span>Yetkilerimi Yenile</a></li>
                                 @if (prevUserKey.Key != null)
                                 {
-                                    <li><a href="@Url.Action("SetLogin","Kullanicilar",new {kullaniciId=UserIdentity.Current.Id,key=prevUserKey.Value })"  target="_blank"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
+                                    <li><a href="@Url.Action("SetLogin","Kullanicilar",new {kullaniciId=UserIdentity.Current.Id,key=prevUserKey.Value })"><i class="fa fa-user"></i> Önceki Hesaba Geç</a></li>
                                 }
 
                                 @if (UserIdentity.Current.IsActiveDirectoryUser == false)

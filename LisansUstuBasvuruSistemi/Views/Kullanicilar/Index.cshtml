@@ -242,12 +242,12 @@
                                                     </li>
                                                     @if (item.KtipBasvuruYapabilir)
                                                     {
-                                                        if (adinaBasvuru)
+                                                        @*if (adinaBasvuru)
                                                         {
                                                             <li>
                                                                 <a href="@Url.Action("BasvuruYap", "Basvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Başvuru Yap</a>
                                                             </li>
-                                                        }
+                                                        }*@
                                                         if (item.YtuOgrencisi)
                                                         {
                                                             if (adinaBasvuruTDO && TDOBAcik.Contains(item.EnstituKod))

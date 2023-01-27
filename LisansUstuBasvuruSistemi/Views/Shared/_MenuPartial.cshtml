@@ -13,7 +13,8 @@
     var enst = (selectedEnstKisAd + "/").ToLower();
     root = root + enst;
     var eKod = Management.getSelectedEnstitu(selectedEnstKisAd);
-    var menudata = Management.Menulers.Where(p => p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
+    var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
+    var menudata = Management.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
     menudata.Add(new Menuler
     {
         MenuID = 1000063309,
@@ -58,7 +59,7 @@
     while (eklenecekler.Count() > 0);
 
     mMenu.AddRange(menudata.Where(p => p.YetkisizErisim.HasValue && p.YetkisizErisim.Value && mMenu.Any(a => a.MenuID == p.MenuID) == false));
-    mMenu = mMenu.OrderBy(o => o.SiraNo).ToList();
+    mMenu = mMenu.Where(p=>!unShowMenuIds.Contains(p.MenuID) || unShowMenuIds.Contains(p.BagliMenuID ?? 0)).OrderBy(o => o.SiraNo).ToList();
 
     var sb = new System.Text.StringBuilder();
     Func<int?, bool> fxMenu = null;

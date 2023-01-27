@@ -1004,7 +1004,6 @@
     <Compile Include="Utilities\Helpers\UrlInfoHelper.cs" />
     <Compile Include="Utilities\Helpers\ViewRenderHelper.cs" />
     <Compile Include="Utilities\Helpers\XmlSinavConverter.cs" />
-    <Compile Include="Models\ADAuthenticationControl.cs" />
     <Compile Include="Models\ApplicationClock.cs" />
     <Compile Include="Models\BelgeTalepAyar.cs" />
     <Compile Include="Models\DevexpressHelper.cs" />

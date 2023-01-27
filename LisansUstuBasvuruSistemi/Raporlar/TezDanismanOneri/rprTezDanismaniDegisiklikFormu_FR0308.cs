@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                              isDrBasvurusu = b.OgrenimTipKod == OgrenimTipi.Doktra || b.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora,
                              s.BasvuruTarihi,
                              s.FormKodu,
-                             urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TDO_" + s.TDOBasvuruDanismanID + "_" + s.UniqueID,
+                             urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TDOF_" + s.TDOBasvuruDanismanID + "_" + s.UniqueID,
                              s.UniqueID,
                              b.OgrenciNo,
                              AdSoyad = b.Ad + " " + b.Soyad,
