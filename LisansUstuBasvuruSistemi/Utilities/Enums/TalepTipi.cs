@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class TalepTipi
     {
-        public const byte LisansustuSureUzatmaTalebi = 1;
-        public const byte YDSSinavSonucuBelgesiYukleme = 2;
-        public const byte KayitSildirmeBelgesiYukleme = 3;
-        public const byte Covid19KayitDondurmaTalebi = 4;
+        public static int LisansustuSureUzatmaTalebi = 1;
+        public static int YDSSinavSonucuBelgesiYukleme = 2;
+        public static int KayitSildirmeBelgesiYukleme = 3;
+        public static int Covid19KayitDondurmaTalebi = 4;
 
     }
 }

@@ -7,12 +7,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class OgrenimTipi
     {
-        public const byte TezliYuksekLisans = 1;
-        public const byte TezsizYuksekLisans = 2;
-        public const byte Doktra = 3;
-        public const byte SanattaYeterlilik = 4;
-        public const byte ButunlesikDoktora = 5;
-        public const byte BilimselHazirlik = 6;
+        public static int TezliYuksekLisans = 1;
+        public static int TezsizYuksekLisans = 2;
+        public static int Doktra = 3;
+        public static int SanattaYeterlilik = 4;
+        public static int ButunlesikDoktora = 5;
+        public static int BilimselHazirlik = 6;
 
     }
 }

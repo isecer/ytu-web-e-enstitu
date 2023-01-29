@@ -7,11 +7,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class BelgeTalepTip
     {
-        public const byte Transkript = 1;
-        public const byte ÖğrenciBelgesi = 2;
-        public const byte ÖğrenimBelgesi = 3;
-        public const byte İlgiliMakama = 4;
-        public const byte Diğer = 5;
+        public static int Transkript = 1;
+        public static int ÖğrenciBelgesi = 2;
+        public static int ÖğrenimBelgesi = 3;
+        public static int İlgiliMakama = 4;
+        public static int Diğer = 5;
 
     }
 }

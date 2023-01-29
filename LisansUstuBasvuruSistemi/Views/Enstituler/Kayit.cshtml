@@ -1,10 +1,10 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using LisansUstuBasvuruSistemi.Models.FilterModel @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using BiskaUtil
 @model Enstituler
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 <div class="row">
@@ -13,7 +13,7 @@
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.EnstituKod.IsNullOrWhiteSpace() ? "Yeni Enstitü Tanımlama İşlemi" : "Enstitü Bilgisi Düzenleme İşlemi")</h3> 
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.EnstituKod.IsNullOrWhiteSpace() ? "Yeni Enstitü Tanımlama İşlemi" : "Enstitü Bilgisi Düzenleme İşlemi")</h3>
                 </div>
                 <div class="panel-body">
                     <div class="panel panel-default form-horizontal">
@@ -129,7 +129,7 @@
     </form>
 </div>
 <script>
-   
+
     $(function () {
         var model = '@Html.Raw(Json.Encode(MmMessage))';
         validateControl(model);

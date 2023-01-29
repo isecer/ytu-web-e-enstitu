@@ -2,6 +2,8 @@
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.FilterModel;
 using LisansUstuBasvuruSistemi.Raporlar;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
 using System;
 using System.Collections.Generic;
 using System.IO;

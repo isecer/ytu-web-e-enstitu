@@ -7,8 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class TarihKriterSecim
     {
-        public const byte SecilenTarihVeOncesi = 1;
-        public const byte SecilenTarihAraligi = 2;
-        public const byte SecilenTarihVeSonrasi = 3;
+        public static int SecilenTarihVeOncesi = 1;
+        public static int SecilenTarihAraligi = 2;
+        public static int SecilenTarihVeSonrasi = 3;
     }
 }

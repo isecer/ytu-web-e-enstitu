@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class MezuniyetSinavDurum
     {
-        public const byte SonucGirilmedi = 1;
-        public const byte Basarili = 2;
-        public const byte Uzatma = 3;
-        public const byte Basarisiz = 4;
+        public static int SonucGirilmedi = 1;
+        public static int Basarili = 2;
+        public static int Uzatma = 3;
+        public static int Basarisiz = 4;
 
     }
 }

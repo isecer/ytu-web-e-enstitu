@@ -1,4 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using BiskaUtil
 @model Programlar
 @{
@@ -199,7 +202,7 @@
                             <div class="form-group ekAciklama @(Model.ProgramSecimiEkBilgi?"":"hide")">
                                 <label class="col-md-3 col-xs-4 control-label">Ek Açıklama</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <textarea name="Aciklama" id="Aciklama" class="form-control" rows="5" style="resize:vertical">@Model.Aciklama</textarea> 
+                                    <textarea name="Aciklama" id="Aciklama" class="form-control" rows="5" style="resize:vertical">@Model.Aciklama</textarea>
                                 </div>
                             </div>
 
@@ -325,7 +328,7 @@
 
         });
     });
-    
+
     function getBAT(sndr) {
         var val = $(sndr).val();
         if (val != null && val != "") {

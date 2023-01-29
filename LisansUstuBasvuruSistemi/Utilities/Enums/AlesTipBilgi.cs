@@ -7,8 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class AlesTipBilgi
     {
-        public const byte Sayısal = 1;
-        public const byte Sözel = 2;
-        public const byte EşitAğırlık = 3;
+        public static int Sayısal = 1;
+        public static int Sözel = 2;
+        public static int EşitAğırlık = 3;
     }
 }

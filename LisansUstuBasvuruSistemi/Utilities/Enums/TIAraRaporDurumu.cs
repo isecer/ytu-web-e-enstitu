@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class TIAraRaporDurumu
     {
-        public const byte ToplantiBilgileriGirilmedi = 1;
-        public const byte ToplantiBilgileriGirildi = 2;
-        public const byte DegerlendirmeSureciBaslatildi = 3;
-        public const byte DegerlendirmeSureciTamamlandi = 4;
+        public static int ToplantiBilgileriGirilmedi = 1;
+        public static int ToplantiBilgileriGirildi = 2;
+        public static int DegerlendirmeSureciBaslatildi = 3;
+        public static int DegerlendirmeSureciTamamlandi = 4;
 
 
     }

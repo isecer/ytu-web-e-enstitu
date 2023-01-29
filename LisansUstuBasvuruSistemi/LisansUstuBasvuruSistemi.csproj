@@ -852,6 +852,8 @@
     <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.Designer.cs">
       <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Enums\Msgtype.cs" />
+    <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
     <Compile Include="Utilities\Dtos\DmDtos\PagerIndexDto.cs" />
     <Compile Include="Utilities\Dtos\KmDtos\kmKotalar.cs" />
@@ -1005,25 +1007,23 @@
     <Compile Include="Utilities\Helpers\ViewRenderHelper.cs" />
     <Compile Include="Utilities\Helpers\XmlSinavConverter.cs" />
     <Compile Include="Models\ApplicationClock.cs" />
-    <Compile Include="Models\BelgeTalepAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\BelgeTalepAyar.cs" />
     <Compile Include="Models\DevexpressHelper.cs" />
-    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\FilterModels.cs" />
-    <Compile Include="Models\LogIslemleri.cs" />
+    <Compile Include="Utilities\Logs\LogIslemleri.cs" />
     <Compile Include="Models\MailManager.cs" />
     <Compile Include="Models\Management.cs" />
     <Compile Include="Models\MenuVeRoller.cs" />
     <Compile Include="WebServiceData\ObsService\ObsGetData.cs" />
-    <Compile Include="Models\TDOAyar.cs" />
-    <Compile Include="Models\TIAyar.cs" />
-    <Compile Include="Models\MezuniyetAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\TDOAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\TIAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\MezuniyetAyar.cs" />
     <Compile Include="Models\OnlineUsers.cs" />
     <Compile Include="Models\OSYMBinding.cs" />
-    <Compile Include="Models\regExMath.cs" />
     <Compile Include="Models\YokApi\ServiceManager.cs" />
     <Compile Include="Models\YokApi\YokdilDataModel.cs" />
-    <Compile Include="Models\SistemAyar.cs" />
-    <Compile Include="Models\SRAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\SistemAyar.cs" />
+    <Compile Include="Utilities\SystemSetting\SRAyar.cs" />
     <Compile Include="Models\ThreeDHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raporlar\Genel\rprAnket.cs">

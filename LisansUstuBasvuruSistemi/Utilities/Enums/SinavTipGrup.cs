@@ -7,8 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class SinavTipGrup
     {
-        public const byte Ales_Gree = 1;
-        public const byte DilSinavlari = 2;
-        public const byte Tomer = 3;
+        public static int Ales_Gree = 1;
+        public static int DilSinavlari = 2;
+        public static int Tomer = 3;
     }
 }

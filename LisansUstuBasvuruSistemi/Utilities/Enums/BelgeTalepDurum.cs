@@ -7,12 +7,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class BelgeTalepDurum
     {
-        public const byte TalepEdildi = 1;
-        public const byte Hazirlaniyor = 2;
-        public const byte Hazirlandi = 3;
-        public const byte Verildi = 4;
-        public const byte Kapatildi = 5;
-        public const byte IptalEdildi = 6;
+        public static int TalepEdildi = 1;
+        public static int Hazirlaniyor = 2;
+        public static int Hazirlandi = 3;
+        public static int Verildi = 4;
+        public static int Kapatildi = 5;
+        public static int IptalEdildi = 6;
 
     }
 }

@@ -6,6 +6,8 @@ using System.Net.Mail;
 
 using BiskaUtil;
 using System.Threading;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
 {

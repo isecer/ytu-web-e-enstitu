@@ -6,6 +6,8 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.Fil
 using BiskaUtil;
 using System.Threading;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -27,29 +29,9 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             var EnstituAdi = itemE.EnstituAd;
                             string MzamanlayiciMsg = "Mail Zamanlayıcısı Kontrolü Başlatıldı!<br />Enstitü: " + EnstituAdi;
-                            var AktifBs = db.BasvuruSurecs.Where(p => p.IsAktif && (p.BaslangicTarihi <= tarih && p.BitisTarihi >= tarih) && (p.EnstituKod == itemE.EnstituKod)).ToList();
-                            int TaslakCount = 0;
-                            foreach (var itemBs in AktifBs)
-                            {
-                                TaslakCount = 0;
-                                var bsOtoZamanBilgi = itemBs.BasvuruSurecOtoMails.Where(p => p.Gonderildi == false).ToList();
-                                var kalanGun = Convert.ToInt32((itemBs.BitisTarihi - tarih).TotalDays);
-                                var kalanSaat = Convert.ToInt32((itemBs.BitisTarihi - tarih).TotalHours);
+                          
 
-                                foreach (var itmZmn in bsOtoZamanBilgi)
-                                {
-                                    if (itmZmn.ZamanTipID == ZamanTipi.Gun && itmZmn.Zaman == kalanGun)
-                                    {
-                                        TaslakCount += sendMailBsTaslak(itemBs, kalanGun, itmZmn.ZamanTipID, itmZmn.Zaman);
-                                    }
-                                }
-                                if (itemBs.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) MzamanlayiciMsg += "<br />Lisansüstü taslak durumundaki başvuru hatırlatmaları (İşem Yapılan Başvuru Sayısı: " + TaslakCount + ")";
-                                else if (itemBs.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) MzamanlayiciMsg += "<br />Yatay Geçiş taslak durumundaki başvuru hatırlatmaları (İşem Yapılan Başvuru Sayısı: " + TaslakCount + ")";
-                                else MzamanlayiciMsg += "<br />YTU Yeni Mezun Doktora taslak durumundaki başvuru hatırlatmaları (İşem Yapılan Başvuru Sayısı: " + TaslakCount + ")";
-
-                            }
-
-                            TaslakCount = 0;
+                            var TaslakCount = 0;
                             var qAktifMzsID = Management.getAktifMezuniyetSurecID(itemE.EnstituKod);
                             if (qAktifMzsID.HasValue)
                             {
@@ -378,98 +360,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
             // ticker = new Timer(tick, null, 0, 1 * 5 * 1000);
 
-        }
-        public int sendMailBsTaslak(BasvuruSurec Bsurec, int kalanGun, int ZamanTipID, int Zaman)
-        {
-
-            int TaslakCount = 0;
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(Bsurec.EnstituKod);
-                var _ea = mailBilgi.SistemErisimAdresi;
-                var WurlAddr = _ea.Split('/').ToList();
-                if (_ea.Contains("//"))
-                    _ea = WurlAddr[0] + "//" + WurlAddr.Skip(2).Take(1).First();
-                else
-                    _ea = "http://" + WurlAddr.First();
-                var qTaslaklar = db.Basvurulars.Where(p => p.BasvuruSurecID == Bsurec.BasvuruSurecID && p.BasvuruDurumID == BasvuruDurumu.Taslak).Select(s => new { s.EMail, s.Kullanicilar.KullaniciTipleri.Yerli, s.KullaniciID }).Distinct().ToList();
-                Dictionary<string, List<CmbIntDto>> dct = new Dictionary<string, List<CmbIntDto>>();
-                dct.Add("", qTaslaklar.Select(s => new CmbIntDto { Value = s.KullaniciID, Caption = s.EMail }).ToList()); 
-                var bdurumAds = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Taslak).ToList();
-                TaslakCount = qTaslaklar.Count();
-                var zmnB = db.BasvuruSurecOtoMails.Where(p => p.BasvuruSurecID == Bsurec.BasvuruSurecID && p.ZamanTipID == ZamanTipID && p.Zaman == Zaman).FirstOrDefault();
-                zmnB.Gonderildi = true;
-                zmnB.GonderilenCount = TaslakCount;
-                var GonderilecekTumMailler = dct.SelectMany(s => s.Value.Select(s2 => s2.Caption)).Distinct().ToList();
-                zmnB.Gonderilenler = zmnB.Gonderilenler.IsNullOrWhiteSpace() ? string.Join(",", GonderilecekTumMailler) : zmnB.Gonderilenler + string.Join(",", GonderilecekTumMailler);
-
-                if (TaslakCount > 0)
-                    foreach (var itemMailD in dct)
-                    {
-
-                         
-                        string BasvuruDurumAdi = bdurumAds.First().BasvuruDurumAdi;
-                        var mmmC = new mdlMailMainContent();
-                        var enstitu = db.Enstitulers.Where(p => p.EnstituKod == Bsurec.EnstituKod).First();
-                        mmmC.EnstituAdi = enstitu.EnstituAd;
-                        mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-                        mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png"; ;
-
-
-
-
-                        var htmlCbilgi = new mailTableContent();
-
-                        var ackName = "";
-                        if (Bsurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) ackName = "Lisansüstü Başvuru sürecinde yapmış olduğunuz başvurunuz taslak halindendir. Başvuru sürecinin bitimine _xXxGun_  gün kalmıştır. Eğer başvurunuzu _xXxGun_ içerisinde onaylamazsanız başvurunuz geçersiz sayılacaktır.";
-                        else if (Bsurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) ackName = "Yatay Geçiş Başvuru sürecinde yapmış olduğunuz başvurunuz taslak halindendir. Başvuru sürecinin bitimine _xXxGun_  gün kalmıştır. Eğer başvurunuzu _xXxGun_ içerisinde onaylamazsanız başvurunuz geçersiz sayılacaktır.";
-                        else ackName = "YTU Yeni Mezun Doktora Başvuru sürecinde yapmış olduğunuz başvurunuz taslak halindendir. Başvuru sürecinin bitimine _xXxGun_  gün kalmıştır. Eğer başvurunuzu _xXxGun_ içerisinde onaylamazsanız başvurunuz geçersiz sayılacaktır.";
-                        htmlCbilgi.AciklamaBasligi = ackName.Replace("_xXxGun_", kalanGun.ToString() + " Gün ");
-                        htmlCbilgi.GrupBasligi = "BAŞVURU BİLGİSİ";
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Durumu", Aciklama = BasvuruDurumAdi });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Süreci", Aciklama = Bsurec.BaslangicTarihi.ToFormatDateAndTime() + " - " + Bsurec.BitisTarihi.ToFormatDateAndTime() });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuruyu Onaylamanız İçin Kalan Süre", Aciklama = (kalanGun == 1 ? "Son" : kalanGun.ToString()) + " Gün" });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Sisteme Erişim Adresi", Aciklama = enstitu.SistemErisimAdresi });
-
-                        var tableContent = Management.RenderPartialView("Ajax", "getMailTableContent", htmlCbilgi);
-                        mmmC.Content = tableContent;
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var EMailList = itemMailD.Value.Select(s => s.Caption).Distinct().Select(s => new MailSendList { EMail = s, ToOrBcc = true }).ToList();
-                        //EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
-
-                        var emailSend = MailManager.sendMailRetVal(Bsurec.EnstituKod, "Başvurunuz taslak halindedir. Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız", htmlMail, EMailList, null);
-
-                        if (emailSend == null)
-                        {
-
-
-
-                            var kModel = new GonderilenMailler();
-                            kModel.Tarih = DateTime.Now;
-                            kModel.EnstituKod = Bsurec.EnstituKod;
-                            kModel.MesajID = null;
-                            kModel.IslemTarihi = DateTime.Now;
-                            kModel.Konu = "Başvurunuz taslak halindedir. Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız";
-                            kModel.IslemYapanID = 1;
-                            kModel.IslemYapanIP = UserIdentity.Ip;
-                            kModel.Aciklama = "";
-                            kModel.AciklamaHtml = htmlMail ?? "";
-                            kModel.Gonderildi = true;
-                            var eklenen = db.GonderilenMaillers.Add(kModel);
-                            db.SaveChanges();
-                            foreach (var item in itemMailD.Value)
-                            {
-                                db.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = item.Caption, GonderilenMailID = kModel.GonderilenMailID, KullaniciID = item.Value });
-                            }
-                            eklenen.Gonderildi = true;
-                            db.SaveChanges();
-                        }
-
-
-                    }
-            }
-            return TaslakCount;
-        }
+        } 
         public int sendMailMsTaslak(MezuniyetSureci Bsurec, int kalanGun, int ZamanTipID, int Zaman)
         {
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text; 
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions

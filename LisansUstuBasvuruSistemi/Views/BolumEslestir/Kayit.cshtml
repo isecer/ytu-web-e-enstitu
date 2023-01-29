@@ -1,10 +1,12 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Models.FilterModel 
+@using LisansUstuBasvuruSistemi.Models.FilterModel
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model kmBolumEslestir
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-      
+
     var BLData = Management.GetProgramaBasvurulamayacakOgrenciBolumleri(Model.EnstituKod, Model.ProgramKod, Model.OgrenciBolumID);
     BLData.InputName = "OgrenciBolumID";
     BLData.PanelTitle = "Eşleştirilecek öğrenci bölümlerini seçiniz";
@@ -42,13 +44,13 @@
                                     @Model.ProgramAdi
                                 </div>
                             </div>
-                         
+
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label"></label>
                                 <div class="col-md-9 col-xs-8">
                                     @BLData.ToRenderPartialViewHtml("Ajax", "getChkList")
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,7 +75,7 @@
 
             $('.bolumAdlari').each(function (inx, lblx) {
                 var clmVal = $(lblx).text().replace('İ', 'i').toLowerCase(); s
-                var AShow = clmVal.indexOf(filtreval) > -1; 
+                var AShow = clmVal.indexOf(filtreval) > -1;
                 if (AShow) {
                     $(lblx).parents('tr').first().removeClass("hide");
                 }
@@ -92,7 +94,7 @@
             $fltrRowDet.addClass("hide");
             $('#filtreKelime').html("");
 
-        }    
+        }
     }
 
     $('.bolumAdlari,.iCheck-helper').click(function () {
@@ -110,7 +112,7 @@
             $('#ToplamBilgi').html('Toplam: ' + tops + ' Öğrenci Bölümü Seçilen: ' + chckCount + ' Bölüm');
         }, 300);
     }
-     
+
     $(document).ready(function () {
         var model = '@Html.Raw(Json.Encode(MmMessage))';
         validateControl(model);

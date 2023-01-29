@@ -7,9 +7,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class OgrenimDurum
     {
-        public const byte HalenOğrenci = 1;
-        public const byte Mezun = 2;
-        public const byte OzelOgrenci = 3;
+        public static int HalenOğrenci = 1;
+        public static int Mezun = 2;
+        public static int OzelOgrenci = 3;
 
     }
 }

@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class BasvuruDurumu
     {
-        public const byte Taslak = 1;
-        public const byte Onaylandı = 2;
-        public const byte IptalEdildi = 4;
-        public const byte Gonderildi = 5;
+        public static int Taslak = 1;
+        public static int Onaylandı = 2;
+        public static int IptalEdildi = 4;
+        public static int Gonderildi = 5;
 
 
     }

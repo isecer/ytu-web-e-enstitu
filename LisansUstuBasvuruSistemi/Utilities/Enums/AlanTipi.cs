@@ -7,9 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class AlanTipi
     {
-        public const byte AlanIci = 1;
-        public const byte AlanDisi = 2;
-        public const byte Ortak = 3;
-
+        public static int AlanIci = 1;
+        public static int AlanDisi = 2;
+        public static int Ortak = 3; 
     }
 }

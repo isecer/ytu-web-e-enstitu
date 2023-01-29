@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc; 
 using Newtonsoft.Json;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

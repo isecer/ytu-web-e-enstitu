@@ -7,6 +7,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Models.ObsService;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -458,6 +461,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (mMessage.Messages.Count == 0)
                     {
+                        foreach (var item in Tiks)
+                        {
+                            item.TEZ_IZLEME_JURI_ADSOY = item.TEZ_IZLEME_JURI_ADSOY.ToUpper().Trim();
+                            item.TEZ_IZLEME_JURI_UNVAN = item.TEZ_IZLEME_JURI_UNVAN.ToUpper().Trim().ToMezuniyetJuriUnvanAdi();
+                        }
                         var obsTik1 = Tiks[0];
                         var obsTik2 = Tiks[1];
 
@@ -467,6 +475,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
                         Model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
                         Model.IsTezDiliTr = studentInfo.IsTezDiliTr;
+                        studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().Trim();
+                        studentInfo.OgrenciInfo.DANISMAN_UNVAN1 = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper().Trim().ToMezuniyetJuriUnvanAdi();
+                       
                         Model.OgrenciAdSoyad = TIBasvuru.Ad + " " + TIBasvuru.Soyad + " - " + TIBasvuru.OgrenciNo;
                         Model.OgrenciAnabilimdaliProgramAdi = TIBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " - " + TIBasvuru.Programlar.ProgramAdi;
                         if (TIBasvuruAraRapor != null)
@@ -488,14 +499,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             Model.TICalismaRaporDosyaYolu = TIBasvuruAraRapor.TICalismaRaporDosyaYolu;
                             Model.IsYokDrBursiyeriVar = TIBasvuruAraRapor.IsYokDrBursiyeriVar;
                             Model.YokDrOncelikliAlan = TIBasvuruAraRapor.YokDrOncelikliAlan;
-                            Model.KomiteList = TIBasvuruAraRapor.TIBasvuruAraRaporKomites.Select(s => new KrTIBasvuruAraRaporKomite
+                            Model.KomiteList = TIBasvuruAraRapor.TIBasvuruAraRaporKomites.ToList().Select(s => new KrTIBasvuruAraRaporKomite
                             {
                                 TIBasvuruAraRaporID = s.TIBasvuruAraRaporID,
                                 TIBasvuruAraRaporKomiteID = s.TIBasvuruAraRaporKomiteID,
                                 JuriTipAdi = s.JuriTipAdi,
-                                UnvanAdi = s.UnvanAdi,
+                                UnvanAdi = s.UnvanAdi.ToUpper().Trim(),
                                 SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", s.UnvanAdi),
-                                AdSoyad = s.AdSoyad,
+                                AdSoyad = s.AdSoyad.ToUpper().Trim(),
                                 EMail = s.EMail,
                                 UniversiteID = s.UniversiteID,
                                 IsDilSinaviOrUniversite = s.IsDilSinaviOrUniversite,
@@ -506,15 +517,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 UniversiteAdi = s.UniversiteAdi,
                                 AnabilimdaliProgramAdi = s.AnabilimdaliProgramAdi
                             }).ToList();
-
-                            var tD = Model.KomiteList.Where(p => p.JuriTipAdi == "TezDanismani").First();
-                            if (tD.AdSoyad.ToUpper() != studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper() || tD.UnvanAdi.ToUpper() != studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper())
+                             var tD = Model.KomiteList.Where(p => p.JuriTipAdi == "TezDanismani").First();
+                            if (tD.AdSoyad != studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 || tD.UnvanAdi != studentInfo.OgrenciInfo.DANISMAN_UNVAN1)
                                 mMessage.Messages.Add("Tez danışmanı bilgileri değişmiştir.<br /> Önceki Veri: " + tD.UnvanAdi + " " + tD.AdSoyad + " Yeni Veri: " + studentInfo.OgrenciInfo.DANISMAN_UNVAN1 + " " + studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1);
                             tD.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tD.UniversiteID);
-                            if (tD.AdSoyad.ToUpper().Trim() != studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().ToUpper().Trim() || tD.UnvanAdi.ToUpper() != studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper())
+                            if (tD.AdSoyad != studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 || tD.UnvanAdi != studentInfo.OgrenciInfo.DANISMAN_UNVAN1)
                             {
-                                tD.AdSoyad = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper();
-                                tD.UnvanAdi = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi();
+                                tD.AdSoyad = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1;
+                                tD.UnvanAdi = studentInfo.OgrenciInfo.DANISMAN_UNVAN1;
                             }
                             tD.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tD.UnvanAdi);
 
@@ -523,26 +533,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                             var tik1 = Model.KomiteList.Where(p => p.JuriTipAdi == "TikUyesi1").First();
-                            if (tik1.AdSoyad.ToUpper() != obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper() || tik1.UnvanAdi.ToUpper() != obsTik1.TEZ_IZLEME_JURI_UNVAN.ToUpper())
+                            if (tik1.AdSoyad != obsTik1.TEZ_IZLEME_JURI_ADSOY || tik1.UnvanAdi != obsTik1.TEZ_IZLEME_JURI_UNVAN)
                                 mMessage.Messages.Add("Tik1 Üyesi bilgileri değişmiştir.<br /> Önceki Veri: " + tik1.UnvanAdi + " " + tik1.AdSoyad + " Yeni Veri: " + obsTik1.TEZ_IZLEME_JURI_UNVAN + " " + obsTik1.TEZ_IZLEME_JURI_ADSOY);
                             tik1.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tik1.UniversiteID);
-                            if (tik1.AdSoyad.ToUpper() != obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper() || tik1.UnvanAdi.ToUpper() != obsTik1.TEZ_IZLEME_JURI_UNVAN.ToUpper())
+                            if (tik1.AdSoyad != obsTik1.TEZ_IZLEME_JURI_ADSOY || tik1.UnvanAdi != obsTik1.TEZ_IZLEME_JURI_UNVAN)
                             {
-                                tik1.AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY.ToUpper();
-                                tik1.UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
+                                tik1.AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY;
+                                tik1.UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN;
                             }
                             tik1.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tik1.UnvanAdi);
 
 
                             var tik2 = Model.KomiteList.Where(p => p.JuriTipAdi == "TikUyesi2").First();
-                            if (tik2.AdSoyad.ToUpper() != obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper() || tik2.UnvanAdi.ToUpper() != obsTik2.TEZ_IZLEME_JURI_UNVAN.ToUpper())
-                                mMessage.Messages.Add("Tik2 Üyesi bilgileri değişmiştir.<br /> Önceki Veri: " + tik2.UnvanAdi + " " + tik2.AdSoyad + " Yeni Veri: " + obsTik2.TEZ_IZLEME_JURI_UNVAN + " " + obsTik2.TEZ_IZLEME_JURI_ADSOY);
+                            if (tik2.AdSoyad != obsTik2.TEZ_IZLEME_JURI_ADSOY || tik2.UnvanAdi != obsTik2.TEZ_IZLEME_JURI_UNVAN)
+                                mMessage.Messages.Add("Tik2 Üyesi bilgileri değişmiştir.<br /> Önceki Veri: " + tik2.UnvanAdi  + " " + tik2.AdSoyad + " Yeni Veri: " + obsTik2.TEZ_IZLEME_JURI_UNVAN + " " + obsTik2.TEZ_IZLEME_JURI_ADSOY);
 
                             tik2.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tik2.UniversiteID);
-                            if (tik2.AdSoyad.ToUpper() != obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper() || tik2.UnvanAdi.ToUpper() != obsTik2.TEZ_IZLEME_JURI_UNVAN.ToUpper())
+                            if (tik2.AdSoyad != obsTik2.TEZ_IZLEME_JURI_ADSOY || tik2.UnvanAdi != obsTik2.TEZ_IZLEME_JURI_UNVAN)
                             {
-                                tik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper();
-                                tik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi();
+                                tik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY;
+                                tik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN;
 
                             }
                             tik2.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tik2.UnvanAdi);
@@ -564,8 +574,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var TdBilgi = new KrTIBasvuruAraRaporKomite
                             {
                                 JuriTipAdi = "TezDanismani",
-                                UnvanAdi = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToMezuniyetJuriUnvanAdi(),
-                                AdSoyad = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper(),
+                                UnvanAdi = studentInfo.OgrenciInfo.DANISMAN_UNVAN1,
+                                AdSoyad = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1,
                                 EMail = tdKul.EMail,
                                 UniversiteID = Management.UniversiteYtuKod,
                                 // AnabilimdaliProgramAdi = TezDanismani.Birimler!=null?TezDanismani.Birimler.BirimAdi:"",
@@ -580,7 +590,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 JuriTipAdi = "TikUyesi1",
                                 AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY,
-                                UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi(),
+                                UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN,
                                 EMail = obsTik1.TEZ_IZLEME_JURI_EPOSTA
                             };
                             Tk1Bilgi.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", Tk1Bilgi.UnvanAdi);
@@ -592,7 +602,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 JuriTipAdi = "TikUyesi2",
                                 AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY,
-                                UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToMezuniyetJuriUnvanAdi()
+                                UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN
                             };
                             Tk2Bilgi.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", Tk2Bilgi.UnvanAdi);
                             Tk2Bilgi.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", Tk2Bilgi.UniversiteID);

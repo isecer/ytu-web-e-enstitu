@@ -6,9 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Models.FilterModel
 {
+    
     public class CheckObjectX<T> where T : class
     {
         public bool? Checked { get; set; }

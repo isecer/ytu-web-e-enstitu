@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Models.ObsService

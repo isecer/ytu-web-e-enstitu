@@ -8,6 +8,7 @@ using LisansUstuBasvuruSistemi.Models.FilterModel;
 using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

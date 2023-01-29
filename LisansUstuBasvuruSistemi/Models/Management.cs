@@ -27,6 +27,10 @@ using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.DmDtos;
 using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -12779,11 +12783,7 @@ namespace LisansUstuBasvuruSistemi.Models
             //    return "";
             //}
         }
-        public static IHtmlString ToRenderPartialViewHtml(this object model, string controllerName, string partialView)
-        {
-            var strView = RenderPartialView(controllerName, partialView, model);
-            return new HtmlString(strView);
-        }
+      
         public static int PageSize = 15;
 
         public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
@@ -12957,16 +12957,7 @@ namespace LisansUstuBasvuruSistemi.Models
             var rsm = ResimAdi.IsNullOrWhiteSpace() ? (getRoot() + SistemAyar.KullaniciDefaultResim) : (getRoot() + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
             return rsm;
         }
-        public static SinavSonucAlesXmlModel toSinavSonucAlesXmlModel(this string obj)
-        {
-            var xml = new XmlDocument();
-            xml.LoadXml(obj);
-            string jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xml);
-            var jobject = JObject.Parse(jsonString);
-            var output = jobject.Children<JProperty>().Select(prop => prop.Value.ToObject<SinavSonucAlesXmlModel>()).FirstOrDefault();
-
-            return output;
-        }
+       
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
             var sonuclar = xmlstring.toSinavSonucAlesXmlModel();
@@ -13150,49 +13141,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 mdl.BitisYili = nowYear + 1;
             }
             return mdl;
-        }
-        public static CevrilenNotModel ToNotCevir(this double deger, int Sistem)
-        {
-            var mdl = new CevrilenNotModel();
-            if (Sistem == NotSistemi.Not1LikSistem)
-            {  // && CSistem == 100
-                mdl.Not1Lik = 1;
-                mdl.Not4Luk = 4;
-                mdl.Not5Lik = 5;
-                mdl.Not100Luk = (30d + (-35d / 2d + (0.5825d + (0.1925d + 0.195833d * (-2d + deger)) * (-3d + deger)) * (-1d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
-            }
-            else if (Sistem == NotSistemi.Not4LükSistem)
-            {
-                //&& CSistem == 100
-                mdl.Not1Lik = 1;
-                mdl.Not4Luk = 4;
-                mdl.Not5Lik = 5;
-                mdl.Not100Luk = (100d + (70d / 3d + (0.00166667d + 0.00166667d * (-2d + deger)) * (-1d + deger)) * (-4d + deger)).ToString("n2").ToDouble().Value;
-            }
-            else if (Sistem == NotSistemi.Not5LikSistem)
-            {
-                mdl.Not1Lik = 1;
-                mdl.Not4Luk = 4;
-                mdl.Not5Lik = 5;
-                mdl.Not100Luk = (100d + (18.6667d + (-0.000952381d + (0.0021645d + 0.00155844d * (-4d + deger)) * (-3d + deger)) * (-1.25d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
-            }
-            else if (Sistem == NotSistemi.Not100LükSistem)
-            {
-                mdl.Not1Lik = 1;
-                mdl.Not4Luk = 4;
-                mdl.Not5Lik = 5;
-                mdl.Not100Luk = deger.ToString("n2").ToDouble().Value;
-            }
-            else if (Sistem == NotSistemi.Not20LikSistem)
-            {
-                mdl.Not1Lik = 1;
-                mdl.Not4Luk = 4;
-                mdl.Not5Lik = 5;
-                mdl.Not100Luk = ToNotCevir((deger * (0.2)), NotSistemi.Not4LükSistem).Not100Luk.ToString("n2").ToDouble().Value;
-            }
-            return mdl;
-
-        }
+        } 
         public static double toGenelBasariNotu(this double MezuniyetNotu100LukSistem, bool MulakatSurecineGirecek, BasvuruSurecOgrenimTipleri BasurecOT, bool IsAlesYerineDosyaNotuIstensin, double? AlesNotu, double? GirisSinavNotu = null)
         {
 

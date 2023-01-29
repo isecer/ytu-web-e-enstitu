@@ -9,6 +9,7 @@ using BiskaUtil;
 using System.Web.UI.WebControls;
 using System.IO;
 using System.Web.UI;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

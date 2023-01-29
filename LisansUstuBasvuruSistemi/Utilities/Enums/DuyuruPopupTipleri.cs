@@ -7,12 +7,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class DuyuruPopupTipleri
     {
-        public const byte AnaSayfa = 1;
-        public const byte LisansustuBasvuru = 2;
-        public const byte MezuniyetBasvuru = 3;
-        public const byte TalepYap = 4;
-        public const byte TIBasvuru = 5;
-        public const byte TDOBasvuru = 6;
+        public static int AnaSayfa = 1;
+        public static int LisansustuBasvuru = 2;
+        public static int MezuniyetBasvuru = 3;
+        public static int TalepYap = 4;
+        public static int TIBasvuru = 5;
+        public static int TDOBasvuru = 6;
 
     }
 }

@@ -7,8 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class KotaHesapTipleri
     {
-        public const byte SeciliBasvuruSureci = 1;
-        public const byte YilveDonemToplam = 2;
+        public static int SeciliBasvuruSureci = 1;
+        public static int YilveDonemToplam = 2;
 
 
     }

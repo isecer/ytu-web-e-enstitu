@@ -1,9 +1,10 @@
-﻿using System;
+﻿using LisansUstuBasvuruSistemi.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace LisansUstuBasvuruSistemi.Models
+namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
 
     public static class TIAyar

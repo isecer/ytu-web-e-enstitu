@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class ZamanTipi
     {
-        public const byte Yil = 1;
-        public const byte Ay = 2;
-        public const byte Gun = 3;
-        public const byte Saat = 4;
-        public const byte Dakika = 4;
+        public static int Yil = 1;
+        public static int Ay = 2;
+        public static int Gun = 3;
+        public static int Saat = 4;
+        public static int Dakika = 4;
     }
 }

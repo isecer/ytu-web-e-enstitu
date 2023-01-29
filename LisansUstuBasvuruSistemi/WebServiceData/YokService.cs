@@ -4,7 +4,9 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web; 
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using  LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 
 namespace LisansUstuBasvuruSistemi.WebServiceData

@@ -10,6 +10,7 @@ using System.Net.Mail;
 using System.IO;
 using System.Net.Mime;
 using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

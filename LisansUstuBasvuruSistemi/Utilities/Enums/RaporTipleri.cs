@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class RaporTipleri
+    public class RaporTipleri
     {
         public const byte Basvuru = 1;
         public const byte BasvuruSonucListesi = 2;
@@ -41,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const byte TezDanismanOneriFormu = 35;
         public const byte TezEsDanismanOneriFormu = 36;
         public const byte TezEsDanismanOneriTutanakRaporu = 37;
+        public const byte TezDanismanDegisiklikFormu = 38;
 
 
     }

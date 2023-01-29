@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
 using System.Data.Entity.Core.Objects;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

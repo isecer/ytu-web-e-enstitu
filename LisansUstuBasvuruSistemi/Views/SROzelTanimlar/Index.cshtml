@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Models.FilterModel @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @model  fmOzelTanimlar
 @{
@@ -20,12 +21,12 @@
                                 @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
                             </td>
                             <td width="40px;">
-                                <ul class="panel-controls">    
-                                    <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>          
+                                <ul class="panel-controls">
+                                    <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                                 </ul>
                             </td>
                         </tr>
-                    </table>    
+                    </table>
                 </div>
                 <div class="panel-body">
                     <table class="table table-hover">
@@ -47,8 +48,8 @@
                                     <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
                                 </th>
                                 @*<th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
-                                </th>*@
+                                        @Html.DropDownList("EnstituKod", null, new { @class = "form-control" })
+                                    </th>*@
                                 <th>
                                     @Html.DropDownList("SROzelTanimTipID", null, new { @class = "form-control" })
                                 </th>
@@ -76,7 +77,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.SROzelTanimID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SROzelTanimID')">
+                                                            <li id="iShow_@item.SROzelTanimID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SROzelTanimID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -85,8 +86,8 @@
                                             </table>
                                         </td>
                                         @*<td>
-                                            @item.EnstituAdi
-                                        </td>*@
+                                                @item.EnstituAdi
+                                            </td>*@
                                         <td>
                                             @item.SROzelTanimTipAdi
                                         </td>
@@ -208,8 +209,8 @@
                 alert(err.responseText);
                 _pRefresh(_panel, true);
             }
-        });     
-    }     
+        });
+    }
     function sil(sndr, id) {
         $.ajax({
             url: '@Url.Action("Sil", "SROzelTanimlar")',

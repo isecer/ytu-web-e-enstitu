@@ -1,10 +1,5 @@
-using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
-using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using System.Linq;
 
 

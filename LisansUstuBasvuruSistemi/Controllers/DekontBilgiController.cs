@@ -7,6 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.Fil
 using BiskaUtil;
 using Newtonsoft.Json.Linq;
 using System.Xml;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

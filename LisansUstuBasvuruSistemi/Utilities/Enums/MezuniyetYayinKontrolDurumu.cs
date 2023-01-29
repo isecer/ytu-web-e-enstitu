@@ -7,10 +7,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class MezuniyetYayinKontrolDurumu
     {
-        public const byte Taslak = 1;
-        public const byte Onaylandi = 2;
-        public const byte IptalEdildi = 4;
-        public const byte KabulEdildi = 5;
+        public static int Taslak = 1;
+        public static int Onaylandi = 2;
+        public static int IptalEdildi = 4;
+        public static int KabulEdildi = 5;
 
     }
 }

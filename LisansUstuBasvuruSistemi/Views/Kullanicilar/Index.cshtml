@@ -1,6 +1,8 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Models.FilterModel
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model fmKullanicilar
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -233,7 +235,7 @@
                                                         if (UserIdentity.Current.IsAdmin)
                                                         {
                                                             <li>
-                                                                <a href="@Url.Action("SetLogin", new { item.KullaniciID })"  target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
+                                                                <a href="@Url.Action("SetLogin", new { item.KullaniciID })" target="_blank"><i class="fa fa-user fa-lg"></i>Kullanıcı Hesabına Geç</a>
                                                             </li>
                                                         }
                                                     }
@@ -243,11 +245,11 @@
                                                     @if (item.KtipBasvuruYapabilir)
                                                     {
                                                         @*if (adinaBasvuru)
-                                                        {
-                                                            <li>
-                                                                <a href="@Url.Action("BasvuruYap", "Basvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Başvuru Yap</a>
-                                                            </li>
-                                                        }*@
+                                                            {
+                                                                <li>
+                                                                    <a href="@Url.Action("BasvuruYap", "Basvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Başvuru Yap</a>
+                                                                </li>
+                                                            }*@
                                                         if (item.YtuOgrencisi)
                                                         {
                                                             if (adinaBasvuruTDO && TDOBAcik.Contains(item.EnstituKod))

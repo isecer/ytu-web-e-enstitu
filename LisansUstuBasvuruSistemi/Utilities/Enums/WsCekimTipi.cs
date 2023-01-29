@@ -7,8 +7,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class WsCekimTipi
     {
-        public const byte Donemsel = 1;
-        public const byte Aylik = 2;
-        public const byte Tarih = 3;
+        public static int Donemsel = 1;
+        public static int Aylik = 2;
+        public static int Tarih = 3;
     }
 }

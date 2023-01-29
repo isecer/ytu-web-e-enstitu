@@ -1,11 +1,10 @@
-﻿using System;
+﻿using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Xml;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
-using Newtonsoft.Json.Linq;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {

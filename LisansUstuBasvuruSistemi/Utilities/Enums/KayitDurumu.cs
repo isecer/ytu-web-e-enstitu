@@ -7,9 +7,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class KayitDurumu
     {
-        public const byte OnKayit = 0;
-        public const byte KayitOldu = 1;
-        public const byte KayitOlmadi = 2;
+        public static int OnKayit = 0;
+        public static int KayitOldu = 1;
+        public static int KayitOlmadi = 2;
 
     }
 }

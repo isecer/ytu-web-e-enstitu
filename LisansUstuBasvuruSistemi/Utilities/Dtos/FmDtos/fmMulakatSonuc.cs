@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
-
+﻿using System.Collections.Generic; 
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos.FmDtos
 {
     public class fmMulakatSonuc

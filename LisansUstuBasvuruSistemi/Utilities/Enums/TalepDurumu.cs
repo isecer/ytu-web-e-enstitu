@@ -7,9 +7,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public static class TalepDurumu
     {
-        public const byte TalepYapildi = 1;
-        public const byte Onaylandi = 2;
-        public const byte Rededildi = 3;
+        public static int TalepYapildi = 1;
+        public static int Onaylandi = 2;
+        public static int Rededildi = 3;
 
     }
 }

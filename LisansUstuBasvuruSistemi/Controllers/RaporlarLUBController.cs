@@ -1,4 +1,5 @@
 ﻿using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

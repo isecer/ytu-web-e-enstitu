@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

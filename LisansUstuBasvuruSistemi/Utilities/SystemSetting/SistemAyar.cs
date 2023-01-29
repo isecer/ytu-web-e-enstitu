@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models.FilterModel;
 
-namespace LisansUstuBasvuruSistemi.Models
+namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
     public static class SistemAyar
     {
