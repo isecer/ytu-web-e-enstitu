@@ -1,5 +1,5 @@
 ﻿using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

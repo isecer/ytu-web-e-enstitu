@@ -1,15 +1,15 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Raporlar;
-using System.IO;
-using System.Web.UI.WebControls;
 using System.Web.UI;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
+using System.Web.UI.WebControls;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

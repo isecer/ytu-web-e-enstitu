@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
-using BiskaUtil;
 using System.Web.UI.WebControls;
-using System.IO;
-using System.Web.UI;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

@@ -3,12 +3,13 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

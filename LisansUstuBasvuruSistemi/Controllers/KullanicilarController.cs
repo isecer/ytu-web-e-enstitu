@@ -1,5 +1,5 @@
 ﻿using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +14,11 @@ using System.Data.Entity.Core.Objects.DataClasses;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
 using System.Web.Security;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers

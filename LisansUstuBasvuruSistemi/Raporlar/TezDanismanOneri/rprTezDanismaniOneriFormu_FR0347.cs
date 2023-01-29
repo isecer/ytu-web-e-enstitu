@@ -1,5 +1,5 @@
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections;
 using System.ComponentModel;

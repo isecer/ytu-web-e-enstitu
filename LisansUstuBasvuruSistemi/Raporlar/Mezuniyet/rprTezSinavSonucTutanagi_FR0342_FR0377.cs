@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.Enums;

@@ -1,8 +1,7 @@
 ﻿using BiskaUtil;
 using Ionic.Zip;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -15,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

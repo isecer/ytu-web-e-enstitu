@@ -110,7 +110,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.RprMezuniyetTutanakModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprMezuniyetTutanakModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // xrLabel2

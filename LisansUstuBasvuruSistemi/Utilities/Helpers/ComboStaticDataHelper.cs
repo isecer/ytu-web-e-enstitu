@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {

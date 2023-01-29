@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model KmTDOBasvuruDanisman
 @{
     Layout = null;
@@ -218,7 +218,7 @@
             $.ajax({
                 url: '@Url.Action("GetSinavTip", "TDOBasvuru")',
                 data: { 'TDOBasvuruID': @Model.TDOBasvuruID, 'SinavTipID': sndrVal },
-                success: function (result) { 
+                success: function (result) {
                      if (result.OzelNot == true) {
                         var SnotSlct = '<select class="form-control" id="' + inp + '" name="' + inp +'">';
 

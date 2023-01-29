@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using Newtonsoft.Json.Linq;
 using System.Xml;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers

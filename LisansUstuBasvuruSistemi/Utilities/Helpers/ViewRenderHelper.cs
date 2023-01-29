@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {

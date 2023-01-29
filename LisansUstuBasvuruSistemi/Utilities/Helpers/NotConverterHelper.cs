@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers

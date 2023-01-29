@@ -1,14 +1,12 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Models.FilterModel
-@using LisansUstuBasvuruSistemi.Utilities.Enums
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
-@using BiskaUtil
-@model Programlar
+@model LisansUstuBasvuruSistemi.Models.Programlar
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var OldID = (string)ViewBag.OldID;
-    var ProgramKullaniciTipleri = (List<programKullaniciModel>)ViewBag.ProgramKullaniciTipleri;
+    var OldID = (string)ViewBag.OldID; 
     var KulIds = (List<int>)ViewBag.KullaniciIDs;
     var OBIds = (List<int>)ViewBag.AOgrenciBolumID;
     var SecilenOBIds = (List<int>)ViewBag.OgrenciBolumIDs;

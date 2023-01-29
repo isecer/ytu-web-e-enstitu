@@ -1,8 +1,9 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,4 @@
-﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
-@model List<CheckObject<Kullanicilar>>
+﻿@model List<BiskaUtil.CheckObject<LisansUstuBasvuruSistemi.Models.Kullanicilar>>
 @{
     Layout = null;
     var allchecked = Model.Where(s => s.Checked == true).Count() == Model.Count;

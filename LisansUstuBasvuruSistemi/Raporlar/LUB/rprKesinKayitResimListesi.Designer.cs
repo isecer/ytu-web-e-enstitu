@@ -139,13 +139,13 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(Utilities.Dtos.RmDtos.rprModelKazananList);
+            this.objectDataSource1.DataSource = typeof(Utilities.Dtos.rprModelKazananList);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // objectDataSource2
             // 
             this.objectDataSource2.Constructor = objectConstructorInfo1;
-            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.rprModelKazananList);
+            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprModelKazananList);
             this.objectDataSource2.Name = "objectDataSource2";
             // 
             // xrPageInfo1

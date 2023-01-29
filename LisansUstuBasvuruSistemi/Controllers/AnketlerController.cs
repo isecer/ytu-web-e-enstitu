@@ -1,7 +1,8 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,7 @@ using CaptchaMvc.Interface;
 using CaptchaMvc.Models;
 using DevExpress.XtraReports.Security;
 using LisansUstuBasvuruSistemi.Models; 
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;

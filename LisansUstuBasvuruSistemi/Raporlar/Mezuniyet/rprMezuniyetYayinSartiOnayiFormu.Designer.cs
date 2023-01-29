@@ -640,7 +640,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.raporMezuniyetBasvuruFormModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.raporMezuniyetBasvuruFormModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // ReportHeader

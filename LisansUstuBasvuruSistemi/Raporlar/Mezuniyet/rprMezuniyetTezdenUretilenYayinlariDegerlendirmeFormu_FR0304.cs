@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -67,7 +67,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                               join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
                               join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
-                              select new rprMezuniyetTezDegerlendirmeYayinBilgi
+                              select new RprMezuniyetTezDegerlendirmeYayinBilgi
                               {
                                   YayinTurAdi = sd.MezuniyetYayinTurAdi,
                                   YayinBasligi = qs.YayinBasligi,

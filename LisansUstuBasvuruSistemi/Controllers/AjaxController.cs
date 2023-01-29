@@ -3,10 +3,9 @@ using BiskaUtil;
 using CaptchaMvc.HtmlHelpers;
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
 using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -16,12 +15,12 @@ using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

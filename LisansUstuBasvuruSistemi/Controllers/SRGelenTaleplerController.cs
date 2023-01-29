@@ -1,13 +1,12 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers

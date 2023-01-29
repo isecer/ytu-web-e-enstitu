@@ -1,10 +1,12 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.TIGelenBasvuru)]

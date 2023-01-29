@@ -736,7 +736,7 @@
             // 
             // objectDataSource2
             // 
-            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.rprBasvuruSonucBolumModel);
+            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprBasvuruSonucBolumModel);
             this.objectDataSource2.Name = "objectDataSource2";
             // 
             // PageHeader

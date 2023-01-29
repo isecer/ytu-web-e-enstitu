@@ -485,7 +485,7 @@ public class RprTDOEYK : DevExpress.XtraReports.UI.XtraReport
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.RprTDOEYKModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprTDOEYKModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // RprTDOEYK

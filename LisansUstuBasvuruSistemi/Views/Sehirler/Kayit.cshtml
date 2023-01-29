@@ -1,6 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Models @using LisansUstuBasvuruSistemi.Models.FilterModel @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
-@model Sehirler
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Models.Sehirler
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";

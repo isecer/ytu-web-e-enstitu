@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
@@ -32,6 +29,33 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
 
             return model;
+        }
+        public static EOyilBilgi toEoYilBilgi(this DateTime datetime)
+        {
+
+            var mdl = new EOyilBilgi();
+            var nowYear = datetime.Year;
+            if (datetime.Month >= 2 && datetime.Month <= 8)
+            {
+                mdl.Donem = 2;
+            }
+            else
+            {
+                mdl.BaslangicYili = datetime.Year;
+                mdl.BitisYili = datetime.Year + 1;
+                mdl.Donem = 1;
+            }
+            if (datetime.Month <= 8)
+            {
+                mdl.BaslangicYili = nowYear - 1;
+                mdl.BitisYili = nowYear;
+            }
+            else
+            {
+                mdl.BaslangicYili = nowYear;
+                mdl.BitisYili = nowYear + 1;
+            }
+            return mdl;
         }
     }
 }

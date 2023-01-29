@@ -1666,7 +1666,7 @@
             // 
             // objectDataSource2
             // 
-            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Models.FilterModel.rprMezuniyetTezDegerlendirmeYayinBilgi);
+            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprMezuniyetTezDegerlendirmeYayinBilgi);
             this.objectDataSource2.Name = "objectDataSource2";
             // 
             // xrTableRow18

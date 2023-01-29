@@ -1,13 +1,14 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc; 
-using Newtonsoft.Json;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1006,15 +1007,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        var Msonuclari = btercihleri.SelectMany(s => s.MulakatSonuclaris).ToList();
-                        db.MulakatSonuclaris.RemoveRange(Msonuclari);
+                        var mSonuclari = btercihleri.SelectMany(s => s.MulakatSonuclaris).ToList();
+                        db.MulakatSonuclaris.RemoveRange(mSonuclari);
                     }
 
                     foreach (var item in mlktsB)
                     {
                         var mlktSonucItem = new MulakatSonuclari();
-                        var newB = qdata.Where(p => p.BasvuruTercihID == item.BasvuruTercihID).First();
-                        var btercih = btercihleri.Where(p => p.BasvuruTercihID == item.BasvuruTercihID).First();
+                        var newB = qdata.First(p => p.BasvuruTercihID == item.BasvuruTercihID);
+                        var btercih = btercihleri.First(p => p.BasvuruTercihID == item.BasvuruTercihID);
                         mlktSonucItem.BasvuruSurecID = mdl.BasvuruSurecID;
                         mlktSonucItem.MulakatSonucTipID = item.MulakatSonucTipID;
                         mlktSonucItem.MulakatID = item.MulakatID;
@@ -1028,7 +1029,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mlktSonucItem.IslemTarihi = DateTime.Now;
                         if (!item.IsAlesYerineDosyaNotuIstensin)
                         {
-                            var sinavBilgi = btercih.Basvurular.BasvurularSinavBilgis.Where(p => p.SinavTipGrupID == SinavTipGrup.Ales_Gree).FirstOrDefault();
+                            var sinavBilgi = btercih.Basvurular.BasvurularSinavBilgis.FirstOrDefault(p => p.SinavTipGrupID == SinavTipGrup.Ales_Gree);
                             if (sinavBilgi != null)
                             {
                                 var _snvBilgi = bsSinavBilgi.Where(p => p.SinavTipID == sinavBilgi.SinavTipID).First();

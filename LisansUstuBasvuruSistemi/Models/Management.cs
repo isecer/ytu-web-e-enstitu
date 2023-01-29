@@ -1,6 +1,13 @@
 ﻿
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OsymWebServiceClient;
@@ -22,15 +29,6 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
-using DevExpress.XtraCharts.Native;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
-using LisansUstuBasvuruSistemi.Utilities.Dtos.DmDtos;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
 {

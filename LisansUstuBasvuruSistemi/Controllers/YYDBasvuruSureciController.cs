@@ -1,5 +1,5 @@
 ﻿using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,12 @@ using System.Data;
 using System.IO;
 using Ionic.Zip;
 using System.Drawing;
-using System.Drawing.Imaging; 
-using LisansUstuBasvuruSistemi.Utilities.Dtos.CmbDtos;
+using System.Drawing.Imaging;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using Newtonsoft.Json;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers

@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models.FilterModel;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
