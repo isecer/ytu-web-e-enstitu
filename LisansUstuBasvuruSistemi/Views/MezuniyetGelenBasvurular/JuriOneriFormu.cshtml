@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
-@model MezuniyetJuriOneriFormuModel
+@model MezuniyetJuriOneriFormuKayitDto
 @{
     Layout = null;
     var TezDanismaniBilgi = Model.JoFormJuriList.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault();

@@ -10,7 +10,7 @@
     var kayit = RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
     var sil = RoleNames.YYDGelenBasvurularSil.InRoleCurrent();
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
-    var bilgiModel = (BasvuruBilgiModel)ViewBag.bModel;
+    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     
     var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
     var mKids = (List<int>)ViewBag.kIds;

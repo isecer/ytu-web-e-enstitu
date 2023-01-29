@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class bsMulakatDetay : Mulakat
+    public class BasvuruMulakatDetayDto : Mulakat
     {
         public int SelectedTabIndex { get; set; }
         public int BaslangicYil { get; set; }
@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool SonucHesaplandi { get; set; }
         public bool IsAlesYerineDosyaNotuIstensin { get; set; }
         public bool IsBelgeYuklemeVar { get; set; }
-        public bsMulakatDetay()
+        public BasvuruMulakatDetayDto()
         {
             SonucHesaplandi = false;
             MulakatDetay = new List<krMulakatDetay>();

@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class bsUrecDetay : BasvuruSurec
+    public class BasvuruSurecDetayDto : BasvuruSurec
     {
         public int SelectedTabIndex { get; set; }
         public bool IsDelete { get; set; }
@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<frAnketDetay> AnketDetay { get; set; }
         public int ToplamOnaylananBasvuru { get; set; }
         public List<CmbIntDto> CmbOgrenimTipBilgi { get; set; }
-        public bsUrecDetay()
+        public BasvuruSurecDetayDto()
         {
             CmbOgrenimTipBilgi = new List<CmbIntDto>();
             MulakatSonucu = new fmMulakatSonuc();

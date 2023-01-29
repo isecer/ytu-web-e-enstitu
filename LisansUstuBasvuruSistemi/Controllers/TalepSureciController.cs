@@ -230,7 +230,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     message = "'" + kayit.BaslangicTarihi.ToFormatDateAndTime() + " / " + kayit.BitisTarihi.ToFormatDateAndTime() + "' Tarihli Talep Süreci Silinirken Bir Hata Oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = Msgtype.Error;

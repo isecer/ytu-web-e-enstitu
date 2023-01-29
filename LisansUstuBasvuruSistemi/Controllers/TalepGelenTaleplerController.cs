@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _EnstituKod = "";
             }
 
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
 
 
             

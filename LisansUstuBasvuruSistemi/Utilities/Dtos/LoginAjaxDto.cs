@@ -6,8 +6,8 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
    
-        public class AjaxLoginModel
-        {
+        public class LoginAjaxDto
+    {
             public string UserName { get; set; }
             public string Password { get; set; }
             public string Message { get; set; }

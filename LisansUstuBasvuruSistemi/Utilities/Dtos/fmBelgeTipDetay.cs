@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class frBelgeTipDetay : BelgeTipDetay
     {
         public List<string> BelgeTipAdi { get; set; }
-        public List<BTSaatShowModel> Saatler { get; set; }
+        public List<BtSaatShowModel> Saatler { get; set; }
         public string OgrenimDurumAdi { get; set; }
         public string IslemYapan { get; set; }
 

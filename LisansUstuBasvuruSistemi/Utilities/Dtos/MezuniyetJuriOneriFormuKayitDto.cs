@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class MezuniyetJuriOneriFormuModel : MezuniyetJuriOneriFormlari
+    public class MezuniyetJuriOneriFormuKayitDto : MezuniyetJuriOneriFormlari
     {
         public bool IsDoktoraOrYL { get; set; }
         public string OgrenciAnabilimdaliProgramAdi { get; set; }
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<KrMezuniyetJuriOneriFormuJurileri> JoFormJuriList { get; set; }
 
 
-        public MezuniyetJuriOneriFormuModel()
+        public MezuniyetJuriOneriFormuKayitDto()
         {
             AnaTabAdi = new List<string>();
             DetayTabAdi = new List<string>();

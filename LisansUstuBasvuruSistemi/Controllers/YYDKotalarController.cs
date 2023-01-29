@@ -357,20 +357,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             message += "<br/>Tanımsız program kodları mevcut! <br/>Program Kod: " + string.Join("<br/>Program Kod: ", olmayanlar);
                         }
-                        Management.SistemBilgisiKaydet(message.Replace("<br/>", "\r\n"), "Kotalar/getWsData", BilgiTipi.Bilgi);
+                        Management.SistemBilgisiKaydet(message.Replace("<br/>", "\r\n"), "Kotalar/getWsData", LogType.Bilgi);
                     }
                     else
                     {
                         success = false;
                         message = "Çekilecek bir kota bilgisi bulunamadı!";
-                        Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", BilgiTipi.Bilgi);
+                        Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Bilgi);
                     }
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "Kota bilgisi güncellenirken bir hata oluştu! Hata: " + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Kritik);
                 }
             }
             else
@@ -399,7 +399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + PAdi.ProgramAdi + "' İsimli Programının " + otL.OgrenimTipAdi + " öğrenim tipine ait kota bilgisi silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Kotalar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(message, "Kotalar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

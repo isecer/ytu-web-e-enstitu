@@ -4,7 +4,7 @@
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var bilgiTipleri = new BilgiTipleri();
+    var bilgiTipleri = new LogTypeData();
 
 }
  
@@ -55,7 +55,7 @@
                                 foreach (var item in Model.data.Select((s, Inx) => new { data = s, Index = Inx }))
                                 {
                                     RowIndex += 1;
-                                    var BilgiTip = bilgiTipleri.BilgiTip.Where(p => p.BilgiTipID == item.data.BilgiTipi.Value).First();
+                                    var BilgiTip = bilgiTipleri.LogTipiData.Where(p => p.BilgiTipID == item.data.BilgiTipi.Value).First();
                                     <tr>
                                         <td>
                                             <table>

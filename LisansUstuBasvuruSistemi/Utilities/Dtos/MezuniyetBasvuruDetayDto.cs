@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class basvuruDetayModelMezuniyet : MezuniyetBasvurulari
+    public class MezuniyetBasvuruDetayDto : MezuniyetBasvurulari
     {
         public IHtmlString BasvuruDurumHtml { get; set; }
         public bool IsDelete { get; set; }
@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string BasvuruKayitSureciTarihi { get; set; }
         public string KullaniciTipAdi { get; set; }
 
-        public List<YayinBilgiModel> YayinBilgileri { get; set; }
+        public List<MezuniyetBasvurulariYayinDto> YayinBilgileri { get; set; }
 
         public string MezuniyetYayinKontrolDurumAdi { get; set; }
         public string DurumClassName { get; set; }
@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? EYKDaOnaylandi { get; set; }
 
         public string TezDanismanBilgiEslesen { get; set; }
-        public YayinBilgiModel SelectedYayin { get; set; }
+        public MezuniyetBasvurulariYayinDto SelectedYayin { get; set; }
 
 
         public MezuniyetSRModel MezuniyetSRModel { get; set; }
@@ -52,9 +52,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
 
 
-        public basvuruDetayModelMezuniyet()
+        public MezuniyetBasvuruDetayDto()
         {
-            YayinBilgileri = new List<YayinBilgiModel>();
+            YayinBilgileri = new List<MezuniyetBasvurulariYayinDto>();
             MezuniyetSRModel = new MezuniyetSRModel();
 
 

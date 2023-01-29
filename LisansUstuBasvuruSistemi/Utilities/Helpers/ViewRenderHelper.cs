@@ -52,27 +52,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             var PagerString = model.ToRenderPartialViewHtml("Mezuniyet", "BasvuruDurumView");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayBasvuru(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayBasvuru(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t1_Basvuru");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayEYKSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayEYKSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t2_EYKSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetaySinavSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetaySinavSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t3_SinavSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayTezKontrolSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayTezKontrolSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t4_TezKontrolSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayMezuniyetSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayMezuniyetSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t5_MezuniyetSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;

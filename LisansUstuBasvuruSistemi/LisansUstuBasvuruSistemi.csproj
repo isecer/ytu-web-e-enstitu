@@ -852,18 +852,17 @@
     <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.Designer.cs">
       <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\Dtos\AjaxLoginModel.cs" />
-    <Compile Include="Utilities\Dtos\AnketCevapModel.cs" />
-    <Compile Include="Utilities\Dtos\basvuruDetayModelMezuniyet.cs" />
-    <Compile Include="Utilities\Dtos\BasvuruDetayModelTDO.cs" />
-    <Compile Include="Utilities\Dtos\BasvuruDetayModelTI.cs" />
-    <Compile Include="Utilities\Dtos\basvuruDurumModel.cs" />
-    <Compile Include="Utilities\Dtos\BasvuruModels.cs" />
+    <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
+    <Compile Include="Utilities\Dtos\LoginAjaxDto.cs" />
+    <Compile Include="Utilities\Dtos\AnketCevapDto.cs" />
+    <Compile Include="Utilities\Dtos\MezuniyetBasvuruDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\TdoBasvuruDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\TiBasvuruDetayDto.cs" />
     <Compile Include="Utilities\Dtos\BelgeTalepleriDetaymodel.cs" />
     <Compile Include="Utilities\Dtos\BelgeTipDetayKayitModel.cs" />
-    <Compile Include="Utilities\Dtos\BilgiTipleri.cs" />
-    <Compile Include="Utilities\Dtos\bsMulakatDetay.cs" />
-    <Compile Include="Utilities\Dtos\bsUrecDetay.cs" />
+    <Compile Include="Utilities\Dtos\LogTypeData.cs" />
+    <Compile Include="Utilities\Dtos\BasvuruMulakatDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\BasvuruSurecDetayDto.cs" />
     <Compile Include="Utilities\Dtos\BTSaatKontrolModel.cs" />
     <Compile Include="Utilities\Dtos\CevrilenNotModel.cs" />
     <Compile Include="Utilities\Dtos\CheckObjectX.cs" />
@@ -883,11 +882,9 @@
     <Compile Include="Utilities\Dtos\kulaniciProgramYetkiModel.cs" />
     <Compile Include="Utilities\Dtos\mailBsonucModel.cs" />
     <Compile Include="Utilities\Dtos\mailListModel.cs" />
-    <Compile Include="Utilities\Dtos\mailMulakatSinavYerJuriBilgi.cs" />
-    <Compile Include="Utilities\Dtos\mailMulakatSinavYerJuriBilgiBolum.cs" />
-    <Compile Include="Utilities\Dtos\mailSRjuriModel.cs" />
-    <Compile Include="Utilities\Dtos\MezuniyetJuriOneriFormuModel.cs" />
-    <Compile Include="Utilities\Dtos\mezuniyetYayinKontrolDurumModel.cs" />
+    <Compile Include="Utilities\Dtos\MulakatSinavYerJuriBilgiMailDto.cs" />
+    <Compile Include="Utilities\Dtos\MezuniyetJuriOneriFormuKayitDto.cs" />
+    <Compile Include="Utilities\Dtos\MezuniyetYayinKontrolDurumDto.cs" />
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
     <Compile Include="Utilities\Dtos\msUrecDetay.cs" />
@@ -906,8 +903,8 @@
     <Compile Include="Utilities\Dtos\TercihRowModel.cs" />
     <Compile Include="Utilities\Dtos\TIAraRaporFormuModel.cs" />
     <Compile Include="Utilities\Dtos\UrlInfoModel.cs" />
-    <Compile Include="Utilities\Dtos\URoles.cs" />
-    <Compile Include="Utilities\Dtos\YayinBilgiModel.cs" />
+    <Compile Include="Utilities\Dtos\UserRoleDto.cs" />
+    <Compile Include="Utilities\Dtos\MezuniyetBasvurulariYayinDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />

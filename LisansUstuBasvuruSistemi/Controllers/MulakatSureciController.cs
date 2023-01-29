@@ -164,7 +164,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kulProgIDs.Contains(mlkt.ProgramKod) == false)
                     {
                         MmMessage.Messages.Add("Yetkiniz olmayan bir mülakat kaydını düzeltemezsiniz!");
-                        Management.SistemBilgisiKaydet("Yetkili olunmayan mülakat bilgisi düzenlenmek istendi! \r\nMülakatID=" + mlkt.MulakatID + " \r\n ProgramKod=" + mlkt.ProgramKod, "MulakatSureci/MulakatKayit", BilgiTipi.Saldırı);
+                        Management.SistemBilgisiKaydet("Yetkili olunmayan mülakat bilgisi düzenlenmek istendi! \r\nMülakatID=" + mlkt.MulakatID + " \r\n ProgramKod=" + mlkt.ProgramKod, "MulakatSureci/MulakatKayit", LogType.Saldırı);
                     }
                     else if (BasvuruSurecID.HasValue == false && UserIdentity.Current.IsAdmin == false)
                     {
@@ -294,7 +294,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kulProgIDs.Contains(mlkt.ProgramKod) == false)
                     {
                         MmMessage.Messages.Add("Yetkiniz olmayan bir mülakat kaydını düzeltemezsiniz!");
-                        Management.SistemBilgisiKaydet("Yetkili olunmayan mülakat bilgisi düzenlenmek istendi! \r\nMülakatID=" + mlkt.MulakatID + " \r\n ProgramKod=" + mlkt.ProgramKod, "MulakatSureci/MulakatKayit", BilgiTipi.Saldırı);
+                        Management.SistemBilgisiKaydet("Yetkili olunmayan mülakat bilgisi düzenlenmek istendi! \r\nMülakatID=" + mlkt.MulakatID + " \r\n ProgramKod=" + mlkt.ProgramKod, "MulakatSureci/MulakatKayit", LogType.Saldırı);
                     }
                     else if (BasvuruSurecID.HasValue == false && UserIdentity.Current.IsAdmin == false)
                     {
@@ -319,7 +319,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (kulProgIDs.Contains(kModel.ProgramKod) == false)
             {
                 MmMessage.Messages.Add("Yetkiniz olmayan bir programa mülakat kaydı yapamazsınız!");
-                Management.SistemBilgisiKaydet("Yetkili olunmayan programa mülakat bilgisi eklenmek istendi! \r\nMülakatID=" + kModel.MulakatID + " \r\n ProgramKod=" + kModel.ProgramKod, "MulakatSureci/MulakatKayit", BilgiTipi.Saldırı);
+                Management.SistemBilgisiKaydet("Yetkili olunmayan programa mülakat bilgisi eklenmek istendi! \r\nMülakatID=" + kModel.MulakatID + " \r\n ProgramKod=" + kModel.ProgramKod, "MulakatSureci/MulakatKayit", LogType.Saldırı);
             }
             else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
 
@@ -715,7 +715,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult getMulakatDetay(int BasvuruSurecID, int OgrenimTipKod, string ProgramKod, int tbInx, bool IsDelete, bool IsBootBox = false, int? MulakatID = null)
         {
-            var model = new bsMulakatDetay();
+            var model = new BasvuruMulakatDetayDto();
            
 
 
@@ -857,7 +857,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                  
                     var UpdatedjsonStr = JsonConvert.SerializeObject(new { Tercih.BasvuruTercihID, Tercih.BasvuruID, Tercih.SiraNo, Tercih.OgrenimTipKod, Tercih.ProgramKod, Tercih.AlanTipID }, Formatting.Indented);
                     Msg += "\r\n\r\n Değişim Öncesi Json: \r\n" + jsonStr + "\r\n\r\nDeğişim Sonrası Json:\r\n" + UpdatedjsonStr;
-                    Management.SistemBilgisiKaydet("Alan tipi değiştirme işlemi \r\n" + Msg, "MulakatSureci/AlanDegistirmeIslemi", BilgiTipi.Uyarı);
+                    Management.SistemBilgisiKaydet("Alan tipi değiştirme işlemi \r\n" + Msg, "MulakatSureci/AlanDegistirmeIslemi", LogType.Uyarı);
 
                 }
             }
@@ -944,14 +944,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mmMessage.Messages.Add("Bu mülakata ait olmayan başvuruları kayıt edemezsiniz!");
                             Management.SistemBilgisiKaydet("Bu mülakata ait olmayan başvurular kayıt edemezsiniz!\r\nMulakatID:" + mdl.MulakatID +
                                                                                                                        "\r\nGelen Başvuru Tercihleri:" + string.Join(",", mdl.BasvuruTercihID) +
-                                                                                                                       "\r\nAsıl Başvuru Tercihleri:" + string.Join(",", btercihIds), "MulakatSureci/GirisSinavNotuKaydet", BilgiTipi.Saldırı);
+                                                                                                                       "\r\nAsıl Başvuru Tercihleri:" + string.Join(",", btercihIds), "MulakatSureci/GirisSinavNotuKaydet", LogType.Saldırı);
                         }
                     }
                     else
                     {
                         mmMessage.IsSuccess = false;
                         mmMessage.Messages.Add("Mülakata sınav not girişi süreci kapalıdır! Kayıt işlemi yapılamaz.");
-                        Management.SistemBilgisiKaydet("Mülakata sınav not girişi süreci kapalı iken not sonuçları  girilmek isteniyor!\r\nMulakatID:" + mdl.MulakatID, "MulakatSureci/GirisSinavNotuKaydet", BilgiTipi.Saldırı);
+                        Management.SistemBilgisiKaydet("Mülakata sınav not girişi süreci kapalı iken not sonuçları  girilmek isteniyor!\r\nMulakatID:" + mdl.MulakatID, "MulakatSureci/GirisSinavNotuKaydet", LogType.Saldırı);
                     }
                 }
                 else
@@ -1095,7 +1095,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add((mdl.MulakatSurecineGirecek ? "Mükakat" : "Dosya") + " not bilgileri kaydedilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                Management.SistemBilgisiKaydet((mdl.MulakatSurecineGirecek ? "Mükakat" : "Dosya") + " not bilgileri kaydedilirken bir hata oluştu!\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
+                Management.SistemBilgisiKaydet((mdl.MulakatSurecineGirecek ? "Mükakat" : "Dosya") + " not bilgileri kaydedilirken bir hata oluştu!\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Kritik);
             }
             if (mmMessage.IsSuccess)
             {
@@ -1149,7 +1149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         msg += " sistemden silinemedi! <br>Hata:" + ex.ToExceptionMessage();
                         mmMessage.Messages.Add(msg);
                         mmMessage.Title = "Hata";
-                        Management.SistemBilgisiKaydet(msg, "MulakatSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                        Management.SistemBilgisiKaydet(msg, "MulakatSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     }
                 }
                 else
@@ -1167,7 +1167,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Title ="Uyarı";
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.Messages.Add("Bu mülakat bilgisini silmeye yetkili değilsiniz!");
-                Management.SistemBilgisiKaydet("Mulakat bilgisi yetkisiz silme işlemi!\r\nMulakatID:" + id + "\r\nSilinmek İstenen Program Kodu:" + mlkt.ProgramKod + "\r\nProgram Yetkileri:" + string.Join(", ", uPrKods), "MulakatSureci/Sil", BilgiTipi.OnemsizHata);
+                Management.SistemBilgisiKaydet("Mulakat bilgisi yetkisiz silme işlemi!\r\nMulakatID:" + id + "\r\nSilinmek İstenen Program Kodu:" + mlkt.ProgramKod + "\r\nProgram Yetkileri:" + string.Join(", ", uPrKods), "MulakatSureci/Sil", LogType.OnemsizHata);
             }
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
 

@@ -123,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else
                 {
                     mdl.AciklamaSelectedLng = "Hata oluştu";
-                    Management.SistemBilgisiKaydet("Gsis Program Ücreti Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + ")", "Management/GetGsisProgramUcretKontrol/getProgramFee ProgramKod:" + mdl.ProgramKod + " OgrenimTipKod:" + mdl.OgrenimTipKod + " Dönen Hata Kodu:" + data.returnInfo, BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Gsis Program Ücreti Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + ")", "Management/GetGsisProgramUcretKontrol/getProgramFee ProgramKod:" + mdl.ProgramKod + " OgrenimTipKod:" + mdl.OgrenimTipKod + " Dönen Hata Kodu:" + data.returnInfo, LogType.Kritik);
 
                 }
 
@@ -145,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (OdemeBasTarih == "-1" || OdemeBasTarih == "-2")
                 {
                     _Msj = "Hata";
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getFirstPaymentDate Dönen Hata Kodu:" + OdemeBasTarih, BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getFirstPaymentDate Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
                     returnValue = false;
                 }
                 else
@@ -156,7 +156,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     returnValue = false;
                     _Msj = "Hata";
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
                 }
                 else
                 {
@@ -188,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (OdemeBasTarih == "-1" || OdemeBasTarih == "-2")
                     {
 
-                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/getFirstPaymentDate/paymentControl Dönen Hata Kodu:" + OdemeBasTarih, BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/getFirstPaymentDate/paymentControl Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
                     }
                     else
                     {
@@ -196,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     if (OdemeBitTarih == "-1" || OdemeBitTarih == "-2")
                     {
-                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
                     }
                     else
                     {
@@ -233,7 +233,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     mdl.AciklamaSelectedLng = "Hata Oluştu!";
                     //sistem hatası
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcu Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/paymentControl Dönen Hata Kodu:" + RetVal, BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcu Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/paymentControl Dönen Hata Kodu:" + RetVal, LogType.Kritik);
                 }
 
             }
@@ -358,7 +358,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     model.KayitVar = false;
                     model.Mesaj = "Yök öğrenci sorgulama servisinden sorgulanan öğrenci için sonuç bilgisi başarılı dönmemektedir." + " \r\n\r\nSonuç Kod:" + deger.Sonuc.SonucKod + "\r\nSonucMesaj:" + deger.Sonuc.SonucMesaj;
                     model.Mesaj += "\r\n\r\n" + JsonConvert.SerializeObject(deger);
-                    SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", BilgiTipi.Kritik);
+                    SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogType.Kritik);
 
                 }
             }
@@ -367,7 +367,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 model.KayitVar = false;
                 model.Hata = true;
                 model.Mesaj = "YÖK Servisinden Öğrenci Bilgisi kontrol edilirken bir hata oluştu.Hata:" + ex.ToExceptionMessage();
-                SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
+                SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
             return model;
@@ -918,10 +918,10 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static URoles GetUserRoles(string userName = null)
+        public static UserRoleDto GetUserRoles(string userName = null)
         {
             string UserName = userName ?? HttpContext.Current.User.Identity.Name;
-            var rolls = new URoles();
+            var rolls = new UserRoleDto();
             using (LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities())
             {
                 //return db.Rollers.ToArray();//-----------------------------------------------------------<<<Silinecek
@@ -950,9 +950,9 @@ namespace LisansUstuBasvuruSistemi.Models
 
             }
         }
-        public static URoles GetUserRoles(int KullaniciID)
+        public static UserRoleDto GetUserRoles(int KullaniciID)
         {
-            var rolls = new URoles();
+            var rolls = new UserRoleDto();
             using (LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities())
             {
                 var kull = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).FirstOrDefault();
@@ -1882,7 +1882,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 var dofW = IslemTarihi.DayOfWeek.ToString("d").ToInt().Value;
                 var Bastarih = IslemTarihi.TodateToShortDate();
                 var tarih = IslemTarihi.TodateToShortDate();
-            gehBiliBili:
+                gehBiliBili:
                 var btSaat = db.BelgeTipDetaySaatlers.Include("BelgeTipDetay").Where(p => p.BelgeTipDetay.OgrenimDurumID == OgrenimDurumID && p.HaftaGunID == dofW && p.BelgeTipDetay.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == BelgeTipID) && p.TalepBaslangicSaat <= talepZamani && p.TalepBitisSaat >= talepZamani).FirstOrDefault();
                 tarih = tarih.AddDays(btSaat.EklenecekGun);
 
@@ -6072,9 +6072,9 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static YayinBilgiModel getYayinBilgisi(int MezuniyetSurecID, int MezuniyetYayinTurID)
+        public static MezuniyetBasvurulariYayinDto getYayinBilgisi(int MezuniyetSurecID, int MezuniyetYayinTurID)
         {
-            var mdl = new YayinBilgiModel();
+            var mdl = new  MezuniyetBasvurulariYayinDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 mdl = (from s in db.MezuniyetSureciYayinTurleris.Where(p => p.MezuniyetSurecID == MezuniyetSurecID && p.MezuniyetYayinTurID == MezuniyetYayinTurID)
@@ -6089,7 +6089,7 @@ namespace LisansUstuBasvuruSistemi.Models
                        from klD in defkl.DefaultIfEmpty()
                        join inx in db.MezuniyetYayinIndexTurleris on new { s.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                        from inxD in definx.DefaultIfEmpty()
-                       select new YayinBilgiModel
+                       select new MezuniyetBasvurulariYayinDto
                        {
                            MezuniyetYayinTurID = s.MezuniyetYayinTurID,
                            MezuniyetYayinTurAdi = sd.MezuniyetYayinTurAdi,
@@ -6247,7 +6247,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                                 mdl.Puan = 0;
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", BilgiTipi.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
                                         }
                                         else
@@ -6275,7 +6275,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 mdl.Puan = 0;
                                                 mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SAY_PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", BilgiTipi.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
                                             mdl.AlesTipID = AlesTipBilgi.Sayısal;
                                         }
@@ -6292,7 +6292,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 mdl.Puan = 0;
                                                 mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SOZ_PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", BilgiTipi.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
 
                                         }
@@ -6320,7 +6320,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                 if (sonuc.SonucKodu.ToString() != "KayitBulunamadi")
                                 {
                                     string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + " \r\nSonuç kodu:" + sonuc.SonucKodu + " \r\n Acıklama: " + sonuc.Aciklama;
-                                    Management.SistemBilgisiKaydet("Web servisinden  sınav bilgisi çekilemedi! \r\nDetay: " + bilgi, "Management/getSinavTipSonucModel", BilgiTipi.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
+                                    Management.SistemBilgisiKaydet("Web servisinden  sınav bilgisi çekilemedi! \r\nDetay: " + bilgi, "Management/getSinavTipSonucModel", LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
 
                                 }
 
@@ -6365,7 +6365,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                         mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                         mdl.Puan = 0;
                                         string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + qSonuc.Sonuc;
-                                        Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", BilgiTipi.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                        Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                     }
                                 }
                                 else
@@ -6501,7 +6501,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 string bilgi = "SinavID=" + SinavTipID + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck;
-                Management.SistemBilgisiKaydet("Web servisinden sınav bilgisi çekilirken bir hata oluştu!\r\n" + bilgi + " \r\n Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
+                Management.SistemBilgisiKaydet("Web servisinden sınav bilgisi çekilirken bir hata oluştu!\r\n" + bilgi + " \r\n Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
             }
             return mdl;
         }
@@ -7081,7 +7081,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         if (bsSdonemBilgi == null)
                         {
 
-                            Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                             _yil = 0001;
 
                             _MmMessage.Messages.Add(mdlSinavTip.SinavAdi + " Sınavı için sınav sonucu bilgisi alınamadı! Lütfen bilgileri doğru girdiğinizden emin olunuz.");
@@ -7787,7 +7787,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     catch (Exception ex)
                     {
-                        Management.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipi.OnemsizHata);
+                        Management.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
                     }
                 }
                 else
@@ -7829,7 +7829,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     catch (Exception errQuality)
                     {
-                        Management.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), BilgiTipi.OnemsizHata);
+                        Management.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogType.OnemsizHata);
                     }
                     #endregion
                 }
@@ -7856,13 +7856,13 @@ namespace LisansUstuBasvuruSistemi.Models
                         File.Delete(path2);
                         if (RotasYonDegisimLog)
                         {
-                            Management.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + ResimYolu, "Management/resimKaydet", BilgiTipi.Bilgi);
+                            Management.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + ResimYolu, "Management/resimKaydet", LogType.Bilgi);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Management.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
                 }
                 #endregion
 
@@ -7871,7 +7871,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             catch (Exception ex)
             {
-                Management.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata, null, UserIdentity.Ip);
+                Management.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, null, UserIdentity.Ip);
                 return null;
             }
         }
@@ -8084,7 +8084,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!\r\n Başvuru ID: " + basvuru.BasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "Başvuru Sil", BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet(message, "Başvuru Sil", LogType.Kritik);
                     }
                     else if (!getAktifBasvuruSurecID(basvuru.BasvuruSurec.EnstituKod, BasvuruSurecTipID, basvuru.BasvuruSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                     {
@@ -8096,7 +8096,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     else if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false && (basvuru.BasvuruDurumID != BasvuruDurumu.Gonderildi && basvuru.BasvuruDurumID == BasvuruDurumu.Onaylandı))
                     {
@@ -8107,7 +8107,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız!");
-                        SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Sil", BilgiTipi.Kritik);
+                        SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Sil", LogType.Kritik);
                     }
                 }
             }
@@ -8126,13 +8126,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Başvuru ID:" + BasvuruID, "Başvuru Düzelt", BilgiTipi.Uyarı);
+                        if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Başvuru ID:" + BasvuruID, "Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.BasvuruSurec.EnstituKod != EnstituKod)
                         {
-                            SistemBilgisiKaydet("Seçilen başvuru Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Başvuru Enstitü Kod:" + basvuru.BasvuruSurec.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", BilgiTipi.Uyarı);
+                            SistemBilgisiKaydet("Seçilen başvuru Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Başvuru Enstitü Kod:" + basvuru.BasvuruSurec.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Uyarı);
                             EnstituKod = basvuru.BasvuruSurec.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.BasvuruSurec.EnstituKod) && RoleNames.GelenBasvurularKayit.InRoleCurrent() && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -8140,7 +8140,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu enstitüye ait başvuruyu güncellemeye yetkili değilsiniz!");
                             string message = "Bu enstitüye ait başvuruyu güncellemeye yetkili değilsiniz!\r\n Başvuru ID: " + basvuru.BasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!getAktifBasvuruSurecID(EnstituKod, BasvuruSurecTipID, basvuru.BasvuruSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                         {
@@ -8152,13 +8152,13 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur!");
-                            SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", BilgiTipi.Saldırı);
+                            SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (RoleNames.GelenBasvurularKayit.InRoleCurrent() && basvuru.MulakatSonuclaris.Any(a => a.KayitDurumID.HasValue && a.KayitDurumlari.IsKayitOldu == true) && UserIdentity.Current.IsAdmin == false)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız!");
-                            SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", BilgiTipi.Kritik);
+                            SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Kritik);
                         }
 
                     }
@@ -8170,7 +8170,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (KullaniciID.HasValue == false) KullaniciID = UserIdentity.Current.Id;
                     else if (KullaniciID != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Başvury Yap", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Başvury Yap", LogType.Saldırı);
                         KullaniciID = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID.Value).First();
@@ -8360,9 +8360,9 @@ namespace LisansUstuBasvuruSistemi.Models
             public int ID { get; set; }
         }
 
-        public static basvuruDetayModel getSecilenBasvuruDetay(int BasvuruID)
+        public static BasvuruDetaySecilenDto getSecilenBasvuruDetay(int BasvuruID)
         {
-            var model = new basvuruDetayModel();
+            var model = new BasvuruDetaySecilenDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -8404,7 +8404,7 @@ namespace LisansUstuBasvuruSistemi.Models
                          join drns in db.NotSistemleris on s.DRNotSistemID equals drns.NotSistemID into defdrsn
                          from DRSN in defdrsn.DefaultIfEmpty()
                          where s.BasvuruID == BasvuruID && s.KullaniciID == (KulID ?? s.KullaniciID)
-                         select new basvuruDetayModel
+                         select new BasvuruDetaySecilenDto
                          {
                              BasvuruSurecTipID = bs.BasvuruSurecTipID,
                              IsYerli = kt.Yerli,
@@ -8601,7 +8601,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogType.Kritik);
                     }
                     else if (!TDOAyar.BasvurusuAcikmi.getAyarTDO(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -8613,7 +8613,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{
@@ -8645,7 +8645,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait tez izleme başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "TIK Başvuru Sil", BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet(message, "TIK Başvuru Sil", LogType.Kritik);
                     }
                     else if (!TIAyar.BasvurusuAcikmi.getAyarTI(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -8657,7 +8657,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Tez İzleme Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{
@@ -8682,13 +8682,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + TDOBasvuruID, "TDO Başvuru Düzelt", BilgiTipi.Uyarı);
+                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + TDOBasvuruID, "TDO Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.EnstituKod != EnstituKod)
                         {
-                            SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", BilgiTipi.Uyarı);
+                            SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Uyarı);
                             EnstituKod = basvuru.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.EnstituKod) && KayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -8696,7 +8696,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitüde yetkili değilsiniz.");
                             string message = "Bu enstitüye ait Tez danışmanı öneri başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!TDOAyar.BasvurusuAcikmi.getAyarTDO(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
@@ -8708,7 +8708,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu işlem için yetkili değilsiniz.");
-                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", BilgiTipi.Saldırı);
+                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Saldırı);
                         }
 
                     }
@@ -8719,7 +8719,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (KullaniciID.HasValue == false) KullaniciID = UserIdentity.Current.Id;
                     else if (KullaniciID != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogType.Saldırı);
                         KullaniciID = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID.Value).First();
@@ -8766,13 +8766,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez İzleme Başvuru ID:" + TIBasvuruID, "TI Başvuru Düzelt", BilgiTipi.Uyarı);
+                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez İzleme Başvuru ID:" + TIBasvuruID, "TI Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.EnstituKod != EnstituKod)
                         {
-                            SistemBilgisiKaydet("Seçilen Tez İzleme başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez İzleme Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", BilgiTipi.Uyarı);
+                            SistemBilgisiKaydet("Seçilen Tez İzleme başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez İzleme Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogType.Uyarı);
                             EnstituKod = basvuru.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.EnstituKod) && KayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -8780,7 +8780,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitü için Yetkili Değilsiniz.");
                             string message = "Bu enstitüye ait Tez İzleme başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TIBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!TIAyar.BasvurusuAcikmi.getAyarTI(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
@@ -8792,7 +8792,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", BilgiTipi.Saldırı);
+                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez İzleme başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TIBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "TIK Başvuru Düzelt", LogType.Saldırı);
                         }
                     }
                 }
@@ -8802,7 +8802,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (KullaniciID.HasValue == false) KullaniciID = UserIdentity.Current.Id;
                     else if (KullaniciID != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez İzleme Başvuru Yap", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez İzleme Başvuru Yap", LogType.Saldırı);
                         KullaniciID = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID.Value).First();
@@ -8858,9 +8858,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return msg;
 
         }
-        public static BasvuruDetayModelTDO getSecilenBasvuruTDODetay(int TDOBasvuruID, Guid? UniqueID)
+        public static TdoBasvuruDetayDto getSecilenBasvuruTDODetay(int TDOBasvuruID, Guid? UniqueID)
         {
-            var model = new BasvuruDetayModelTDO() { TDOBasvuruID = TDOBasvuruID };
+            var model = new TdoBasvuruDetayDto() { TDOBasvuruID = TDOBasvuruID };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var IsYoneticiYetki = RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
@@ -8869,10 +8869,10 @@ namespace LisansUstuBasvuruSistemi.Models
                 KullaniciKayitBilgisiGuncelle(basvuru.KullaniciID);
                 var enstitu = db.Enstitulers.Where(p => p.EnstituKod == basvuru.EnstituKod).First();
                 var ShowAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TDOEYKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
-            tekrarYukle:
+                tekrarYukle:
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
                 model.TDOBasvuruDanismanList = (from s in basvuru.TDOBasvuruDanismen
-                                                select new TDOBasvuruDanismanModel
+                                                select new TdoBasvuruDanismanDto
                                                 {
                                                     UniqueID = s.UniqueID,
                                                     IsObsData = s.IsObsData,
@@ -9138,9 +9138,9 @@ namespace LisansUstuBasvuruSistemi.Models
 
             }
         }
-        public static BasvuruDetayModelTI getSecilenBasvuruTIDetay(int TIBasvuruID, Guid? UniqueID)
+        public static TiBasvuruDetayDto getSecilenBasvuruTIDetay(int TIBasvuruID, Guid? UniqueID)
         {
-            var model = new BasvuruDetayModelTI();
+            var model = new TiBasvuruDetayDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -9157,7 +9157,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     model.TezDanismanBilgiEslesen = "Sistemde eşleşen tez danışmanı bulunamadı.";
                 }
-                model.TIBasvuruAraRaporList = basvuru.TIBasvuruAraRapors.Where(p => UniqueID.HasValue ? p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == UniqueID) : true).Select(s => new TIBasvuruAraRaporModel
+                model.TIBasvuruAraRaporList = basvuru.TIBasvuruAraRapors.Where(p => UniqueID.HasValue ? p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == UniqueID) : true).Select(s => new TiBasvuruAraRaporDto
                 {
                     UniqueID = s.UniqueID,
                     FormKodu = s.FormKodu,
@@ -9284,7 +9284,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait mezuniyet başvurusu silmeye yetkili değilsiniz!\r\n Mezuniyet Başvuru ID: " + basvuru.MezuniyetBasvurulariID + " \r\n Mezuniyet Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "Mezuniyet Başvuru Sil", BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet(message, "Mezuniyet Başvuru Sil", LogType.Kritik);
                     }
                     else if (!getAktifMezuniyetSurecID(basvuru.MezuniyetSureci.EnstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                     {
@@ -9296,7 +9296,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgisiKaydet("Başka bir kullanıcıya ait mezuniyet başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Mezuniyet Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya ait mezuniyet başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Mezuniyet Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
                     {
@@ -9324,13 +9324,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Mezuniyet Başvuru ID:" + MezuniyetBasvurulariID, "Mezuniyet Başvuru Düzelt", BilgiTipi.Uyarı);
+                        if (KayitYetki == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Mezuniyet Başvuru ID:" + MezuniyetBasvurulariID, "Mezuniyet Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.MezuniyetSureci.EnstituKod != EnstituKod)
                         {
-                            SistemBilgisiKaydet("Seçilen Mezuniyet başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Mezuniyet Başvuru Enstitü Kod:" + basvuru.MezuniyetSureci.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", BilgiTipi.Uyarı);
+                            SistemBilgisiKaydet("Seçilen Mezuniyet başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Mezuniyet Başvuru Enstitü Kod:" + basvuru.MezuniyetSureci.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", LogType.Uyarı);
                             EnstituKod = basvuru.MezuniyetSureci.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && KayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -9338,7 +9338,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
                             string message = "Bu enstitüye ait mezuniyet başvurusu güncellemeye yetkili değilsiniz!\r\n Mezuniyet Başvuru ID: " + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!getAktifMezuniyetSurecID(EnstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                         {
@@ -9350,7 +9350,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Mezuniyet başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", BilgiTipi.Saldırı);
+                            SistemBilgisiKaydet("Başka bir kullanıcıya ait Mezuniyet başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (KayitYetki == false && (basvuru.IsDanismanOnay == true))
                         {
@@ -9367,7 +9367,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (KullaniciID.HasValue == false) KullaniciID = UserIdentity.Current.Id;
                     else if (KullaniciID != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Mezuniyet Başvury Yap", BilgiTipi.Saldırı);
+                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Mezuniyet Başvury Yap", LogType.Saldırı);
                         KullaniciID = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID.Value).First();
@@ -9550,7 +9550,7 @@ namespace LisansUstuBasvuruSistemi.Models
                               from klD in defkl.DefaultIfEmpty()
                               join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
-                              select new YayinBilgiModel
+                              select new  MezuniyetBasvurulariYayinDto
                               {
                                   Yayinlanmis = qs.Yayinlanmis,
                                   MezuniyetBasvurulariYayinID = qs.MezuniyetBasvurulariYayinID,
@@ -9734,9 +9734,9 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static basvuruDetayModelMezuniyet getSecilenBasvuruMezuniyetDetay(int MezuniyetBasvurulariID, int? MezuniyetBasvurulariYayinID = null, int? ShowDetayYayinID = null)
+        public static MezuniyetBasvuruDetayDto getSecilenBasvuruMezuniyetDetay(int MezuniyetBasvurulariID, int? MezuniyetBasvurulariYayinID = null, int? ShowDetayYayinID = null)
         {
-            var model = new basvuruDetayModelMezuniyet();
+            var model = new MezuniyetBasvuruDetayDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -9859,7 +9859,7 @@ namespace LisansUstuBasvuruSistemi.Models
                               from klD in defkl.DefaultIfEmpty()
                               join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
                               from inxD in definx.DefaultIfEmpty()
-                              select new YayinBilgiModel
+                              select new  MezuniyetBasvurulariYayinDto
                               {
                                   MezuniyetYayinTurID = qs.MezuniyetYayinTurID,
                                   ShowDetayYayinID = ShowDetayYayinID,
@@ -10071,7 +10071,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             modelAnk.JsonStringData = anketSorulari.toJsonText();
                             foreach (var item in anketSorulari)
                             {
-                                modelAnk.AnketCevapModel.Add(new AnketCevapModel
+                                modelAnk.AnketCevapModel.Add(new AnketCevapDto
                                 {
                                     SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
                                     SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir },
@@ -10628,7 +10628,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -10865,7 +10865,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11084,7 +11084,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11231,7 +11231,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                             if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
                             if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
-                            
+
                             kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
                             kModel.IslemYapanIP = UserIdentity.Ip;
                             kModel.Aciklama = item.Sablon.Sablon ?? "";
@@ -11257,7 +11257,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez Eş danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOEsBasvuruDanismanID:" + TDOBasvuruEsDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11462,7 +11462,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + TDOBasvuruDanismanID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11584,7 +11584,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     itemEk.EkAdi.ToSetNameFileExtension(FExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
 
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemEk.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogType.Uyarı);
                         }
                         if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }));
                         var ParamereDegerleri = new List<MailReplaceParameterModel>();
@@ -11726,7 +11726,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez İzleme toplantısı için Komite üyelerine mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -11787,7 +11787,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     foreach (var item in mModel)
                     {
 
-                        var Juri = Juriler.Where(p => p.UniqueID == item.UniqueID).FirstOrDefault(); 
+                        var Juri = Juriler.Where(p => p.UniqueID == item.UniqueID).FirstOrDefault();
                         item.Sablon = Sablonlar.Where(p => p.MailSablonTipID == item.MailSablonTipID).FirstOrDefault();
                         if (item.Sablon == null) continue;
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
@@ -11807,7 +11807,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailTIToplantiBilgisi", LogType.Uyarı);
                         }
                         if (!IsLinkOrSonuc)
                         {
@@ -11921,7 +11921,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 var message = "";
                 if (IsLinkOrSonuc) message = "Tez İzleme değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
                 else message = "Tez İzleme değerlendirmesi sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -12026,7 +12026,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetDegerlendirmeLink", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetDegerlendirmeLink", LogType.Uyarı);
                         }
                         if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }));
                         var ParamereDegerleri = new List<MailReplaceParameterModel>();
@@ -12121,7 +12121,7 @@ namespace LisansUstuBasvuruSistemi.Models
             {
                 var message = "";
                 message = "Tez Sınavı değerlendirmesi için Jüri üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!";
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -12248,7 +12248,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
                         }
 
 
@@ -12347,7 +12347,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Salon rezervasyonuna ait jürilere mail gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavYerBilgisi \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavYerBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -12439,7 +12439,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavSonucu", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavSonucu", LogType.Uyarı);
                         }
 
                         var ParamereDegerleri = new List<MailReplaceParameterModel>();
@@ -12501,7 +12501,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 var message = "Tez sınav sonucu bilgisi mail olarak gönderilirken bir hata oluştu! \r\nSRTalepID:" + SRTalepID;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavSonucu \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetSinavSonucu \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -12565,7 +12565,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavSonucu", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavSonucu", LogType.Uyarı);
                         }
 
                         var ParamereDegerleri = new List<MailReplaceParameterModel>();
@@ -12624,7 +12624,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (SablonTipID == MailSablonTipi.Mez_TezKontrolTezDosyasiYuklendi)
                     Msg = "Tez şablon dosyası yüklendi bilgisi mail olarak gönderilirken bir hata oluştu! \r\nMezuniyetBasvurulariTezDosyaID:" + MezuniyetBasvurulariTezDosyaID;
 
-                Management.SistemBilgisiKaydet(Msg + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetTezSablonKontrol \r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(Msg + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailMezuniyetTezSablonKontrol \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(Msg + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -12781,7 +12781,7 @@ namespace LisansUstuBasvuruSistemi.Models
             //    return "";
             //}
         }
-      
+
         public static int PageSize = 15;
 
         public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
@@ -12955,7 +12955,7 @@ namespace LisansUstuBasvuruSistemi.Models
             var rsm = ResimAdi.IsNullOrWhiteSpace() ? (getRoot() + SistemAyar.KullaniciDefaultResim) : (getRoot() + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
             return rsm;
         }
-       
+
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
             var sonuclar = xmlstring.toSinavSonucAlesXmlModel();
@@ -13139,7 +13139,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 mdl.BitisYili = nowYear + 1;
             }
             return mdl;
-        } 
+        }
         public static double toGenelBasariNotu(this double MezuniyetNotu100LukSistem, bool MulakatSurecineGirecek, BasvuruSurecOgrenimTipleri BasurecOT, bool IsAlesYerineDosyaNotuIstensin, double? AlesNotu, double? GirisSinavNotu = null)
         {
 
@@ -13384,7 +13384,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                             if (!IsSuccess)
                             {
-                                Management.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", BilgiTipi.Kritik);
+                                Management.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", LogType.Kritik);
                             }
 
                         }
@@ -13473,7 +13473,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
                         }
                         var sndMail = MailManager.sendMail(EnstituKod, Sablon.SablonAdi, htmlMail, EMailList, Attachments);
 
@@ -13511,7 +13511,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else
                 {
                     msg = "Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi!";
-                    Management.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", LogType.Kritik);
                 }
                 return msg;
             }
@@ -13582,27 +13582,27 @@ namespace LisansUstuBasvuruSistemi.Models
             var PagerString = model.ToRenderPartialViewHtml("Mezuniyet", "BasvuruDurumView");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayBasvuru(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayBasvuru(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t1_Basvuru");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayEYKSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayEYKSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t2_EYKSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetaySinavSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetaySinavSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t3_SinavSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayTezKontrolSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayTezKontrolSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t4_TezKontrolSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;
         }
-        public static IHtmlString ToMezuniyetDetayMezuniyetSureci(this basvuruDetayModelMezuniyet model)
+        public static IHtmlString ToMezuniyetDetayMezuniyetSureci(this MezuniyetBasvuruDetayDto model)
         {
             var PagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t5_MezuniyetSureci");/// MHelper.RenderPartialView("Ajax", "Renrerpagination", model);
             return PagerString;

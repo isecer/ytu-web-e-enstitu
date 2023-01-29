@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class URoles
+    public class UserRoleDto
     {
 
         public int? YetkiGrupID { get; set; }
@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<Roller> EklenenRoller { get; set; }
         public List<Roller> YetkiGrupRolleri { get; set; }
         public List<Roller> TumRoller { get; set; }
-        public URoles()
+        public UserRoleDto()
         {
             EklenenRoller = new List<Roller>();
             YetkiGrupRolleri = new List<Roller>();

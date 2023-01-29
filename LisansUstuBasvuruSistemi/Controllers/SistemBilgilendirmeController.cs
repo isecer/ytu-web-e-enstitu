@@ -70,18 +70,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemZamani = s.IslemTarihi,
                 IpAdresi = s.IslemYapanIP
             }).ToArray();
-            var btip = new BilgiTipleri();
-            ViewBag.BilgiTipi = new SelectList(btip.BilgiTip.Select(s => new { s.BilgiTipID, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
+            var btip = new LogTypeData();
+            ViewBag.BilgiTipi = new SelectList(btip.LogTipiData.Select(s => new { s.BilgiTipID, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
             ViewBag.IndexModel = IndexModel;
             return View(model);
         }
-        public ActionResult getDetay(int SistemBilgiID)
-        {
-            var q = db.SistemBilgilendirmes.Where(p => p.SistemBilgiID == SistemBilgiID).First();
-            return View(q);
-        }
-
-
+      
 
     }
 }

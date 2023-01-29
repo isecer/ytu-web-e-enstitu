@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
 
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             bbModel.Kullanici = Kul;
             var TalepSurecID = Management.getAktifTalepSurecID(_EnstituKod);
             bbModel.SistemBasvuruyaAcik = TalepSurecID.HasValue;
@@ -831,7 +831,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     catch (Exception ex)
                     {
                         mmMessage.Messages.Add("Onaylanan Taleplere mail gönderilirken bir hata oluştu.");
-                        Management.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                        Management.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Hata);
                     }
                     LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Update, Talepler.ToJson());
 
@@ -841,7 +841,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Toplu Talep Onay işlemi yapılırken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
-                    Management.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                    Management.SistemBilgisiKaydet("Toplu Talep Onay işlemi yapılırken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Hata);
                 }
             }
             else
@@ -938,7 +938,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Talep silinirken bir hata oluştu! Hata: " + ex.ToExceptionMessage());
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);

@@ -17,10 +17,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<TimeSpan> TeslimBitisSaat { get; set; }
 
 
-        public List<BTSaatShowModel> Saatler { get; set; }
+        public List<BtSaatShowModel> Saatler { get; set; }
         public List<int> SeciliBelgeTipler { get; set; }
     }
-    public class BTSaatShowModel : BelgeTipDetaySaatler
+    public class BtSaatShowModel : BelgeTipDetaySaatler
     {
         public List<CmbIntDto> GunNos { get; set; }
     }

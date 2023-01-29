@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Mvc; 
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             #region bilgiModel
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             var MezuniyetSurecID = Management.getAktifMezuniyetSurecID(_EnstituKod);
             bbModel.AktifSurecID = MezuniyetSurecID ?? 0;
             bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.getAyarMZ(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
@@ -305,11 +305,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.MezuniyetBasvurulariID > 0)
             {
-                ViewBag.MezuniyetYayinKontrolDurumu = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID).Select(s => new mezuniyetYayinKontrolDurumModel { MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.MezuniyetYayinKontrolDurumAdi }).First();
+                ViewBag.MezuniyetYayinKontrolDurumu = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID).Select(s => new MezuniyetYayinKontrolDurumDto { MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.MezuniyetYayinKontrolDurumAdi }).First();
             }
             else
             {
-                ViewBag.MezuniyetYayinKontrolDurumu = new mezuniyetYayinKontrolDurumModel
+                ViewBag.MezuniyetYayinKontrolDurumu = new MezuniyetYayinKontrolDurumDto
                 {
                     DurumAdi = "Yeni Başvuru",
                     ClassName = "fa fa-plus",
@@ -649,7 +649,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                }).ToList();
                 foreach (var item in qYayins)
                 {
-                    var rowMDY = new MezuniyetBasvurulariYayin();
+                    var rowMDY = new Models.MezuniyetBasvurulariYayin();
                     rowMDY.MezuniyetBasvurulariID = kModel.MezuniyetBasvurulariID;
                     rowMDY.MezuniyetYayinTurID = item.MezuniyetYayinTurID;
                     rowMDY.Yayinlanmis = item.Yayinlanmis;
@@ -789,11 +789,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.MezuniyetYayinKontrolDurumID > 0)
             {
-                ViewBag.MezuniyetYayinKontrolDurumu = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.MezuniyetYayinKontrolDurumID == kModel.MezuniyetYayinKontrolDurumID).Select(s => new mezuniyetYayinKontrolDurumModel { MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.MezuniyetYayinKontrolDurumAdi }).First();
+                ViewBag.MezuniyetYayinKontrolDurumu = db.MezuniyetYayinKontrolDurumlaris.Where(p => p.MezuniyetYayinKontrolDurumID == kModel.MezuniyetYayinKontrolDurumID).Select(s => new MezuniyetYayinKontrolDurumDto { MezuniyetYayinKontrolDurumID = s.MezuniyetYayinKontrolDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.MezuniyetYayinKontrolDurumAdi }).First();
             }
             else
             {
-                ViewBag.MezuniyetYayinKontrolDurumu = new mezuniyetYayinKontrolDurumModel
+                ViewBag.MezuniyetYayinKontrolDurumu = new MezuniyetYayinKontrolDurumDto
                 {
                     DurumAdi = "Yeni Başvuru",
                     ClassName = "fa fa-plus",
@@ -831,7 +831,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               from ymD in defym.DefaultIfEmpty()
                               join kl in db.MezuniyetYayinLinkTurleris on s.YayinMezuniyetYayinLinkTurID equals kl.MezuniyetYayinLinkTurID into defkl
                               from klD in defkl.DefaultIfEmpty()
-                              select new YayinBilgiModel
+                              select new MezuniyetBasvurulariYayinDto
                               {
                                   Yayinlanmis = model.YayinBilgisi.Yayinlanmis,
                                   MezuniyetYayinTurID = model.YayinBilgisi.MezuniyetYayinTurID,
@@ -1140,7 +1140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
                 mmMessage.Messages.Add(msg);
-                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", BilgiTipi.Saldırı);
+                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", LogType.Saldırı);
             }
             if (sonSrTalebi != null && sonSrTalebi.SRDurumID == SRTalepDurum.Onaylandı && !sonSrTalebi.MezuniyetSinavDurumID.HasValue)
             {
@@ -1444,7 +1444,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
                 mmMessage.Messages.Add(msg);
-                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + SrTalep.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", BilgiTipi.Saldırı);
+                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + SrTalep.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", LogType.Saldırı);
             }
             else if (MzTalep.IsMezunOldu.HasValue)
             {
@@ -1560,7 +1560,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddRow(YayinBilgiModel model)
+        public ActionResult AddRow(MezuniyetBasvurulariYayin model)
         {
             return View(model);
         }
@@ -2351,7 +2351,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Mezuniyet/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Mezuniyet/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

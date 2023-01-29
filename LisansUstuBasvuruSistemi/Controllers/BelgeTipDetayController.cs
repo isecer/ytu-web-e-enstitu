@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                            s.EklenecekGun
 
                                        } into g1
-                                    select new BTSaatShowModel
+                                    select new BtSaatShowModel
                                     {
                                         TalepBaslangicSaat = g1.Key.TalepBaslangicSaat,
                                         TalepBitisSaat = g1.Key.TalepBitisSaat,
@@ -130,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     s.EklenecekGun
 
                                 } into g1
-                             select new BTSaatShowModel
+                             select new BtSaatShowModel
                              {
                                  TalepBaslangicSaat = g1.Key.TalepBaslangicSaat,
                                  TalepBitisSaat = g1.Key.TalepBitisSaat,
@@ -170,7 +170,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             join qtsbt in qTeslimBitisSaat on qTbs.inx equals qtsbt.inx
                             join qhg in qHaftaGunleri on qTbs.inx equals qhg.inx
 
-                            select new BTSaatShowModel
+                            select new BtSaatShowModel
                             {
                                 TalepBaslangicSaat = qTbs.s,
                                 TalepBitisSaat = qTbt.s,
@@ -425,7 +425,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "Belge Tip detay kaydı silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

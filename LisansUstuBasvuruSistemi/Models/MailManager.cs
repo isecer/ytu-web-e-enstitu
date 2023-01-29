@@ -112,14 +112,14 @@ namespace LisansUstuBasvuruSistemi.Models
                         catch (Exception ex)
                         {
                             qeklenen.HataMesaji = ex.ToExceptionMessage();
-                            Management.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata, uid, uIp);
+                            Management.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
                         }
                         dbb.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Management.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata, uid, uIp);
+                    Management.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
                 }
             }).Start();
 

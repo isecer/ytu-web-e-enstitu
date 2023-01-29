@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class AnketCevapModel
+    public class AnketCevapDto
     {
         public int? SecilenAnketSoruSecenekID { get; set; }
         public frAnketDetay SoruBilgi { get; set; }

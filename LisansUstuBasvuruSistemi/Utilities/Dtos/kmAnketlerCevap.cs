@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int BasvuruSurecID { get; set; }
         public int AnketID { get; set; }
         public string JsonStringData { get; set; }
-        public List<AnketCevapModel> AnketCevapModel { get; set; }
+        public List<AnketCevapDto> AnketCevapModel { get; set; }
         public List<int> AnketSoruID { get; set; }
         public List<int?> AnketSoruSecenekID { get; set; }
         public List<string> TabloVeri1 { get; set; }
@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> AnketSoruSecenekAciklama { get; set; }
         public kmAnketlerCevap()
         {
-            AnketCevapModel = new List<AnketCevapModel>();
+            AnketCevapModel = new List<AnketCevapDto>();
             AnketSoruID = new List<int>();
             AnketSoruSecenekID = new List<int?>();
             TabloVeri1 = new List<string>();

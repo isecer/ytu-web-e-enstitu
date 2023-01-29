@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                 model.HataMsj =
                     "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz! Hata:" +
                     ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
+                Management.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
             if (model.OgrenciInfo == null) model.OgrenciInfo = new Ogrenci();

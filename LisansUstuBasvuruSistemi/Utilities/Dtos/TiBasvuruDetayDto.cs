@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class BasvuruDetayModelTI : TIBasvuru
+    public class TiBasvuruDetayDto : TIBasvuru
     {
         public bool GelenBasvuru { get; set; }
         public string EnstituAdi { get; set; }
@@ -22,9 +22,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
-        public List<TIBasvuruAraRaporModel> TIBasvuruAraRaporList { get; set; }
+        public List<TiBasvuruAraRaporDto> TIBasvuruAraRaporList { get; set; }
     }
-    public class TIBasvuruAraRaporModel : TIBasvuruAraRapor
+    public class TiBasvuruAraRaporDto : TIBasvuruAraRapor
     {
         public string DonemAdi { get; set; }
         public string TIBasvuruAraaRaporDurumAdi { get; set; }

@@ -245,7 +245,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.Ad + " " + kayit.Soyad + " isimli başvuru sahibine ait başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "GelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "GelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
@@ -282,7 +282,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(adSoyad + " Öğrencisine ait başvuru taslak durumuna çevrilemedi. Hata:" + ex.ToExceptionMessage());
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "GelenBasvurular/TaslagaCevir<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "GelenBasvurular/TaslagaCevir<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

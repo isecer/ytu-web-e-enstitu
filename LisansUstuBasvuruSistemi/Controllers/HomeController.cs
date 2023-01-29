@@ -116,7 +116,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.JsonStringData = anketSorulari.toJsonText();
                     foreach (var item in anketSorulari)
                     {
-                        model.AnketCevapModel.Add(new AnketCevapModel
+                        model.AnketCevapModel.Add(new AnketCevapDto
                         {
                             SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
                             SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },

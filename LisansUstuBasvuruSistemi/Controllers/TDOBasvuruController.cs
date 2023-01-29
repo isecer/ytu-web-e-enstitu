@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var enstituKod = Management.getSelectedEnstitu(ekd);
             #region bilgiModel
-            var bbModel = new BasvuruBilgiModel
+            var bbModel = new IndexPageInfoDto
             {
                 SistemBasvuruyaAcik = TDOAyar.BasvurusuAcikmi.getAyarTDO(enstituKod, "false").ToBoolean().Value
             };
@@ -1592,7 +1592,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silinemedi.");
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1637,7 +1637,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1693,7 +1693,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

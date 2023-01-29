@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class basvuruDurumModel : BasvuruDurumlari
+    public class MezuniyetYayinKontrolDurumDto : MezuniyetYayinKontrolDurumlari
     {
         public string DurumAdi { get; set; }
     }

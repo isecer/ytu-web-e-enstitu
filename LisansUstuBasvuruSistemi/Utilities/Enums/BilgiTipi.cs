@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class BilgiTipi
+    public static class LogType
     {
         public const byte Hata = 1;
         public const byte Uyarı = 2;

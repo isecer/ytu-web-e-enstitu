@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult LoginControl(string UserName, string Password, string CaptchaInputText, bool? RememberMe, string ReturnUrl, string dlgId)
         {
 
-            var MmMessage = new AjaxLoginModel();
+            var MmMessage = new LoginAjaxDto();
             MmMessage.ReturnUrl = ReturnUrl;
             MmMessage.UserName = UserName;
             MmMessage.Password = Password;
@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult SignOut(string ReturnUrl)
         {
-            var MmMessage = new AjaxLoginModel();
+            var MmMessage = new LoginAjaxDto();
 
             if (UserIdentity.Current.IsAuthenticated)
             {
@@ -272,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             catch (Exception ex)
                             {
-                                Management.SistemBilgisiKaydet(ex, BilgiTipi.Hata);
+                                Management.SistemBilgisiKaydet(ex, LogType.Hata);
                             }
 
                     }
@@ -378,7 +378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var Basvuru = db.Basvurulars.Where(p => p.BasvuruID == id && p.KullaniciID == (KullaniciID ?? p.KullaniciID)).First();
 
 
-            var mdl = new BasvuruDetayModel();
+            var mdl = new BasvuruDetayDto();
             mdl.SelectedTabIndex = tbInx;
             mdl.BasvuruID = Basvuru.BasvuruID;
             mdl.BasvuruTarihi = Basvuru.BasvuruTarihi;
@@ -410,7 +410,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { page = page, IsAuthenticated = UserIdentity.Current.IsAuthenticated }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
-        public ActionResult GetBasvuruDetaySablon(BasvuruDetayModel model)
+        public ActionResult GetBasvuruDetaySablon(BasvuruDetayDto model)
         {
             return View(model);
         }
@@ -422,7 +422,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var KullaniciID = RoleNames.GelenBasvurular.InRoleCurrent() || RoleNames.MulakatSureci.InRoleCurrent() || RoleNames.BasvuruSureci.InRoleCurrent() ? (int?)null : UserIdentity.Current.Id;
             var Basvuru = db.Basvurulars.Where(p => p.BasvuruID == id && p.KullaniciID == (KullaniciID ?? p.KullaniciID)).First();
 
-            var mdl = new BasvuruDetayModel();
+            var mdl = new BasvuruDetayDto();
             mdl.BasvuruSurecID = Basvuru.BasvuruSurecID;
             mdl.IsSave = IsSave;
             mdl.SelectedTabIndex = tbInx;
@@ -529,7 +529,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                   join pr in db.Programlars on s.ProgramKod equals pr.ProgramKod
                                   join als in db.AlesTipleris on pr.AlesTipID equals als.AlesTipID
                                   join abd in db.AnabilimDallaris on pr.AnabilimDaliKod equals abd.AnabilimDaliKod
-                                  select new FrTercihler
+                                  select new BasvuruTercihDto
                                   {
                                       BasvuruTercihID = s.BasvuruTercihID,
                                       BasvuruID = s.BasvuruID,
@@ -569,7 +569,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  join st in SinavTipleris on s.SinavTipID equals st.SinavTipID
                                  join stl in SinavTipleriLngs on st.SinavTipID equals stl.SinavTipID
                                  join stg in SinavTipGroups on s.SinavTipGrupID equals stg.SinavTipGrupID
-                                 select new FrSinavlar
+                                 select new BasvuruSinavTipDto
                                  {
                                      EnstituKod = BasvuruSurec.EnstituKod,
                                      IsWebService = bs.WebService,
@@ -631,7 +631,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                               join ms in MulakatSonuclaris on s.BasvuruTercihID equals ms.BasvuruTercihID
                                               join ot in OgrenimTipleris on s.OgrenimTipKod equals ot.OgrenimTipKod
                                               join prl in Programlars on s.ProgramKod equals prl.ProgramKod
-                                              select new FrTercihler
+                                              select new BasvuruTercihDto
                                               {
                                                   IsSeciliBasvuruyaAitTercih = s.BasvuruID == Basvuru.BasvuruID,
                                                   MulakatSonucID = ms.MulakatSonucID,
@@ -677,7 +677,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var BsKimlikBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.KimlikBelgesi).FirstOrDefault();
                                 if (BsKimlikBelgesi != null)
                                 {
-                                    var kb = new BasvuruBelgeModel
+                                    var kb = new BasvuruBelgeDto
                                     {
                                         SiraNo = 1,
                                         BasvuruID = BasvuruB.BasvuruID,
@@ -701,7 +701,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var BsLEgitimBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.LEgitimBelgesi).FirstOrDefault();
                                 if (BsLEgitimBelgesi != null)
                                 {
-                                    var kb = new BasvuruBelgeModel
+                                    var kb = new BasvuruBelgeDto
                                     {
                                         SiraNo = 2,
                                         BasvuruID = BasvuruB.BasvuruID,
@@ -730,7 +730,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     var BsYLEgitimBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.YLEgitimBelgesi).FirstOrDefault();
                                     if (BsYLEgitimBelgesi != null)
                                     {
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
 
                                             SiraNo = 8,
@@ -759,7 +759,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var BsMezuniyetBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.MezuniyetBelgesi).FirstOrDefault();
                                 if (BsMezuniyetBelgesi != null)
                                 {
-                                    var kb = new BasvuruBelgeModel
+                                    var kb = new BasvuruBelgeDto
                                     {
                                         SiraNo = !IsDrBavurusuVar ? 3 : 9,
                                         BasvuruID = BasvuruB.BasvuruID,
@@ -788,7 +788,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     var BsMezuniyetBelgesiYL = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.YLMezuniyetBelgesi).FirstOrDefault();
                                     if (BsMezuniyetBelgesiYL != null)
                                     {
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = !IsDrBavurusuVar ? 4 : 10,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -824,7 +824,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         if (IsDrBavurusuVar) BelgeTipAdi = "YL ve DR Transkript Belgesi";
                                         else BelgeTipAdi = "Lisans ve YL Transkript Belgesi";
                                     }
-                                    var kb = new BasvuruBelgeModel
+                                    var kb = new BasvuruBelgeDto
                                     {
                                         SiraNo = !IsDrBavurusuVar ? 5 : 11,
                                         BasvuruID = BasvuruB.BasvuruID,
@@ -860,7 +860,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     var BsTaninirlikBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.TaninirlikBelgesi).FirstOrDefault();
                                     if (BsTaninirlikBelgesi != null)
                                     {
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = !IsDrBavurusuVar ? 6 : 12,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -889,7 +889,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     var BsDenklikBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.DenklikBelgesi).FirstOrDefault();
                                     if (BsDenklikBelgesi != null)
                                     {
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = !IsDrBavurusuVar ? 6 : 12,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -924,7 +924,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     if (BsAlesGreSinavBelgesi != null)
                                     {
                                         var AlesGreSinaviBelgesi = BasvurularYuklenenBelgelers.Where(p => p.BasvuruBelgeTipID == BasvuruBelgeTipi.AlesGreSinaviBelgesi).FirstOrDefault();
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = 13,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -956,7 +956,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     var BsDilSinaviBelgesi = BasvuruSurecBelgeTipleris.Where(a => a.BasvuruBelgeTipID == BasvuruBelgeTipi.DilSinaviBelgesi).FirstOrDefault();
                                     if (BsDilSinaviBelgesi != null)
                                     {
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = 14,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -1010,7 +1010,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     if (BsTomerSinaviBelgesi != null && IsBelgeYukleme)
                                     {
                                         var TomerSinaviBelgesi = BasvurularYuklenenBelgelers.Where(p => p.BasvuruBelgeTipID == BasvuruBelgeTipi.TomerSinaviBelgesi).FirstOrDefault();
-                                        var kb = new BasvuruBelgeModel
+                                        var kb = new BasvuruBelgeDto
                                         {
                                             SiraNo = 15,
                                             BasvuruID = BasvuruB.BasvuruID,
@@ -1059,22 +1059,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return json;
         }
         [Authorize]
-        public ActionResult GetBasvuruKimlikBilgisi(BasvuruDetayModel model)
+        public ActionResult GetBasvuruKimlikBilgisi(BasvuruDetayDto model)
         {
             return View(model);
         }
         [Authorize]
-        public ActionResult GetBasvuruOgrenimTercihBilgisi(BasvuruDetayModel model)
+        public ActionResult GetBasvuruOgrenimTercihBilgisi(BasvuruDetayDto model)
         {
             return View(model);
         }
         [Authorize]
-        public ActionResult GetBasvuruSinavBilgileri(BasvuruDetayModel model)
+        public ActionResult GetBasvuruSinavBilgileri(BasvuruDetayDto model)
         {
             return View(model);
         }
         [Authorize]
-        public ActionResult GetBasvuruBelgeYukleme(BasvuruDetayModel model)
+        public ActionResult GetBasvuruBelgeYukleme(BasvuruDetayDto model)
         {
             return View(model);
         }
@@ -1681,7 +1681,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (basvuru.KullaniciID != UserIdentity.Current.Id)
                 {
-                    Management.SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuru üzerindeki AGNO bilgisi güncellenmek isteniyor!\nBasvuruID:" + basvuru.BasvuruID + "\nKullaniciID:" + UserIdentity.Current.Id + "\nÇağrılan Kullanıcı ID:" + basvuru.KullaniciID, "Ajax/setGBNDetail", BilgiTipi.Saldırı);
+                    Management.SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuru üzerindeki AGNO bilgisi güncellenmek isteniyor!\nBasvuruID:" + basvuru.BasvuruID + "\nKullaniciID:" + UserIdentity.Current.Id + "\nÇağrılan Kullanıcı ID:" + basvuru.KullaniciID, "Ajax/setGBNDetail", LogType.Saldırı);
                     _MmMessage.Messages.Add("Başka bir kullanıcıya ait başvuru üzerindeki AGNO bilgisini güncelleyemezsiniz!");
                 }
             }
@@ -1831,7 +1831,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             MmMessage.IsSuccess = false;
-                            Management.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), BilgiTipi.Hata, kul.KullaniciID, UserIdentity.Ip);
+                            Management.SistemBilgisiKaydet("Şifre sıfırlama! Hata: " + rtVal.ToExceptionMessage(), rtVal.ToExceptionStackTrace(), LogType.Hata, kul.KullaniciID, UserIdentity.Ip);
                             MmMessage.Title = "Şifre sıfırlama linki '" + kul.EMail + "' adresine gönderilemedi!";
                         }
                     }
@@ -2257,7 +2257,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.JsonStringData = anketSorulari.toJsonText();
                         foreach (var item in anketSorulari)
                         {
-                            model.AnketCevapModel.Add(new AnketCevapModel
+                            model.AnketCevapModel.Add(new AnketCevapDto
                             {
                                 SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
                                 SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama },
@@ -2609,7 +2609,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View();
         }
         [Authorize]
-        public ActionResult dAktifSinavlar(tercihSTKontrolModel model)
+        public ActionResult dAktifSinavlar(BasvuruTercihKontrolDto model)
         {
             var qOgrenimTipKods = model.OgrenimTipKods.Select((s, inx) => new { s = s, Index = inx }).ToList();
             var qProgramKods = model.ProgramKods.Select((s, inx) => new { s = s, Index = inx }).ToList();
@@ -2712,11 +2712,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        [Authorize]
-        public ActionResult getJuriMailContent(mailSRjuriModel mdl)
-        {
-            return View(mdl);
-        }
+        
         [Authorize]
 
         public ActionResult getJuriEkleKontrol(string JuriAdi, string Email)
@@ -3037,7 +3033,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var FExtension = Path.GetExtension(ekTamYol);
                         attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.FExtension.ToSetNameFileExtension(FExtension), MediaTypeNames.Application.Octet));
                     }
-                    else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MailGonderPost", BilgiTipi.Hata);
+                    else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.FExtension + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MailGonderPost", LogType.Hata);
                 }
 
 
@@ -3081,7 +3077,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         catch (Exception ex)
                         {
-                            Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Ajax/MailGonderPost<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                            Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Ajax/MailGonderPost<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Hata);
                         }
                     }
                 }
@@ -3403,7 +3399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var FExtension = Path.GetExtension(ekTamYol);
                                 attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.EkAdi.ToSetNameFileExtension(FExtension), MediaTypeNames.Application.Octet));
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MesajKaydetPost", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MesajKaydetPost", LogType.Uyarı);
                         }
                         var snded = MailManager.sendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, attach);
 
@@ -3508,7 +3504,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             XtraReport RprX = null;
             if (RaporTipi.HasValue == false)
             {
-                Management.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", "Ajax/GetDxReport", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet("Rapor almak için rapor tipinin gönderilmesi gerekmektedir!", "Ajax/GetDxReport", LogType.Hata);
             }
             else
             {
@@ -4570,7 +4566,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var t2 = DateTime.Now;
                         var TS = (t2 - t1).TotalSeconds;
 
-                        Management.SistemBilgisiKaydet("'" + anket.AnketAdi + "' Anket Raporu Oluşturuldu. Oluşturulma Süresi: " + TS + " Sn.", "Ajax/GetDxReport", BilgiTipi.Bilgi);
+                        Management.SistemBilgisiKaydet("'" + anket.AnketAdi + "' Anket Raporu Oluşturuldu. Oluşturulma Süresi: " + TS + " Sn.", "Ajax/GetDxReport", LogType.Bilgi);
                         rprAnket rpr = new rprAnket(enstitu.EnstituAd, anket.AnketAdi, BasTar.ToString("dd-MM-yyyy") + " - " + BitTar.ToString("dd-MM-yyyy") + " Tarih aralığındaki anket sonuçları");
                         rpr.DataSource = qModel;
                         rpr.DisplayName = BasTar.ToString("dd-MM-yyyy") + " - " + BitTar.ToString("dd-MM-yyyy") + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";

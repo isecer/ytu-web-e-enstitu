@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class YayinBilgiModel : MezuniyetBasvurulariYayin
+    public class MezuniyetBasvurulariYayinDto : MezuniyetBasvurulariYayin
     {
         public int? ShowDetayYayinID { get; set; }
         public bool DegerlendirmeAktif { get; set; }
@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<MezuniyetYayinProjeTurleri> MezuniyetYayinProjeTurleris { get; set; }
 
 
-        public YayinBilgiModel()
+        public MezuniyetBasvurulariYayinDto()
         {
             guID = Guid.NewGuid().ToString().Substring(0, 8);
             YayinIndexTurleri = new List<Models.MezuniyetYayinIndexTurleri>();

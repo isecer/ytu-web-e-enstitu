@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
 
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             bbModel.Kullanici = Kul;
             bbModel.SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.getAyarBT(_EnstituKod, "0").ToBoolean().Value;
             bbModel.DonemAdi = Management.getAkademikBulundugumuzTarih(DateTime.Now).Caption;
@@ -335,7 +335,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (belge.OgrenciNo != kul.OgrenciNo && belge.IslemYapanID != kul.KullaniciID)
                         {
-                            Management.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", LogType.Saldırı);
                             MmMessage.Messages.Add("Size ait olmayan bir belgeyi düzenlemeye hakkınız yoktur!");
 
                         }
@@ -796,7 +796,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.JsonStringData = anketSorulari.toJsonText();
                         foreach (var item in anketSorulari)
                         {
-                            model.AnketCevapModel.Add(new AnketCevapModel
+                            model.AnketCevapModel.Add(new AnketCevapDto
                             {
                                 SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
                                 SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
@@ -1133,7 +1133,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                    Management.SistemBilgisiKaydet(ex, BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
                 }
             }
             return mmMessage.toJsonResult();

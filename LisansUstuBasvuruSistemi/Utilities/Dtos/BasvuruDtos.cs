@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class BasvuruBilgiModel
+    public class IndexPageInfoDto
     {
         public bool SistemBasvuruyaAcik { get; set; }
         public bool SistemGirisSinavBilgiAcik { get; set; }
@@ -34,7 +34,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string KullaniciTipYetkiYokMsj { get; set; }
 
     }
-    public class tercihSTKontrolModel
+    public class BasvuruDurumDto : BasvuruDurumlari
+    {
+        public string DurumAdi { get; set; }
+    }
+    public class BasvuruTercihKontrolDto
     {
 
         public int SinavTipGrupID { get; set; }
@@ -44,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> ProgramKods { get; set; }
         public List<bool> Ingilizces { get; set; }
 
-        public tercihSTKontrolModel()
+        public BasvuruTercihKontrolDto()
         {
             OgrenimTipKods = new List<int>();
             ProgramKods = new List<string>();
@@ -52,6 +56,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         }
 
     }
+
     public class EntBegeKayitT
     {
         public string EnstituKod { get; set; }
@@ -60,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime BaslangicTar { get; set; }
         public DateTime BitisTar { get; set; }
     }
-    public class BasvuruDetayModel : Basvurular
+    public class BasvuruDetayDto : Basvurular
     {
         public int SelectedTabIndex { get; set; }
 
@@ -93,12 +98,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DRNotSistemi { get; set; }
         public string DRegitimDilAdi { get; set; }
 
-        public List<FrTercihler> Tercihlers { get; set; }
+        public List<BasvuruTercihDto> Tercihlers { get; set; }
         public bool IsSecilenTercihVarAsil { get; set; }
         public bool IsSecilenTercihVarYedek { get; set; }
         public bool IsTurkceProgramVar { get; set; }
         public bool IsBelgeYuklemeVar { get; set; }
-        public List<FrSinavlar> Sinavlars { get; set; }
+        public List<BasvuruSinavTipDto> Sinavlars { get; set; }
 
         public bool IsGonderilenMaillerVar { get; set; }
         public bool IsHesaplandi { get; set; }
@@ -106,18 +111,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsBelgeYuklemeAktif { get; set; }
         public bool IsYedekCokluTercih { get; set; }
 
-        public List<BasvuruBelgeModel> Belgelers { get; set; }
+        public List<BasvuruBelgeDto> Belgelers { get; set; }
 
         public bool KayitIslemiGordu { get; set; }
         public bool IsSave { get; set; }
         public bool IsKayittaBelgeOnayiZorunlu { get; set; }
 
         public YokStudentControl YokStudentControl { get; set; }
-        public BasvuruDetayModel()
+        public BasvuruDetayDto()
         {
-            Tercihlers = new List<FrTercihler>();
-            Sinavlars = new List<FrSinavlar>();
-            Belgelers = new List<BasvuruBelgeModel>();
+            Tercihlers = new List<BasvuruTercihDto>();
+            Sinavlars = new List<BasvuruSinavTipDto>();
+            Belgelers = new List<BasvuruBelgeDto>();
         }
     }
     public class YokStudentControl
@@ -131,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             AktifOgrenimListesi = new List<string>();
         }
     }
-    public class FrTercihler : BasvurularTercihleri
+    public class BasvuruTercihDto : BasvurularTercihleri
     {
         public bool IsSeciliBasvuruyaAitTercih { get; set; }
         public int MulakatSonucID { get; set; }
@@ -148,17 +153,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? KayıtOldu { get; set; }
         public bool IsBelgeYuklemeAktif { get; set; }
     }
-    public class FrSinavlar : SinavTipleri
-    {
-        public string EnstituKod { get; set; }
-        public bool IsWebService { get; set; }
-        public int SinavTipGrupID { get; set; }
+    public class BasvuruSinavTipDto : SinavTipleri
+    { 
+        public bool IsWebService { get; set; } 
         public int? SinavDilID { get; set; }
         public string SinavDilAdi { get; set; }
-        public bool IsTaahhutVar { get; set; }
-        public bool GIsTaahhutVar { get; set; }
-        public string GrupAdi { get; set; }
-        public int? TarihGirisMaxGecmisYil { get; set; }
+        public bool IsTaahhutVar { get; set; } 
+        public string GrupAdi { get; set; } 
         public int? Yil { get; set; }
         public string DonemAdi { get; set; }
         public DateTime? SinavTarihi { get; set; }
@@ -190,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string SGK { get; set; }
 
     }
-    public class basvuruDetayModel : Basvurular
+    public class BasvuruDetaySecilenDto : Basvurular
     {
 
         public int BasvuruSurecTipID { get; set; }
@@ -219,9 +220,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string NufusIlIcleAdi { get; set; }
         public bool IsLAgnoOrYLAgnoAlinsin { get; set; }
 
-        public sinavBilgiGrupModel BasvurularSinavBilgi_A { get; set; }
-        public sinavBilgiGrupModel BasvurularSinavBilgi_D { get; set; }
-        public sinavBilgiGrupModel BasvurularSinavBilgi_T { get; set; }
+        public BasvuruSinavBilgiGrupDto BasvurularSinavBilgi_A { get; set; }
+        public BasvuruSinavBilgiGrupDto BasvurularSinavBilgi_D { get; set; }
+        public BasvuruSinavBilgiGrupDto BasvurularSinavBilgi_T { get; set; }
         public List<basvuruTercihModel> BasvuruTercihleri { get; set; }
 
         public string BasvuruDurumAdi { get; set; }
@@ -229,17 +230,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DurumColor { get; set; }
 
 
-        public basvuruDetayModel()
+        public BasvuruDetaySecilenDto()
         {
-            BasvurularSinavBilgi_A = new sinavBilgiGrupModel();
-            BasvurularSinavBilgi_D = new sinavBilgiGrupModel();
-            BasvurularSinavBilgi_T = new sinavBilgiGrupModel();
+            BasvurularSinavBilgi_A = new BasvuruSinavBilgiGrupDto();
+            BasvurularSinavBilgi_D = new BasvuruSinavBilgiGrupDto();
+            BasvurularSinavBilgi_T = new BasvuruSinavBilgiGrupDto();
             BasvuruTercihleri = new List<basvuruTercihModel>();
 
         }
     }
 
-    public class BasvuruBelgeModel : BasvurularYuklenenBelgeler
+    public class BasvuruBelgeDto : BasvurularYuklenenBelgeler
     {
         public int SiraNo { get; set; }
         public string BasvuruBelgeTipAdi { get; set; }
@@ -248,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsKayitSonrasiGetirilecek { get; set; }
         public string Not { get; set; }
     }
-    public class sinavBilgiGrupModel
+    public class BasvuruSinavBilgiGrupDto
     {
         public string DilKodu { get; set; }
         public string DurumColor { get; set; }

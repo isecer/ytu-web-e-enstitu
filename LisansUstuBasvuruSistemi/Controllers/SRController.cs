@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             bbModel.SistemBasvuruyaAcik = SRAyar.SalonRezervasyonTalebiAcikmi.getAyarSR(_EnstituKod, "0").ToBoolean().Value;
             bbModel.DonemAdi = Management.getAkademikBulundugumuzTarih( DateTime.Now).Caption;
             bbModel.EnstituYetki = true;// UserIdentity.Current.SeciliEnstituKodu == _EnstituKod;
@@ -224,7 +224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (data.TalepYapanID != UserIdentity.Current.Id)
                         {
                             var basvuruBilgi = data.Kullanicilar.Ad + " " + data.Kullanicilar.Soyad + " Kullanıcısına ait <br/>" + data.Tarih.ToString() + " tarihli salon rezervasyon talebi  <br/>";
-                            Management.SistemBilgisiKaydet("Farklı bir kullanıcıya ait salon rezervasyon bilgisi güncellenmek isteniyor! \r\n SRTalepID:" + model.SRTalepID + " \r\n " + basvuruBilgi.Replace("<br/>", "\r\n"), "SR/TalepYap", BilgiTipi.Saldırı);
+                            Management.SistemBilgisiKaydet("Farklı bir kullanıcıya ait salon rezervasyon bilgisi güncellenmek isteniyor! \r\n SRTalepID:" + model.SRTalepID + " \r\n " + basvuruBilgi.Replace("<br/>", "\r\n"), "SR/TalepYap", LogType.Saldırı);
                             MmMessage.Messages.Add("Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!");
 
                         }
@@ -282,7 +282,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
                 mmMessage.Messages.Add("Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!");
-                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "SR/TalepYap", BilgiTipi.Saldırı);
+                Management.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + kModel.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "SR/TalepYap", LogType.Saldırı);
             }
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == kModel.TalepYapanID).First();
             var ttips = db.SRTalepTipleris.Where(p => p.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == kulls.KullaniciTipID)).ToList();
@@ -562,7 +562,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var snded = MailManager.sendMailRetVal(mailBilgi.EnstituKod, enstituAdi, htmlMail, EMailList, null);
                     if (snded != null)
                     {
-                        Management.SistemBilgisiKaydet("Salon rezervasyon talebi işlemi için mail gönderilirken bir hata oluştu! Hata: " + snded.ToExceptionMessage(), "SR/TalepYap", BilgiTipi.Hata);
+                        Management.SistemBilgisiKaydet("Salon rezervasyon talebi işlemi için mail gönderilirken bir hata oluştu! Hata: " + snded.ToExceptionMessage(), "SR/TalepYap", LogType.Hata);
                     }
                 }
                 #endregion
@@ -645,7 +645,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                      JuriBilgi = s.SRTaleplerJuris.ToList()
                                                  }));
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == q.TalepYapanID).First();
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             if (kulls.KullaniciTipID == KullaniciTipBilgi.IdariPersonel || kulls.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel)
             {
                 bbModel.BirimAdi = kulls.Birimler.BirimAdi;
@@ -707,7 +707,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add(basvuruBilgi + "silinemedi!");
                 mmMessage.Title = "Hata";
-                Management.SistemBilgisiKaydet(basvuruBilgi + "silinemedi! Hata:" + ex.ToExceptionMessage(), "SR/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                Management.SistemBilgisiKaydet(basvuruBilgi + "silinemedi! Hata:" + ex.ToExceptionMessage(), "SR/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
 
             //}

@@ -45,7 +45,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
                             if (!IsSuccess)
                             {
-                                Management.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", BilgiTipi.Kritik);
+                                Management.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", LogType.Kritik);
                             }
 
                         }
@@ -134,7 +134,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
                         }
                         var sndMail = MailManager.sendMail(EnstituKod, Sablon.SablonAdi, htmlMail, EMailList, Attachments);
 
@@ -172,7 +172,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 else
                 {
                     msg = "Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi!";
-                    Management.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", LogType.Kritik);
                 }
                 return msg;
             }

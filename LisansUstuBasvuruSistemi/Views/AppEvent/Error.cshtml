@@ -30,7 +30,7 @@
         {
             db.SistemBilgilendirmes.Add(new SistemBilgilendirme
             {
-                BilgiTipi = BilgiTipi.Hata,
+                BilgiTipi = LogType.Hata,
                 Message = Model.ToExceptionMessage(),
                 IslemYapanID = (UserIdentity.Current.IsAuthenticated ? UserIdentity.Current.Id : (int?)null),
                 IslemYapanIP = UserIdentity.Ip,

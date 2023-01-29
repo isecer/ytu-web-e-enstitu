@@ -12,7 +12,7 @@
     var DSinavTipleri = (SelectList)ViewBag.DSinavTipleri;
     var TSinavTipleri = (SelectList)ViewBag.TSinavTipleri;
     var _MmMessage = (MmMessage)ViewBag._MmMessage;
-    var BsvDurum = (basvuruDurumModel)ViewBag.BasvuruDurumu;
+    var BsvDurum = (BasvuruDurumDto)ViewBag.BasvuruDurumu;
     var prks = Model.BasvuruTercihleri.Select(d => d.ProgramKod).ToList();
     var otsIds = Model.BasvuruTercihleri.Select(d => d.OgrenimTipKod).ToList();
     var IngsIds = Model.BasvuruTercihleri.Select(d => d.Ingilizce).ToList();

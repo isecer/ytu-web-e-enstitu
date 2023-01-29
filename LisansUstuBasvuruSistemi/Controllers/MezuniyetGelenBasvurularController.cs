@@ -378,7 +378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Index Bilgisi Güncellenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/YayinIndexUpdate<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/YayinIndexUpdate<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
             var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
@@ -939,7 +939,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Tez dosyası kontrolü durum bilgisi kayıt edilirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/TdDurumKaydet<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/TdDurumKaydet<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Kritik);
                 }
             }
             mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
@@ -1157,7 +1157,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var cmbUnvanList = Management.cmbMezuniyetJofUnvanlar(true);
             var cmbUniversiteList = Management.cmbGetAktifUniversiteler(true);
 
-            var Model = new MezuniyetJuriOneriFormuModel
+            var Model = new MezuniyetJuriOneriFormuKayitDto
             {
                 MezuniyetBasvurulariID = MezuniyetBasvurulariID,
                 IsTezDiliTr = MB.IsTezDiliTr == true,
@@ -1367,7 +1367,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }.toJsonResult();
         }
         [ValidateInput(false)]
-        public ActionResult JuriOneriFormuPost(MezuniyetJuriOneriFormuModel kModel, string PostDetayTabAdi = "", bool SaveData = false)
+        public ActionResult JuriOneriFormuPost(MezuniyetJuriOneriFormuKayitDto kModel, string PostDetayTabAdi = "", bool SaveData = false)
         {
             var mMessage = new MmMessage();
             mMessage.MessageType = Msgtype.Success;
@@ -1657,7 +1657,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            Management.SistemBilgisiKaydet(hataMsj, "MezuniyetGelenBasvurular/JuriOneriFormuPost", BilgiTipi.Hata);
+                            Management.SistemBilgisiKaydet(hataMsj, "MezuniyetGelenBasvurular/JuriOneriFormuPost", LogType.Hata);
                         }
 
 
@@ -1911,7 +1911,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                             itemSe.EkAdi.ToSetNameFileExtension(FExtension), System.Net.Mime.MediaTypeNames.Application.Octet));
                                         gonderilenMailEkleri.Add(new GonderilenMailEkleri { EkAdi = itemSe.EkAdi, EkDosyaYolu = itemSe.EkDosyaYolu });
                                     }
-                                    else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "MezuniyetGelenBasvurular/JuriOneriFormuOnayDurumKayit", BilgiTipi.Uyarı);
+                                    else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "MezuniyetGelenBasvurular/JuriOneriFormuOnayDurumKayit", LogType.Uyarı);
                                 }
 
                                 if (item.Sablon.GonderilecekEkEpostalar != null) item.EMails.AddRange(item.Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }));
@@ -2103,7 +2103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

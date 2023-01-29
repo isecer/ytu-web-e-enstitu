@@ -51,15 +51,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string KayitDonemi { get; set; }
         public string DonemAdi { get; set; }
 
-        public YayinBilgiModel YayinBilgisi { get; set; }
+        public MezuniyetBasvurulariYayinDto YayinBilgisi { get; set; }
 
-        public List<YayinBilgiModel> MezuniyetBasvuruYayinlari { get; set; }
+        public List<MezuniyetBasvurulariYayinDto> MezuniyetBasvuruYayinlari { get; set; }
         public kmMezuniyetBasvuru()
         {
             _MezuniyetBasvurulariYayinID = new List<int>();
             _Yayinlanmis = new List<bool?>();
             _MezuniyetYayinTarih = new List<DateTime?>();
-            MezuniyetBasvuruYayinlari = new List<YayinBilgiModel>();
+            MezuniyetBasvuruYayinlari = new List<MezuniyetBasvurulariYayinDto>();
             _MezuniyetYayinTurID = new List<int>();
             _YayinBasligi = new List<string>();
             _MezuniyetYayinBelgesi = new List<HttpPostedFileBase>();

@@ -104,7 +104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!KullaniciID.HasValue) KullaniciID = UserIdentity.Current.Id;
 
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             var BasvuruSurecID = Management.getAktifBasvuruSurecID(_EnstituKod, BasvuruSurecTipi.LisansustuBasvuru);
             bbModel.AktifSurecID = BasvuruSurecID ?? 0;
             bbModel.SistemBasvuruyaAcik = BasvuruSurecID.HasValue;
@@ -209,11 +209,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.BasvuruID > 0)
             {
-                ViewBag.BasvuruDurumu = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == model.BasvuruDurumID).Select(s => new basvuruDurumModel { BasvuruDurumID = s.BasvuruDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.BasvuruDurumAdi }).First();
+                ViewBag.BasvuruDurumu = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == model.BasvuruDurumID).Select(s => new BasvuruDurumDto { BasvuruDurumID = s.BasvuruDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.BasvuruDurumAdi }).First();
             }
             else
             {
-                ViewBag.BasvuruDurumu = new basvuruDurumModel
+                ViewBag.BasvuruDurumu = new BasvuruDurumDto
                 {
                     DurumAdi = "Yeni Başvuru",
                     ClassName = "fa fa-plus",
@@ -992,11 +992,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.BasvuruID > 0)
             {
-                ViewBag.BasvuruDurumu = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == kModel.BasvuruDurumID).Select(s => new basvuruDurumModel { BasvuruDurumID = s.BasvuruDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.BasvuruDurumAdi }).First();
+                ViewBag.BasvuruDurumu = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == kModel.BasvuruDurumID).Select(s => new BasvuruDurumDto { BasvuruDurumID = s.BasvuruDurumID, ClassName = s.ClassName, Color = s.Color, DurumAdi = s.BasvuruDurumAdi }).First();
             }
             else
             {
-                ViewBag.BasvuruDurumu = new basvuruDurumModel
+                ViewBag.BasvuruDurumu = new BasvuruDurumDto
                 {
                     DurumAdi = "Yeni Başvuru",
                     ClassName = "fa fa-plus",
@@ -1064,7 +1064,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new { firstLength = maksNot[0].Length, lastLength = maksNot[1].Length, maxLenth = mdl.MaxNot.ToString().Length }.toJsonResult();
         }
 
-        public ActionResult getSinavTip(tercihSTKontrolModel model, int BasvuruSurecID, bool? EgitimDiliTurkce, int SinavTipID, string SelectedVal, List<int> OgrenimTipKods, List<bool> Ingilizces, List<string> ProgramKods, int? BasvuruID)
+        public ActionResult getSinavTip(BasvuruTercihKontrolDto model, int BasvuruSurecID, bool? EgitimDiliTurkce, int SinavTipID, string SelectedVal, List<int> OgrenimTipKods, List<bool> Ingilizces, List<string> ProgramKods, int? BasvuruID)
         {
 
             var mdl = Management.getSinavBilgisi(BasvuruSurecID, SinavTipID, OgrenimTipKods, ProgramKods, Ingilizces);
@@ -1107,7 +1107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!uygunMu)
                 {
 
-                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n DilID:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", BilgiTipi.Saldırı);
+                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n DilID:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                     _yil = 0001;
                 }
             }
@@ -1117,7 +1117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!uygunMu)
                 {
 
-                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", BilgiTipi.Saldırı);
+                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                     _yil = 0001;
                 }
             }
@@ -1202,7 +1202,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Basvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Basvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

@@ -909,7 +909,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             catch (Exception ex)
             {
                 Msg = (IsSinavOrKota ? "Sınav" : "Kota") + " Bilgileri Kopyalanırken Bir Hata Oluştu! </br>Hata:" + ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(ex, Msg, BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(ex, Msg, LogType.Hata);
             }
             mmMessage.Messages.Add(Msg);
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1122,7 +1122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                        join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                        join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                        join d in db.Donemlers on s.DonemID equals d.DonemID
-                       select new bsUrecDetay
+                       select new BasvuruSurecDetayDto
                        {
                            EnstituKod = s.EnstituKod,
                            EnstituAdi = e.EnstituAd,
@@ -1220,7 +1220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                        join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                        join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                        join d in db.Donemlers on s.DonemID equals d.DonemID
-                       select new bsUrecDetay
+                       select new BasvuruSurecDetayDto
                        {
                            EnstituKod = s.EnstituKod,
                            EnstituAdi = e.EnstituAd,
@@ -1743,27 +1743,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return Content(page, "text/html");
         }
-        public ActionResult getBsDetAnaBilgi(bsUrecDetay model)
+        public ActionResult getBsDetAnaBilgi(BasvuruSurecDetayDto model)
         {
             return View(model);
         }
-        public ActionResult getBsSinavTipleri(bsUrecDetay model)
+        public ActionResult getBsSinavTipleri(BasvuruSurecDetayDto model)
         {
             return View(model);
         }
-        public ActionResult getBsKotalar(bsUrecDetay model)
+        public ActionResult getBsKotalar(BasvuruSurecDetayDto model)
         {
             return View(model);
         }
-        public ActionResult getBsMulakat(bsUrecDetay model)
+        public ActionResult getBsMulakat(BasvuruSurecDetayDto model)
         {
             return View();
         }
-        public ActionResult getBsSonuc(bsUrecDetay model)
+        public ActionResult getBsSonuc(BasvuruSurecDetayDto model)
         {
             return View();
         }
-        public ActionResult getBsAnket(bsUrecDetay model)
+        public ActionResult getBsAnket(BasvuruSurecDetayDto model)
         {
             return View();
         }
@@ -2028,7 +2028,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = false;
                 var msg = "Hesaplama işlemi yapılırken bir hata oluştu! hata:" + ex.ToExceptionMessage();
                 mmMessage.Messages.Add(msg);
-                Management.SistemBilgisiKaydet(msg, "BasvuruSureci/BasvuruSonucHesap<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.Kritik);
+                Management.SistemBilgisiKaydet(msg, "BasvuruSureci/BasvuruSonucHesap<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
             if (mmMessage.IsSuccess) mmMessage.MessageType = Msgtype.Success;
@@ -2039,7 +2039,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult getBasvuruSonucDetay(int id, string ProgramKod, int OgrenimTipKod, int tbInx, bool IsDelete, bool IsBootBox = false)
         {
-            var model = new bsMulakatDetay();
+            var model = new BasvuruMulakatDetayDto();
             var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).FirstOrDefault();
             var _EnstituKod = bsurec.EnstituKod;
             var program = db.Programlars.Where(p => p.ProgramKod == ProgramKod).First();
@@ -2183,7 +2183,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     message = "'" + qBil.BaslangicYil + "/" + qBil.BitisYil + " " + qBil.DonemAdi + "' Dönemine ait başvuru süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "BasvuruSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(message, "BasvuruSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = Msgtype.Error;
@@ -2211,7 +2211,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bsurecSturs = bsurec.BasvuruSurecMulakatSinavTurleris.ToList();
             try
             {
-                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat Sınav yeri ve jüri bilgisi mail gönderim işlemi başlatıldı!", "BasvuruSureci/mailGonderJuriYer", BilgiTipi.Bilgi);
+                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat Sınav yeri ve jüri bilgisi mail gönderim işlemi başlatıldı!", "BasvuruSureci/mailGonderJuriYer", LogType.Bilgi);
                 var data = from s in db.BasvurularTercihleris
                            join bot in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == id) on s.OgrenimTipKod equals bot.OgrenimTipKod
                            join kt in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == id) on new { s.ProgramKod, s.OgrenimTipKod } equals new { kt.ProgramKod, kt.OgrenimTipKod }
@@ -2231,7 +2231,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  join b in db.AnabilimDallaris on new { pr.AnabilimDaliKod, bsurec.EnstituKod } equals new { b.AnabilimDaliKod, b.EnstituKod }
                                  join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == bsurec.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
                                  where s.BasvuruSurecID == id
-                                 select new mailMulakatSinavYerJuriBilgi
+                                 select new MulakatSinavYerJuriBilgiMailDto
                                  {
                                      MulakatID = s.MulakatID,
                                      BasvuruSurecID = id,
@@ -2371,7 +2371,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bsurec.SinavYerBilgisiOgrenciMailiGonderildi = true;
                 bsurec.SinavYerBilgisiOgrenciMailiGonderimTarihi = DateTime.Now;
                 db.SaveChanges();
-                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat Sınav yeri ve jüri bilgisi mail gönderim işlemi tamamlandı! " + data.Select(s => s.EMail).Distinct().Count() + " \r\nkişiye mail gönderildi!", "BasvuruSureci/mailGonderJuriYer", BilgiTipi.Bilgi);
+                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat Sınav yeri ve jüri bilgisi mail gönderim işlemi tamamlandı! " + data.Select(s => s.EMail).Distinct().Count() + " \r\nkişiye mail gönderildi!", "BasvuruSureci/mailGonderJuriYer", LogType.Bilgi);
                 var message = "'" + SurecAdiB + "'  başvuru sürecine ait yer / jüri bilgisi mail başarılı bir şekilde gönderildi!";
                 mmMessage.IsSuccess = true;
                 mmMessage.Title = "Mail Gönderim İşlemi Başarılı";
@@ -2383,7 +2383,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var title = "'" + SurecAdiB + "'  başvuru sürecine ait yer / jüri bilgisi mail gönderilirken bir hata oluştu!";
                 var hata = "</br> Hata:" + ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(title + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/mailGonderJuriYer", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(title + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/mailGonderJuriYer", LogType.Hata);
                 mmMessage.Title = title;
                 mmMessage.Messages.Add(hata);
                 mmMessage.MessageType = Msgtype.Error;
@@ -2408,7 +2408,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(bsurec.EnstituKod);
             var erisimAdresi = mailBilgi.SistemErisimAdresi + "/MulakatSureci/Index";
-            Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav yer ve Jüri bilgileri" : "Sınav Notu") + " girişi için Anabilim Dallarına bilgi maili gönderim işlemi başlatıldı!", "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", BilgiTipi.Bilgi);
+            Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav yer ve Jüri bilgileri" : "Sınav Notu") + " girişi için Anabilim Dallarına bilgi maili gönderim işlemi başlatıldı!", "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", LogType.Bilgi);
             try
             {
                 var rollers = new List<string> { RoleNames.MulakatSureci, RoleNames.MulakatKayıt };
@@ -2435,7 +2435,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  b.AnabilimDaliKod,
                                  b.AnabilimDaliAdi
                              } into g1
-                             select new mailMulakatSinavYerJuriBilgiBolum
+                             select new MulakatSinavYerJuriBilgiBolumMailDto
                              {
                                  AnabilimDaliKod = g1.Key.AnabilimDaliKod,
                                  AnabilimDaliAdi = g1.Key.AnabilimDaliAdi,
@@ -2443,7 +2443,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  GonderilecekMails = db.KullaniciProgramlaris.Where(p =>
                                                              (p.Kullanicilar.YetkiGruplari.YetkiGrupRolleris.Any(a => rollers.Contains(a.Roller.RolAdi)) || p.Kullanicilar.Rollers.Any(a => rollers.Contains(a.RolAdi)))
                                                              && g1.Select(s => s.ProgramKod).Contains(p.ProgramKod)).Select(s2 => s2.Kullanicilar.EMail).ToList(),
-                                 detay = g1.Where(p => p.AnabilimDaliKod == g1.Key.AnabilimDaliKod).Select(s => new mailMulakatSinavYerJuriBilgiBolumDetay
+                                 MulakatSinavYerJuriBilgiBolumDetayMailDtos = g1.Where(p => p.AnabilimDaliKod == g1.Key.AnabilimDaliKod).Select(s => new MulakatSinavYerJuriBilgiBolumDetayMailDto
                                  {
                                      EksikBilgiSinavYerBilgi = db.Mulakats.Where(p => p.BasvuruSurecID == g1.Key.BasvuruSurecID && p.ProgramKod == s.ProgramKod && p.OgrenimTipKod == s.OgrenimTipKod).Any() == false,
                                      ProgramKod = s.ProgramKod,
@@ -2457,10 +2457,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  }).ToList()
                              }).AsQueryable();
 
-                var qDataList = new List<mailMulakatSinavYerJuriBilgiBolum>();
+                var qDataList = new List<MulakatSinavYerJuriBilgiBolumMailDto>();
                 if (isSinavYerOrSinavNotGiris)
                 {
-                    qDataList = qData.Where(p => p.detay.Any(a => a.EksikBilgiSinavYerBilgi)).ToList();
+                    qDataList = qData.Where(p => p.MulakatSinavYerJuriBilgiBolumDetayMailDtos.Any(a => a.EksikBilgiSinavYerBilgi)).ToList();
                 }
                 else
                 {
@@ -2468,8 +2468,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     qDataList = qData.ToList();
                     foreach (var item in qDataList)
                     {
-                        var mdetay = new List<mailMulakatSinavYerJuriBilgiBolumDetay>();
-                        foreach (var item2 in item.detay)
+                        var mdetay = new List<MulakatSinavYerJuriBilgiBolumDetayMailDto>();
+                        foreach (var item2 in item.MulakatSinavYerJuriBilgiBolumDetayMailDtos)
                         {
                             var sTips = db.MulakatDetays.Where(p => p.Mulakat.ProgramKod == item2.ProgramKod && p.Mulakat.OgrenimTipKod == item2.OgrenimTipKod && p.Mulakat.BasvuruSurecID == id).ToList();
                             var qBCount = tercihS.Where(p => p.ProgramKod == item2.ProgramKod && item2.OgrenimTipKod == p.OgrenimTipKod).Count();
@@ -2493,10 +2493,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
 
                         }
-                        item.detay = mdetay;
+                        item.MulakatSinavYerJuriBilgiBolumDetayMailDtos = mdetay;
 
                     }
-                    qDataList = qDataList.Where(p => p.detay.Count > 0).ToList();
+                    qDataList = qDataList.Where(p => p.MulakatSinavYerJuriBilgiBolumDetayMailDtos.Count > 0).ToList();
 
                 }
 
@@ -2518,7 +2518,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mtc.AciklamaBasligi = "";
                     mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Dönem Adı", Aciklama = SurecAdiB });
                     mtc.Detaylar.Add(new mailTableRow { Baslik = "Anabilim Dalı Adı", Aciklama = item.AnabilimDaliAdi });
-                    var qdetay = item.detay.AsQueryable();
+                    var qdetay = item.MulakatSinavYerJuriBilgiBolumDetayMailDtos.AsQueryable();
                     if (isSinavYerOrSinavNotGiris)
                     {
                         qdetay = qdetay.Where(a => a.EksikBilgiSinavYerBilgi);
@@ -2610,7 +2610,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     bsurec.SinavNotBilgisiBolumMailiGonderimTarihi = DateTime.Now;
                 }
                 db.SaveChanges();
-                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav giriş ve Jüri bilgileri" : "Sınav Notu") + " girişi için Anabilim Dallarına bilgi maili gönderimi tamamlandı!  \r\n" + qDataList.Count() + " Anabilim Dalına mail gönderildi!", "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", BilgiTipi.Bilgi);
+                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav giriş ve Jüri bilgileri" : "Sınav Notu") + " girişi için Anabilim Dallarına bilgi maili gönderimi tamamlandı!  \r\n" + qDataList.Count() + " Anabilim Dalına mail gönderildi!", "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", LogType.Bilgi);
                 var message = "'" + SurecAdiB + "'  Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav giriş ve Jüri bilgileri" : "Sınav Notu") + " girişi için \r\n" + qDataList.Count() + " Bölüme başarılı bir şekilde mail gönderildi!";
                 mmMessage.IsSuccess = true;
                 mmMessage.Title = "Mail Gönderim İşlemi Başarılı";
@@ -2621,7 +2621,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
 
                 var message = "'" + SurecAdiB + "'  Başvuru sürecine ait Mülakat " + (isSinavYerOrSinavNotGiris ? "Sınav giriş ve Jüri bilgileri" : "Sınav Notu") + " girişi için Anabilim Dallarına bilgi maili gönderilirken bir hata oluştu!";
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", BilgiTipi.Hata);
+                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/mailGonderBolumSinavYerBilgiGiris", LogType.Hata);
                 mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
@@ -2653,7 +2653,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.Messages.Count == 0)
             {
-                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + " öğrencilere gönderilmeye başlandı!", "BasvuruSureci/basvuruSonucMailGonderim", BilgiTipi.Bilgi);
+                Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + " öğrencilere gönderilmeye başlandı!", "BasvuruSureci/basvuruSonucMailGonderim", LogType.Bilgi);
                 try
                 {
                     var Bsonuc = (from s in db.MulakatSonuclaris.Where(p => p.BasvuruSurecID == id && (!IsSonucOrAnket ? (p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu != true && p.MulakatSonucTipID == MulakatSonucTipi.Asil) : 1 == 1))
@@ -2875,7 +2875,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         bsurec.KayitOlmayanOgrencilereAnketLinkiGonderimTarihi = DateTime.Now;
                     }
                     db.SaveChanges();
-                    Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + " Öğrencilere mail olarak gönderildi! \r\n  " + Bsonuc.Count + " Öğrenciye mail gönderildi!", "BasvuruSureci/basvuruSonucMailGonderim", BilgiTipi.Bilgi);
+                    Management.SistemBilgisiKaydet(SurecAdiB + " Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + " Öğrencilere mail olarak gönderildi! \r\n  " + Bsonuc.Count + " Öğrenciye mail gönderildi!", "BasvuruSureci/basvuruSonucMailGonderim", LogType.Bilgi);
                     var message = "'" + SurecAdiB + "'  Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + "  " + Bsonuc.Count + " öğrenciye mail olarak gönderildi!";
                     mmMessage.IsSuccess = true;
                     mmMessage.Title = "Mail Gönderim İşlemi Başarılı";
@@ -2885,7 +2885,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     var message = "'" + SurecAdiB + "'  Başvuru sürecine ait başvuru " + (IsSonucOrAnket ? "sonuçları" : "Anket giriş bilgileri") + "  Öğrencilere mail olarak gönderilirken bir hata oluştu!";
-                    Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/basvuruSonucMailGonderim", BilgiTipi.Hata);
+                    Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "BasvuruSureci/basvuruSonucMailGonderim", LogType.Hata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                     mmMessage.MessageType = Msgtype.Error;
@@ -2954,14 +2954,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var msg = OgrenciBilgi + " GSIS sistemi '" + program.ProgramAdi + "' programında kaydı gözükmektedir! Kayıt aktarım işlemi yapılamaz!";
                             mmMessage.Messages.Add(msg);
                             mmMessage.IsSuccess = false;
-                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", BilgiTipi.Uyarı);
+                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", LogType.Uyarı);
                         }
                         else if ((programKod == ProgramBilgi.ProgramKod) && btercih.KayitDurumID.HasValue && KayitDurumID.HasValue && KayitDurumID == KayitDurumu.KayitOlmadi)
                         {
                             var msg = OgrenciBilgi + " GSIS sistemi " + program.ProgramAdi + " programında kaydı gözükmektedir! Kayıt üstünde herhangi bir işlem yapılamaz!";
                             mmMessage.Messages.Add(msg);
                             mmMessage.IsSuccess = false;
-                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", BilgiTipi.Uyarı);
+                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", LogType.Uyarı);
                         }
                     }
                 }
@@ -2970,7 +2970,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var msg = OgrenciBilgi + " si için OBS sisteminde kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz!";
                     mmMessage.Messages.Add(msg);
                     mmMessage.IsSuccess = false;
-                    Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", BilgiTipi.Kritik);
+                    Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", LogType.Kritik);
                 }
             }
             if (mmMessage.IsSuccess && ProgramBilgi.YokOgrenciKontrolHataVar)
@@ -3005,7 +3005,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var msg = OgrenciBilgi + " için yedek program kayıt önceliği tercihinde " + BasvuruTercihi.KayitSiraNo + ". öncelik olarak '" + DigerTercihProgrami.ProgramAdi + "' programına kayıt olmak istemektedir. Bu program için işlem yapılmadan " + ProgramBilgi.ProgramAdi + " programına kayıt işemi yapılamaz!";
                             mmMessage.Messages.Add(msg);
                             mmMessage.IsSuccess = false;
-                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", BilgiTipi.Uyarı);
+                            Management.SistemBilgisiKaydet(msg, "BasvuruSureci/KazananKayit", LogType.Uyarı);
                         }
                     }
                 }
@@ -3297,7 +3297,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                     {
                         mmMessage.Messages.Add(OgrenciBilgi + "nin Kayıt işlemi sırasında bir hata oluştu! GSIS sistemi hata döndürdü! <br/> Mesaj:" + returnVal);
-                        Management.SistemBilgisiKaydet(OgrenciBilgi + "nin Kayıt işlemi sırasında bir hata oluştu! GSIS sistemi hata döndürdü! <br/> Mesaj:" + returnVal + " <br/><br/>" + sw, "BasvuruSureci/KazananKayit", BilgiTipi.Kritik);
+                        Management.SistemBilgisiKaydet(OgrenciBilgi + "nin Kayıt işlemi sırasında bir hata oluştu! GSIS sistemi hata döndürdü! <br/> Mesaj:" + returnVal + " <br/><br/>" + sw, "BasvuruSureci/KazananKayit", LogType.Kritik);
                         mmMessage.IsSuccess = false;
                     }
                     IsReloadPage = true;
@@ -3353,7 +3353,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", BilgiTipi.Uyarı);
+                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
                         }
                         if (Parametreler.Any(a => a == "@EnstituAdi"))
                             ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
@@ -3400,7 +3400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
 
                             mmMessage.Messages.Add("Mail gönderilirken bir hata oluştu!");
-                            Management.SistemBilgisiKaydet("Kayıt işlemi yapılan öğrenciye mail gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+                            Management.SistemBilgisiKaydet("Kayıt işlemi yapılan öğrenciye mail gönderilirken bir hata oluştu! \r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata);
                         }
 
                     }

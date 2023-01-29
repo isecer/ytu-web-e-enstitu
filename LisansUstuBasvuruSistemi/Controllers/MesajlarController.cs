@@ -177,7 +177,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 success = false;
                 message = "'" + kayit.Konu + "'Konulu Mesaj Durumu Güncellenemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(message, "Mesajlar/DurumKayit<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                Management.SistemBilgisiKaydet(message, "Mesajlar/DurumKayit<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
             return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -208,7 +208,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         success = false;
                         message = "'" + kayit.Konu + "' Başlıklı Konu! <br/> Bilgi:" + ex.ToExceptionMessage();
-                        Management.SistemBilgisiKaydet(message, "Mesajlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                        Management.SistemBilgisiKaydet(message, "Mesajlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     }
                 }
                 else

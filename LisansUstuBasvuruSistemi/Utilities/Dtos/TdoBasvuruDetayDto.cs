@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class BasvuruDetayModelTDO : TDOBasvuru
+    public class TdoBasvuruDetayDto : TDOBasvuru
     {
         public bool GelenBasvuru { get; set; }
         public string EnstituAdi { get; set; }
@@ -23,9 +23,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public Guid? DegerlendirenUniqueID { get; set; }
         public bool TdoBasvurusuYapabilir { get; set; }
         public bool IsYeniDanismanOneriOrDegisiklik { get; set; }
-        public List<TDOBasvuruDanismanModel> TDOBasvuruDanismanList { get; set; }
+        public List<TdoBasvuruDanismanDto> TDOBasvuruDanismanList { get; set; }
     }
-    public class TDOBasvuruDanismanModel : TDOBasvuruDanisman
+    public class TdoBasvuruDanismanDto : TDOBasvuruDanisman
     {
         public string DonemAdi { get; set; }
         public string AdSoyad { get; set; }

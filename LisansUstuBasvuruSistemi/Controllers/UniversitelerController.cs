@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Ad + "' İsimli Üniversite Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage(); 
-                    Management.SistemBilgisiKaydet(message, "Universiteler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                    Management.SistemBilgisiKaydet(message, "Universiteler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

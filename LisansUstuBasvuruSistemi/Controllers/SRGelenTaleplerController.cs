@@ -167,7 +167,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add(basvuruBilgi + "silinemedi!");
                 mmMessage.Title = "Hata";
-                Management.SistemBilgisiKaydet(basvuruBilgi + " Bilgi:" + ex.ToExceptionMessage(), "SRGelenTalepler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), BilgiTipi.OnemsizHata);
+                Management.SistemBilgisiKaydet(basvuruBilgi + " Bilgi:" + ex.ToExceptionMessage(), "SRGelenTalepler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
 
             //}

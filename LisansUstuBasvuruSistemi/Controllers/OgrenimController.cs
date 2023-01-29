@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
            
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             #region bilgiModel
-            var bbModel = new BasvuruBilgiModel();
+            var bbModel = new IndexPageInfoDto();
             var MezuniyetSurecID = Management.getAktifMezuniyetSurecID(_EnstituKod);
             bbModel.AktifSurecID = MezuniyetSurecID ?? 0;
             bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.getAyarMZ(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;

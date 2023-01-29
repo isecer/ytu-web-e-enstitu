@@ -238,7 +238,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                                         EkDosyaYolu = itemSe.EkDosyaYolu,
                                                     });
                                                 }
-                                                else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", BilgiTipi.Uyarı);
+                                                else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
                                             }
                                             if (Parametreler.Any(a => a == "@EnstituAdi"))
                                                 ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
@@ -330,7 +330,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             db.SistemBilgilendirmes.Add(new SistemBilgilendirme()
                             {
                                 Message = MzamanlayiciMsg,
-                                BilgiTipi = BilgiTipi.Uyarı,
+                                BilgiTipi = LogType.Uyarı,
                                 IslemYapanID = 1,
                                 IslemYapanIP = "::",
                                 IslemTarihi = DateTime.Now,
@@ -346,7 +346,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 }
                 catch (Exception e)
                 {
-                    Management.SistemBilgisiKaydet("Toplu mail gönderilirken bir hata oluştu! hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), BilgiTipi.Hata, 1, "::");
+                    Management.SistemBilgisiKaydet("Toplu mail gönderilirken bir hata oluştu! hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), LogType.Hata, 1, "::");
                 }
             }
         }

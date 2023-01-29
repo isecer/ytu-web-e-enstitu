@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class MulakatBilgiModel : BasvuruBilgiModel
+    public class MulakatBilgiModel : IndexPageInfoDto
     {
         public List<string> Programlar { get; set; }
         //public basvuru AktifBasvuru { get; set; }
