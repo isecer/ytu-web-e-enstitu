@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
 @{
@@ -67,7 +68,7 @@
                     <table style="margin:0px;">
                         <tr>
                             <td width="110" style="text-align:center;">
-                                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                                <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
                             </td>
                             <td style="padding-left:10px;text-align:left;">
 
@@ -210,7 +211,7 @@
 
                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
                     {
-                        @Model.ToMezuniyetDetayEYKSureci()
+                        @Model.ToMezuniyetDetayEykSureci()
                     }
                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.EYKDaOnaylandi == true && Model.EYKTarihi.HasValue)
                     {
@@ -275,7 +276,7 @@ else
     <table style="margin:0px;">
         <tr>
             <td width="100" style="text-align:center;">
-                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
             </td>
             <td style="padding-left:10px;text-align:left;">
 

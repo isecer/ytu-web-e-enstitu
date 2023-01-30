@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -1468,7 +1469,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (tbInx == 4)
             {
-                var prkods = Management.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
+                var prkods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
 
                 #region MulakatSınavBilgi
                 mdl.ProgramKotaLst = (from k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == id)
@@ -1679,7 +1680,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 #region BaşvuruSonuclari
 
-                var KullaniciProgramKods = Management.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
+                var KullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
                 var vW = db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == id && KullaniciProgramKods.Contains(p.ProgramKod)).Select(s =>
                          new frMulakatSonucDetay
                          {
@@ -3654,7 +3655,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetProgramKotalari(int id)
         {
             var Surec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First();
-            var KullaniciProgramKods = Management.GetUserProgramKods(UserIdentity.Current.Id, Surec.EnstituKod);
+            var KullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, Surec.EnstituKod);
             var vW = db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == id && KullaniciProgramKods.Contains(p.ProgramKod)).Select(s =>
                 new
                 {

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -214,12 +215,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            ViewBag.AktifDonemID = new SelectList(Management.cmbTIAktifDonemListe(true), "Value", "Caption", model.AktifDonemID);
-            ViewBag.DonemID = new SelectList(Management.cmbTIAktifDonemListe(true), "Value", "Caption", model.DonemID);
-            ViewBag.AktifDurumID = new SelectList(Management.cmbTDOOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
-            ViewBag.DurumID = new SelectList(Management.cmbTDOOneriDurumListe(true), "Value", "Caption", model.DurumID);
-            ViewBag.AktifEsDurumID = new SelectList(Management.cmbTDOEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
-            ViewBag.EsDurumID = new SelectList(Management.cmbTDOEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
+            ViewBag.AktifDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifDonemID);
+            ViewBag.DonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.DonemID);
+            ViewBag.AktifDurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
+            ViewBag.DurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
+            ViewBag.AktifEsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
+            ViewBag.EsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
 
 
             model.Data = qdata; 

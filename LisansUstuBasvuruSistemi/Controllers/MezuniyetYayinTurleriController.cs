@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -116,11 +117,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.IsAktif = true;
             }
 
-            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(Management.cmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", model.MezuniyetYayinBelgeTurID);
-            ViewBag.KaynakMezuniyetYayinLinkTurID = new SelectList(Management.cmbMezuniyetYayinLinkTurleri(true, true), "Value", "Caption", model.KaynakMezuniyetYayinLinkTurID);
-            ViewBag.MezuniyetYayinMetinTurID = new SelectList(Management.cmbMezuniyetYayinMetinTurleri(true), "Value", "Caption", model.MezuniyetYayinMetinTurID);
-            ViewBag.YayinMezuniyetYayinLinkTurID = new SelectList(Management.cmbMezuniyetYayinLinkTurleri(false, true), "Value", "Caption", model.YayinMezuniyetYayinLinkTurID);
-            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(Management.cmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", model.MezuniyetYayinBelgeTurID); 
+            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", model.MezuniyetYayinBelgeTurID);
+            ViewBag.KaynakMezuniyetYayinLinkTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinLinkTurleri(true, true), "Value", "Caption", model.KaynakMezuniyetYayinLinkTurID);
+            ViewBag.MezuniyetYayinMetinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinMetinTurleri(true), "Value", "Caption", model.MezuniyetYayinMetinTurID);
+            ViewBag.YayinMezuniyetYayinLinkTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinLinkTurleri(false, true), "Value", "Caption", model.YayinMezuniyetYayinLinkTurID);
+            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", model.MezuniyetYayinBelgeTurID); 
             return View(model);
         }
         [HttpPost]
@@ -213,11 +214,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             ViewBag.MmMessage = MmMessage;
-            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(Management.cmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", kModel.MezuniyetYayinBelgeTurID);
-            ViewBag.KaynakMezuniyetYayinLinkTurID = new SelectList(Management.cmbMezuniyetYayinLinkTurleri(true, true), "Value", "Caption", kModel.KaynakMezuniyetYayinLinkTurID);
-            ViewBag.MezuniyetYayinMetinTurID = new SelectList(Management.cmbMezuniyetYayinMetinTurleri(true), "Value", "Caption", kModel.MezuniyetYayinMetinTurID);
-            ViewBag.YayinMezuniyetYayinLinkTurID = new SelectList(Management.cmbMezuniyetYayinLinkTurleri(false, true), "Value", "Caption", kModel.YayinMezuniyetYayinLinkTurID);
-            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(Management.cmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", kModel.MezuniyetYayinBelgeTurID); 
+            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", kModel.MezuniyetYayinBelgeTurID);
+            ViewBag.KaynakMezuniyetYayinLinkTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinLinkTurleri(true, true), "Value", "Caption", kModel.KaynakMezuniyetYayinLinkTurID);
+            ViewBag.MezuniyetYayinMetinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinMetinTurleri(true), "Value", "Caption", kModel.MezuniyetYayinMetinTurID);
+            ViewBag.YayinMezuniyetYayinLinkTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinLinkTurleri(false, true), "Value", "Caption", kModel.YayinMezuniyetYayinLinkTurID);
+            ViewBag.MezuniyetYayinBelgeTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", kModel.MezuniyetYayinBelgeTurID); 
             return View(kModel);
         }
 

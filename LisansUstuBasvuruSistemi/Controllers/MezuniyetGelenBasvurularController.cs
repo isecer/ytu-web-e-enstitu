@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -28,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MBGelenBKayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             if (MBGelenBKayitYetki)
             {
-                model.MezuniyetSurecID = Management.getAktifMezuniyetSurecID(Management.getSelectedEnstitu(EKD));
+                model.MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(Management.getSelectedEnstitu(EKD));
             }
 
             model.Expand = model.MezuniyetSurecID.HasValue;
@@ -290,17 +291,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else ViewBag.kIds = new List<int>();
 
-            ViewBag.MezuniyetSurecID = new SelectList(Management.getmezuniyetSurecleri(EnstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
-            ViewBag.MezuniyetSureci = new SelectList(Management.getMezuniyetSurecGroup(EnstituKod, true), "Value", "Caption", model.MezuniyetSureci);
+            ViewBag.MezuniyetSurecID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecleri(EnstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
+            ViewBag.MezuniyetSureci = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecGroup(EnstituKod, true), "Value", "Caption", model.MezuniyetSureci);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(Management.cmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
-            ViewBag.JuriOneriFormuDurumuID = new SelectList(Management.cmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
-            ViewBag.KayitDonemi = new SelectList(Management.getmezuniyetKayitDonemleri(EnstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
+            ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
+            ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
+            ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(EnstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
             ViewBag.SRDurumID = new SelectList(Management.cmbSRDurumListe(true), "Value", "Caption", model.SRDurumID);
             ViewBag.TDDurumID = new SelectList(Management.cmbTDDurumListe(true), "Value", "Caption", model.TDDurumID);
-            ViewBag.MezuniyetSinavDurumID = new SelectList(Management.cmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
-            ViewBag.TeslimFormDurumu = new SelectList(Management.cmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
-            ViewBag.MezuniyetDurumID = new SelectList(Management.cmbMezuniyetDurumIDListe(true), "Value", "Caption", model.MezuniyetDurumID);
+            ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
+            ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
+            ViewBag.MezuniyetDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetDurumId(true), "Value", "Caption", model.MezuniyetDurumID);
             return View(model);
         }
 
@@ -309,7 +310,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult YayinKontrol(int id, int MezuniyetBasvurulariYayinID)
         {
 
-            var model = Management.getSecilenBasvuruMezuniyetDetay(id, MezuniyetBasvurulariYayinID);
+            var model = MezuniyetBus.GetMezuniyetBasvuruDetayBilgi(id, MezuniyetBasvurulariYayinID);
             return View(model);
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
@@ -816,7 +817,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (talep.SRTalepTipleri.IsTezSinavi && SendMail)
             {
-                var msgs = Management.sendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
+                var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
                 if (msgs.Messages.Count > 0)
                 {
                     strView = Management.RenderPartialView("Ajax", "getMessage", msgs);
@@ -884,7 +885,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (SendMailSinav && new List<int> { MezuniyetSinavDurum.Basarili, MezuniyetSinavDurum.Uzatma }.Contains(talep.MezuniyetSinavDurumID.Value))
                 {
-                    mmMessage = Management.sendMailMezuniyetSinavSonucu(id, talep.MezuniyetSinavDurumID.Value);
+                    mmMessage = MezuniyetBus.SendMailMezuniyetSinavSonucu(id, talep.MezuniyetSinavDurumID.Value);
 
                 }
             }
@@ -931,8 +932,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     db.SaveChanges();
                     LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", IslemTipi.Update, talep.ToJson());
                     mmMessage.IsSuccess = true;
-                    if (kModel.IsOnaylandiOrDuzeltme == true) mmMessage.Messages.AddRange(Management.sendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipi.Mez_TezKontrolTezDosyasiBasarili, kModel.Aciklama).Messages);
-                    else if (kModel.IsOnaylandiOrDuzeltme == false) mmMessage.Messages.AddRange(Management.sendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipi.Mez_TezKontrolTezDosyasiOnaylanmadi, kModel.Aciklama).Messages);
+                    if (kModel.IsOnaylandiOrDuzeltme == true) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipi.Mez_TezKontrolTezDosyasiBasarili, kModel.Aciklama).Messages);
+                    else if (kModel.IsOnaylandiOrDuzeltme == false) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipi.Mez_TezKontrolTezDosyasiOnaylanmadi, kModel.Aciklama).Messages);
                 }
                 catch (Exception ex)
                 {
@@ -1154,7 +1155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetJuriOneriFormu(int MezuniyetBasvurulariID)
         {
             var MB = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == MezuniyetBasvurulariID);
-            var cmbUnvanList = Management.cmbMezuniyetJofUnvanlar(true);
+            var cmbUnvanList = MezuniyetBus.GetCmbMezuniyetJofUnvanlar(true);
             var cmbUniversiteList = Management.cmbGetAktifUniversiteler(true);
 
             var Model = new MezuniyetJuriOneriFormuKayitDto
@@ -1503,7 +1504,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       s.BilimselCalismalarAnahtarSozcuklerSuccess,
                                       s.DilSinavAdiSuccess,
                                       s.DilPuaniSuccess,
-                                      IsSuccessRow = s.JuriTipAdi.ToJOFormSuccessRow(kModel.IsTezDiliTr, s.AdSoyadSuccess, s.UnvanAdiSuccess, s.EMailSuccess, s.UniversiteIDSuccess, s.UzmanlikAlaniSuccess, s.BilimselCalismalarAnahtarSozcuklerSuccess, s.DilSinavAdiSuccess, s.DilPuaniSuccess)
+                                      IsSuccessRow = s.JuriTipAdi.ToJoFormSuccessRow(kModel.IsTezDiliTr, s.AdSoyadSuccess, s.UnvanAdiSuccess, s.EMailSuccess, s.UniversiteIDSuccess, s.UzmanlikAlaniSuccess, s.BilimselCalismalarAnahtarSozcuklerSuccess, s.DilSinavAdiSuccess, s.DilPuaniSuccess)
                                   }
                 into g1
                                   select new
@@ -2072,7 +2073,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Sil(int id)
         {
-            var mmMessage = Management.getMezuniyetBasvurusuSilKontrol(id);
+            var mmMessage = MezuniyetBus.MezuniyetBasvurusuSilKontrol(id);
             if (mmMessage.IsSuccess)
             {
                 var kayit = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == id).FirstOrDefault();

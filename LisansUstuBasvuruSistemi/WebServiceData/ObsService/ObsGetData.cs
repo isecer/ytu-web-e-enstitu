@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Ws_ObsService;
 
 namespace LisansUstuBasvuruSistemi.Models.ObsService
@@ -38,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
                                 model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                                var donem = Management.ToAraRaporDonemBilgi(model.KayitTarihi.Value);
+                                var donem = DonemHelper.ToAraRaporDonemBilgi(model.KayitTarihi.Value);
                                 model.BaslangicYil = donem.BaslangicYil;
                                 model.BitisYil = donem.BitisYil;
                                 model.DonemID = donem.DonemID;

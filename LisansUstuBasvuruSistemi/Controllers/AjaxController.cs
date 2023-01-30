@@ -20,6 +20,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -109,13 +110,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     string msg = "";
-                    var user = Management.GetLoginUser(UserName);
+                    var user = UserBus.GetLoginUser(UserName);
 
                     if (user != null)
                     {
                         if (user.IsActiveDirectoryUser == false)
                         {
-                            loginUser = Management.Login(UserName, Password);
+                            loginUser = UserBus.Login(UserName, Password);
                         }
                         else
                         {
@@ -183,7 +184,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, "", RememberMe.Value);
-                Management.SetLastLogon();
+                UserBus.SetLastLogon();
             }
             return MmMessage.toJsonResult();
         }
@@ -209,7 +210,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getImageUpload(int KullaniciID)
         {
             if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) KullaniciID = UserIdentity.Current.Id;
-            var kullanici = Management.GetUser(KullaniciID);
+            var kullanici = UserBus.GetUser(KullaniciID);
             return View(kullanici);
         }
         [Authorize]
@@ -257,7 +258,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (KullaniciID == UserIdentity.Current.Id)
                     {
                         AnaResmiDegistir = true;
-                        var userIdentity = Management.GetUserIdentity(UserIdentity.Current.Name);
+                        var userIdentity = UserBus.GetUserIdentity(UserIdentity.Current.Name);
                         userIdentity.Impersonate();
                         Session["UserIdentity"] = userIdentity;
                     }
@@ -278,7 +279,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            return new { mMessage = mMessage, ResimAdi = YeniResim.toKullaniciResim(), AnaResmiDegistir = AnaResmiDegistir }.toJsonResult();
+            return new { mMessage = mMessage, ResimAdi = YeniResim.ToKullaniciResim(), AnaResmiDegistir = AnaResmiDegistir }.toJsonResult();
         }
         [Authorize]
         public ActionResult YetkiYenile(string ReturnUrl)
@@ -287,7 +288,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (UserIdentity.Current.IsAuthenticated)
             {
-                var userIdentity = Management.GetUserIdentity(UserIdentity.Current.Name);
+                var userIdentity = UserBus.GetUserIdentity(UserIdentity.Current.Name);
                 userIdentity.Impersonate();
                 Session["UserIdentity"] = userIdentity;
                 MmMessage.Messages.Add("Yetkileriniz yeniden yüklenmiştir.");
@@ -311,13 +312,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kullaniciID = UserIdentity.Current.Id;
             var data = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciID);
             ViewBag.ResimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
-            data.ResimAdi = data.ResimAdi.toKullaniciResim();
+            data.ResimAdi = data.ResimAdi.ToKullaniciResim();
 
 
             #region Enstituler
             var enstroles = Management.GetEnstituler(true);
-            var userEnstRoles = Management.GetKullaniciEnstituler(kullaniciID);
-            var kullanici = Management.GetUser(kullaniciID);
+            var userEnstRoles = UserBus.GetKullaniciEnstituler(kullaniciID);
+            var kullanici = UserBus.GetUser(kullaniciID);
             var dataEnst = enstroles.Select(s => new CheckObject<Enstituler>
             {
                 Value = s,
@@ -326,8 +327,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.KEnstituler = dataEnst;
             #endregion
             #region yetkiler
-            var roles = Management.GetAllRoles().ToList();
-            var userRoles = Management.GetUserRoles(kullaniciID);
+            var roles = RollerBus.GetAllRoles().ToList();
+            var userRoles = UserBus.GetUserRoles(kullaniciID);
             ViewBag.EkRollerCount = userRoles.EklenenRoller.Count;
             ViewBag.Kullanici = kullanici;
             var dataR = roles.Select(s => new CheckObject<Roller>
@@ -347,7 +348,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
 
             #region programYetkileri
-            var dataKP = Management.GetKullaniciProgramlari(kullaniciID, null);
+            var dataKP = KullanicilarBus.GetKullaniciProgramlari(kullaniciID, null);
             ViewBag.KProgramlar = dataKP.Where(p => p.YetkiVar).ToList();
             #endregion
             if (data.KayitDonemID.HasValue)
@@ -1596,7 +1597,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpGet]
         public ActionResult getDetailMezuniyet(int id, int? ShowDetayYayinID, int tbInx, bool IsDelete, bool GelenBasvuru = false)
         {
-            var model = Management.getSecilenBasvuruMezuniyetDetay(id, null, ShowDetayYayinID);
+            var model = MezuniyetBus.GetMezuniyetBasvuruDetayBilgi(id, null, ShowDetayYayinID);
             model.GelenBasvuru = GelenBasvuru;
             model.SelectedTabIndex = tbInx;
 
@@ -1629,7 +1630,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             model.IsDelete = IsDelete;
-            model.SMezuniyetYayinKontrolDurum = new SelectList(Management.cmbMezuniyetYayinDurum(false, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
+            model.SMezuniyetYayinKontrolDurum = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(false, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             model.SEYKYaGonderildi = new SelectList(Management.cmbJOEykGonderimDurumData(true, OnayTarihi), "Value", "Caption", model.EYKYaGonderildi);
             model.SEYKDaOnaylandi = new SelectList(Management.cmbJOEykOnayDurumData(true), "Value", "Caption", model.EYKDaOnaylandi);
 
@@ -1642,7 +1643,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getDetailTIBasvuru(int id, Guid? UniqueID, bool IsDelete, bool GelenBasvuru = false)
         {
 
-            var model = Management.getSecilenBasvuruTIDetay(id, UniqueID);
+            var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, UniqueID);
             model.GelenBasvuru = GelenBasvuru;
 
             ViewBag.IsDelete = IsDelete;
@@ -1654,7 +1655,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getDetailTDOBasvuru(int id, Guid? UniqueID, bool IsDelete, bool GelenBasvuru = false)
         {
 
-            var model = Management.getSecilenBasvuruTDODetay(id, UniqueID);
+            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, UniqueID);
             model.GelenBasvuru = GelenBasvuru;
 
             ViewBag.IsDelete = IsDelete;
@@ -1991,7 +1992,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.StepNo == 1)
             {
                 _MmMessage.Title = "Bir sonraki adıma geçmek için aşağıdaki uyarıları kontrol ediniz!";
-                var kmM = Management.kuKontrol(kModel);
+                var kmM = KullanicilarBus.KullaniciKayitKontrol(kModel);
                 _MmMessage.Messages.AddRange(kmM.Messages.ToList());
                 _MmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
             }
@@ -2286,7 +2287,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _MmMessage = new MmMessage();
             if (kModel.StepNo == 1)
             {
-                var tezK = Management.TezKontrol(kModel);
+                var tezK = MezuniyetBus.TezKontrol(kModel);
                 _MmMessage.Messages.AddRange(tezK.Messages);
                 _MmMessage.MessagesDialog.AddRange(tezK.MessagesDialog);
                 _MmMessage.Title = "Bir sonraki adıma geçmek için aşağıdaki uyarıları kontrol ediniz!";
@@ -2297,7 +2298,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                 {
-                    var yyK = Management.YayinKontrol(kModel);
+                    var yyK = MezuniyetBus.YayinKontrol(kModel);
                     _MmMessage.Messages.AddRange(yyK.Messages);
                     _MmMessage.MessagesDialog.AddRange(yyK.MessagesDialog);
                 }
@@ -3115,7 +3116,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 id = k.id.ToString(),
                 AdSoyad = k.AdSoyad,
                 text = k.text,
-                Images = k.Images.toKullaniciResim()
+                Images = k.Images.ToKullaniciResim()
 
             }).ToList();
             if (kul.Count == 0)
@@ -3123,7 +3124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var lst = new List<mailListModel>();
                 if (!term.ToIsValidEmail())
                 {
-                    lst.Add(new mailListModel { id = term, AdSoyad = term, text = term, Images = "".toKullaniciResim() });
+                    lst.Add(new mailListModel { id = term, AdSoyad = term, text = term, Images = "".ToKullaniciResim() });
                 }
                 return lst.toJsonResult();
             }
@@ -3458,7 +3459,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 KullaniciTipAdi = s.KullaniciTipAdi,
                 TcKimlikNo = s.TcKimlikNo,
                 OgrenciNo = s.OgrenciNo,
-                Images = s.Images.toKullaniciResim()
+                Images = s.Images.ToKullaniciResim()
             }).ToList();
 
             return Kul2.toJsonResult();

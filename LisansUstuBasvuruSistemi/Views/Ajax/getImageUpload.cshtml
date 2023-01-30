@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @model frKullanicilar
 @{
     Layout = null; 
@@ -27,7 +28,7 @@
                             <div class="panel panel-default" style="padding:0px;margin:0px;">
                                 <div class="panel-body profile bg-info" style="padding:0px;margin:0px;">
                                     <div class="profile-image">
-                                        <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi.toKullaniciResim()?id=@gd" alt="@Model.Ad @Model.Soyad">
+                                        <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi.ToKullaniciResim()?id=@gd" alt="@Model.Ad @Model.Soyad">
                                     </div>
                                 </div>
                             </div>

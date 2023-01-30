@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -45,7 +46,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.KullaniciTipYetki = true;
             if (Kul.KayitDonemID.HasValue == false && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && Kul.KayitDonemID.HasValue == false)
             {
-                var kullKayitB = Management.KullaniciKayitBilgisiGuncelle(Kul.KullaniciID);
+                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(Kul.KullaniciID);
                 Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
             }
             if (Kul.YtuOgrencisi)

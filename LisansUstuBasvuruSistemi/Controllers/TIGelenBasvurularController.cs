@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -123,12 +124,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
             }
             else ViewBag.kIds = new List<int>();
-            ViewBag.AktifTIAraRaporDonemID = new SelectList(Management.cmbTIAktifDonemListe(true), "Value", "Caption", model.AktifTIAraRaporDonemID);
-            ViewBag.TIAraRaporDonemID = new SelectList(Management.cmbTIAktifDonemListe(true), "Value", "Caption", model.TIAraRaporDonemID);
-            ViewBag.AktifTIAraRaporRaporDurumID = new SelectList(Management.cmbTIAraRaporDurumListe(true), "Value", "Caption", model.AktifTIAraRaporRaporDurumID);
-            ViewBag.TIAraRaporRaporDurumID = new SelectList(Management.cmbTIAraRaporDurumListe(true), "Value", "Caption", model.TIAraRaporRaporDurumID);
-            ViewBag.AktifAraRaporSayisi = new SelectList(Management.cmbAraRaporSayisi(true), "Value", "Caption", model.AktifAraRaporSayisi);
-            ViewBag.TIAraRaporSayisi = new SelectList(Management.cmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi);
+            ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifTIAraRaporDonemID);
+            ViewBag.TIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.TIAraRaporDonemID);
+            ViewBag.AktifTIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.AktifTIAraRaporRaporDurumID);
+            ViewBag.TIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.TIAraRaporRaporDurumID);
+            ViewBag.AktifAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AktifAraRaporSayisi);
+            ViewBag.TIAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi);
 
 
             model.Data = qdata;

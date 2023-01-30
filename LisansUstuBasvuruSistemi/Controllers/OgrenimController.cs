@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -27,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             #region bilgiModel
             var bbModel = new IndexPageInfoDto();
-            var MezuniyetSurecID = Management.getAktifMezuniyetSurecID(_EnstituKod);
+            var MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(_EnstituKod);
             bbModel.AktifSurecID = MezuniyetSurecID ?? 0;
             bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.getAyarMZ(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
             bbModel.MezuniyetSurec = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == MezuniyetSurecID.Value).FirstOrDefault();
@@ -49,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (kulls.KayitDonemID.HasValue == false && kulls.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kulls.KayitDonemID.HasValue == false)
                 {
-                    var kullKayitB = Management.KullaniciKayitBilgisiGuncelle(UserIdentity.Current.Id);
+                    var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(UserIdentity.Current.Id);
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
@@ -145,8 +146,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.Data = qdata;
             ViewBag.IndexModel = IndexModel;
-            ViewBag.MezuniyetSurecID = new SelectList(Management.getmezuniyetSurecleri(EnstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
-            ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(Management.cmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
+            ViewBag.MezuniyetSurecID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecleri(EnstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
+            ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
            
             ViewBag.bModel = bbModel;
             return View(model);

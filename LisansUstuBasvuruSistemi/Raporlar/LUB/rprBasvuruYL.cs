@@ -7,6 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -26,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 var BasvuruID = db.BasvurularTercihleris.Where(p => p.BasvuruTercihID == id && (KullaniciID.HasValue ? p.Basvurular.KullaniciID == KullaniciID : 1 == 1)).First().BasvuruID;
                 var model = Management.getSecilenBasvuruDetay(BasvuruID);
                 var btercih = model.BasvuruTercihleri.Where(p => p.BasvuruTercihID == id).First();
-                var UserImgUrl = model.ResimAdi.toKullaniciResim();
+                var UserImgUrl = model.ResimAdi.ToKullaniciResim();
                 imgResim.ImageUrl = System.Web.HttpContext.Current.Server.MapPath(UserImgUrl);
 
 

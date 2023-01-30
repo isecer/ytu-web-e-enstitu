@@ -8,6 +8,7 @@ using System;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -17,10 +18,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            return Index(new fmTalepler { }, EKD);
+            return Index(new FmTalepler { }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmTalepler model, string EKD)
+        public ActionResult Index(FmTalepler model, string EKD)
         {
             
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
@@ -98,7 +99,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Toplam = model.RowCount;
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Select(s => new frTalepler
+            model.data = q.Select(s => new FrTalepler
             {
 
                 SRTalepID = s.SRTalepID,
@@ -324,7 +325,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (sendMailAna && sendMailJuri && talep.SRTalepTipleri.IsTezSinavi)
             {
-                var msgs = Management.sendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
+                var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
                 if (msgs.Messages.Count > 0)
                 {
                     strView = Management.RenderPartialView("Ajax", "getMessage", msgs);

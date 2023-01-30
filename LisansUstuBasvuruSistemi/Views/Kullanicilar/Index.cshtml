@@ -1,4 +1,5 @@
 ﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
@@ -30,19 +31,19 @@
     {
         mezuniyetBAcik.Add(EnstituKodlari.SosyalBilimleri);
     }
-    if (TIAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.FenBilimleri).ToBoolean().Value)
     {
         TDOBAcik.Add(EnstituKodlari.FenBilimleri);
     }
-    if (TIAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
     {
         TDOBAcik.Add(EnstituKodlari.SosyalBilimleri);
     }
-    if (TIAyar.BasvurusuAcikmi.getAyarTI(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.GetAyarTi(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
     {
         TIBAcik.Add(EnstituKodlari.SosyalBilimleri);
     }
-    if (TIAyar.BasvurusuAcikmi.getAyarTI(EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.GetAyarTi(EnstituKodlari.FenBilimleri).ToBoolean().Value)
     {
         TIBAcik.Add(EnstituKodlari.FenBilimleri);
     }
@@ -311,7 +312,7 @@
                                                 <tr>
                                                     <td width="60">
                                                         <span class="user" style="width: 50px; height: 50px; margin-right: 5px;">
-                                                            <img style="width: 50px; height: 50px;cursor:pointer;margin:0px;" onclick="detayGor(@item.KullaniciID,'#kulPnl')" src="@item.ResimAdi.toKullaniciResim()">
+                                                            <img style="width: 50px; height: 50px;cursor:pointer;margin:0px;" onclick="detayGor(@item.KullaniciID,'#kulPnl')" src="@item.ResimAdi.ToKullaniciResim()">
                                                         </span>
                                                     </td>
 

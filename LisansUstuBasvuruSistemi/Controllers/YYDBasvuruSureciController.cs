@@ -11,6 +11,7 @@ using System.IO;
 using Ionic.Zip;
 using System.Drawing;
 using System.Drawing.Imaging;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using Newtonsoft.Json;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
@@ -1259,7 +1260,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (tbInx == 4)
             {
-                var prkods = Management.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
+                var prkods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
 
                 #region MulakatSınavBilgi
                 mdl.ProgramKotaLst = (from k in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == id)
@@ -1469,7 +1470,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 #region BaşvuruSonuclari
 
-                var KullaniciProgramKods = Management.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
+                var KullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, mdl.EnstituKod);
                 var vW = db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == id && KullaniciProgramKods.Contains(p.ProgramKod)).Select(s =>
                          new frMulakatSonucDetay
                          {
@@ -3343,7 +3344,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetProgramKotalari(int id)
         {
             var Surec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == id).First();
-            var KullaniciProgramKods = Management.GetUserProgramKods(UserIdentity.Current.Id, Surec.EnstituKod);
+            var KullaniciProgramKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, Surec.EnstituKod);
             var vW = db.vW_ProgramBasvuruSonucSayisal.Where(p => p.BasvuruSurecID == id && KullaniciProgramKods.Contains(p.ProgramKod)).Select(s =>
                 new
                 {

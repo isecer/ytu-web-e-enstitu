@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -48,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             bbModel.Enstitü = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First();
             bbModel.EnstituYetki = UserIdentity.Current.EnstituKods.Contains(_EnstituKod);
-            var kulProgIds = Management.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
+            var kulProgIds = UserBus.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
             var prgramlar = (from s in db.Programlars
                              join b in db.AnabilimDallaris.Where(p =>  p.EnstituKod == _EnstituKod) on s.AnabilimDaliKod equals b.AnabilimDaliKod
                              where kulProgIds.Contains(s.ProgramKod)
@@ -150,7 +151,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.DialogID = dlgid;
             var model = new kmMulakat();
 
-            var kulProgIDs = Management.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
+            var kulProgIDs = UserBus.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
             if (id.HasValue)
             {
                 var mlkt = db.Mulakats.Where(p => p.MulakatID == id.Value).FirstOrDefault();
@@ -235,7 +236,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
-            var kulProgIDs = Management.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
+            var kulProgIDs = UserBus.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
             var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == kModel.BasvuruSurecID).First();
 
             if (kModel.YuzdeOran == null) kModel.YuzdeOran = new List<int>();
@@ -1123,7 +1124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             // var surecAktif = Management.getAktifMulakatSonucGiris(mlkt.BasvuruSurec.EnstituKod, mlkt.BasvuruSurecID).HasValue;
             var surecAktifJuriGiris = Management.getAktifMulakatSurecID(mlkt.BasvuruSurec.EnstituKod,BasvuruSurecTipi.LisansustuBasvuru, mlkt.BasvuruSurecID).HasValue;
 
-            var uPrKods = Management.GetUserProgramKods(UserIdentity.Current.Id, mlkt.BasvuruSurec.EnstituKod);
+            var uPrKods = UserBus.GetUserProgramKods(UserIdentity.Current.Id, mlkt.BasvuruSurec.EnstituKod);
             if (uPrKods.Contains(mlkt.ProgramKod))
             {
                 if (surecAktifJuriGiris || UserIdentity.Current.IsAdmin)

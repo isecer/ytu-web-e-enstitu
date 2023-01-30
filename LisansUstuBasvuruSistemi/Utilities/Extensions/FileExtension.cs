@@ -6,28 +6,28 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
    public  static class FileExtension
     {
-        public static string GetFileName(this string Path)
+        public static string GetFileName(this string path)
         {
-            return System.IO.Path.GetFileName(Path);
+            return System.IO.Path.GetFileName(path);
         }
-        public static string GetFileExtension(this string Path)
+        public static string GetFileExtension(this string path)
         {
-            return System.IO.Path.GetExtension(Path);
+            return System.IO.Path.GetExtension(path);
         }
-        public static string ToSetNameFileExtension(this string FName, string Extension)
+        public static string ToSetNameFileExtension(this string fName, string extension)
         {
-            if (FName.ToLower().Contains(Extension.ToLower()) == false) FName += Extension;
-            return FName;
+            if (fName.ToLower().Contains(extension.ToLower()) == false) fName += extension;
+            return fName;
         }
-        public static string ToFileNameAddGuid(this string FileName, string Extension = null, string addGuid = null)
+        public static string ToFileNameAddGuid(this string fileName, string extension = null, string addGuid = null)
         {
-            FileName = FileName.GetFileName();
-            Extension = Extension ?? FileName.GetFileExtension();
+            fileName = fileName.GetFileName();
+            extension = extension ?? fileName.GetFileExtension();
             var nGuid = Guid.NewGuid().ToString().Substring(0, 4);
             if (addGuid != null) nGuid = addGuid + "_" + nGuid;
-            FileName = FileName.Replace(Extension, "_" + nGuid).ReplaceSpecialCharacter() + Extension;
-            FileName = FileName.Replace("+", "_");
-            return FileName;
+            fileName = fileName.Replace(extension, "_" + nGuid).ReplaceSpecialCharacter() + extension;
+            fileName = fileName.Replace("+", "_");
+            return fileName;
         }
     }
 }

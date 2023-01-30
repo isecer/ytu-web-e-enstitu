@@ -10,8 +10,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
     {
         public static string ToExceptionMessage(this Exception ex)
         {
-            int ix = 1;
-            Dictionary<int, string> msgs = new Dictionary<int, string>() { { ix, ex.Message } };
+            var ix = 1;
+            var msgs = new Dictionary<int, string>() { { ix, ex.Message } };
             var innException = ex;
             while ((innException = innException.InnerException) != null)
             {
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                 {
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        msgsVex.Add(string.Format("State: {0} Property: {1}, Error: {2}", eve.Entry.State, ve.PropertyName, ve.ErrorMessage));
+                        msgsVex.Add($"State: {eve.Entry.State} Property: {ve.PropertyName}, Error: {ve.ErrorMessage}");
                     }
                 }
                 if (msgsVex.Any())

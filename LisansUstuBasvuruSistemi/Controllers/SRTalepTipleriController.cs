@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -59,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             var aylar = Management.cmbAylar(false);
             ViewBag.Aylar = aylar;
-            ViewBag.KullaniciTipleri = Management.cmbKullaniciTipleri(false, false);
+            ViewBag.KullaniciTipleri = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsTezSinavi = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.IsTezSinavi);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
@@ -80,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             } 
             ViewBag.Aylars = Management.cmbAylar(false); 
-            ViewBag.KullaniciTipleris = Management.cmbKullaniciTipleri(false, false); 
+            ViewBag.KullaniciTipleris = KullanicilarBus.GetCmbKullaniciTipleri(false, false); 
             return View(model);
         }
         [HttpPost]
@@ -164,7 +165,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
              
             ViewBag.MmMessage = MmMessage; 
             ViewBag.Aylars = Management.cmbAylar(false);
-            ViewBag.KullaniciTipleris = Management.cmbKullaniciTipleri(false, false);
+            ViewBag.KullaniciTipleris = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
             return View(kModel);
         }
         public ActionResult Sil(int? id)

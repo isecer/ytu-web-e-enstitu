@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text; 
+using System.Text;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
@@ -10,69 +10,70 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
     {
-        public static string toEmptyStringZero(this object obj)
+        public static string ToEmptyStringZero(this object obj)
         {
-            string retval = "";
+            var retval = "";
             if (obj != null && obj.ToString() != "0") retval = obj.ToString();
             return retval;
         }
-        public static int? toNullIntZero(this object obj)
+        public static int? ToNullIntZero(this object obj)
         {
             int? retval = null;
             if (obj != null && obj.ToString() != "0") retval = obj.ToString().ToInt();
             return retval;
         }
-        public static int? ToInt(this string String)
+        public static int? ToInt(this string str)
         {
-            int result = 0;
-            return int.TryParse(String, out result) ? new int?(result) : new int?();
+            int def = 0;
+            if (int.TryParse(str, out def)) return def;
+            return null;
         }
-        public static int? toIntObj(this object obj)
+        public static int? ToIntObj(this object obj)
         {
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
-            else return (int?)null;
+            return null;
         }
-        public static double? toDoubleObj(this object obj)
+        public static double? ToDoubleObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
-            else return (double?)null;
+            return null;
         }
-        public static bool? toBooleanObj(this object obj)
+        public static bool? ToBooleanObj(this object obj)
         {
-            bool dgr;
-            if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
-            else return (bool?)null;
+            bool def = false;
+            if (obj!=null && bool.TryParse(obj.ToString(), out def)) return def;
+            return null;
         }
-        public static bool? toIntToBooleanObj(this object obj)
+        public static bool? ToIntToBooleanObj(this object obj)
         {
-            var IntValue = obj.toIntObj();
-            if (obj != null && IntValue.HasValue)
+            var intValue = obj.ToIntObj();
+            if (obj != null && intValue.HasValue)
             {
-
-                if (IntValue == 1) return true;
-                else if (IntValue == 0) return false;
-                else return (bool?)null;
+                switch (intValue)
+                {
+                    case 1:
+                        return true;
+                    case 0:
+                        return false;
+                    default:
+                        return (bool?)null;
+                }
             }
-            else return (bool?)null;
+            return null;
         }
-        public static decimal? toDecimalObj(this object obj)
+        public static decimal? ToDecimalObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
-            else return (decimal?)null;
+            return null;
         }
-        public static string toStrObj(this object obj)
+        public static string ToStrObj(this object obj)
         {
             if (obj != null) return Convert.ToString(obj);
-            else return (string)null;
+            return null;
         }
-        public static string toStrObjEmptString(this object obj)
+        public static string ToStrObjEmptString(this object obj)
         {
-            if (obj != null)
-            {
-                var Str = Convert.ToString(obj);
-                return Str.Trim();
-            }
-            else return "";
+            return obj != null ? Convert.ToString(obj).Trim() : "";
         }
         public static decimal? ToMoney(this string moneyString)
         {
@@ -83,11 +84,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static decimal ToMoney(this string moneyString, decimal defaultValue)
         {
             var ms = ToMoney(moneyString);
-            return (ms.HasValue ? ms.Value : defaultValue);
+            return ms ?? defaultValue;
         }
         public static decimal? ToMoney(this string moneyString, string decimalSeparator, string groupSeparator)
         {
-            char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             var moneyStr = string.Join("",
                 moneyString
                     .ToCharArray()
@@ -100,108 +101,102 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string ToFormatDate(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.Value.ToString("dd.MM.yyyy");
-
+            return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("dd.MM.yyyy");
         }
         public static string ToFormatDate(this DateTime datetime)
         {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy");
-
+            return datetime == DateTime.MinValue ? "" : datetime.ToString("dd.MM.yyyy");
         }
         public static string ToFormatDateAndTime(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.Value.ToString("dd.MM.yyyy HH:mm");
-
+            return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("dd.MM.yyyy HH:mm");
         }
         public static string ToFormatDateAndTime(this DateTime datetime)
         {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy HH:mm");
-
+            return datetime == DateTime.MinValue ? "" : datetime.ToString("dd.MM.yyyy HH:mm");
         }
         public static string ToFormatTime(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.Value.ToString("HH.mm");
-
+            return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("HH.mm");
         }
         public static string ToFormatTime(this DateTime datetime)
         {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("HH.mm");
-
+            return datetime == DateTime.MinValue ? "" : datetime.ToString("HH.mm");
         }
-        public static string toJsonText(this object obj)
-        {  
+        public static string ToJsonText(this object obj)
+        {
             return JsonConvert.SerializeObject(obj); ;
         }
-        public static string ToBelirtilmemis(this int? Sayi)
+        public static string ToBelirtilmemis(this int? sayi)
         {
-            if (!Sayi.HasValue) return "Belirtilmemiş";
-            else return Sayi.Value.ToString();
-
+            return !sayi.HasValue ? "Belirtilmemiş" : sayi.Value.ToString();
         }
-        public static string ToCinsiyet(this int? Sayi)
+        public static string ToCinsiyet(this int? sayi)
         {
-            var cins = "";
-            if (!Sayi.HasValue) cins = "Belirtilmemiş";
-            else if (Sayi == 1) cins = "Erkek";
-            else if (Sayi == 2) cins = "Kadın";
-            else cins = Sayi.Value.ToString();
+            string cins;
+            switch (sayi)
+            {
+                case null:
+                    cins = "Belirtilmemiş";
+                    break;
+                case 1:
+                    cins = "Erkek";
+                    break;
+                case 2:
+                    cins = "Kadın";
+                    break;
+                default:
+                    cins = sayi.Value.ToString();
+                    break;
+            }
             return cins;
 
         }
         public static string ToEvliBekar(this bool? durum)
         {
-            var cins = "";
+            string cins;
             if (!durum.HasValue) cins = "Belirtilmemiş";
             else if (durum.Value) cins = "Evli";
-            else if (!durum.Value) cins = "Bekar";
-            else cins = durum.Value.ToString();
+            else cins = "Bekar";
             return cins;
         }
         public static string ToAsilYedek(this bool? durum)
         {
-            var cins = "";
+            string cins;
             if (!durum.HasValue) cins = "-";
             else if (durum.Value) cins = "Asil";
-            else if (!durum.Value) cins = "Yedek";
-            else cins = durum.Value.ToString();
+            else cins = "Yedek";
             return cins;
         }
-        public static string toTIDegerlendirmeSonucu(bool? IsOyBirligiOrCouklugu, bool? IsBasariliOrBasarisiz)
+        public static string ToTiDegerlendirmeSonucu(bool? isOyBirligiOrCouklugu, bool? isBasariliOrBasarisiz)
         {
-            string ReturnSonuc = "";
+            var returnSonuc = "";
 
-            if (IsOyBirligiOrCouklugu.HasValue && IsBasariliOrBasarisiz.HasValue)
+            if (isOyBirligiOrCouklugu.HasValue && isBasariliOrBasarisiz.HasValue)
             {
-                ReturnSonuc += IsOyBirligiOrCouklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
-                ReturnSonuc += IsBasariliOrBasarisiz.Value ? " Başarılı" : " Başarısız";
+                returnSonuc += isOyBirligiOrCouklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
+                returnSonuc += isBasariliOrBasarisiz.Value ? " Başarılı" : " Başarısız";
 
             }
-            return ReturnSonuc;
+            return returnSonuc;
         }
-        public static string ToMezuniyetJuriUnvanAdi(this string UnvanAdi)
+        public static string ToMezuniyetJuriUnvanAdi(this string unvanAdi)
         {
-            UnvanAdi = UnvanAdi.Trim().ToLower().Replace("  ", ".").Replace(". ", ".").Replace(" .", ".").Replace(" ", ".");
-            var ProfUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
-            var DocUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
-            var OgUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
-            if (ProfUnvan.Any(a => a.Contains(UnvanAdi))) return "PROF.DR.";
-            else if (DocUnvan.Any(a => a.Contains(UnvanAdi))) return "DOÇ.DR.";
-            else if (OgUyeUnvan.Any(a => a.Contains(UnvanAdi))) return "DR.ÖĞR.ÜYE.";
-            else return UnvanAdi.ToUpper();
+            unvanAdi = unvanAdi.Trim().ToLower().Replace("  ", ".").Replace(". ", ".").Replace(" .", ".").Replace(" ", ".");
+            var profUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
+            var docUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
+            var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
+            if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF.DR.";
+            else if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ.DR.";
+            else if (ogUyeUnvan.Any(a => a.Contains(unvanAdi))) return "DR.ÖĞR.ÜYE.";
+            else return unvanAdi.ToUpper();
         }
 
-        public static string toKullaniciResim(this string ResimAdi)
+        public static string ToKullaniciResim(this string resimAdi)
         {
-
-            var rsm = ResimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
+            var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
             return rsm;
         }
     }

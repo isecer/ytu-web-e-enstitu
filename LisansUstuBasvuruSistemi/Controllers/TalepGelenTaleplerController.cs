@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -223,7 +224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TalepListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
             ViewBag.TalepSurecID = new SelectList(Management.getTalepSurecleri(_EnstituKod ,true), "Value", "Caption", model.TalepSurecID);
-            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true), "Value", "Caption", model.KullaniciTipID);
+            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true), "Value", "Caption", model.KullaniciTipID);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.TalepDurumID = new SelectList(Management.cmbTalepDurumlari( true), "Value", "Caption", model.TalepDurumID);
             ViewBag.TalepTipID = new SelectList(Management.cmbTalepTipleri( true), "Value", "Caption", model.TalepTipID);

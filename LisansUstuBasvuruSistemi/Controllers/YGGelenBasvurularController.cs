@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -246,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar( _EnstituKod, false), "Value", "Caption", model.ProgramKod);
             ViewBag.LOgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu2( true, IsBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
             ViewBag.SinavTipKod = new SelectList(Management.cmbGetBSAktifSinavlar(_EnstituKod, new List<int> { SinavTipGrup.DilSinavlari, SinavTipGrup.Tomer, SinavTipGrup.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
-            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
+            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
             ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler( true), "Value", "Caption", model.CinsiyetID);
             ViewBag.IsTaahhutVar = new SelectList(Management.cmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
             ViewBag.UyrukKod = new SelectList(Management.cmbUyruk(true), "Value", "Caption", model.UyrukKod);

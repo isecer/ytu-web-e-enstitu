@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @model frMesajlar
 @{
@@ -29,11 +30,11 @@
                         <span class="user" style="width: 35px; height: 35px; margin-right: 5px;" title="@(itemx.KullaniciID > 0 ? "Kullanıcı Detaı Göster" : "")">
                             @if (itemx.KullaniciID > 0)
                             {
-                                <img style="width: 35px; height: 35px;margin:0px;cursor:pointer;" src="@(itemx.ResimYolu.toKullaniciResim())" onclick="detayGor(@itemx.KullaniciID,'#kulPnl')">
+                                <img style="width: 35px; height: 35px;margin:0px;cursor:pointer;" src="@(itemx.ResimYolu.ToKullaniciResim())" onclick="detayGor(@itemx.KullaniciID,'#kulPnl')">
                             }
                             else
                             {
-                                <img style="width: 35px; height: 35px;margin:0px;" src="@(itemx.ResimYolu.toKullaniciResim())">
+                                <img style="width: 35px; height: 35px;margin:0px;" src="@(itemx.ResimYolu.ToKullaniciResim())">
 
                             }
                         </span>

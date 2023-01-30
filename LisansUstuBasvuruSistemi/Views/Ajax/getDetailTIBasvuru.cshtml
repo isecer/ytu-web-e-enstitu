@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TiBasvuruDetayDto
 @{
@@ -108,7 +109,7 @@
                                                 </table>
                                             </td>
                                             <td class="clsHide" width="100" style="text-align:center;">
-                                                <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:70px;height:70px;" class="img-circle img-thumbnail">
+                                                <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:70px;height:70px;" class="img-circle img-thumbnail">
                                             </td>
                                         </tr>
 
@@ -365,7 +366,7 @@
                             </table>
                         </td>
                         <td class="clsHide" width="100" style="text-align:center;">
-                            <img src="@(Model.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                            <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
                         </td>
                     </tr>
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -138,8 +139,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(AlesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
 
             var _roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
-            var kuls = Management.GetRoluOlanKullanicilar(_roleName, _EnstituKod);
-            var rolls = Management.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
+            var kuls = UserBus.GetRoluOlanKullanicilar(_roleName, _EnstituKod);
+            var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
             ViewBag.KullaniciIDs = rolls.Where(p => p.Checked == true).Select(s => s.Value.KullaniciID).ToList();
 
             var oBolIds = db.BolumEslestirs.Where(p => p.ProgramKod == model.ProgramKod).Select(s => s.OgrenciBolumID).ToList();
@@ -443,8 +444,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var abd = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == AnabilimDaliID).First();
             var _roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
-            var kuls = Management.GetRoluOlanKullanicilar(_roleName, abd.EnstituKod);
-            var rolls = Management.GetProgramYetkisiOlanKullanicilar(kuls, ProgramKod).Select(s => new { Value = s.Value.KullaniciID, Caption = (s.Value.Ad + " " + s.Value.Soyad + " [" + s.Value.KullaniciAdi + "]") }).ToList();
+            var kuls = UserBus.GetRoluOlanKullanicilar(_roleName, abd.EnstituKod);
+            var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, ProgramKod).Select(s => new { Value = s.Value.KullaniciID, Caption = (s.Value.Ad + " " + s.Value.Soyad + " [" + s.Value.KullaniciAdi + "]") }).ToList();
             return Json(rolls, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult getBAT(int BasvuruAgnoAlimTipID)

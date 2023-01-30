@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @model kmBasvuru
 @{
     string KullaniciTipAdi = Model.KullaniciTipAdi;
@@ -64,7 +65,7 @@
                                     <tr>
                                         <td style="width: 130px;">
                                             <span class="user" style="width: 100px; height: 100px; margin-right: 5px;">
-                                                <img class="pImageD" style="width:100px;height:100px;" src="@Model.ResimAdi.toKullaniciResim()" alt="@Model.Ad @Model.Soyad">
+                                                <img class="pImageD" style="width:100px;height:100px;" src="@Model.ResimAdi.ToKullaniciResim()" alt="@Model.Ad @Model.Soyad">
                                             </span>
                                         </td>
                                         <td>

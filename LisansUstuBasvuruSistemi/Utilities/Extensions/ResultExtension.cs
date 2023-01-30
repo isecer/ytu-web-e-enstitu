@@ -8,13 +8,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ResultExtension
     {
-        public static JsonResult toJsonResult(this object obj)
+        public static JsonResult ToJsonResult(this object obj)
         {
-            var jsr = new JsonResult();
-            jsr.ContentEncoding = System.Text.Encoding.UTF8;
-            jsr.ContentType = "application/json";
-            jsr.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            jsr.Data = obj;
+            var jsr = new JsonResult
+            {
+                ContentEncoding = System.Text.Encoding.UTF8,
+                ContentType = "application/json",
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = obj
+            };
             return jsr;
         }
     }

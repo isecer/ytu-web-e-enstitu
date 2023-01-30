@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -35,11 +37,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             if (model.IsDegerlendirme == null)
             {
-                bbModel.SistemBasvuruyaAcik = TIAyar.BasvurusuAcikmi.getAyarTI(_EnstituKod, "false").ToBoolean().Value;
+                bbModel.SistemBasvuruyaAcik = TiAyar.BasvurusuAcikmi.GetAyarTi(_EnstituKod, "false").ToBoolean().Value;
 
                 if (model.KullaniciID.HasValue && !RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent()) model.KullaniciID = UserIdentity.Current.Id;
                 model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
-                var kullKayitB = Management.KullaniciKayitBilgisiGuncelle(model.KullaniciID.Value);
+                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(model.KullaniciID.Value);
                 var Kul = _db.Kullanicilars.Where(p => p.KullaniciID == model.KullaniciID).First();
 
                 if (Kul.YtuOgrencisi)
@@ -185,10 +187,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 KullaniciID = UserIdentity.Current.Id;
             }
-            var studentInfo = Management.KullaniciKayitBilgisiGuncelle(KullaniciID.Value);
+            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(KullaniciID.Value);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).FirstOrDefault();
 
-            _MmMessage = Management.getAktifTezIzlemeSurecKontrol(EnstituKod, KullaniciID, TIBasvuruID);
+            _MmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(EnstituKod, KullaniciID, TIBasvuruID);
 
             if (model.TIBasvuruID <= 0 && _MmMessage.IsSuccess)
             {
@@ -275,9 +277,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
-            _MmMessage = Management.getAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.toNullIntZero());
+            _MmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.toNullIntZero());
 
-            var kullKayitB = Management.KullaniciKayitBilgisiGuncelle(kModel.KullaniciID);
+            var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kModel.KullaniciID);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).FirstOrDefault();
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
@@ -293,7 +295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (_MmMessage.Messages.Count == 0)
             {
-                kModel.BasvuruSonDonemSecilecekDersKodlari = TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(kModel.EnstituKod, "");
+                kModel.BasvuruSonDonemSecilecekDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(kModel.EnstituKod, "");
                 kModel.ResimAdi = kul.ResimAdi;
                 kModel.KullaniciTipID = kul.KullaniciTipID;
                 kModel.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
@@ -397,7 +399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var TIBasvuru = _db.TIBasvurus.Where(p => p.TIBasvuruID == TIBasvuruID).First();
             var TIBasvuruAraRapor = TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).FirstOrDefault();
             var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
-            var studentInfo = Management.KullaniciKayitBilgisiGuncelle(TIBasvuru.KullaniciID);
+            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(TIBasvuru.KullaniciID);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == TIBasvuru.KullaniciID).First();
             if (!DegerlendirmeYetki)
             {
@@ -428,7 +430,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var ogrenciBilgi = Management.StudentControl(TIBasvuru.TcKimlikNo);
 
-                var sondonemKayitolmasiGerekenDersKodlari = TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(TIBasvuru.EnstituKod, "");
+                var sondonemKayitolmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(TIBasvuru.EnstituKod, "");
 
                 var KayitYapilacakDersKodlaris = !TIBasvuruAraRaporID.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').ToList() : new List<string>();
                 if (KayitYapilacakDersKodlaris.Any() && KayitYapilacakDersKodlaris.Where(p => ogrenciBilgi.AktifDonemDers.DersKodNums.Any(a => a == p)).Count() != KayitYapilacakDersKodlaris.Count)
@@ -470,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var obsTik1 = Tiks[0];
                         var obsTik2 = Tiks[1];
 
-                        var cmbUnvanList = Management.cmbMezuniyetJofUnvanlar(true);
+                        var cmbUnvanList = MezuniyetBus.GetCmbMezuniyetJofUnvanlar(true);
                         var cmbUniversiteList = Management.cmbGetAktifUniversiteler(true);
 
                         Model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
@@ -616,7 +618,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         Model.SListUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption");
                         Model.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption");
-                        Model.SListAraRaporSayisi = new SelectList(Management.cmbAraRaporSayisi(true), "Value", "Caption", Model.AraRaporSayisi);
+                        Model.SListAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", Model.AraRaporSayisi);
 
                         mMessage.MessageType = Msgtype.Information;
                         mMessage.IsSuccess = true;
@@ -648,7 +650,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var TIBasvuru = _db.TIBasvurus.Where(p => p.TIBasvuruID == kModel.TIBasvuruID).First();
             var TIBasvuruAraRapor = TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == kModel.TIBasvuruAraRaporID).FirstOrDefault();
             var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
-            var studentInfo = Management.KullaniciKayitBilgisiGuncelle(TIBasvuru.KullaniciID);
+            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(TIBasvuru.KullaniciID);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == TIBasvuru.KullaniciID).First();
 
             if (!DegerlendirmeYetki)
@@ -670,7 +672,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bool IsDegisiklikVar = false;
                 var DonemBilgi = (IsYeniJO ? DateTime.Now : TIBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
                 var DonemdeVerilenDersBilgileri = IsYeniJO ? Management.StudentControl(TIBasvuru.TcKimlikNo) : new StudentControl();
-                var KayitYapilacakDersKodlaris = IsYeniJO ? TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(TIBasvuru.EnstituKod, "").Split(',').ToList() : new List<string>();
+                var KayitYapilacakDersKodlaris = IsYeniJO ? TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(TIBasvuru.EnstituKod, "").Split(',').ToList() : new List<string>();
 
                 if (TIBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == DonemBilgi.BaslangicYil && p.DonemID == DonemBilgi.DonemID))
                 {
@@ -720,7 +722,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 }
                                 else
                                 {
-                                    var SinavPuanKontroluYap = TIAyar.SinavPuanGirisKontroluYapilsin.getAyarTI(TIBasvuru.EnstituKod, "false").ToBoolean().Value;
+                                    var SinavPuanKontroluYap = TiAyar.SinavPuanGirisKontroluYapilsin.GetAyarTi(TIBasvuru.EnstituKod, "false").ToBoolean().Value;
                                     if (SinavPuanKontroluYap)
                                     {
                                         kModel.SinavPuani = kModel.SinavPuani.Replace(" ", "").Replace(".", ",");
@@ -732,7 +734,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         }
                                         else
                                         {
-                                            var PuanKriteri = TIAyar.OgrenciMinSinavPuan.getAyarTI(TIBasvuru.EnstituKod, "60").ToInt().Value;
+                                            var PuanKriteri = TiAyar.OgrenciMinSinavPuan.GetAyarTi(TIBasvuru.EnstituKod, "60").ToInt().Value;
                                             var Puan = Convert.ToDouble(kModel.SinavPuani);
                                             if (PuanKriteri > Puan || Puan > 100)
                                             {
@@ -808,8 +810,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (mMessage.Messages.Count == 0)
                 {
-                    var SinavPuanKontroluYap = TIAyar.SinavPuanGirisKontroluYapilsin.getAyarTI(TIBasvuru.EnstituKod, "false").ToBoolean().Value;
-                    var PuanKriteri = TIAyar.UyelerMinSinavPuan.getAyarTI(TIBasvuru.EnstituKod, "80").ToInt().Value;
+                    var SinavPuanKontroluYap = TiAyar.SinavPuanGirisKontroluYapilsin.GetAyarTi(TIBasvuru.EnstituKod, "false").ToBoolean().Value;
+                    var PuanKriteri = TiAyar.UyelerMinSinavPuan.GetAyarTi(TIBasvuru.EnstituKod, "80").ToInt().Value;
                     var TabIDs = kModel.TabID.Select((s, i) => new { TabID = s, Inx = (i + 1) }).ToList();
                     var JuriTipAdis = kModel.JuriTipAdi.Select((s, i) => new { JuriTipAdi = s, Inx = (i + 1) }).ToList();
                     var AdSoyads = kModel.AdSoyad.Select((s, i) => new { AdSoyad = s, Inx = (i + 1) }).ToList();
@@ -861,7 +863,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  }).Select(s => new
                                  {
                                      Row = s,
-                                     IsSuccessRow = s.JuriTipAdi.ToTIUyeFormSuccessRow(kModel.IsTezDiliTr, s.AdSoyadSuccess, s.UnvanAdiSuccess, s.EMailSuccess, s.UniversiteIDSuccess, s.AnabilimdaliProgramAdiSuccess, s.IsDilSinaviOrUniversiteSuccess, s.DilSinavAdiSuccess, s.DilPuaniSuccessMsg.IsNullOrWhiteSpace(), s.SinavTarihiSuccess)
+                                     IsSuccessRow = s.JuriTipAdi.ToTiUyeFormSuccessRow(kModel.IsTezDiliTr, s.AdSoyadSuccess, s.UnvanAdiSuccess, s.EMailSuccess, s.UniversiteIDSuccess, s.AnabilimdaliProgramAdiSuccess, s.IsDilSinaviOrUniversiteSuccess, s.DilSinavAdiSuccess, s.DilPuaniSuccessMsg.IsNullOrWhiteSpace(), s.SinavTarihiSuccess)
 
                                  }).ToList();
 
@@ -1058,7 +1060,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (IsYeniJO)
                             {
                                 var Td = _db.Kullanicilars.Where(p => p.KullaniciID == kul.DanismanID).First();
-                                TIBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TIAyar.SonDonemKayitOlunmasiGerekenDersKodlari.getAyarTI(TIBasvuru.EnstituKod, "");
+                                TIBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(TIBasvuru.EnstituKod, "");
                                 TIBasvuru.TezDanismanID = Td.KullaniciID;
                                 TIBasvuruAraRapor.TezDanismanID = Td.KullaniciID;
                                 TIBasvuruAraRapor.RaporTarihi = DateTime.Now;
@@ -1083,7 +1085,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     _db.SaveChanges();
                                 }
                                 if (IsDegisiklikVar && !IsYeniJO && TIBasvuruAraRapor.SRTalepleris.Any()) SRTalepID = TIBasvuruAraRapor.SRTalepleris.First().SRTalepID;
-                                var Messages = Management.sendMailTIBilgisi(TIBasvuruAraRapor.TIBasvuruAraRaporID, SRTalepID);
+                                var Messages = TezIzlemeBus.SendMailTiBilgisi(TIBasvuruAraRapor.TIBasvuruAraRaporID, SRTalepID);
                                 if (SRTalepID.HasValue && mMessage.IsSuccess) mMessage.Messages.Add("<br/><i class='fa fa-lg fa-envelope-o' style='font-size:11pt;'></i> <span style=font-size:10pt;'>Rapor bilgilerinde değişiklik yapıldığı için Rapor, Toplantı bilgileri Danışman ve Öğrenciye mail olarak tekrar gönderildi!</span>");
 
                             }
@@ -1340,7 +1342,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (IsSendMail)
                         {
-                            var Messages = Management.sendMailTIBilgisi(null, SRTalep.SRTalepID);
+                            var Messages = TezIzlemeBus.SendMailTiBilgisi(null, SRTalep.SRTalepID);
                             if (Messages.IsSuccess)
                             {
                                 mmMessage.Messages.Add("<br/><i class='fa fa-envelope-o'></i> <span style=font-size:10pt;'>Toplantı bilgisi Komite üyelerine ve öğrenciye mail olarak gönderildi.</span>");
@@ -1501,7 +1503,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.IsSuccess = true;
                         if (SendMailLink)
                         {
-                            var Messages = Management.sendMailTIDegerlendirmeLink(Komite.TIBasvuruAraRaporID, null, true);
+                            var Messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(Komite.TIBasvuruAraRaporID, null, true);
                             if (IsTezDanismani || DegerlendirmeDuzeltmeYetki)
                             {
                                 if (Messages.IsSuccess)
@@ -1538,7 +1540,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             TIBasvuruAraRapor.IsBasariliOrBasarisiz = TIBasvuruAraRaporKomites.Count(c => c.IsBasarili == true) > TIBasvuruAraRaporKomites.Count(c => c.IsBasarili == false);
                             TIBasvuruAraRapor.IsOyBirligiOrCouklugu = TIBasvuruAraRaporKomites.Count == TIBasvuruAraRaporKomites.Count(c => c.IsBasarili == TIBasvuruAraRapor.IsBasariliOrBasarisiz);
 
-                            var Messages = Management.sendMailTIDegerlendirmeLink(Komite.TIBasvuruAraRaporID, null, false);
+                            var Messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(Komite.TIBasvuruAraRaporID, null, false);
                             if (IsTezDanismani || DegerlendirmeDuzeltmeYetki)
                             {
                                 if (Messages.IsSuccess)
@@ -1606,7 +1608,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (Uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
 
                 }
-                var Messages = Management.sendMailTIDegerlendirmeLink(TIBasvuruAraRaporID, UniqueID, true);
+                var Messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(TIBasvuruAraRaporID, UniqueID, true);
                 if (Messages.IsSuccess)
                 {
 
@@ -1640,7 +1642,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
 
-            var mmMessage = Management.getTIBasvuruSilKontrol(id);
+            var mmMessage = TezIzlemeBus.GetTiBasvuruSilKontrol(id);
 
             if (mmMessage.IsSuccess)
             {

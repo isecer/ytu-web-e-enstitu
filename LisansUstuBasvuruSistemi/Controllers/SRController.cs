@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -18,12 +19,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Index(string EKD)
         {
-            return Index(new fmTalepler { }, EKD);
+            return Index(new FmTalepler { }, EKD);
         }
 
 
         [HttpPost]
-        public ActionResult Index(fmTalepler model, string EKD)
+        public ActionResult Index(FmTalepler model, string EKD)
         {
             
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
@@ -84,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join otl in db.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into def1
                     from defOtl in def1.DefaultIfEmpty()
                     where s.EnstituKod == _EnstituKod && s.TalepYapanID == UserIdentity.Current.Id
-                    select new frTalepler
+                    select new FrTalepler
                     {
                         SRTalepID = s.SRTalepID,
                         EnstituKod = e.EnstituKod,
@@ -593,7 +594,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             
             var _EnstituKod = Management.getSelectedEnstitu(EKD);
             var kYetki = RoleNames.SRTalepDuzelt.InRoleCurrent();
-            var q = Queryable.First<frTalepler>((from s in db.SRTalepleris
+            var q = Queryable.First<FrTalepler>((from s in db.SRTalepleris
                                                  join tt in db.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
                                                  join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                                                  join k in db.Kullanicilars on s.TalepYapanID equals k.KullaniciID
@@ -607,7 +608,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                  join otl in db.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into def2
                                                  from defOtl in def2.DefaultIfEmpty()
                                                  where s.EnstituKod == _EnstituKod && s.SRTalepID == id
-                                                 select new frTalepler
+                                                 select new FrTalepler
                                                  {
                                                      SRTalepID = s.SRTalepID,
                                                      EnstituKod = e.EnstituKod,

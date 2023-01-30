@@ -7,7 +7,7 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
 
-    public static class TIAyar
+    public static class TiAyar
     {
 
         public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
@@ -16,38 +16,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string OgrenciMinSinavPuan = "Öğrenci için Dil Sınavı Kabulü Min Puan";
         public const string SinavPuanGirisKontroluYapilsin = "Sınav Puan Giriş Kontrolü Yapılsın";
 
-        public static void setAyarTI(string AyarAdi, string AyarDegeri, string EnstituKod)
+        public static void SetAyarTi(string ayarAdi, string ayarDegeri, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.TIAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKod).FirstOrDefault();
+                var qq = db.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
                 if (qq != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    qq.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.TIAyarlars.Add(new TIAyarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.TIAyarlars.Add(new TIAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             }
 
         }
-        public static string getAyarTI(this string AyarAdi, string EnstituKodu, string VarsayilanDeger = "")
+        public static string GetAyarTi(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.TIAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKodu).FirstOrDefault();
-                if (qq != null)
-                {
-                    return qq.AyarDegeri;
-                }
-                else
-                {
-                    return VarsayilanDeger;
-
-                }
+                var qq = db.TIAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                return qq != null ? qq.AyarDegeri : varsayilanDeger;
             }
         }
     }

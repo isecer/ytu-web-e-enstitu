@@ -19,6 +19,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.WebPages;
 using System.Xml;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -35,8 +36,8 @@ namespace LisansUstuBasvuruSistemi
             //Management.Update();
              
             Management.Enstitulers = Management.GetEnstituler();
-            Management.Roles = Management.GetAllRoles();
-            Management.Menulers = Management.GetAllMenu();
+            RollerBus.Roles = RollerBus.GetAllRoles();
+            MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
 
             bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.getAyar().toBooleanObj() ?? false;
@@ -248,7 +249,7 @@ namespace LisansUstuBasvuruSistemi
 
         void Membership_OnRequireUserIdentity(string UserName, ref BiskaUtil.UserIdentity userIdentity)
         {
-            userIdentity = Management.GetUserIdentity(UserName);
+            userIdentity = UserBus.GetUserIdentity(UserName);
         }
         protected void Application_AcquireRequestState(Object sender, EventArgs e)
         {
@@ -282,7 +283,7 @@ namespace LisansUstuBasvuruSistemi
                         {
                             if (User.Identity.IsAuthenticated)
                             {
-                                var user = Management.GetUser();
+                                var user = UserBus.GetUser();
                                 usr.KullaniciID = user.KullaniciID;
                                 usr.Name = user.Ad + " " + user.Soyad;
                                 usr.UserName = user.KullaniciAdi;
@@ -290,13 +291,13 @@ namespace LisansUstuBasvuruSistemi
                                 usr.Browser = browser;
                                 usr.Version = version;
                                 usr.KullaniciTipi = user.KullaniciTipAdi;
-                                usr.ResimAdi = user.ResimAdi.toKullaniciResim();
+                                usr.ResimAdi = user.ResimAdi.ToKullaniciResim();
                                 usr.IsAuthenticated = true;
                             }
                             else
                             {
                                 usr.Name = "Misafir";
-                                usr.ResimAdi = "".toKullaniciResim();
+                                usr.ResimAdi = "".ToKullaniciResim();
                                 usr.KullaniciTipi = "";
                                 usr.Platform = platform;
                                 usr.Browser = browser;

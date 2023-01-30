@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -553,7 +554,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 #region AnaBilgi
                 var IndexModel = new MIndexBilgi();
-                var btDurulari = Management.cmbMezuniyetYayinDurumListeDBilgi(Management.getMBasvuruDurumIDs());
+                var btDurulari = MezuniyetBus.GetMezuniyetYayinDurumListe(Management.getMBasvuruDurumIDs());
                 foreach (var item in btDurulari)
                 {
                     var tipCount = db.MezuniyetBasvurularis.Where(p => p.MezuniyetSurecID == mdl.MezuniyetSurecID && p.MezuniyetYayinKontrolDurumID == item.MezuniyetYayinKontrolDurumID).Count();

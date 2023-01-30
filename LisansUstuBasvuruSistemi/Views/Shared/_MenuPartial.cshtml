@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @{
     Layout = null;
 
@@ -14,7 +15,7 @@
     root = root + enst;
     var eKod = Management.getSelectedEnstitu(selectedEnstKisAd);
     var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
-    var menudata = Management.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
+    var menudata = MenulerBus.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
     menudata.Add(new Menuler
     {
         MenuID = 1000063309,
@@ -31,7 +32,7 @@
     });
     var mMenu = new List<Menuler>();
 
-    mMenu = Management.GetUserMenus().ToList();
+    mMenu = UserBus.GetUserMenus().ToList();
     mMenu.Add(new Menuler
     {
         MenuID = 1000063309,

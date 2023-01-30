@@ -1015,7 +1015,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var nContains = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == model.SinavTipID && p.SinavTipleriOT_SNAID != model.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
             var pr = db.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
-            var dataR = pr.Select(s => new kulaniciProgramYetkiModel
+            var dataR = pr.Select(s => new KulaniciProgramYetkiModel
             {
                 ProgramKod = s.ProgramKod,
                 ProgramAdi = s.ProgramAdi,
@@ -1179,7 +1179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var prK = kModel.IPProgramKod;
             var nContains = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == kModel.SinavTipID && p.SinavTipleriOT_SNAID != kModel.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
             var pr = db.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
-            var dataR = pr.Select(s => new kulaniciProgramYetkiModel
+            var dataR = pr.Select(s => new KulaniciProgramYetkiModel
             {
                 ProgramKod = s.ProgramKod,
                 ProgramAdi = s.ProgramAdi,

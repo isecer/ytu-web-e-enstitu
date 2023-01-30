@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -59,9 +60,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (data != null) model = data;
             }
 
-            var roles = Management.GetAllRoles().ToList();
+            var roles = RollerBus.GetAllRoles().ToList();
             var sRol = new List<Roller>();
-            if (id.HasValue && id.Value > 0) sRol = Management.GetYetkiGrupRoles(id.Value);
+            if (id.HasValue && id.Value > 0) sRol = YetkiGrupBus.GetYetkiGrupRoles(id.Value);
 
             var dataR = roles.Select(s => new CheckObject<Roller>
             {
@@ -126,7 +127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            var roles = Management.GetAllRoles().ToList();
+            var roles = RollerBus.GetAllRoles().ToList();
             var sRol = new List<int>();
             if (RolID != null && RolID.Count > 0) sRol = RolID;
 

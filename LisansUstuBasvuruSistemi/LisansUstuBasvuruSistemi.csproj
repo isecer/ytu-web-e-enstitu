@@ -213,6 +213,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\routeSet.cs" />
+    <Compile Include="Business\MenulerBus.cs" />
+    <Compile Include="Business\MezuniyetBus.cs" />
+    <Compile Include="Business\RollerBus.cs" />
+    <Compile Include="Business\TezDanismanOneriBus.cs" />
+    <Compile Include="Business\TezIzlemeBus.cs" />
+    <Compile Include="Business\KullanicilarBus.cs" />
+    <Compile Include="Business\UserBus.cs" />
+    <Compile Include="Business\YetkiGrupBus.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\AnketlerController.cs" />

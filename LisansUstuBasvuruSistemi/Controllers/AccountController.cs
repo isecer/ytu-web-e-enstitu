@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
@@ -73,13 +74,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     string msg = "";
-                    var user = Management.GetLoginUser(UserName);
+                    var user = UserBus.GetLoginUser(UserName);
                     Kullanicilar loginUser = null;
                     if (user != null)
                     {
                         if (user.IsActiveDirectoryUser == false)
                         {
-                            loginUser = Management.Login(UserName, Password);
+                            loginUser = UserBus.Login(UserName, Password);
                         }
                         else
                         {
@@ -103,14 +104,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             try
                             {
                                 var lastTdo = db.TDOBasvurus.OrderByDescending(p => p.KullaniciID == loginUser.KullaniciID).FirstOrDefault();
-                                if (lastTdo != null) Management.getSecilenBasvuruTDODetay(lastTdo.TDOBasvuruID, null);
+                                if (lastTdo != null) TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(lastTdo.TDOBasvuruID, null);
                             }
                             catch (Exception ex)
                             {
                             }
                             RememberMe = RememberMe ?? false;
                             FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", RememberMe.Value);
-                            Management.SetLastLogon();
+                            UserBus.SetLastLogon();
                             MmMessage.IsCloseDialog = true;
                             if (MmMessage.IsDialog)
                             {
@@ -194,7 +195,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (kul != null)
                 {
-                    kul.ResimAdi = kul.ResimAdi.toKullaniciResim();
+                    kul.ResimAdi = kul.ResimAdi.ToKullaniciResim();
                     if (kul.ParolaSifirlamGecerlilikTarihi.HasValue && kul.ParolaSifirlamGecerlilikTarihi.Value < DateTime.Now)
                     {
                         msg.IsSuccess = false;
@@ -219,7 +220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).FirstOrDefault();
                     if (kul != null)
                     {
-                        kul.ResimAdi = kul.ResimAdi.toKullaniciResim();
+                        kul.ResimAdi = kul.ResimAdi.ToKullaniciResim();
                     }
                 }
                 else
@@ -333,7 +334,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     MmMessage.Title = "Şifre değiştirme işlemi başarısız!";
                     // Management.SistemBilgisiKaydet("Şifre değiştirme işlemi başarısız! Hata:" + string.Join("\r\n", MmMessage.Messages) + "\r\n KullanıcıAdı:" + kul.KullaniciAdi, "Account/ParolaSifirla", BilgiTipi.Bilgi);
                 }
-                kul.ResimAdi = kul.ResimAdi.toKullaniciResim();
+                kul.ResimAdi = kul.ResimAdi.ToKullaniciResim();
             }
             else
             {
@@ -406,7 +407,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             }
-            ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, (KayitYetki ? false : true)), "Value", "Caption", model.KullaniciTipID);
+            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (KayitYetki ? false : true)), "Value", "Caption", model.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
@@ -968,7 +969,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemTarihi = kModel.IslemTarihi;
                     data.IslemYapanIP = kModel.IslemYapanIP;
-                    if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.toKullaniciResim(); }
+                    if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.ToKullaniciResim(); }
                     db.SaveChanges();
                     MmMessage.Messages.Add("'" + data.Ad + " " + data.Soyad + "' Kullanıcı hesabı güncellendi.");
                     MmMessage.IsCloseDialog = true;
@@ -1069,7 +1070,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var YeniResimYolu = YeniResimAdi.toKullaniciResim();
+            var YeniResimYolu = YeniResimAdi.ToKullaniciResim();
             UserIdentity.Current.ImagePath = YeniResimYolu;
             return new { mMessage, YeniResimAdi, YeniResimYolu }.toJsonResult();
         }
@@ -1091,7 +1092,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var YeniResimYolu = ResimAdi.toKullaniciResim();
+            var YeniResimYolu = ResimAdi.ToKullaniciResim();
 
             return new { YeniResimYolu }.toJsonResult();
         }

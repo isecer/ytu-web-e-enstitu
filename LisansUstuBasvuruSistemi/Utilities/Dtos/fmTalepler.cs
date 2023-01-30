@@ -8,7 +8,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmTalepler : PagerOption
+    public class FmTalepler : PagerOption
     {
         public string EnstituKod { get; set; }
         public int? SRTalepTipID { get; set; }
@@ -18,10 +18,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public TimeSpan? BitSaat { get; set; }
         public int? SRDurumID { get; set; }
         public string Aciklama { get; set; }
-        public IEnumerable<frTalepler> data { get; set; }
+        public IEnumerable<FrTalepler> data { get; set; }
 
     }
-    public class frTalepler : SRTalepleri
+    public class FrTalepler : SRTalepleri
     {
         public string EnstituAdi { get; set; }
         public string OgrenciNo { get; set; }

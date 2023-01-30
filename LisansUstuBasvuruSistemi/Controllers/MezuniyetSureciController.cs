@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -132,7 +133,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            model.OgrenimTipModel = Management.getMezuniyetOgrenimTipKriterleri(_EnstituKod, model.MezuniyetSurecID);
+            model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(_EnstituKod, model.MezuniyetSurecID);
             ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(_EnstituKod, false, true);
@@ -426,7 +427,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
 
-            kModel.OgrenimTipModel = Management.getMezuniyetOgrenimTipKriterleri(kModel.EnstituKod, kModel.MezuniyetSurecID);
+            kModel.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(kModel.EnstituKod, kModel.MezuniyetSurecID);
             foreach (var item in kModel.OgrenimTipModel.OgrenimTipKriterList)
             {
                 var sItem = MezuniyetSureciOgrenimTipKriterleri.Where(p => p.OgrenimTipID == item.OgrenimTipID).First();
@@ -476,7 +477,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult getOtBilgiM(string EnstituKod, int MezuniyetSurecID)
         {
-            var model = Management.getMezuniyetOgrenimTipKriterleri(EnstituKod, MezuniyetSurecID);
+            var model = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(EnstituKod, MezuniyetSurecID);
             return View(model);
         }
         public ActionResult getMsDetail(int id, int tbInx, bool IsDelete)
@@ -548,7 +549,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            }).First();
                 #region AnaBilgi
                 var IndexModel = new MIndexBilgi();
-                var btDurulari = Management.cmbMezuniyetYayinDurumListeDBilgi();
+                var btDurulari = MezuniyetBus.GetMezuniyetYayinDurumListe();
                 foreach (var item in btDurulari)
                 {
                     var tipCount = db.MezuniyetBasvurularis.Where(p => p.MezuniyetSurecID == mdl.MezuniyetSurecID && p.MezuniyetYayinKontrolDurumID == item.MezuniyetYayinKontrolDurumID).Count();

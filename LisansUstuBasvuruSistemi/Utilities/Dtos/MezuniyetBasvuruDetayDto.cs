@@ -65,6 +65,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public bool IsSrEykSureAsimi { get; set; }
         public DateTime? EykIlkSrMaxTarih { get; set; }
-        public List<frTalepler> SalonRezervasyonlari { get; set; }
+        public List<FrTalepler> SalonRezervasyonlari { get; set; }
     }
 }

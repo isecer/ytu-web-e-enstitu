@@ -7,6 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Linq;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {
@@ -42,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
 
                 lbl_yayinSartiVarMi.Text = "Yayın Şartı Var Mı?";
                 MBasvuru.MezuniyetBasvurulariYayins.Select(s => s.MezuniyetYayinTurID).ToList();
-                var msYTurs = Management.MezuniyetAktifYonetmelik(MBasvuru.MezuniyetSurecID, MBasvuru.KullaniciID, MezuniyetBasvurulariID);
+                var msYTurs = MezuniyetBus.GetMezuniyetAktifYonetmelik(MBasvuru.MezuniyetSurecID, MBasvuru.KullaniciID, MezuniyetBasvurulariID);
                 var yturIds = msYTurs.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == MBasvuru.OgrenimTipKod && p.IsZorunlu).Select(s => s.MezuniyetYayinTurID).ToList();
                 var yturs = db.MezuniyetSureciYayinTurleris.Where(p => yturIds.Contains(p.MezuniyetYayinTurID)).ToList();
                 chk_YS_Var.Checked = yturs.Count > 0;

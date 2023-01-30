@@ -13,6 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -267,7 +268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.KullaniciTipID = kul.KullaniciTipID;
             #region Kontrol
             #region KullaniciKontrol
-            var kmM = Management.kuKontrol(kModel);
+            var kmM = KullanicilarBus.KullaniciKayitKontrol(kModel);
             _MmMessage.Messages.AddRange(kmM.Messages.ToList());
             _MmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
             if (_MmMessage.Messages.Count > 0) stps.Add(1);

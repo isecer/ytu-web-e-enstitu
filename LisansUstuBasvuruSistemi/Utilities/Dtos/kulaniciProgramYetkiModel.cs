@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kulaniciProgramYetkiModel
+    public class KulaniciProgramYetkiModel
     {
         public int KullaniciProgramID { get; set; }
         public bool YetkiVar { get; set; }

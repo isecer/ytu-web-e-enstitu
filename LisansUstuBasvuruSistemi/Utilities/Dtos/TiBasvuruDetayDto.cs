@@ -28,6 +28,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string DonemAdi { get; set; }
         public string TIBasvuruAraaRaporDurumAdi { get; set; }
-        public frTalepler SRModel { get; set; }
+        public FrTalepler SRModel { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model Kullanicilar
 @{
@@ -79,7 +80,7 @@
                                                     <div class="panel panel-default" style="padding:0px;margin:0px;">
                                                         <div class="panel-body profile bg-info" style="padding:0px;margin:0px;">
                                                             <div class="profile-image">
-                                                                <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi.toKullaniciResim()" alt="@Model.Ad @Model.Soyad">
+                                                                <img class="pImageD" style="width:120px;height:120px;" src="@Model.ResimAdi.ToKullaniciResim()" alt="@Model.Ad @Model.Soyad">
                                                             </div>
                                                             <div class="profile-controls">
                                                                 <a href="javascript:void(0);" onclick="rotateImage(true)" style="padding:5px;" class="profile-control-left" title="Sola Döndür"><span class="fa fa-rotate-left"></span></a>

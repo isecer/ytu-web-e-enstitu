@@ -5,6 +5,7 @@ using System.Web;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using System.Threading;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -32,7 +33,7 @@ namespace LisansUstuBasvuruSistemi.Models
                           
 
                             var TaslakCount = 0;
-                            var qAktifMzsID = Management.getAktifMezuniyetSurecID(itemE.EnstituKod);
+                            var qAktifMzsID = MezuniyetBus.GetMezuniyetAktifSurecId(itemE.EnstituKod);
                             if (qAktifMzsID.HasValue)
                             {
                                 var qAktifMs = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == qAktifMzsID.Value).FirstOrDefault();

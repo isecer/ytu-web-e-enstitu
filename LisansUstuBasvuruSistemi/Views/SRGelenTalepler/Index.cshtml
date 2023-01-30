@@ -1,8 +1,9 @@
 ﻿@using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos  
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmTalepler
+@model  FmTalepler
 @{
     ViewBag.Title = "Index";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -56,7 +57,9 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int RowIndex = Model.StartRowIndex; string 
+                                    
+                                    = "odd";
                                 foreach (var item in Model.data)
                                 {
                                     var starih = Convert.ToDateTime(item.Tarih.ToShortDateString() + " " + item.BasSaat.ToString());
@@ -81,7 +84,7 @@
                                         <td>
                                             <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
                                                 <tr>
-                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick=detayGor('@item.TalepYapanID') class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick=detayGor('@item.TalepYapanID') class="img-circle img-thumbnail"></td>
                                                     <td style="margin:0px;border:none;">
                                                         @item.TalepYapan
                                                         <br />

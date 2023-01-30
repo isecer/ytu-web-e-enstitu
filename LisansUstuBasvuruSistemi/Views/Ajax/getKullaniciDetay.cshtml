@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model Kullanicilar
@@ -17,7 +18,7 @@
     var roller = (IEnumerable<CheckObject<Roller>>)ViewBag.KRoller;
     var cats = (List<CmbIntDto>)ViewBag.cats;
     var user = (Kullanicilar)ViewBag.Kullanici;
-    var rollerP = (List<kulaniciProgramYetkiModel>)ViewBag.KProgramlar;
+    var rollerP = (List<KulaniciProgramYetkiModel>)ViewBag.KProgramlar;
     var ytuOgrnB = (OgrenimTipleri)ViewBag.YtuOgrenimB;
     var donem = (Donemler)ViewBag.Donem;
     var secilenTumRoollerCount = roller.Count(a => a.Checked == true);

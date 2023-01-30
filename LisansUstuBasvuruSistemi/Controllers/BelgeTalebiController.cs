@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
@@ -38,7 +39,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                 {
-                    var kullKayitB = Management.KullaniciKayitBilgisiGuncelle(Kul.KullaniciID);
+                    var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(Kul.KullaniciID);
                     if (kullKayitB.KayitVar)
                     {
                         Kul.KayitYilBaslangic = kullKayitB.BaslangicYil;

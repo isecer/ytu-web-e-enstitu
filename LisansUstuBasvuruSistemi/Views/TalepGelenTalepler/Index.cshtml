@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTalep
 @{
@@ -224,7 +225,8 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int RowIndex = Model.StartRowIndex; string 
+                                    = "odd";
                                 foreach (var item in Model.Data)
                                 {
                                     var IsDanismanOnayDosyasi = item.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi).FirstOrDefault();
@@ -248,7 +250,7 @@
                                         <td>
                                             <table style="padding:0px;margin:0px;border:none;table-layout:fixed;">
                                                 <tr>
-                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.toKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
                                                     <td style="margin:0px;border:none;">
                                                         <table>
                                                             @if (item.YtuOgrencisi)
@@ -298,7 +300,7 @@
                                                     <table style="margin:0px;">
                                                         <tr>
                                                             <td width="150" style="text-align:center;">
-                                                                <img src="@(item.ResimAdi.toKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                                                                <img src="@(item.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
                                                             </td>
                                                             <td style="padding-left:10px;text-align:left;">
 
