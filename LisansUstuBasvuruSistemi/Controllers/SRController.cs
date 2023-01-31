@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -27,10 +28,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmTalepler model, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
             var bbModel = new IndexPageInfoDto();
-            bbModel.SistemBasvuruyaAcik = SRAyar.SalonRezervasyonTalebiAcikmi.getAyarSR(_EnstituKod, "0").ToBoolean().Value;
+            bbModel.SistemBasvuruyaAcik = SrAyar.SalonRezervasyonTalebiAcikmi.GetAyarSr(_EnstituKod, "0").ToBoolean().Value;
             bbModel.DonemAdi = Management.getAkademikBulundugumuzTarih( DateTime.Now).Caption;
             bbModel.EnstituYetki = true;// UserIdentity.Current.SeciliEnstituKodu == _EnstituKod;
             bbModel.Enstitü = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First();
@@ -145,13 +146,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult TalepYap(int? id, string EKD, int? KullaniciID = null, string dlgid = "")
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
 
 
-            var yetkiliK = RoleNames.SRTalepDuzelt.InRoleCurrent();
+            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
 
 
             var model = new kmSRTalep();
@@ -189,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            if (SRAyar.SalonRezervasyonTalebiAcikmi.getAyarSR(_EnstituKod, "0").ToBoolean().Value)
+            if (SrAyar.SalonRezervasyonTalebiAcikmi.GetAyarSr(_EnstituKod, "0").ToBoolean().Value)
             {
                 if (id.HasValue)
                 {
@@ -272,12 +273,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult TalepYap(kmSRTalep kModel, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var mmMessage = new MmMessage();
             bool belgeDuzenleYetki = RoleNames.BelgeTalebiDuzelt.InRoleCurrent();
             var ttip = new SRTalepTipleri();
             kModel.EnstituKod = _EnstituKod;
-            var yetkiliK = RoleNames.SRTalepDuzelt.InRoleCurrent();
+            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
 
             if (kModel.TalepYapanID != UserIdentity.Current.Id && !yetkiliK)
             {
@@ -486,7 +487,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 #region SendMail
-                if (SRAyar.getAyarSR(SRAyar.SRIslemlerindeMailGonder, _EnstituKod).ToBoolean().Value && kModel.SRTalepID <= 0)
+                if (SrAyar.GetAyarSr(SrAyar.SrIslemlerindeMailGonder, _EnstituKod).ToBoolean().Value && kModel.SRTalepID <= 0)
                 {
                     var enstLng = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First();
                     var talep = db.SRTalepleris.Where(p => p.SRTalepID == KID).First();
@@ -513,7 +514,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mdl.GrupBasligi = "Rezervasyon talep detaylarınız";
                     mdl.Detaylar.Add(new mailTableRow { Baslik = "Salon Adı", Aciklama = salon.SalonAdi });
                     mdl.Detaylar.Add(new mailTableRow { Baslik = "Tarih", Aciklama = talep.Tarih.ToString("dd.MM.yyyyy") + " " + haftaGunu.HaftaGunAdi });
-                    mdl.Detaylar.Add(new mailTableRow { Baslik = "Saat", Aciklama = string.Format("{0:hh\\:mm}", talep.BasSaat) + "-" + string.Format("{0:hh\\:mm}", talep.BitSaat) });
+                    mdl.Detaylar.Add(new mailTableRow { Baslik = "Saat", Aciklama = $"{talep.BasSaat:hh\\:mm}" + "-" +
+                        $"{talep.BitSaat:hh\\:mm}"
+                    });
                     if (ttip.IsTezSinavi)
                     {
                         var tezDiliTr = talep.MezuniyetBasvurulari.IsTezDiliTr == true;
@@ -592,8 +595,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getDetail(int id, bool IsDelete, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
-            var kYetki = RoleNames.SRTalepDuzelt.InRoleCurrent();
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
             var q = Queryable.First<FrTalepler>((from s in db.SRTalepleris
                                                  join tt in db.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
                                                  join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -684,7 +687,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var basvuruBilgi = kayit.Kullanicilar.Ad + " " + "" + kayit.Kullanicilar.Soyad + " Kullanıcısına ait <br/>" + kayit.Tarih.ToShortDateString() + " " + kayit.BasSaat + "-" + kayit.BitSaat + " tarihli rezervasyon<br/>";
             try
             {
-                if (kayit.SRDurumID != SRTalepDurum.TalepEdildi && RoleNames.SRGelenTalepler.InRoleCurrent() == false)
+                if (kayit.SRDurumID != SRTalepDurum.TalepEdildi && RoleNames.SrGelenTalepler.InRoleCurrent() == false)
                 {
                     mmMessage.Messages.Add("Onaylanan veya reddedilen taleplerinizi silemezsiniz");
                     mmMessage.Title = "Bilgilendirme";

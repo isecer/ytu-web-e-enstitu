@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  fmBasvurular
 @{
     ViewBag.Title = "Index";
@@ -59,13 +60,11 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string 
-                                    = "odd";
+                                int RowIndex = Model.StartRowIndex; 
                                 foreach (var item in Model.Data)
                                 {
                                     item.YLUniversiteID = 1;
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    RowIndex++; 
                                     <tr style="color:@item.DurumColor;" id="cls-@item.BasvuruID">
                                         <td>
                                             <table>

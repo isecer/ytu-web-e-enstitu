@@ -18,11 +18,12 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize(Roles = RoleNames.YYDBasvuruSureci)]
+    [Authorize(Roles = RoleNames.YydBasvuruSureci)]
     public class YYDBasvuruSureciController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -123,16 +124,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
 
             model.Data = qdata;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
 
 
             return View(model);
         }
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult Kayit(int? id, string dlgid, string EKD)
         {
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -257,7 +258,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", model.Kota_BasvuruSurecKontrolTipID);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.KayitOlmayanlarAnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.KayitOlmayanlarAnketID), "Value", "Caption", model.KayitOlmayanlarAnketID);
@@ -265,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult Kayit(kmBasvuruSurec kModel, string dlgid = "")
         {
             var MmMessage = new MmMessage();
@@ -695,7 +696,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var bsMList = Management.getBsMailZamanData();
             ViewBag.BsOtoMmail = bsMList;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", kModel.Kota_BasvuruSurecKontrolTipID);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
@@ -703,7 +704,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = MmMessage;
             return View(kModel);
         }
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult Kopyala(int basvuruSurecID, string EnstituKod, bool IsSinavOrKota)
         {
             var mmMessage = new MmMessage();
@@ -1659,7 +1660,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult AlanDegistirmeIslemi(string UniqueID, bool IsAlanIciOrDisi)
         {
             var mmMessage = new MmMessage();
@@ -1720,7 +1721,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult BasvuruSonucHesap(int id, string ProgramKod = null, int? OgrenimTipKod = null, int? OrtakKotaSayisi = null, int? AlanIciKota = null, int? AlanDisiKota = null, int? AlanIciEkKota = null, int? AlanDisiEkKota = null)
         {
 
@@ -2102,7 +2103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return View(model);
         }
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciSil)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciSil)]
         public ActionResult Sil(int id)
         {
             var mmMessage = new MmMessage();
@@ -2157,7 +2158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult mailGonderJuriYer(int id, bool JuriBilgisiGonderilsin = false)
         {
             var mmMessage = new MmMessage();
@@ -2355,7 +2356,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult basvuruSonucMailGonderim(int id, bool IsSonucOrAnket, string OgrenimTipKods)
         {
             var mmMessage = new MmMessage();
@@ -2619,7 +2620,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = (RoleNames.YYDBasvuruSureciOgrenciKayit))]
+        [Authorize(Roles = (RoleNames.YydBasvuruSureciOgrenciKayit))]
         public ActionResult KazananKayit(int MulakatSonucID, int? KayitDurumID, bool YokODKontrolYap = true, bool? IsSave = null)
         {
             var mmMessage = new MmMessage();
@@ -3144,7 +3145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
 
         public ActionResult TopluKayitKapatma(int BasvuruSurecID, int MulakatSonucTipID, string OgrenimTipKods)
         {
@@ -3227,7 +3228,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult TopluKayit(int BasvuruSurecID, string ProgramKod, int OgrenimTipKod, int AlanTipID)
         {
 
@@ -3245,7 +3246,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = true, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
         public ActionResult TopluKayitY(int BasvuruSurecID, string ProgramKod, int OgrenimTipKod, int AlanTipID)
         {
 
@@ -3267,7 +3268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = true, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
-        [Authorize(Roles = RoleNames.YYDBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
 
 
 

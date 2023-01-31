@@ -13,6 +13,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -29,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MBGelenBKayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
             if (MBGelenBKayitYetki)
             {
-                model.MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(Management.getSelectedEnstitu(EKD));
+                model.MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(EnstituBus.GetSelectedEnstitu(EKD));
             }
 
             model.Expand = model.MezuniyetSurecID.HasValue;
@@ -44,10 +45,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmMezuniyetBasvurulari model, string EKD, bool export = false)
         {
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
             var nowDate = DateTime.Now;
-            string EnstituKod = Management.getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var KullaniciID = UserIdentity.Current.Id;
             var q = from s in db.MezuniyetBasvurularis
                     join ms in db.MezuniyetSurecis on s.MezuniyetSurecID equals ms.MezuniyetSurecID
@@ -852,7 +853,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
                 {
                     var MbOKriters = talep.MezuniyetBasvurulari.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.Where(p => p.OgrenimTipKod == talep.MezuniyetBasvurulari.OgrenimTipKod).First();
-                    var TTEkSureYetki = RoleNames.MezuniyetGelenBasvurularTTEkSure.InRoleCurrent();
+                    var TTEkSureYetki = RoleNames.MezuniyetGelenBasvurularTtEkSure.InRoleCurrent();
 
                     if (TezTeslimSonTarih.HasValue && !TTEkSureYetki && TezTeslimSonTarih.Value > talep.Tarih.AddDays(MbOKriters.MBTezTeslimSuresiGun))
                     {
@@ -1697,7 +1698,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MB = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == id).First();
             var JuriOneriFormu = MB.MezuniyetJuriOneriFormlaris.Where(p => p.MezuniyetJuriOneriFormID == MezuniyetJuriOneriFormID).FirstOrDefault();
 
-            if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEYKOnay.InRoleCurrent())
+            if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda Asil/Yedek jüri adayı seçimi yetkisine sahip değilsiniz!");
             }
@@ -1758,7 +1759,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Jüri öneri formunda onay yetkisine sahip değilsiniz!");
             }
-            else if (EYKDaOnayOrEYKYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEYKOnay.InRoleCurrent())
+            else if (EYKDaOnayOrEYKYaGonderim && !RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent())
             {
                 mmMessage.Messages.Add("Jüri öneri formunda EYK'da onay yetkisine sahip değilsiniz!");
             }
@@ -2186,7 +2187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var html = "";
             string RaporAdi = "";
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var baslangicTarihi = BasTar.ToDate().Value;
             var bitisTarihi = BitTar.ToDate().Value;
             var qData = db.MezuniyetBasvurularis.Where(p => p.MezuniyetSureci.EnstituKod == _EnstituKod).AsQueryable();

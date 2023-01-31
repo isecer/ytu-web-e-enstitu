@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmMezuniyetBasvurulari
 @{
@@ -202,7 +203,7 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="150">Rezervasyon Durumu</td>
+                                            <td width="150">Salon Rez. Durumu</td>
                                             <td>
                                                 @Html.DropDownList("SRDurumID", null, new { @class = "form-control" })
                                             </td>

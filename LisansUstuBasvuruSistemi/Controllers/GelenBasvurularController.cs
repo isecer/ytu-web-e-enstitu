@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -26,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new fmBasvurular() { PageSize = 10, Expand = false };
 
-            model.BasvuruSurecID = Management.getAktifBasvuruSurecID(Management.getSelectedEnstitu(EKD), BasvuruSurecTipi.LisansustuBasvuru);
+            model.BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipi.LisansustuBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
             return Index(model, EKD, null, false, BelgeDetailBasvuruID);
         }
@@ -37,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var nowDate = DateTime.Now;
             ProgramKod = ProgramKod ?? new List<string>();
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
             var q = from s in db.Basvurulars
                     join en in db.Enstitulers on new { s.BasvuruSurec.EnstituKod } equals new { en.EnstituKod }

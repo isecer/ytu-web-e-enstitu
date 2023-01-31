@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -78,7 +79,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
 
             model.Data = qdata;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
 
            
@@ -87,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]
         public ActionResult Kayit(int? id, string dlgid, string EKD)
         {
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -134,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(_EnstituKod, model.MezuniyetSurecID);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(_EnstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
@@ -445,7 +446,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     item.Checked = qMailZamanlari.Any(a => a.MailSablonTipID == item.MailSablonTipID && a.Zaman == item.Zaman && a.ZamanTipID == item.ZamanTipID);
 
             ViewBag.kmMzOtoMail = zmMList;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(kModel.EnstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);

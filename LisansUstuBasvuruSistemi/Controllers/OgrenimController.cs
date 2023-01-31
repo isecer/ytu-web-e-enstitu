@@ -25,12 +25,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
            
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             #region bilgiModel
             var bbModel = new IndexPageInfoDto();
             var MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(_EnstituKod);
             bbModel.AktifSurecID = MezuniyetSurecID ?? 0;
-            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.getAyarMZ(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
+            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyarMz(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
             bbModel.MezuniyetSurec = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == MezuniyetSurecID.Value).FirstOrDefault();
             if (bbModel.MezuniyetSurec != null)
             {
@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.Kullanici = kulls;
             #endregion 
             var nowDate = DateTime.Now;
-            string EnstituKod = Management.getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var KullaniciID = UserIdentity.Current.Id;
             var q = from s in db.MezuniyetBasvurularis
                     join mOT in db.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOT.MezuniyetSurecID, mOT.OgrenimTipKod }

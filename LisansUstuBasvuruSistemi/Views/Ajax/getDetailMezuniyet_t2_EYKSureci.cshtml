@@ -1,9 +1,10 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model MezuniyetBasvuruDetayDto
 @{
 
@@ -11,7 +12,7 @@
     Layout = null;
     bool JuriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
     bool JuriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
-    bool JuriOneriFormuOnayYetkiEYKDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEYKOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
+    bool JuriOneriFormuOnayYetkiEYKDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
     var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
 
 
@@ -19,7 +20,7 @@
 
 
 }
- 
+
 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
     <div class="col-md-12">
         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">

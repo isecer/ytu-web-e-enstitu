@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model fmMulakatSureci
 @{
@@ -11,8 +12,8 @@
     var bilgiModel = (MulakatBilgiModel)ViewBag.bModel; 
 
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    var kayit = RoleNames.YGMulakatKayıt.InRoleCurrent();
-    var silme = RoleNames.YGMulakatSil.InRoleCurrent();
+    var kayit = RoleNames.YgMulakatKayıt.InRoleCurrent();
+    var silme = RoleNames.YgMulakatSil.InRoleCurrent();
 
     string _colorAna = "#268a8b";
     string _colorMul = "green";

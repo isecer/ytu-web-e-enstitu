@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -27,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmMezuniyetBasvurulari model, string EKD)
         {
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             if (model.RowID.HasValue)
             {
                 var basvuru = db.MezuniyetBasvurularis.Where(p => p.RowID == model.RowID).FirstOrDefault();
@@ -42,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             var MezuniyetSurecID = MezuniyetBus.GetMezuniyetAktifSurecId(_EnstituKod);
             bbModel.AktifSurecID = MezuniyetSurecID ?? 0;
-            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.getAyarMZ(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
+            bbModel.SistemBasvuruyaAcik = MezuniyetAyar.MezuniyetBasvurusuAcikmi.GetAyarMz(_EnstituKod, "0").ToBoolean().Value && MezuniyetSurecID.HasValue;
             bbModel.MezuniyetSurec = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == MezuniyetSurecID.Value).FirstOrDefault();
             if (bbModel.MezuniyetSurec != null)
             {
@@ -90,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.Kullanici = Kul;
             #endregion 
             var nowDate = DateTime.Now;
-            string EnstituKod = Management.getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var q = from s in db.MezuniyetBasvurularis
                     join ms in db.MezuniyetSurecis on s.MezuniyetSurecID equals ms.MezuniyetSurecID
                     join kul in db.Kullanicilars on s.KullaniciID equals kul.KullaniciID
@@ -203,7 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new kmMezuniyetBasvuru();
 
-            model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? Management.getSelectedEnstitu(EKD) : EnstituKod;
+            model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(EKD) : EnstituKod;
 
 
             if (MezuniyetBasvurulariID.HasValue || KullaniciID.HasValue)
@@ -261,7 +262,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (MezuniyetBasvurulariID.HasValue)
                 {
                     model = MezuniyetBus.GetMezuniyetBasvuruBilgi(MezuniyetBasvurulariID.Value);
-                    model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? Management.getSelectedEnstitu(EKD) : EnstituKod;
+                    model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(EKD) : EnstituKod;
                     model.ResimAdi = kul.ResimAdi;
                     KullaniciID = model.KullaniciID;
 
@@ -485,7 +486,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     MBasvuru = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID).First();
                     if (!MBasvuru.TezDanismanID.HasValue || MBasvuru.TezDanismanID <= 0) MBasvuru.TezDanismanID = kul.DanismanID;
-                    if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi && kModel.MezuniyetYayinKontrolDurumID != MBasvuru.MezuniyetYayinKontrolDurumID && MezuniyetAyar.getAyarMZ(MezuniyetAyar.YeniMezuniyetBasvurusundaMailGonder, kModel.EnstituKod).ToBoolean() == true)
+                    if (kModel.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi && kModel.MezuniyetYayinKontrolDurumID != MBasvuru.MezuniyetYayinKontrolDurumID && MezuniyetAyar.GetAyarMz(MezuniyetAyar.YeniMezuniyetBasvurusundaMailGonder, kModel.EnstituKod).ToBoolean() == true)
                     {
                         MBasvuru.BasvuruTarihi = DateTime.Now;
                         sendMail = true;
@@ -1131,7 +1132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mezuniyetBasvurusu = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
             var sonSrTalebi = mezuniyetBasvurusu.SRTalepleris.LastOrDefault();
-            var srTalebiYetkisi = mezuniyetBasvurusu.KullaniciID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSRTalebiYap.InRoleCurrent();
+            var srTalebiYetkisi = mezuniyetBasvurusu.KullaniciID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSrTalebiYap.InRoleCurrent();
 
 
             kModel.SRTalepTipID = 1;
@@ -1434,7 +1435,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.Title = "Tez Teslim Formu Oluşturma İşlemi";
             mmMessage.MessageType = Msgtype.Warning;
 
-            var yetkiliK = RoleNames.SRTalepDuzelt.InRoleCurrent();
+            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
 
             var SrTalep = db.SRTalepleris.Where(p => p.SRTalepID == kModel.SRTalepID).First();
 

@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTalepler
 @{
@@ -9,7 +10,7 @@
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
-    var kYetki = RoleNames.SRTalepDuzelt.InRoleCurrent();
+    var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
 }
 <div class="row">
     <div class="col-md-12">

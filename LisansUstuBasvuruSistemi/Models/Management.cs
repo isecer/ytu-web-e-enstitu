@@ -5,6 +5,7 @@ using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -44,28 +45,11 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static List<Enstituler> Enstitulers = new List<Enstituler>();
+      
 
-        public static List<Enstituler> GetEnstituler()
-        {
-            if (!Enstitulers.Any())
-            {
-                using (var db = new LisansustuBasvuruSistemiEntities())
-                {
-                    Enstitulers = db.Enstitulers.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToList();
-                }
-            }
+       
 
-            return Enstitulers;
-
-        }
-
-        public static Enstituler[] GetEnstituler(bool sadeceYetkiliOlduguEnstituler = false)
-        {
-            var enst = Enstitulers.AsQueryable();
-            if (sadeceYetkiliOlduguEnstituler && UserIdentity.Current.IsAdmin == false) enst = enst.Where(p => UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
-            return enst.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToArray();
-        }
+   
       
 
         #region gsisData
@@ -273,8 +257,8 @@ namespace LisansUstuBasvuruSistemi.Models
             var model = new YokStudentControl();
             try
             {
-                var KullaniciAdi = SistemAyar.getAyar(SistemAyar.AyarYOKWSKullaniciAdi);
-                var Sifre = SistemAyar.getAyar(SistemAyar.AyarYOKWSKullaniciSifre);
+                var KullaniciAdi = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciAdi);
+                var Sifre = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciSifre);
                 System.Net.ServicePointManager.Expect100Continue = false;
 
                 BasicHttpBinding basicAuthBinding = new BasicHttpBinding(BasicHttpSecurityMode.TransportCredentialOnly);
@@ -734,21 +718,10 @@ namespace LisansUstuBasvuruSistemi.Models
             root = root.EndsWith("/") ? root : root + "/";
             return root;
         }
-        public static bool IsContainsEnstitu(this string ekod)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                ekod = ekod.ToLower();
-                var sdils = db.Enstitulers.Where(p => p.IsAktif).ToList();
-                return sdils.Select(s => s.EnstituKisaAd.ToLower()).Any(a => a == ekod);
-            }
-        }
+      
 
 
-        public static string getSelectedEnstitu(string EKD)
-        {
-            return Enstitulers.Where(p => p.EnstituKisaAd.ToLower() == EKD.ToLower()).First().EnstituKod;
-        }
+      
 
         #endregion
 
@@ -912,7 +885,7 @@ namespace LisansUstuBasvuruSistemi.Models
          public static List<CmbIntDto> getbasvuruSurecleriDekont(string EKD, bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
-            string EnstituKod = getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
@@ -1055,7 +1028,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
         public static BelgeTipDetaySaatler getSelectedSaat(DateTime IslemTarihi, int BelgeTipID, int OgrenimDurumID, string _EnstituKod)
         {
-            var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.getAyarBT(_EnstituKod, "0").ToBoolean().Value;
+            var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.GetAyarBt(_EnstituKod, "0").ToBoolean().Value;
             TimeSpan talepZamani = new TimeSpan(IslemTarihi.Hour, IslemTarihi.Minute, IslemTarihi.Second);
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
@@ -1435,35 +1408,7 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             return makaleYayinDurumIstenenler().Contains(YayinTurID);
         }
-        public static CmbIntDto GetCevaplanmamisMesajCount(string EnstituKod)
-        {
-
-            var model = new CmbIntDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var EnstituKods = UserBus.GetUserEnstituKods(UserIdentity.Current.Id);
-                var qListe = db.Mesajlars.Where(p => EnstituKods.Contains(p.EnstituKod) && p.EnstituKod == EnstituKod && p.UstMesajID.HasValue == false && !p.IsAktif && p.Silindi == false).OrderByDescending(o => (o.Mesajlar1.Any() ? o.Mesajlar1.Select(s => s.Tarih).Max() : o.Tarih)).AsQueryable();
-                var Liste = qListe.Take(20).ToList();
-                var htmlContent = "";
-                foreach (var item in Liste)
-                {
-
-                    var kul = item.Kullanicilar;
-                    htmlContent += "<a href='javascript:void(0);' class='list-group-item' style='padding-top:0px;padding-bottom:0px;padding-left:2px;padding-right:-1px;'>" +
-                                      "<table style='table-layout:fixed;width:100%;'>" +
-                                              "<tr>" +
-                                                  "<td width='40'><img style='width:40px;height:40px;' src ='" + ((item.KullaniciID > 0 ? item.Kullanicilar.ResimAdi : "").ToKullaniciResim()) + "' class='pull-left' ></td>" +
-                                                  "<td><span class='contacts-title'>" + item.AdSoyad + "</span><span style='float:right;font-size:8pt;'><b>" + (item.Mesajlar1.Any() ? item.Mesajlar1.Select(s => s.Tarih).Max().ToFormatDateAndTime() : item.Tarih.ToFormatDateAndTime()) + "</b></span><p><b>Konu:</b> " + item.Konu + "</p></td>" +
-                                              "</tr>" +
-                                          "</table>" +
-                                  "</a>";
-                }
-                model.Value = qListe.Count();
-                model.Caption = htmlContent;
-                return model;
-
-            }
-        }
+       
 
     
       
@@ -2029,7 +1974,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var tTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == SRTalepTipID).First();
 
 
-                    if (tTip.SRTalepTipleriAktifAylars.Any(a => a.AyID == nTarih.Month) == false && RoleNames.SRGelenTalepler.InRoleCurrent() == false)
+                    if (tTip.SRTalepTipleriAktifAylars.Any(a => a.AyID == nTarih.Month) == false && RoleNames.SrGelenTalepler.InRoleCurrent() == false)
                     {
                         var syLst = tTip.SRTalepTipleriAktifAylars.SelectMany(s => s.Aylar.AyAdi).ToList();
                         string msg = tTip.TalepTipAdi + " talep tipi için talep yapılabilecek aylar: '" + string.Join(", ", syLst) + "' Bu ayların dışında sistem rezervasyon işlemine kapalıdır.";
@@ -2284,35 +2229,8 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static List<CmbStringDto> cmbGetAktifEnstituler(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            var data = Enstitulers.Where(p => p.IsAktif).OrderBy(o => o.EnstituAd).ToList();
-            foreach (var item in data)
-            {
-                dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });
-            }
-            return dct;
-
-        }
-        public static List<CmbStringDto> cmbGetYetkiliEnstituler(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = Enstitulers.Where(p => EnstKods.Contains(p.EnstituKod)).OrderBy(o => o.EnstituAd).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbStringDto { Value = item.EnstituKod, Caption = item.EnstituAd });
-                }
-            }
-            return dct;
-
-        }
+       
+      
         public static List<CmbStringDto> GetDiller(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
@@ -3216,26 +3134,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        public static List<CmbIntDto> cmbGetSeciliBolumler(string EKD, int OgrenimTipKod)
-        {
-            var _EntituKod = getSelectedEnstitu(EKD);
-            var dct = new List<CmbIntDto>();
-            dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-                var listBolID = db.Programlars.Where(p => p.AnabilimDallari.IsAktif && p.Kotalars.Any(a => a.OgrenimTipKod == OgrenimTipKod) && p.AnabilimDallari.EnstituKod == _EntituKod).Select(s => s.AnabilimDallari.AnabilimDaliID).Distinct().ToList();
-
-
-                var bols = db.AnabilimDallaris.Where(p => listBolID.Contains(p.AnabilimDaliID)).OrderBy(o => o.AnabilimDaliAdi).ToList();
-
-                foreach (var item in bols)
-                {
-                    dct.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi });
-                }
-            }
-            return dct;
-        }
+        
         public static List<krMulakatSonuc> getMulakatSonucListMulakatsiz(int BasvuruSurecID, string ProgramKod, int OgrenimTipKod, List<int> BasvuruTercihleriIDs)
         {
             var mlktSonucModel = new List<krMulakatSonuc>();
@@ -4363,41 +4262,8 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetMesajKategorileri(string EnstituKod = "", bool bosSecimVar = false, bool? IsAktif = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.MesajKategorileris.AsQueryable();
-                if (IsAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == IsAktif.Value);
-                if (EnstituKod.IsNullOrWhiteSpace() == false) qdata = qdata.Where(p => p.EnstituKod == EnstituKod);
-                var data = qdata.OrderBy(o => o.KategoriAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.MesajKategoriID, Caption = item.Enstituler.EnstituKisaAd + " / " + item.KategoriAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbGetMesajYillari(string EnstituKod = "", bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.Mesajlars.AsQueryable();
-                if (EnstituKod.IsNullOrWhiteSpace() == false) qdata = qdata.Where(p => p.MesajKategorileri.EnstituKod == EnstituKod);
-                var data = qdata.Select(s => s.Tarih.Year).Distinct().OrderByDescending(o => o).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item, Caption = item.ToString() + " Yılı" });
-                }
-            }
-            return dct;
-
-        }
+      
+    
         public static List<CmbIntDto> cmbGetBasvuruAgnoAlimTipleri(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -4885,8 +4751,8 @@ namespace LisansUstuBasvuruSistemi.Models
                         OSYMBinding binding = new OSYMBinding();
                         EndpointAddress endpointAddress = new
                         EndpointAddress("https://vps.osym.gov.tr/Ext/Provider/BilgiServisi/Sonuc");
-                        var KullaniciAdi = SistemAyar.getAyar(SistemAyar.AyarOsymWSKullaniciAdi);
-                        var Sifre = SistemAyar.getAyar(SistemAyar.AyarOsymWSKullaniciSifre);
+                        var KullaniciAdi = SistemAyar.GetAyar(SistemAyar.AyarOsymWsKullaniciAdi);
+                        var Sifre = SistemAyar.GetAyar(SistemAyar.AyarOsymWsKullaniciSifre);
                         using (var client = new Ws_Osym_1.SonucClient(binding, endpointAddress))
                         {
 
@@ -6027,9 +5893,9 @@ namespace LisansUstuBasvuruSistemi.Models
                 Bitmap bmp = new Bitmap(fileStream);
 
                 string folderName = SistemAyar.KullaniciResimYolu;
-                bool RotasYonDegisimLog = SistemAyar.getAyar(SistemAyar.RotasyonuDegisenResimleriLogla).ToBoolean().Value;
-                bool Boyutlandirma = SistemAyar.getAyar(SistemAyar.KullaniciResimKaydiBoyutlandirma).ToBoolean().Value;
-                bool KaliteOpt = SistemAyar.getAyar(SistemAyar.KullaniciResimKaydiKaliteOpt).ToBoolean().Value;
+                bool RotasYonDegisimLog = SistemAyar.GetAyar(SistemAyar.RotasyonuDegisenResimleriLogla).ToBoolean().Value;
+                bool Boyutlandirma = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiBoyutlandirma).ToBoolean().Value;
+                bool KaliteOpt = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiKaliteOpt).ToBoolean().Value;
                 string ResimAdi = Resim.FileName.ToFileNameAddGuid();
                 var ResimYolu = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/" + folderName), ResimAdi);
 
@@ -6038,8 +5904,8 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     try
                     {
-                        var uzn = SistemAyar.getAyar(SistemAyar.KullaniciResimKaydiHeightPx);
-                        var gens = SistemAyar.getAyar(SistemAyar.KullaniciResimKaydiWidthPx);
+                        var uzn = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiHeightPx);
+                        var gens = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiWidthPx);
 
                         int Uzunluk = uzn.IsNullOrWhiteSpace() ? 560 : uzn.ToInt().Value;
                         int Genislik = gens.IsNullOrWhiteSpace() ? 560 : gens.ToInt().Value;
@@ -6064,7 +5930,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                         Bitmap bmp_Q = new Bitmap(ResimYolu);
 
-                        ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+                        ImageCodecInfo jpgEncoder = FileExtension.GetImageCodecInfo(ImageFormat.Jpeg);
 
 
                         Int64 quality = 100L;
@@ -6175,52 +6041,8 @@ namespace LisansUstuBasvuruSistemi.Models
             return rotateFlipType;
         }
 
-
-        public static void VaryQualityLevel(string path)
-        {
-            // Get a bitmap.
-            Bitmap bmp1 = new Bitmap(path);
-            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            // Create an Encoder object based on the GUID
-            // for the Quality parameter category.
-            System.Drawing.Imaging.Encoder myEncoder =
-                System.Drawing.Imaging.Encoder.Quality;
-
-            // Create an EncoderParameters object.
-            // An EncoderParameters object has an array of EncoderParameter
-            // objects. In this case, there is only one
-            // EncoderParameter object in the array.
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            bmp1.Save(@"d:\TestPhotoQualityFifty.jpg", jpgEncoder, myEncoderParameters);
-
-            myEncoderParameter = new EncoderParameter(myEncoder, 100L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            bmp1.Save(@"d:\TestPhotoQualityHundred.jpg", jpgEncoder, myEncoderParameters);
-
-            // Save the bitmap as a JPG file with zero quality level compression.
-            myEncoderParameter = new EncoderParameter(myEncoder, 0L);
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            bmp1.Save(@"d:\TestPhotoQualityZero.jpg", jpgEncoder, myEncoderParameters);
-
-        }
-        public static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
-            }
-            return null;
-        }
+         
+      
 
         public static int? getAktifBasvuruSurecID(string EnstituKod, int BasvuruSurecTipID, int? BasvuruSurecID = null, bool? IsMulakatDurum = null)
         {
@@ -7111,60 +6933,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return mdl;
         }
 
-        public static Exception YeniHesapMailGonder(Kullanicilar kModel, string sfr)
-        {
-
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-                var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
-                var mRowModel = new List<mailTableRow>();
-                var enstitu = db.Enstitulers.Where(p => p.EnstituKod == kModel.EnstituKod).First();
-
-
-                var _ea = mailBilgi.SistemErisimAdresi;
-                var WurlAddr = _ea.Split('/').ToList();
-                if (_ea.Contains("//"))
-                    _ea = WurlAddr[0] + "//" + WurlAddr.Skip(2).Take(1).First();
-                else
-                    _ea = "http://" + WurlAddr.First();
-                mRowModel.Add(new mailTableRow { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
-
-                if (kModel.BirimID.HasValue)
-                {
-                    var birim = db.Birimlers.Where(p => p.BirimID == kModel.BirimID).First();
-                    mRowModel.Add(new mailTableRow { Baslik = "Birim", Aciklama = birim.BirimAdi });
-                }
-                if (kModel.UnvanID.HasValue)
-                {
-                    var unvan = db.Unvanlars.Where(p => p.UnvanID == kModel.UnvanID).First();
-                    mRowModel.Add(new mailTableRow { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
-                }
-                if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
-                if (kModel.PasaportNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Pasaport No", Aciklama = kModel.PasaportNo });
-                if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
-
-                mRowModel.Add(new mailTableRow { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
-                mRowModel.Add(new mailTableRow { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
-                mRowModel.Add(new mailTableRow { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
-                var mmmC = new mdlMailMainContent();
-
-                mmmC.EnstituAdi = enstitu.EnstituAd;
-                var mtc = new mailTableContent();
-                mtc.AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.";
-                mtc.Detaylar = mRowModel;
-                var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
-                mmmC.Content = tavleContent;
-                mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
-                string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
-                var User = mailBilgi.SmtpKullaniciAdi;
-                var snded = MailManager.sendMailRetVal(kModel.EnstituKod, User, htmlMail, kModel.EMail, null);
-                return snded;
-
-            }
-        }
+     
       
      
         #endregion
@@ -7173,30 +6942,10 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-        public static string GetFileName(this string Path)
-        {
-            return System.IO.Path.GetFileName(Path);
-        }
-        public static string GetFileExtension(this string Path)
-        {
-            return System.IO.Path.GetExtension(Path);
-        }
-        public static string ToSetNameFileExtension(this string FName, string Extension)
-        {
-            if (FName.ToLower().Contains(Extension.ToLower()) == false) FName += Extension;
-            return FName;
-        }
-        public static string ToFileNameAddGuid(this string FileName, string Extension = null, string addGuid = null)
-        {
-            FileName = FileName.GetFileName();
-            Extension = Extension ?? FileName.GetFileExtension();
-            var nGuid = Guid.NewGuid().ToString().Substr(0, 4);
-            if (addGuid != null) nGuid = addGuid + "_" + nGuid;
-            FileName = FileName.Replace(Extension, "_" + nGuid).ReplaceSpecialCharacter() + Extension;
-            FileName = FileName.Replace("+", "_");
-            return FileName;
-        }
-
+      
+       
+       
+      
         public static decimal? ToMoney(this string moneyString)
         {
             var groupSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator;
@@ -7234,52 +6983,52 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             return Encoding.UTF8.GetByteCount(value) == value.Length;
         }
-        public static string ToExceptionMessage(this Exception ex)
-        {
-            int ix = 1;
-            Dictionary<int, string> msgs = new Dictionary<int, string>() { { ix, ex.Message } };
-            var innException = ex;
-            while ((innException = innException.InnerException) != null)
-            {
-                ix++;
-                msgs.Add(ix, innException.Message);
-            }
-            var returnMsg = string.Join("\r\n", msgs.Select(s => s.Key + "- " + s.Value).ToArray());
+        //public static string ToExceptionMessage(this Exception ex)
+        //{
+        //    int ix = 1;
+        //    Dictionary<int, string> msgs = new Dictionary<int, string>() { { ix, ex.Message } };
+        //    var innException = ex;
+        //    while ((innException = innException.InnerException) != null)
+        //    {
+        //        ix++;
+        //        msgs.Add(ix, innException.Message);
+        //    }
+        //    var returnMsg = string.Join("\r\n", msgs.Select(s => s.Key + "- " + s.Value).ToArray());
 
-            if (ex is DbEntityValidationException)
-            {
-                var msgsVex = new List<string>();
-                var exV = (DbEntityValidationException)ex;
-                foreach (var eve in exV.EntityValidationErrors)
-                {
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        msgsVex.Add(string.Format("State: {0} Property: {1}, Error: {2}", eve.Entry.State, ve.PropertyName, ve.ErrorMessage));
-                    }
-                }
-                if (msgsVex.Any())
-                {
-                    msgsVex.Insert(0, "Veri Giriş Hataları:");
-                    returnMsg += "\r\n" + string.Join("\r\n", msgsVex);
-                }
-            }
+        //    if (ex is DbEntityValidationException)
+        //    {
+        //        var msgsVex = new List<string>();
+        //        var exV = (DbEntityValidationException)ex;
+        //        foreach (var eve in exV.EntityValidationErrors)
+        //        {
+        //            foreach (var ve in eve.ValidationErrors)
+        //            {
+        //                msgsVex.Add(string.Format("State: {0} Property: {1}, Error: {2}", eve.Entry.State, ve.PropertyName, ve.ErrorMessage));
+        //            }
+        //        }
+        //        if (msgsVex.Any())
+        //        {
+        //            msgsVex.Insert(0, "Veri Giriş Hataları:");
+        //            returnMsg += "\r\n" + string.Join("\r\n", msgsVex);
+        //        }
+        //    }
 
-            return returnMsg;
-        }
-        public static string ToExceptionStackTrace(this Exception ex)
-        {
-            Dictionary<int, string> stck = new Dictionary<int, string>();
+        //    return returnMsg;
+        //}
+        //public static string ToExceptionStackTrace(this Exception ex)
+        //{
+        //    Dictionary<int, string> stck = new Dictionary<int, string>();
 
-            int ix = 1;
-            var innException = ex;
-            stck.Add(ix, ex.StackTrace);
-            while ((innException = innException.InnerException) != null)
-            {
-                ix++;
-                stck.Add(ix, innException.StackTrace);
-            }
-            return string.Join("\r\n", stck.Select(s => s.Key + "- " + s.Value).ToArray());
-        }
+        //    int ix = 1;
+        //    var innException = ex;
+        //    stck.Add(ix, ex.StackTrace);
+        //    while ((innException = innException.InnerException) != null)
+        //    {
+        //        ix++;
+        //        stck.Add(ix, innException.StackTrace);
+        //    }
+        //    return string.Join("\r\n", stck.Select(s => s.Key + "- " + s.Value).ToArray());
+        //}
 
 
         public static string RenderPartialView(string controllerName, string partialView, object model)
@@ -7320,25 +7069,25 @@ namespace LisansUstuBasvuruSistemi.Models
 
         public static int PageSize = 15;
 
-        public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
-        {
-            var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-            return r.Replace(input, replacement);
-        }
-        public static string ReplaceSpecialCharacter(this string gelenStr)
-        {
-            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-            var fname = r.Replace(gelenStr, "");
-            return fname;
+        //public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
+        //{
+        //    var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+        //    var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+        //    return r.Replace(input, replacement);
+        //}
+        //public static string ReplaceSpecialCharacter(this string gelenStr)
+        //{
+        //    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+        //    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+        //    var fname = r.Replace(gelenStr, "");
+        //    return fname;
 
-        }
-        public static bool IsSpecialCharacterCheck(this string gelenStr)
-        {
-            var regexItem = new Regex("^[a-zA-Z0-9 ]*$");
-            return regexItem.IsMatch(gelenStr);
-        }
+        //}
+        //public static bool IsSpecialCharacterCheck(this string gelenStr)
+        //{
+        //    var regexItem = new Regex("^[a-zA-Z0-9 ]*$");
+        //    return regexItem.IsMatch(gelenStr);
+        //}
 
         public static Image CreateQrCode(this string Kod, int Width = 360, int Height = 360)
         {
@@ -7379,81 +7128,9 @@ namespace LisansUstuBasvuruSistemi.Models
             else return null;
         }
 
-        public static string ToBelirtilmemis(this int? Sayi)
-        {
-            if (!Sayi.HasValue) return "Belirtilmemiş";
-            else return Sayi.Value.ToString();
+       
 
-        }
-
-        public static string ToCinsiyet(this int? Sayi)
-        {
-            var cins = "";
-            if (!Sayi.HasValue) cins = "Belirtilmemiş";
-            else if (Sayi == 1) cins = "Erkek";
-            else if (Sayi == 2) cins = "Kadın";
-            else cins = Sayi.Value.ToString();
-            return cins;
-
-        }
-        public static string ToEvliBekar(this bool? durum)
-        {
-            var cins = "";
-            if (!durum.HasValue) cins = "Belirtilmemiş";
-            else if (durum.Value) cins = "Evli";
-            else if (!durum.Value) cins = "Bekar";
-            else cins = durum.Value.ToString();
-            return cins;
-        }
-        public static string ToAsilYedek(this bool? durum)
-        {
-            var cins = "";
-            if (!durum.HasValue) cins = "-";
-            else if (durum.Value) cins = "Asil";
-            else if (!durum.Value) cins = "Yedek";
-            else cins = durum.Value.ToString();
-            return cins;
-        }
-
-        public static string ToFormatDate(this DateTime? datetime)
-        {
-            if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy");
-
-        }
-        public static string ToFormatDate(this DateTime datetime)
-        {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy");
-
-        }
-        public static string ToFormatDateAndTime(this DateTime? datetime)
-        {
-            if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy HH:mm");
-
-        }
-        public static string ToFormatDateAndTime(this DateTime datetime)
-        {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("dd.MM.yyyy HH:mm");
-
-        }
-        public static string ToFormatTime(this DateTime? datetime)
-        {
-            if (!datetime.HasValue) return "";
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("HH.mm");
-
-        }
-        public static string ToFormatTime(this DateTime datetime)
-        {
-            if (datetime == DateTime.MinValue) return "";
-            else return datetime.ToString("HH.mm");
-
-        }
+  
 
 
         public static Image resizeImage(this Image imgToResize, Size size)
@@ -7485,12 +7162,12 @@ namespace LisansUstuBasvuruSistemi.Models
 
             return (Image)b;
         }
-        public static string ToKullaniciResim(this string ResimAdi)
-        {
+        //public static string ToKullaniciResim(this string ResimAdi)
+        //{
 
-            var rsm = ResimAdi.IsNullOrWhiteSpace() ? (Management.getRoot() + SistemAyar.KullaniciDefaultResim) : (Management.getRoot() + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
-            return rsm;
-        }
+        //    var rsm = ResimAdi.IsNullOrWhiteSpace() ? (Management.getRoot() + SistemAyar.KullaniciDefaultResim) : (Management.getRoot() + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
+        //    return rsm;
+        //}
 
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
@@ -7820,47 +7497,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
             }
             return ReturnSonuc;
-        }
-        public static UrlInfoModel toUrlInfo(this Uri uri)
-        {
-            var model = new UrlInfoModel();
-            model.Root = LisansUstuBasvuruSistemi.Models.Management.getRoot();
-            var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
-
-            webSite = webSite.IndexOf("?") > -1 ? webSite.Substring(0, webSite.IndexOf("?")) : webSite;
-            webSite = webSite.EndsWith("/") ? webSite : webSite + "/";
-            var apath = uri.AbsolutePath.IndexOf("?") > -1 ? uri.AbsolutePath.Substring(0, uri.AbsolutePath.IndexOf("?")) : uri.AbsolutePath;
-            var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
-            string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (spl.First().item.IsContainsEnstitu() ? spl.First().item : "FBE")).ToLower();
-
-            model.Query = uri.Query;
-            model.EnstituKisaAd = selectedEnstKisAd;
-            var enst = (selectedEnstKisAd + "/").ToLower();
-            var tspl = new List<string>();
-            model.FakeRoot = model.Root + enst;
-            model.DefaultUri = webSite + enst;
-            var lstNoEqLnq = new List<string>() { selectedEnstKisAd };
-            var laspath = string.Join("/", spl.Where(p => !p.item.IsContainsEnstitu()).Select(s => s.item));
-            foreach (var item in spl.Where(p => !lstNoEqLnq.Contains(p.item)).Select(s => s.item))
-            {
-                tspl.Add(item);
-            }
-            if (tspl.Count > 0)
-            {
-
-                apath = model.Root + enst + tspl[0] + "/Index";
-
-            }
-            else
-            {
-                apath = model.Root + enst + "home/index";
-            }
-            model.LastPath = laspath;
-            apath = apath.IndexOf("I") > -1 ? apath.Replace("I", "i").ToLower() : apath.ToLower();
-            model.AbsolutePath = apath;
-
-            return model;
-        }
+        } 
 
         public static List<CmbIntDto> CmbCardBonusType()
         {

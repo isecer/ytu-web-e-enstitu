@@ -14,6 +14,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -371,7 +372,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             var model = new Kullanicilar();
 
-            model.EnstituKod = Management.getSelectedEnstitu(EKD);
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             model.IsAktif = true;
             bool IsKurumIci = true;
             bool IsYerli = true;
@@ -401,11 +402,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (RoleNames.KullanicilarKayit.InRoleCurrent())
             {
-                ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+                ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             }
             else
             {
-                ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+                ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             }
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (KayitYetki ? false : true)), "Value", "Caption", model.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", model.UnvanID);
@@ -441,7 +442,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var resimBilgi = new CmbStringDto { Caption = "", Value = "" };
             var kKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
             #region Kontrol
@@ -844,7 +845,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else kModel.KullaniciAdi = kModel.EMail;
                 }
                 kModel.Sifre = Guid.NewGuid().ToString().Substr(0, 6);
-                var excpt = Management.YeniHesapMailGonder(kModel, kModel.Sifre);
+                var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, kModel.Sifre);
                 if (excpt != null)
                 {
                     MmMessage.Messages.Add("Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + excpt.ToExceptionMessage());

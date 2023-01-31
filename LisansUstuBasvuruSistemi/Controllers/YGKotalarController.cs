@@ -10,11 +10,13 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize(Roles = RoleNames.YGKotalar)]
+    [Authorize(Roles = RoleNames.YgKotalar)]
     public class YGKotalarController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -126,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             //ViewBag.EnstituKod2 = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.MulakatSurecineGirecek = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.MulakatSurecineGirecek);
@@ -140,7 +142,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
             ViewBag.MmMessage = MmMessage;
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var model = new kmKotalar();
 
             string AnabilimDaliKod = "";
@@ -173,7 +175,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.IsAlesYerineDosyaNotuIstensin = model.IsAlesYerineDosyaNotuIstensin ?? false;
             var tEnstKod = model.EnstituKod.IsNullOrWhiteSpace() == false ? model.EnstituKod : _EnstituKod;
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", tEnstKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", tEnstKod);
             ViewBag.AnabilimDaliKod = new SelectList(Management.cmbGetYetkiliProgramAnabilimDallari(true, tEnstKod), "Value", "Caption", AnabilimDaliKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, tEnstKod, AnabilimDaliKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(tEnstKod, true), "Value", "Caption", model.OgrenimTipKod);
@@ -323,7 +325,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.MulakatSurecineGirecek = kModel.MulakatSurecineGirecek ?? true;
             kModel.IsAlesYerineDosyaNotuIstensin = kModel.IsAlesYerineDosyaNotuIstensin ?? false;
             ViewBag.MmMessage = MmMessage;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", EnstituKod);
             ViewBag.AnabilimDaliKod = new SelectList(Management.cmbGetYetkiliProgramAnabilimDallari(true, EnstituKod), "Value", "Caption", AnabilimDaliKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, EnstituKod, AnabilimDaliKod, true), "Value", "Caption", kModel.ProgramKod);
 

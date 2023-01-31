@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models; 
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
@@ -26,11 +27,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string KullaniciHesapKaydiKimlikDogrula = "Hesap Kaydında Kimlik Doğrulaması Yap";
         public const string KullaniciResimYolu = "Images/KullaniciResimleri";
         public const string KullaniciDefaultResim = "Images/whoisUsr.png";
-        public const string AyarOsymWSKullaniciAdi = "ÖSYM Web Servisi Kullanıcı Adı";
-        public const string AyarOsymWSKullaniciSifre = "ÖSYM Web Servisi Kullanıcı Şifre";
+        public const string AyarOsymWsKullaniciAdi = "ÖSYM Web Servisi Kullanıcı Adı";
+        public const string AyarOsymWsKullaniciSifre = "ÖSYM Web Servisi Kullanıcı Şifre";
 
-        public const string AyarYOKWSKullaniciAdi = "YÖK Web Servisi Kullanıcı Adı";
-        public const string AyarYOKWSKullaniciSifre = "YÖK Web Servisi Kullanıcı Şifre";
+        public const string AyarYokwsKullaniciAdi = "YÖK Web Servisi Kullanıcı Adı";
+        public const string AyarYokwsKullaniciSifre = "YÖK Web Servisi Kullanıcı Şifre";
 
         public const string KullaniciResimKaydiBoyutlandirma = "Resim Kaydında Boyutlandırma Yap";
         public const string KullaniciResimKaydiWidthPx = "Resim Kaydı Width (Px)";
@@ -39,36 +40,36 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string RotasyonuDegisenResimleriLogla = "Rotasyonu Değişen Resimleri Logla";
 
         public const string OtomatikMailBilgilendirmeServisiniCalistir = "Otomatik Mail Bilgilendirme Servisini Çalıştır";
-        public static void setAyar(string AyarAdi, string AyarDegeri)
+        public static void SetAyar(string ayarAdi, string ayarDegeri)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.Ayarlars.Where(p => p.AyarAdi == AyarAdi).FirstOrDefault();
+                var qq = db.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
                 if (qq != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    qq.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.Ayarlars.Add(new Ayarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.Ayarlars.Add(new Ayarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             }
 
         }
-        public static string getAyar(this string AyarAdi, string VarsayilanDeger = "")
+        public static string GetAyar(this string ayarAdi, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.Ayarlars.Where(p => p.AyarAdi == AyarAdi).FirstOrDefault();
+                var qq = db.Ayarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi);
                 if (qq != null)
                 {
                     return qq.AyarDegeri;
                 }
                 else
                 {
-                    return VarsayilanDeger;
+                    return varsayilanDeger;
 
                 }
             }
@@ -76,10 +77,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     }
     public static class EnstituMailInfo
     {
-        public static Enstituler GetEnstituMailBilgisi(string EnstituKod)
+        public static Enstituler GetEnstituMailBilgisi(string enstituKod)
         {
 
-            return Management.Enstitulers.Where(p => p.EnstituKod == EnstituKod).First();
+            return EnstituBus.Enstitulers.First(p => p.EnstituKod == enstituKod);
 
 
         }

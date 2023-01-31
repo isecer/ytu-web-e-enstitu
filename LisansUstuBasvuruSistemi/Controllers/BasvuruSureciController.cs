@@ -17,6 +17,7 @@ using System.Web.UI;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -121,7 +122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
 
             model.Data = qdata;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
 
             return View(model);
@@ -129,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BasvuruSureciKayit)]
         public ActionResult Kayit(int? id, string EKD)
         {
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
             var model = new kmBasvuruSurec();
@@ -260,7 +261,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", model.Kota_BasvuruSurecKontrolTipID);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.KayitOlmayanlarAnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.KayitOlmayanlarAnketID), "Value", "Caption", model.KayitOlmayanlarAnketID);
@@ -886,7 +887,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var bsMList = Management.getBsMailZamanData();
             ViewBag.BsOtoMmail = bsMList;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", kModel.Kota_BasvuruSurecKontrolTipID);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);

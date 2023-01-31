@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string BTID, string EKD,   bool IsPopup = false)
         {
             var model = new KmDekontBilgi(); 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int? BasvuruSurecID = null;
             bool yetkili = RoleNames.BasvuruSureci.InRoleCurrent() || RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
             int kuLID;

@@ -7,6 +7,7 @@ using System;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -25,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
         public ActionResult Index(fmBelgeTalepleri model, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             #region data
             var q = from s in db.BelgeTalepleris
                     join ibt in db.BelgeTipleris on s.BelgeTipID equals ibt.BelgeTipID

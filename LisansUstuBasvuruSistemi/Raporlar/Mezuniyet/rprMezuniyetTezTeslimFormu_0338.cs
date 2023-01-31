@@ -9,6 +9,7 @@ using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

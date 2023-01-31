@@ -6,6 +6,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -19,12 +20,12 @@ namespace LisansUstuBasvuruSistemi.Business
             var model = new TdoBasvuruDetayDto() { TDOBasvuruID = tdoBasvuruId };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var isYoneticiYetki = RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
-                var isDanismanOnayYetki = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
+                var isYoneticiYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+                var isDanismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
                 var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(basvuru.KullaniciID);
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
-                var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TDOEYKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
+                var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
                 tekrarYukle:
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
                 model.TDOBasvuruDanismanList = (from s in basvuru.TDOBasvuruDanismen
@@ -304,7 +305,7 @@ namespace LisansUstuBasvuruSistemi.Business
             };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kayitYetki = RoleNames.TDOGelenBasvuruKayit.InRoleCurrent();
+                var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
                 if (tdoBasvuruId.HasValue)
                 {
                     var basvuru = db.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId.Value);
@@ -328,7 +329,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             string message = "Bu enstitüye ait Tez danışmanı öneri başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
                             Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
-                        else if (!TDOAyar.BasvurusuAcikmi.getAyarTDO(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                        else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -345,7 +346,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    msg.IsSuccess = TDOAyar.BasvurusuAcikmi.getAyarTDO(enstituKod, "false").ToBoolean().Value;
+                    msg.IsSuccess = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean().Value;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
@@ -391,7 +392,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kayitYetki = RoleNames.TDOGelenBasvuruKayit.InRoleCurrent();
+                var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
                 var basvuru = db.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId);
                 if (basvuru == null)
                 {
@@ -407,7 +408,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
                         Management.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogType.Kritik);
                     }
-                    else if (!TDOAyar.BasvurusuAcikmi.getAyarTDO(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
+                    else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");

@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
 @{
@@ -10,7 +11,7 @@
 
     Layout = null;
     bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    bool SrTalepYetki = Model.KullaniciID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSRTalebiYap.InRoleCurrent();
+    bool SrTalepYetki = Model.KullaniciID == UserIdentity.Current.Id || RoleNames.MezuniyetGelenBasvurularSrTalebiYap.InRoleCurrent();
     var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + Model.MezuniyetBasvurulariID.ToString();
 

@@ -3,15 +3,16 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTIBasvuru
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
-    var kyetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
-    var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent();
-    var TITezDegerlendirmeDuzeltme = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
-    var ToplantiTalepYetki = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
+    var kyetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
+    var DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+    var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+    var ToplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
     var mKids = (List<int>)ViewBag.kIds;
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
 }
@@ -139,13 +140,10 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string 
-                                    
-                                    = "odd";
+                                int RowIndex = Model.StartRowIndex;  
                                 foreach (var item in Model.Data)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    RowIndex++; 
                                     <tr style="color:@item.DurumColor;">
                                         <td>
                                             <table>

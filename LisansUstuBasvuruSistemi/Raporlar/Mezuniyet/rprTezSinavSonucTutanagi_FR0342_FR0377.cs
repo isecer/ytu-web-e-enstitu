@@ -8,6 +8,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

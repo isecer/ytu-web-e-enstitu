@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -55,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Kayit(int? id, string EKD)
         {
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
             var model = new TalepSurecleri();
@@ -82,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
             ViewBag.TalepTipleris = db.TalepTipleris.ToList();
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
             return View(model);
         }
@@ -203,7 +205,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.TalepTipleris = db.TalepTipleris.ToList();
             ViewBag.TalepTipID = TalepTipID;
             ViewBag.MmMessage = MmMessage;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }

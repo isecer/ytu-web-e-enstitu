@@ -10,10 +10,10 @@
     var apath = Request.Url.AbsolutePath.IndexOf("?") > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?")) : Request.Url.AbsolutePath;
 
     var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
-    string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (spl.First().item.IsContainsEnstitu() ? spl.First().item : "FBE")).ToLower();
+    string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
     var enst = (selectedEnstKisAd + "/").ToLower();
     root = root + enst;
-    var eKod = Management.getSelectedEnstitu(selectedEnstKisAd);
+    var eKod = EnstituBus.GetSelectedEnstitu(selectedEnstKisAd);
     var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
     var menudata = MenulerBus.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
     menudata.Add(new Menuler

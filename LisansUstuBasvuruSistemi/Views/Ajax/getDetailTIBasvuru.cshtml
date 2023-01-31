@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TiBasvuruDetayDto
 @{
@@ -14,9 +15,9 @@
     string DColor = Model.DurumColor;
     var IsDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var IsOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
-    bool ToplantiYetki = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
-    bool DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent();
-    bool DegerlendirmeDuzeltmeYetki = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+    bool ToplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
+    bool DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+    bool DegerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
     bool FormOlusturmaYetki = (DegerlendirmeYetki || DegerlendirmeDuzeltmeYetki || IsDanismani || Model.KullaniciID == UserIdentity.Current.Id);
 
 }

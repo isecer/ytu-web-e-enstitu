@@ -14,6 +14,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -34,12 +35,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var nowDate = DateTime.Now;
            
-            string EnstituKod = Management.getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
 
 
             int? KullaniciID = UserIdentity.Current.Id;
-            var Yetki = RoleNames.YYDBasvuruSureciKayit.InRoleCurrent() || RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
+            var Yetki = RoleNames.YydBasvuruSureciKayit.InRoleCurrent() || RoleNames.YydGelenBasvurularKayit.InRoleCurrent();
 
             if (Yetki && model.BelgeDetailBasvuruID.HasValue)
             {
@@ -103,14 +104,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getbbModel(int? KullaniciID, string EKD)
         {
            
-            var Yetki = RoleNames.YYDBasvuruSureciKayit.InRoleCurrent() || RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
+            var Yetki = RoleNames.YydBasvuruSureciKayit.InRoleCurrent() || RoleNames.YydGelenBasvurularKayit.InRoleCurrent();
             if (!Yetki && KullaniciID.HasValue)
             {
                 KullaniciID = UserIdentity.Current.Id;
             }
             if (!KullaniciID.HasValue) KullaniciID = UserIdentity.Current.Id;
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var bbModel = new IndexPageInfoDto();
             var BasvuruSurecID = Management.getAktifBasvuruSurecID(_EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru);
             bbModel.AktifSurecID = BasvuruSurecID ?? 0;
@@ -129,8 +130,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new kmBasvuru();
             var _MmMessage = new MmMessage();
-            model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? Management.getSelectedEnstitu(EKD) : EnstituKod;
-            var IsGelenBasvuruYetki = RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
+            model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(EKD) : EnstituKod;
+            var IsGelenBasvuruYetki = RoleNames.YydGelenBasvurularKayit.InRoleCurrent();
            
 
             if (BasvuruID.HasValue || KullaniciID.HasValue)
@@ -174,7 +175,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (BasvuruID.HasValue)
                     {
                         model = Management.getSecilenBasvuru(BasvuruID.Value);
-                        model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? Management.getSelectedEnstitu(EKD) : EnstituKod;
+                        model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(EKD) : EnstituKod;
                         model.ResimAdi = kul.ResimAdi;
                         KullaniciID = model.KullaniciID;
 
@@ -260,7 +261,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _MmMessage = new MmMessage();
            
             bool ogrenimDurumuIstensin = false;
-            var kYetki = RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
+            var kYetki = RoleNames.YydGelenBasvurularKayit.InRoleCurrent();
             if (kYetki == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == kModel.BasvuruSurecID).First();
             kModel.EnstituKod = bsurec.EnstituKod;

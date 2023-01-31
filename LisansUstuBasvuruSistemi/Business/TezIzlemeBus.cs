@@ -7,6 +7,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
@@ -146,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.Business
             };
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kayitYetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+                var kayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
                 if (tiBasvuruId.HasValue)
                 {
                     var tiBasvuru = db.TIBasvurus.FirstOrDefault(p => p.TIBasvuruID == tiBasvuruId.Value);
@@ -711,7 +712,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kayitYetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+                var kayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
                 var basvuru = db.TIBasvurus.FirstOrDefault(p => p.TIBasvuruID == tiBasvuruId);
                 if (basvuru == null)
                 {

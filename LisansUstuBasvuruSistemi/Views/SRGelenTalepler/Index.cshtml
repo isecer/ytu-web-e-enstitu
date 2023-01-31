@@ -2,13 +2,14 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos  
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTalepler
 @{
     ViewBag.Title = "Index";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
-    var kYetki = RoleNames.SRTalepDuzelt.InRoleCurrent();
+    var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
 }
 
 <div class="row">
@@ -57,20 +58,17 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string 
-                                    
-                                    = "odd";
+                                int rowIndex = Model.StartRowIndex; 
                                 foreach (var item in Model.data)
                                 {
                                     var starih = Convert.ToDateTime(item.Tarih.ToShortDateString() + " " + item.BasSaat.ToString());
                                     var _fWeight = starih > DateTime.Now ? "font-weight:bold;" : "";
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++; 
                                     <tr class="mColor_@item.SRTalepID" style="@_fWeight color:@item.Color">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.SRTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SRTalepID')">

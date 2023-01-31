@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize(Roles = RoleNames.SRSalonlar)]
+    [Authorize(Roles = RoleNames.SrSalonlar)]
     public class SRSalonlarController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -72,14 +74,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.TT = db.SRTalepTipleris.ToList();
             return View(model);
         }
         public ActionResult Kayit(int? id, string EKD, string dlgid)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -121,17 +123,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.SRTalepTipID = Management.cmbSRTalepTipleri();
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SelectedTTID = model.SRSalonTalepTipleris.Select(s => s.SRTalepTipID).ToList();
             return View(model);
         }
         [HttpPost]
-        [Authorize(Roles = RoleNames.SRSalonlarKayıt)]
+        [Authorize(Roles = RoleNames.SrSalonlarKayıt)]
         public ActionResult Kayit(kmSalonlar kModel, List<int> SRTalepTipIDs, string OldID, string EKD, string dlgid = "")
         {
             SRTalepTipIDs = SRTalepTipIDs ?? new List<int>();
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -246,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.SRTalepTipID = Management.cmbSRTalepTipleri();
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.SelectedTTID = SRTalepTipIDs;
             return View(kModel);
         }

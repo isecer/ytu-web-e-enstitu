@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiskaUtil;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,12 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
                    || value is double
                    || value is decimal;
         }
-        public static bool IsNumberX(this object value)
-        {
-            double Deger;
-            var durum = double.TryParse(value.ToStrObj(), out Deger);
-            return durum;
-        }
+        
         public static bool IsURL(this string source)
         {
             return Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute);

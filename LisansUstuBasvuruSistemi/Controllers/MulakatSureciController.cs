@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -28,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmMulakatSureci model, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
             var bbModel = new MulakatBilgiModel();
             var BasvuruSurecID = Management.getAktifMulakatSurecID(_EnstituKod, BasvuruSurecTipi.LisansustuBasvuru, null, true);
@@ -145,7 +146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult MulakatKayit(int? id, string EKD, string dlgid)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -232,7 +233,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult MulakatKayit(kmMulakat kModel, string EKD, string dlgid)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -872,7 +873,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.MulakatKayıt)]
         public ActionResult GirisSinavNotuKaydet(krMulakatSonucPostModel mdl, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var mmMessage = new MmMessage();
             mmMessage.IsSuccess = true;
 

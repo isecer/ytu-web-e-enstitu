@@ -3,13 +3,14 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model FrTalepler
 @{
     Layout = null;
     var _color = Model.Color;
     bool IsDelete = (bool)ViewBag.IsDelete;
-    var kRole = RoleNames.SRTalepDuzelt.InRoleCurrent(); 
+    var kRole = RoleNames.SrTalepDuzelt.InRoleCurrent(); 
 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
 

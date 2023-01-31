@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -55,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -74,7 +76,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = data;
                 }
             }
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -133,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             ViewBag.MmMessage = MmMessage;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }

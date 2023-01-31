@@ -17,38 +17,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string IlkBelgeTalebiAnketiAdi = "İlk Belge Talebinde İstenen Anket";
         public const string Donem4BelgeTalebiAnketiAdi = "4. Dönem İlk Belge Talebinde İstenen Anket";
 
-        public static void setAyarBT(string AyarAdi, string AyarDegeri, string EnstituKod)
+        public static void SetAyarBt(string ayarAdi, string ayarDegeri, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.BelgeTalepAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKod).FirstOrDefault();
-                if (qq != null)
+                var ayar = db.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                if (ayar != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    ayar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.BelgeTalepAyarlars.Add(new BelgeTalepAyarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.BelgeTalepAyarlars.Add(new BelgeTalepAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             }
 
         }
-        public static string getAyarBT(this string AyarAdi, string EnstituKodu, string VarsayilanDeger = "")
+        public static string GetAyarBt(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.BelgeTalepAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKodu).FirstOrDefault();
-                if (qq != null)
-                {
-                    return qq.AyarDegeri;
-                }
-                else
-                {
-                    return VarsayilanDeger;
-
-                }
+                var ayar = db.BelgeTalepAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
     }

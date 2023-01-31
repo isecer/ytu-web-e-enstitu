@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -95,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 TalepYaparkenPopupAc = s.TalepYaparkenPopupAc,
                 YayinSonTarih = s.YayinSonTarih
             }).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -116,8 +118,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 sEnstituKod = EnstKods.First();
             }
-            else sEnstituKod = Management.getSelectedEnstitu(EKD);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
+            else sEnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -261,7 +263,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
             ViewBag.MmMessage = MmMessage;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }

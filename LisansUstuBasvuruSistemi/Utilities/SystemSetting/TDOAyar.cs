@@ -7,44 +7,36 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
 
-    public static class TDOAyar
+    public static class TdoAyar
     {
 
         public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
         public const string DanismanMaxOgrenciKayitKriter = "Danışman YL + DR maksimum kayıtlı öğrenci sayısı";
         public const string DanismanMinSinavPuanKabulKriter = "Danışman için Dil Sınavı kabulü min puan";
 
-        public static void setAyarTDO(string AyarAdi, string AyarDegeri, string EnstituKod)
+        public static void SetAyarTdo(string ayarAdi, string ayarDegeri, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.TDOAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKod).FirstOrDefault();
-                if (qq != null)
+                var ayar = db.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                if (ayar != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    ayar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.TDOAyarlars.Add(new TDOAyarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.TDOAyarlars.Add(new TDOAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             } 
         }
-        public static string getAyarTDO(this string AyarAdi, string EnstituKodu, string VarsayilanDeger = "")
+        public static string GetAyarTdo(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.TDOAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKodu).FirstOrDefault();
-                if (qq != null)
-                {
-                    return qq.AyarDegeri;
-                }
-                else
-                {
-                    return VarsayilanDeger;
-
-                }
+                var ayar = db.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
     }

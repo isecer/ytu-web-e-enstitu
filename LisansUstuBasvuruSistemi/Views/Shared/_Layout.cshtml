@@ -4,6 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using CaptchaMvc.HtmlHelpers
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @{
     var urlInfo = Request.Url.toUrlInfo();
@@ -23,7 +24,7 @@
         FixedSidebar = false;
     }
 
-    var Enstituler = Management.GetEnstituler();
+    var Enstituler = EnstituBus.GetEnstituler();
     var lImage = "/Content/assets/images/ytu_logo_tr.gif";
 }
 
@@ -305,8 +306,8 @@
 
                     @if (UserIdentity.Current.IsAuthenticated && RoleNames.Mesajlar.InRoleCurrent())
                     {
-                        var enstituKod = Management.getSelectedEnstitu(urlInfo.EnstituKisaAd);
-                        var MsjModel = Management.GetCevaplanmamisMesajCount(enstituKod);
+                        var enstituKod = EnstituBus.GetSelectedEnstitu(urlInfo.EnstituKisaAd);
+                        var MsjModel = MesajlarBus.GetCevaplanmamisMesajCount(enstituKod);
                         <li class="xn-icon-button pull-right" id="_msgCountLi">
                             <a href="javascript:void(0);"><span class="fa fa fa-envelope fa-lg"></span></a>
                             <div id="_msjCount" class="informer informer-@(MsjModel.Value>0?"warning":"success")">@MsjModel.Value</div>

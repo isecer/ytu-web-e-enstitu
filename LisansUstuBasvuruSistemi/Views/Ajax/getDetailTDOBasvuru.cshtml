@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model TdoBasvuruDetayDto
 @{
@@ -12,10 +13,10 @@
 
     var isDelete = (bool)ViewBag.IsDelete;
     var isKullaniciGormeYetki = RoleNames.Kullanicilar.InRoleCurrent();
-    var tdoDanismanOnayYetkisi = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
-    var tdoEykyaGonderimYetkisi = RoleNames.TDOEYKyaGonderimYetkisi.InRoleCurrent();
-    var tdoEykdaOnayYetkisi = RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
-    var tdoFormOlusturmaYetkisi = RoleNames.TDOFormOlusturmaYetkisi.InRoleCurrent();
+    var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
+    var tdoEykyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
+    var tdoEykdaOnayYetkisi = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
+    var tdoFormOlusturmaYetkisi = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
 
 }
 <style>

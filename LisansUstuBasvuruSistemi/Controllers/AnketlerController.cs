@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -18,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            var sEkod = Management.getSelectedEnstitu(EKD);
+            var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
             return Index(new fmAnketler { PageSize = 15, EnstituKod = sEkod });
         }
         [HttpPost]
@@ -53,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Toplam = model.RowCount;
             ViewBag.IndexModel = IndexModel;
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
         public ActionResult Kayit(int? id, string dlgid)
@@ -69,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
         [HttpPost]
@@ -115,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             return View(kModel);
         }
 

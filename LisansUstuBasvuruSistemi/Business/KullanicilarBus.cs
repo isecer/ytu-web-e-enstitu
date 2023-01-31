@@ -311,6 +311,60 @@ namespace LisansUstuBasvuruSistemi.Business
             }
         }
 
-       
+        public static Exception YeniHesapMailGonder(Kullanicilar kModel, string sfr)
+        {
+
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+
+                var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
+                var mRowModel = new List<mailTableRow>();
+                var enstitu = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
+
+
+                var erisimAdresi = mailBilgi.SistemErisimAdresi;
+                var erisimAdresiSpl = erisimAdresi.Split('/').ToList();
+                if (erisimAdresi.Contains("//"))
+                    erisimAdresi = erisimAdresiSpl[0] + "//" + erisimAdresiSpl.Skip(2).Take(1).First();
+                else
+                    erisimAdresi = "http://" + erisimAdresiSpl.First();
+                mRowModel.Add(new mailTableRow { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
+
+                if (kModel.BirimID.HasValue)
+                {
+                    var birim = db.Birimlers.First(p => p.BirimID == kModel.BirimID);
+                    mRowModel.Add(new mailTableRow { Baslik = "Birim", Aciklama = birim.BirimAdi });
+                }
+                if (kModel.UnvanID.HasValue)
+                {
+                    var unvan = db.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
+                    mRowModel.Add(new mailTableRow { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
+                }
+                if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
+                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
+                if (kModel.PasaportNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Pasaport No", Aciklama = kModel.PasaportNo });
+                if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
+
+                mRowModel.Add(new mailTableRow { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
+                mRowModel.Add(new mailTableRow { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
+                mRowModel.Add(new mailTableRow { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
+                var mmmC = new mdlMailMainContent();
+
+                mmmC.EnstituAdi = enstitu.EnstituAd;
+                var mtc = new mailTableContent();
+                mtc.AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.";
+                mtc.Detaylar = mRowModel;
+                var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                mmmC.Content = tavleContent;
+                mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
+                mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
+                var htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                var user = mailBilgi.SmtpKullaniciAdi;
+                var snded = MailManager.sendMailRetVal(kModel.EnstituKod, user, htmlMail, kModel.EMail, null);
+                return snded;
+
+            }
+
+        }
     }
 }

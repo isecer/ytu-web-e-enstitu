@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -105,7 +107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -115,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
             var model = new KmSinavTipleri();
-            model.EnstituKod = Management.getSelectedEnstitu(EKD);
+            model.EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             if (id.HasValue)
             {
                 var data = db.SinavTipleris.Where(p => p.SinavTipID == id).Select(s => new KmSinavTipleri
@@ -189,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.OgrenimTipleris = OgrenimTipleris;
             ViewBag.SinavDilleris = db.SinavDilleris.ToList();
             ViewBag.Programlars = db.Programlars.Where(p => p.AnabilimDallari.EnstituKod == model.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.OzelTarihTipID = new SelectList(Management.cmbGetOzelTarihTipleri(true), "Value", "Caption", model.OzelTarihTipID);
             ViewBag.OzelNotTipID = new SelectList(Management.cmbGetOzelNotTipleri(true), "Value", "Caption", model.OzelNotTipID);
@@ -750,7 +752,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.OgrenimTipleris = OgrenimTipleris;
             ViewBag.SinavDilleris = db.SinavDilleris.ToList();
             ViewBag.Programlars = db.Programlars.Where(p => p.AnabilimDallari.EnstituKod == kModel.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
             ViewBag.OzelTarihTipID = new SelectList(Management.cmbGetOzelTarihTipleri(true), "Value", "Caption", kModel.OzelTarihTipID);
             ViewBag.OzelNotTipID = new SelectList(Management.cmbGetOzelNotTipleri(true), "Value", "Caption", kModel.OzelNotTipID);

@@ -2,13 +2,14 @@
 @using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTIBasvuru
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
-    var kyetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+    var kyetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
 }
 @if (!Model.IsDegerlendirme.HasValue)
 {

@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -21,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new KmDekontBilgi();
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int? BasvuruSurecID = null;
             bool yetkili = RoleNames.BasvuruSureciKayit.InRoleCurrent();
             int kuLID;
@@ -93,7 +94,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new KmDekontBilgi();
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int? BasvuruSurecID = null;
             bool yetkili = RoleNames.BasvuruSureciKayit.InRoleCurrent();
             int kuLID = KullaniciID;
@@ -125,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         { 
             var _MmMessage = new MmMessage();
             var ngid = new Guid(UniqueID);
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var kYetki = RoleNames.BasvuruSureciKayit.InRoleCurrent();
             var OdemeBilgi = Management.GetOnlineOdemeProgramDetay(UniqueID, false, true, true);
             object paymentForm = null;

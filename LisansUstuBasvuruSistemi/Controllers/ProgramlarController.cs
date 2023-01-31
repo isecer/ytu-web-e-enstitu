@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -18,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            var sEkod = Management.getSelectedEnstitu(EKD);
+            var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
             return Index(new fmProgramlar { PageSize = 15, EnstituKod = sEkod, Expand = false });
         }
         [HttpPost]
@@ -88,7 +89,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.AlesTipID = new SelectList(Management.cmbGetAktifAlesTipleri(true), "Value", "Caption", model.AlesTipID);
             var KullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
             ViewBag.KullaniciTipID = new SelectList(KullaniciTipList, "Value", "Caption", model.KullaniciTipID);
@@ -105,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var model = new Programlar();
             List<int> SAlesTipIDs = null;
             var OgrenciBolumIDs = new List<int>();

@@ -1,6 +1,7 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 @using LisansUstuBasvuruSistemi.Models
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @{
     Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
     Exception err = Model!=null ? Model.Exception: null;

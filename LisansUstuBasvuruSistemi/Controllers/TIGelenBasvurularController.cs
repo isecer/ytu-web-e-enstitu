@@ -10,7 +10,7 @@ using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [Authorize(Roles = RoleNames.TIGelenBasvuru)]
+    [Authorize(Roles = RoleNames.TiGelenBasvuru)]
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TIGelenBasvurularController : Controller
     {
@@ -32,7 +32,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTIBasvuru model, string EKD)
         {
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
 
             var nowDate = DateTime.Now;
@@ -102,8 +102,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcPasaPortNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad) || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
 
-            var TezDegerlendirme = RoleNames.TITezDegerlendirmeYap.InRoleCurrent();
-            var MBGelenBKayitYetki = RoleNames.TIGelenBasvuruKayit.InRoleCurrent();
+            var TezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+            var MBGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
             if (TezDegerlendirme && !MBGelenBKayitYetki)
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);

@@ -3,13 +3,14 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmBasvurular
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kayit = RoleNames.YYDGelenBasvurularKayit.InRoleCurrent();
-    var sil = RoleNames.YYDGelenBasvurularSil.InRoleCurrent();
+    var kayit = RoleNames.YydGelenBasvurularKayit.InRoleCurrent();
+    var sil = RoleNames.YydGelenBasvurularSil.InRoleCurrent();
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     
@@ -225,14 +226,11 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string 
-                                    
-                                    = "odd";
+                                int RowIndex = Model.StartRowIndex; 
                                 foreach (var item in Model.Data)
                                 {
                                     item.YLUniversiteID = 1;
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    RowIndex++; 
                                     <tr style="color:@item.DurumColor;" id="cls-@item.BasvuruID">
                                         <td>
                                             <table>

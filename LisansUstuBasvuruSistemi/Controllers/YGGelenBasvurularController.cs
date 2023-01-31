@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -21,23 +22,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
 
-        [Authorize(Roles = RoleNames.YGGelenBasvurular)]
+        [Authorize(Roles = RoleNames.YgGelenBasvurular)]
         public ActionResult Index(string EKD, int? BelgeDetailBasvuruID = null)
         {
             var model = new fmBasvurular() { PageSize = 10, Expand = false };
 
-            model.BasvuruSurecID = Management.getAktifBasvuruSurecID(Management.getSelectedEnstitu(EKD), BasvuruSurecTipi.YatayGecisBasvuru);
+            model.BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipi.YatayGecisBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
             return Index(model, EKD, null, false, BelgeDetailBasvuruID);
         }
         [HttpPost]
-        [Authorize(Roles = RoleNames.YGGelenBasvurular)]
+        [Authorize(Roles = RoleNames.YgGelenBasvurular)]
         public ActionResult Index(fmBasvurular model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
         {
 
             var nowDate = DateTime.Now;
             ProgramKod = ProgramKod ?? new List<string>();
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
            
             var q = from s in db.Basvurulars
@@ -261,7 +262,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = RoleNames.YGGelenBasvurularSil)]
+        [Authorize(Roles = RoleNames.YgGelenBasvurularSil)]
         public ActionResult Sil(int id)
         {
 
@@ -294,7 +295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RoleNames.YGGelenBasvurularKayit)]
+        [Authorize(Roles = RoleNames.YgGelenBasvurularKayit)]
         public ActionResult TaslagaCevir(int id)
         {
 

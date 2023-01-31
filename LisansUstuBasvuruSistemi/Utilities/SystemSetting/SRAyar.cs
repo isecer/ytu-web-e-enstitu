@@ -6,40 +6,40 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 {
-    public static class SRAyar
+    public static class SrAyar
     {
         public const string SalonRezervasyonTalebiAcikmi = "Salon Rezervasyon İşlemi Açık";
-        public const string SRIslemlerindeMailGonder = "Salon Rezervasyon İşlemlerinde Mail Gönder";
+        public const string SrIslemlerindeMailGonder = "Salon Rezervasyon İşlemlerinde Mail Gönder";
 
-        public static void setAyarSR(string AyarAdi, string AyarDegeri, string EnstituKod)
+        public static void SetAyarSr(string ayarAdi, string ayarDegeri, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.SRAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKod).FirstOrDefault();
-                if (qq != null)
+                var srAyar = db.SRAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                if (srAyar != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    srAyar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.Ayarlars.Add(new Ayarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.Ayarlars.Add(new Ayarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             }
         }
-        public static string getAyarSR(this string AyarAdi, string EnstituKodu, string VarsayilanDeger = "")
+        public static string GetAyarSr(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.SRAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKodu).FirstOrDefault();
-                if (qq != null)
+                var srAyar = db.SRAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                if (srAyar != null)
                 {
-                    return qq.AyarDegeri;
+                    return srAyar.AyarDegeri;
                 }
                 else
                 {
-                    return VarsayilanDeger;
+                    return varsayilanDeger;
 
                 }
             }

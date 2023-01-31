@@ -13,38 +13,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string MezuniyetBasvurusuAcikmi = "Mezuniyet Başvurusu Açık";
         public const string YeniMezuniyetBasvurusundaMailGonder = "Yeni Mezuniyet Başvurusunda Mail Gönder"; 
 
-        public static void setAyarMZ(string AyarAdi, string AyarDegeri, string EnstituKod)
+        public static void SetAyarMz(string ayarAdi, string ayarDegeri, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.MezuniyetAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKod).FirstOrDefault();
-                if (qq != null)
+                var ayar = db.MezuniyetAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKod);
+                if (ayar != null)
                 {
-                    qq.AyarDegeri = AyarDegeri;
+                    ayar.AyarDegeri = ayarDegeri;
                 }
                 else
                 {
-                    db.MezuniyetAyarlars.Add(new MezuniyetAyarlar { AyarAdi = AyarAdi, AyarDegeri = AyarDegeri });
+                    db.MezuniyetAyarlars.Add(new MezuniyetAyarlar { AyarAdi = ayarAdi, AyarDegeri = ayarDegeri });
 
                 }
                 db.SaveChanges();
             }
 
         }
-        public static string getAyarMZ(this string AyarAdi, string EnstituKodu, string VarsayilanDeger = "")
+        public static string GetAyarMz(this string ayarAdi, string enstituKodu, string varsayilanDeger = "")
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var qq = db.MezuniyetAyarlars.Where(p => p.AyarAdi == AyarAdi && p.EnstituKod == EnstituKodu).FirstOrDefault();
-                if (qq != null)
-                {
-                    return qq.AyarDegeri;
-                }
-                else
-                {
-                    return VarsayilanDeger;
-
-                }
+                var ayar = db.MezuniyetAyarlars.FirstOrDefault(p => p.AyarAdi == ayarAdi && p.EnstituKod == enstituKodu);
+                return ayar != null ? ayar.AyarDegeri : varsayilanDeger;
             }
         }
     }

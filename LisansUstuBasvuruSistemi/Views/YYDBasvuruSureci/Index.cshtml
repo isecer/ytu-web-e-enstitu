@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model fmBasvuruSureci
 @{
@@ -10,8 +11,8 @@
 
     Layout = "~/Views/Shared/_Layout.cshtml";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    var kayit = RoleNames.YYDBasvuruSureciKayit.InRoleCurrent();
-    var silme = RoleNames.YYDBasvuruSureciSil.InRoleCurrent(); 
+    var kayit = RoleNames.YydBasvuruSureciKayit.InRoleCurrent();
+    var silme = RoleNames.YydBasvuruSureciSil.InRoleCurrent(); 
  
 
 }

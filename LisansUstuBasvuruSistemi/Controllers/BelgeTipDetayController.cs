@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -23,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmBelgeTipDetay model, string EKD)
         {
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var q = (from s in db.BelgeTipDetays
                      join so in db.OgrenimDurumlaris on new { s.OgrenimDurumID } equals new { so.OgrenimDurumID }
                      where s.EnstituKod == _EnstituKod
@@ -147,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BelgeTipleriKayıt)]
         public ActionResult Kayit(BelgeTipDetayKayitModel kModel, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             kModel.EnstituKod = _EnstituKod;
             var MmMessage = new MmMessage(); 
             kModel.TalepBaslangicSaat = kModel.TalepBaslangicSaat ?? new List<TimeSpan>();

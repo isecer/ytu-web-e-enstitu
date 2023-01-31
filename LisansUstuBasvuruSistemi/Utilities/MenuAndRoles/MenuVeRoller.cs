@@ -6,7 +6,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 {
-    public class _Menuler : IMenu
+    public class SystemMenu : IMenu
     {
         //[MenuAttribute(MenuID = 60000, MenuAdi = "İntihal Kontrol", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, SiraNo = 1)]
         //public const string IntihalKontrol = "İntihal Kontrol";
@@ -25,16 +25,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string BasvuruIslemleri = "Başvuru İşlemleri";
 
         [MenuAttribute(MenuID = 80500, MenuAdi = "YTU Yeni Mezun Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 8)]
-        public const string YYDBasvuruIslemleri = "YYD Başvuru İşlemleri";
+        public const string YydBasvuruIslemleri = "YYD Başvuru İşlemleri";
 
         [MenuAttribute(MenuID = 81000, MenuAdi = "Yatay Geçiş Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 9)]
-        public const string YGBasvuruIslemleri = "YG Başvuru İşlemleri";
+        public const string YgBasvuruIslemleri = "YG Başvuru İşlemleri";
 
         [MenuAttribute(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 11)]
-        public const string TDOIslemleri = "Tez danışmanı öneri İşlemleri";
+        public const string TdoIslemleri = "Tez danışmanı öneri İşlemleri";
 
         [MenuAttribute(MenuID = 83300, MenuAdi = "Tez İzleme İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 14)]
-        public const string TIIslemleri = "Tez İzleme İşlemleri";
+        public const string TiIslemleri = "Tez İzleme İşlemleri";
 
         [MenuAttribute(MenuID = 83500, MenuAdi = "Mezuniyet İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", DilCeviriYap = true, YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 16)]
         public const string MezuniyetIslemleri = "Mezuniyet İşlemleri";
@@ -57,40 +57,40 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Rezervasyon Yap", MenuCssClass = "fa fa-file-text-o", MenuUrl = "SR/Index", DilCeviriYap = true, YetkisizErisim = false, SiraNo = 1)]
         [RoleAttribute(GorunurAdi = "Rezervasyon Yap", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRYap = "Rezervasyon Yap";
+        public const string SrYap = "Rezervasyon Yap";
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Gelen Rezervasyonlar", MenuCssClass = "fa fa-file-text-o", MenuUrl = "SRGelenTalepler/Index", DilCeviriYap = false, SiraNo = 2)]
         [RoleAttribute(GorunurAdi = "Gelen Rezervasyon Talepleri", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRGelenTalepler = "Gelen Rezervasyon Talepleri";
+        public const string SrGelenTalepler = "Gelen Rezervasyon Talepleri";
         [RoleAttribute(GorunurAdi = "Rezervasyon Talebi Düzelt", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRTalepDuzelt = "Rezervasyon Talebi Düzelt";
+        public const string SrTalepDuzelt = "Rezervasyon Talebi Düzelt";
         [RoleAttribute(GorunurAdi = "Rezervasyon Talebi Sil", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRTalepSil = "Rezervasyon Talebi Sil";
+        public const string SrTalepSil = "Rezervasyon Talebi Sil";
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Özel Tanımlar", MenuCssClass = "fa fa-list-alt", MenuUrl = "SROzelTanimlar/Index", DilCeviriYap = false, SiraNo = 3)]
         [RoleAttribute(GorunurAdi = "Özel Tanımlar", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SROzelTanimlar = "Özel Tanımlar";
+        public const string SrOzelTanimlar = "Özel Tanımlar";
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Salon Bilgi", MenuCssClass = "fa fa-list-alt", MenuUrl = "SRSalonBilgi/Index", DilCeviriYap = false, SiraNo = 4)]
         [RoleAttribute(GorunurAdi = "Salon Bilgi", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRSalonBilgi = "Salon Bilgi";
+        public const string SrSalonBilgi = "Salon Bilgi";
 
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Salon Tanımları", MenuCssClass = "fa fa-list-alt", MenuUrl = "SRSalonlar/Index", DilCeviriYap = false, SiraNo = 5)]
         [RoleAttribute(GorunurAdi = "Salon Tanımları", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRSalonlar = "Salon Rezervasyon Salonlar";
+        public const string SrSalonlar = "Salon Rezervasyon Salonlar";
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Talep Tipleri", MenuCssClass = "fa fa-list-alt", MenuUrl = "SRTalepTipleri/Index", DilCeviriYap = false, SiraNo = 6)]
         [RoleAttribute(GorunurAdi = "Talep Tipleri", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRTalepTipleri = "Talep Tipleri";
+        public const string SrTalepTipleri = "Talep Tipleri";
 
         [RoleAttribute(GorunurAdi = "Salon Tanımları Kayıt", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRSalonlarKayıt = "Salon Tanımları Kayıt";
+        public const string SrSalonlarKayıt = "Salon Tanımları Kayıt";
         [RoleAttribute(GorunurAdi = "Salon Tanımları Sil", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRSalonlarSil = "Salon Tanımları Sil";
+        public const string SrSalonlarSil = "Salon Tanımları Sil";
 
         [MenuAttribute(BagliMenuID = 65000, MenuAdi = "Salon Rezervasyon Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "SRAyarlar/Index", DilCeviriYap = false, SiraNo = 7)]
         [RoleAttribute(GorunurAdi = "Salon Rez. Ayarları", Kategori = "Salon Rezervasyonu", Aciklama = "")]
-        public const string SRAyarları = "Salon Rezervasyon Ayarları";
+        public const string SrAyarları = "Salon Rezervasyon Ayarları";
 
 
         [MenuAttribute(BagliMenuID = 75000, MenuAdi = "Belge Talebi Yap", MenuCssClass = "fa fa-file-text-o", MenuUrl = "BelgeTalebi/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
@@ -176,97 +176,97 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
 
         [MenuAttribute(BagliMenuID = 80500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YYDBasvuru/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]
-        public const string YYDBasvuru = "YYDBasvuru";
+        public const string YydBasvuru = "YYDBasvuru";
         [MenuAttribute(BagliMenuID = 80500, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YYDGelenBasvurular/Index", DilCeviriYap = false, SiraNo = 3)]
         [RoleAttribute(GorunurAdi = "Gelen Başvurular", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDGelenBasvurular = "YYD Gelen Başvurular";
+        public const string YydGelenBasvurular = "YYD Gelen Başvurular";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDGelenBasvurularKayit = "YYDGelen Başvurular Kayıt";
+        public const string YydGelenBasvurularKayit = "YYDGelen Başvurular Kayıt";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Sil", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDGelenBasvurularSil = "YYD Gelen Başvurular Sil";
+        public const string YydGelenBasvurularSil = "YYD Gelen Başvurular Sil";
         [MenuAttribute(BagliMenuID = 80500, MenuAdi = "Başvuru Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YYDBasvuruSureci/Index", DilCeviriYap = false, SiraNo = 4)]
         [RoleAttribute(GorunurAdi = "Başvuru Süreci", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDBasvuruSureci = "YYD Başvuru Süreci Listesi";
+        public const string YydBasvuruSureci = "YYD Başvuru Süreci Listesi";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDBasvuruSureciKayit = "YYD Başvuru Süreci Kayıt";
+        public const string YydBasvuruSureciKayit = "YYD Başvuru Süreci Kayıt";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Öğrenci Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDBasvuruSureciOgrenciKayit = "YYD Başvuru Süreci Öğrenci Kayıt";
+        public const string YydBasvuruSureciOgrenciKayit = "YYD Başvuru Süreci Öğrenci Kayıt";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Sil", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDBasvuruSureciSil = "YYD Başvuru Süreci Sil";
+        public const string YydBasvuruSureciSil = "YYD Başvuru Süreci Sil";
         [MenuAttribute(BagliMenuID = 80500, MenuAdi = "Kotalar", MenuCssClass = "fa fa-gear", MenuUrl = "YYDKotalar/Index", DilCeviriYap = false, SiraNo = 5)]
         [RoleAttribute(GorunurAdi = "Kotalar", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
-        public const string YYDKotalar = "YYD Kotalar";
+        public const string YydKotalar = "YYD Kotalar";
 
         [MenuAttribute(BagliMenuID = 81000, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YGBasvuru/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]
-        public const string YGBasvuru = "YGBasvuru";
+        public const string YgBasvuru = "YGBasvuru";
         [MenuAttribute(BagliMenuID = 81000, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YGGelenBasvurular/Index", DilCeviriYap = false, SiraNo = 3)]
         [RoleAttribute(GorunurAdi = "Gelen Başvurular", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGGelenBasvurular = "YG Gelen Başvurular";
+        public const string YgGelenBasvurular = "YG Gelen Başvurular";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGGelenBasvurularKayit = "YGGelen Başvurular Kayıt";
+        public const string YgGelenBasvurularKayit = "YGGelen Başvurular Kayıt";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGGelenBasvurularSil = "YG Gelen Başvurular Sil";
+        public const string YgGelenBasvurularSil = "YG Gelen Başvurular Sil";
         [MenuAttribute(BagliMenuID = 81000, MenuAdi = "Başvuru Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YGBasvuruSureci/Index", DilCeviriYap = false, SiraNo = 4)]
         [RoleAttribute(GorunurAdi = "Başvuru Süreci", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGBasvuruSureci = "YG Başvuru Süreci Listesi";
+        public const string YgBasvuruSureci = "YG Başvuru Süreci Listesi";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Kayıt", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGBasvuruSureciKayit = "YG Başvuru Süreci Kayıt";
+        public const string YgBasvuruSureciKayit = "YG Başvuru Süreci Kayıt";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Öğrenci Kayıt", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGBasvuruSureciOgrenciKayit = "YG Başvuru Süreci Öğrenci Kayıt";
+        public const string YgBasvuruSureciOgrenciKayit = "YG Başvuru Süreci Öğrenci Kayıt";
         [RoleAttribute(GorunurAdi = "Başvuru Süreci Sil", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGBasvuruSureciSil = "YG Başvuru Süreci Sil";
+        public const string YgBasvuruSureciSil = "YG Başvuru Süreci Sil";
         [MenuAttribute(BagliMenuID = 81000, MenuAdi = "Kotalar", MenuCssClass = "fa fa-gear", MenuUrl = "YGKotalar/Index", DilCeviriYap = false, SiraNo = 5)]
         [RoleAttribute(GorunurAdi = "Kotalar", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGKotalar = "YG Kotalar";
+        public const string YgKotalar = "YG Kotalar";
         [MenuAttribute(BagliMenuID = 81000, MenuAdi = "Mülakat Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YGMulakatSureci/Index", DilCeviriYap = false, SiraNo = 6)]
         [RoleAttribute(GorunurAdi = "Mülakat Süreci", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGMulakatSureci = "YG Mülakat Süreci";
+        public const string YgMulakatSureci = "YG Mülakat Süreci";
         [RoleAttribute(GorunurAdi = "Mülakat Süreci Kayıt", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGMulakatKayıt = "YG Mülakat Süreci Kayıt";
+        public const string YgMulakatKayıt = "YG Mülakat Süreci Kayıt";
         [RoleAttribute(GorunurAdi = "Mülakat Süreci Sil", Kategori = "Yatay Geçiş Başvuru", Aciklama = "")]
-        public const string YGMulakatSil = "YG Mülakat Süreci Sil";
+        public const string YgMulakatSil = "YG Mülakat Süreci Sil";
 
 
         [MenuAttribute(BagliMenuID = 82300, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TDOBasvuru/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
-        public const string TDOBasvuru = "TDO Başvuru";
+        public const string TdoBasvuru = "TDO Başvuru";
         [MenuAttribute(BagliMenuID = 82300, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TDOGelenBasvurular/Index", DilCeviriYap = false, SiraNo = 4)]
         [RoleAttribute(GorunurAdi = "Gelen Başvurular", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOGelenBasvuru = "TDO Gelen Başvurular";
+        public const string TdoGelenBasvuru = "TDO Gelen Başvurular";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOGelenBasvuruKayit = "TDO Gelen Başvurular Kayıt";
+        public const string TdoGelenBasvuruKayit = "TDO Gelen Başvurular Kayıt";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOGelenBasvuruSil = "TDO Gelen Başvurular Sil";
+        public const string TdoGelenBasvuruSil = "TDO Gelen Başvurular Sil";
         [RoleAttribute(GorunurAdi = "TDO Form Düzeltme Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOFormOlusturmaYetkisi = "TDO Form Oluşturma Yetkisi";
+        public const string TdoFormOlusturmaYetkisi = "TDO Form Oluşturma Yetkisi";
         [RoleAttribute(GorunurAdi = "TDO Danışman Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDODanismanOnayYetkisi = "TDO Danisman Onay Yetkisi";
+        public const string TdoDanismanOnayYetkisi = "TDO Danisman Onay Yetkisi";
         [RoleAttribute(GorunurAdi = "TDO EYK'ya Gönderim Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOEYKyaGonderimYetkisi = "TDO EYK'ya Gönderim Yetkisi";
+        public const string TdoeyKyaGonderimYetkisi = "TDO EYK'ya Gönderim Yetkisi";
         [RoleAttribute(GorunurAdi = "TDO EYK'da Onay Yetkisi", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOEYKdaOnayYetkisi = "TDO EYK'da Onay Yetkisi";
+        public const string TdoeyKdaOnayYetkisi = "TDO EYK'da Onay Yetkisi";
         [MenuAttribute(BagliMenuID = 82300, MenuAdi = "TDO Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "TDOAyarlar/Index", DilCeviriYap = false, SiraNo = 7)]
         [RoleAttribute(GorunurAdi = "TDO Ayarları", Kategori = "Tez Danışmanı Öneri", Aciklama = "")]
-        public const string TDOAyarlari = "TDO Ayarları";
+        public const string TdoAyarlari = "TDO Ayarları";
 
 
         [MenuAttribute(BagliMenuID = 83300, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TIBasvuru/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
-        public const string TIBasvuru = "TI Başvuru";
+        public const string TiBasvuru = "TI Başvuru";
         [MenuAttribute(BagliMenuID = 83300, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TIGelenBasvurular/Index", DilCeviriYap = false, SiraNo = 4)]
         [RoleAttribute(GorunurAdi = "Gelen Başvurular", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TIGelenBasvuru = "TI Gelen Başvurular";
+        public const string TiGelenBasvuru = "TI Gelen Başvurular";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TIGelenBasvuruKayit = "TI Gelen Başvurular Kayıt";
+        public const string TiGelenBasvuruKayit = "TI Gelen Başvurular Kayıt";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TIGelenBasvuruSil = "TI Gelen Başvurular Sil";
+        public const string TiGelenBasvuruSil = "TI Gelen Başvurular Sil";
         [RoleAttribute(GorunurAdi = "TIK Toplantı Talebi Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TIToplantiTalebiYap = "TI Toplantı Talebi Yap";
+        public const string TiToplantiTalebiYap = "TI Toplantı Talebi Yap";
         [RoleAttribute(GorunurAdi = "TIK Tez Degerlendirme Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TITezDegerlendirmeYap = "Tez İzleme Tez Degerlendirme Yap";
+        public const string TiTezDegerlendirmeYap = "Tez İzleme Tez Degerlendirme Yap";
         [RoleAttribute(GorunurAdi = "TIK Tez Degerlendirme Düzeltme", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TITezDegerlendirmeDuzeltme = "Tez İzleme Tez Degerlendirme Düzeltme";
+        public const string TiTezDegerlendirmeDuzeltme = "Tez İzleme Tez Degerlendirme Düzeltme";
         [MenuAttribute(BagliMenuID = 83300, MenuAdi = "TIK Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "TIAyarlar/Index", DilCeviriYap = false, SiraNo = 7)]
         [RoleAttribute(GorunurAdi = "TIK Ayarları", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TIAyarlari = "TI Ayarları";
+        public const string TiAyarlari = "TI Ayarları";
 
         [MenuAttribute(BagliMenuID = 83500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Mezuniyet/Index", DilCeviriYap = true, YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
         //[RoleAttribute(GorunurAdi = "Başvuru", Kategori = "Lisansüstü Başvuru", Aciklama = "")]
@@ -279,15 +279,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [RoleAttribute(GorunurAdi = "Gelen Başvurular J.Öneri.F Onay", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
         public const string MezuniyetGelenBasvurularJuriOneriFormuOnay = "Gelen Başvurular Juri Öneri Formu Onay";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular J.Öneri.F Onay EYK'da", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
-        public const string MezuniyetGelenBasvurularJuriOneriFormuEYKOnay = "Gelen Başvurular Juri Öneri Formu EYK Onay";
+        public const string MezuniyetGelenBasvurularJuriOneriFormuEykOnay = "Gelen Başvurular Juri Öneri Formu EYK Onay";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular SR Talebi Yap", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
-        public const string MezuniyetGelenBasvurularSRTalebiYap = "Gelen Başvurular SR Talebi Yap";
+        public const string MezuniyetGelenBasvurularSrTalebiYap = "Gelen Başvurular SR Talebi Yap";
 
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Tez Kontrol", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
         public const string MezuniyetGelenBasvurularTezKontrol = "Gelen Başvurular Tez Kontrol";
 
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Tez Teslim Ek Süre", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
-        public const string MezuniyetGelenBasvurularTTEkSure = "Gelen Başvurular Tez Teslim Ek Süre";
+        public const string MezuniyetGelenBasvurularTtEkSure = "Gelen Başvurular Tez Teslim Ek Süre";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
         public const string MezuniyetGelenBasvurularKayit = "Mezuniyet Gelen Başvurular Kayıt";
         [RoleAttribute(GorunurAdi = "Gelen Başvurular Sil", Kategori = "Mezuniyet İşlemleri", Aciklama = "")]
@@ -440,7 +440,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string Anketler = "Anketler";
 
         [RoleAttribute(GorunurAdi = "SSS Kayıt", Kategori = "Sistem", Aciklama = "")]
-        public const string SSSKayit = "SSSKayit";
+        public const string SssKayit = "SSSKayit";
 
         [MenuAttribute(BagliMenuID = 100000, MenuAdi = "Sistem Ayarları", MenuCssClass = "fa fa-cogs", MenuUrl = "SistemAyarlari/Index", DilCeviriYap = false, SiraNo = 22)]
         [RoleAttribute(GorunurAdi = "Sistem Ayarları", Kategori = "Sistem", Aciklama = "")]

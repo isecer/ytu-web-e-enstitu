@@ -20,6 +20,7 @@ using System.Web.Routing;
 using System.Web.WebPages;
 using System.Xml;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -35,12 +36,12 @@ namespace LisansUstuBasvuruSistemi
             BiskaUtil.SystemInformation.OnEvent += SystemInformation_OnEvent;
             //Management.Update();
              
-            Management.Enstitulers = Management.GetEnstituler();
+            EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
 
-            bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.getAyar().toBooleanObj() ?? false;
+            bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().toBooleanObj() ?? false;
             if (OtomatikMailBilgilendirmeServisiniCalistir)
             {
                 ApplicationClock ap = new ApplicationClock();

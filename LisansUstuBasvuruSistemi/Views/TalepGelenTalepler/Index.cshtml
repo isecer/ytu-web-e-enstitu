@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTalep
 @{
@@ -225,13 +226,11 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string 
-                                    = "odd";
+                                int RowIndex = Model.StartRowIndex;  
                                 foreach (var item in Model.Data)
                                 {
                                     var IsDanismanOnayDosyasi = item.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi).FirstOrDefault();
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    RowIndex++; 
                                     <tr class="mColor_@item.TalepGelenTalepID delrw_@item.TalepGelenTalepID" style="color:@item.Color">
                                         <td>
                                             <table>

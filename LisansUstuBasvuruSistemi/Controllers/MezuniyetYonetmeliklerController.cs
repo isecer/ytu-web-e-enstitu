@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -26,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var q = from s in db.MezuniyetYonetmelikleris
                     join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join d in db.Donemlers on s.DonemID equals d.DonemID
@@ -98,7 +99,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
 
             model.Data = qdata;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
             ViewBag.TarihKriterID = new SelectList(Management.getTarihKriterSecim(true), "Value", "Caption", model.TarihKriterID);
 
@@ -106,7 +107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Kayit(int? id, string dlgid, string EKD)
         {
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -179,7 +180,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                  }).OrderBy(o => o.OgrenimTipAdi).ThenBy(t => t.MezuniyetYayinTurAdi).ToList();
             }
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", model.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", model.OgretimYiliB);
             ViewBag.GrupKodu = Management.getGrupKod(yayinturCount, "Grup", true);
@@ -469,7 +470,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgretimYiliB = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYiliB);
             ViewBag.GrupKodu = Management.getGrupKod(yayinturCount, "Grup", true);

@@ -13,6 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -32,7 +33,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!UserIdentity.Current.IsAuthenticated && model.IsDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             #region bilgiModel
             var bbModel = new IndexPageInfoDto();
             if (model.IsDegerlendirme == null)
@@ -169,13 +170,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new KmTIBasvuru();
             var _MmMessage = new MmMessage();
-            EnstituKod = Management.getSelectedEnstitu(EKD);
+            EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
 
             if (TIBasvuruID.HasValue || KullaniciID.HasValue)
             {
                 if (KullaniciID.HasValue)
-                    if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent() == false)
+                    if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false)
                         KullaniciID = UserIdentity.Current.Id;
                 if (TIBasvuruID.HasValue)
                 {
@@ -276,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _MmMessage = new MmMessage();
 
 
-            if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
+            if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             _MmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.toNullIntZero());
 
             var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kModel.KullaniciID);
@@ -398,7 +399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string View = "";
             var TIBasvuru = _db.TIBasvurus.Where(p => p.TIBasvuruID == TIBasvuruID).First();
             var TIBasvuruAraRapor = TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).FirstOrDefault();
-            var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
+            var DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
             var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(TIBasvuru.KullaniciID);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == TIBasvuru.KullaniciID).First();
             if (!DegerlendirmeYetki)
@@ -649,7 +650,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bool IsYeniJO = true;
             var TIBasvuru = _db.TIBasvurus.Where(p => p.TIBasvuruID == kModel.TIBasvuruID).First();
             var TIBasvuruAraRapor = TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == kModel.TIBasvuruAraRaporID).FirstOrDefault();
-            var DegerlendirmeYetki = RoleNames.TITezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
+            var DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || TIBasvuru.KullaniciID == UserIdentity.Current.Id;
             var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(TIBasvuru.KullaniciID);
             var kul = _db.Kullanicilars.Where(p => p.KullaniciID == TIBasvuru.KullaniciID).First();
 
@@ -1133,7 +1134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult RezervasyonAl(int TIBasvuruAraRaporID, int SRTalepID)
         {
-            var ToplantiYetki = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
+            var ToplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
             var TIAraRapor = _db.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).First();
             var model = new kmSRTalep();
             if (!ToplantiYetki && TIAraRapor.TIBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
@@ -1192,8 +1193,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.MessageType = Msgtype.Warning;
             var TIAraRapor = _db.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == kModel.TIBasvuruAraRaporID).First();
             var SRTalep = TIAraRapor.SRTalepleris.FirstOrDefault();
-            var TIToplantiTalebiYap = RoleNames.TIToplantiTalebiYap.InRoleCurrent();
-            var TITezDegerlendirmeDuzeltme = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+            var TIToplantiTalebiYap = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
+            var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
 
             if (!TIToplantiTalebiYap && TIAraRapor.TIBasvuru.TezDanismanID != UserIdentity.Current.Id) kModel.YetkisizErisim = true;
 
@@ -1375,7 +1376,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage();
             mMessage.IsSuccess = false;
             mMessage.Title = "Tez İzleme Rapor Değerlendirme İşlemi";
-            var DegerlendirmeDuzeltmeYetki = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+            var DegerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
             bool IsRefresh = false;
             if (!UniqueID.HasValue)
             {
@@ -1589,7 +1590,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mMessage.Title = "Tez İzleme Raporu Değerlendirme Linki Gönderme İşlemi";
             var AraRapor = _db.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).First();
             var Basvuru = AraRapor.TIBasvuru;
-            var TITezDegerlendirmeDuzeltme = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+            var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
             if (!TITezDegerlendirmeDuzeltme && Basvuru.TezDanismanID != UserIdentity.Current.Id)
             {
                 mMessage.MessageType = Msgtype.Warning;
@@ -1703,8 +1704,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
             mmMessage.Title = "Rapor silme işlemi";
-            var TITezDegerlendirmeYap = RoleNames.TITezDegerlendirmeYap.InRoleCurrent();
-            var TITezDegerlendirmeDuzeltme = RoleNames.TITezDegerlendirmeDuzeltme.InRoleCurrent();
+            var TITezDegerlendirmeYap = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+            var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
             var qKayit = _db.TIBasvuruAraRapors.Where(p => p.TIBasvuruID == id && p.TIBasvuruAraRaporID == TIBasvuruAraRaporID).AsQueryable();
             if (!TITezDegerlendirmeYap && !TITezDegerlendirmeDuzeltme) qKayit = qKayit.Where(p => p.TIBasvuru.KullaniciID == UserIdentity.Current.Id);
             else if (TITezDegerlendirmeYap && !TITezDegerlendirmeDuzeltme) qKayit = qKayit.Where(p => p.TezDanismanID == UserIdentity.Current.Id);

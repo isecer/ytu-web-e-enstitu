@@ -3,16 +3,17 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTDOBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var danismanOnayYetki = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
+    var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
     var mKids = (List<int>)ViewBag.kIds;
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
-    var kayitYetki = RoleNames.TDOGelenBasvuruKayit.InRoleCurrent();
-    var silmeYetki = RoleNames.TDOGelenBasvuruSil.InRoleCurrent();
-    var eykOnayYetki = kayitYetki || RoleNames.TDOEYKdaOnayYetkisi.InRoleCurrent();
+    var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
+    var silmeYetki = RoleNames.TdoGelenBasvuruSil.InRoleCurrent();
+    var eykOnayYetki = kayitYetki || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
 
 }
 

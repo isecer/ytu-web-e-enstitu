@@ -14,7 +14,7 @@ using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [Authorize(Roles = RoleNames.TDOGelenBasvuru)]
+    [Authorize(Roles = RoleNames.TdoGelenBasvuru)]
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class TDOGelenBasvurularController : Controller
     {
@@ -29,10 +29,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTDOBasvuru model, string EKD, bool export = false)
         {
 
-            var enstituKod = Management.getSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var nowDate = DateTime.Now;
-            var tdoDanismanOnayYetkisi = RoleNames.TDODanismanOnayYetkisi.InRoleCurrent();
-            var tdoGelenBasvuruKayit = RoleNames.TDOGelenBasvuruKayit.InRoleCurrent();
+            var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
+            var tdoGelenBasvuruKayit = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
 
             var q = from s in db.TDOBasvurus
                     join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -285,7 +285,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             string raporAdi = "";
-            var enstituKod = Management.getSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var enstitu = db.Enstitulers.First(p => p.EnstituKod == enstituKod);
             var baslangicTarihi = BasTar.ToDate().Value;
             var bitisTarihi = BitTar.ToDate().Value; 
@@ -318,7 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return File(ms.ToArray(), "application/ms-excel", raporAdi + " (" + BasTar.Replace("-", ".") + "-" + BitTar.Replace("-", ".") + ")." + "xls"); 
         }
 
-        [Authorize(Roles = RoleNames.TDOEYKdaOnayYetkisi)]
+        [Authorize(Roles = RoleNames.TdoeyKdaOnayYetkisi)]
         public ActionResult EYKGonderimOnay(string aktifDonemId)
         {
             var qDanismans = (from s in db.TDOBasvurus

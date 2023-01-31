@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Web;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+
 namespace LisansUstuBasvuruSistemi.Business
 {
     public static class UserBus

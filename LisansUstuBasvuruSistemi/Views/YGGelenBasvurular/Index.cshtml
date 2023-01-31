@@ -3,13 +3,14 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmBasvurular
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kayit = RoleNames.YGGelenBasvurularKayit.InRoleCurrent();
-    var sil = RoleNames.YGGelenBasvurularSil.InRoleCurrent();
+    var kayit = RoleNames.YgGelenBasvurularKayit.InRoleCurrent();
+    var sil = RoleNames.YgGelenBasvurularSil.InRoleCurrent();
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     

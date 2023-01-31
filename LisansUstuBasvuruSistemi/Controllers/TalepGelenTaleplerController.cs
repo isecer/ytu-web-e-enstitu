@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var TalepSurecID = Management.getAktifTalepSurecID(_EnstituKod);
             return Index(new fmTalep() { PageSize = 15, TalepSurecID = TalepSurecID, Expand = TalepSurecID.HasValue }, EKD);
         }
@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTalep model, string EKD, bool export = false)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
             if (!kulls.KullaniciEnstituYetkileris.Any(a => a.EnstituKod == _EnstituKod))
             {

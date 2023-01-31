@@ -11,6 +11,8 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -65,7 +67,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HataMesaji = s.HataMesaji
 
             }).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
         public ActionResult MailDetay(int GonderilenMailID)
@@ -108,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new GonderilenMailler();
             var MmMessage = new MmMessage();
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             ViewBag.MmMessage = MmMessage;
 
             var dataK = (from s in db.GonderilenMailKullanicilars
@@ -137,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Gonder(GonderilenMailler kModel, List<string> DosyaEkiAdi, List<HttpPostedFileBase> DosyaEki, List<int?> DuyuruDosyaEkID, List<int> KullaniciIDs, string EKD, string Alici = "")
         {
             var MmMessage = new MmMessage();
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             DuyuruDosyaEkID = DuyuruDosyaEkID == null ? new List<int?>() : DuyuruDosyaEkID;
             DosyaEki = DosyaEki == null ? new List<HttpPostedFileBase>() : DosyaEki;
             DosyaEkiAdi = DosyaEkiAdi == null ? new List<string>() : DosyaEkiAdi;

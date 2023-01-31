@@ -5,6 +5,7 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -70,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 EkSayisi = s.EkSayisi,
                 DuyuruEkleris = s.Ekler
             }).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod); 
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod); 
             return View(model);
         }
 
@@ -79,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             
-            string _EnstituKod = Management.getSelectedEnstitu(EKD);
+            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var fModel = new fmDuyurular(); 
             fModel.EnstituKod = _EnstituKod;
             var q = from s in db.Duyurulars

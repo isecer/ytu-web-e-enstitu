@@ -6,6 +6,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

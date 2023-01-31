@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [Authorize(Roles = RoleNames.SRSalonBilgi)]
+    [Authorize(Roles = RoleNames.SrSalonBilgi)]
     public class SRSalonBilgiController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -22,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(fmSalonBilgi model, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             model.EnstituKod = _EnstituKod;
             
             DateTime? t1 = null;

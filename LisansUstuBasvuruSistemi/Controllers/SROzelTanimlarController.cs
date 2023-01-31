@@ -7,12 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize(Roles = RoleNames.SROzelTanimlar)]
+    [Authorize(Roles = RoleNames.SrOzelTanimlar)]
     public class SROzelTanimlarController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -96,7 +98,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.TT = db.SRTalepTipleris.ToList();
             ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri(true), "Value", "Caption", model.SROzelTanimTipID);
             ViewBag.HaftaGunleri = db.HaftaGunleris.ToList();
@@ -118,7 +120,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 hGSecilenler = model.SROzelTanimGunlers.Select(s => s.HaftaGunID).ToList();
 
             }
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod);
             ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri( true), "Value", "Caption", model.SROzelTanimTipID);
             ViewBag.SRSalonID = new SelectList(Management.cmbSalonlar(model.EnstituKod, model.SRTalepTipID ?? 0 ,true), "Value", "Caption", model.SRSalonID);
             ViewBag.Ay = new SelectList(Management.cmbAylar( true), "Value", "Caption", model.Ay);
@@ -449,7 +451,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
             ViewBag.MmMessage = MmMessage;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler( true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler( true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.Ay = new SelectList(Management.cmbAylar(true), "Value", "Caption", kModel.Ay);
             ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri( true), "Value", "Caption", kModel.SROzelTanimTipID);
             ViewBag.SRSalonID = new SelectList(Management.cmbSalonlar(kModel.EnstituKod, kModel.SRTalepTipID ?? 0 ,true), "Value", "Caption", kModel.SRSalonID);

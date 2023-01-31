@@ -9,10 +9,11 @@ using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [Authorize(Roles = RoleNames.SRGelenTalepler)]
+    [Authorize(Roles = RoleNames.SrGelenTalepler)]
     public class SRGelenTaleplerController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
@@ -24,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmTalepler model, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
 
 
@@ -143,7 +144,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SRDurumID = new SelectList(Management.cmbSRDurumListe( true), "Value", "Caption", model.SRDurumID);
             return View(model);
         }
-        [Authorize(Roles = RoleNames.SRTalepSil)]
+        [Authorize(Roles = RoleNames.SrTalepSil)]
         public ActionResult Sil(int id)
         {
             var mmMessage = new MmMessage();
@@ -176,7 +177,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
        
-        [Authorize(Roles = RoleNames.SRTalepDuzelt)]
+        [Authorize(Roles = RoleNames.SrTalepDuzelt)]
       //  [ValidateInput(false)]
         public ActionResult Istenenkaydet(int id, int SRDurumID, string SRDurumAciklamasi)
         {
@@ -188,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var _EnstituKod = talep.EnstituKod;
             bool sendMailJuri = false;
             bool sendMailTalepYapan = false;
-            var sendMailAna = SRAyar.getAyarSR(SRAyar.SRIslemlerindeMailGonder, _EnstituKod).ToBoolean().Value;
+            var sendMailAna = SrAyar.GetAyarSr(SrAyar.SrIslemlerindeMailGonder, _EnstituKod).ToBoolean().Value;
 
             bool save = false;
             if (SRDurumID == SRTalepDurum.Onaylandı)

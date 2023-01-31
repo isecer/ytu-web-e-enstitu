@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -19,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Index(string EKD)
         {
-            var sEkod = Management.getSelectedEnstitu(EKD);
+            var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
             return Index(new fmMezuniyetYayinTurleri { PageSize = Management.PageSize, Expand = false });
         }
         [HttpPost]

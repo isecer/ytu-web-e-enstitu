@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
@@ -18,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             webSite = webSite.EndsWith("/") ? webSite : webSite + "/";
             var apath = uri.AbsolutePath.IndexOf("?") > -1 ? uri.AbsolutePath.Substring(0, uri.AbsolutePath.IndexOf("?")) : uri.AbsolutePath;
             var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
-            string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (spl.First().item.IsContainsEnstitu() ? spl.First().item : "FBE")).ToLower();
+            string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
 
             model.Query = uri.Query;
             model.EnstituKisaAd = selectedEnstKisAd;
@@ -27,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             model.FakeRoot = model.Root + enst;
             model.DefaultUri = webSite + enst;
             var lstNoEqLnq = new List<string>() { selectedEnstKisAd };
-            var laspath = string.Join("/", spl.Where(p => !p.item.IsContainsEnstitu()).Select(s => s.item));
+            var laspath = string.Join("/", spl.Where(p => !EnstituBus.IsContainsEnstitu(p.item)).Select(s => s.item));
             foreach (var item in spl.Where(p => !lstNoEqLnq.Contains(p.item)).Select(s => s.item))
             {
                 tspl.Add(item);

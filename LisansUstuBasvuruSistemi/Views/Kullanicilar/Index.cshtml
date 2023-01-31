@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model fmKullanicilar
@@ -23,19 +24,19 @@
     var mezuniyetBAcik = new List<string>();
     var TIBAcik = new List<string>();
     var TDOBAcik = new List<string>();
-    if (MezuniyetAyar.getAyarMZ(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    if (MezuniyetAyar.GetAyarMz(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.FenBilimleri).ToBoolean().Value)
     {
         mezuniyetBAcik.Add(EnstituKodlari.FenBilimleri);
     }
-    if (MezuniyetAyar.getAyarMZ(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    if (MezuniyetAyar.GetAyarMz(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
     {
         mezuniyetBAcik.Add(EnstituKodlari.SosyalBilimleri);
     }
-    if (TiAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.FenBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.GetAyarTdo(EnstituKodlari.FenBilimleri).ToBoolean().Value)
     {
         TDOBAcik.Add(EnstituKodlari.FenBilimleri);
     }
-    if (TiAyar.BasvurusuAcikmi.getAyarTDO(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
+    if (TiAyar.BasvurusuAcikmi.GetAyarTdo(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
     {
         TDOBAcik.Add(EnstituKodlari.SosyalBilimleri);
     }

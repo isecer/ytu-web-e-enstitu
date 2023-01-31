@@ -18,6 +18,7 @@ using System.Web.Security;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -148,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemYapanIP = s.IslemYapanIP
             }).Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.BirimID = new SelectList(Management.getBirimler().ToOrderedList("BirimID", "UstBirimID", "BirimAdi"), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.IsAdmin = new SelectList(Management.cmbVarYokData(true), "Value", "Caption", model.IsAdmin);
@@ -166,7 +167,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var model = new Kullanicilar();
             model.IsAktif = true;
             bool IsKurumIci = true;
@@ -190,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.EnstituKod = _EnstituKod;
             }
             ViewBag.ResimVar = ResimVar;
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", model.BirimID);
@@ -614,7 +615,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     });
                     db.SaveChanges();
 
-                    var excpt = Management.YeniHesapMailGonder(kModel, sfr);
+                    var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, sfr);
                     if (excpt != null)
                     {
                         MmMessage.Messages.Add(kModel.KullaniciAdi + " kullanıcı hesabı oluşturuldu fakat kullanıcıya bilgi maili atılırken bir hata oluştu! Hata:" + excpt.ToExceptionMessage());
@@ -698,7 +699,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.ResimVar = kModel.ResimAdi.IsNullOrWhiteSpace() == false;
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", kModel.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", kModel.UnvanID);
@@ -771,7 +772,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (id.HasValue == false) return RedirectToAction("Index");
 
-            var roles = Management.GetEnstituler(true);
+            var roles = EnstituBus.GetEnstituler(true);
             var userRoles = UserBus.GetKullaniciEnstituler(id.Value);
             var Kullanici = UserBus.GetUser(id.Value);
             ViewBag.Kullanici = Kullanici;
@@ -818,7 +819,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (id.HasValue == false) return RedirectToAction("Index");
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var data = KullanicilarBus.GetKullaniciProgramlari(id.Value, _EnstituKod);
             var Kullanici = UserBus.GetUser(id.Value);
             ViewBag.Kullanici = Kullanici;
@@ -828,7 +829,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.KullanicilarProgramYetkileri)]
         public ActionResult KullaniciProgramYetkileri(List<string> ProgramKod, int KullaniciID, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             if (KullaniciID <= 0)
             {
                 return RedirectToAction("Index");

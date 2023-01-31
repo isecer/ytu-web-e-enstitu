@@ -25,12 +25,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(fmBelgeTalepleri model, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
 
             var bbModel = new IndexPageInfoDto();
             bbModel.Kullanici = Kul;
-            bbModel.SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.getAyarBT(_EnstituKod, "0").ToBoolean().Value;
+            bbModel.SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(_EnstituKod, "0").ToBoolean().Value;
             bbModel.DonemAdi = Management.getAkademikBulundugumuzTarih(DateTime.Now).Caption;
             bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(_EnstituKod) || UserIdentity.Current.SeciliEnstituKodu == _EnstituKod;
             bbModel.Enstitü = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod).First();
@@ -321,12 +321,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult TalepYap(string EKD, string Kod = "", int? id = null)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var belge = new BelgeTalepleri();
             var MmMessage = new MmMessage();
             bool belgeDuzenleYetki = RoleNames.BelgeTalebiDuzelt.InRoleCurrent();
             var kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
-            if (BelgeTalepAyar.BelgeTalebiAcikmi.getAyarBT(_EnstituKod, "0").ToBoolean().Value)
+            if (BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(_EnstituKod, "0").ToBoolean().Value)
             {
 
                 if (id.HasValue)
@@ -440,7 +440,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult TalepYap(BelgeTalepleri kModel, string EKD, bool? Iptal)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             bool belgeDuzenleYetki = RoleNames.BelgeTalebiDuzelt.InRoleCurrent();
             var MmMessage = new MmMessage();
 
@@ -650,7 +650,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     ID = kModel.BelgeTalepID;
                     kModel.BelgeTalepID = ID;
-                    var mGonder = BelgeTalepAyar.getAyarBT(BelgeTalepAyar.YeniBelgeTalebindeMailGonder, _EnstituKod).ToBoolean().Value;
+                    var mGonder = BelgeTalepAyar.GetAyarBt(BelgeTalepAyar.YeniBelgeTalebindeMailGonder, _EnstituKod).ToBoolean().Value;
                     if (mGonder)
                         bilgiMaili(kModel, donem.DonemAdi, _EnstituKod);
 
@@ -705,7 +705,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (kModel.BelgeTalepID <= 0 && kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
             {
-                string _EnstituKod = Management.getSelectedEnstitu(EKD);
+                string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
                 #region kontrol
 
@@ -748,7 +748,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (MmMessage.Messages.Count == 0)
                 {
-                    var IlkBTAnketAdi = BelgeTalepAyar.getAyarBT(BelgeTalepAyar.IlkBelgeTalebiAnketiAdi, _EnstituKod, "");
+                    var IlkBTAnketAdi = BelgeTalepAyar.GetAyarBt(BelgeTalepAyar.IlkBelgeTalebiAnketiAdi, _EnstituKod, "");
                     var IlkBTAnketID = db.Ankets.Where(p => p.AnketAdi == IlkBTAnketAdi).Select(s => s.AnketID).FirstOrDefault();
                     var IlkBelgeTalebiVar = db.BelgeTalepleris.Any(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod) || IlkBTAnketAdi.IsNullOrWhiteSpace();
                     var KullaniciDonem4 = Convert.ToDouble((kul.KayitYilBaslangic.Value + 2) + "." + kul.KayitDonemID.Value);
@@ -759,7 +759,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (KullaniciDonem4 <= AktifDonem)
                     {
                         if (!db.BelgeTalepleris.Where(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod).ToList().Any(a => !a.AnketCevaplaris.Any(a2 => a2.AnketID == IlkBTAnketID)))
-                            AnketAdi = BelgeTalepAyar.getAyarBT(BelgeTalepAyar.Donem4BelgeTalebiAnketiAdi, _EnstituKod, "");
+                            AnketAdi = BelgeTalepAyar.GetAyarBt(BelgeTalepAyar.Donem4BelgeTalebiAnketiAdi, _EnstituKod, "");
                     }
                     else if (!IlkBelgeTalebiVar) AnketAdi = IlkBTAnketAdi;
 
@@ -817,7 +817,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getBilgi(int? BelgeTalepID, int BelgeTipID, int miktar, string EKD)
         {
             BelgeTalepID = BelgeTalepID <= 0 ? null : BelgeTalepID;
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int OgrenimDurumID;
             string OgrenciNo = "";
 
@@ -870,7 +870,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var konu = "";
             if (kModel.BelgeDurumID == BelgeTalepDurum.TalepEdildi)
             {
-                var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.getAyarBT(_EnstituKodu, "");
+                var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.GetAyarBt(_EnstituKodu, "");
                 contentBilgi.AciklamaDetayi = GunHesap(kModel.TalepTarihi, kModel.EklenecekGun, kModel.TeslimBaslangicSaat.Value, kModel.TeslimBitisSaat.Value, kModel.UcretAlimiVar, BelgeAlimAdresi);
                 contentBilgi.AciklamaBasligi = "Belge Talebi İşlemi Yapıldı";
                 konu = "Belge Talebi İşlemi Yapıldı";
@@ -960,13 +960,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.getAyarBT(_EnstituKod, "");
+                    var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.GetAyarBt(_EnstituKod, "");
                     AciklamaDetayi = GunHesap(kModel.TalepTarihi, kModel.EklenecekGun, kModel.TeslimBaslangicSaat.Value, kModel.TeslimBitisSaat.Value, kModel.UcretAlimiVar, BelgeAlimAdresi);
                 }
             }
             else
             {
-                var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.getAyarBT(_EnstituKod, "");
+                var BelgeAlimAdresi = BelgeTalepAyar.BelgeAlımAdresi.GetAyarBt(_EnstituKod, "");
                 AciklamaDetayi = GunHesap(kModel.TalepTarihi, kModel.EklenecekGun, kModel.TeslimBaslangicSaat.Value, kModel.TeslimBitisSaat.Value, kModel.UcretAlimiVar, BelgeAlimAdresi);
             }
 

@@ -17,18 +17,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var ssS = db.SikcaSorulanSorulars.Where(p => p.EnstituKod == _EnstituKod .ToLower());
-            var yetki = RoleNames.SSSKayit.InRoleCurrent();
+            var yetki = RoleNames.SssKayit.InRoleCurrent();
             if (yetki == false) ssS = ssS.Where(p => p.IsAktif); 
             return View(ssS.FirstOrDefault());
         }
-        [Authorize(Roles = RoleNames.SSSKayit)]
+        [Authorize(Roles = RoleNames.SssKayit)]
         public ActionResult Kayit(string EKD)
         {
             var mdl = new SikcaSorulanSorular();
             var MmMessage = new MmMessage();
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
             var sss = db.SikcaSorulanSorulars.Where(p => p.EnstituKod == _EnstituKod .ToLower()).FirstOrDefault();
             if (sss != null)
@@ -46,13 +46,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             
 
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(false), "Value", "Caption", mdl.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(false), "Value", "Caption", mdl.EnstituKod ?? _EnstituKod);
             ViewBag.MmMessage = MmMessage;
             return View(mdl);
         }
         [HttpPost]
         [ValidateInput(false)]
-        [Authorize(Roles = RoleNames.SSSKayit)]
+        [Authorize(Roles = RoleNames.SssKayit)]
         public ActionResult Kayit(SikcaSorulanSorular kmodel)
         {
             var MmMessage = new MmMessage();
@@ -95,7 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(false), "Value", "Caption", kmodel.EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(false), "Value", "Caption", kmodel.EnstituKod);
             ViewBag.MmMessage = MmMessage;
             return View(kmodel);
         }

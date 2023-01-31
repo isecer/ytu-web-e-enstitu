@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -21,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            var enstituKod = Management.getSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             return Index(new fmMesajlar() { PageSize = 10, Expand = true, EnstituKod = enstituKod }, EKD);
         }
         [HttpPost]
@@ -149,18 +150,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemYapanIP = s.IslemYapanIP,
                 IsAktif = s.IsAktif
             }).ToList();
-            ViewBag.EnstituKod = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.MesajKategoriID = new SelectList(Management.cmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.MesajKategoriID = new SelectList(MesajlarBus.cmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsAktif = new SelectList(Management.cmbAcikKapaliData(true), "Value", "Caption", model.IsAktif);
             ViewBag.IsDosyaEkDurum = new SelectList(Management.cmbDosyaEkiDurumData(true), "Value", "Caption", model.IsDosyaEkDurum);
-            ViewBag.MesajYili = new SelectList(Management.cmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
+            ViewBag.MesajYili = new SelectList(MesajlarBus.cmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
 
             return View(model);
         }
         public ActionResult GetAcikMsjCount(string EnstituKod)
         {
-            var model = Management.GetCevaplanmamisMesajCount(EnstituKod);
+            var model = MesajlarBus.GetCevaplanmamisMesajCount(EnstituKod);
             return new { mCount = model.Value.Value, HtmlContent = model.Caption }.toJsonResult();
         }
         public ActionResult DurumKayit(int id, bool IsAktif, bool? MainFilter)

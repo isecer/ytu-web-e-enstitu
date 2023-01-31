@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -27,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTalep model, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
 
             var bbModel = new IndexPageInfoDto();
@@ -209,7 +210,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult TalepYap(int? TalepGelenTalepID, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var Talep = new TalepGelenTalepler();
             var MmMessage = new MmMessage();
             var KayitYetki =  RoleNames.GelenTalepKayit.InRoleCurrent();
@@ -247,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult TalepYap(TalepGelenTalepler kModel, HttpPostedFileBase Dosya, string DosyaAdi, HttpPostedFileBase DosyaDanismanOnay, string DosyaAdiDanismanOnay, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.Title = "";
             var KayitYetki =  RoleNames.GelenTalepKayit.InRoleCurrent();
@@ -803,7 +804,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GelenTalepOnay(List<int> KTalepGelenTalepIDs, string OnayAciklamasi, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
             var mmMessage = new MmMessage();
             mmMessage.MessageType = Msgtype.Success;

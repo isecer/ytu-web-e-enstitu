@@ -14,6 +14,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -33,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmBasvurular model, string EKD)
         {
             var nowDate = DateTime.Now;
-            string EnstituKod = Management.getSelectedEnstitu(EKD);
+            string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int? KullaniciID = UserIdentity.Current.Id;
             var Yetki = RoleNames.BasvuruSureciKayit.InRoleCurrent() || RoleNames.GelenBasvurularKayit.InRoleCurrent();
 
@@ -104,7 +105,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!KullaniciID.HasValue) KullaniciID = UserIdentity.Current.Id;
 
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var bbModel = new IndexPageInfoDto();
             var BasvuruSurecID = Management.getAktifBasvuruSurecID(_EnstituKod, BasvuruSurecTipi.LisansustuBasvuru);
             bbModel.AktifSurecID = BasvuruSurecID ?? 0;
@@ -122,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var model = new kmBasvuru();
             var _MmMessage = new MmMessage();
-            if (EnstituKod.IsNullOrWhiteSpace()) EnstituKod = Management.getSelectedEnstitu(EKD);
+            if (EnstituKod.IsNullOrWhiteSpace()) EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             model.EnstituKod = EnstituKod;
             var IsGelenBasvuruYetki = RoleNames.GelenBasvurularKayit.InRoleCurrent();
 

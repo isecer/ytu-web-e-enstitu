@@ -6,6 +6,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -188,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 } 
                 db.SaveChanges();
-                Management.Enstitulers = db.Enstitulers.ToList();
+                EnstituBus.Enstitulers = db.Enstitulers.ToList();
                 return RedirectToAction("Index");
             }
             else

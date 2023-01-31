@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -15,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         // GET: RaporlarBelgeTalep
         public ActionResult Index(string EKD)
         {
-            var eKod = Management.getSelectedEnstitu(EKD);
+            var eKod = EnstituBus.GetSelectedEnstitu(EKD);
             var btBaslangicTarihi = db.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderBy(s => s.TalepTarihi).FirstOrDefault();
             var btBitisTarihi = db.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderByDescending(s => s.TalepTarihi).FirstOrDefault();
             var t1 = new List<CmbStringDto>();

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -18,17 +19,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class YGMulakatSureciController : Controller
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        [Authorize(Roles = RoleNames.YGMulakatSureci)]
+        [Authorize(Roles = RoleNames.YgMulakatSureci)]
         public ActionResult Index(string EKD)
         {
             return Index(new fmMulakatSureci() { PageSize = 10 }, EKD);
         }
         [HttpPost]
-        [Authorize(Roles = RoleNames.YGMulakatSureci)]
+        [Authorize(Roles = RoleNames.YgMulakatSureci)]
         public ActionResult Index(fmMulakatSureci model, string EKD)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
             var bbModel = new MulakatBilgiModel();
             var BasvuruSurecID = Management.getAktifMulakatSurecID(_EnstituKod, BasvuruSurecTipi.YatayGecisBasvuru, null, true);
@@ -138,11 +139,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.YGMulakatKayıt)]
+        [Authorize(Roles = RoleNames.YgMulakatKayıt)]
         public ActionResult MulakatKayit(int? id, string EKD, string dlgid)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -225,11 +226,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        [Authorize(Roles = RoleNames.YGMulakatKayıt)]
+        [Authorize(Roles = RoleNames.YgMulakatKayıt)]
         public ActionResult MulakatKayit(kmMulakat kModel, string EKD, string dlgid)
         {
             
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
@@ -802,7 +803,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = RoleNames.YGBasvuruSureciKayit)]
+        [Authorize(Roles = RoleNames.YgBasvuruSureciKayit)]
         public ActionResult AlanDegistirmeIslemi(string UniqueID, bool IsAlanIciOrDisi)
         {
             var mmMessage = new MmMessage();
@@ -866,10 +867,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.YGMulakatKayıt)]
+        [Authorize(Roles = RoleNames.YgMulakatKayıt)]
         public ActionResult GirisSinavNotuKaydet(krMulakatSonucPostModel mdl, string EKD)
         {
-            var _EnstituKod = Management.getSelectedEnstitu(EKD);
+            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var mmMessage = new MmMessage();
             mmMessage.IsSuccess = true;
 
@@ -1111,7 +1112,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView, ColorSet = Json(colorS.Select(s => new { s.Key, s.Value })) }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = RoleNames.YGMulakatSil)]
+        [Authorize(Roles = RoleNames.YgMulakatSil)]
         public ActionResult Sil(int id)
         {
 

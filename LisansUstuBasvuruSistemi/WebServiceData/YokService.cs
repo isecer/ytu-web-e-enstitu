@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Web; 
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using  LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
@@ -18,8 +19,8 @@ namespace LisansUstuBasvuruSistemi.WebServiceData
             var model = new YokStudentControl();
             try
             {
-                var KullaniciAdi = SistemAyar.getAyar(SistemAyar.AyarYOKWSKullaniciAdi);
-                var Sifre = SistemAyar.getAyar(SistemAyar.AyarYOKWSKullaniciSifre);
+                var KullaniciAdi = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciAdi);
+                var Sifre = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciSifre);
                 System.Net.ServicePointManager.Expect100Continue = false;
 
                 BasicHttpBinding basicAuthBinding = new BasicHttpBinding(BasicHttpSecurityMode.TransportCredentialOnly);
