@@ -130,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             KullaniciID = KullaniciID ?? new List<int>();
             db.Kullanicilars.Where(p => KullaniciID.Contains(p.KullaniciID)).ToList().ForEach((k) => { eList.Add(new CmbIntDto { Value = k.KullaniciID, Caption = k.EMail }); });
 
-            ViewBag.MailSablonlariID = new SelectList(Management.cmbMailSablonlari(_EnstituKod, true, false), "Value", "Caption");
+            ViewBag.MailSablonlariID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonlari(_EnstituKod, true, false), "Value", "Caption");
             ViewBag.EmailList = eList;
             return View(model);
         }
@@ -276,7 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.Kullanicilar = kul;
             ViewBag.Alici = Alici;
-            ViewBag.MailSablonlariID = new SelectList(Management.cmbMailSablonlari(_EnstituKod, true, false), "Value", "Caption");
+            ViewBag.MailSablonlariID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonlari(_EnstituKod, true, false), "Value", "Caption");
             return View(kModel);
         }
 
@@ -313,7 +313,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var dataqx = qx.Count();
             var jsonWal = new { Toplam = toplamCount, Secilen = dataqx };
-            return jsonWal.toJsonResult();
+            return jsonWal.ToJsonResult();
 
         }
         public ActionResult TekrarGonder(int id)
@@ -330,7 +330,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             MailManager.sendMail(gm.GonderilenMailID, gm.Konu, gm.AciklamaHtml, EMailList, attach);
-            return true.toJsonResult();
+            return true.ToJsonResult();
         }
 
 

@@ -14,17 +14,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public string CardNumber { get; set; }
         public string ExpireMonth { get; set; }
         public string ExpireYear { get; set; }
-        public string CV2 { get; set; }
-        public int? MaximumTipID { get; set; }
+        public string Cv2 { get; set; }
+        public int? MaximumTipId { get; set; }
         public int? Taksit { get; set; }
     }
     public class ThreeDHelper
     {
         public static string PrepareForm(string actionUrl, NameValueCollection collection)
         {
-            string formID = "PaymentForm";
+            const string formId = "PaymentForm";
             StringBuilder strForm = new StringBuilder();
-            strForm.Append("<form id=\"" + formID + "\" name=\"" + formID + "\" action=\"" + actionUrl + "\" method=\"POST\">");
+            strForm.Append("<form id=\"" + formId + "\" name=\"" + formId + "\" action=\"" + actionUrl + "\" method=\"POST\">");
 
             foreach (string key in collection)
             {
@@ -34,14 +34,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             strForm.Append("</form>");
             StringBuilder strScript = new StringBuilder();
             strScript.Append("<script>");
-            strScript.Append("var v" + formID + " = document." + formID + ";");
-            strScript.Append("v" + formID + ".submit();");
+            strScript.Append("var v" + formId + " = document." + formId + ";");
+            strScript.Append("v" + formId + ".submit();");
             strScript.Append("</script>");
 
             return strForm.ToString() + strScript.ToString();
         }
 
-        public static string ConvertSHA1(string text)
+        public static string ConvertSha1(string text)
         {
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] inputbytes = sha.ComputeHash(Encoding.UTF8.GetBytes(text));
@@ -49,30 +49,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return Convert.ToBase64String(inputbytes);
         }
 
-        public static string CreateRandomValue(int Length, bool CharactersB, bool CharactersS, bool Numbers, bool SpecialCharacters)
+        public static string CreateRandomValue(int length, bool charactersB, bool charactersS, bool isNumbers, bool specialCharacters)
         {
-            string characters_b = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string characters_s = "abcdefghijklmnopqrstuvwxyz";
-            string numbers = "0123456789";
-            string special_characters = "-_*+/";
-            string allowedChars = String.Empty;
+            var characters_b = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var characters_s = "abcdefghijklmnopqrstuvwxyz";
+            var numbers = "0123456789";
+            const string special_characters = "-_*+/";
+            var allowedChars = String.Empty;
 
-            if (CharactersB)
+            if (charactersB)
                 allowedChars += characters_b;
 
-            if (CharactersS)
+            if (charactersS)
                 allowedChars += characters_s;
 
-            if (Numbers)
+            if (isNumbers)
                 allowedChars += numbers;
 
-            if (SpecialCharacters)
+            if (specialCharacters)
                 allowedChars += special_characters;
 
-            char[] chars = new char[Length];
-            Random rd = new Random();
+            var chars = new char[length];
+            var rd = new Random();
 
-            for (int i = 0; i < Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
             }
@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return new string(chars);
         }
 
-        public static NameValueCollection valueCollection(CreditCardModel cardModel = null, string SiparisNo = "", string DefaultUrl = "", string Amount = "")
+        public static NameValueCollection ValueCollection(CreditCardModel cardModel = null, string siparisNo = "", string defaultUrl = "", string amount = "")
         {
             if (cardModel == null)
                 cardModel = new CreditCardModel
@@ -88,51 +88,52 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                     CardNumber = "4546711234567894",
                     ExpireMonth = "12",
                     ExpireYear = "18",
-                    CV2 = "000",
+                    Cv2 = "000",
                     HolderName = "Test"
 
                 };
 
-            string processType = "Auth";//İşlem tipi
-            string clientId = "190300000";//Mağaza numarası
-            string storeKey = "123456";//Mağaza anahtarı
-            string storeType = "3d_pay_hosting";//SMS onaylı ödeme modeli 3DPay olarak adlandırılıyor.
-            string successUrl = DefaultUrl + "OnlineOdeme/Success";//Başarılı Url
-            string unsuccessUrl = DefaultUrl + "OnlineOdeme/UnSuccess";//Hata Url
-            string randomKey = ThreeDHelper.CreateRandomValue(10, false, false, true, false);
-            string installment = "";//Taksit
-            string orderNumber = SiparisNo ?? ThreeDHelper.CreateRandomValue(8, false, false, true, false);//Sipariş numarası
-            string currencyCode = "949"; //TL ISO code | EURO "978" | Dolar "840"
-            string languageCode = "tr";// veya "en"
-            string cardType = "1"; //Kart Ailesi Visa 1 | MasterCard 2 | Amex 3
-            string orderAmount = Amount;//Decimal seperator nokta olmalı!
+            var processType = "Auth";//İşlem tipi
+            var clientId = "190300000";//Mağaza numarası
+            var storeKey = "123456";//Mağaza anahtarı
+            var storeType = "3d_pay_hosting";//SMS onaylı ödeme modeli 3DPay olarak adlandırılıyor.
+            var successUrl = defaultUrl + "OnlineOdeme/Success";//Başarılı Url
+            var unsuccessUrl = defaultUrl + "OnlineOdeme/UnSuccess";//Hata Url
+            var randomKey = ThreeDHelper.CreateRandomValue(10, false, false, true, false);
+            var installment = "";//Taksit
+            var orderNumber = siparisNo ?? ThreeDHelper.CreateRandomValue(8, false, false, true, false);//Sipariş numarası
+            var currencyCode = "949"; //TL ISO code | EURO "978" | Dolar "840"
+            var languageCode = "tr";// veya "en"
+            var cardType = "1"; //Kart Ailesi Visa 1 | MasterCard 2 | Amex 3
+            var orderAmount = amount;//Decimal seperator nokta olmalı!
 
             //Güvenlik amaçlı olarak birleştirip şifreliyoruz. Banka decode edip bilgilerin doğruluğunu kontrol ediyor. Alanların sırasına dikkat etmeliyiz.
-            string hashFormat = clientId + orderNumber + orderAmount + successUrl + unsuccessUrl + processType + installment + randomKey + storeKey;
-            var paymentCollection = new NameValueCollection();
-
-            //Mağaza bilgileri
-            paymentCollection.Add("hash", ThreeDHelper.ConvertSHA1(hashFormat));
-            paymentCollection.Add("clientid", clientId);
-            paymentCollection.Add("storetype", storeType);
-            paymentCollection.Add("rnd", randomKey);
-            paymentCollection.Add("okUrl", successUrl);
-            paymentCollection.Add("failUrl", unsuccessUrl);
-            paymentCollection.Add("islemtipi", processType);
-            paymentCollection.Add("refreshtime", "0");
-            //Ödeme bilgileri
-            paymentCollection.Add("currency", currencyCode);
-            paymentCollection.Add("lang", languageCode);
-            paymentCollection.Add("amount", orderAmount);
-            paymentCollection.Add("oid", orderNumber);
-            //Kredi kart bilgileri
-            paymentCollection.Add("pan", cardModel.CardNumber);
-            paymentCollection.Add("cardHolderName", cardModel.HolderName);
-            paymentCollection.Add("cv2", cardModel.CV2);
-            paymentCollection.Add("Ecom_Payment_Card_ExpDate_Year", cardModel.ExpireYear);
-            paymentCollection.Add("Ecom_Payment_Card_ExpDate_Month", cardModel.ExpireMonth);
-            paymentCollection.Add("taksit", installment);
-            paymentCollection.Add("cartType", cardType);
+            var hashFormat = clientId + orderNumber + orderAmount + successUrl + unsuccessUrl + processType + installment + randomKey + storeKey;
+            var paymentCollection = new NameValueCollection
+            {
+                //Mağaza bilgileri
+                { "hash", ThreeDHelper.ConvertSha1(hashFormat) },
+                { "clientid", clientId },
+                { "storetype", storeType },
+                { "rnd", randomKey },
+                { "okUrl", successUrl },
+                { "failUrl", unsuccessUrl },
+                { "islemtipi", processType },
+                { "refreshtime", "0" },
+                //Ödeme bilgileri
+                { "currency", currencyCode },
+                { "lang", languageCode },
+                { "amount", orderAmount },
+                { "oid", orderNumber },
+                //Kredi kart bilgileri
+                { "pan", cardModel.CardNumber },
+                { "cardHolderName", cardModel.HolderName },
+                { "cv2", cardModel.Cv2 },
+                { "Ecom_Payment_Card_ExpDate_Year", cardModel.ExpireYear },
+                { "Ecom_Payment_Card_ExpDate_Month", cardModel.ExpireMonth },
+                { "taksit", installment },
+                { "cartType", cardType }
+            };
 
             return paymentCollection;
         }

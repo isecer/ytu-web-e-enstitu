@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -128,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = PS.PageIndex;
 
             var IndexModel = new MIndexBilgi();
-            var btDurulari = Management.TalepDurumList();
+            var btDurulari = TaleplerBus.GetTalepDurumList();
             foreach (var item in btDurulari)
             {
                 var tipCount = q.Where(p => p.TalepDurumID == item.TalepDurumID).Count();
@@ -223,14 +224,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TalepListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
-            ViewBag.TalepSurecID = new SelectList(Management.getTalepSurecleri(_EnstituKod ,true), "Value", "Caption", model.TalepSurecID);
+            ViewBag.TalepSurecID = new SelectList(TaleplerBus.GetCmbTalepSurecleri(_EnstituKod ,true), "Value", "Caption", model.TalepSurecID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true), "Value", "Caption", model.KullaniciTipID);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.TalepDurumID = new SelectList(Management.cmbTalepDurumlari( true), "Value", "Caption", model.TalepDurumID);
-            ViewBag.TalepTipID = new SelectList(Management.cmbTalepTipleri( true), "Value", "Caption", model.TalepTipID);
-            ViewBag.KTalepDurumID = new SelectList(Management.cmbTalepDurumlari(false), "Value", "Caption");
-            ViewBag.IsDersYukuTamamlandi = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.IsDersYukuTamamlandi);
-            ViewBag.IsTezOnerisiYapildi = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.IsTezOnerisiYapildi);
+            ViewBag.TalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari( true), "Value", "Caption", model.TalepDurumID);
+            ViewBag.TalepTipID = new SelectList(TaleplerBus.GetCmbTalepTipleri(true), "Value", "Caption", model.TalepTipID);
+            ViewBag.KTalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari(false), "Value", "Caption");
+            ViewBag.IsDersYukuTamamlandi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsDersYukuTamamlandi);
+            ViewBag.IsTezOnerisiYapildi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsTezOnerisiYapildi);
             ViewBag.IndexModel = IndexModel;
             return View(model);
         }

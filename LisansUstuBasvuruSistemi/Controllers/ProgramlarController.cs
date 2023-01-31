@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -93,13 +94,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AlesTipID = new SelectList(Management.cmbGetAktifAlesTipleri(true), "Value", "Caption", model.AlesTipID);
             var KullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
             ViewBag.KullaniciTipID = new SelectList(KullaniciTipList, "Value", "Caption", model.KullaniciTipID);
-            ViewBag.Ucretli = new SelectList(Management.cmbVarYokData(true), "Value", "Caption", model.Ucretli);
+            ViewBag.Ucretli = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.Ucretli);
             var AlesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { }, new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
             ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(AlesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
             ViewBag.LYLHerhangiBirindeGecenAlanIci = new SelectList(Management.cmbAlanEslesmeData(true), "Value", "Caption", model.LYLHerhangiBirindeGecenAlanIci);
-            ViewBag.ProgramSecimiEkBilgi = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.ProgramSecimiEkBilgi);
-            ViewBag.IsAlandisiBolumKisitlamasi = new SelectList(Management.cmbVarYokData(true), "Value", "Caption", model.IsAlandisiBolumKisitlamasi);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.ProgramSecimiEkBilgi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.ProgramSecimiEkBilgi);
+            ViewBag.IsAlandisiBolumKisitlamasi = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAlandisiBolumKisitlamasi);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(string id, string EKD)

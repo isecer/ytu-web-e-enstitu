@@ -10,7 +10,96 @@ using Newtonsoft.Json;
 namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
-    { 
+    {
+        public static string ToJsonText(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj); ;
+        }
+        public static string toStrObj(this object obj)
+        {
+            if (obj != null) return Convert.ToString(obj);
+            else return (string)null;
+        }
+
+        public static string toStrObjEmptString(this object obj)
+        {
+            if (obj != null)
+            {
+                var Str = Convert.ToString(obj);
+                return Str.Trim();
+            }
+            else return "";
+        }
+        public static decimal? ToMoney(this string moneyString)
+        {
+            var groupSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator;
+            var decimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+            return ToMoney(moneyString, decimalSeparator, groupSeparator);
+        } 
+        public static decimal? ToMoney(this string moneyString, string decimalSeparator, string groupSeparator)
+        {
+            char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var moneyStr = string.Join("",
+                moneyString
+                    .ToCharArray()
+                    .Where(p => (p.ToString() == groupSeparator || p.ToString() == decimalSeparator || numbers.Contains(p))).ToArray()
+            );
+            decimal def = 0;
+            if (decimal.TryParse(moneyStr, out def)) return def;
+            return null;
+        }
+        public static decimal? toDecimalObj(this object obj)
+        {
+            if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
+            else return (decimal?)null;
+        }
+        public static bool? toIntToBooleanObj(this object obj)
+        {
+            var IntValue = obj.toIntObj();
+            if (obj != null && IntValue.HasValue)
+            {
+
+                if (IntValue == 1) return true;
+                else if (IntValue == 0) return false;
+                else return (bool?)null;
+            }
+            else return (bool?)null;
+        }
+        public static bool? toBooleanObj(this object obj)
+        {
+            bool dgr;
+            if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
+            else return (bool?)null;
+        }
+        public static double? toDoubleObj(this object obj)
+        {
+            if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
+            else return (double?)null;
+        }
+        public static int? toIntObj(this object obj)
+        {
+            if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
+            else return (int?)null;
+        }
+        public static int ToEmptyStringToZero(this object obj)
+        {
+            int retval = 0;
+            if (obj != null && obj.ToString().Trim() != "") retval = obj.ToString().ToInt().Value;
+            return retval;
+        }
+        public static int? toNullIntZero(this object obj)
+        {
+            int? retval = null;
+            if (obj != null && obj.ToString() != "0") retval = obj.ToString().ToInt();
+            return retval;
+        }
+        public static string toEmptyStringZero(this object obj)
+        {
+            string retval = "";
+            if (obj != null && obj.ToString() != "0") retval = obj.ToString();
+            return retval;
+        }
+
         public static string ToFormatDate(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
@@ -38,10 +127,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return datetime == DateTime.MinValue ? "" : datetime.ToString("HH.mm");
         }
-        public static string ToJsonText(this object obj)
-        {
-            return JsonConvert.SerializeObject(obj); ;
-        }
+        
         public static string ToBelirtilmemis(this int? sayi)
         {
             return !sayi.HasValue ? "Belirtilmemiş" : sayi.Value.ToString();

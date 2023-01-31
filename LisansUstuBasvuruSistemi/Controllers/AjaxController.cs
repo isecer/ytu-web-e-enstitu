@@ -23,6 +23,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -178,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.Message = Hata;
             if (MmMessage.IsSuccess == false)
             {
-                var newCaptcha = Management.RenderPartialView("Ajax", "GetCaptcha", new UrlInfoModel());
+                var newCaptcha = ViewRenderHelper.RenderPartialView("Ajax", "GetCaptcha", new UrlInfoModel());
                 MmMessage.NewSrc = newCaptcha;
 
             }
@@ -187,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, "", RememberMe.Value);
                 UserBus.SetLastLogon();
             }
-            return MmMessage.toJsonResult();
+            return MmMessage.ToJsonResult();
         }
         public ActionResult SignOut(string ReturnUrl)
         {
@@ -205,7 +206,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (ReturnUrl.IsNullOrWhiteSpace()) MmMessage.ReturnUrl = Url.Action("Index", "Home");
             else MmMessage.ReturnUrl = ReturnUrl;
             MmMessage.IsSuccess = true;
-            return MmMessage.toJsonResult();
+            return MmMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult getImageUpload(int KullaniciID)
@@ -248,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
                     var eskiResim = kul.ResimAdi;
-                    kul.ResimAdi = YeniResim = Management.ResimKaydet(KProfilResmi);
+                    kul.ResimAdi = YeniResim = KullanicilarBus.ResimKaydet(KProfilResmi);
                     kul.IslemYapanID = UserIdentity.Current.Id;
                     kul.IslemYapanIP = UserIdentity.Ip;
                     kul.IslemTarihi = DateTime.Now;
@@ -280,7 +281,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
             }
-            return new { mMessage = mMessage, ResimAdi = YeniResim.ToKullaniciResim(), AnaResmiDegistir = AnaResmiDegistir }.toJsonResult();
+            return new { mMessage = mMessage, ResimAdi = YeniResim.ToKullaniciResim(), AnaResmiDegistir = AnaResmiDegistir }.ToJsonResult();
         }
         [Authorize]
         public ActionResult YetkiYenile(string ReturnUrl)
@@ -298,7 +299,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (ReturnUrl.IsNullOrWhiteSpace()) MmMessage.ReturnUrl = Url.Action("Index", "Home");
             else MmMessage.ReturnUrl = ReturnUrl;
             MmMessage.IsSuccess = true;
-            return MmMessage.toJsonResult();
+            return MmMessage.ToJsonResult();
         }
         [HttpGet]
         [Authorize]
@@ -408,7 +409,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mdl.SelectedTabIndex = tbInx;
-            var page = Management.RenderPartialView("Ajax", "GetBasvuruDetaySablon", mdl);
+            var page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruDetaySablon", mdl);
             return Json(new { page = page, IsAuthenticated = UserIdentity.Current.IsAuthenticated }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -487,7 +488,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.Adres = Basvuru.Adres;
                 mdl.Adres2 = Basvuru.Adres2;
                 #endregion
-                page = Management.RenderPartialView("Ajax", "GetBasvuruKimlikBilgisi", mdl);
+                page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruKimlikBilgisi", mdl);
             }
             else if (tbInx == 2)
             {
@@ -549,7 +550,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       ProgramAdi = pr.ProgramAdi,
                                   }).ToList();
                 #endregion
-                page = Management.RenderPartialView("Ajax", "GetBasvuruOgrenimTercihBilgisi", mdl);
+                page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruOgrenimTercihBilgisi", mdl);
             }
             else if (tbInx == 3)
             {
@@ -594,7 +595,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  }).OrderBy(o => o.SinavTipGrupID).ToList();
 
                 #endregion
-                page = Management.RenderPartialView("Ajax", "GetBasvuruSinavBilgileri", mdl);
+                page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruSinavBilgileri", mdl);
             }
             else if (tbInx == 4)
             {
@@ -1047,7 +1048,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
                 #endregion
-                page = Management.RenderPartialView("Ajax", "GetBasvuruBelgeYukleme", mdl);
+                page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruBelgeYukleme", mdl);
             }
 
 
@@ -1227,7 +1228,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             else mMessage.Title = "Belge yükleme işlemi başarısız";
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1260,7 +1261,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add(VarolanBelge.BelgeAdi + " isimli " + BasvuruBelgeTipAdi + " dosyası " + (IsOnaylandi ? "onaylandı." : "onayı kaldırıldı"));
             }
 
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1409,10 +1410,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                             _ea = "http://" + WurlAddr.First();
                         mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                        var HCB = Management.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+                        var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
                         mmmC.Content = HCB;
 
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var snded = MailManager.sendMail(mailBilgi.EnstituKod, "Lisansüstü " + (BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru ? "" : "yatay geçiş ") + "başvurusu kayıt olunmak istenen tercih Hk.", htmlMail, Basvuru.EMail, null);
                         if (snded)
                         {
@@ -1439,7 +1440,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1558,10 +1559,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                             _ea = "http://" + WurlAddr.First();
                         mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                        var HCB = Management.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+                        var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
                         mmmC.Content = HCB;
 
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var SendEmail = Basvuru.EMail;
                         // SendEmail = "irfansecer@gmail.com";
                         var snded = MailManager.sendMail(mailBilgi.EnstituKod, "Lisansüstü kayıt olunmak istenen tercih Hk.", htmlMail, SendEmail, null);
@@ -1591,7 +1592,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             mMessage.MessageType = Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1632,10 +1633,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.IsDelete = IsDelete;
             model.SMezuniyetYayinKontrolDurum = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(false, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
-            model.SEYKYaGonderildi = new SelectList(Management.cmbJOEykGonderimDurumData(true, OnayTarihi), "Value", "Caption", model.EYKYaGonderildi);
-            model.SEYKDaOnaylandi = new SelectList(Management.cmbJOEykOnayDurumData(true), "Value", "Caption", model.EYKDaOnaylandi);
+            model.SEYKYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, OnayTarihi), "Value", "Caption", model.EYKYaGonderildi);
+            model.SEYKDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", model.EYKDaOnaylandi);
 
-            model.SIsAsilOryedek = new SelectList(Management.cmbJOAsilYedekDurumData(true), "Value", "Caption");
+            model.SIsAsilOryedek = new SelectList(ComboData.GetCmbAsilYedekDurumData(true), "Value", "Caption");
 
 
             return View(model);
@@ -1764,7 +1765,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _MmMessage.IsSuccess = true;
                 }
             }
-            return _MmMessage.toJsonResult();
+            return _MmMessage.ToJsonResult();
         }
 
         public ActionResult SifreResetle(string MailAddress)
@@ -1814,10 +1815,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mtc.AciklamaBasligi = "Şifre Sıfırlama İşlemi";
                         mtc.AciklamaDetayi = "Şifrenizi sıfırlamak için aşağıda bulunan linke tıklayınız ve açılan sayfa da yeni şifrenizi tanımlayınız.";
                         mtc.Detaylar = mRowModel;
-                        var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                        var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                         mmmC.Content = tavleContent;
 
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var User = mailBilgi.SmtpKullaniciAdi;
                         var EMailList = new List<MailSendList>();
                         EMailList.Add(new MailSendList { EMail = kul.EMail, ToOrBcc = true });
@@ -1841,7 +1842,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            return MmMessage.toJsonResult();
+            return MmMessage.ToJsonResult();
         }
 
         public ActionResult pTipKontrol(int id)
@@ -1854,14 +1855,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 s.KurumIci,
                 s.Yerli
             }).First();
-            return pt.toJsonResult();
+            return pt.ToJsonResult();
         }
         public ActionResult getOts(string EnstituKod, bool bosSecimVar = true, int? HaricOgreniTipKod = null)
         {
             var cmbmld = new List<CmbIntDto>();
             cmbmld = Management.cmbAktifOgrenimTipleri(EnstituKod, bosSecimVar, true, HaricOgreniTipKod);
 
-            return cmbmld.toJsonResult();
+            return cmbmld.ToJsonResult();
         }
         public ActionResult getBolumler(int BasvuruSurecID, string otKod, int KTipID)
         {
@@ -1878,12 +1879,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var _ID = otKod.ToInt().Value;
                 _YLShow = db.OgrenimTipleris.Where(p => p.EnstituKod == bs.EnstituKod && p.OgrenimTipKod == _ID).First().YLEgitimBilgisiIste;
             }
-            return new { IsSubOT = IsSubOT, data = cmbmld.Select(s => new { s.Value, s.Caption }), YLShow = _YLShow.ToString().ToLower() }.toJsonResult();
+            return new { IsSubOT = IsSubOT, data = cmbmld.Select(s => new { s.Value, s.Caption }), YLShow = _YLShow.ToString().ToLower() }.ToJsonResult();
         }
         public ActionResult getProgramlar(int bolID, int otID, int BasvuruSurecID, int KullaniciTipID)
         {
             var bolm = Management.cmbGetAktifProgramlarX(bolID, otID, BasvuruSurecID, KullaniciTipID);
-            return bolm.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
 
         public ActionResult OgrenimBilgisiKontrolEt(kmBasvuru kModel, int BasvuruID)
@@ -1947,7 +1948,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             _MmMessage.IsSuccess = _MmMessage.Messages.Count == 0;
             _MmMessage.Title = "Ekleme işmini yapabilmek aşağıdaki uyarıları incleyiniz!";
             _MmMessage.MessageType = _MmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            return _MmMessage.toJsonResult();
+            return _MmMessage.ToJsonResult();
         }
 
         public ActionResult getBolumProgramList(string Kod, string Tip)
@@ -1955,12 +1956,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (Tip == "bolum")
             {
                 var lst = Management.cmbGetYetkiliAnabilimDallari(true, Kod);
-                return lst.Select(s => new { s.Value, s.Caption }).toJsonResult();
+                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
             }
             else if (Tip == "program")
             {
                 var lst = Management.cmbGetAktifProgramlar(true, Kod.ToInt().Value);
-                return lst.Select(s => new { s.Value, s.Caption }).toJsonResult();
+                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
             }
             return null;
 
@@ -1971,12 +1972,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (Tip == "bolum")
             {
                 var lst = Management.cmbGetYetkiliProgramAnabilimDallari(true, EnstituKod);
-                return lst.Select(s => new { s.Value, s.Caption }).toJsonResult();
+                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
             }
             else if (Tip == "program")
             {
                 var lstStr = Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, EnstituKod, BolumKod, true);
-                return lstStr.Select(s => new { s.Value, s.Caption }).toJsonResult();
+                return lstStr.Select(s => new { s.Value, s.Caption }).ToJsonResult();
             }
             else
             {
@@ -2221,7 +2222,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
 
-                    if (model.Detay.Count > 0) ekAciklama = Management.RenderPartialView("Ajax", "getEkAciklamaContent", model);
+                    if (model.Detay.Count > 0) ekAciklama = ViewRenderHelper.RenderPartialView("Ajax", "getEkAciklamaContent", model);
                 }
                 else
                 {
@@ -2256,7 +2257,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.AnketTipID = 1;
                         model.BasvuruSurecID = kModel.BasvuruSurecID;
                         model.AnketID = bSurec.AnketID.Value;
-                        model.JsonStringData = anketSorulari.toJsonText();
+                        model.JsonStringData = anketSorulari.ToJsonText();
                         foreach (var item in anketSorulari)
                         {
                             model.AnketCevapModel.Add(new AnketCevapDto
@@ -2274,11 +2275,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             });
                         }
 
-                        AnketGiris = Management.RenderPartialView("Ajax", "getAnket", model);
+                        AnketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
                     }
                 }
             }
-            return new { sbmtForm = kModel.sbmtForm, _MmMessage = _MmMessage, EkAciklamalar = ekAciklama, AnketGiris = AnketGiris, ShowEgitimDili = _ShowEgitimDiliIsle, kModel.YLDurum }.toJsonResult();
+            return new { sbmtForm = kModel.sbmtForm, _MmMessage = _MmMessage, EkAciklamalar = ekAciklama, AnketGiris = AnketGiris, ShowEgitimDili = _ShowEgitimDiliIsle, kModel.YLDurum }.ToJsonResult();
         }
 
 
@@ -2308,7 +2309,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             _MmMessage.IsSuccess = _MmMessage.Messages.Count == 0;
             _MmMessage.MessageType = _MmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            return new { sbmtForm = kModel.sbmtForm, _MmMessage = _MmMessage, EkAciklamalar = "" }.toJsonResult();
+            return new { sbmtForm = kModel.sbmtForm, _MmMessage = _MmMessage, EkAciklamalar = "" }.ToJsonResult();
         }
 
 
@@ -2334,12 +2335,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            return new { ResimAdi = folname + "/" + user.ResimAdi }.toJsonResult();
+            return new { ResimAdi = folname + "/" + user.ResimAdi }.ToJsonResult();
         }
         public ActionResult getProgramlarEkod(string EnstituKod)
         {
             var bolm = Management.cmbGetAktifProgramlar(EnstituKod, true);
-            return bolm.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult getMessage(MmMessage model)
         {
@@ -2602,7 +2603,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnketSoruSecenekID_" + item });
 
             }
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
 
         }
 
@@ -2621,21 +2622,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               join qi in qIngilizces on s.Index equals qi.Index
                               select new CmbMultyTypeDto { Value = s.s, ValueB = qi.s, ValueS2 = qp.s }).ToList();
             var data = Management.cmbGetdAktifSinavlar(qtercihler, model.BasvuruSurecID, model.SinavTipGrupID, true);
-            return data.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return data.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         [Authorize]
         public ActionResult getSalonlar(string EnstituKod, int SRTalepTipID, int? TalepYapanID = null, int? id = null)
         {
-            var cmbmld = Management.cmbSalonlar(EnstituKod, SRTalepTipID, true);
+            var cmbmld = SrTalepleriBus.GetCmbSalonlar(EnstituKod, SRTalepTipID, true);
             var ttip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == SRTalepTipID).First();
 
             var kotaBilgi = new CmbMultyTypeDto();
             kotaBilgi.ValueB = true;
             if (TalepYapanID.HasValue)
             {
-                kotaBilgi = Management.SRkotaKontrol(TalepYapanID.Value, SRTalepTipID, id);
+                kotaBilgi = SrTalepleriBus.GetSrKotaBilgi(TalepYapanID.Value, SRTalepTipID, id);
             }
-            return new { IsTezSinavi = ttip.IsTezSinavi, kotaBilgi = kotaBilgi, data = cmbmld.Select(s => new { s.Value, s.Caption }) }.toJsonResult();
+            return new { IsTezSinavi = ttip.IsTezSinavi, kotaBilgi = kotaBilgi, data = cmbmld.Select(s => new { s.Value, s.Caption }) }.ToJsonResult();
         }
         [Authorize]
         public ActionResult getGunler(int SRSalonID, int SRTalepTipID, DateTime Tarih, DateTime? Tarih2 = null, int? SROzelTanimID = null)
@@ -2703,10 +2704,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var RwId = new Guid(MzRowID);
                 MinTarih = db.MezuniyetBasvurularis.Where(p => p.RowID == RwId).Select(s => s.EYKTarihi).FirstOrDefault();
             }
-            var data = Management.getSalonBosSaatler(SRSalonID, SRTalepTipID, Tarih, SRTalepID, null, MinTarih);
+            var data = SrTalepleriBus.GetSalonBosSaatler(SRSalonID, SRTalepTipID, Tarih, SRTalepID, null, MinTarih);
             data.IsPopupFrame = IsPopupFrame;
-            var HCB = Management.RenderPartialView("Ajax", "getSaatlerView", data);
-            return new { Deger = HCB }.toJsonResult();
+            var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getSaatlerView", data);
+            return new { Deger = HCB }.ToJsonResult();
         }
         [Authorize]
         public ActionResult getSaatlerView(SRSalonSaatlerModel model)
@@ -2742,7 +2743,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess = mmMessage.Messages.Count == 0;
                 mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-                strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+                strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             }
             else
             {
@@ -2797,7 +2798,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else model.BasvuruRowID = null;
             }
 
-            ViewBag.MailSablonlariID = new SelectList(Management.cmbMailSablonlari(model.EnstituKod, true, false), "Value", "Caption");
+            ViewBag.MailSablonlariID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonlari(model.EnstituKod, true, false), "Value", "Caption");
 
             ViewBag.MmMessage = new MmMessage();
             return View(model);
@@ -3090,7 +3091,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Warning;
             }
 
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             //return Content(strView, MediaTypeNames.Text.Html);
             return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet);
             //return new JsonResult { Data = new { IsSuccess = mmMessage.IsSuccess, Message = strView } };
@@ -3127,10 +3128,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     lst.Add(new mailListModel { id = term, AdSoyad = term, text = term, Images = "".ToKullaniciResim() });
                 }
-                return lst.toJsonResult();
+                return lst.ToJsonResult();
             }
 
-            else return kul.toJsonResult();
+            else return kul.ToJsonResult();
         }
 
         [Authorize]
@@ -3151,7 +3152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                }).Take(60).ToList();
 
 
-            return Programlars.toJsonResult();
+            return Programlars.ToJsonResult();
         }
 
         [Authorize]
@@ -3174,7 +3175,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var KulID = UserIdentity.Current.Id;
             var Ots = Management.cmbGetAktifOgrenimTipleri(BasvuruSurecID, false);
-            return Ots.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return Ots.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         [Authorize]
         public ActionResult getProgramlarBS(int BasvuruSurecID, List<int> OgrenimTipKods, bool IsBolumOrOgrenci, bool IsSonucOrMulakat)
@@ -3183,14 +3184,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             OgrenimTipKods = OgrenimTipKods ?? new List<int>();
             OgrenimTipKods = OgrenimTipKods.Where(p => p > 0).ToList();
             var progs = Management.CmbGetBSTumProgramlar(BasvuruSurecID, IsBolumOrOgrenci, OgrenimTipKods, IsSonucOrMulakat);
-            return progs.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return progs.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
 
         [AllowAnonymous]
         public ActionResult getMsjKategoris(string EnstituKod)
         {
             var Ots = MesajlarBus.cmbGetMesajKategorileri(EnstituKod, true, true);
-            return Ots.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return Ots.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult getKtNot(int MesajKategoriID)
         {
@@ -3270,9 +3271,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             foreach (var item in qDosyalar)
             {
-                if (!Management.FExtensions().Contains(item.FExtension))
+                if (!FileExtension.FExtensions().Contains(item.FExtension))
                 {
-                    mmMessage.Messages.Add(item.Dosya.FileName + " dosyası " + string.Join(" , ", Management.FExtensions()).Replace(".", "") + " uzantılarından farklı bir dosya olamaz.");
+                    mmMessage.Messages.Add(item.Dosya.FileName + " dosyası " + string.Join(" , ", FileExtension.FExtensions()).Replace(".", "") + " uzantılarından farklı bir dosya olamaz.");
                 }
             }
 
@@ -3413,7 +3414,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = false;
             }
 
-            //var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            //var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             //return Content(strView, MediaTypeNames.Text.Html);
             return Json(new { success = mmMessage.IsSuccess, responseText = mmMessage.IsSuccess ? "Mesaj gönderme işlemi başarılı!" : "Mesaj gönderilirken bir hata oluştu!<br/>" + string.Join("<br/>", mmMessage.Messages) }, JsonRequestBehavior.AllowGet);
             //return new JsonResult { Data = new { IsSuccess = mmMessage.IsSuccess, Message = strView } };
@@ -3427,8 +3428,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new ObsOgrenciSorgulaModel();
             if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc);
             model.Tc = tc;
-            var view = Management.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
-            return view.toJsonResult();
+            var view = ViewRenderHelper.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
+            return view.ToJsonResult();
         }
 
 
@@ -3463,7 +3464,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Images = s.Images.ToKullaniciResim()
             }).ToList();
 
-            return Kul2.toJsonResult();
+            return Kul2.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetYTUOgretimEleman(string term)
@@ -3482,7 +3483,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 EMail = s.KURUMMAIL
             }).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
-            return Kul2.toJsonResult();
+            return Kul2.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetYTULUBOgretimEleman(string term)
@@ -3498,7 +3499,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }).ToList();
 
-            return Kul2.toJsonResult();
+            return Kul2.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetDxReport(int? RaporTipi, bool IsPdfStream = false)

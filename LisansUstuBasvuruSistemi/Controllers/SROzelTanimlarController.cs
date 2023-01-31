@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -97,10 +99,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.TT = db.SRTalepTipleris.ToList();
-            ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri(true), "Value", "Caption", model.SROzelTanimTipID);
+            ViewBag.SROzelTanimTipID = new SelectList(SrTalepleriBus.GetCmbOzelTanimTipleri(true), "Value", "Caption", model.SROzelTanimTipID);
             ViewBag.HaftaGunleri = db.HaftaGunleris.ToList();
             return View(model);
         }
@@ -121,12 +123,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod);
-            ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri( true), "Value", "Caption", model.SROzelTanimTipID);
-            ViewBag.SRSalonID = new SelectList(Management.cmbSalonlar(model.EnstituKod, model.SRTalepTipID ?? 0 ,true), "Value", "Caption", model.SRSalonID);
-            ViewBag.Ay = new SelectList(Management.cmbAylar( true), "Value", "Caption", model.Ay);
-            ViewBag.SRTalepTipID = new SelectList(Management.cmbTalepTipleri( null, true), "Value", "Caption", model.SRTalepTipID);
+            ViewBag.SROzelTanimTipID = new SelectList(SrTalepleriBus.GetCmbOzelTanimTipleri( true), "Value", "Caption", model.SROzelTanimTipID);
+            ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(model.EnstituKod, model.SRTalepTipID ?? 0 ,true), "Value", "Caption", model.SRSalonID);
+            ViewBag.Ay = new SelectList(SrTalepleriBus.GetCmbAylar( true), "Value", "Caption", model.Ay);
+            ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbTalepTipleri( null, true), "Value", "Caption", model.SRTalepTipID);
 
-            var hGunler = Management.cmbGetHaftaGunleri(false);
+            var hGunler = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = hGunler;
             ViewBag.hGSecilenler = hGSecilenler;
             return View(model);
@@ -288,12 +290,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (kModel.SROzelTanimTipID == SROzelTanimTip.Rezerve)
                 {
-                    var msg = Management.SRKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID.Value, kModel.BasTarih.Value, saatler, null, kModel.SROzelTanimID, kModel.BitTarih, HaftaGunIDs);
+                    var msg = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID.Value, kModel.BasTarih.Value, saatler, null, kModel.SROzelTanimID, kModel.BitTarih, HaftaGunIDs);
                     MmMessage.Messages.AddRange(msg.Messages);
                 }
                 else
                 {
-                    var msg = Management.SRKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID.Value, kModel.Tarih.Value, saatler, null, kModel.SROzelTanimID);
+                    var msg = SrTalepleriBus.SrKayitKontrol(kModel.SRSalonID.Value, kModel.SRTalepTipID.Value, kModel.Tarih.Value, saatler, null, kModel.SROzelTanimID);
                     MmMessage.Messages.AddRange(msg.Messages);
                 }
 
@@ -452,11 +454,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             ViewBag.MmMessage = MmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler( true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.Ay = new SelectList(Management.cmbAylar(true), "Value", "Caption", kModel.Ay);
-            ViewBag.SROzelTanimTipID = new SelectList(Management.cmbOzelTanimTipleri( true), "Value", "Caption", kModel.SROzelTanimTipID);
-            ViewBag.SRSalonID = new SelectList(Management.cmbSalonlar(kModel.EnstituKod, kModel.SRTalepTipID ?? 0 ,true), "Value", "Caption", kModel.SRSalonID);
-            ViewBag.SRTalepTipID = new SelectList(Management.cmbTalepTipleri( null, true), "Value", "Caption", kModel.SRTalepTipID);
-            var hGunler = Management.cmbGetHaftaGunleri(false);
+            ViewBag.Ay = new SelectList(SrTalepleriBus.GetCmbAylar(true), "Value", "Caption", kModel.Ay);
+            ViewBag.SROzelTanimTipID = new SelectList(SrTalepleriBus.GetCmbOzelTanimTipleri( true), "Value", "Caption", kModel.SROzelTanimTipID);
+            ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(kModel.EnstituKod, kModel.SRTalepTipID ?? 0 ,true), "Value", "Caption", kModel.SRSalonID);
+            ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbTalepTipleri( null, true), "Value", "Caption", kModel.SRTalepTipID);
+            var hGunler = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = hGunler;
             ViewBag.hGSecilenler = HaftaGunIDs;
             return View(kModel);
@@ -506,9 +508,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult getSaatList(int SRSalonID, int SRTalepTipID, DateTime Tarih, int? SROzelTanimID)
         { 
-            var data = Management.getSalonBosSaatler(SRSalonID, SRTalepTipID, Tarih, null, SROzelTanimID);
-            var HCB = Management.RenderPartialView("SROzelTanimlar", "getSaatlerView", data);
-            return new { Deger = HCB }.toJsonResult();
+            var data = SrTalepleriBus.GetSalonBosSaatler(SRSalonID, SRTalepTipID, Tarih, null, SROzelTanimID);
+            var HCB = ViewRenderHelper.RenderPartialView("SROzelTanimlar", "getSaatlerView", data);
+            return new { Deger = HCB }.ToJsonResult();
         }
         public ActionResult getSaatlerView(SRSalonSaatlerModel model)
         {

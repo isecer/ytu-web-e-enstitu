@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -73,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.TT = db.SRTalepTipleris.ToList();
             return View(model);
@@ -119,9 +121,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.SRSalonTalepTipleris = data.SRSalonTalepTipleris.ToList();
                 }
             }
-            var haftaGunleri = Management.cmbGetHaftaGunleri(false);
+            var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
-            ViewBag.SRTalepTipID = Management.cmbSRTalepTipleri();
+            ViewBag.SRTalepTipID = SrTalepleriBus.GetCmbSrTalepTipleri();
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SelectedTTID = model.SRSalonTalepTipleris.Select(s => s.SRTalepTipID).ToList();
@@ -244,9 +246,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             
             ViewBag.MmMessage = MmMessage;
             kModel.Saatler = qSaatler;
-            var haftaGunleri = Management.cmbGetHaftaGunleri(false);
+            var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
-            ViewBag.SRTalepTipID = Management.cmbSRTalepTipleri();
+            ViewBag.SRTalepTipID = SrTalepleriBus.GetCmbSrTalepTipleri();
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.SelectedTTID = SRTalepTipIDs;
@@ -311,7 +313,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                     ).ToList();
                 if (varolanlar.Count > 0)
                 {
-                    var gunler = Management.cmbGetHaftaGunleri(false);
+                    var gunler = SrTalepleriBus.GetCmbHaftaGunleri(false);
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Eklemeye çalıştığınız günlere ait saat aralıkları zaten bulunmaktadır!");
 
@@ -326,12 +328,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
                     mtc.Detaylar = mRowModel;
-                    var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                    var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                     mmMessage.Messages.Add(tavleContent);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 

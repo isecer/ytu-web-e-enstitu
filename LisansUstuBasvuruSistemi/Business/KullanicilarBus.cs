@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Web;
-using BiskaUtil; 
+using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -63,7 +68,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var kullanici = db.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                var isYerli = kullanici.KullaniciTipleri.Yerli; 
+                var isYerli = kullanici.KullaniciTipleri.Yerli;
                 #region kullaniciKontrol 
                 if (isYerli)
                     if (kModel.TcKimlikNo.IsNullOrWhiteSpace())
@@ -291,26 +296,176 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var kull = (from s in db.Programlars
-                    join b in db.AnabilimDallaris on s.AnabilimDaliID equals b.AnabilimDaliID
-                    join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod
-                    select new KulaniciProgramYetkiModel
-                    {
-                        EnstituKod = e.EnstituKod,
-                        EnstituAdi = e.EnstituAd,
-                        EnstituKisaAd = e.EnstituKisaAd,
-                        AnabilimDaliAdi = b.AnabilimDaliAdi,
-                        AnabilimDaliKod = b.AnabilimDaliKod,
-                        ProgramKod = s.ProgramKod,
-                        ProgramAdi = s.ProgramAdi,
-                        YetkiVar = db.KullaniciProgramlaris.Any(a => a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
-                    });
+                            join b in db.AnabilimDallaris on s.AnabilimDaliID equals b.AnabilimDaliID
+                            join e in db.Enstitulers on b.EnstituKod equals e.EnstituKod
+                            select new KulaniciProgramYetkiModel
+                            {
+                                EnstituKod = e.EnstituKod,
+                                EnstituAdi = e.EnstituAd,
+                                EnstituKisaAd = e.EnstituKisaAd,
+                                AnabilimDaliAdi = b.AnabilimDaliAdi,
+                                AnabilimDaliKod = b.AnabilimDaliKod,
+                                ProgramKod = s.ProgramKod,
+                                ProgramAdi = s.ProgramAdi,
+                                YetkiVar = db.KullaniciProgramlaris.Any(a => a.KullaniciID == kullaniciId && a.ProgramKod == s.ProgramKod)
+                            });
 
                 if (enstituKod.IsNullOrWhiteSpace() == false) kull = kull.Where(p => p.EnstituKod == enstituKod);
                 var data = kull.OrderByDescending(o => o.YetkiVar).ThenBy(t => t.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ToList();
                 return data;
             }
         }
+        public static string ResimKaydet(HttpPostedFileBase resim)
+        {
+            try
+            {
+                var mimeType = resim.ContentType;
+                var fileStream = resim.InputStream;
+                var bmp = new Bitmap(fileStream);
 
+                const string folderName = SistemAyar.KullaniciResimYolu;
+                var rotasYonDegisimLog = SistemAyar.RotasyonuDegisenResimleriLogla.GetAyar().ToBoolean(false);
+                var boyutlandirma = SistemAyar.KullaniciResimKaydiBoyutlandirma.GetAyar().ToBoolean(false);
+                var kaliteOpt = SistemAyar.KullaniciResimKaydiKaliteOpt.GetAyar().ToBoolean(true);
+                var resimAdi = resim.FileName.ToFileNameAddGuid();
+                var resimYolu = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/" + folderName), resimAdi);
+
+
+                if (boyutlandirma)
+                {
+                    try
+                    {
+                        var uzn = SistemAyar.KullaniciResimKaydiHeightPx.GetAyar();
+                        var gens = SistemAyar.KullaniciResimKaydiWidthPx.GetAyar();
+
+                        var uzunluk = uzn.ToInt(560);
+                        var genislik = gens.ToInt(560);
+                        var img = bmp.ResizeImage(new Size(genislik, uzunluk));
+                        img.Save(resimYolu, ImageFormat.Jpeg);
+                    }
+                    catch (Exception ex)
+                    {
+                        Management.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
+                    }
+                }
+                else
+                {
+                    bmp.Save(resimYolu, ImageFormat.Jpeg);
+                }
+
+                if (kaliteOpt)
+                {
+                    #region Quality check
+
+                    try
+                    {
+                        var bmpQ = new Bitmap(resimYolu);
+                        var jpgEncoder = ImageHelper.GetImageCodecInfo(ImageFormat.Jpeg);
+                        var quality = 100L;
+                        if (resim.ContentLength >= 80000 && resim.ContentLength < 200000) quality = 80;
+                        else if (resim.ContentLength >= 200000 && resim.ContentLength < 400000) quality = 70;
+                        else if (resim.ContentLength >= 400000 && resim.ContentLength < 600000) quality = 60;
+                        else if (resim.ContentLength >= 600000 && resim.ContentLength < 800000) quality = 50;
+                        else if (resim.ContentLength >= 800000 && resim.ContentLength < 1000000) quality = 40;
+                        else if (resim.ContentLength >= 1000000) quality = 30;
+                        System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
+                        var myEncoderParameters = new EncoderParameters(1);
+                        var myEncoderParameter = new EncoderParameter(myEncoder, quality);
+                        myEncoderParameters.Param[0] = myEncoderParameter;
+                        bmpQ.Save(path2, jpgEncoder, myEncoderParameters);
+                        bmpQ.Dispose();
+                        if (File.Exists(resimYolu))
+                            File.Delete(resimYolu);
+                        var imgTmp = Image.FromFile(path2);
+                        imgTmp.Save(resimYolu, ImageFormat.Jpeg);
+                        imgTmp.Dispose();
+                        File.Delete(path2);
+                    }
+                    catch (Exception errQuality)
+                    {
+                        Management.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogType.OnemsizHata);
+                    }
+                    #endregion
+                }
+
+                #region Rotation
+                try
+                {
+
+                    var img1 = Image.FromFile(resimYolu);
+                    var prop = img1.PropertyItems.FirstOrDefault(p => p.Id == 0x0112);
+                    if (prop != null)
+                    {
+                        int orientationValue = img1.GetPropertyItem(prop.Id).Value[0];
+                        RotateFlipType rotateFlipType = GetOrientationToFlipType(orientationValue);
+                        img1.RotateFlip(rotateFlipType);
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
+                        img1.Save(path2);
+                        img1.Dispose();
+                        if (File.Exists(resimYolu))
+                            File.Delete(resimYolu);
+                        var imgTmp = Image.FromFile(path2);
+                        imgTmp.Save(resimYolu, ImageFormat.Jpeg);
+                        imgTmp.Dispose();
+                        File.Delete(path2);
+                        if (rotasYonDegisimLog)
+                        {
+                            Management.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, "Management/resimKaydet", LogType.Bilgi);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Management.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
+                }
+                #endregion
+
+
+                return resimAdi;
+            }
+            catch (Exception ex)
+            {
+                Management.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, null, UserIdentity.Ip);
+                return null;
+            }
+        }
+        private static RotateFlipType GetOrientationToFlipType(int orientationValue)
+        {
+            RotateFlipType rotateFlipType;
+            switch (orientationValue)
+            {
+                case 1:
+                    rotateFlipType = RotateFlipType.RotateNoneFlipNone;
+                    break;
+                case 2:
+                    rotateFlipType = RotateFlipType.RotateNoneFlipX;
+                    break;
+                case 3:
+                    rotateFlipType = RotateFlipType.Rotate180FlipNone;
+                    break;
+                case 4:
+                    rotateFlipType = RotateFlipType.Rotate180FlipX;
+                    break;
+                case 5:
+                    rotateFlipType = RotateFlipType.Rotate90FlipX;
+                    break;
+                case 6:
+                    rotateFlipType = RotateFlipType.Rotate90FlipNone;
+                    break;
+                case 7:
+                    rotateFlipType = RotateFlipType.Rotate270FlipX;
+                    break;
+                case 8:
+                    rotateFlipType = RotateFlipType.Rotate270FlipNone;
+                    break;
+                default:
+                    rotateFlipType = RotateFlipType.RotateNoneFlipNone;
+                    break;
+            }
+
+            return rotateFlipType;
+        }
         public static Exception YeniHesapMailGonder(Kullanicilar kModel, string sfr)
         {
 
@@ -354,11 +509,11 @@ namespace LisansUstuBasvuruSistemi.Business
                 var mtc = new mailTableContent();
                 mtc.AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.";
                 mtc.Detaylar = mRowModel;
-                var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                 mmmC.Content = tavleContent;
                 mmmC.LogoPath = erisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
                 mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
-                var htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                 var user = mailBilgi.SmtpKullaniciAdi;
                 var snded = MailManager.sendMailRetVal(kModel.EnstituKod, user, htmlMail, kModel.EMail, null);
                 return snded;

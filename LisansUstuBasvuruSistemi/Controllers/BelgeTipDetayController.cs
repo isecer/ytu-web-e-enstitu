@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -86,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
 
@@ -116,9 +118,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            var haftaGunleri = Management.cmbGetHaftaGunleri(false);
+            var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
-            ViewBag.BelgeTipleriList = Management.cmbBelgeTipleri(false);
+            ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
             model.SeciliBelgeTipler = db.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID).Select(s => s.BelgeTipID).ToList();
             model.Saatler = (from s in db.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID)
                              join gn in db.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
@@ -313,9 +315,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             kModel.Saatler = qSaatler;
             kModel.SeciliBelgeTipler = kModel.BelgeTipID;
-            var haftaGunleri = Management.cmbGetHaftaGunleri(false);
+            var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
-            ViewBag.BelgeTipleriList = Management.cmbBelgeTipleri(false);
+            ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
             ViewBag.MmMessage = MmMessage;
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             return View(kModel);
@@ -399,13 +401,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var varolanlar = qSaatler.Where(a => a._GHaftaGunleriList.Intersect(model.GHaftaGunleri).Any() && ((a._TalepBaslangcSaati <= model.TalepBaslangicSaat && a._TalepBitisSaati >= model.TalepBaslangicSaat) || (a._TalepBaslangcSaati <= model.TalepBitisSaat && a._TalepBitisSaati >= model.TalepBitisSaat))).ToList();
                 if (varolanlar.Count > 0)
                 {
-                    var gunler = Management.cmbGetHaftaGunleri(false);
+                    var gunler = SrTalepleriBus.GetCmbHaftaGunleri(false);
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Eklemeye çalıştığınız günlere ait saat aralıkları zaten bulunmaktadır talep saatleri zaten eklidir! Tekrar eklenemez!");
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize(Roles = RoleNames.BelgeTipleriSil)]

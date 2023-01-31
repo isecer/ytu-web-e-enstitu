@@ -9,6 +9,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
@@ -409,9 +410,9 @@ namespace LisansUstuBasvuruSistemi.Models
                         htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Sisteme Erişim Adresi", Aciklama = enstitu.SistemErisimAdresi });
 
 
-                        var tableContent = Management.RenderPartialView("Ajax", "getMailTableContent", htmlCbilgi);
+                        var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", htmlCbilgi);
                         mmmC.Content = tableContent;
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var EMailList = itemMailD.Value.Select(s => s.Caption).Distinct().Select(s => new MailSendList { EMail = s, ToOrBcc = false }).ToList();
                         // EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
                         var emailSend = MailManager.sendMailRetVal(Bsurec.EnstituKod, "Başvurunuz taslak halindedir.Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız", htmlMail, EMailList, null);

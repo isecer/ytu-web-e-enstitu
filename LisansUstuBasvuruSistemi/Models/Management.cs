@@ -39,10 +39,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         public static string Tuz = "@BİSKAmcumu";
         public static int UniversiteYtuKod { get; } = 67;
-        public static List<string> FExtensions()
-        {
-            return new List<string>() { ".jpg", ".jpeg", ".tif", ".bmp", ".png", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".rtf", ".pptx" };
-        }
+      
 
 
       
@@ -860,27 +857,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return lst;
         }
-        public static List<CmbIntDto> getTalepSurecleri(string EnstituKod, bool bosSecimVar = false)
-        {
-            var lst = new List<CmbIntDto>();
-            if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = (from s in db.TalepSurecleris.Where(p => p.EnstituKod == EnstituKod)
-                            orderby s.BaslangicTarihi descending
-                            select new
-                            {
-                                s.TalepSurecID,
-                                s.BaslangicTarihi,
-                                s.BitisTarihi
-                            }).ToList();
-                foreach (var item in data)
-                {
-                    lst.Add(new CmbIntDto { Value = item.TalepSurecID, Caption = item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() });
-                }
-            }
-            return lst;
-        }
+    
 
          public static List<CmbIntDto> getbasvuruSurecleriDekont(string EKD, bool bosSecimVar = false)
         {
@@ -947,204 +924,12 @@ namespace LisansUstuBasvuruSistemi.Models
                 return lst;
             }
         }
-        public static List<CmbStringDto> getAkademikTarih(bool bosSecimVar = false, int? EklenecekYil = null)
-        {
-            var lst = new List<CmbStringDto>();
-            var donems = new List<CmbIntDto>();
-            if (bosSecimVar) lst.Add(new CmbStringDto { Value = "", Caption = "" });
-            int addY = EklenecekYil.HasValue ? EklenecekYil.Value : 1;
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                donems = db.Donemlers.OrderBy(o => o.DonemID).Select(s => new CmbIntDto { Value = s.DonemID, Caption = s.DonemAdi }).ToList();
-            }
-            for (int i = (DateTime.Now.Year + addY); i >= 2012; i--)
-            {
-                lst.Add(new CmbStringDto { Value = i.ToString() + "/" + (i + 1).ToString() + "/2", Caption = i.ToString() + "/" + (i + 1).ToString() + " " + donems.Where(p => p.Value == 2).First().Caption });
-                lst.Add(new CmbStringDto { Value = i.ToString() + "/" + (i + 1).ToString() + "/1", Caption = i.ToString() + "/" + (i + 1).ToString() + " " + donems.Where(p => p.Value == 1).First().Caption });
-            }
-            return lst;
-        }
-        public static List<CmbStringDto> getGrupKod(int GrupSayisi, string GrupAdi = "Grup", bool bosSecimVar = false)
-        {
-            var lst = new List<CmbStringDto>();
-            if (bosSecimVar) lst.Add(new CmbStringDto());
-            for (int i = 1; i <= GrupSayisi; i++)
-            {
-                lst.Add(new CmbStringDto { Value = GrupAdi + i.ToString(), Caption = GrupAdi + i.ToString() });
-            }
-            return lst;
-        }
-        public static List<CmbBoolDto> getVeVeya(bool bosSecimVar = false)
-        {
-            var lst = new List<CmbBoolDto>();
-            if (bosSecimVar) lst.Add(new CmbBoolDto());
-            lst.Add(new CmbBoolDto { Value = true, Caption = "Ve" });
-            lst.Add(new CmbBoolDto { Value = false, Caption = "Veya" });
-
-            return lst;
-        }
-        public static List<CmbIntDto> getTarihKriterSecim(bool bosSecimVar = false)
-        {
-            var lst = new List<CmbIntDto>();
-            if (bosSecimVar) lst.Add(new CmbIntDto());
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihVeOncesi, Caption = "Seçilen Tarih ve Öncesi" });
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihAraligi, Caption = "Seçilen Tarih Aralığı" });
-            lst.Add(new CmbIntDto { Value = TarihKriterSecim.SecilenTarihVeSonrasi, Caption = "Seçilen Tarih ve Sonrası" });
-
-            return lst;
-        }
-        public static CmbStringDto getAkademikBulundugumuzTarih(DateTime? tarih = null)
-        {
-            var mdl = new CmbStringDto();
-            var trh = tarih.HasValue ? tarih.Value.TodateToShortDate() : DateTime.Now.TodateToShortDate();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var eoy = trh.toEoYilBilgi();
-                var sDonem = db.Donemlers.Where(p => p.DonemID == eoy.Donem).First();
-                eoy.DonemAdi = sDonem.DonemAdi;
-                mdl.Value = eoy.BaslangicYili + "/" + eoy.BitisYili + "/" + eoy.Donem;
-                mdl.Caption = eoy.BaslangicYili + " / " + eoy.BitisYili + " " + eoy.DonemAdi;
-
-            }
-            return mdl;
-        }
-        public static List<CmbStringDto> getBelgeTeslimSaatler()
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var saatler = db.BelgeTipDetaySaatlers.OrderBy(o => o.TalepBaslangicSaat).Select(s => new { s.TeslimBaslangicSaat, s.TeslimBitisSaat }).Distinct().ToList();
-                var lst = new List<CmbStringDto>();
-                lst.Add(new CmbStringDto { Caption = "" });
-                lst.Add(new CmbStringDto { Value = "00:00-23:59", Caption = "Bugün verilecekler (Tümü)" });
-                foreach (var item in saatler)
-                {
-                    var bsSt = string.Format("{0:hh\\:mm}", item.TeslimBaslangicSaat);
-                    var btSt = string.Format("{0:hh\\:mm}", item.TeslimBitisSaat);
-                    lst.Add(new CmbStringDto { Value = (bsSt + "-" + btSt), Caption = "Bugün verilecekler (" + (bsSt + "-" + btSt) + ")" });
-                }
-
-                return lst;
-            }
-        }
-        public static BelgeTipDetaySaatler getSelectedSaat(DateTime IslemTarihi, int BelgeTipID, int OgrenimDurumID, string _EnstituKod)
-        {
-            var rtatilDurum = BelgeTalepAyar.BelgeTalebiResmiTatilDurum.GetAyarBt(_EnstituKod, "0").ToBoolean().Value;
-            TimeSpan talepZamani = new TimeSpan(IslemTarihi.Hour, IslemTarihi.Minute, IslemTarihi.Second);
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var dofW = IslemTarihi.DayOfWeek.ToString("d").ToInt().Value;
-                var Bastarih = IslemTarihi.TodateToShortDate();
-                var tarih = IslemTarihi.TodateToShortDate();
-                gehBiliBili:
-                var btSaat = db.BelgeTipDetaySaatlers.Include("BelgeTipDetay").Where(p => p.BelgeTipDetay.OgrenimDurumID == OgrenimDurumID && p.HaftaGunID == dofW && p.BelgeTipDetay.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == BelgeTipID) && p.TalepBaslangicSaat <= talepZamani && p.TalepBitisSaat >= talepZamani).FirstOrDefault();
-                tarih = tarih.AddDays(btSaat.EklenecekGun);
-
-                if (rtatilDurum)
-                {
-                    var uygunlukKontrol = getUygunKontrol(tarih);
-                    if (uygunlukKontrol.Value.Value == false)
-                    {
-                        tarih = uygunlukKontrol.Caption.Value;
-                        dofW = tarih.DayOfWeek.ToString("d").ToInt().Value;
-
-                        talepZamani = new TimeSpan(1, 1, 1);
-                        goto gehBiliBili;
-                    }
-                    btSaat.EklenecekGun = (tarih - Bastarih).TotalDays.toIntObj().Value;
-                }
-                return btSaat;
-            }
-        }
-        public static CmbBoolDatetimeDto getUygunKontrol(DateTime nTarih)
-        {
-            var mdl = new CmbBoolDatetimeDto();
-            mdl.Value = true;
-            mdl.Caption = nTarih;
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                bool success = false;
-                while (success == false)
-                {
-                    success = true;
-                    var ResmiTatilDegisen = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= mdl.Caption && p.BitTarih >= mdl.Caption).FirstOrDefault();
-                    if (ResmiTatilDegisen != null)
-                    {
-                        success = false;
-                        mdl.Value = false;
-                        mdl.Caption = nTarih = ResmiTatilDegisen.BitTarih.Value.AddDays(1);
-                    }
-                    else
-                    {
-                        var ResmiTatilSabit = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == mdl.Caption.Value.Month && p.Gun == mdl.Caption.Value.Day).FirstOrDefault();
-                        if (ResmiTatilSabit != null)
-                        {
-                            success = false;
-                            mdl.Value = false;
-                            mdl.Caption = nTarih = nTarih.AddDays(1);
-                        }
-                    }
-                }
-            }
-            return mdl;
-        }
-        public static BelgeTalepleri getBelge(int BelgeTalepID)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.BelgeTalepleris.Where(p => p.BelgeTalepID == BelgeTalepID).FirstOrDefault();
-                return data;
-            }
-        }
-        public static CmbIntDto toVerilmeBilgisi(this int BelgeTalepID, string IslemTipListeAdi)
-        {
-            var html = "";
-            var mdl = new CmbIntDto();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var belge = db.BelgeTalepleris.Where(p => p.BelgeTalepID == BelgeTalepID).FirstOrDefault();
-                if (belge.BelgeDurumID == BelgeTalepDurum.TalepEdildi || belge.BelgeDurumID == BelgeTalepDurum.Hazirlaniyor || belge.BelgeDurumID == BelgeTalepDurum.Hazirlandi)
-                {
-                    var verilecekTarih = belge.TalepTarihi.AddDays(belge.EklenecekGun).TodateToShortDate();
-                    var days = (verilecekTarih - DateTime.Now.TodateToShortDate());
-                    var day = Convert.ToInt32(days.Days);
-                    bool gelecek = (days.Days > 0);
-                    mdl.Value = days.Days;
-                    var saatAralik = belge.TeslimBaslangicSaat.Value.ToString(@"hh\:mm") + "-" + belge.TeslimBitisSaat.Value.ToString(@"hh\:mm");
-                    var _durum = "(" + belge.BelgeDurumlari.DurumAdi + ")";
-                    if (verilecekTarih == DateTime.Now.TodateToShortDate())
-                    {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Bu Gün Verilecek " + _durum + "</span>";
-                    }
-                    else if (day == 1)
-                    {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Yarın Verilecek " + _durum + "</span>";
-                    }
-                    else
-                    {
-                        if (gelecek)
-                        {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + day + " Gün Sonra Verilecek " + _durum + "</span>";
-                        }
-                        else
-                        {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + Math.Abs(day) + " Gün Önce Verilmeliydi" + _durum + "</span>";
-
-                        }
-                    }
-                }
-                else if (belge.BelgeDurumID == BelgeTalepDurum.Verildi)
-                {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss") + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde Verildi</span>";
-
-                }
-                else
-                {
-                    html += "<span style='font-size:9pt;font-weight:bold;'>" + belge.IslemTarihi.ToString("dd-MM-yyyy HH:mm:ss") + "</span> <br /><span style='font-size:8.5pt;'>Tarihinde " + IslemTipListeAdi + "</span>";
-                }
-                mdl.Caption = html;
-                return mdl;
-            }
-        }
+    
+      
+       
+      
+        
+   
         public static List<CmbIntDto> cmbYetkiGruplari(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1161,125 +946,8 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbBoolDto> cmbAktifPasifData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Aktif" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Pasif" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbAcikKapaliData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Kapalı" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Açık" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbDosyaEkiDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Dosya Eki Olanlar" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Dosya Eki Olmayanlar" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbOnayDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Onaylandı" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Onaylanmadı" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbJOAsilYedekDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Asil" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Yedek" });
-            return dct;
-        }
-        public static List<CmbBoolDto> cmbJOEykGonderimDurumData(bool bosSecimVar = false, DateTime? OnayTarihi = null)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "EYK'ya gönderimi onaylandı" + (OnayTarihi.HasValue ? " (" + OnayTarihi.ToFormatDateAndTime() + ")" : "") });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "EYK'ya gönderimi onaylanmadı" });
-            return dct;
-        }
-        public static List<CmbBoolDto> cmbJOEykOnayDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Eyk'da Onaylandı" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Eyk'da Onaylanmadı" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbDoluBosData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Dolu" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Boş" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbGrupOlanData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "Tümü" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Grup Olanlar" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Grup Olmayanlar" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbKazanmaDurumData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "Tümü" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Kazananlar" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Kazanamayanlar" });
-            return dct;
-
-        }
-
-        public static List<CmbIntDto> cmbEsitlikKosulu()
-        {
-            var dct = new List<CmbIntDto>();
-
-            dct.Add(new CmbIntDto { Value = -1, Caption = "<" });
-            dct.Add(new CmbIntDto { Value = 0, Caption = "==" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = ">" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbItirazAktifPasifData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Açık Olan İtirazlar" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Kapalı Olan İtirazlar" });
-            return dct;
-
-        }
-
-        public static List<CmbIntDto> cmbBasvuruEvlilikDurumu(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = "Evli Olan Kullanıcıları Listele" });
-            dct.Add(new CmbIntDto { Value = 2, Caption = "Bekar Olan Kullanıcıları Listele" });
-            return dct;
-
-        }
-
+      
+         
 
         public static List<CmbIntDto> cmbSehirler(bool bosSecimVar = false)
         {
@@ -1400,23 +1068,11 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<int> makaleYayinDurumIstenenler()
-        {
-            return new List<int> { 5, 4 };//ulusal ulusrarası  makale    
-        }
-        public static bool makaleYayinDurumIsteniyormu(this int YayinTurID)
-        {
-            return makaleYayinDurumIstenenler().Contains(YayinTurID);
-        }
+     
        
 
     
-      
-    
-        public static List<int> getMBasvuruDurumIDs()
-        {
-            return new List<int>() { BasvuruDurumu.Taslak, BasvuruDurumu.Onaylandı };
-        }
+       
         public static List<BasvuruDurumlari> cmbBasvuruDurumListeDBilgi(List<int> SelectedBDurumID = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -1448,122 +1104,17 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbBelgeTipleri(bool bosSecimVar = false, int? OgrenimDurumID = null, string _EnstituKod = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.BelgeTipleris.Where(p => (OgrenimDurumID.HasValue ? p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID && a.BelgeTipDetay.OgrenimDurumID == OgrenimDurumID.Value && a.BelgeTipDetay.EnstituKod == _EnstituKod && a.BelgeTipDetay.IsAktif) : true) && p.IsAktif).OrderBy(o => o.BelgeTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.BelgeTipID, Caption = item.BelgeTipAdi });
-                }
-            }
-            return dct;
+      
+      
+      
 
-        }
-        public static List<CmbIntDto> cmbMailSablonlari(string _EnstituKodu, bool bosSecimVar = false, bool? SistemMailFiltre = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.MailSablonlaris.Where(p => p.EnstituKod == _EnstituKodu && p.IsAktif && p.MailSablonTipleri.SistemMaili == (SistemMailFiltre.HasValue ? SistemMailFiltre.Value : p.MailSablonTipleri.SistemMaili)).OrderBy(o => o.SablonAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.MailSablonlariID, Caption = item.SablonAdi });
-                }
-            }
+    
 
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbMailSablonTipleri(bool? SistemMaili = null, bool bosSecimVar = false, bool? IsOlusturulmayanlar = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.MailSablonTipleris.Where(p => IsOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : true && p.SistemMaili == (SistemMaili.HasValue ? SistemMaili.Value : p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
-                }
-            }
-
-            return dct;
-
-        }
-
-        public static BelgeTipDetay getBtipDetay(int BelgeTipID, int OgrenimDurumID, string _EnstituKod)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var btip = db.BelgeTipDetays.Where(p => p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == BelgeTipID) && p.OgrenimDurumID == OgrenimDurumID && p.EnstituKod == _EnstituKod).First();
-                return btip;
-            }
-        }
-
-        public static List<CmbIntDto> cmbBelgeTalepDurum(bool bosSecimVar = false, bool Yonetici = false, bool yeniKayit = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.BelgeDurumlaris.Where(p => p.BelgeDurumID == (yeniKayit ? BelgeTalepDurum.TalepEdildi : p.BelgeDurumID) && p.IsAktif && (Yonetici ? true : p.TalepEdenGorsun == true)).OrderBy(o => o.BelgeDurumID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.BelgeDurumID, Caption = item.DurumAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<BelgeDurumlari> BelgeTalepDurumList()
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
-                return data;
-
-            }
-
-        }
-        public static List<TalepDurumlari> TalepDurumList()
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
-                return data;
-
-            }
-
-        }
-        public static List<CmbIntDto> cmbBelgeTalepDurumListe(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.BelgeDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.BelgeDurumID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.BelgeDurumID, Caption = item.DurumAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbEvetHayirData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Evet" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Hayir" });
-            return dct;
-
-        }
+        
+       
+       
+      
+      
         public static List<CmbBoolDto> cmbAlanEslesmeData(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();
@@ -1605,594 +1156,25 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbSRDurum(bool bosSecimVar = false, bool Yonetici = false, bool yeniKayit = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.SRDurumlaris.Where(p => p.SRDurumID == (yeniKayit ? BelgeTalepDurum.TalepEdildi : p.SRDurumID) && p.IsAktif && (Yonetici ? true : p.TalepEdenGorsun == true)).OrderBy(o => o.SRDurumID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRDurumID, Caption = item.DurumAdi });
-                }
-            }
-            return dct;
+      
+       
+    
+       
+       
+     
+      
 
-        }
-        public static List<SRDurumlari> SRDurumList()
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
-                return data;
+        
+        
 
-            }
+      
+    
+       
+      
+   
+     
 
-        }
-        public static List<CmbIntDto> cmbSRDurumListe(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.SRDurumlaris.Where(p => p.IsAktif).OrderBy(o => o.SRDurumID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRDurumID, Caption = item.DurumAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbTDDurumListe(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-
-            dct.Add(new CmbIntDto { Value = 2, Caption = "İşlem Bekleyenler" });
-            dct.Add(new CmbIntDto { Value = 0, Caption = "Düzeltme Talep Edildi" });
-            dct.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
-
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbSalonlar(string _EnstituKod, bool bosSecimVar = false, bool? IsAktif = true)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == _EnstituKod);
-
-                if (IsAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == IsAktif.Value);
-                var data = qdata.OrderBy(o => o.SalonAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRSalonID, Caption = item.SalonAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbSalonlar(string _EnstituKod, int SRTalepTipID, bool bosSecimVar = false, bool? IsAktif = true)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.SRSalonlars.Where(p => p.IsAktif && p.EnstituKod == _EnstituKod && p.SRSalonTalepTipleris.Any(a => a.SRTalepTipID == SRTalepTipID));
-
-                if (IsAktif.HasValue) qdata = qdata.Where(p => p.IsAktif == IsAktif.Value);
-                var data = qdata.OrderBy(o => o.SalonAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRSalonID, Caption = item.SalonAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbAylar(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.Aylars.OrderBy(o => o.AyID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.AyID, Caption = item.AyAdi });
-                }
-            }
-            return dct;
-
-        }
-
-        public static CmbMultyTypeDto SRkotaKontrol(int TalepYapanID, int SRTalepTipID, int? id = null)
-        {
-            var cmbMD = new CmbMultyTypeDto();
-            cmbMD.ValueB = true;
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var ttip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == SRTalepTipID).First();
-                if (ttip.MaxCevaplanmamisTalep.HasValue)
-                {
-                    var q = db.SRTalepleris.Where(p => p.TalepYapanID == TalepYapanID && p.SRTalepTipID == SRTalepTipID && p.SRDurumID == SRTalepDurum.TalepEdildi);
-                    if (id.HasValue) q = q.Where(p => p.SRTalepID != id.Value);
-                    var kayitlar = q.ToList();
-                    int cnt = kayitlar.Count;
-                    cmbMD.Value = cnt;
-                    if (ttip.MaxCevaplanmamisTalep.Value <= cnt && !id.HasValue)
-                    {
-                        cmbMD.ValueS = ttip.TalepTipAdi + " talep tipi için yapabileceğiniz rezervasyon talebi sayısı " + ttip.MaxCevaplanmamisTalep.Value + " adettir, daha önceden yapmış olduğunuz " + cnt + "  adet işlem bekleyen rezervasyon talebiniz bulunmaktadır. İşlem bekleyen rezervasyon talepleriniz işlem görene kadar yeni rezervasyon talebi yapamazsınız!";
-                        cmbMD.ValueB = false;
-                    }
-                    else
-                    {
-                        cmbMD.ValueS = ttip.TalepTipAdi + " talep tipi için yapabileceğiniz rezervasyon talebi sayısı " + ttip.MaxCevaplanmamisTalep.Value + " adettir, daha önceden yapmış olduğunuz " + kayitlar + "  adet işlem bekleyen rezervasyon talebiniz bulunmaktadır. " + ttip.MaxCevaplanmamisTalep.Value + " adet yeni rezervasyon talebi yapabilirsiniz!";
-                        cmbMD.ValueB = true;
-                    }
-
-                }
-            }
-            return cmbMD;
-        }
-        public static SRSalonSaatlerModel getSalonBosSaatler(int SRSalonID, int SRTalepTipID, DateTime Tarih, int? SRTalepID = null, int? SROzelTanimID = null, DateTime? MinTarih = null)
-        {
-            var model = new SRSalonSaatlerModel();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var nTarih = Tarih.ToShortDateString().ToDate().Value;
-                var dofW = nTarih.DayOfWeek.ToString("d").ToInt().Value;
-                var haftaGunu = db.HaftaGunleris.Where(p => p.HaftaGunID == dofW).First();
-                var salon = db.SRSalonlars.Where(p => p.SRSalonID == SRSalonID).First();
-                var SecilenTarihRezervasyonlar = db.SRTalepleris.Where(p => p.SRSalonID == SRSalonID && p.Tarih == nTarih && (p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi)).ToList();
-                var ResmiTatilDegisen = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih).FirstOrDefault();
-                var ResmiTatilSabit = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day).FirstOrDefault();
-                var Rezervasyonlar = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == SRSalonID && p.Tarih == nTarih).FirstOrDefault();
-                var Rezerve = db.SROzelTanimlars.Where(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (SROzelTanimID.HasValue ? SROzelTanimID.Value : 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == SRSalonID && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih).FirstOrDefault();
-                var TalepTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == SRTalepTipID).First();
-                model.Tarih = nTarih;
-                var salonSaatleri = db.SRSaatlers.Where(p => p.SRSalonID == SRSalonID && p.HaftaGunID == haftaGunu.HaftaGunID).Select(s => new SRSalonSaatler
-                {
-                    SRSaatID = s.SRSaatID,
-                    SRSalonID = s.SRSalonID,
-                    HaftaGunID = s.HaftaGunID,
-                    HaftaGunAdi = haftaGunu.HaftaGunAdi,
-                    BasSaat = s.BasSaat,
-                    BitSaat = s.BitSaat,
-                    SalonDurumID = SRSalonDurum.Boş,
-                    Aciklama = "Rezervasyon için uygun"
-                }).ToList();
-
-                foreach (var item in SecilenTarihRezervasyonlar)
-                {
-                    var TalepTipiLng = item.SRTalepTipleri;
-                    var Aciklama = TalepTipiLng.TalepTipAdi + ", " + item.Kullanicilar.Ad + " " + item.Kullanicilar.Soyad;
-                    var SalonSaat = salonSaatleri.Where(p => p.SRSalonID == item.SRSalonID && p.BasSaat == item.BasSaat && p.BitSaat == item.BitSaat).FirstOrDefault();
-                    if (SalonSaat != null)
-                    {
-                        SalonSaat.Checked = SRTalepID == item.SRTalepID;
-                        SalonSaat.SalonDurumID = SRSalonDurum.Alındı;
-                        SalonSaat.Aciklama = Aciklama;
-
-                    }
-                    else
-                    {
-                        salonSaatleri.Add(new SRSalonSaatler
-                        {
-                            SRSalonID = item.SRSalonID.Value,
-                            HaftaGunID = item.HaftaGunID,
-                            HaftaGunAdi = haftaGunu.HaftaGunAdi,
-                            BasSaat = item.BasSaat,
-                            BitSaat = item.BitSaat,
-                            SalonDurumID = SRSalonDurum.Alındı,
-                            Aciklama = Aciklama,
-                            Checked = true,
-                        });
-                    }
-                }
-
-
-                if (SROzelTanimID.HasValue) //gelentalepGuncellemeIse
-                {
-                    var talep = db.SROzelTanimlars.Where(p => p.SROzelTanimID == SROzelTanimID.Value).First();
-                    if (Tarih == talep.Tarih && talep.SRSalonID == SRSalonID)
-                    {
-                        var rezTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == talep.SRTalepTipID).First();
-                        foreach (var item in talep.SROzelTanimSaatlers)
-                        {
-
-                            if (!salonSaatleri.Any(a => a.BasSaat == item.BasSaat && a.BitSaat == item.BitSaat))
-                            {
-                                var _rw = new SRSalonSaatler();
-                                _rw.SRSalonID = talep.SRSalonID.Value;
-                                _rw.HaftaGunID = dofW;
-                                _rw.HaftaGunAdi = haftaGunu.HaftaGunAdi;
-                                _rw.BasSaat = item.BasSaat;
-                                _rw.BitSaat = item.BitSaat;
-                                _rw.SalonDurumID = SRSalonDurum.Alındı;
-                                _rw.Aciklama = rezTip.TalepTipAdi + ", " + talep.Aciklama;
-                                salonSaatleri.Add(_rw);
-                            }
-                            else
-                            {
-                                var qdata = salonSaatleri.Where(p => p.BasSaat == item.BasSaat && p.BitSaat == item.BitSaat).FirstOrDefault();
-                                if (Tarih == talep.Tarih && qdata != null)
-                                {
-                                    qdata.SalonDurumID = SRSalonDurum.Alındı;
-                                    qdata.Aciklama = rezTip.TalepTipAdi + ", " + talep.Aciklama;
-                                }
-
-                            }
-                        }
-                    }
-
-                }
-                if (TalepTip.SRTalepTipleriAktifAylars.Any(a => a.AyID == nTarih.Month) == false && UserIdentity.Current.IsAdmin == false)
-                {
-                    salonSaatleri.Clear();
-                    var syLst = TalepTip.SRTalepTipleriAktifAylars.SelectMany(s => s.Aylar.AyAdi).ToList();
-                    var SRTalepTipi = TalepTip;
-
-                    model.GenelAciklama = SRTalepTipi.TalepTipAdi + " talep tipi için talep yapılabilecek aylar: '" + string.Join(", ", syLst) + "' Bu ayların dışında sistem rezervasyon işlemine kapalıdır.";
-                }
-                else if (salonSaatleri.Count == 0)
-                {
-
-                    model.GenelAciklama = model.SRSalonAdi + " Salonu için " + model.Tarih.ToString("dd.MM.yyyy") + " tarihi için rezervasyon alınamaz.";
-                }
-
-                model.HaftaGunID = haftaGunu.HaftaGunID;
-                model.SRSalonID = salon.SRSalonID;
-                model.SRSalonAdi = salon.SalonAdi;
-                model.HaftaGunundeSaatlerVar = salonSaatleri.Count > 0;
-                model.HaftaGunAdi = haftaGunu.HaftaGunAdi;
-                //model.BosSaatSayisi = salonSaatleri.Where(a => a.Dolu == false).Count();
-                //model.DoluSaatSayisi = salonSaatleri.Where(a => a.Dolu).Count();
-
-
-
-                foreach (var item in salonSaatleri)
-                {
-                    var qGTalepEslesen = SecilenTarihRezervasyonlar.Where(a => a.SRTalepID != (SRTalepID ?? 0) &&
-                                                                (
-                                                                  (a.BasSaat == item.BasSaat || a.BitSaat == item.BitSaat) ||
-                                                                (
-                                                                    (a.BasSaat < item.BasSaat && a.BitSaat > item.BasSaat) || a.BasSaat < item.BitSaat && a.BitSaat > item.BitSaat) ||
-                                                                    (a.BasSaat > item.BasSaat && a.BasSaat < item.BitSaat) || a.BitSaat > item.BasSaat && a.BitSaat < item.BitSaat)
-                                                                ).FirstOrDefault();
-                    var nowDate = DateTime.Now;
-                    if (MinTarih.HasValue) nowDate = MinTarih.Value;
-                    var kTarih = Convert.ToDateTime(Tarih.ToShortDateString() + " " + item.BasSaat.Hours + ":" + item.BasSaat.Minutes + ":" + item.BasSaat.Seconds);
-                    if (qGTalepEslesen != null)
-                    {
-
-                        var rezTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == qGTalepEslesen.SRTalepTipID).First();
-                        item.SalonDurumID = qGTalepEslesen.SRDurumID == SRTalepDurum.Onaylandı ? SRSalonDurum.Dolu : SRSalonDurum.OnTalep;
-                        item.Disabled = true;
-                        item.Aciklama = qGTalepEslesen.SRDurumID == SRTalepDurum.Onaylandı ? rezTip.TalepTipAdi + ", " + qGTalepEslesen.Kullanicilar.Ad + " " + qGTalepEslesen.Kullanicilar.Soyad : "Onay bekliyor";
-
-                    }
-                    else if (ResmiTatilDegisen != null)
-                    {
-                        item.SalonDurumID = SRSalonDurum.ResmiTatil;
-                        item.Disabled = true;
-                        item.Aciklama = ResmiTatilDegisen.Aciklama;
-                    }
-                    else if (ResmiTatilSabit != null)
-                    {
-                        item.SalonDurumID = SRSalonDurum.ResmiTatil;
-                        item.Disabled = true;
-                        item.Aciklama = ResmiTatilSabit.Aciklama;
-                    }
-                    else if (Rezerve != null)
-                    {
-                        var rezTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == Rezerve.SRTalepTipID).First();
-                        item.SalonDurumID = SRSalonDurum.Dolu;
-                        item.Disabled = true;
-                        item.Aciklama = rezTip.TalepTipAdi + ", " + Rezerve.Aciklama;
-                    }
-                    else if (Rezervasyonlar != null)
-                    {
-                        var qRez = Rezervasyonlar.SROzelTanimSaatlers.Where(a => a.SROzelTanimID != (SROzelTanimID ?? 0) &&
-                                                                    (
-                                                                      (a.BasSaat == item.BasSaat || a.BitSaat == item.BitSaat) ||
-                                                                    (
-                                                                        (a.BasSaat < item.BasSaat && a.BitSaat > item.BasSaat) || a.BasSaat < item.BitSaat && a.BitSaat > item.BitSaat) ||
-                                                                        (a.BasSaat > item.BasSaat && a.BasSaat < item.BitSaat) || a.BitSaat > item.BasSaat && a.BitSaat < item.BitSaat)
-                                                                  ).FirstOrDefault();
-                        if (qRez != null)
-                        {
-                            var rezTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == qRez.SROzelTanimlar.SRTalepTipID).First();
-                            item.SalonDurumID = SRSalonDurum.Dolu;
-                            item.Disabled = true;
-                            item.Aciklama = rezTip.TalepTipAdi + ", " + Rezervasyonlar.Aciklama;
-                        }
-                        else if (kTarih < nowDate && item.SalonDurumID == SRSalonDurum.Boş)
-                        {
-                            item.SalonDurumID = SRSalonDurum.GecmisTarih;
-                            item.Disabled = true;
-                            item.Aciklama = "Geçmişe dönük rezervasyon alınamaz.";
-                        }
-                    }
-                    else if (kTarih < nowDate && item.SalonDurumID == SRSalonDurum.Boş)
-                    {
-                        item.SalonDurumID = SRSalonDurum.GecmisTarih;
-                        item.Disabled = true;
-                        item.Aciklama = "Geçmişe dönük rezervasyon alınamaz.";
-                    }
-
-                }
-
-                var qData = (from s in salonSaatleri
-                             join d in db.SRSalonDurumlaris on s.SalonDurumID equals d.SRSalonDurumID
-                             select new SRSalonSaatler
-                             {
-                                 SRSaatID = s.SRSaatID,
-                                 SRSalonID = s.SRSalonID,
-                                 HaftaGunID = s.HaftaGunID,
-                                 HaftaGunAdi = haftaGunu.HaftaGunAdi,
-                                 BasSaat = s.BasSaat,
-                                 BitSaat = s.BitSaat,
-                                 SalonDurumID = s.SalonDurumID,
-                                 SalonDurumAdi = d.SalonDurumAdi,
-                                 Aciklama = s.Aciklama,
-                                 Disabled = s.Disabled,
-                                 Checked = s.Checked,
-                                 Color = d.Color
-                             }).OrderBy(o => o.BasSaat).ToList();
-
-                model.Data = qData;
-            }
-            return model;
-        }
-        public static MmMessage SRKayitKontrol(int SRSalonID, int SRTalepTipID, DateTime Tarih, List<SROzelTanimSaatler> Saatler, int? SRTalepID = null, int? SROzelTanimID = null, DateTime? Tarih2 = null, List<int> haftaGunID = null, DateTime? MinTarih = null)
-        {
-            var mmMessage = new MmMessage();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var bitTar = Tarih2 ?? Tarih;
-                haftaGunID = haftaGunID ?? new List<int>();
-                for (DateTime date = Tarih; date <= bitTar; date = date.AddDays(1.0))
-                {
-                    var nTarih = date.ToShortDateString().ToDate().Value;
-                    var dofW = nTarih.DayOfWeek.ToString("d").ToInt().Value;
-
-                    if (!haftaGunID.Contains(dofW) && haftaGunID.Count > 0)
-                    {
-                        continue;
-                    }
-                    var salon = db.SRSalonlars.Where(p => p.SRSalonID == SRSalonID).First();
-
-                    var haftaGunu = db.HaftaGunleris.Where(p => p.HaftaGunID == dofW).First();
-                    var ResmiTatilDegisen = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih).FirstOrDefault();
-                    var ResmiTatilSabit = db.SROzelTanimlars.Where(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day).FirstOrDefault();
-                    var Rezervasyonlar = db.SROzelTanimlars.Where(p => p.SROzelTanimID != (SROzelTanimID.HasValue ? SROzelTanimID.Value : 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == SRSalonID && p.Tarih == nTarih).ToList();
-                    var Rezerve = db.SROzelTanimlars.Where(p => p.SROzelTanimGunlers.Any(a => a.HaftaGunID == dofW) && p.SROzelTanimID != (SROzelTanimID.HasValue ? SROzelTanimID.Value : 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == SRSalonID && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih).FirstOrDefault();
-                    var tTip = db.SRTalepTipleris.Where(p => p.SRTalepTipID == SRTalepTipID).First();
-
-
-                    if (tTip.SRTalepTipleriAktifAylars.Any(a => a.AyID == nTarih.Month) == false && RoleNames.SrGelenTalepler.InRoleCurrent() == false)
-                    {
-                        var syLst = tTip.SRTalepTipleriAktifAylars.SelectMany(s => s.Aylar.AyAdi).ToList();
-                        string msg = tTip.TalepTipAdi + " talep tipi için talep yapılabilecek aylar: '" + string.Join(", ", syLst) + "' Bu ayların dışında sistem rezervasyon işlemine kapalıdır.";
-                        mmMessage.Messages.Add(msg);
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-
-                    }
-
-                    else
-                    {
-
-                        if (Tarih2.HasValue)
-                        {
-
-                            var qTalepEslesen = db.SRTalepleris.Where(a => a.SRSalonID == SRSalonID && a.Tarih == nTarih).Any(p => p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi);
-                            if (qTalepEslesen)
-                            {
-                                mmMessage.Messages.Add(nTarih.ToShortDateString() + "Tarihi için " + salon.SalonAdi + " Salonu için dolu saatler var!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                            }
-                            if (ResmiTatilDegisen != null || ResmiTatilSabit != null)
-                            {
-
-                                mmMessage.Messages.Add("Resmi tatillerde rezervasyon alınamaz.");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                            }
-                            else if (Rezerve != null)
-                            {
-
-                                mmMessage.Messages.Add(nTarih.ToShortDateString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-
-                            }
-                            else if (Rezervasyonlar.Count > 0)
-                            {
-
-                                mmMessage.Messages.Add(nTarih.ToShortDateString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-
-                            }
-                        }
-                        else
-                        {
-                            foreach (var item in Saatler)
-                            {
-
-                                var nowDate = DateTime.Now;
-                                if (MinTarih.HasValue) nowDate = MinTarih.Value;
-                                var kTarih = Convert.ToDateTime(Tarih.ToShortDateString() + " " + item.BasSaat.Hours + ":" + item.BasSaat.Minutes + ":" + item.BasSaat.Seconds);
-
-                                var qTalepEslesen = db.SRTalepleris.Where(a => a.SRTalepID != (SRTalepID ?? 0) && a.SRSalonID == SRSalonID && a.Tarih == nTarih &&
-                                                 (
-                                                   (a.BasSaat == item.BasSaat || a.BitSaat == item.BitSaat) ||
-                                                 (
-                                                     (a.BasSaat < item.BasSaat && a.BitSaat > item.BasSaat) || a.BasSaat < item.BitSaat && a.BitSaat > item.BitSaat) ||
-                                                     (a.BasSaat > item.BasSaat && a.BasSaat < item.BitSaat) || a.BitSaat > item.BasSaat && a.BitSaat < item.BitSaat)
-                                                 );
-
-                                if (qTalepEslesen.Any(p => p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi))
-                                {
-                                    mmMessage.Messages.Add((nTarih.ToShortDateString() + " " + item.BasSaat.ToString() + " - " + item.BitSaat.ToString()) + " Tarihi için " + salon.SalonAdi + " Salonu Doludur! Lütfen boş bir saat seçiniz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                                }
-                                if (ResmiTatilDegisen != null || ResmiTatilSabit != null)
-                                {
-                                    ;
-                                    mmMessage.Messages.Add("Resmi tatillerde rezervasyon alınamaz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                                }
-                                else if (Rezerve != null)
-                                {
-                                    mmMessage.Messages.Add(item.BasSaat.ToString() + " - " + item.BitSaat.ToString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-
-                                }
-                                else if (Rezervasyonlar.Count > 0)
-                                {
-                                    foreach (var itemRO in Rezervasyonlar)
-                                    {
-
-
-                                        var qRez = itemRO.SROzelTanimSaatlers.Where(a =>
-                                                                                    (
-                                                                                      (a.BasSaat == item.BasSaat || a.BitSaat == item.BitSaat) ||
-                                                                                    (
-                                                                                        (a.BasSaat < item.BasSaat && a.BitSaat > item.BasSaat) || a.BasSaat < item.BitSaat && a.BitSaat > item.BitSaat) ||
-                                                                                        (a.BasSaat > item.BasSaat && a.BasSaat < item.BitSaat) || a.BitSaat > item.BasSaat && a.BitSaat < item.BitSaat)
-                                                                                  ).FirstOrDefault();
-                                        if (qRez != null)
-                                        {
-                                            mmMessage.Messages.Add(item.BasSaat.ToString() + " - " + item.BitSaat.ToString() + " Tarihinde " + salon.SalonAdi + " Salonu doludur!");
-                                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                                        }
-                                    }
-                                }
-                                else if (kTarih < nowDate)
-                                {
-                                    mmMessage.Messages.Add("Geçmişe dönük rezervasyon alınamaz.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                                }
-                                else if (salon.SRSaatlers.Any(a => a.BasSaat == item.BasSaat && a.BitSaat == item.BitSaat) == false)
-                                {
-                                    mmMessage.Messages.Add("Rezervasyon için seçilen sat uygun değildir.");
-                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            return mmMessage;
-        }
-
-
-        public static List<CmbIntDto> cmbSRTalepTipleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.SRTalepTipleris.OrderBy(o => o.SRTalepTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRTalepTipID, Caption = item.TalepTipAdi });
-                }
-            }
-            return dct;
-        }
-        public static List<CmbIntDto> cmbTalepTipleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.TalepTipleris.OrderBy(o => o.TalepTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
-                }
-            }
-            return dct;
-        }
-        public static List<CmbIntDto> cmbTalepTipleriSurec(int TalepSurecID, int TalepTipID, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var Surec = db.TalepSurecleris.Where(p => p.TalepSurecID == TalepSurecID).First();
-                var TalepTipIDs = Surec.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
-                var data = db.TalepTipleris.Where(p => (p.TalepTipID == TalepTipID || TalepTipIDs.Contains(p.TalepTipID))).OrderBy(o => o.TalepTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
-                }
-            }
-            return dct;
-        }
-        public static List<CmbIntDto> cmbTalepDurumlari(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.TalepDurumlaris.OrderBy(o => o.TalepDurumID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.TalepDurumID, Caption = item.TalepDurumAdi });
-                }
-            }
-            return dct;
-        }
-        public static List<CmbIntDto> cmbTalepTipleri(int? KullaniciTipID, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.SRTalepTipleris.Where(p => p.IsTezSinavi == false).OrderBy(o => o.SRTalepTipID).AsQueryable();
-                if (KullaniciTipID.HasValue) qdata = qdata.Where(p => p.SRTalepTipKullanicilars.Any(a => a.KullaniciTipID == KullaniciTipID));
-                var data = qdata.ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SRTalepTipID, Caption = item.TalepTipAdi });
-                }
-            }
-            return dct;
-        }
-        public static List<CmbIntDto> cmbOzelTanimTipleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.SROzelTanimTipleris.OrderBy(o => o.SROzelTanimTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SROzelTanimTipID, Caption = item.SROzelTanimTipAdi });
-                }
-            }
-            return dct;
-        }
-
-        public static List<CmbIntDto> cmbArGorStatuleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.TalepArGorStatuleris.OrderBy(o => o.TalepArGorStatuID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.TalepArGorStatuID, Caption = item.StatuAdi });
-                }
-            }
-            return dct;
-        }
+      
 
        
      
@@ -2209,26 +1191,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbBoolDto> cmbVarYokData(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Var" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Yok" });
-            return dct;
-
-        }
-        public static List<CmbBoolDto> cmbIdariAkademikdata(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbBoolDto>();
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Idari" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Akademik" });
-            return dct;
-
-        }
-
-
+      
        
       
         public static List<CmbStringDto> GetDiller(bool bosSecimVar = false)
@@ -2261,14 +1224,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbBoolDto> getGrupGoster()
-        {
-            var dct = new List<CmbBoolDto>();
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Grup Olarak Göster" });
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Tek Olarak Göster" });
-            return dct;
-
-        }
+       
 
         public static List<CmbIntDto> cmbGetKontrolTipleri(bool bosSecimVar = false)
         {
@@ -2285,22 +1241,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-
-        public static List<CmbStringDto> cmbGetWsDonemler(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.Donemlers.Where(p => p.IsWsDonem).OrderBy(o => o.DonemID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbStringDto { Value = item.WsDonemKod, Caption = item.DonemAdi });
-                }
-            }
-            return dct;
-
-        }
+ 
         public static List<CmbIntDto> cmbGetWsSinavCekimTipleri(bool bosSecimVar = false, int? FilterCekimTip = null)
         {
             var dct = new List<CmbIntDto>();
@@ -4040,8 +2981,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static DateTime NowDate { get { return DateTime.Now; } }
-
+      
         public static DateTime EkSureBasTar { get { return new DateTime(2021, 2, 1, 13, 00, 0); } }
         public static DateTime EkSureBitTar { get { return new DateTime(2021, 2, 5, 16, 0, 0); } }
 
@@ -4054,7 +2994,7 @@ namespace LisansUstuBasvuruSistemi.Models
             {
 
                 int? OgrenimnTipKod = null;
-                if (new List<int> { 1066, 1065 }.Contains(BasvuruSurecID) && NowDate > EkSureBasTar && NowDate <= EkSureBitTar)
+                if (new List<int> { 1066, 1065 }.Contains(BasvuruSurecID) && DateTime.Now > EkSureBasTar && DateTime.Now <= EkSureBitTar)
                 {
                     OgrenimnTipKod = OgrenimTipi.TezsizYuksekLisans;
                 }
@@ -4119,7 +3059,7 @@ namespace LisansUstuBasvuruSistemi.Models
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 int? OgrenimnTipKod = null;
-                if (new List<int> { 1066, 1065 }.Contains(BasvuruSurecID) && NowDate > EkSureBasTar && NowDate <= EkSureBitTar)
+                if (new List<int> { 1066, 1065 }.Contains(BasvuruSurecID) && DateTime.Now > EkSureBasTar && DateTime.Now <= EkSureBitTar)
                 {
                     OgrenimnTipKod = OgrenimTipi.TezsizYuksekLisans;
                 }
@@ -4298,22 +3238,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
             return new PagerIndexDto { StartRowIndex = setStartRowInx, PageIndex = setPageInx };
         }
-        public static List<CmbIntDto> cmbGetHaftaGunleri(bool bosSecimVar = false, bool? IsHaftaSonu = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.HaftaGunleris.AsQueryable();
-                if (IsHaftaSonu.HasValue) qdata = qdata.Where(p => p.IsHaftaSonu == IsHaftaSonu);
-                var data = qdata.OrderByDescending(o => o.HaftaGunID > 0).ThenBy(o => o.HaftaGunID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.HaftaGunID, Caption = item.HaftaGunAdi });
-                }
-            }
-            return dct;
-        }
+      
         #endregion
 
 
@@ -4322,7 +3247,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         public static string GetTercihRowHtml(TercihRowModel model)
         {
-            return RenderPartialView("Basvuru", "CreateTercihRowHtml", model);
+            return ViewRenderHelper.RenderPartialView("Basvuru", "CreateTercihRowHtml", model);
         }
         public static kotaKontrolModel AlanKontrol(int BasvuruSurecID, int LOgrenciBolumID, int? YLOgrenciBolumID, int OgrenimTipKod, string tprog, int KullaniciID, int BasvuruID = 0)
         {
@@ -4931,7 +3856,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     mdl.AciklanmaTarihi = qSonuc.SinavTarihi == DateTime.MinValue ? (DateTime?)null : qSonuc.SinavTarihi;
 
                                     mdl.jSonValDilSinavi = new SinavSonucDilXmlModel { DIL = "İNGİLİZCE / ENGLISH", PUAN = mdl.Puan.ToString() };
-                                    mdl.WsXmlData = mdl.jSonValDilSinavi.toJsonText();
+                                    mdl.WsXmlData = mdl.jSonValDilSinavi.ToJsonText();
                                     mdl.SinavDilID = "ingilizce".toStrToSinavDilID();
                                     if (qSonuc.Sonuc.HasValue)
                                     {
@@ -5884,162 +4809,9 @@ namespace LisansUstuBasvuruSistemi.Models
             }
 
         }
-        public static string ResimKaydet(HttpPostedFileBase Resim)
-        {
-            try
-            {
-                string mimeType = Resim.ContentType;
-                Stream fileStream = Resim.InputStream;
-                Bitmap bmp = new Bitmap(fileStream);
+      
 
-                string folderName = SistemAyar.KullaniciResimYolu;
-                bool RotasYonDegisimLog = SistemAyar.GetAyar(SistemAyar.RotasyonuDegisenResimleriLogla).ToBoolean().Value;
-                bool Boyutlandirma = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiBoyutlandirma).ToBoolean().Value;
-                bool KaliteOpt = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiKaliteOpt).ToBoolean().Value;
-                string ResimAdi = Resim.FileName.ToFileNameAddGuid();
-                var ResimYolu = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/" + folderName), ResimAdi);
-
-
-                if (Boyutlandirma)
-                {
-                    try
-                    {
-                        var uzn = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiHeightPx);
-                        var gens = SistemAyar.GetAyar(SistemAyar.KullaniciResimKaydiWidthPx);
-
-                        int Uzunluk = uzn.IsNullOrWhiteSpace() ? 560 : uzn.ToInt().Value;
-                        int Genislik = gens.IsNullOrWhiteSpace() ? 560 : gens.ToInt().Value;
-                        var img = bmp.resizeImage(new Size(Genislik, Uzunluk));
-                        img.Save(ResimYolu, ImageFormat.Jpeg);
-                    }
-                    catch (Exception ex)
-                    {
-                        Management.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
-                    }
-                }
-                else
-                {
-                    bmp.Save(ResimYolu, ImageFormat.Jpeg);
-                }
-
-                if (KaliteOpt)
-                {
-                    #region Quality check
-                    try
-                    {
-
-                        Bitmap bmp_Q = new Bitmap(ResimYolu);
-
-                        ImageCodecInfo jpgEncoder = FileExtension.GetImageCodecInfo(ImageFormat.Jpeg);
-
-
-                        Int64 quality = 100L;
-                        if (Resim.ContentLength >= 80000 && Resim.ContentLength < 200000) quality = 80;
-                        else if (Resim.ContentLength >= 200000 && Resim.ContentLength < 400000) quality = 70;
-                        else if (Resim.ContentLength >= 400000 && Resim.ContentLength < 600000) quality = 60;
-                        else if (Resim.ContentLength >= 600000 && Resim.ContentLength < 800000) quality = 50;
-                        else if (Resim.ContentLength >= 800000 && Resim.ContentLength < 1000000) quality = 40;
-                        else if (Resim.ContentLength >= 1000000) quality = 30;
-                        System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-                        var path2 = ResimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
-                        EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                        EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quality);
-                        myEncoderParameters.Param[0] = myEncoderParameter;
-                        bmp_Q.Save(path2, jpgEncoder, myEncoderParameters);
-                        bmp_Q.Dispose();
-                        if (File.Exists(ResimYolu))
-                            File.Delete(ResimYolu);
-                        var imgTmp = Image.FromFile(path2);
-                        imgTmp.Save(ResimYolu, ImageFormat.Jpeg);
-                        imgTmp.Dispose();
-                        File.Delete(path2);
-                    }
-                    catch (Exception errQuality)
-                    {
-                        Management.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogType.OnemsizHata);
-                    }
-                    #endregion
-                }
-
-                #region Rotation
-                try
-                {
-
-                    Image img1 = Image.FromFile(ResimYolu);
-                    var prop = img1.PropertyItems.Where(p => p.Id == 0x0112).FirstOrDefault();
-                    if (prop != null)
-                    {
-                        int orientationValue = img1.GetPropertyItem(prop.Id).Value[0];
-                        RotateFlipType rotateFlipType = GetOrientationToFlipType(orientationValue);
-                        img1.RotateFlip(rotateFlipType);
-                        var path2 = ResimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
-                        img1.Save(path2);
-                        img1.Dispose();
-                        if (File.Exists(ResimYolu))
-                            File.Delete(ResimYolu);
-                        var imgTmp = Image.FromFile(path2);
-                        imgTmp.Save(ResimYolu, ImageFormat.Jpeg);
-                        imgTmp.Dispose();
-                        File.Delete(path2);
-                        if (RotasYonDegisimLog)
-                        {
-                            Management.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + ResimYolu, "Management/resimKaydet", LogType.Bilgi);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Management.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
-                }
-                #endregion
-
-
-                return ResimAdi;
-            }
-            catch (Exception ex)
-            {
-                Management.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, null, UserIdentity.Ip);
-                return null;
-            }
-        }
-
-        private static RotateFlipType GetOrientationToFlipType(int orientationValue)
-        {
-            RotateFlipType rotateFlipType = RotateFlipType.RotateNoneFlipNone;
-
-            switch (orientationValue)
-            {
-                case 1:
-                    rotateFlipType = RotateFlipType.RotateNoneFlipNone;
-                    break;
-                case 2:
-                    rotateFlipType = RotateFlipType.RotateNoneFlipX;
-                    break;
-                case 3:
-                    rotateFlipType = RotateFlipType.Rotate180FlipNone;
-                    break;
-                case 4:
-                    rotateFlipType = RotateFlipType.Rotate180FlipX;
-                    break;
-                case 5:
-                    rotateFlipType = RotateFlipType.Rotate90FlipX;
-                    break;
-                case 6:
-                    rotateFlipType = RotateFlipType.Rotate90FlipNone;
-                    break;
-                case 7:
-                    rotateFlipType = RotateFlipType.Rotate270FlipX;
-                    break;
-                case 8:
-                    rotateFlipType = RotateFlipType.Rotate270FlipNone;
-                    break;
-                default:
-                    rotateFlipType = RotateFlipType.RotateNoneFlipNone;
-                    break;
-            }
-
-            return rotateFlipType;
-        }
+        
 
          
       
@@ -6422,14 +5194,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return model;
 
         }
-
-
-
-        public class RequestModel
-        {
-            public long Tckn { get; set; }
-            public int ID { get; set; }
-        }
+         
 
         public static BasvuruDetaySecilenDto getSecilenBasvuruDetay(int BasvuruID)
         {
@@ -6939,133 +5704,10 @@ namespace LisansUstuBasvuruSistemi.Models
         #endregion
 
         #region Extension
+         
 
 
-
-      
-       
-       
-      
-        public static decimal? ToMoney(this string moneyString)
-        {
-            var groupSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator;
-            var decimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
-            return ToMoney(moneyString, decimalSeparator, groupSeparator);
-        }
-        public static decimal ToMoney(this string moneyString, decimal defaultValue)
-        {
-            var ms = ToMoney(moneyString);
-            return (ms.HasValue ? ms.Value : defaultValue);
-        }
-        public static decimal? ToMoney(this string moneyString, string decimalSeparator, string groupSeparator)
-        {
-            char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-            var moneyStr = string.Join("",
-                                          moneyString
-                                          .ToCharArray()
-                                          .Where(p => (p.ToString() == groupSeparator || p.ToString() == decimalSeparator || numbers.Contains(p))).ToArray()
-                                      );
-            decimal def = 0;
-            if (decimal.TryParse(moneyStr, out def)) return def;
-            return null;
-        }
-
-        public static bool ToIsValidEmail(this string Email)
-        {
-            bool IsSuccess = !Regex.IsMatch(Email,
-                @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,24}))$",
-                RegexOptions.IgnoreCase);
-            if (!IsSuccess) IsSuccess = !Email.IsASCII();
-            return IsSuccess;
-        }
-        public static bool IsASCII(this string value)
-        {
-            return Encoding.UTF8.GetByteCount(value) == value.Length;
-        }
-        //public static string ToExceptionMessage(this Exception ex)
-        //{
-        //    int ix = 1;
-        //    Dictionary<int, string> msgs = new Dictionary<int, string>() { { ix, ex.Message } };
-        //    var innException = ex;
-        //    while ((innException = innException.InnerException) != null)
-        //    {
-        //        ix++;
-        //        msgs.Add(ix, innException.Message);
-        //    }
-        //    var returnMsg = string.Join("\r\n", msgs.Select(s => s.Key + "- " + s.Value).ToArray());
-
-        //    if (ex is DbEntityValidationException)
-        //    {
-        //        var msgsVex = new List<string>();
-        //        var exV = (DbEntityValidationException)ex;
-        //        foreach (var eve in exV.EntityValidationErrors)
-        //        {
-        //            foreach (var ve in eve.ValidationErrors)
-        //            {
-        //                msgsVex.Add(string.Format("State: {0} Property: {1}, Error: {2}", eve.Entry.State, ve.PropertyName, ve.ErrorMessage));
-        //            }
-        //        }
-        //        if (msgsVex.Any())
-        //        {
-        //            msgsVex.Insert(0, "Veri Giriş Hataları:");
-        //            returnMsg += "\r\n" + string.Join("\r\n", msgsVex);
-        //        }
-        //    }
-
-        //    return returnMsg;
-        //}
-        //public static string ToExceptionStackTrace(this Exception ex)
-        //{
-        //    Dictionary<int, string> stck = new Dictionary<int, string>();
-
-        //    int ix = 1;
-        //    var innException = ex;
-        //    stck.Add(ix, ex.StackTrace);
-        //    while ((innException = innException.InnerException) != null)
-        //    {
-        //        ix++;
-        //        stck.Add(ix, innException.StackTrace);
-        //    }
-        //    return string.Join("\r\n", stck.Select(s => s.Key + "- " + s.Value).ToArray());
-        //}
-
-
-        public static string RenderPartialView(string controllerName, string partialView, object model)
-        {
-            //try
-            //{
-
-
-            if (HttpContext.Current == null)
-                HttpContext.Current = new HttpContext(
-                                        new HttpRequest(null, "http://www.lisansustu.yildiz.edu.tr", null),
-                                        new HttpResponse(null));
-            var context = new HttpContextWrapper(System.Web.HttpContext.Current) as HttpContextBase;
-            var routes = new System.Web.Routing.RouteData();
-            routes.Values.Add("controller", controllerName);
-            var requestContext = new System.Web.Routing.RequestContext(context, routes);
-            string requiredString = requestContext.RouteData.GetRequiredString("controller");
-            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
-            var controller = controllerFactory.CreateController(requestContext, requiredString) as ControllerBase;
-            controller.ControllerContext = new ControllerContext(context, routes, controller);
-            var ViewData = new ViewDataDictionary();
-            var TempData = new TempDataDictionary();
-            ViewData.Model = model;
-            using (var sw = new StringWriter())
-            {
-                var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialView);
-                var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, ViewData, TempData, sw);
-                viewResult.View.Render(viewContext, sw);
-                return sw.GetStringBuilder().ToString();
-            }
-            //}
-            //catch (Exception ex)
-            //{
-            //    SistemBilgisiKaydet("View Render Edilirken Bir Hata Oluştu!\r\nViewPath:" + controllerName + "/" + partialView + " \r\nhata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata);
-            //    return "";
-            //}
-        }
+     
 
         public static int PageSize = 15;
 
@@ -7089,34 +5731,8 @@ namespace LisansUstuBasvuruSistemi.Models
         //    return regexItem.IsMatch(gelenStr);
         //}
 
-        public static Image CreateQrCode(this string Kod, int Width = 360, int Height = 360)
-        {
-            var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", Kod, Width, Height);
-            WebResponse response = default(WebResponse);
-            Stream remoteStream = default(Stream);
-            StreamReader readStream = default(StreamReader);
-            WebRequest request = WebRequest.Create(url);
-            response = request.GetResponse();
-            remoteStream = response.GetResponseStream();
-            readStream = new StreamReader(remoteStream);
-            System.Drawing.Image img = System.Drawing.Image.FromStream(remoteStream);
-
-            response.Close();
-            remoteStream.Close();
-            readStream.Close();
-            return img;
-        }
-
-        public static bool IsImage(this string Uzanti)
-        {
-            var imagesTypes = new List<string>();
-            imagesTypes.Add("Png");
-            imagesTypes.Add("Jpg");
-            imagesTypes.Add("Bmp");
-            imagesTypes.Add("Tif");
-            imagesTypes.Add("Gif");
-            return imagesTypes.Contains(Uzanti);
-        }
+       
+ 
         public static DateTime TodateToShortDate(this DateTime Tarih)
         {
             var data1 = Tarih.ToDateString().ToDate().Value;
@@ -7129,45 +5745,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
        
-
-  
-
-
-        public static Image resizeImage(this Image imgToResize, Size size)
-        {
-            int sourceWidth = imgToResize.Width;
-            int sourceHeight = imgToResize.Height;
-
-            float nPercent = 0;
-            float nPercentW = 0;
-            float nPercentH = 0;
-
-            nPercentW = ((float)sourceWidth / (float)size.Width);
-            nPercentH = ((float)sourceHeight / (float)size.Height);
-
-            if (nPercentH > nPercentW)
-                nPercent = nPercentH;
-            else
-                nPercent = nPercentW;
-
-            int destWidth = (int)(sourceWidth / nPercent);
-            int destHeight = (int)(sourceHeight / nPercent);
-
-            Bitmap b = new Bitmap(destWidth, destHeight);
-            Graphics g = Graphics.FromImage((Image)b);
-            g.InterpolationMode = InterpolationMode.Bicubic;
-            b.SetResolution(200, 200);
-            g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
-            g.Dispose();
-
-            return (Image)b;
-        }
-        //public static string ToKullaniciResim(this string ResimAdi)
-        //{
-
-        //    var rsm = ResimAdi.IsNullOrWhiteSpace() ? (Management.getRoot() + SistemAyar.KullaniciDefaultResim) : (Management.getRoot() + SistemAyar.KullaniciResimYolu + "/" + ResimAdi);
-        //    return rsm;
-        //}
+ 
 
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
@@ -7205,212 +5783,18 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-        public static JsonResult toJsonResult(this object obj)
-        {
-            var jsr = new JsonResult();
-            jsr.ContentEncoding = System.Text.Encoding.UTF8;
-            jsr.ContentType = "application/json";
-            jsr.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            jsr.Data = obj;
-            return jsr;
-        }
+       
 
-        public static string toJsonText(this object obj)
-        {
-            return JsonConvert.SerializeObject(obj); ;
-        }
+        
 
-        public static string toEmptyStringZero(this object obj)
-        {
-            string retval = "";
-            if (obj != null && obj.ToString() != "0") retval = obj.ToString();
-            return retval;
-        }
-        public static int? toNullIntZero(this object obj)
-        {
-            int? retval = null;
-            if (obj != null && obj.ToString() != "0") retval = obj.ToString().ToInt();
-            return retval;
-        }
-        public static int ToEmptyStringToZero(this object obj)
-        {
-            int retval = 0;
-            if (obj != null && obj.ToString().Trim() != "") retval = obj.ToString().ToInt().Value;
-            return retval;
-        }
-        public static int? toIntObj(this object obj)
-        {
-            if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
-            else return (int?)null;
-        }
-        public static double? toDoubleObj(this object obj)
-        {
-            if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
-            else return (double?)null;
-        }
-        public static bool? toBooleanObj(this object obj)
-        {
-            bool dgr;
-            if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
-            else return (bool?)null;
-        }
-        public static bool? toIntToBooleanObj(this object obj)
-        {
-            var IntValue = obj.toIntObj();
-            if (obj != null && IntValue.HasValue)
-            {
+       
+      
+       
+       
 
-                if (IntValue == 1) return true;
-                else if (IntValue == 0) return false;
-                else return (bool?)null;
-            }
-            else return (bool?)null;
-        }
-        public static decimal? toDecimalObj(this object obj)
-        {
-            if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
-            else return (decimal?)null;
-        }
-        public static string toStrObj(this object obj)
-        {
-            if (obj != null) return Convert.ToString(obj);
-            else return (string)null;
-        }
-        public static string toStrObjEmptString(this object obj)
-        {
-            if (obj != null)
-            {
-                var Str = Convert.ToString(obj);
-                return Str.Trim();
-            }
-            else return "";
-        }
-        public static bool IsNumber(this object value)
-        {
-            double sayi;
-            return double.TryParse(value.ToString(), out sayi);
-        }
-        public static bool IsNumber2(this object value)
-        {
-            return value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal;
-        }
-        public static bool IsNumberX(this object value)
-        {
-            double Deger;
-            var durum = double.TryParse(value.toStrObj(), out Deger);
-            return durum;
-        }
-        public static bool IsURL(this string source)
-        {
-            return Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute);
-        }
-
-        public static bool IsValidUrl(this string urlString)
-        {
-            if (urlString.IsNullOrWhiteSpace()) return false;
-            Uri uri;
-            return Uri.TryCreate(urlString, UriKind.RelativeOrAbsolute, out uri)
-                && (uri.Scheme == Uri.UriSchemeHttp
-                 || uri.Scheme == Uri.UriSchemeHttps
-                 || uri.Scheme == Uri.UriSchemeFtp
-                 || uri.Scheme == Uri.UriSchemeMailto
-                 );
-        }
-        public static EOyilBilgi toEoYilBilgi(this DateTime datetime)
-        {
-
-            var mdl = new EOyilBilgi();
-            var nowYear = datetime.Year;
-            if (datetime.Month >= 2 && datetime.Month <= 8)
-            {
-                mdl.Donem = 2;
-            }
-            else
-            {
-                mdl.BaslangicYili = datetime.Year;
-                mdl.BitisYili = datetime.Year + 1;
-                mdl.Donem = 1;
-            }
-            if (datetime.Month <= 8)
-            {
-                mdl.BaslangicYili = nowYear - 1;
-                mdl.BitisYili = nowYear;
-            }
-            else
-            {
-                mdl.BaslangicYili = nowYear;
-                mdl.BitisYili = nowYear + 1;
-            }
-            return mdl;
-        }
-        public static double toGenelBasariNotu(this double MezuniyetNotu100LukSistem, bool MulakatSurecineGirecek, BasvuruSurecOgrenimTipleri BasurecOT, bool IsAlesYerineDosyaNotuIstensin, double? AlesNotu, double? GirisSinavNotu = null)
-        {
-
-            var formul = "";
-
-            string retVal = "";
-            string reGexF = "";
-            string AlesKey = IsAlesYerineDosyaNotuIstensin ? "Dosya" : "Ales";
-            if (BasurecOT.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans)
-            {
-                if (AlesNotu.HasValue)
-                {
-                    // MezuniyetNotu100LukSistem + AlesNotu
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluD : BasurecOT.GBNFormulu;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.ToString());
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-                else
-                {
-                    //sadece MezuniyetNotu100LukSistem  
-                    reGexF = MezuniyetNotu100LukSistem.ToString();
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-            }
-            else
-            {
-                if (AlesNotu.HasValue && GirisSinavNotu.HasValue)
-                {
-                    // MezuniyetNotu100LukSistem + GirisSinavNotu + AGNO 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluD : BasurecOT.GBNFormulu;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.ToString()).Replace("Mülakat", GirisSinavNotu.Value.ToString());
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-                else if (GirisSinavNotu.HasValue)
-                {
-
-                    // MezuniyetNotu100LukSistem + GirisSinavNotu 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluDDosyasiz : BasurecOT.GBNFormuluAlessiz;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace("Mülakat", GirisSinavNotu.Value.ToString());
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-                else if (AlesNotu.HasValue)
-                {
-                    // MezuniyetNotu100LukSistem + GirisSinavNotu 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluDMulakatsiz : BasurecOT.GBNFormuluMulakatsiz;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.Value.ToString());
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-                else
-                {
-                    reGexF = MezuniyetNotu100LukSistem.ToString();
-                    retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
-                }
-            }
-            return retVal.ToDouble().Value;
-
-        }
-        public static string toDeviceType(this string ua)
+       
+       
+         public static string toDeviceType(this string ua)
         {
             string ret = "";
             // Check if user agent is a smart TV - http://goo.gl/FocDk
@@ -7486,18 +5870,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return ret;
         }
 
-        public static string ToTIDegerlendirmeSonucu(bool? IsOyBirligiOrCouklugu, bool? IsBasariliOrBasarisiz)
-        {
-            string ReturnSonuc = "";
-
-            if (IsOyBirligiOrCouklugu.HasValue && IsBasariliOrBasarisiz.HasValue)
-            {
-                ReturnSonuc += IsOyBirligiOrCouklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
-                ReturnSonuc += IsBasariliOrBasarisiz.Value ? " Başarılı" : " Başarısız";
-
-            }
-            return ReturnSonuc;
-        } 
+      
 
         public static List<CmbIntDto> CmbCardBonusType()
         {
@@ -7624,7 +5997,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                         var EMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true } };
                         mmmC.Content = contentHtml;
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var Attachments = new List<System.Net.Mail.Attachment>();
                         if (Sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
                         {

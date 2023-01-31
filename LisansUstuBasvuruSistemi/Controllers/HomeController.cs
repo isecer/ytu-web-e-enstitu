@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -114,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.AnketTipID = 3;
                     model.RowID = RowID;
                     model.AnketID = AnketID;
-                    model.JsonStringData = anketSorulari.toJsonText();
+                    model.JsonStringData = anketSorulari.ToJsonText();
                     foreach (var item in anketSorulari)
                     {
                         model.AnketCevapModel.Add(new AnketCevapDto
@@ -133,7 +134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         });
                     }
 
-                    var AnketGiris = Management.RenderPartialView("Ajax", "getAnket", model);
+                    var AnketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
                     ViewBag.AnketGiris = AnketGiris;
 
                 }

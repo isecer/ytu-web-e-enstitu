@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -145,7 +146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                      }
                                                    ).OrderBy(o => o.SiraNo).ToList()
                           }).OrderBy(o => o.SiraNo).ToList();
-            var page = Management.RenderPartialView("Anketler", "DetaySablon", qModel);
+            var page = ViewRenderHelper.RenderPartialView("Anketler", "DetaySablon", qModel);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult DetaySablon(int model)
@@ -165,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               SiraNo = sa.SiraNo,
                               IsEkAciklamaGir = sa.IsEkAciklamaGir
                           }).OrderBy(o => o.SiraNo).ToList();
-            var page = Management.RenderPartialView("Anketler", "DetaySablon2", qModel);
+            var page = ViewRenderHelper.RenderPartialView("Anketler", "DetaySablon2", qModel);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult DetaySablon2(int model)
@@ -189,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else model.SiraNo = Anket.AnketSorus.Count + 1;
 
-            var page = Management.RenderPartialView("Anketler", "SoruEkle", model);
+            var page = ViewRenderHelper.RenderPartialView("Anketler", "SoruEkle", model);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult SoruEkle()
@@ -253,7 +254,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Hata:" + ex.ToExceptionMessage());
                 }
             }
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         public ActionResult GetSoruSecenekEkle(int AnketSoruID, int? AnketSoruSecenekID)
         {
@@ -271,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else model.SiraNo = model.AnketSoru.AnketSoruSeceneks.Count + 1;
              
-            var page = Management.RenderPartialView("Anketler", "SoruSecenekEkle", model);
+            var page = ViewRenderHelper.RenderPartialView("Anketler", "SoruSecenekEkle", model);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult SoruSecenekEkle()
@@ -326,7 +327,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Hata:" + ex.ToExceptionMessage());
                 }
             }
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         public ActionResult Sil(int id)
         {

@@ -13,6 +13,41 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     {
         public static string RenderPartialView(string controllerName, string partialView, object model)
         {
+            //try
+            //{
+
+
+            if (HttpContext.Current == null)
+                HttpContext.Current = new HttpContext(
+                                        new HttpRequest(null, "http://www.lisansustu.yildiz.edu.tr", null),
+                                        new HttpResponse(null));
+            var context = new HttpContextWrapper(System.Web.HttpContext.Current) as HttpContextBase;
+            var routes = new System.Web.Routing.RouteData();
+            routes.Values.Add("controller", controllerName);
+            var requestContext = new System.Web.Routing.RequestContext(context, routes);
+            string requiredString = requestContext.RouteData.GetRequiredString("controller");
+            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
+            var controller = controllerFactory.CreateController(requestContext, requiredString) as ControllerBase;
+            controller.ControllerContext = new ControllerContext(context, routes, controller);
+            var ViewData = new ViewDataDictionary();
+            var TempData = new TempDataDictionary();
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialView);
+                var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    SistemBilgisiKaydet("View Render Edilirken Bir Hata Oluştu!\r\nViewPath:" + controllerName + "/" + partialView + " \r\nhata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), BilgiTipi.Hata);
+            //    return "";
+            //}
+        }
+        public static string RenderPartialViewx(string controllerName, string partialView, object model)
+        {
 
 
             if (HttpContext.Current == null)
@@ -41,7 +76,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         }
         public static IHtmlString ToRenderPartialViewHtml(this object model, string controllerName, string partialView)
         {
-            var strView = RenderPartialView(controllerName, partialView, model);
+            var strView = RenderPartialViewx(controllerName, partialView, model);
             return new HtmlString(strView);
         }
 

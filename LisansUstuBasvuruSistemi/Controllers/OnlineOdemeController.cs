@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
@@ -73,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             var bolm = Management.getbasvuruSurecleriTercihlerOdeme(BasvuruSurecID, KullaniciID.Value, true, true);
-            return bolm.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
 
 
@@ -172,17 +173,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CardNumber" });
                 }
                  
-                if (model.CV2.IsNullOrWhiteSpace())
+                if (model.Cv2.IsNullOrWhiteSpace())
                 {
                     _MmMessage.Messages.Add("Güvenlik Kodu Boş Bırakılamaz");
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CV2" });
                 }
-                else if (model.CV2.Length != 3)
+                else if (model.Cv2.Length != 3)
                 {
                     _MmMessage.Messages.Add("Güvenlik Kodu 3 Haneden Oluşması Gerekmektedir.");
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CV2" });
                 }
-                else if (!model.CV2.IsNumber())
+                else if (!model.Cv2.IsNumber())
                 {
                     _MmMessage.Messages.Add("Güvenlik Kodu Sadece Sayıdan Oluşması Gerekmektedir.");
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CV2" });
@@ -272,7 +273,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     //Kredi kart bilgileri
                     paymentCollection.Add("pan", cardModel.CardNumber);
                     paymentCollection.Add("cardHolderName", cardModel.HolderName);
-                    paymentCollection.Add("cv2", cardModel.CV2);
+                    paymentCollection.Add("cv2", cardModel.Cv2);
                     var yil = cardModel.ExpireYear.Substring(2, 2);
                     paymentCollection.Add("Ecom_Payment_Card_ExpDate_Year", yil);
                     var month = string.Format("{0:00}", cardModel.ExpireMonth);

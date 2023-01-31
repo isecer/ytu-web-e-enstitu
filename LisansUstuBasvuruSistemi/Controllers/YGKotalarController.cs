@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -131,8 +132,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             //ViewBag.EnstituKod2 = new SelectList(Management.cmbGetYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.MulakatSurecineGirecek = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.MulakatSurecineGirecek);
-            ViewBag.IsAlesYerineDosyaNotuIstensin = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.IsAlesYerineDosyaNotuIstensin);
+            ViewBag.MulakatSurecineGirecek = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.MulakatSurecineGirecek);
+            ViewBag.IsAlesYerineDosyaNotuIstensin = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsAlesYerineDosyaNotuIstensin);
             return View(model);
         }
 

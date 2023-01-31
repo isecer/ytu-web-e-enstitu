@@ -9,6 +9,8 @@ using Newtonsoft.Json.Linq;
 using System.Xml;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -146,7 +148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = false;
                 mMessage.MessageType = Msgtype.Error;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult getProgramlar(int BasvuruSurecID, int? KullaniciID)
@@ -158,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
            
             var bolm = Management.getbasvuruSurecleriTercihlerOdeme(BasvuruSurecID, KullaniciID.Value, true, false);
-            return bolm.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult getPRdetay(string UniqueID)
         {

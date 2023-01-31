@@ -70,7 +70,7 @@
                                         <td>:</td>
                                         <td>   
                                             @{
-                                                var vBil = Model.BelgeTalepID.toVerilmeBilgisi(Model.DurumListeAdi);
+                                                var vBil = BelgeTalepBus.GetBelgeVerilmeBilgisi(Model.BelgeTalepID,Model.DurumListeAdi);
                                                 string tColor = "style=cursor:pointer;" + (vBil.Value < 0 ? "color:maroon;" : Model.Color);
                                                 string vClass = (vBil.Value < 0 ? "fa fa-warning" : Model.ClassName);
                                                <table style="width:100%;table-layout:fixed;">

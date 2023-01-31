@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Utilities.SystemData
 @model MezuniyetBasvuruDetayDto
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -155,7 +156,7 @@
                             <label class="col-md-6 col-xs-6 control-label">Danışman İsmi Var Mı?</label>
                             <div class="col-md-6 col-xs-6">
                                 <select id="DanismanIsmiVar" name="DanismanIsmiVar">
-                                    @foreach (var item in Management.cmbEvetHayirData(true))
+                                    @foreach (var item in ComboData.GetCmbEvetHayirData(true))
                                     {
                                         <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.SelectedYayin.DanismanIsmiVar ? "selected" : "")>@item.Caption</option>
                                     }
@@ -166,7 +167,7 @@
                             <label class="col-md-6 col-xs-6 control-label">Tez İçeriği ile Uyumlu mu?</label>
                             <div class="col-md-6 col-xs-6">
                                 <select id="TezIcerikUyumuVar" name="TezIcerikUyumuVar">
-                                    @foreach (var item in Management.cmbEvetHayirData(true))
+                                    @foreach (var item in ComboData.GetCmbEvetHayirData(true))
                                     {
                                         <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.SelectedYayin.TezIcerikUyumuVar ? "selected" : "")>@item.Caption</option>
                                     }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -91,7 +92,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else q = q.OrderBy(o => o.OrderInx).ThenByDescending(t => t.Tarih).ThenByDescending(t => t.BasSaat).ThenByDescending(t => t.IslemTarihi);
             var IndexModel = new MIndexBilgi();
-            var btDurulari = Management.SRDurumList();
+            var btDurulari = SrTalepleriBus.GetSrDurumList();
             foreach (var item in btDurulari)
             {
                 var tipCount = q.Where(p => p.SRDurumID == item.SRDurumID).Count();
@@ -139,9 +140,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
            
             ViewBag.IndexModel = IndexModel;
-            ViewBag.SRTalepTipID = new SelectList(Management.cmbSRTalepTipleri( true), "Value", "Caption", model.SRTalepTipID);
-            ViewBag.SRSalonID = new SelectList(Management.cmbSalonlar(_EnstituKod ,true), "Value", "Caption", model.SRSalonID);
-            ViewBag.SRDurumID = new SelectList(Management.cmbSRDurumListe( true), "Value", "Caption", model.SRDurumID);
+            ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbSrTalepTipleri( true), "Value", "Caption", model.SRTalepTipID);
+            ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(_EnstituKod ,true), "Value", "Caption", model.SRSalonID);
+            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe( true), "Value", "Caption", model.SRDurumID);
             return View(model);
         }
         [Authorize(Roles = RoleNames.SrTalepSil)]
@@ -173,7 +174,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             //}
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
        
@@ -210,7 +211,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add(msg);
                     mmMessage.IsSuccess = false;
                     mmMessage.MessageType = Msgtype.Error;
-                    strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+                    strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
                 }
                 else
                 {
@@ -288,16 +289,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mdl.Detaylar.Add(new mailTableRow
                     {
                         Colspan2 = true,
-                        Aciklama = Management.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
+                        Aciklama = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
                     });
                 }
                 else
                 {
                     mdl.Detaylar.Add(new mailTableRow { Baslik = "Açıklama", Aciklama = talep.Aciklama });
                 }
-                string content = Management.RenderPartialView("Ajax", "getMailTableContent", mdl);
+                string content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mdl);
                 mmmC.Content = content;
-                string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                 var User = mailBilgi.SmtpKullaniciAdi;
                 var snded = MailManager.sendMail(mailBilgi.EnstituKod, enstituAdi, htmlMail, talep.Kullanicilar.EMail, null);
                 if (snded)
@@ -329,7 +330,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
                 if (msgs.Messages.Count > 0)
                 {
-                    strView = Management.RenderPartialView("Ajax", "getMessage", msgs);
+                    strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", msgs);
                 }
             }
             return new
@@ -339,7 +340,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Color = qbDrm.Color,
                 FontWeight = fWeight,
                 strView = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
 

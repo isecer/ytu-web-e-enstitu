@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -144,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = PS.PageIndex;
 
             var IndexModel = new MIndexBilgi();
-            var btDurulari = Management.BelgeTalepDurumList();
+            var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
             //foreach (var item in btDurulari)
             //{
             //    var tipCount = q.Where(p => p.BelgeDurumID == item.BelgeDurumID).Count();
@@ -237,8 +238,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             ViewBag.MmMessage = MmMessage;
-            ViewBag.TalepArGorStatuID = new SelectList(Management.cmbArGorStatuleri(true), "Value", "Caption", Talep.TalepArGorStatuID);
-            ViewBag.TalepTipID = new SelectList(Management.cmbTalepTipleriSurec(Talep.TalepSurecID, Talep.TalepTipID, true), "Value", "Caption", Talep.TalepTipID);
+            ViewBag.TalepArGorStatuID = new SelectList(TaleplerBus.GetCmbArGorStatuleri(true), "Value", "Caption", Talep.TalepArGorStatuID);
+            ViewBag.TalepTipID = new SelectList(TaleplerBus.GetCmbTalepTipleriSurec(Talep.TalepSurecID, Talep.TalepTipID, true), "Value", "Caption", Talep.TalepTipID);
 
             
             return View(Talep);
@@ -628,13 +629,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 LogIslemleri.LogEkle("TalepGelenTalepler", YeniKayit ? IslemTipi.Insert : IslemTipi.Update, talep.ToJson());
                 MmMessage.IsSuccess = true;
                 MmMessage.MessageType = Msgtype.Success;
-                return MmMessage.toJsonResult();
+                return MmMessage.ToJsonResult();
             }
             else
             {
                 MmMessage.IsSuccess = false;
                 MmMessage.MessageType = Msgtype.Warning;
-                return MmMessage.toJsonResult();
+                return MmMessage.ToJsonResult();
             }
         }
 
@@ -743,9 +744,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                     _ea = "http://" + WurlAddr.First();
                 mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                var HCB = Management.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+                var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
                 mmmC.Content = HCB;
-                string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                 var emailSend = MailManager.sendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, Talep.EMail, null);
 
                 if (emailSend)
@@ -797,7 +798,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 TalepDurumAdi = qbDrm.TalepDurumAdi,
                 ClassName = qbDrm.ClassName,
                 Color = qbDrm.Color
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
         [HttpPost]
@@ -853,7 +854,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new
             {
                 IsSuccess = mmMessage.IsSuccess,
@@ -889,7 +890,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 s.TalepTipleri.TaahhutAciklamasi,
                 TalepTipAciklama = (Aciklama != null ? Aciklama : s.TalepTipleri.TalepTipAciklama)
             }).First();
-            var jResult= TalepTip.toJsonResult();
+            var jResult= TalepTip.ToJsonResult();
 
             return jResult;
         }
@@ -943,7 +944,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     Management.SistemBilgisiKaydet("Talep silinirken bir hata oluştu! TalepGelenTalepID=" + id, "TalepYap /Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

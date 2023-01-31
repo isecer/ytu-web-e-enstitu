@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -276,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = Msgtype.Warning;
             }
 
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
 
 
 
@@ -333,7 +334,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
             }
             db.SaveChanges();
-            return new { qDanismans.Count }.toJsonResult();
+            return new { qDanismans.Count }.ToJsonResult();
         }
     }
 }

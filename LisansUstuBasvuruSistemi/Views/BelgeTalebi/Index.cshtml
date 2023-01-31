@@ -196,7 +196,7 @@
                                         </td>
                                         <td>
                                             @{
-                                                var vBil = item.BelgeTalepID.toVerilmeBilgisi(item.DurumListeAdi);
+                                                var vBil = BelgeTalepBus.GetBelgeVerilmeBilgisi(item.BelgeTalepID,item.DurumListeAdi);
                                                 string tColor = "style=cursor:pointer;color:" + (vBil.Value < 0 ? "maroon;" : item.Color);
                                                 <table style="width:100%;table-layout:fixed;">
                                                     <tr>

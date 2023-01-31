@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -101,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = qdata;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
-            ViewBag.TarihKriterID = new SelectList(Management.getTarihKriterSecim(true), "Value", "Caption", model.TarihKriterID);
+            ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(true), "Value", "Caption", model.TarihKriterID);
 
             return View(model);
         }
@@ -181,11 +183,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", model.OgretimYili);
-            ViewBag.OgretimYiliB = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", model.OgretimYiliB);
-            ViewBag.GrupKodu = Management.getGrupKod(yayinturCount, "Grup", true);
-            ViewBag.VeVeya = Management.getVeVeya(true);
-            ViewBag.TarihKriterID = new SelectList(Management.getTarihKriterSecim(false), "Value", "Caption", model.TarihKriterID);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYili);
+            ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", model.OgretimYiliB);
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(yayinturCount, "Grup", true);
+            ViewBag.VeVeya = ComboData.GecCmbVeVeya(true);
+            ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption", model.TarihKriterID);
 
             return View(model);
         }
@@ -471,11 +473,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYili);
-            ViewBag.OgretimYiliB = new SelectList(Management.getAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYiliB);
-            ViewBag.GrupKodu = Management.getGrupKod(yayinturCount, "Grup", true);
-            ViewBag.VeVeya = Management.getVeVeya(true);
-            ViewBag.TarihKriterID = new SelectList(Management.getTarihKriterSecim(false), "Value", "Caption");
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYili);
+            ViewBag.OgretimYiliB = new SelectList(DonemlerBus.GetCmbAkademikTarih(false, 5), "Value", "Caption", kModel.OgretimYiliB);
+            ViewBag.GrupKodu = ComboData.GetCmbGrupKod(yayinturCount, "Grup", true);
+            ViewBag.VeVeya = ComboData.GecCmbVeVeya(true);
+            ViewBag.TarihKriterID = new SelectList(ComboData.GetCmbTarihKriterSecim(false), "Value", "Caption");
             ViewBag.MmMessage = MmMessage;
             return View(kModel);
         }
@@ -496,7 +498,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.IsAktif = data.IsAktif;
             model.OgretimYili = data.BaslangicYil + "/" + data.BitisYil + " " + data.Donemler.DonemAdi;
             if (data.TarihKriterID == TarihKriterSecim.SecilenTarihAraligi) model.OgretimYiliB = data.BaslangicYilB + "/" + data.BitisYilB + " " + data.Donemler1.DonemAdi;
-            model.TarihKriterAdi = Management.getTarihKriterSecim().Where(p => p.Value == data.TarihKriterID).First().Caption;
+            model.TarihKriterAdi = ComboData.GetCmbTarihKriterSecim().Where(p => p.Value == data.TarihKriterID).First().Caption;
 
             model.IslemTarihi = data.IslemTarihi;
             model.IslemYapanID = data.IslemYapanID;
@@ -555,7 +557,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 #region AnaBilgi
                 var IndexModel = new MIndexBilgi();
-                var btDurulari = MezuniyetBus.GetMezuniyetYayinDurumListe(Management.getMBasvuruDurumIDs());
+                var btDurulari = MezuniyetBus.GetMezuniyetYayinDurumListe(new List<int>() { BasvuruDurumu.Taslak, BasvuruDurumu.Onaylandı });
                 foreach (var item in btDurulari)
                 {
                     var tipCount = db.MezuniyetBasvurularis.Where(p => p.MezuniyetSurecID == mdl.MezuniyetSurecID && p.MezuniyetYayinKontrolDurumID == item.MezuniyetYayinKontrolDurumID).Count();
@@ -569,7 +571,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.ToplamBasvuruBilgisi = IndexModel;
 
                 #endregion
-                page = Management.RenderPartialView("MezuniyetSureci", "getMsDetAnaBilgi", mdl);
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "getMsDetAnaBilgi", mdl);
             }
 
             return Content(page, "text/html");
@@ -661,7 +663,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

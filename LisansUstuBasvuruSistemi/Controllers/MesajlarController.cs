@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -153,8 +154,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.MesajKategoriID = new SelectList(MesajlarBus.cmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsAktif = new SelectList(Management.cmbAcikKapaliData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.IsDosyaEkDurum = new SelectList(Management.cmbDosyaEkiDurumData(true), "Value", "Caption", model.IsDosyaEkDurum);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAcikKapaliData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsDosyaEkDurum = new SelectList(ComboData.GetCmbDosyaEkiDurumData(true), "Value", "Caption", model.IsDosyaEkDurum);
             ViewBag.MesajYili = new SelectList(MesajlarBus.cmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
 
             return View(model);
@@ -162,7 +163,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetAcikMsjCount(string EnstituKod)
         {
             var model = MesajlarBus.GetCevaplanmamisMesajCount(EnstituKod);
-            return new { mCount = model.Value.Value, HtmlContent = model.Caption }.toJsonResult();
+            return new { mCount = model.Value.Value, HtmlContent = model.Caption }.ToJsonResult();
         }
         public ActionResult DurumKayit(int id, bool IsAktif, bool? MainFilter)
         {

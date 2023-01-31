@@ -4,6 +4,7 @@
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
 @{
@@ -304,7 +305,7 @@
                                             inx++;
                                             item.RowNum = inx;
                                             item.IsDataShow = true;
-                                            @Html.Raw(Management.RenderPartialView("Mezuniyet", "AddRow", item));
+                                            @Html.Raw(ViewRenderHelper.RenderPartialView("Mezuniyet", "AddRow", item));
                                         }
                                     }
                                     else

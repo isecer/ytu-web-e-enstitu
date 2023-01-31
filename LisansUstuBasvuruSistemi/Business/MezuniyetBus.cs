@@ -654,7 +654,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 foreach (var item in model.MezuniyetSRModel.SalonRezervasyonlari)
                 {
 
-                    item.SrDurumSelectList.SRDurumID = new SelectList(Management.cmbSRDurumListe(false), "Value", "Caption", item.SRDurumID);
+                    item.SrDurumSelectList.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(false), "Value", "Caption", item.SRDurumID);
                     item.SrDurumSelectList.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(), "Value", "Caption", item.MezuniyetSinavDurumID);
 
                 }
@@ -713,7 +713,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             modelAnk.AnketTipID = 4;
                             modelAnk.BasvuruSurecID = bsurec.MezuniyetSurecID;
                             modelAnk.AnketID = bsurec.AnketID.Value;
-                            modelAnk.JsonStringData = anketSorulari.toJsonText();
+                            modelAnk.JsonStringData = anketSorulari.ToJsonText();
                             foreach (var item in anketSorulari)
                             {
                                 modelAnk.AnketCevapModel.Add(new AnketCevapDto
@@ -725,7 +725,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 });
                             }
 
-                            model.AnketView = Management.RenderPartialView("Ajax", "getAnket", modelAnk);
+                            model.AnketView = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", modelAnk);
                         }
                     }
                 }
@@ -1120,6 +1120,10 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
 
+        } 
+        public static bool IsMakaleYayinDurumIsteniyor(this int yayinTurId)
+        {
+            return new List<int> { 5, 4 }.Contains(yayinTurId);
         }
         public static IHtmlString ToMezuniyetDurum(this frMezuniyetBasvurulari model)
         {
@@ -1504,6 +1508,18 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 3, Caption = "Eyk'Ya Gonderimi Onaylanmadi" });
             dct.Add(new CmbIntDto { Value = 4, Caption = "Eyk'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 5, Caption = "Eyk'Da Onaylanmadı" });
+
+            return dct;
+
+        }
+        public static List<CmbIntDto> GetCmbTezDurumListe(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+
+            dct.Add(new CmbIntDto { Value = 2, Caption = "İşlem Bekleyenler" });
+            dct.Add(new CmbIntDto { Value = 0, Caption = "Düzeltme Talep Edildi" });
+            dct.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
 
             return dct;
 

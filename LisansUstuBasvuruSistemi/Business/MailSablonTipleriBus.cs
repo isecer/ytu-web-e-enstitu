@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Models.ObsService;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+
+namespace LisansUstuBasvuruSistemi.Business
+{
+    public class MailSablonTipleriBus
+    {
+        public static List<CmbIntDto> GetCmbMailSablonlari(string enstituKodu, bool bosSecimVar = false, bool? sistemMailFiltre = null)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = db.MailSablonlaris.Where(p => p.EnstituKod == enstituKodu && p.IsAktif && p.MailSablonTipleri.SistemMaili == (sistemMailFiltre ?? p.MailSablonTipleri.SistemMaili)).OrderBy(o => o.SablonAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.MailSablonlariID, Caption = item.SablonAdi });
+                }
+            }
+
+            return dct;
+
+        }
+
+        public static List<CmbIntDto> GetCmbMailSablonTipleri(bool? sistemMaili = null, bool bosSecimVar = false, bool? isOlusturulmayanlar = null)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = db.MailSablonTipleris.Where(p => isOlusturulmayanlar == true ? !p.MailSablonlaris.Any() : true && p.SistemMaili == (sistemMaili ?? p.SistemMaili)).OrderBy(o => o.SablonTipAdi).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
+                }
+            }
+
+            return dct;
+
+        }
+    }
+
+}

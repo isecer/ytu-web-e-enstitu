@@ -516,7 +516,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult getOT(int BasvuruSurecID, string ProgramKod, int? MulakatID = null)
         {
             var lst = Management.cmbGetKullaniciMulakatOgrenimTipleri(BasvuruSurecID, UserIdentity.Current.Id, ProgramKod, true, MulakatID);
-            return lst.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public class mulakatDetayKontrolM : MulakatDetay
         {
@@ -692,7 +692,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess = mmMessage.Messages.Count == 0;
                 mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-                strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+                strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             }
             else
             {
@@ -865,7 +865,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Information;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1111,7 +1111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Title = "Hata";
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView, ColorSet = Json(colorS.Select(s => new { s.Key, s.Value })) }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1171,7 +1171,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Bu mülakat bilgisini silmeye yetkili değilsiniz!");
                 Management.SistemBilgisiKaydet("Mulakat bilgisi yetkisiz silme işlemi!\r\nMulakatID:" + id + "\r\nSilinmek İstenen Program Kodu:" + mlkt.ProgramKod + "\r\nProgram Yetkileri:" + string.Join(", ", uPrKods), "MulakatSureci/Sil", LogType.OnemsizHata);
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
 
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }

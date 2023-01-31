@@ -189,7 +189,7 @@
                                                 @item.TIAraRaporAktifDonemAdi<br />@(item.AraRaporSayisi.HasValue ? item.AraRaporSayisi + ". Rapor" : "")
                                             </td>
                                             <td>
-                                                @item.TIAraRaporRaporDurumAdi <br />@Management.ToTIDegerlendirmeSonucu(item.IsOyBirligiOrCouklugu, item.IsBasariliOrBasarisiz)
+                                                @item.TIAraRaporRaporDurumAdi <br />@ValueConverterExtension.ToTiDegerlendirmeSonucu(item.IsOyBirligiOrCouklugu, item.IsBasariliOrBasarisiz)
                                             </td>
 
                                             <td>

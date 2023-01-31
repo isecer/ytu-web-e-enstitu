@@ -623,21 +623,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         mMessage.MessageType = Msgtype.Information;
                         mMessage.IsSuccess = true;
-                        View = Management.RenderPartialView("TIBasvuru", "TIAraRaporFormu", Model);
+                        View = ViewRenderHelper.RenderPartialView("TIBasvuru", "TIAraRaporFormu", Model);
                     }
                 }
             }
 
 
             if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
             {
                 mMessage.IsSuccess,
                 Content = View,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
 
         }
         [Authorize]
@@ -1122,7 +1122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsYeniJO,
                 SaveData,
                 kModel.SelectedTabID,
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize]
         public ActionResult TIAraRaporFormu()
@@ -1368,7 +1368,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            return mmMessage.toJsonResult();
+            return mmMessage.ToJsonResult();
         }
 
         public ActionResult AraRaporDegerlendi(Guid? UniqueID, bool? IsTezIzlemeRaporuTezOnerisiUygun, bool IsDrBurs, bool? IsTezIzlemeRaporuAltAlanUygun, bool? IsBasarili, string Aciklama)
@@ -1579,7 +1579,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1635,7 +1635,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            return new { mMessage, MessageType = (mMessage.IsSuccess ? "success" : "error") }.toJsonResult();
+            return new { mMessage, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
         }
 
 
@@ -1695,7 +1695,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1741,7 +1741,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

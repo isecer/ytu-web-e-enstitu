@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -130,12 +131,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            var gunler = Management.cmbGetHaftaGunleri(false, false);
+            var gunler = SrTalepleriBus.GetCmbHaftaGunleri(false, false);
             ViewBag.HaftaGunleri = gunler;
 
-            var salonlar = Management.cmbSalonlar(model.EnstituKod, false, null);
+            var salonlar = SrTalepleriBus.GetCmbSalonlar(model.EnstituKod, false, null);
             ViewBag.Salonlar = salonlar;
-            ViewBag.IsDolu = new SelectList(Management.cmbDoluBosData(true), "Value", "Caption", model.IsDolu);
+            ViewBag.IsDolu = new SelectList(ComboData.GetCmbDoluBosData(true), "Value", "Caption", model.IsDolu);
 
 
             return View(model);

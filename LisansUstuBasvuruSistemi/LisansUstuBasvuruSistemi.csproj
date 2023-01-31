@@ -213,11 +213,16 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\routeSet.cs" />
+    <Compile Include="Business\BelgeTalepBus.cs" />
+    <Compile Include="Business\DonemlerBus.cs" />
     <Compile Include="Business\EnstituBus.cs" />
+    <Compile Include="Business\MailSablonTipleriBus.cs" />
     <Compile Include="Business\MenulerBus.cs" />
     <Compile Include="Business\MesajlarBus.cs" />
     <Compile Include="Business\MezuniyetBus.cs" />
     <Compile Include="Business\RollerBus.cs" />
+    <Compile Include="Business\SrTalepleriBus.cs" />
+    <Compile Include="Business\TaleplerBus.cs" />
     <Compile Include="Business\TezDanismanOneriBus.cs" />
     <Compile Include="Business\TezIzlemeBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
@@ -917,6 +922,7 @@
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariYayinDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
+    <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
     <Compile Include="Utilities\Dtos\PagerIndexDto.cs" />
     <Compile Include="Utilities\Dtos\kmKotalar.cs" />
@@ -951,8 +957,6 @@
     <Compile Include="Utilities\Dtos\raporBTSayisalModel.cs" />
     <Compile Include="Utilities\Dtos\raporLUBModel.cs" />
     <Compile Include="Utilities\Dtos\raporOtipModel.cs" />
-    <Compile Include="Utilities\Helpers\ADAuthenticationHelper.cs" />
-    <Compile Include="Utilities\Helpers\ComboStaticDataHelper.cs" />
     <Compile Include="Utilities\Helpers\DekontHelper.cs" />
     <Compile Include="Utilities\Helpers\DeviceTypeHelper.cs" />
     <Compile Include="Utilities\Helpers\DonemHelper.cs" />
@@ -1071,7 +1075,7 @@
     <Compile Include="Utilities\Helpers\XmlSinavConverter.cs" />
     <Compile Include="Models\ApplicationClock.cs" />
     <Compile Include="Utilities\SystemSetting\BelgeTalepAyar.cs" />
-    <Compile Include="Models\DevexpressHelper.cs" />
+    <Compile Include="Utilities\Helpers\DevexpressHelper.cs" />
     <Compile Include="Utilities\Logs\LogIslemleri.cs" />
     <Compile Include="Models\MailManager.cs" />
     <Compile Include="Models\Management.cs" />
@@ -1086,7 +1090,7 @@
     <Compile Include="Models\YokApi\YokdilDataModel.cs" />
     <Compile Include="Utilities\SystemSetting\SistemAyar.cs" />
     <Compile Include="Utilities\SystemSetting\SrAyar.cs" />
-    <Compile Include="Models\ThreeDHelper.cs" />
+    <Compile Include="Utilities\Helpers\ThreeDHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raporlar\Genel\rprAnket.cs">
       <SubType>Component</SubType>

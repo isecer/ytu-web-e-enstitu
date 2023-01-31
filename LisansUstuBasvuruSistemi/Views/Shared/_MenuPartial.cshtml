@@ -14,7 +14,8 @@
     var enst = (selectedEnstKisAd + "/").ToLower();
     root = root + enst;
     var eKod = EnstituBus.GetSelectedEnstitu(selectedEnstKisAd);
-    var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
+    //var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
+    var unShowMenuIds = new List<int> {   };
     var menudata = MenulerBus.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
     menudata.Add(new Menuler
     {

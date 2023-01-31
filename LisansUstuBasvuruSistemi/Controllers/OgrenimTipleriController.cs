@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -96,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
             ViewBag.IndexModel = IndexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string dlgid)
@@ -118,7 +119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
            
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.GrupGoster = new SelectList(Management.getGrupGoster(), "Value", "Caption", model.GrupGoster); 
+            ViewBag.GrupGoster = new SelectList(ComboData.GetCmbGrupGosterData(), "Value", "Caption", model.GrupGoster); 
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(model.EnstituKod, false, true, model.OgrenimTipKod);
             ViewBag.YedekOgrenciSayisiKotaCarpani = new SelectList(Management.cmbOTYedekCarpanData(false), "Value", "Caption", model.YedekOgrenciSayisiKotaCarpani);
             ViewBag.secilenID = secilenID;
@@ -424,7 +425,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.MmMessage = MmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.GrupGoster = new SelectList(Management.getGrupGoster(), "Value", "Caption", kModel.GrupGoster); 
+            ViewBag.GrupGoster = new SelectList(ComboData.GetCmbGrupGosterData(), "Value", "Caption", kModel.GrupGoster); 
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(kModel.EnstituKod, false, true, kModel.OgrenimTipKod);
             ViewBag.YedekOgrenciSayisiKotaCarpani = new SelectList(Management.cmbOTYedekCarpanData(false), "Value", "Caption", kModel.YedekOgrenciSayisiKotaCarpani);
             ViewBag.secilenID = secilenID;

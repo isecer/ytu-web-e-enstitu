@@ -19,6 +19,7 @@ using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -140,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = MmMessage;
             var model = new kmBasvuruSurec();
             model.IsAktif = true;
-            var eoY = DateTime.Now.toEoYilBilgi();
+            var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
             model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem;
             model.FarkliOgrenimTipleriAyniBasvurudaAlinabilsin = true;
 
@@ -259,7 +260,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", model.Kota_BasvuruSurecKontrolTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.KayitOlmayanlarAnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.KayitOlmayanlarAnketID), "Value", "Caption", model.KayitOlmayanlarAnketID);
             ViewBag.BsOtoMmail = bsMList;
@@ -698,7 +699,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.BsOtoMmail = bsMList;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.Kota_BasvuruSurecKontrolTipID = new SelectList(Management.cmbGetKontrolTipleri(true), "Value", "Caption", kModel.Kota_BasvuruSurecKontrolTipID);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
             ViewBag.KayitOlmayanlarAnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.KayitOlmayanlarAnketID), "Value", "Caption", kModel.KayitOlmayanlarAnketID);
             ViewBag.MmMessage = MmMessage;
@@ -724,7 +725,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mmMessage.Messages.Add(Msg);
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         public void SBKopyala(int basvuruSurecID, string EnstituKod)
@@ -1147,7 +1148,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                              GrupAdi = ot.GrupAdi
                                          }).OrderBy(t => t.OgrenimTipAdi).ToList();
                 #endregion
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsDetAnaBilgi", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsDetAnaBilgi", mdl);
             }
             if (tbInx == 2)
             {
@@ -1215,7 +1216,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     }).ToList();
 
                 #endregion
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsSinavTipleri", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsSinavTipleri", mdl);
             }
             if (tbInx == 3)
             {
@@ -1257,7 +1258,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                       }).OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ToList();
                 #endregion
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsKotalar", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsKotalar", mdl);
             }
             if (tbInx == 4)
             {
@@ -1464,7 +1465,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.MulakatBilgi.YerJuriBilgisiGirisCount = tmpT.Where(p => p.SinavNotGirisiYapildi).Count();
                 #endregion
                 mdl.IsDelete = IsDelete;
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsMulakat", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsMulakat", mdl);
             }
             if (tbInx == 5)
             {
@@ -1512,7 +1513,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 #endregion
                 mdl.IsDelete = IsDelete;
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsSonuc", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsSonuc", mdl);
             }
             if (tbInx == 6)
             {
@@ -1545,7 +1546,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.AnketDetay = qModel;
                 #endregion
                 mdl.IsDelete = IsDelete;
-                page = Management.RenderPartialView("YYDBasvuruSureci", "getBsAnket", mdl);
+                page = ViewRenderHelper.RenderPartialView("YYDBasvuruSureci", "getBsAnket", mdl);
             }
             return Content(page, "text/html");
         }
@@ -1717,7 +1718,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Information;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -1987,7 +1988,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.IsSuccess) mmMessage.MessageType = Msgtype.Success;
             else mmMessage.MessageType = Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
@@ -2154,7 +2155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -2270,7 +2271,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Yeri", Aciklama = itmMD.YerAdi });
                             mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Tarihi", Aciklama = itmMD.SinavTarihi.ToFormatDateAndTime() });
                             mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Tipi", Aciklama = itmMD.MulakatSinavTurAdi });
-                            mdHtml.Add(Management.RenderPartialView("Ajax", "getMailTableContent", mtcSinavB));
+                            mdHtml.Add(ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavB));
 
                         }
                         mtc.Detaylar.Add(new mailTableRow
@@ -2291,12 +2292,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mtc.Detaylar.Add(new mailTableRow
                             {
                                 Colspan2 = true,
-                                Aciklama = Management.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
+                                Aciklama = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
                             });
                         }
-                        var tavleContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                        var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                         mmmC.Content = sablonHtml + "<br/>" + tavleContent;
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
                         var User = mailBilgi.SmtpKullaniciAdi;
                         var EMailList = item.GonderilecekMails.Distinct().Select(s => new MailSendList { EMail = s.Caption, ToOrBcc = false }).ToList();
@@ -2351,7 +2352,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -2555,7 +2556,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         #endregion
 
                         mmmC.Content = content.Replace("_removeRw_", "");
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
                         var selectedAttachL = attchL.Where(p => p.Key == (_cont.MailSablonTipID + "_")).FirstOrDefault();
                         var attach = new List<System.Net.Mail.Attachment>();
@@ -2612,7 +2613,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                 }
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new
             {
                 IsSuccess = mmMessage.IsSuccess,
@@ -3133,7 +3134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new
             {
                 DekontIste = dekontIste,
@@ -3223,7 +3224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Information;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { IsSuccess = true, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
@@ -3242,7 +3243,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.IslemYapanIP = UserIdentity.Ip;
             }
             db.SaveChanges();
-            var strView = Management.RenderPartialView("Ajax", "getMessage", new MmMessage { IsSuccess = true, Messages = { "Toplu Kayıt Kapatma İşlemi Başarılı" }, Title = "Toplu Kayıt Kapatma İşlemi" });
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", new MmMessage { IsSuccess = true, Messages = { "Toplu Kayıt Kapatma İşlemi Başarılı" }, Title = "Toplu Kayıt Kapatma İşlemi" });
             return Json(new { IsSuccess = true, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
@@ -3264,7 +3265,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             db.SaveChanges();
-            var strView = Management.RenderPartialView("Ajax", "getMessage", new MmMessage { IsSuccess = true, Messages = { "Toplu Kayıt Kapatma İşlemi Başarılı" }, Title = "Toplu Kayıt Kapatma İşlemi" });
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", new MmMessage { IsSuccess = true, Messages = { "Toplu Kayıt Kapatma İşlemi Başarılı" }, Title = "Toplu Kayıt Kapatma İşlemi" });
             return Json(new { IsSuccess = true, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }

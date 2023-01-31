@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -64,8 +65,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.IndexModel = IndexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true), "Value", "Caption", model.MailSablonTipID);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true), "Value", "Caption", model.MailSablonTipID);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string EKD)
@@ -87,8 +88,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else sEnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == model.MailSablonTipID).FirstOrDefault();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true, id > 0 ? false : true), "Value", "Caption", model.MailSablonTipID);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, id > 0 ? false : true), "Value", "Caption", model.MailSablonTipID);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
 
@@ -222,8 +223,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = MmMessage;
             ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == kModel.MailSablonTipID).FirstOrDefault();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(Management.cmbMailSablonTipleri(true, true, kModel.MailSablonTipID > 0 ? false : true), "Value", "Caption", kModel.MailSablonTipID);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, kModel.MailSablonTipID > 0 ? false : true), "Value", "Caption", kModel.MailSablonTipID);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
         public ActionResult getSablonTipParametre(int MailSablonTipID)

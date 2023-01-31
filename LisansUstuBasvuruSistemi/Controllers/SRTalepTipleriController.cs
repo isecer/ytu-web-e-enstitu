@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -59,12 +60,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
             IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            var aylar = Management.cmbAylar(false);
+            var aylar = SrTalepleriBus.GetCmbAylar(false);
             ViewBag.Aylar = aylar;
             ViewBag.KullaniciTipleri = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsTezSinavi = new SelectList(Management.cmbEvetHayirData(true), "Value", "Caption", model.IsTezSinavi);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsTezSinavi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsTezSinavi);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
 
@@ -81,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = data;  
                 }
             } 
-            ViewBag.Aylars = Management.cmbAylar(false); 
+            ViewBag.Aylars = SrTalepleriBus.GetCmbAylar(false); 
             ViewBag.KullaniciTipleris = KullanicilarBus.GetCmbKullaniciTipleri(false, false); 
             return View(model);
         }
@@ -165,7 +166,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
              
             ViewBag.MmMessage = MmMessage; 
-            ViewBag.Aylars = Management.cmbAylar(false);
+            ViewBag.Aylars = SrTalepleriBus.GetCmbAylar(false);
             ViewBag.KullaniciTipleris = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
             return View(kModel);
         }

@@ -21,6 +21,7 @@ using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -148,11 +149,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemTarihi = s.IslemTarihi,
                 IslemYapanIP = s.IslemYapanIP
             }).Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.BirimID = new SelectList(Management.getBirimler().ToOrderedList("BirimID", "UstBirimID", "BirimAdi"), "BirimID", "BirimAdi", model.BirimID);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.IsAdmin = new SelectList(Management.cmbVarYokData(true), "Value", "Caption", model.IsAdmin);
+            ViewBag.IsAdmin = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAdmin);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(false), "Value", "Caption", model.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
@@ -598,7 +599,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (ProfilResmi != null)
                     {
-                        kModel.ResimAdi = Management.ResimKaydet(ProfilResmi);
+                        kModel.ResimAdi = KullanicilarBus.ResimKaydet(ProfilResmi);
 
                     }
 
@@ -681,7 +682,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 if (System.IO.File.Exists(rsm)) System.IO.File.Delete(rsm);
                             }
                         }
-                        data.ResimAdi = Management.ResimKaydet(ProfilResmi);
+                        data.ResimAdi = KullanicilarBus.ResimKaydet(ProfilResmi);
                     }
                     db.SaveChanges();
                     LogIslemleri.LogEkle("Kullanicilar", IslemTipi.Update, data.ToJson());
@@ -762,7 +763,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (Kullanici.YetkiGrupID == id) CheckedRollIDs = Kullanici.Rollers.Select(s => new CmbIntDto { Value = s.RolID, Caption = RenkTiplier.Info }).ToList();
             var YetkiGrupRollIDs = db.YetkiGrupRolleris.Where(p => p.YetkiGrupID == id).Select(s => new CmbIntDto { Value = s.RolID, Caption = RenkTiplier.Danger }).ToList();
             CheckedRollIDs.AddRange(YetkiGrupRollIDs);
-            return CheckedRollIDs.toJsonResult();
+            return CheckedRollIDs.ToJsonResult();
         }
 
 

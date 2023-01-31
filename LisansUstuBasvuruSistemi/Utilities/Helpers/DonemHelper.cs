@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             return model;
         }
-        public static EOyilBilgi toEoYilBilgi(this DateTime datetime)
+        public static EOyilBilgi ToEgitimOgretimYilBilgi(this DateTime datetime)
         {
 
             var mdl = new EOyilBilgi();

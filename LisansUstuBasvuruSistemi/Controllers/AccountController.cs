@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var users = OnlineUsers.users;
             int Count = users.Count();
-            var q = Count.toJsonResult();
+            var q = Count.ToJsonResult();
             return q;
 
         }
@@ -984,7 +984,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MmMessage.Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz.";
                 MmMessage.MessageType = Msgtype.Warning;
             }
-            return MmMessage.toJsonResult();
+            return MmMessage.ToJsonResult();
         }
 
 
@@ -1026,7 +1026,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
                         EskiResimAdi = kul.ResimAdi;
 
-                        kul.ResimAdi = YeniResimAdi = Management.ResimKaydet(KImage);
+                        kul.ResimAdi = YeniResimAdi = KullanicilarBus.ResimKaydet(KImage);
                         kul.IslemYapanID = UserIdentity.Current.Id;
                         kul.IslemYapanIP = UserIdentity.Ip;
                         kul.IslemTarihi = DateTime.Now;
@@ -1050,7 +1050,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        YeniResimAdi = Management.ResimKaydet(KImage);
+                        YeniResimAdi = KullanicilarBus.ResimKaydet(KImage);
                         if (EskiResimAdi.IsNullOrWhiteSpace() == false)
                         {
                             var ResimKlasorAdi = SistemAyar.KullaniciResimYolu;
@@ -1073,7 +1073,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
             var YeniResimYolu = YeniResimAdi.ToKullaniciResim();
             UserIdentity.Current.ImagePath = YeniResimYolu;
-            return new { mMessage, YeniResimAdi, YeniResimYolu }.toJsonResult();
+            return new { mMessage, YeniResimAdi, YeniResimYolu }.ToJsonResult();
         }
         [HttpPost]
         public ActionResult RotateImage(bool LeftOrRight, string ResimAdi)
@@ -1095,7 +1095,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             var YeniResimYolu = ResimAdi.ToKullaniciResim();
 
-            return new { YeniResimYolu }.toJsonResult();
+            return new { YeniResimYolu }.ToJsonResult();
         }
 
 

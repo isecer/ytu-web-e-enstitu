@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -96,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new kmMezuniyetSureci();
 
             model.IsAktif = true;
-            var eoY = DateTime.Now.toEoYilBilgi();
+            var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
             model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem; 
             var mzMList = Management.getZmMailZamanData(!id.HasValue || id <= 0);
             if (id.HasValue && id > 0)
@@ -136,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             model.OgrenimTipModel = MezuniyetBus.GetMezuniyetOgrenimTipKriterleri(_EnstituKod, model.MezuniyetSurecID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", model.OgretimYili);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", model.OgretimYili);
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(_EnstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(_EnstituKod, true, model.AnketID), "Value", "Caption", model.AnketID);
             ViewBag.kmMzOtoMail = mzMList;
@@ -447,7 +448,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.kmMzOtoMail = zmMList;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.OgrenimTipleri = Management.cmbAktifOgrenimTipleri(kModel.EnstituKod, false, true);
             ViewBag.AnketID = new SelectList(Management.cmbGetAktifAnketler(kModel.EnstituKod, true, kModel.AnketID), "Value", "Caption", kModel.AnketID);
             ViewBag.MmMessage = MmMessage;
@@ -564,7 +565,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.ToplamBasvuruBilgisi = IndexModel;
 
                 #endregion
-                page = Management.RenderPartialView("MezuniyetSureci", "getMsDetAnaBilgi", mdl);
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "getMsDetAnaBilgi", mdl);
             }
             if (tbInx == 2)
             {
@@ -609,7 +610,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              }).ToList();
 
                 #endregion
-                page = Management.RenderPartialView("MezuniyetSureci", "getYonetmelikBilgi", qData);
+                page = ViewRenderHelper.RenderPartialView("MezuniyetSureci", "getYonetmelikBilgi", qData);
             }
             return Content(page, "text/html");
         }
@@ -755,7 +756,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

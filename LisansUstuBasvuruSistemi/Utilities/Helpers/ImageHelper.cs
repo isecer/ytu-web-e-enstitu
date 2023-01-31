@@ -5,12 +5,13 @@ using System.Net;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
-    public class QrCodeHelper
+    public static  class ImageHelper
     {
-        public System.Drawing.Image CreateQrCode(string Kod, int Width = 360, int Height = 360)
+        public static Image CreateQrCode(this string Kod, int Width = 360, int Height = 360)
         {
             var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", Kod, Width, Height);
             WebResponse response = default(WebResponse);
@@ -27,25 +28,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             readStream.Close();
             return img;
         }
-        public Image resizeImage(Image imgToResize, Size size)
+
+        public static Image ResizeImage(this Image imgToResize, Size size)
         {
-            int sourceWidth = imgToResize.Width;
-            int sourceHeight = imgToResize.Height;
+            var sourceWidth = imgToResize.Width;
+            var sourceHeight = imgToResize.Height;
 
-            float nPercent = 0;
-            float nPercentW = 0;
-            float nPercentH = 0;
+            var nPercentW = ((float)sourceWidth / (float)size.Width);
+            var nPercentH = ((float)sourceHeight / (float)size.Height);
 
-            nPercentW = ((float)sourceWidth / (float)size.Width);
-            nPercentH = ((float)sourceHeight / (float)size.Height);
+            var nPercent = nPercentH > nPercentW ? nPercentH : nPercentW;
 
-            if (nPercentH > nPercentW)
-                nPercent = nPercentH;
-            else
-                nPercent = nPercentW;
-
-            int destWidth = (int)(sourceWidth / nPercent);
-            int destHeight = (int)(sourceHeight / nPercent);
+            var destWidth = (int)(sourceWidth / nPercent);
+            var destHeight = (int)(sourceHeight / nPercent);
 
             Bitmap b = new Bitmap(destWidth, destHeight);
             Graphics g = Graphics.FromImage((Image)b);
@@ -57,5 +52,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return (Image)b;
         }
 
+        public static ImageCodecInfo GetImageCodecInfo(ImageFormat format)
+        {
+
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
     }
 }

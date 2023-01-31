@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
                         var EMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true } };
                         mmmC.Content = contentHtml;
-                        string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var Attachments = new List<System.Net.Mail.Attachment>();
                         if (Sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
                         {

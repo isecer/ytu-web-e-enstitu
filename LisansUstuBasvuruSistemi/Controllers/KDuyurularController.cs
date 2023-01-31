@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -137,7 +138,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 YayinSonTarih = s.YayinSonTarih
             }).OrderByDescending(o => o.Tarih).ToList();
 
-            string htmlDuyuru = Management.RenderPartialView("KDuyurular", "DuyuruHtml", fModel);
+            string htmlDuyuru = ViewRenderHelper.RenderPartialView("KDuyurular", "DuyuruHtml", fModel);
             return Json(new { ShowMessage = fModel.Data.Count() > 0, HtmlMessage = htmlDuyuru });
         }
         public ActionResult DuyuruHtml(fmDuyurular model)

@@ -8,6 +8,7 @@ using BiskaUtil;
 using System.Threading;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Models
@@ -269,7 +270,7 @@ namespace LisansUstuBasvuruSistemi.Models
             mmmC.EnstituAdi = EnstituAdi;
             mmmC.LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png";
             mmmC.Content = model.HtmlContent.Replace("_removeRw_", "");
-            model.HtmlContent = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+            model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
 
             return model;

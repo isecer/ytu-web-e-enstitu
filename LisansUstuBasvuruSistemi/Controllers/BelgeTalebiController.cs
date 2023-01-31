@@ -9,7 +9,9 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -31,7 +33,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
             bbModel.Kullanici = Kul;
             bbModel.SistemBasvuruyaAcik = BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(_EnstituKod, "0").ToBoolean().Value;
-            bbModel.DonemAdi = Management.getAkademikBulundugumuzTarih(DateTime.Now).Caption;
+            bbModel.DonemAdi = DonemlerBus.CmbGetAkademikBulundugumuzTarih(DateTime.Now).Caption;
             bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(_EnstituKod) || UserIdentity.Current.SeciliEnstituKodu == _EnstituKod;
             bbModel.Enstitü = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod).First();
             bbModel.KullaniciTipYetki = false;
@@ -153,7 +155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = PS.PageIndex;
 
             var IndexModel = new MIndexBilgi();
-            var btDurulari = Management.BelgeTalepDurumList();
+            var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
 
             IndexModel.Toplam = model.RowCount;
             model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new frBelgeTalepleri
@@ -202,9 +204,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             #endregion
 
-            ViewBag.BelgeTipID = new SelectList(Management.cmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(true), "Value", "Caption", model.OgretimYili);
-            ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true), "Value", "Caption", model.OgretimYili);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
             return View(model);
         }
 
@@ -281,7 +283,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             belgeTalebi.SeciliDonemdehenuzVerilmeyenMiktar = AyniDonemTalepEdilenBelgeSayisi(belgeTalebi);
             belgeTalebi.BelgeTalepID = belh.BelgeTalepID;
             ViewBag.VerilenBelgeSayisi = new SelectList(getBelgeSayisi(), "Value", "Caption", belgeTalebi.BelgeDurumID == BelgeTalepDurum.Verildi ? belgeTalebi.VerilenBelgeSayisi : belgeTalebi.IstenenBelgeSayisi);
-            ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurum(true, kYetki), "Value", "Caption", belgeTalebi.BelgeDurumID);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, kYetki), "Value", "Caption", belgeTalebi.BelgeDurumID);
 
             return View(belgeTalebi);
         }
@@ -316,7 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 bsay = getBelgeSayisi(10);
             }
-            return bsay.Select(s => new { Key = s.Value, Value = s.Caption }).ToList().toJsonResult();
+            return bsay.Select(s => new { Key = s.Value, Value = s.Caption }).ToList().ToJsonResult();
         }
 
         public ActionResult TalepYap(string EKD, string Kod = "", int? id = null)
@@ -419,8 +421,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Information, MmMessage.Messages.ToArray());
                 return RedirectToAction("Index");
             }
-            ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurum(true, belgeDuzenleYetki, belge.BelgeTalepID <= 0), "Value", "Caption", belge.BelgeDurumID);
-            ViewBag.BelgeTipID = new SelectList(Management.cmbBelgeTipleri(true, belge.OgrenimDurumID, _EnstituKod), "Value", "Caption", belge.BelgeTipID);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, belgeDuzenleYetki, belge.BelgeTalepID <= 0), "Value", "Caption", belge.BelgeDurumID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true, belge.OgrenimDurumID, _EnstituKod), "Value", "Caption", belge.BelgeTipID);
 
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(_EnstituKod, true), "Value", "Caption", belge.ProgramKod);
             //ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod true), "Value", "Caption", belge.OgrenimTipKod);
@@ -543,8 +545,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var belCont = getContent((kModel.BelgeTalepID == 0 ? (int?)null : kModel.BelgeTalepID), kModel.BelgeTipID, _EnstituKod, kModel.OgrenciNo, kModel.IstenenBelgeSayisi, kModel.OgrenimDurumID);
                 if (belCont.Success == false)
                 {
-                    var eoYil = DateTime.Now.toEoYilBilgi();
-                    var btip = Management.getBtipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+                    var eoYil = DateTime.Now.ToEgitimOgretimYilBilgi();
+                    var btip = BelgeTalepBus.GetBelgeTipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
                     if (kModel.BelgeTalepID <= 0)
                     {
                         kModel.UcretAlimiVar = btip.UcretAlimiVar;
@@ -561,7 +563,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 string msg = "";
                 var YeniKayit = kModel.BelgeTalepID <= 0;
-                var eoYil = DateTime.Now.toEoYilBilgi();
+                var eoYil = DateTime.Now.ToEgitimOgretimYilBilgi();
                 var donem = db.Donemlers.Where(p => p.DonemID == eoYil.Donem).First();
 
 
@@ -576,13 +578,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (YeniKayit)
                 {
                     kModel.TalepTarihi = DateTime.Now;
-                    var belgeSaat = Management.getSelectedSaat(kModel.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+                    var belgeSaat = BelgeTalepBus.GetCmbSelectedSaat(kModel.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
                     kModel.EklenecekGun = belgeSaat.EklenecekGun;
                     kModel.TeslimBaslangicSaat = belgeSaat.TeslimBaslangicSaat;
                     kModel.TeslimBitisSaat = belgeSaat.TeslimBitisSaat;
                     var guid = Guid.NewGuid().ToString().Substring(0, 6).ToLower();
                     kModel.ErisimKodu = guid;
-                    var btip = Management.getBtipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+                    var btip = BelgeTalepBus.GetBelgeTipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
                     kModel.UcretAlimiVar = btip.UcretAlimiVar;
                     kModel.UcretsizMiktar = btip.UcretsizMiktar;
                     kModel.DonemlikKota = btip.DonemlikKota;
@@ -604,7 +606,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var belge = db.BelgeTalepleris.Where(p => p.BelgeTalepID == kModel.BelgeTalepID).First();
 
-                    var belgeSaat = Management.getSelectedSaat(belge.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+                    var belgeSaat = BelgeTalepBus.GetCmbSelectedSaat(belge.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
                     kModel.EklenecekGun = belgeSaat.EklenecekGun;
                     kModel.TeslimBaslangicSaat = belgeSaat.TeslimBaslangicSaat;
                     kModel.TeslimBitisSaat = belgeSaat.TeslimBitisSaat;
@@ -675,8 +677,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MmMessage.IsSuccess = false;
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
             }
-            ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurum(true, belgeDuzenleYetki, kModel.BelgeTalepID <= 0), "Value", "Caption", kModel.BelgeDurumID);
-            ViewBag.BelgeTipID = new SelectList(Management.cmbBelgeTipleri(true, kModel.OgrenimDurumID, _EnstituKod), "Value", "Caption", kModel.BelgeTipID);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurum(true, belgeDuzenleYetki, kModel.BelgeTalepID <= 0), "Value", "Caption", kModel.BelgeDurumID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true, kModel.OgrenimDurumID, _EnstituKod), "Value", "Caption", kModel.BelgeTipID);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(_EnstituKod, true), "Value", "Caption", kModel.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             ViewBag.BelgeDilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", kModel.BelgeDilKodu);
@@ -684,7 +686,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             int sayi = 10;
             if (kModel.OgrenimDurumID > 0 && kModel.BelgeTipID > 0)
             {
-                var btip = Management.getBtipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+                var btip = BelgeTalepBus.GetBelgeTipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
                 if (btip.DonemlikKota.HasValue)
                 {
                     sayi = btip.DonemlikKota.Value;
@@ -752,7 +754,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var IlkBTAnketID = db.Ankets.Where(p => p.AnketAdi == IlkBTAnketAdi).Select(s => s.AnketID).FirstOrDefault();
                     var IlkBelgeTalebiVar = db.BelgeTalepleris.Any(a => a.OgrenciNo == kul.OgrenciNo && kul.ProgramKod == a.ProgramKod) || IlkBTAnketAdi.IsNullOrWhiteSpace();
                     var KullaniciDonem4 = Convert.ToDouble((kul.KayitYilBaslangic.Value + 2) + "." + kul.KayitDonemID.Value);
-                    var SuankiDonem = DateTime.Now.toEoYilBilgi();
+                    var SuankiDonem = DateTime.Now.ToEgitimOgretimYilBilgi();
 
                     var AktifDonem = Convert.ToDouble((SuankiDonem.BaslangicYili) + "." + SuankiDonem.Donem);
                     var AnketAdi = "";
@@ -794,7 +796,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var model = new kmAnketlerCevap();
                         model.AnketTipID = 2;
                         model.AnketID = AnketID;
-                        model.JsonStringData = anketSorulari.toJsonText();
+                        model.JsonStringData = anketSorulari.ToJsonText();
                         foreach (var item in anketSorulari)
                         {
                             model.AnketCevapModel.Add(new AnketCevapDto
@@ -806,13 +808,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             });
                         }
 
-                        AnketGiris = Management.RenderPartialView("Ajax", "getAnket", model);
+                        AnketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
                     }
                 }
                 #endregion
 
             }
-            return new { IsSubmitOrAnketShow = AnketGiris == "", AnketGiris = AnketGiris }.toJsonResult();
+            return new { IsSubmitOrAnketShow = AnketGiris == "", AnketGiris = AnketGiris }.ToJsonResult();
         }
         public ActionResult getBilgi(int? BelgeTalepID, int BelgeTipID, int miktar, string EKD)
         {
@@ -836,8 +838,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             var contentB = getContent(BelgeTalepID, BelgeTipID, _EnstituKod, OgrenciNo, miktar, OgrenimDurumID);
-            var HCB = Management.RenderPartialView("Ajax", "getMailTableContent", contentB);
-            return new { Deger = HCB }.toJsonResult();
+            var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentB);
+            return new { Deger = HCB }.ToJsonResult();
 
         }
         void bilgiMaili(BelgeTalepleri kModel, string DonemAdi, string _EnstituKodu)
@@ -897,9 +899,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
                 _ea = "http://" + WurlAddr.First();
             mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-            var HCB = Management.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
+            var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
             mmmC.Content = HCB;
-            string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+            string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
             var emailSend = MailManager.sendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
         }
 
@@ -914,7 +916,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var eoYil = DateTime.Now.toEoYilBilgi();
+                var eoYil = DateTime.Now.ToEgitimOgretimYilBilgi();
                 kModel.OgretimYiliBaslangic = eoYil.BaslangicYili;
                 kModel.OgretimYiliBitis = eoYil.BitisYili;
                 kModel.DonemID = eoYil.Donem;
@@ -926,8 +928,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             }
-            var btiap = Management.getBtipDetay(BelgeTipID, OgrenimDurumID, _EnstituKod);
-            var saatB = Management.getSelectedSaat(kModel.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
+            var btiap = BelgeTalepBus.GetBelgeTipDetay(BelgeTipID, OgrenimDurumID, _EnstituKod);
+            var saatB = BelgeTalepBus.GetCmbSelectedSaat(kModel.TalepTarihi, kModel.BelgeTipID, kModel.OgrenimDurumID, _EnstituKod);
             kModel.EklenecekGun = saatB.EklenecekGun;
             kModel.TeslimBaslangicSaat = saatB.TeslimBaslangicSaat;
             kModel.TeslimBitisSaat = saatB.TeslimBitisSaat;
@@ -1031,8 +1033,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemTipListeAdi = belge.BelgeDurumlari.DurumAdi,
                 belge.BelgeDurumlari.ClassName,
                 belge.BelgeDurumlari.Color,
-                verilmeBilgi = belge.BelgeTalepID.toVerilmeBilgisi(belge.BelgeDurumlari.DurumAdi)
-            }.toJsonResult();
+                verilmeBilgi =BelgeTalepBus.GetBelgeVerilmeBilgisi(belge.BelgeTalepID,belge.BelgeDurumlari.DurumAdi)
+            }.ToJsonResult();
         }
 
 
@@ -1076,7 +1078,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (belge.BelgeDurumID == BelgeTalepDurum.Verildi) belge.VerilenBelgeSayisi = miktar;
             else belge.IstenenBelgeSayisi = miktar;
             var bel2 = tutarHesapla(belge);
-            return bel2.VerilenBelgeTutar.toJsonResult();
+            return bel2.VerilenBelgeTutar.ToJsonResult();
         }
         string GunHesap(DateTime IslemTarihi, int EklenecekGun, TimeSpan TeslimBaslangicSaat, TimeSpan TeslimBitisSaat, bool Ucretli, string Adres)
         {
@@ -1137,7 +1139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     Management.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
                 }
             }
-            return mmMessage.toJsonResult();
+            return mmMessage.ToJsonResult();
         }
     }
 }

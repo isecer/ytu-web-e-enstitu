@@ -7,6 +7,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueControlExtension
     {
+        public static bool ToIsValidEmail(this string email)
+        {
+            var isSuccess = !Regex.IsMatch(email,
+                @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,24}))$",
+                RegexOptions.IgnoreCase);
+            if (!isSuccess) isSuccess = !email.IsASCII();
+            return isSuccess;
+        }
         //public static bool IsNullOrEmpty(this string str) => string.IsNullOrEmpty(str);
 
         //public static bool IsNullOrWhiteSpace(this string str) => string.IsNullOrWhiteSpace(str);

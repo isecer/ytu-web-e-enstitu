@@ -14,6 +14,7 @@ using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -298,8 +299,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
             ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(EnstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
-            ViewBag.SRDurumID = new SelectList(Management.cmbSRDurumListe(true), "Value", "Caption", model.SRDurumID);
-            ViewBag.TDDurumID = new SelectList(Management.cmbTDDurumListe(true), "Value", "Caption", model.TDDurumID);
+            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID);
+            ViewBag.TDDurumID = new SelectList(MezuniyetBus.GetCmbTezDurumListe(true), "Value", "Caption", model.TDDurumID);
             ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
             ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
             ViewBag.MezuniyetDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetDurumId(true), "Value", "Caption", model.MezuniyetDurumID);
@@ -382,7 +383,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Index Bilgisi Güncellenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage());
                 Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "MezuniyetGelenBasvurular/YayinIndexUpdate<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -802,7 +803,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add(msg);
                     mmMessage.IsSuccess = false;
                     mmMessage.MessageType = Msgtype.Error;
-                    strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+                    strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
                 }
             }
 
@@ -821,7 +822,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var msgs = MezuniyetBus.SendMailMezuniyetSinavYerBilgisi(id, SRDurumID == SRTalepDurum.Onaylandı);
                 if (msgs.Messages.Count > 0)
                 {
-                    strView = Management.RenderPartialView("Ajax", "getMessage", msgs);
+                    strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", msgs);
                 }
             }
             return new
@@ -831,7 +832,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Color = qbDrm.Color,
                 FontWeight = fWeight,
                 strView = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult SRSinavDurumKaydet(int id, int MezuniyetSinavDurumID, DateTime? TezTeslimSonTarih)
@@ -892,13 +893,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mmMessage.Title = "Sınav durumu kayıt işlemi";
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            strView = mmMessage.Messages.Count > 0 ? Management.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
+            strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
 
             return new
             {
                 mmMessage.IsSuccess,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
         [HttpPost]
@@ -946,12 +947,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             mmMessage.Title = "Tez Kontrol Durumu Kayıt İşlemi";
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var strView = mmMessage.Messages.Count > 0 ? Management.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
+            var strView = mmMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage) : "";
             return new
             {
                 mmMessage.IsSuccess,
                 Messages = strView,
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult MezuniyetDurumKaydet(int id, bool? IsMezunOldu, DateTime? Tarih)
@@ -1009,13 +1010,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
 
             return new
             {
                 mmMessage.IsSuccess,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult EYKTarihiKaydet(int id, DateTime? EYKTarihi)
@@ -1064,7 +1065,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MmMessage.IsSuccess,
                 MmMessage,
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult SinavTarihiKaydet(int id, string SinavTarihi)
@@ -1116,7 +1117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MmMessage.IsSuccess,
                 MmMessage,
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult TezTeslimSonTarihiKaydet(int id, string tezTeslimSonTarih)
@@ -1150,7 +1151,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess,
                 MmMessage = mmMessage,
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
         public ActionResult GetJuriOneriFormu(int MezuniyetBasvurulariID)
@@ -1356,17 +1357,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                View = Management.RenderPartialView("MezuniyetGelenBasvurular", "JuriOneriFormu", Model);
+                View = ViewRenderHelper.RenderPartialView("MezuniyetGelenBasvurular", "JuriOneriFormu", Model);
             }
             else { mMessage.IsSuccess = false; mMessage.MessageType = Msgtype.Warning; }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
             {
                 mMessage.IsSuccess,
                 Content = View,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         [ValidateInput(false)]
         public ActionResult JuriOneriFormuPost(MezuniyetJuriOneriFormuKayitDto kModel, string PostDetayTabAdi = "", bool SaveData = false)
@@ -1680,7 +1681,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsYeniJO = IsYeniJO,
                 SelectedAnaTabAdi = SelectedAnaTabAdi,
                 SelectedDetayTabAdi = SelectedDetayTabAdi
-            }.toJsonResult();
+            }.ToJsonResult();
         }
         public ActionResult JuriOneriFormu()
         {
@@ -1736,12 +1737,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 db.SaveChanges();
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return new
             {
                 mmMessage.IsSuccess,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
 
@@ -1999,12 +2000,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mmMessage.Messages.Add("Form " + (Onaylandi.HasValue ? (Onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return new
             {
                 mmMessage.IsSuccess,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
         }
 
 
@@ -2070,7 +2071,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             db.SaveChanges();
             mmMessage.IsSuccess = true;
             mmMessage.MessageType = Msgtype.Success;
-            return mmMessage.toJsonResult();
+            return mmMessage.ToJsonResult();
         }
         public ActionResult Sil(int id)
         {
@@ -2109,7 +2110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
@@ -2177,7 +2178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessageType = Msgtype.Warning;
             }
 
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
 
 
 

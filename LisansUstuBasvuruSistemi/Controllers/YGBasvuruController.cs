@@ -950,9 +950,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
 
-                    var tableContent = Management.RenderPartialView("Ajax", "getMailTableContent", mtc);
+                    var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
                     mmmC.Content = tableContent;
-                    string htmlMail = Management.RenderPartialView("Ajax", "getMailContent", mmmC);
+                    string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
 
                     var attchL = new List<System.Net.Mail.Attachment>();
@@ -1104,7 +1104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             
             var mdl = Management.AlanKontrolYG(BasvuruSurecID, BolumIDs, oTipKod, tprog, KullaniciID, BasvuruID);
 
-            return mdl.toJsonResult();
+            return mdl.ToJsonResult();
         }
         [ValidateInput(false)]
         public ActionResult CreateTercihRowHtml(TercihRowModel model)
@@ -1115,7 +1115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mdl = db.NotSistemleris.Where(p => p.NotSistemID == NotSistemID).First();
             var maksNot = mdl.MaxNot.ToString().Split(',');
-            return new { firstLength = maksNot[0].Length, lastLength = maksNot[1].Length, maxLenth = mdl.MaxNot.ToString().Length }.toJsonResult();
+            return new { firstLength = maksNot[0].Length, lastLength = maksNot[1].Length, maxLenth = mdl.MaxNot.ToString().Length }.ToJsonResult();
         }
 
         public ActionResult getSinavTip(BasvuruTercihKontrolDto model, int BasvuruSurecID, bool? EgitimDiliTurkce, int SinavTipID, string SelectedVal, List<int> OgrenimTipKods, List<bool> Ingilizces, List<string> ProgramKods, int? BasvuruID)
@@ -1187,7 +1187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string strView = "";
             if (mdl.IsSinavSonucuVar || mdl.ShowIsTaahhutVar)
             {
-                strView = Management.RenderPartialView("Basvuru", "getSinavTipSonucView", mdl);
+                strView = ViewRenderHelper.RenderPartialView("Basvuru", "getSinavTipSonucView", mdl);
 
 
             }
@@ -1269,7 +1269,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
 

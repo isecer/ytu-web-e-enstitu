@@ -479,21 +479,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 mMessage.MessageType = Msgtype.Information;
                 mMessage.IsSuccess = true;
-                view = Management.RenderPartialView("TDOBasvuru", "TDODanismanFormu", model);
+                view = ViewRenderHelper.RenderPartialView("TDOBasvuru", "TDODanismanFormu", model);
 
 
             }
 
 
             if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
             {
                 mMessage.IsSuccess,
                 Content = view,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
 
         }
         [ValidateInput(false)]
@@ -943,13 +943,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetProgramlar(int tdAnabilimDaliId)
         {
             var bolm = Management.cmbGetAktifProgramlar(true, tdAnabilimDaliId);
-            return bolm.Select(s => new { s.Value, s.Caption }).toJsonResult();
+            return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult GetSinavTip(int tdoBasvuruId, int sinavTipId)
         {
@@ -957,7 +957,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var notlar = new List<CmbDoubleDto>();
             if (sinav.OzelNot) notlar = Management.cmbGetSinavTipOzelNot(sinavTipId, true);
-            return new { sinav.OzelNot, Notlar = notlar }.toJsonResult();
+            return new { sinav.OzelNot, Notlar = notlar }.ToJsonResult();
         }
         [Authorize]
         public ActionResult TdoDanismanFormu()
@@ -1080,7 +1080,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult TDOVarolanDanismanOnayPost(TDOBasvuruDanisman kModel)
@@ -1137,7 +1137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult TDOEYKYaGonderimPost(int tdoBasvuruDanismanId, bool? eykYaGonderildi)
@@ -1175,7 +1175,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult TDOEYKDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
@@ -1235,7 +1235,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
 
 
@@ -1286,18 +1286,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model = tdoBasvuruDanismanData.TDOBasvuruEsDanismen.First();
                 }
                 if (model == null) model = new TDOBasvuruEsDanisman { TDOBasvuruDanismanID = tdoBasvuruDanismanId, IsDegisiklikTalebi = isDegisiklikTalebi };
-                view = Management.RenderPartialView("TDOBasvuru", "TDOEsDanismanFormu", model);
+                view = ViewRenderHelper.RenderPartialView("TDOBasvuru", "TDOEsDanismanFormu", model);
                 mMessage.IsSuccess = true;
             }
             if (mMessage.MessageType != Msgtype.Information) mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
 
             return new
             {
                 mMessage.IsSuccess,
                 Content = view,
                 Messages = strView
-            }.toJsonResult();
+            }.ToJsonResult();
 
         }
 
@@ -1450,7 +1450,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
 
         [Authorize]
@@ -1491,7 +1491,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult TdoEykdaOnayPostEs(int tdoBasvuruEsDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
@@ -1555,7 +1555,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            return mMessage.toJsonResult();
+            return mMessage.ToJsonResult();
         }
         [Authorize]
         public ActionResult DetaySil(int id, int tdoBasvuruDanismanId)
@@ -1599,7 +1599,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1644,7 +1644,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
@@ -1700,7 +1700,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

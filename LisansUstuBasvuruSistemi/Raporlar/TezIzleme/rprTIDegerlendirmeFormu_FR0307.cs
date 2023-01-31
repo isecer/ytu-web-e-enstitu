@@ -6,6 +6,7 @@ using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using System.Linq;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar
 {

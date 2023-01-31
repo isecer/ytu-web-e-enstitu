@@ -8,6 +8,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -133,7 +134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = PS.PageIndex;
 
             var IndexModel = new MIndexBilgi();
-            var btDurulari = Management.BelgeTalepDurumList();
+            var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
             foreach (var item in btDurulari)
             {
                 var tipCount = q.Where(p => p.BelgeDurumID == item.BelgeDurumID).Count();
@@ -183,14 +184,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             #endregion
             ViewBag.IndexModel = IndexModel;
-            ViewBag.BelgeTipID = new SelectList(Management.cmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
-            ViewBag.OgretimYili = new SelectList(Management.getAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
-            ViewBag.BelgeDurumID = new SelectList(Management.cmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
+            ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(_EnstituKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);
-            ViewBag.BuGunkuKayitlar = new SelectList(Management.getBelgeTeslimSaatler(), "Value", "Caption", model.BuGunkuKayitlar);
+            ViewBag.BuGunkuKayitlar = new SelectList(BelgeTalepBus.GetCmbBelgeTeslimSaatler(), "Value", "Caption", model.BuGunkuKayitlar);
             return View(model);
         }
 
@@ -214,7 +215,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.Messages.Add("Belge Talebi Silinemedi.");
                 Management.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
             }
-            return mmMessage.toJsonResult();
+            return mmMessage.ToJsonResult();
         }
     }
 }

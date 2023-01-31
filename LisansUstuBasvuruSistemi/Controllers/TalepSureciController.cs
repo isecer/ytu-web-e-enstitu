@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -52,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var IndexModel = new MIndexBilgi() { Toplam = model.RowCount, Pasif = q.Where(p => !p.IsAktif).Count() };
             IndexModel.Aktif = IndexModel.Toplam - IndexModel.Pasif;
             ViewBag.IndexModel = IndexModel;
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string EKD)
@@ -83,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else model.TalepSureciTalepTipleris = new List<TalepSureciTalepTipleri>();
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
             ViewBag.TalepTipleris = db.TalepTipleris.ToList();
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(), "Value", "Caption", model.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
             return View(model);
@@ -206,7 +208,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.TalepTipID = TalepTipID;
             ViewBag.MmMessage = MmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.IsAktif = new SelectList(Management.cmbAktifPasifData(), "Value", "Caption", kModel.IsAktif);
+            ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
 
@@ -247,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;
             }
-            var strView = Management.RenderPartialView("Ajax", "getMessage", mmMessage);
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

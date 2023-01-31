@@ -1,11 +1,12 @@
 ﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.MezuniyetBasvurulariYayinDto
 @{
     Layout = null; 
 }
-@if (Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu())
+@if (Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor())
 {
     <div class="form-group">
         <label class="col-md-3 col-xs-4 control-label">Yayın Durumu</label>
@@ -85,7 +86,7 @@
         </div>
     </div>
 }
-<div class="form-group yBaslik  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+<div class="form-group yBaslik  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
     <label class="col-md-3 col-xs-4 control-label">Yayın Başlığı</label>
     <div class="col-md-9 col-xs-8 " style="text-align: left;">
         <input type="text" class="form-control" autocomplete="off" value="" name="YayinBasligi" id="YayinBasligi">
@@ -93,7 +94,7 @@
 </div>
 @if (Model.YayinYazarlarIstensin)
 {
-    <div class="form-group yazars  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group yazars  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Yazarlar</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" placeholder="Yazar1; Yazar2; Yazar3 şeklinde girilmelidir." value="" name="YazarAdi" id="YazarAdi">
@@ -102,7 +103,7 @@
 }
 @if (Model.YayinProjeTurIstensin)
 {
-    <div class="form-group ptur  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group ptur  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Proje Türü</label>
         <div class="col-md-9 col-xs-8">
             <select id="MezuniyetYayinProjeTurID" name="MezuniyetYayinProjeTurID" class="form-control" onchange="ProjeTurKontrol(this)">
@@ -128,7 +129,7 @@
 }
 @if (Model.YayinProjeTurIstensin)
 {
-    <div class="form-group pkurulus  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?(Model.MezuniyetYayinTurID==3?"":"hide"):"hide") : "hide"):(Model.MezuniyetYayinTurID==3?"":"hide"))">
+    <div class="form-group pkurulus  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?(Model.MezuniyetYayinTurID==3?"":"hide"):"hide") : "hide"):(Model.MezuniyetYayinTurID==3?"":"hide"))">
         <label class="col-md-3 col-xs-4 control-label">Proje Dest. Kuruluş</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="ProjeDeatKurulus" id="ProjeDeatKurulus">
@@ -137,7 +138,7 @@
 }
 @if (Model.YayinProjeEkibiIstensin)
 {
-    <div class="form-group pekip  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group pekip  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Proje Ekibi</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" placeholder="ProjeEkibi1; ProjeEkibi2; ProjeEkibi3 şeklinde girilmelidir." name="ProjeEkibi" id="ProjeEkibi">
@@ -146,7 +147,7 @@
 }
 @if (Model.IsTarihAraligiIstensin)
 {
-    <div class="form-group ptar  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group ptar  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Tarih Aralığı (Başlangıç/Bitiş)</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" placeholder="Başlangıç Tarihi / Bitiş Tarihi şekline girilmelidir." autocomplete="off" value="" name="TarihAraligi" id="TarihAraligi">
@@ -155,7 +156,7 @@
 }
 @if (Model.YayinMevcutDurumIstensin)
 {
-    <div class="form-group pdurum  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group pdurum  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Proje Mevcut Durum</label>
         <div class="col-md-9 col-xs-8">
             <select class="form-control" name="IsProjeTamamlandiOrDevamEdiyor" id="IsProjeTamamlandiOrDevamEdiyor">
@@ -169,7 +170,7 @@
 
 @if (Model.YayinEtkinlikAdiIstensin)
 {
-    <div class="form-group etkinlik  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group etkinlik  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Etkinlik Adı</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="EtkinlikAdi" id="EtkinlikAdi">
@@ -178,7 +179,7 @@
 }
 @if (Model.YayinYerBilgisiIstensin)
 {
-    <div class="form-group yerbilgisi  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group yerbilgisi  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Yer</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="YerBilgisi" id="YerBilgisi">
@@ -187,7 +188,7 @@
 }
 @if (Model.MezuniyetYayinTarihZorunlu)
 {
-    <div class="form-group yTarih  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group yTarih  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Bildiri Tarihi</label>
         <div class="col-md-9 col-xs-8">
             <input class="form-control form-control-inline input-medium date-pickerx" placeholder="Örnek Format: @DateTime.Now.ToString("dd-MM-yyyy")" autocomplete="off" size="16" type="text" value="@(Model.MezuniyetYayinTarih.HasValue == false ? "" : Model.MezuniyetYayinTarih.ToString("dd-MM-yyyy"))" name="MezuniyetYayinTarih" id="MezuniyetYayinTarih">
@@ -196,7 +197,7 @@
 }
 @if (Model.MezuniyetYayinBelgeTurZorunlu)
 {
-    <div class="form-group yBelge  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
+    <div class="form-group yBelge  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinBelgeTurAdi</label>
         <div class="col-md-9 col-xs-8">
             <table>
@@ -219,7 +220,7 @@
 }
 @if (Model.MezuniyetYayinKaynakLinkTurZorunlu)
 {
-    <div class="form-group kLink @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+    <div class="form-group kLink @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinKaynakLinkTurAdi</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="MezuniyetYayinKaynakLinki" id="MezuniyetYayinKaynakLinki">
@@ -228,7 +229,7 @@
 }
 @if (Model.YayinYilCiltSayiIstensin)
 {
-    <div class="form-group yilCints  @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group yilCints  @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Yıl/Cilt/Sayı/ss</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="YilCiltSayiSS" id="YilCiltSayiSS">
@@ -237,7 +238,7 @@
 }
 @if (Model.MezuniyetYayinMetinZorunlu)
 {
-    <div class="form-group yMetni @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+    <div class="form-group yMetni @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinMetinTurAdi</label>
         <div class="col-md-9 col-xs-8">
             <table>
@@ -251,7 +252,7 @@
 }
 @if (Model.MezuniyetYayinLinkiZorunlu)
 {
-    <div class="form-group yLinki @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
+    <div class="form-group yLinki @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"hide") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">@Model.MezuniyetYayinLinkTurAdi</label>
         <div class="col-md-9 col-xs-8">
             <input type="text" class="form-control" autocomplete="off" value="" name="MezuniyetYayinLinki" id="MezuniyetYayinLinki">
@@ -260,7 +261,7 @@
 }
 @if (Model.MezuniyetYayinIndexTurZorunlu)
 {
-    <div class="form-group yIndex @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
+    <div class="form-group yIndex @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"":"") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Index Bilgisi</label>
         <div class="col-md-9 col-xs-8">
             <select id="MezuniyetYayinIndexTurID" name="MezuniyetYayinIndexTurID" class="form-control">
@@ -275,7 +276,7 @@
 }
 @if (Model.MezuniyetKabulEdilmisMakaleZorunlu)
 {
-    <div class="form-group yMak @(Model.MezuniyetYayinTurID.makaleYayinDurumIsteniyormu() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
+    <div class="form-group yMak @(Model.MezuniyetYayinTurID.IsMakaleYayinDurumIsteniyor() ? ( Model.Yayinlanmis.HasValue ? (Model.Yayinlanmis.Value?"hide":"") : "hide"):"")">
         <label class="col-md-3 col-xs-4 control-label">Kabul Edilmiş Makale</label>
         <div class="col-md-9 col-xs-8">
             <table>
