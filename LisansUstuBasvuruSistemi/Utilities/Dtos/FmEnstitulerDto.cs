@@ -7,16 +7,16 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmAlesTipleri : PagerOption
+    public class FmEnstitulerDto : PagerOption
     {
-        public string AlesTipAdi { get; set; }
+        public string EnstituKod { get; set; }
+        public string EnstituAd { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frAlesTipleri> data { get; set; }
+        public IEnumerable<FrEnstitulerDto> EnstitulerDtos { get; set; }
 
     }
-    public class frAlesTipleri : AlesTipleri
+    public class FrEnstitulerDto : Enstituler
     {
         public string IslemYapan { get; set; }
-
     }
 }

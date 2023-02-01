@@ -1,7 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model fmDuyurular
+@model FmDuyurularDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -43,7 +43,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.DuyurularDtos)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";

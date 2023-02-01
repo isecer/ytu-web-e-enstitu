@@ -10,28 +10,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.TdoAyarlari)]
-    public class TDOAyarlarController : Controller
+    public class TdoAyarlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         { 
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var data = db.TDOAyarlars.Where(p => p.EnstituKod == _EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var data = _entities.TDOAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
-            var PanelToggled = new Dictionary<string, bool>();
-            foreach (var item in cats)
-            {
-                PanelToggled.Add(item.Kategori, item.Toggle);
-            }
-            ViewBag.PanelToggled = PanelToggled;
+            var panelToggled = cats.ToDictionary(item => item.Kategori, item => item.Toggle);
+            ViewBag.PanelToggled = panelToggled;
             return View(data);
         }
         [HttpPost]
-        public ActionResult Index(List<string> AyarAdi, List<string> AyarDegeri, List<string> PanelToggled, string EKD)
+        public ActionResult Index(List<string> ayarAdi, List<string> ayarDegeri, List<string> panelToggled, string ekd)
         {
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var qSistemAyarAdi = AyarAdi.Select((s, Index) => new { inx = Index, s }).ToList();
-            var qSistemAyarDegeri = AyarDegeri.Select((s, Index) => new { inx = Index, s }).ToList();
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var qSistemAyarAdi = ayarAdi.Select((s, index) => new { inx = index, s }).ToList();
+            var qSistemAyarDegeri = ayarDegeri.Select((s, index) => new { inx = index, s }).ToList();
 
             var qModel = (from sa in qSistemAyarAdi
                           join sad in qSistemAyarDegeri on sa.inx equals sad.inx
@@ -43,22 +39,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           }).ToList();
             foreach (var item in qModel)
             {
-                var ayar = db.TDOAyarlars.Where(p => p.AyarAdi == item.AyarAdi && p.EnstituKod == _EnstituKod).FirstOrDefault();
+                var ayar = _entities.TDOAyarlars.FirstOrDefault(p => p.AyarAdi == item.AyarAdi && p.EnstituKod == enstituKod);
                 if (ayar != null)
                 {
                     ayar.AyarDegeri = item.AyarDegeri;
                 }
             }
-            db.SaveChanges();
+            _entities.SaveChanges();
             MessageBox.Show("Tez danışmanı öneri Ayarları Güncellendi", MessageBox.MessageType.Success);
-            var data = db.TDOAyarlars.Where(p => p.EnstituKod == _EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
-            var _PanelToggled = new Dictionary<string, bool>();
-            foreach (var item in PanelToggled)
+            var data = _entities.TDOAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            var toggled = new Dictionary<string, bool>();
+            foreach (var item in panelToggled)
             {
-                var _ptg = item.Replace("__", "◘").Split('◘');
-                _PanelToggled.Add(_ptg[0], _ptg[1].ToBoolean().Value);
+                var ptg = item.Replace("__", "◘").Split('◘');
+                toggled.Add(ptg[0], ptg[1].ToBoolean().Value);
             }
-            ViewBag.PanelToggled = _PanelToggled; 
+            ViewBag.PanelToggled = toggled; 
             return View(data);
         }
     }

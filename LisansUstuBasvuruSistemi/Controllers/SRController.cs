@@ -496,7 +496,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var juriler = db.SRTaleplerJuris.Where(p => p.SRTalepID == talep.SRTalepID).ToList();
                     var haftaGunu = db.HaftaGunleris.Where(p =>  p.HaftaGunID == talep.HaftaGunID).First();
                     var kullanıcı = db.Kullanicilars.Where(p => p.KullaniciID == kModel.TalepYapanID).First();
-                    var mmmC = new mdlMailMainContent();
+                    var mmmC = new MailMainContentDto();
                     var enstituAdi = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First().EnstituAd;
                     
                     mmmC.EnstituAdi = enstituAdi;
@@ -509,13 +509,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                         _ea = "http://" + WurlAddr.First();
                     mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                    var mdl = new mailTableContent();
+                    var mdl = new MailTableContentDto();
                     mdl.AciklamaTextAlingCenter = true;
                     mdl.AciklamaBasligi = "Salon rezervasyon talebi işleminiz alınmıştır.";
                     mdl.GrupBasligi = "Rezervasyon talep detaylarınız";
-                    mdl.Detaylar.Add(new mailTableRow { Baslik = "Salon Adı", Aciklama = salon.SalonAdi });
-                    mdl.Detaylar.Add(new mailTableRow { Baslik = "Tarih", Aciklama = talep.Tarih.ToString("dd.MM.yyyyy") + " " + haftaGunu.HaftaGunAdi });
-                    mdl.Detaylar.Add(new mailTableRow { Baslik = "Saat", Aciklama = $"{talep.BasSaat:hh\\:mm}" + "-" +
+                    mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Salon Adı", Aciklama = salon.SalonAdi });
+                    mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tarih", Aciklama = talep.Tarih.ToString("dd.MM.yyyyy") + " " + haftaGunu.HaftaGunAdi });
+                    mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Saat", Aciklama = $"{talep.BasSaat:hh\\:mm}" + "-" +
                         $"{talep.BitSaat:hh\\:mm}"
                     });
                     if (ttip.IsTezSinavi)
@@ -534,22 +534,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             tezbasligi = tezDiliTr ? talep.MezuniyetBasvurulari.TezBaslikTr: talep.MezuniyetBasvurulari.TezBaslikEn;
                         }
-                        mdl.Detaylar.Add(new mailTableRow { Baslik = "Tez Başlığı", Aciklama = tezbasligi });
-                        mdl.Detaylar.Add(new mailTableRow { Baslik = "Tez Danışman Adı", Aciklama = talep.DanismanAdi });
-                        if (talep.EsDanismanAdi.IsNullOrWhiteSpace() == false) mdl.Detaylar.Add(new mailTableRow { Baslik = "Tez Eş Danışman Adı", Aciklama = talep.EsDanismanAdi });
-                        if (talep.TezOzeti.IsNullOrWhiteSpace() == false) mdl.Detaylar.Add(new mailTableRow { Baslik = "Tez Özeti", Aciklama = talep.TezOzetiHtml });
+                        mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tez Başlığı", Aciklama = tezbasligi });
+                        mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tez Danışman Adı", Aciklama = talep.DanismanAdi });
+                        if (talep.EsDanismanAdi.IsNullOrWhiteSpace() == false) mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tez Eş Danışman Adı", Aciklama = talep.EsDanismanAdi });
+                        if (talep.TezOzeti.IsNullOrWhiteSpace() == false) mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Tez Özeti", Aciklama = talep.TezOzetiHtml });
 
 
-                        var mtcSinavJ = new mailTableContent();
+                        var mtcSinavJ = new MailTableContentDto();
                         mtcSinavJ.IsJuriBilgi = false;
                         mtcSinavJ.GrupBasligi = "Jüri Bilgisi";
                         ;
                         foreach (var itemJr in juriler.Select((s, inx) => new { s, inx }).ToList())
                         {
-                            mtcSinavJ.Detaylar.Add(new mailTableRow { SiraNo = (itemJr.inx + 1), Baslik = itemJr.s.JuriAdi, Aciklama = (itemJr.s.Telefon + " (" + itemJr.s.Email + ")"), });
+                            mtcSinavJ.Detaylar.Add(new MailTableRowDto { SiraNo = (itemJr.inx + 1), Baslik = itemJr.s.JuriAdi, Aciklama = (itemJr.s.Telefon + " (" + itemJr.s.Email + ")"), });
                         }
 
-                        mdl.Detaylar.Add(new mailTableRow
+                        mdl.Detaylar.Add(new MailTableRowDto
                         {
                             Colspan2 = true,
                             Aciklama = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
@@ -557,14 +557,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        mdl.Detaylar.Add(new mailTableRow { Baslik = "Açıklama", Aciklama = talep.Aciklama });
+                        mdl.Detaylar.Add(new MailTableRowDto { Baslik = "Açıklama", Aciklama = talep.Aciklama });
                     }
                     string content = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mdl);
                     mmmC.Content = content;
                     string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                     var User = mailBilgi.SmtpKullaniciAdi;
                     var EMailList = new List<MailSendList> { new MailSendList { EMail = talep.Kullanicilar.EMail, ToOrBcc = true } };
-                    var snded = MailManager.sendMailRetVal(mailBilgi.EnstituKod, enstituAdi, htmlMail, EMailList, null);
+                    var snded = MailManager.SendMailRetVal(mailBilgi.EnstituKod, enstituAdi, htmlMail, EMailList, null);
                     if (snded != null)
                     {
                         Management.SistemBilgisiKaydet("Salon rezervasyon talebi işlemi için mail gönderilirken bir hata oluştu! Hata: " + snded.ToExceptionMessage(), "SR/TalepYap", LogType.Hata);

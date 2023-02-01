@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmBelgeTalepleri
+@model  FmBelgeTalepleriDto
 @{
     ViewBag.Title = "Index";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -132,7 +132,7 @@
                                 </th>
                                 <th class="sirala" field="AdiSoyadi">Ad Soyad</th> 
                                 <th class="sirala" field="TalepTarihi" width="160">Talep Tarihi</th>
-                                <th class="sirala" field="DurumListeAdi">Durum</th>
+                                <th class="sirala" field="DurumAdi">Durum</th>
                                 <th width="40"></th>
                             </tr>
 
@@ -154,7 +154,7 @@
                             {
 
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.BelgeTalepleriDtos)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";

@@ -7,20 +7,20 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMesajKategorileri : PagerOption
+    public class FmMesajKategorileriDto : PagerOption
     {
         public string EnstituKod { get; set; }
         public string KategoriAdi { get; set; }
         public string KategoriAciklamasi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frMesajKategorileri> Data { get; set; }
+        public IEnumerable<FrMesajKategorileriDto> MesajKategorileriDtos { get; set; }
     }
-    public class frMesajKategorileri : MesajKategorileri
+    public class FrMesajKategorileriDto : MesajKategorileri
     {
         public string EnstituAd { get; set; }
         public string IslemYapan { get; set; }
     }
-    public class SubMessages
+    public class SubMessagesDto
     {
         public int KullaniciID { get; set; }
         public string EMail { get; set; }
@@ -30,8 +30,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int MesajID { get; set; }
         public string Icerik { get; set; }
         public string IslemYapanIP { get; set; }
-        public List<MesajEkleri> Ekler { get; set; }
-        public List<GonderilenMailKullanicilar> Gonderilenler { get; set; }
+        public List<MesajEkleri> MesajEkleris { get; set; }
+        public List<GonderilenMailKullanicilar> GonderilenMailKullanicilars { get; set; }
 
     }
 }

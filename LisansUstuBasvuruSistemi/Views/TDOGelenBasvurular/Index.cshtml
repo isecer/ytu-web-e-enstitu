@@ -5,7 +5,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmTDOBasvuru
+@model  FmTdoBasvuruDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
@@ -54,7 +54,7 @@
                                     </div>
                                     <script>
                                         function EYKYaGonderimOnay() {
-                                            var DonemAdi = '@Model.Data.First().AktifDonemAdi';
+                                            var DonemAdi = '@Model.TdoBasvuruDtos.First().AktifDonemAdi';
                                             var btbx = bootbox.dialog({
                                                 message: DonemAdi + " döneminde <b>EYK'ya gönderilmeyen</b> Danışman öneri formlarını <b>EYK'ya gönderimini</b> onaylamak istiyor musunuz?",
                                                 title: "Toplu EYK'ya gönderme işlemi",
@@ -283,7 +283,7 @@
                             {
 
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.TdoBasvuruDtos)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -435,7 +435,7 @@
 </div>
 @if (danismanOnayYetki && !eykOnayYetki && (Model.RowCount > 0 || Model.TDOBasvuruID.HasValue))
 {
-    if (!Model.TDOBasvuruID.HasValue && Model.RowCount > 0) { Model.TDOBasvuruID = Model.Data.First().TDOBasvuruID; }
+    if (!Model.TDOBasvuruID.HasValue && Model.RowCount > 0) { Model.TDOBasvuruID = Model.TdoBasvuruDtos.First().TDOBasvuruID; }
     <script>
         $(function () {
         showDetail('@Model.TDOBasvuruID');

@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -23,10 +24,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmMailGonderme() { PageSize = 15 });
+            return Index(new FmMailGondermeDto() { PageSize = 15 });
         }
         [HttpPost]
-        public ActionResult Index(fmMailGonderme model)
+        public ActionResult Index(FmMailGondermeDto model)
         {
             var q = from s in db.GonderilenMaillers.Where(p => model.Aciklama != null && model.Aciklama.Trim() != "" ? p.Aciklama.Contains(model.Aciklama): true)
                     join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
@@ -56,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else q = q.OrderByDescending(o => o.Tarih);
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frMailGonderme
+            model.MailGondermeDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMailGondermeDto
             {
                 GonderilenMailID = s.GonderilenMailID,
                 Tarih = s.Tarih,
@@ -78,7 +79,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         from xDef in def.DefaultIfEmpty()
                         join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                         where s.GonderilenMailID == GonderilenMailID
-                        select new frMailGonderme
+                        select new FrMailGondermeDto
                         {
                             GonderilenMailID = s.GonderilenMailID,
                             EnstituAdi = xDef != null ? xDef.EnstituAd : "Sistem",
@@ -246,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var FExtension = Path.GetExtension(ekTamYol);
                     attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.mDosyaAdi.ToSetNameFileExtension(FExtension), MediaTypeNames.Application.Octet));
                 }
-                MailManager.sendMail(eklenen.GonderilenMailID, kModel.Konu, kModel.AciklamaHtml, mailList.Select(s => new MailSendList { EMail = s.Email, ToOrBcc = true }).ToList(), attach);
+                MailManager.SendMail(eklenen.GonderilenMailID, kModel.Konu, kModel.AciklamaHtml, mailList.Select(s => new MailSendList { EMail = s.Email, ToOrBcc = true }).ToList(), attach);
                 return RedirectToAction("Index");
             }
             else
@@ -329,7 +330,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 attach.Add(new Attachment(new MemoryStream(System.IO.File.ReadAllBytes(ekTamYol)), item.EkAdi.ToSetNameFileExtension(FExtension), MediaTypeNames.Application.Octet));
 
             }
-            MailManager.sendMail(gm.GonderilenMailID, gm.Konu, gm.AciklamaHtml, EMailList, attach);
+            MailManager.SendMail(gm.GonderilenMailID, gm.Konu, gm.AciklamaHtml, EMailList, attach);
             return true.ToJsonResult();
         }
 

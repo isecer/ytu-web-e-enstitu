@@ -4,6 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using CaptchaMvc.HtmlHelpers
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @{
@@ -404,7 +405,7 @@
 
                         <li class="xn-icon-button pull-right" style="cursor:pointer;" onclick="getOnlineUsers()">
                             <a href="javascript:void(0)" onclick="getOnlineUsers()"><span class="fa fa-group"></span></a>
-                            <div id="userCnt" class="informer informer-success">@OnlineUsers.OnlineUserCount</div>
+                            <div id="userCnt" class="informer informer-success">@OnlineUsersHelper.OnlineUserCount</div>
                             <div id="oUserList" style="min-height: 100px;z-index:999;" class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging"></div>
                             <script type="text/javascript">
                                 var tmrLogn = null;

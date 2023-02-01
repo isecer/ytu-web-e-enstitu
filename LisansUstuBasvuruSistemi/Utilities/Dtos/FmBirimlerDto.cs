@@ -7,12 +7,12 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBirimler : PagerOption
+    public class FmBirimlerDto : PagerOption
     {
         public string BirimKod { get; set; }
         public string BirimAdi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<Birimler> data { get; set; }
+        public IEnumerable<Birimler> Birimlers { get; set; }
 
     }
 }

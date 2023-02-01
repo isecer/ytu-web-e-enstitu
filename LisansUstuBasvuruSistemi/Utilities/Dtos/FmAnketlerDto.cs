@@ -3,14 +3,14 @@ using LisansUstuBasvuruSistemi.Models;
 using System.Collections.Generic;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmAnketler : PagerOption
+    public class FmAnketlerDto : PagerOption
     {
         public string EnstituKod { get; set; }
         public string AnketAdi { get; set; }
-        public IEnumerable<frAnketler> Data { get; set; }
+        public IEnumerable<FrAnketlerDto> FrAnketlers { get; set; }
     }
 
-    public class frAnketler : Anket
+    public class FrAnketlerDto : Anket
     {
         public string EnstituAdi { get; set; }
         public string DilAdi { get; set; }
@@ -18,37 +18,37 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string IslemYapan { get; set; }
         public int SoruSayisi { get; set; }
     }
-    public class frAnketDetay : AnketSoru
+    public class FrAnketDetayDto : AnketSoru
     {
         public string DilAdi { get; set; }
         public string DilFlagClass { get; set; }
         public int SecenekSayisi { get; set; }
         public string Aciklama { get; set; }
         public string CevapHtml { get; set; }
-        public List<frAnketSecenekDetay> frAnketSecenekDetay { get; set; }
+        public List<FrAnketSecenekDetayDto> FrAnketSecenekDetay { get; set; }
 
-        public List<AnketSeceneklerDetay> SecenekDetay { get; set; }
-        public List<AnketTableDetay> TableDetay { get; set; }
-        public frAnketDetay()
+        public List<AnketSeceneklerDetayDto> AnketSeceneklerDetays { get; set; }
+        public List<AnketTableDetayDto> AnketTableDetays { get; set; }
+        public FrAnketDetayDto()
         {
-            SecenekDetay = new List<AnketSeceneklerDetay>();
-            TableDetay = new List<AnketTableDetay>();
-            frAnketSecenekDetay = new List<frAnketSecenekDetay>();
+            AnketSeceneklerDetays = new List<AnketSeceneklerDetayDto>();
+            AnketTableDetays = new List<AnketTableDetayDto>();
+            FrAnketSecenekDetay = new List<FrAnketSecenekDetayDto>();
         }
     }
-    public class AnketSeceneklerDetay
+    public class AnketSeceneklerDetayDto
     {
         public int SiraNo { get; set; }
         public string SecenekAdi { get; set; }
         public Dictionary<int, string> EkAciklama { get; set; }
         public int Count { get; set; }
     }
-    public class frAnketSecenekDetay : AnketSoruSecenek
+    public class FrAnketSecenekDetayDto : AnketSoruSecenek
     {
         public int Count { get; set; }
 
     }
-    public class AnketTableDetay
+    public class AnketTableDetayDto
     {
         public string SiraNo { get; set; }
         public string TabloVeri1 { get; set; }

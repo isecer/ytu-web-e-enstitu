@@ -20,12 +20,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
         public ActionResult Index(string EKD)
         {
-            return Index(new fmBelgeTalepleri() { PageSize = 10, Expand = false }, EKD);
+            return Index(new FmBelgeTalepleriDto() { PageSize = 10, Expand = false }, EKD);
         }
 
         [HttpPost]
         [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
-        public ActionResult Index(fmBelgeTalepleri model, string EKD)
+        public ActionResult Index(FmBelgeTalepleriDto model, string EKD)
         {
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             #region data
@@ -141,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IndexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
             IndexModel.Toplam = model.RowCount;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new frBelgeTalepleri
+            model.BelgeTalepleriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
             {
                 BelgeTalepID = item.BelgeTalepID,
                 BelgeDurumID = item.BelgeDurumID,

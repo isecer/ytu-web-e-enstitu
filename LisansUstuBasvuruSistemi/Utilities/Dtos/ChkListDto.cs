@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class ChkListModel
+    public class ChkListDto
     {
         public string PanelTitle { get; set; }
         public string TableID { get; set; }
@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
             }
         }
-        public ChkListModel(string InputName = "")
+        public ChkListDto(string InputName = "")
         {
             this.InputName = InputName;
             var ID = Guid.NewGuid().ToString().Substr(0, 4);

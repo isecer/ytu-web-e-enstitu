@@ -24,63 +24,68 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public static class OnlineUsersHelper
     {
-        static readonly List<OnlineUser> _users = null;
+        private static readonly List<OnlineUser> Users = null;
         public static int OnlineUserCount = 0;
-        static object lockObject = new object();
+        private static readonly object LockObject = new object();
         static OnlineUsersHelper(){
-            _users = new List<OnlineUser>();
+            Users = new List<OnlineUser>();
          }
-        public static OnlineUser[] users { get {
-                return _users.AsReadOnly().ToArray();
-            } }
-        public static void AddUser(string UserId, string ip)
+        public static OnlineUser[] GetUsers => Users.AsReadOnly().ToArray();
+
+        public static void AddUser(string userId, string ip)
         {
 
-            Monitor.Enter(lockObject);
+            Monitor.Enter(LockObject);
             try
             {
-                var clientIP = ip ?? HttpContext.Current.Request.UserHostAddress;
-                if (_users.Where(p => p.UniqueId == UserId).Count() == 0)
-                    _users.Add(new OnlineUser { Tc = "Misafir", Name = "Misafir", LoginTime = DateTime.Now, UniqueId = UserId, Ip = clientIP });
+                var clientIp = ip ?? HttpContext.Current.Request.UserHostAddress;
+                if (Users.All(p => p.UniqueId != userId))
+                    Users.Add(new OnlineUser { Tc = "Misafir", Name = "Misafir", LoginTime = DateTime.Now, UniqueId = userId, Ip = clientIp });
 
 
-                OnlineUserCount = _users.Count;
+                OnlineUserCount = Users.Count;
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
             finally
             {
-                Monitor.Exit(lockObject);
+                Monitor.Exit(LockObject);
             }
         }
-        public static void RemoveUser(string UserId)
+        public static void RemoveUser(string userId)
         {
 
-            Monitor.Enter(lockObject);
+            Monitor.Enter(LockObject);
             try
             {
-                _users.RemoveAll(p => p.UniqueId == UserId);
-                OnlineUserCount = _users.Count;
+                Users.RemoveAll(p => p.UniqueId == userId);
+                OnlineUserCount = Users.Count;
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
             finally
             {
-                Monitor.Exit(lockObject);
+                Monitor.Exit(LockObject);
             }
         }
 
-        public static OnlineUser GetByID(string UniqueId)
+        public static OnlineUser GetById(string uniqueId)
         {
-            Monitor.Enter(lockObject);
+            Monitor.Enter(LockObject);
             try
             {
-                return _users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
+                return Users.FirstOrDefault(p => p.UniqueId == uniqueId);
             }
             catch {
                 return null;
             }
             finally
             {
-                Monitor.Exit(lockObject);
+                Monitor.Exit(LockObject);
             }
         }
     }

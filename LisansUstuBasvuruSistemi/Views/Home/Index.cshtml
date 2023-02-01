@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     bool IsMesajGonder = (bool)ViewBag.IsMesajGonder;
     var MesajGroupID = (string)ViewBag.MesajGroupID;
-    var Duyurular = (List<frDuyurular>)ViewBag.Duyurular;
+    var Duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
     var AnketGiris = (string)ViewBag.AnketGiris;
 }
 @if (Duyurular.Count > 0)

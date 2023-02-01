@@ -49,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IsAktif
                     };
 
-            var Data = q.Select(s => new frDuyurular
+            var Data = q.Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,
@@ -121,8 +121,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.AnketCevapModel.Add(new AnketCevapDto
                         {
                             SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                            SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
-                            SoruSecenek = item.Secenekler.Select(s => new frAnketSecenekDetay
+                            SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
+                            SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto
                             {
                                 AnketSoruSecenekID = s.Value,
                                 SiraNo = s.SiraNo,

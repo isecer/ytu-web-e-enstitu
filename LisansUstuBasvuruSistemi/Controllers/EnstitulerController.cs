@@ -19,14 +19,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmEnstituler { });
+            return Index(new FmEnstitulerDto { });
         }
         [HttpPost]
-        public ActionResult Index(fmEnstituler model)
+        public ActionResult Index(FmEnstitulerDto model)
         {
 
             var q = from s in db.Enstitulers
-                    select new frEnstituler
+                    select new FrEnstitulerDto
                     {
 
                         EnstituKod = s.EnstituKod,
@@ -53,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.EnstituAd);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.EnstitulerDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();

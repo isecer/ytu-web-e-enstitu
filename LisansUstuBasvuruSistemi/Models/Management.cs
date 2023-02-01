@@ -2698,9 +2698,9 @@ namespace LisansUstuBasvuruSistemi.Models
             retL.Add(IsYerli ? BasvuruBelgeTipi.TaninirlikBelgesi : BasvuruBelgeTipi.DenklikBelgesi);
             return retL;
         }
-        public static ChkListModel GetProgramaBasvurulamayacakOgrenciBolumleri(string EnstituKod, string ProgramKod, List<int> Secilenler = null)
+        public static ChkListDto GetProgramaBasvurulamayacakOgrenciBolumleri(string EnstituKod, string ProgramKod, List<int> Secilenler = null)
         {
-            var Model = new ChkListModel();
+            var Model = new ChkListDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -2721,9 +2721,9 @@ namespace LisansUstuBasvuruSistemi.Models
                 return Model;
             }
         }
-        public static ChkListModel GetProgramaEslesenOgrenciBolumleri(string EnstituKod, string ProgramKod, List<int> Secilenler = null)
+        public static ChkListDto GetProgramaEslesenOgrenciBolumleri(string EnstituKod, string ProgramKod, List<int> Secilenler = null)
         {
-            var Model = new ChkListModel();
+            var Model = new ChkListDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -5941,7 +5941,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         string EnstituKod = Enstituler.EnstituKod;
                         var Sablon = db.MailSablonlaris.Where(p => p.MailSablonTipleri.SistemMaili && p.MailSablonTipID == MailSablonTipi.LisansustuSanalPosOdemeBilgisi).First();
                         var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(EnstituKod);
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
 
                         mmmC.EnstituAdi = db.Enstitulers.Where(p => p.EnstituKod == EnstituKod).First().EnstituAd;
                         var _ea = mailBilgi.SistemErisimAdresi;
@@ -6021,7 +6021,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             }
                             else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
                         }
-                        var sndMail = MailManager.sendMail(EnstituKod, Sablon.SablonAdi, htmlMail, EMailList, Attachments);
+                        var sndMail = MailManager.SendMail(EnstituKod, Sablon.SablonAdi, htmlMail, EMailList, Attachments);
 
                         if (sndMail)
                         {

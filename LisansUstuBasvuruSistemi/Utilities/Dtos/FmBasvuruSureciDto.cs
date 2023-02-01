@@ -7,12 +7,12 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBasvuruSureci : PagerOption
+    public class FmBasvuruSureciDto : PagerOption
     {
         public string EnstituKod { get; set; }
-        public IEnumerable<frBasvuruSureci> Data { get; set; }
+        public IEnumerable<FrBasvuruSureciDto> FrBasvuruSureciDtos { get; set; }
     }
-    public class frBasvuruSureci : BasvuruSurec
+    public class FrBasvuruSureciDto : BasvuruSurec
     {
         public bool Hesaplandi { get; set; }
         public string EnstituAdi { get; set; }

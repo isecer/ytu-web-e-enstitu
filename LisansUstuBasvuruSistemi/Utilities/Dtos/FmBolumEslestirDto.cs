@@ -6,14 +6,14 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBolumEslestir : PagerOption
+    public class FmBolumEslestirDto : PagerOption
     {
         public string EnstituKod { get; set; }
         public string ProgramAdi { get; set; }
-        public IEnumerable<frBolumEslestir> data { get; set; }
+        public IEnumerable<FrBolumEslestirDto> BolumEslestirDtos { get; set; }
 
     }
-    public class frBolumEslestir : frProgramlar
+    public class FrBolumEslestirDto : frProgramlar
     {
         public List<string> OgrenciBolumAdlari { get; set; }
     }

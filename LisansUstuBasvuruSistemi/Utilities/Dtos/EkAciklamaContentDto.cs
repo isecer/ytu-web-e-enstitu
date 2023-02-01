@@ -5,11 +5,11 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class ekAciklamaContent
+    public class EkAciklamaContentDto
     {
         public string Baslik { get; set; }
         public List<CmbStringDto> Detay { get; set; }
-        public ekAciklamaContent()
+        public EkAciklamaContentDto()
         {
             Detay = new List<CmbStringDto>();
         }

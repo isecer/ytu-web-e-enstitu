@@ -1379,14 +1379,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     #region sendMail
                     if (IsSecildi == true)
                     {
-                        var htmlBigliRow = new List<mailTableRow>();
-                        var contentBilgi = new mailTableContent();
+                        var htmlBigliRow = new List<MailTableRowDto>();
+                        var contentBilgi = new MailTableContentDto();
 
                         var OtL = db.OgrenimTipleris.Where(p => p.OgrenimTipKod == Tercih.OgrenimTipKod).First();
                         var Prl = Tercih.Programlar;
 
-                        htmlBigliRow.Add(new mailTableRow { Baslik = "Öğrenim Seviyesi", Aciklama = OtL.OgrenimTipAdi });
-                        htmlBigliRow.Add(new mailTableRow { Baslik = "Program Adı", Aciklama = Prl.ProgramAdi });
+                        htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = OtL.OgrenimTipAdi });
+                        htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program Adı", Aciklama = Prl.ProgramAdi });
                         if (BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru)
                         {
                             contentBilgi.GrupBasligi = "Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
@@ -1398,7 +1398,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else contentBilgi.GrupBasligi = "YTu Yeni mezun Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
                         contentBilgi.Detaylar = htmlBigliRow;
 
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
                         var enstituAdi = db.Enstitulers.Where(p => p.EnstituKod == BasvuruSurec.EnstituKod).First().EnstituAd;
                         mmmC.EnstituAdi = enstituAdi;
                         mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
@@ -1414,7 +1414,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmmC.Content = HCB;
 
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var snded = MailManager.sendMail(mailBilgi.EnstituKod, "Lisansüstü " + (BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru ? "" : "yatay geçiş ") + "başvurusu kayıt olunmak istenen tercih Hk.", htmlMail, Basvuru.EMail, null);
+                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, "Lisansüstü " + (BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru ? "" : "yatay geçiş ") + "başvurusu kayıt olunmak istenen tercih Hk.", htmlMail, Basvuru.EMail, null);
                         if (snded)
                         {
                             var kModel = new GonderilenMailler();
@@ -1528,8 +1528,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     #region sendMail
                     if (TercihUniqueIDs.Count > 0)
                     {
-                        var htmlBigliRow = new List<mailTableRow>();
-                        var contentBilgi = new mailTableContent();
+                        var htmlBigliRow = new List<MailTableRowDto>();
+                        var contentBilgi = new MailTableContentDto();
 
                         foreach (var item in TercihUniqueIDs)
                         {
@@ -1537,17 +1537,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             var Tercih = DonemdekiBasvuruTercihleri.Where(p => p.UniqueID == item).First();
                             var OtL = OgrenimTipleriLngs.Where(p => p.OgrenimTipKod == Tercih.OgrenimTipKod).First();
                             var Prl = Tercih.Programlar;
-                            htmlBigliRow.Add(new mailTableRow { Baslik = "Öğrenim Seviyesi", Aciklama = OtL.OgrenimTipAdi });
-                            htmlBigliRow.Add(new mailTableRow { Baslik = "Program Adı", Aciklama = Prl.ProgramAdi });
-                            if (qTercih.IsSecildi) htmlBigliRow.Add(new mailTableRow { Baslik = "Kayıt Seçeneği", Aciklama = "Kayıt Olmak İstenen " + qTercih.Oncelik + ". Tercih" });
-                            else htmlBigliRow.Add(new mailTableRow { Baslik = "Kayıt Seçeneği", Aciklama = "Kayıt Olmak İstenmiyor" });
-                            htmlBigliRow.Add(new mailTableRow { Baslik = "---------------", Aciklama = "-----------------" });
+                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = OtL.OgrenimTipAdi });
+                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program Adı", Aciklama = Prl.ProgramAdi });
+                            if (qTercih.IsSecildi) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Kayıt Seçeneği", Aciklama = "Kayıt Olmak İstenen " + qTercih.Oncelik + ". Tercih" });
+                            else htmlBigliRow.Add(new MailTableRowDto { Baslik = "Kayıt Seçeneği", Aciklama = "Kayıt Olmak İstenmiyor" });
+                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "---------------", Aciklama = "-----------------" });
                         }
 
                         contentBilgi.GrupBasligi = "Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
                         contentBilgi.Detaylar = htmlBigliRow;
 
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
                         var enstituAdi = db.Enstitulers.Where(p => p.EnstituKod == BasvuruSurec.EnstituKod).First().EnstituAd;
                         mmmC.EnstituAdi = enstituAdi;
                         mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
@@ -1565,7 +1565,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var SendEmail = Basvuru.EMail;
                         // SendEmail = "irfansecer@gmail.com";
-                        var snded = MailManager.sendMail(mailBilgi.EnstituKod, "Lisansüstü kayıt olunmak istenen tercih Hk.", htmlMail, SendEmail, null);
+                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, "Lisansüstü kayıt olunmak istenen tercih Hk.", htmlMail, SendEmail, null);
                         if (snded)
                         {
                             var kModel = new GonderilenMailler();
@@ -1795,13 +1795,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                     {
                         var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kul.EnstituKod);
-                        var mRowModel = new List<mailTableRow>();
+                        var mRowModel = new List<MailTableRowDto>();
                         DateTime gecerlilikTarihi = DateTime.Now.AddHours(2);
                         string guid = Guid.NewGuid().ToString().Substring(0, 20);
-                        mRowModel.Add(new mailTableRow { Baslik = "Şifre Sıfırlama Linki", Aciklama = "<a target='_blank' href='" + mailBilgi.SistemErisimAdresi + "/Account/ParolaSifirla?psKod=" + guid + "'>Şifrenizi sıfırlamak için tıklayınız</a>" });
-                        mRowModel.Add(new mailTableRow { Baslik = "Link Geçerlilik Tarihi", Aciklama = "Yukarıdaki link '" + gecerlilikTarihi.ToFormatDateAndTime() + "' tarihine kadar geçerlidir." });
+                        mRowModel.Add(new MailTableRowDto { Baslik = "Şifre Sıfırlama Linki", Aciklama = "<a target='_blank' href='" + mailBilgi.SistemErisimAdresi + "/Account/ParolaSifirla?psKod=" + guid + "'>Şifrenizi sıfırlamak için tıklayınız</a>" });
+                        mRowModel.Add(new MailTableRowDto { Baslik = "Link Geçerlilik Tarihi", Aciklama = "Yukarıdaki link '" + gecerlilikTarihi.ToFormatDateAndTime() + "' tarihine kadar geçerlidir." });
 
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
                         mmmC.EnstituAdi = db.Enstitulers.Where(p => p.EnstituKod == kul.EnstituKod).First().EnstituAd;
                         mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
                         var _ea = mailBilgi.SistemErisimAdresi;
@@ -1811,7 +1811,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                             _ea = "http://" + WurlAddr.First();
                         mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                        var mtc = new mailTableContent();
+                        var mtc = new MailTableContentDto();
                         mtc.AciklamaBasligi = "Şifre Sıfırlama İşlemi";
                         mtc.AciklamaDetayi = "Şifrenizi sıfırlamak için aşağıda bulunan linke tıklayınız ve açılan sayfa da yeni şifrenizi tanımlayınız.";
                         mtc.Detaylar = mRowModel;
@@ -1822,7 +1822,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var User = mailBilgi.SmtpKullaniciAdi;
                         var EMailList = new List<MailSendList>();
                         EMailList.Add(new MailSendList { EMail = kul.EMail, ToOrBcc = true });
-                        var rtVal = MailManager.sendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, EMailList, null);
+                        var rtVal = MailManager.SendMailRetVal(kul.EnstituKod, "Şifre Sıfırlama İşlemi", htmlMail, EMailList, null);
                         if (rtVal == null)
                         {
                             MmMessage.IsSuccess = true;
@@ -2211,7 +2211,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!bSurec.AnketID.HasValue || (bSurec.AnketID.HasValue && UserIdentity.Current.Informations.Any(a => a.Key == "LUBAnket")))
                 {
 
-                    var model = new ekAciklamaContent();
+                    var model = new EkAciklamaContentDto();
                     model.Baslik = "Başvuru işleminizi tamamlamadan önce aşağıda bulunan programlar ile ilgili ek açıklamaları okuyunuz!";
                     var prgs = db.Programlars.Where(p => kModel._ProgramKod.Contains(p.ProgramKod)).ToList();
                     foreach (var item in prgs)
@@ -2263,8 +2263,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             model.AnketCevapModel.Add(new AnketCevapDto
                             {
                                 SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                                SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama },
-                                SoruSecenek = item.Secenekler.Select(s => new frAnketSecenekDetay
+                                SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama },
+                                SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto
                                 {
                                     AnketSoruSecenekID = s.AnketSoruSecenekID,
                                     SiraNo = s.SiraNo,
@@ -2347,17 +2347,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        public ActionResult getMailContent(mdlMailMainContent model)
+        public ActionResult getMailContent(MailMainContentDto model)
         {
 
             return View(model);
         }
-        public ActionResult getMailTableContent(mailTableContent model)
+        public ActionResult getMailTableContent(MailTableContentDto model)
         {
             return View(model);
         }
 
-        public ActionResult getEkAciklamaContent(ekAciklamaContent model)
+        public ActionResult getEkAciklamaContent(EkAciklamaContentDto model)
         {
 
             return View(model);
@@ -2607,7 +2607,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
 
-        public ActionResult GetAnketCevap(frAnketDetay model)
+        public ActionResult GetAnketCevap(FrAnketDetayDto model)
         {
             return View();
         }
@@ -3055,7 +3055,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 foreach (var item in dct)
                 {
-                    var excpt = MailManager.sendMailRetVal(_EnstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
+                    var excpt = MailManager.SendMailRetVal(_EnstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
                     if (excpt == null)
                     {
                         mmMessage.Messages.Add("Mail gönderildi!");
@@ -3380,15 +3380,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var itemE = Sablon.Enstituler;
                         var EnstituL = Sablon.Enstituler;
-                        var ParamereDegerleri = new List<MailReplaceParameterModel>();
+                        var ParamereDegerleri = new List<MailReplaceParameterDto>();
                         var Parametreler = Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
 
                         if (Parametreler.Any(a => a == "@EnstituAdi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
                         if (Parametreler.Any(a => a == "@WebAdresi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
                         if (Parametreler.Any(a => a == "@AdSoyad"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "AdSoyad", Value = kModel.AdSoyad });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = kModel.AdSoyad });
                         var EMailList = new List<MailSendList> { new MailSendList { EMail = kModel.Email, ToOrBcc = true } };
                         if (Sablon.GonderilecekEkEpostalar.IsNullOrWhiteSpace() == false)
                             EMailList.AddRange(Sablon.GonderilecekEkEpostalar.Split(',').Select(s => new MailSendList { EMail = s.Trim(), ToOrBcc = false }).ToList());
@@ -3404,7 +3404,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MesajKaydetPost", LogType.Uyarı);
                         }
-                        var snded = MailManager.sendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, attach);
+                        var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, attach);
 
                     }
                 }
@@ -4489,15 +4489,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var AnketSoruSecenek = db.AnketSoruSeceneks.Where(p => p.AnketSoru.AnketID == AnketID).ToList();
                         var Cevaplar = db.AnketCevaplaris.Where(p => p.AnketID == AnketID && p.Tarih >= BasTar && p.Tarih <= BitTar).ToList();
                         var qModel = (from sa in AnketSorularis
-                                      select new frAnketDetay
+                                      select new FrAnketDetayDto
                                       {
                                           AnketSoruID = sa.AnketSoruID,
                                           AnketID = sa.AnketID,
                                           SoruAdi = sa.SoruAdi,
                                           SiraNo = sa.SiraNo,
                                           IsTabloVeriGirisi = sa.IsTabloVeriGirisi,
-                                          frAnketSecenekDetay = (from ss in AnketSoruSecenek.Where(p => p.AnketSoruID == sa.AnketSoruID)
-                                                                 select new frAnketSecenekDetay
+                                          FrAnketSecenekDetay = (from ss in AnketSoruSecenek.Where(p => p.AnketSoruID == sa.AnketSoruID)
+                                                                 select new FrAnketSecenekDetayDto
                                                                  {
                                                                      AnketSoruID = ss.AnketSoruID,
                                                                      AnketSoruSecenekID = ss.AnketSoruSecenekID,
@@ -4518,21 +4518,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             if (item.IsTabloVeriGirisi)
                             {
 
-                                var tblRw = new AnketTableDetay();
+                                var tblRw = new AnketTableDetayDto();
                                 tblRw.SiraNo = "#";
                                 int i = 0;
-                                foreach (var item2 in item.frAnketSecenekDetay)
+                                foreach (var item2 in item.FrAnketSecenekDetay)
                                 {
                                     i++;
                                     PropertyInfo propertyInfo = tblRw.GetType().GetProperty("TabloVeri" + i);
                                     propertyInfo.SetValue(tblRw, item2.SecenekAdi, null);
                                 }
-                                item.TableDetay.Add(tblRw);
+                                item.AnketTableDetays.Add(tblRw);
                                 i = 0;
                                 foreach (var item2 in item.AnketCevaplaris)
                                 {
                                     i++;
-                                    item.TableDetay.Add(new AnketTableDetay
+                                    item.AnketTableDetays.Add(new AnketTableDetayDto
                                     {
                                         SiraNo = (i).ToString(),
                                         TabloVeri1 = item2.TabloVeri1,
@@ -4545,8 +4545,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else
                             {
-                                var tblRw = new AnketTableDetay();
-                                foreach (var item2 in item.frAnketSecenekDetay)
+                                var tblRw = new AnketTableDetayDto();
+                                foreach (var item2 in item.FrAnketSecenekDetay)
                                 {
                                     var ekAciklamalar = "";
 
@@ -4556,7 +4556,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         {
                                             _ekAciklama.Add(itemx.inx + 1, itemx.s.EkAciklama);
                                         }
-                                    item.SecenekDetay.Add(new AnketSeceneklerDetay
+                                    item.AnketSeceneklerDetays.Add(new AnketSeceneklerDetayDto
                                     {
                                         EkAciklama = _ekAciklama,
                                         SiraNo = item2.SiraNo,

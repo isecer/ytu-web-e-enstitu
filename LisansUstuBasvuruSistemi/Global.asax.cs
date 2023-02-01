@@ -21,6 +21,7 @@ using System.Web.WebPages;
 using System.Xml;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -279,7 +280,7 @@ namespace LisansUstuBasvuruSistemi
 
                     if (UniqueId != null)
                     {
-                        var usr = OnlineUsers.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
+                        var usr = OnlineUsersHelper.GetUsers.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
                         if (usr != null)
                         {
                             if (User.Identity.IsAuthenticated)
@@ -317,7 +318,7 @@ namespace LisansUstuBasvuruSistemi
             {
                 var UniqueId = Guid.NewGuid().ToString();
                 Session["UserId"] = UniqueId;
-                OnlineUsers.AddUser(UniqueId, null);
+                OnlineUsersHelper.AddUser(UniqueId, null);
             }
 
             //StringBuilder strb = new StringBuilder();
@@ -362,7 +363,7 @@ namespace LisansUstuBasvuruSistemi
             if (true && Session["UserId"] != null)
             {
                 var UniqueId = Session["UserId"].ToString();
-                var oUser = OnlineUsers.GetByID(UniqueId);//.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
+                var oUser = OnlineUsersHelper.GetById(UniqueId);//.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
                 if (oUser != null && oUser.KullaniciID.HasValue)
                 {
                     using (var db = new LisansustuBasvuruSistemiEntities())
@@ -376,7 +377,7 @@ namespace LisansUstuBasvuruSistemi
                     }
 
                 }
-                OnlineUsers.RemoveUser(UniqueId);
+                OnlineUsersHelper.RemoveUser(UniqueId);
             }
         }
 

@@ -21,10 +21,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            return Index(new fmDuyurular() { PageSize = 15 }, EKD);
+            return Index(new FmDuyurularDto() { PageSize = 15 }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmDuyurular model, string EKD)
+        public ActionResult Index(FmDuyurularDto model, string EKD)
         {
 
 
@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Toplam = model.RowCount;
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else q = q.OrderByDescending(o => o.Tarih);
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frDuyurular
+            model.DuyurularDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,

@@ -20,16 +20,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmAnabilimDallari { });
+            return Index(new FmAnabilimDallariDto { });
         }
         [HttpPost]
-        public ActionResult Index(fmAnabilimDallari model)
+        public ActionResult Index(FmAnabilimDallariDto model)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in db.AnabilimDallaris
                     join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
                     where EnstKods.Contains(s.EnstituKod)
-                    select new frAnabilimDallari
+                    select new FrAnabilimDallariDto
                     {
                         AnabilimDaliID = s.AnabilimDaliID,
                         EnstituKod = s.EnstituKod,
@@ -52,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.AnabilimDaliAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.FrAnabilimDallaris = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();

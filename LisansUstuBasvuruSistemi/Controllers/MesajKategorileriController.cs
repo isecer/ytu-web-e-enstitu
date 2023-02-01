@@ -20,17 +20,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmMesajKategorileri { });
+            return Index(new FmMesajKategorileriDto { });
         }
         [HttpPost]
-        public ActionResult Index(fmMesajKategorileri model)
+        public ActionResult Index(FmMesajKategorileriDto model)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in db.MesajKategorileris
                     join se in db.MesajKategorileris on new { s.MesajKategoriID } equals new { se.MesajKategoriID }
                     join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
                     where EnstKods.Contains(s.EnstituKod)
-                    select new frMesajKategorileri
+                    select new FrMesajKategorileriDto
                     {
                         MesajKategoriID = s.MesajKategoriID,
                         EnstituKod = s.EnstituKod,
@@ -52,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort); q = q.OrderBy(o => o.KategoriAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.MesajKategorileriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();

@@ -473,7 +473,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
 
                 var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
-                var mRowModel = new List<mailTableRow>();
+                var mRowModel = new List<MailTableRowDto>();
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
 
 
@@ -483,30 +483,30 @@ namespace LisansUstuBasvuruSistemi.Business
                     erisimAdresi = erisimAdresiSpl[0] + "//" + erisimAdresiSpl.Skip(2).Take(1).First();
                 else
                     erisimAdresi = "http://" + erisimAdresiSpl.First();
-                mRowModel.Add(new mailTableRow { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
+                mRowModel.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = kModel.Ad + " " + kModel.Soyad });
 
                 if (kModel.BirimID.HasValue)
                 {
                     var birim = db.Birimlers.First(p => p.BirimID == kModel.BirimID);
-                    mRowModel.Add(new mailTableRow { Baslik = "Birim", Aciklama = birim.BirimAdi });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Birim", Aciklama = birim.BirimAdi });
                 }
                 if (kModel.UnvanID.HasValue)
                 {
                     var unvan = db.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
-                    mRowModel.Add(new mailTableRow { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
+                    mRowModel.Add(new MailTableRowDto { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
                 }
-                if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
-                if (kModel.PasaportNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Pasaport No", Aciklama = kModel.PasaportNo });
-                if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new mailTableRow { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
+                if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
+                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
+                if (kModel.PasaportNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Pasaport No", Aciklama = kModel.PasaportNo });
+                if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
 
-                mRowModel.Add(new mailTableRow { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
-                mRowModel.Add(new mailTableRow { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
-                mRowModel.Add(new mailTableRow { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
-                var mmmC = new mdlMailMainContent();
+                mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
+                mRowModel.Add(new MailTableRowDto { Baslik = "Şifre", Aciklama = kModel.IsActiveDirectoryUser ? "Email şifreniz ile aynı" : sfr });
+                mRowModel.Add(new MailTableRowDto { Baslik = "Sistem Erişim Adresi", Aciklama = "<a href='" + mailBilgi.SistemErisimAdresi + "' target='_blank'>" + mailBilgi.SistemErisimAdresi + "</a>" });
+                var mmmC = new MailMainContentDto();
 
                 mmmC.EnstituAdi = enstitu.EnstituAd;
-                var mtc = new mailTableContent();
+                var mtc = new MailTableContentDto();
                 mtc.AciklamaBasligi = "Kullanıcı hesabınız oluşturuldu. Sisteme Giriş Bilgisi Aşağıdaki Gibidir.";
                 mtc.Detaylar = mRowModel;
                 var tavleContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
@@ -515,7 +515,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
                 var htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                 var user = mailBilgi.SmtpKullaniciAdi;
-                var snded = MailManager.sendMailRetVal(kModel.EnstituKod, user, htmlMail, kModel.EMail, null);
+                var snded = MailManager.SendMailRetVal(kModel.EnstituKod, user, htmlMail, kModel.EMail, null);
                 return snded;
 
             }

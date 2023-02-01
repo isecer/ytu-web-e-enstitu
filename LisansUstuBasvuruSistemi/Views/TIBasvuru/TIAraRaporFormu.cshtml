@@ -18,7 +18,7 @@
         <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
 
 
-            @using (Ajax.BeginForm("TIAraRaporFormuPost", "TIBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTIAraRaporFormu" }))
+            @using (Ajax.BeginForm("TiAraRaporFormuPost", "TIBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTIAraRaporFormu" }))
             { 
                 @Html.HiddenFor(p => p.TIBasvuruID);
                 @Html.HiddenFor(p => p.TIBasvuruAraRaporID);

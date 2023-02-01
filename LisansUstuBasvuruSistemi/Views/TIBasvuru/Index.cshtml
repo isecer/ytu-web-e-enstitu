@@ -464,7 +464,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
           var _panel = $('#bsvrDet_' + TIBasvuruID);
             _pRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("GetTIAraRaporFormu", "TIBasvuru")',
+                url: '@Url.Action("GetTiAraRaporFormu", "TIBasvuru")',
                 data: {
                     'TIBasvuruID': TIBasvuruID,
                     'TIBasvuruAraRaporID': TIBasvuruAraRaporID

@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.GelenBasvurular)]
         public ActionResult Index(string EKD, int? BelgeDetailBasvuruID = null)
         {
-            var model = new fmBasvurular() { PageSize = 10, Expand = false };
+            var model = new FmBasvurularDto() { PageSize = 10, Expand = false };
 
             model.BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipi.LisansustuBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.GelenBasvurular)]
-        public ActionResult Index(fmBasvurular model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
+        public ActionResult Index(FmBasvurularDto model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
         {
 
             var nowDate = DateTime.Now;
@@ -79,8 +79,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DurumClassName = bdrm.ClassName,
                         DurumColor = bdrm.Color,
                         s.BasvuruTarihi,
-                        BasvurularTercihleris = s.BasvurularTercihleris.Select(s => new { s.OgrenimTipKod, s.ProgramKod }),
-                        BasvurularSinavBilgis = s.BasvurularSinavBilgis.Select(s => new { s.SinavTipKod, s.IsTaahhutVar }),
+                        BasvurularTercihleris = s.BasvurularTercihleris.Select(s2 => new { s2.OgrenimTipKod, s2.ProgramKod }),
+                        BasvurularSinavBilgis = s.BasvurularSinavBilgis.Select(s2 => new { s2.SinavTipKod, s2.IsTaahhutVar }),
                         LNotSistemi = s.LNotSistemID,
                         s.LMezuniyetNotu,
                         s.LMezuniyetNotu100LukSistem,
@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = PS.PageIndex;
 
             var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s =>
-            new frBasvurular
+            new FrBasvurularDto
             {
                 KullaniciID = s.KullaniciID,
                 BasvuruSurecID = s.BasvuruSurecID,

@@ -22,10 +22,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmBolumEslestir { PageSize = 15 });
+            return Index(new FmBolumEslestirDto { PageSize = 15 });
         }
         [HttpPost]
-        public ActionResult Index(fmBolumEslestir model, bool export = false)
+        public ActionResult Index(FmBolumEslestirDto model, bool export = false)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join at in db.AlesTipleris on new { s.AlesTipID } equals new { at.AlesTipID }
                     join enst in db.Enstitulers on new { e.EnstituKod } equals new { enst.EnstituKod }
                     where EnstKods.Contains(enst.EnstituKod)
-                    select new frBolumEslestir
+                    select new FrBolumEslestirDto
                     {
                         EnstituKod = enst.EnstituKod,
                         EnstituAd = enst.EnstituAd,
@@ -70,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(o => o.ProgramAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.BolumEslestirDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
 
 
             if (export && model.RowCount > 0)

@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBasvurular : PagerOption
+    public class FmBasvurularDto : PagerOption
     {
         public bool Expand { get; set; }
         public int? BelgeDetailBasvuruID { get; set; }
@@ -28,9 +28,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? LOgrenimDurumID { get; set; }
         public bool? IsTaahhutVar { get; set; }
 
-        public IEnumerable<frBasvurular> Data { get; set; }
+        public IEnumerable<FrBasvurularDto> Data { get; set; }
     }
-    public class frBasvurular : Basvurular
+    public class FrBasvurularDto : Basvurular
     {
         public string EnstituKod { get; set; }
         public string EnstituAdi { get; set; }

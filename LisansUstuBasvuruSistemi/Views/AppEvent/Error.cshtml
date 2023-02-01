@@ -10,7 +10,8 @@
     {
         var ExceltionMessage = Model.ToExceptionMessage();
         bool SaveError = true;
-        if (ExceltionMessage.Contains("1- The controller for path"))
+        var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller" };
+        if (errMesgList.Any(a=> ExceltionMessage.Contains(a)))
         {
             SaveError = false;
             var SplitMesssages = ExceltionMessage.Split('\'');

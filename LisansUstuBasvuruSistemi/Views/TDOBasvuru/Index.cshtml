@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmTDOBasvuru
+@model  FmTdoBasvuruDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -119,7 +119,7 @@
                             {
 
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.TdoBasvuruDtos)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -272,7 +272,7 @@
 {
     <script>
         $(function () {
-            showDetail('@(Model.TDOBasvuruID ?? Model.Data.First().TDOBasvuruID)');
+            showDetail('@(Model.TDOBasvuruID ?? Model.TdoBasvuruDtos.First().TDOBasvuruID)');
             if ('@(Model.TDOBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTDODanismanFormu(@Model.TDOBasvuruID); }, 250);
 
         },200)

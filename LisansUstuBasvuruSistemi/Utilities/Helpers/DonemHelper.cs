@@ -30,10 +30,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             return model;
         }
-        public static EOyilBilgi ToEgitimOgretimYilBilgi(this DateTime datetime)
+        public static EgitimOgretimDonemDto ToEgitimOgretimYilBilgi(this DateTime datetime)
         {
 
-            var mdl = new EOyilBilgi();
+            var mdl = new EgitimOgretimDonemDto();
             var nowYear = datetime.Year;
             if (datetime.Month >= 2 && datetime.Month <= 8)
             {

@@ -12,7 +12,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class UserBus
     {
-        public static frKullanicilar GetUser(string userName = null)
+        public static FrKullanicilarDto GetUser(string userName = null)
         {
             var identityName = userName ?? HttpContext.Current.User.Identity.Name;
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 var q = from s in db.Kullanicilars
                         where s.KullaniciAdi == identityName
-                        select new frKullanicilar
+                        select new FrKullanicilarDto
                         {
                             KullaniciID = s.KullaniciID,
                             EnstituKod = s.EnstituKod,
@@ -71,14 +71,14 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kull;
             }
         }
-        public static frKullanicilar GetUser(int kullaniciId)
+        public static FrKullanicilarDto GetUser(int kullaniciId)
         {
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var q = from s in db.Kullanicilars
                         where s.KullaniciID == kullaniciId
-                        select new frKullanicilar
+                        select new FrKullanicilarDto
                         {
                             EnstituKod = s.EnstituKod,
                             KullaniciID = s.KullaniciID,
@@ -130,13 +130,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kull;
             }
         }
-        public static frKullanicilar GetLoginUser(string kullaniciAdi)
+        public static FrKullanicilarDto GetLoginUser(string kullaniciAdi)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var q = from s in db.Kullanicilars.Where(p => p.IsAktif)
                         join ktl in db.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
-                        select new frKullanicilar
+                        select new FrKullanicilarDto
                         {
                             KullaniciID = s.KullaniciID,
                             ResimAdi = s.ResimAdi,

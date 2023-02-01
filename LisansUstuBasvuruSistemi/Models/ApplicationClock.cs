@@ -223,7 +223,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                         if (item.ZamanTipID == ZamanTipi.Gun && GunIsSuccess && EMailList.Count > 0)
                                         {
                                             var EnstituL = itemE;
-                                            var ParamereDegerleri = new List<MailReplaceParameterModel>();
+                                            var ParamereDegerleri = new List<MailReplaceParameterDto>();
                                             var Parametreler = Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
                                             var gonderilenMEkleris = new List<GonderilenMailEkleri>();
                                             var Attachments = new List<System.Net.Mail.Attachment>();
@@ -244,52 +244,52 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
                                             }
                                             if (Parametreler.Any(a => a == "@EnstituAdi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
                                             if (Parametreler.Any(a => a == "@WebAdresi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = itemE.WebAdresi, IsLink = true });
                                             if (Parametreler.Any(a => a == "@AdSoyad"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "AdSoyad", Value = itemB.Ad + " " + itemB.Soyad });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = itemB.Ad + " " + itemB.Soyad });
                                             if (Parametreler.Any(a => a == "@OgrenciAdSoyad"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "OgrenciAdSoyad", Value = itemB.Ad + " " + itemB.Soyad });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = itemB.Ad + " " + itemB.Soyad });
                                             if (Parametreler.Any(a => a == "@DanismanAdSoyad"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "DanismanAdSoyad", Value = itemB.TezDanismanAdi });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanAdSoyad", Value = itemB.TezDanismanAdi });
                                             if (Parametreler.Any(a => a == "@DanismanUnvanAdi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "DanismanUnvanAdi", Value = itemB.TezDanismanUnvani });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUnvanAdi", Value = itemB.TezDanismanUnvani });
                                             if (Parametreler.Any(a => a == "@OgrenciNo"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "OgrenciNo", Value = itemB.OgrenciNo });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = itemB.OgrenciNo });
                                             if (Parametreler.Any(a => a == "@EYKTarihi"))
                                             {
                                                 var EykTarih = itemB.EYKTarihi.HasValue ? itemB.EYKTarihi.Value.ToDateString() : "";
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EYKTarihi", Value = EykTarih });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = EykTarih });
                                             }
                                             if (Parametreler.Any(a => a == "@SRTarihi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "SRTarihi", Value = SonTarih.ToDateString() });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "SRTarihi", Value = SonTarih.ToDateString() });
                                             if (Parametreler.Any(a => a == "@SinavTarihi") && SinavTarihi.HasValue)
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "SinavTarihi", Value = SinavTarihi.Value.ToLongDateString() });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = SinavTarihi.Value.ToLongDateString() });
                                             if (Parametreler.Any(a => a == "@SinavSaati") && SinavSaati.HasValue)
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "SinavSaati", Value = string.Format("{0:hh\\:mm}", SinavSaati) });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavSaati", Value = string.Format("{0:hh\\:mm}", SinavSaati) });
                                             if (Parametreler.Any(a => a == "@AnabilimDaliAdi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "AnabilimDaliAdi", Value = itemB.Programlar.AnabilimDallari.AnabilimDaliAdi });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "AnabilimDaliAdi", Value = itemB.Programlar.AnabilimDallari.AnabilimDaliAdi });
                                             if (Parametreler.Any(a => a == "@ProgramAdi"))
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "ProgramAdi", Value = itemB.Programlar.ProgramAdi });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = itemB.Programlar.ProgramAdi });
                                             if (Parametreler.Any(a => a == "@CiltTeslimTarih"))//düzenlenecek
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "CiltTeslimTarih", Value = SonTarih.HasValue ? SonTarih.ToDateString() : "" });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "CiltTeslimTarih", Value = SonTarih.HasValue ? SonTarih.ToDateString() : "" });
                                             if (Parametreler.Any(a => a == "@DonemAdi"))
                                             {
                                                 var DonemAdi = itemB.MezuniyetSureci.BaslangicYil + " " + itemB.MezuniyetSureci.BitisYil + " " + itemB.MezuniyetSureci.Donemler.DonemAdi;
-                                                ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "DonemAdi", Value = DonemAdi });
+                                                ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "DonemAdi", Value = DonemAdi });
                                             }
                                             if (Parametreler.Any(a => a == "@Link"))
                                             {
                                                 if (item.MailSablonTipID == MailSablonTipi.Mez_TezKontrolTezDosyasiYuklenmeli)
                                                 {
-                                                    ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "Link", Value = itemE.SistemErisimAdresi + "/mezuniyet/Index?RowID=" + itemB.RowID, IsLink = true });
+                                                    ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "Link", Value = itemE.SistemErisimAdresi + "/mezuniyet/Index?RowID=" + itemB.RowID, IsLink = true });
                                                 }
                                             }
                                             // EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
                                             var mCOntent = SystemMails.GetSystemMailContent(EnstituL.EnstituAd, Sablon.SablonHtml, Sablon.SablonAdi, ParamereDegerleri);
 
-                                            var snded = MailManager.sendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, Attachments);
+                                            var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, Attachments);
                                             if (snded)
                                             {
                                                 GonderilecekMBIDs.Add(itemB.MezuniyetBasvurulariID);
@@ -394,20 +394,20 @@ namespace LisansUstuBasvuruSistemi.Models
 
                         string _DilKodu = itemMailD.Key;
                         string BasvuruDurumAdi = bdurumAds.First().BasvuruDurumAdi;
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
                         var enstitu = db.Enstitulers.Where(p => p.EnstituKod == Bsurec.EnstituKod).First();
                         mmmC.EnstituAdi = enstitu.EnstituAd;
                         mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
                         mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png"; ;
 
 
-                        var htmlCbilgi = new mailTableContent();
+                        var htmlCbilgi = new MailTableContentDto();
                         htmlCbilgi.AciklamaBasligi = "Mezuniyet Başvuru sürecinde yapmış olduğunuz başvurunuz taslak halindendir. Başvuru sürecinin bitimine " + kalanGun + "  gün kalmıştır. Eğer başvurunuzu " + kalanGun + " içerisinde onaylamazsanız başvurunuz geçersiz sayılacaktır.";
                         htmlCbilgi.GrupBasligi = "BAŞVURU BİLGİSİ";
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Durumu", Aciklama = BasvuruDurumAdi });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Süreci", Aciklama = Bsurec.BaslangicTarihi.ToFormatDateAndTime() + " - " + Bsurec.BitisTarihi.ToFormatDateAndTime() });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Başvuruyu Onaylamanız İçin Kalan Süre", Aciklama = (kalanGun == 1 ? "Son" : kalanGun.ToString()) + " Gün" });
-                        htmlCbilgi.Detaylar.Add(new mailTableRow { Baslik = "Sisteme Erişim Adresi", Aciklama = enstitu.SistemErisimAdresi });
+                        htmlCbilgi.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Durumu", Aciklama = BasvuruDurumAdi });
+                        htmlCbilgi.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Süreci", Aciklama = Bsurec.BaslangicTarihi.ToFormatDateAndTime() + " - " + Bsurec.BitisTarihi.ToFormatDateAndTime() });
+                        htmlCbilgi.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuruyu Onaylamanız İçin Kalan Süre", Aciklama = (kalanGun == 1 ? "Son" : kalanGun.ToString()) + " Gün" });
+                        htmlCbilgi.Detaylar.Add(new MailTableRowDto { Baslik = "Sisteme Erişim Adresi", Aciklama = enstitu.SistemErisimAdresi });
 
 
                         var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", htmlCbilgi);
@@ -415,7 +415,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var EMailList = itemMailD.Value.Select(s => s.Caption).Distinct().Select(s => new MailSendList { EMail = s, ToOrBcc = false }).ToList();
                         // EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
-                        var emailSend = MailManager.sendMailRetVal(Bsurec.EnstituKod, "Başvurunuz taslak halindedir.Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız", htmlMail, EMailList, null);
+                        var emailSend = MailManager.SendMailRetVal(Bsurec.EnstituKod, "Başvurunuz taslak halindedir.Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız", htmlMail, EMailList, null);
                         if (emailSend == null)
                         {
                             var kModel = new GonderilenMailler();

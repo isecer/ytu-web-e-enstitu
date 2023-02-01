@@ -22,17 +22,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD)
         {
             var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
-            return Index(new fmAnketler { PageSize = 15, EnstituKod = sEkod });
+            return Index(new FmAnketlerDto { PageSize = 15, EnstituKod = sEkod });
         }
         [HttpPost]
-        public ActionResult Index(fmAnketler model)
+        public ActionResult Index(FmAnketlerDto model)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from a in db.Ankets
                     join enst in db.Enstitulers on new { a.EnstituKod } equals new { enst.EnstituKod }
                     join k in db.Kullanicilars on a.IslemYapanID equals k.KullaniciID
                     where EnstKods.Contains(a.EnstituKod)
-                    select new frAnketler
+                    select new FrAnketlerDto
                     {
                         AnketID = a.AnketID,
                         EnstituKod = a.EnstituKod,
@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.AnketAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.FrAnketlers = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             ViewBag.IndexModel = IndexModel;
@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var qModel = (from s in db.Ankets.Where(p => p.AnketID == AnketID)
                           join sa in db.AnketSorus on s.AnketID equals sa.AnketID
-                          select new frAnketDetay
+                          select new FrAnketDetayDto
                           {
                               AnketSoruID = sa.AnketSoruID,
                               AnketID = sa.AnketID,
@@ -135,8 +135,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               IsTabloVeriGirisi = sa.IsTabloVeriGirisi,
                               IsTabloVeriMaxSatir = sa.IsTabloVeriMaxSatir,
                               SecenekSayisi = sa.AnketSoruSeceneks.Count,
-                              frAnketSecenekDetay = (from ss in sa.AnketSoruSeceneks
-                                                     select new frAnketSecenekDetay
+                              FrAnketSecenekDetay = (from ss in sa.AnketSoruSeceneks
+                                                     select new FrAnketSecenekDetayDto
                                                      {
                                                          AnketSoruID = ss.AnketSoruID,
                                                          AnketSoruSecenekID = ss.AnketSoruSecenekID,
@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var qModel = (from s in db.AnketSorus.Where(p => p.AnketSoruID == AnketSoruID)
                           join sa in db.AnketSoruSeceneks on s.AnketSoruID equals sa.AnketSoruID
-                          select new frAnketSecenekDetay
+                          select new FrAnketSecenekDetayDto
                           {
                               AnketSoruSecenekID = sa.AnketSoruSecenekID,
                               AnketSoruID = sa.AnketSoruID,

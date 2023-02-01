@@ -317,14 +317,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Eklemeye çalıştığınız günlere ait saat aralıkları zaten bulunmaktadır!");
 
-                    var mtc = new mailTableContent();
+                    var mtc = new MailTableContentDto();
                     mtc.CaptTdWidth = 350;
                     mtc.GrupBasligi = "Aşağıdaki saatlerle çakışma var!";
-                    var mRowModel = new List<mailTableRow>();
+                    var mRowModel = new List<MailTableRowDto>();
                     foreach (var item in varolanlar)
                     {
                         var gunlerT = gunler.Where(p => item._HaftaGunleriList.Intersect(model.GHaftaGunleri).Contains(p.Value.Value)).Select(s => s.Caption).ToList();
-                        mRowModel.Add(new mailTableRow { Baslik = string.Join(",", gunlerT), Aciklama = item._TalepBaslangcSaati + " - " + item._TalepBitisSaati });
+                        mRowModel.Add(new MailTableRowDto { Baslik = string.Join(",", gunlerT), Aciklama = item._TalepBaslangcSaati + " - " + item._TalepBitisSaati });
 
                     }
                     mtc.Detaylar = mRowModel;

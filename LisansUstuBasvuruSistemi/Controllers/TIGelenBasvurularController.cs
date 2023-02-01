@@ -12,42 +12,42 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.TiGelenBasvuru)]
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    public class TIGelenBasvurularController : Controller
+    public class TiGelenBasvurularController : Controller
     {
         // GET: TIGelenBasvurular
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
 
-            var model = new fmTIBasvuru() { PageSize = 50 }; 
+            var model = new fmTIBasvuru() { PageSize = 50 };
             //var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
             //if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent())
             //{
             //    model.AktifTIAraRaporDonemID = DonemBilgi.BaslangicYil + "" + DonemBilgi.DonemID;
             //    model.Expand = true;
             //}
-            return Index(model, EKD); ;
+            return Index(model, ekd); ;
         }
         [HttpPost]
-        public ActionResult Index(fmTIBasvuru model, string EKD)
+        public ActionResult Index(fmTIBasvuru model, string ekd)
         {
 
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
 
             var nowDate = DateTime.Now;
             var KullaniciID = UserIdentity.Current.Id;
-            var q = from s in db.TIBasvurus
-                    join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID
-                    join o in db.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod } 
-                    join pr in db.Programlars on k.ProgramKod equals pr.ProgramKod
-                    join ab in db.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
-                    join en in db.Enstitulers on e.EnstituKod equals en.EnstituKod
-                    join ktip in db.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
-                    join ard in db.TIBasvuruAraRapors on s.AktifTIBasvuruAraRaporID equals ard.TIBasvuruAraRaporID into defard
-                    from Ard in defard.DefaultIfEmpty()
-                    where en.EnstituKod == _EnstituKod
+            var q = from s in _entities.TIBasvurus
+                    join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
+                    join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
+                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
+                    join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
+                    join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
+                    join ard in _entities.TIBasvuruAraRapors on s.AktifTIBasvuruAraRaporID equals ard.TIBasvuruAraRaporID into defard
+                    from ard in defard.DefaultIfEmpty()
+                    where en.EnstituKod == enstituKod
                     select new frTIBasvuru
                     {
                         TIBasvuruID = s.TIBasvuruID,
@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        TcPasaPortNo = s.Kullanicilar.TcKimlikNo != null ? s.Kullanicilar.TcKimlikNo : s.Kullanicilar.PasaportNo,
+                        TcPasaPortNo = s.Kullanicilar.TcKimlikNo ?? s.Kullanicilar.PasaportNo,
                         OgrenciNo = s.OgrenciNo,
                         Kullanicilar = s.Kullanicilar,
                         ResimAdi = s.Kullanicilar.ResimAdi,
@@ -70,28 +70,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTIBasvuruAraRaporID = s.AktifTIBasvuruAraRaporID,
-                        TIAraRaporAktifDonemAdi = Ard == null ? "Rapor Girişi Yapılmadı" : (Ard.DonemBaslangicYil + " / " + (Ard.DonemBaslangicYil + 1) + " " + (Ard.DonemID == 1 ? "Güz" : "Bahar")),
-                        TIAraRaporRaporDurumAdi = Ard == null ? "Rapor Girişi Yapılmadı" : Ard.TIBasvuruAraRaporDurumlari.TIBasvuruAraRaporDurumAdi,
-                        AraRaporSayisi = Ard == null ? (int?)null : Ard.AraRaporSayisi,
-                        TIAraRaporAktifDonemID = Ard == null ? null : (Ard.DonemBaslangicYil + "" + Ard.DonemID),
-                        TIAraRaporRaporDurumID = Ard == null ? 0 : Ard.TIBasvuruAraRaporDurumID,
-                        tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(s => new TIAraraporFiltreModel
+                        TIAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        TIAraRaporRaporDurumAdi = ard == null ? "Rapor Girişi Yapılmadı" : ard.TIBasvuruAraRaporDurumlari.TIBasvuruAraRaporDurumAdi,
+                        AraRaporSayisi = ard != null ? ard.AraRaporSayisi : (int?)null,
+                        TIAraRaporAktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
+                        TIAraRaporRaporDurumID = ard != null ? ard.TIBasvuruAraRaporDurumID : (int?)null,
+                        tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TIAraraporFiltreModel
                         {
-                            AraRaporSayisi = s.AraRaporSayisi,
-                            FormKodu = s.FormKodu,
-                            KomiteUyeleri = s.TIBasvuruAraRaporKomites.Select(s2 => s2.AdSoyad).ToList(),
-                            RaporDonemID = s.DonemBaslangicYil + "" + s.DonemID,
-                            TIBasvuruAraRaporDurumID = s.TIBasvuruAraRaporDurumID
+                            AraRaporSayisi = ti.AraRaporSayisi,
+                            FormKodu = ti.FormKodu,
+                            KomiteUyeleri = ti.TIBasvuruAraRaporKomites.Select(s2 => s2.AdSoyad).ToList(),
+                            RaporDonemID = ti.DonemBaslangicYil + "" + ti.DonemID,
+                            TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID
                         }).ToList(),
 
-                        IsOyBirligiOrCouklugu = Ard != null ? Ard.IsOyBirligiOrCouklugu : (bool?)null,
-                        IsBasariliOrBasarisiz = Ard != null ? Ard.IsBasariliOrBasarisiz : (bool?)null
+                        IsOyBirligiOrCouklugu = ard != null ? ard.IsOyBirligiOrCouklugu : (bool?)null,
+                        IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
 
                     };
 
 
             var q2 = q;
-            q = q.Where(p => p.EnstituKod == _EnstituKod);
+            q = q.Where(p => p.EnstituKod == enstituKod);
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TIAraRaporAktifDonemID == model.AktifTIAraRaporDonemID);
             if (model.AktifTIAraRaporRaporDurumID.HasValue) q = q.Where(p => p.TIAraRaporRaporDurumID == model.AktifTIAraRaporRaporDurumID);
             if (model.AktifAraRaporSayisi.HasValue) q = q.Where(p => p.AraRaporSayisi == model.AktifAraRaporSayisi);
@@ -102,23 +102,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcPasaPortNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad) || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
 
-            var TezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
-            var MBGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
-            if (TezDegerlendirme && !MBGelenBKayitYetki)
+            var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+            var mbGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
+            if (tezDegerlendirme && !mbGelenBKayitYetki)
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             }
-            bool isFiltered = false;
-            if (q != q2)
-                isFiltered = true;
+            var isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
+            var indexModel = new MIndexBilgi();
             //IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.BasvuruTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToList();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
             if (isFiltered)
             {
                 ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
@@ -133,7 +130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             model.Data = qdata;
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             return View(model);
         }
 

@@ -7,22 +7,21 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmDuyurular : PagerOption
+    public class FmMailGondermeDto : PagerOption
     {
         public string EnstituKod { get; set; }
-        public string Baslik { get; set; }
+        public string Konu { get; set; }
         public DateTime? Tarih { get; set; }
         public string Aciklama { get; set; }
-        public bool? IsAktif { get; set; }
-        public string DuyuruYapan { get; set; }
-        public IEnumerable<frDuyurular> Data { get; set; }
+        public string MailGonderen { get; set; }
+        public IEnumerable<FrMailGondermeDto> MailGondermeDtos { get; set; }
     }
-
-    public class frDuyurular : Duyurular
+    public class FrMailGondermeDto : GonderilenMailler
     {
         public string EnstituAdi { get; set; }
-        public string DuyuruYapan { get; set; }
+        public string MailGonderen { get; set; }
         public int EkSayisi { get; set; }
-        public List<DuyuruEkleri> Ekler { get; set; }
+        public int KisiSayisi { get; set; }
+
     }
 }

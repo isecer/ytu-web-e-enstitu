@@ -24,10 +24,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            return Index(new fmMesajlar() { PageSize = 10, Expand = true, EnstituKod = enstituKod }, EKD);
+            return Index(new FmMesajlarDto() { PageSize = 10, Expand = true, EnstituKod = enstituKod }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmMesajlar model, string EKD, bool export = false)
+        public ActionResult Index(FmMesajlarDto model, string EKD, bool export = false)
         {
 
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
@@ -134,7 +134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             }
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frMesajlar
+            model.MesajlarDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrMesajlarDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,
@@ -231,7 +231,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult getMesajDetay(int MesajID)
         {
-            var mesaj = db.Mesajlars.Where(p => p.UstMesajID.HasValue == false && p.MesajID == MesajID).Select(s => new frMesajlar
+            var mesaj = db.Mesajlars.Where(p => p.UstMesajID.HasValue == false && p.MesajID == MesajID).Select(s => new FrMesajlarDto
             {
                 MesajKategoriID = s.MesajKategoriID,
                 MesajID = s.MesajID,
@@ -247,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MesajEkleris = s.MesajEkleris.ToList()
             }).First();
 
-            var groupMesajs = db.Mesajlars.Where(p => p.UstMesajID == mesaj.MesajID).ToList().Select(s => new SubMessages
+            var groupMesajs = db.Mesajlars.Where(p => p.UstMesajID == mesaj.MesajID).ToList().Select(s => new SubMessagesDto
             {
                 MesajID = s.MesajID,
                 KullaniciID = s.KullaniciID ?? 0,
@@ -257,12 +257,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Icerik = s.AciklamaHtml,
                 ResimYolu = s.KullaniciID.HasValue ? s.Kullanicilar.ResimAdi : "",
                 IslemYapanIP = s.IslemYapanIP,
-                Gonderilenler = new List<GonderilenMailKullanicilar>(),
-                Ekler = s.MesajEkleris.ToList()
+                GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>(),
+                MesajEkleris = s.MesajEkleris.ToList()
 
 
             }).ToList();
-            groupMesajs.Add(new SubMessages
+            groupMesajs.Add(new SubMessagesDto
             {
                 MesajID = mesaj.MesajID,
                 KullaniciID = mesaj.KullaniciID ?? 0,
@@ -272,24 +272,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Icerik = mesaj.Aciklama,
                 ResimYolu = mesaj.ResimAdi,
                 IslemYapanIP = mesaj.IslemYapanIP,
-                Gonderilenler = new List<GonderilenMailKullanicilar>(),
-                Ekler = mesaj.MesajEkleris.Select(s => new MesajEkleri { EkAdi = s.EkAdi, EkDosyaYolu = s.EkDosyaYolu }).ToList(),
+                GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>(),
+                MesajEkleris = mesaj.MesajEkleris.Select(s => new MesajEkleri { EkAdi = s.EkAdi, EkDosyaYolu = s.EkDosyaYolu }).ToList(),
             });
             var gMesajs = db.GonderilenMaillers.Where(p => p.MesajID == mesaj.MesajID).ToList();
             foreach (var item in gMesajs)
             {
                 var kul = item.Kullanicilar;
-                groupMesajs.Add(new SubMessages
+                groupMesajs.Add(new SubMessagesDto
                 {
                     MesajID = item.MesajID.Value,
                     KullaniciID = kul.KullaniciID,
                     EMail = kul.EMail,
                     AdSoyad = kul.Ad + " " + kul.Soyad,
                     Tarih = item.Tarih,
-                    Ekler = item.GonderilenMailEkleris.Select(s2 => new MesajEkleri { MesajEkiID = 1, EkAdi = s2.EkAdi, EkDosyaYolu = s2.EkDosyaYolu }).ToList(),
+                    MesajEkleris = item.GonderilenMailEkleris.Select(s2 => new MesajEkleri { MesajEkiID = 1, EkAdi = s2.EkAdi, EkDosyaYolu = s2.EkDosyaYolu }).ToList(),
                     Icerik = item.AciklamaHtml,
                     ResimYolu = kul.ResimAdi,
-                    Gonderilenler = item.GonderilenMailKullanicilars.ToList(),
+                    GonderilenMailKullanicilars = item.GonderilenMailKullanicilars.ToList(),
                     IslemYapanIP = item.IslemYapanIP,
 
                 });
@@ -297,9 +297,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mesaj.SubMesajList = groupMesajs.OrderByDescending(o => o.Tarih).ToList();
             return View(mesaj);
         }
-        public List<frMesajlar> GetMesajDetails(List<int> MesajID)
+        public List<FrMesajlarDto> GetMesajDetails(List<int> MesajID)
         {
-            var MesajList = new List<frMesajlar>();
+            var MesajList = new List<FrMesajlarDto>();
             var mesajLar = (from s in db.Mesajlars.Where(p => p.UstMesajID.HasValue == false && MesajID.Contains(p.MesajID))
                             join mk in db.MesajKategorileris on new { s.MesajKategoriID } equals new { mk.MesajKategoriID }
                             join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID into defk
@@ -314,7 +314,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             from Pr in defpr.DefaultIfEmpty()
                             join ab in db.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
                             from Ab in defab.DefaultIfEmpty()
-                            select new frMesajlar
+                            select new FrMesajlarDto
                             {
                                 GidenGelen = "Gelen Mesaj",
                                 MesajKategoriID = s.MesajKategoriID,
@@ -346,7 +346,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             from Pr in defpr.DefaultIfEmpty()
                             join ab in db.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
                             from Ab in defab.DefaultIfEmpty()
-                            select new frMesajlar
+                            select new FrMesajlarDto
                             {
                                 GidenGelen = "Gelen Mesaj",
                                 MesajID = s.MesajID,
@@ -364,7 +364,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             }).ToList();
 
-            altMesaj.AddRange(db.GonderilenMaillers.Where(p => MesajID.Contains(p.MesajID ?? 0)).Select(s => new frMesajlar
+            altMesaj.AddRange(db.GonderilenMaillers.Where(p => MesajID.Contains(p.MesajID ?? 0)).Select(s => new FrMesajlarDto
             {
                 GidenGelen = "Giden Mail",
                 MesajID = s.MesajID.Value,
@@ -381,7 +381,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var Secilenler = altMesaj.Where(p => p.MesajID == item.MesajID || p.UstMesajID == item.MesajID).ToList();
                 foreach (var item2 in Secilenler.OrderByDescending(o => o.Tarih))
                 {
-                    MesajList.Add(new frMesajlar
+                    MesajList.Add(new FrMesajlarDto
                     {
                         GidenGelen = item2.GidenGelen,
                         GrupNo = item.GrupNo,

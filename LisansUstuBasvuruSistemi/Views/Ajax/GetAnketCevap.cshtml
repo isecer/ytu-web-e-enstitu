@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@model frAnketDetay
+@model FrAnketDetayDto
 @{
     Layout = null;
     int inx = 0;
@@ -10,7 +10,7 @@
     <table class="table" style="width:100%;table-layout:fixed;margin:0px;font-size:9pt;">
         <tr>
             <th width="15" style="text-align:left;">#</th>
-            @foreach (var item2 in Model.frAnketSecenekDetay.OrderBy(o=>o.SiraNo))
+            @foreach (var item2 in Model.FrAnketSecenekDetay.OrderBy(o=>o.SiraNo))
             {
                 <th style="text-align:left;">@item2.SecenekAdi</th>
             }
@@ -22,7 +22,7 @@
                 <td width="15" style="text-align:left;">
                     @inx 
                 </td> 
-                @for (int i = 1; i <= Model.frAnketSecenekDetay.Count; i++)
+                @for (int i = 1; i <= Model.FrAnketSecenekDetay.Count; i++)
                 {
                     <td style="text-align:left;">@itemR.GetType().GetProperty("TabloVeri"+i).GetValue(itemR,null)</td>
                 }
@@ -36,7 +36,7 @@ else
 
     <table class="table" style="width:100%;table-layout:fixed;margin:0px;font-size:9pt;">
 
-        @foreach (var item in Model.frAnketSecenekDetay.OrderBy(o=>o.SiraNo))
+        @foreach (var item in Model.FrAnketSecenekDetay.OrderBy(o=>o.SiraNo))
         {
 
             <tr>

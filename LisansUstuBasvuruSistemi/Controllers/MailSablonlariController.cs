@@ -21,17 +21,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            return Index(new fmMailSablonlari() { PageSize = 15 }, EKD);
+            return Index(new FmMailSablonlariDto() { PageSize = 15 }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmMailSablonlari model, string EKD)
+        public ActionResult Index(FmMailSablonlariDto model, string EKD)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in db.MailSablonlaris
                     join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     join ens in db.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod } 
                     where EnstKods.Contains(s.EnstituKod) && s.MailSablonTipleri.SistemMaili==false
-                    select new frMailSablonlari
+                    select new FrMailSablonlariDto
                     {
                         EnstituKod = s.EnstituKod,
                         EnstituAdi = ens.EnstituAd,
@@ -58,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             IndexModel.Toplam = model.RowCount;
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else q = q.OrderByDescending(o => o.IslemTarihi);
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
+            model.MailSablonlariDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod); 
             ViewBag.IndexModel = IndexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);

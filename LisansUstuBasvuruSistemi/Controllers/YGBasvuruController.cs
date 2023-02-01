@@ -28,10 +28,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD, int? BelgeDetailBasvuruID = null)
         {
 
-            return Index(new fmBasvurular() { PageSize = 10, BelgeDetailBasvuruID = BelgeDetailBasvuruID }, EKD);
+            return Index(new FmBasvurularDto() { PageSize = 10, BelgeDetailBasvuruID = BelgeDetailBasvuruID }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmBasvurular model, string EKD)
+        public ActionResult Index(FmBasvurularDto model, string EKD)
         {
             var nowDate = DateTime.Now;
            
@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ktip in db.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
                     join dr in db.BasvuruDurumlaris on s.BasvuruDurumID equals dr.BasvuruDurumID
                     where bs.Enstituler.EnstituKisaAd.Contains(EKD)
-                    select new frBasvurular
+                    select new FrBasvurularDto
                     {
                         KullaniciID = s.KullaniciID,
                         BasvuruSurecID = s.BasvuruSurecID,
@@ -912,7 +912,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (sendMail && bsurec.Enstituler.LUBMailGonder)
                 {
                     var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
-                    var mmmC = new mdlMailMainContent();
+                    var mmmC = new MailMainContentDto();
 
                     mmmC.EnstituAdi = db.Enstitulers.Where(p => p.EnstituKod == kModel.EnstituKod).First().EnstituAd;
                     var _ea = mailBilgi.SistemErisimAdresi;
@@ -924,29 +924,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
                     mmmC.UniversiteAdi = "Yıldız Tekni Üniversitesi";
 
-                    var mtc = new mailTableContent();
+                    var mtc = new MailTableContentDto();
                     if (kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı) mtc.AciklamaDetayi = "Başvurunuza ait kısa bilgi aşağıdaki gibidir. Başvurunuzun detaylı bilgisini Mail ekinden  PDF olarak indirebilirsiniz.";
                     else mtc.AciklamaDetayi = "Başvurunuz İptal Edilmiştir. Detaylar Aşağıdaki Gibidir.";
                     mtc.GrupBasligi = "Başvuru Bilgisi";
 
                     var drm = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == kModel.BasvuruDurumID).First();
-                    mtc.Detaylar.Add(new mailTableRow { Baslik = "Enstitü Adı", Aciklama = bsurec.Enstituler.EnstituAd });
-                    mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Dönem Bilgisi", Aciklama = kModel.DonemAdi });
-                    mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Türü", Aciklama = "Yatay Geçiş Başvurusu" });
-                    mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Durumu", Aciklama = drm.BasvuruDurumAdi });
+                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Enstitü Adı", Aciklama = bsurec.Enstituler.EnstituAd });
+                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Dönem Bilgisi", Aciklama = kModel.DonemAdi });
+                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Türü", Aciklama = "Yatay Geçiş Başvurusu" });
+                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Durumu", Aciklama = drm.BasvuruDurumAdi });
                     if (kModel.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
                     {
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Açıklama", Aciklama = kModel.BasvuruDurumAciklamasi.ToString() });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Açıklama", Aciklama = kModel.BasvuruDurumAciklamasi.ToString() });
                     }
                     else
                     {
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Tarihi", Aciklama = kModel.BasvuruTarihi.ToString() });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Tarihi", Aciklama = kModel.BasvuruTarihi.ToString() });
                     }
                     if (kModel.LOgrenimDurumID.HasValue && kModel.LOgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         var od = db.OgrenimDurumlaris.Where(p => p.OgrenimDurumID == kModel.LOgrenimDurumID.Value).First();
                         var Msg = od.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy")).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy HH:mm")).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToString("dd-MM-yyyy HH:mm"));
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Dikkat", Aciklama = Msg });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Dikkat", Aciklama = Msg });
 
                     }
 
@@ -965,7 +965,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else mTitle = "Başvuru İptal Edildi";
                     var uBilgi = db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).First();
-                    var emailSend = MailManager.sendMail(kModel.EnstituKod, mTitle, htmlMail, uBilgi.EMail, attchL);
+                    var emailSend = MailManager.SendMail(kModel.EnstituKod, mTitle, htmlMail, uBilgi.EMail, attchL);
                 }
                 int? BelgeDetailBasvuruID = null;
                 if (bsurec.IsBelgeYuklemeVar && kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı)

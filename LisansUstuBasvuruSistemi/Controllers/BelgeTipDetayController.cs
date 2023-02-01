@@ -21,17 +21,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            return Index(new fmBelgeTipDetay { }, EKD);
+            return Index(new FmBelgeTipDetayDto { }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmBelgeTipDetay model, string EKD)
+        public ActionResult Index(FmBelgeTipDetayDto model, string EKD)
         {
 
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var q = (from s in db.BelgeTipDetays
                      join so in db.OgrenimDurumlaris on new { s.OgrenimDurumID } equals new { so.OgrenimDurumID }
                      where s.EnstituKod == _EnstituKod
-                     select new frBelgeTipDetay
+                     select new FrBelgeTipDetayDto
                      {
                          BelgeTipDetayID = s.BelgeTipDetayID,
                          EnstituKod = s.EnstituKod,
@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.IslemTarihi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.BelgeTipDetayDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
@@ -97,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
-            var model = new BelgeTipDetayKayitModel();
+            var model = new BelgeTipDetayKayitDto();
             if (id.HasValue)
             {
                 var data = db.BelgeTipDetays.Where(p => p.BelgeTipDetayID == id).FirstOrDefault();
@@ -149,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.BelgeTipleriKayıt)]
-        public ActionResult Kayit(BelgeTipDetayKayitModel kModel, string EKD)
+        public ActionResult Kayit(BelgeTipDetayKayitDto kModel, string EKD)
         {
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             kModel.EnstituKod = _EnstituKod;
@@ -324,7 +324,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult saatEkleKontrol(BTSaatKontrolModel model)
+        public ActionResult saatEkleKontrol(SaatKontrolDto model)
         {
             var mmMessage = new MmMessage();
             mmMessage.IsSuccess = true;

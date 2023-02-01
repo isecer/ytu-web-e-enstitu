@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBelgeTalepleri : PagerOption
+    public class FmBelgeTalepleriDto : PagerOption
     {
         public bool Expand { get; set; }
         public string DilKodu { get; set; }
@@ -20,9 +20,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AranacakKelime { get; set; }
         public string ProgramKod { get; set; }
         public string BuGunkuKayitlar { get; set; }
-        public IEnumerable<frBelgeTalepleri> Data { get; set; }
+        public IEnumerable<FrBelgeTalepleriDto> BelgeTalepleriDtos { get; set; }
     }
-    public class frBelgeTalepleri : BelgeTalepleri
+    public class FrBelgeTalepleriDto : BelgeTalepleri
     {
         public int? KullaniciID { get; set; }
         public string ResimAdi { get; set; }

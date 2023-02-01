@@ -9,8 +9,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class AnketCevapDto
     {
         public int? SecilenAnketSoruSecenekID { get; set; }
-        public frAnketDetay SoruBilgi { get; set; }
-        public List<frAnketSecenekDetay> SoruSecenek { get; set; }
+        public FrAnketDetayDto SoruBilgi { get; set; }
+        public List<FrAnketSecenekDetayDto> SoruSecenek { get; set; }
         public SelectList SelectListSoruSecenek { get; set; }
     }
 }

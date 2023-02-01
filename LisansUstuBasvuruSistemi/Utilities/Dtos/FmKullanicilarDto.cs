@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
-
+using LisansUstuBasvuruSistemi.Models; 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmKullanicilar : PagerOption
+    public class FmKullanicilarDto : PagerOption
     {
         public bool Expand { get; set; }
         public int KullaniciID { get; set; }
@@ -29,13 +28,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? IsAktif { get; set; }
         public bool? IsAdmin { get; set; }
         public string Aciklama { get; set; }
-        public IEnumerable<frKullanicilar> data { get; set; }
-        public fmKullanicilar()
+        public IEnumerable<FrKullanicilarDto> KullanicilarDtos { get; set; }
+        public FmKullanicilarDto()
         {
-            data = new frKullanicilar[0];
+            KullanicilarDtos = new FrKullanicilarDto[0];
         }
     }
-    public class frKullanicilar : Kullanicilar
+    public class FrKullanicilarDto : Kullanicilar
     {
         public bool KtipBasvuruYapabilir { get; set; }
         public string EnstituAdi { get; set; }

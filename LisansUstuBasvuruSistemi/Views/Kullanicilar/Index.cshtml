@@ -6,7 +6,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.SystemSetting
-@model fmKullanicilar
+@model FmKullanicilarDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kayit = RoleNames.KullanicilarKayit.InRoleCurrent();
@@ -218,7 +218,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.data)
+                                foreach (var item in Model.KullanicilarDtos)
                                 {
 
                                     <tr id="row_@item.KullaniciID">

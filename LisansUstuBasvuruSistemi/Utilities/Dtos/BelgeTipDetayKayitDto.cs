@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class BelgeTipDetayKayitModel : BelgeTipDetay
+    public class BelgeTipDetayKayitDto : BelgeTipDetay
     {
         public List<int> BelgeTipID { get; set; }
         public List<string> HaftaGunleri { get; set; }

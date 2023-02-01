@@ -31,10 +31,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Index()
         {
-            return Index(new fmBasvuruSureci() { PageSize = 15 });
+            return Index(new FmBasvuruSureciDto() { PageSize = 15 });
         }
         [HttpPost]
-        public ActionResult Index(fmBasvuruSureci model)
+        public ActionResult Index(FmBasvuruSureciDto model)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
@@ -96,7 +96,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else q = q.OrderBy(model.Sort);
             }
             else q = q.OrderByDescending(o => o.BaslangicTarihi);
-            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frBasvuruSureci
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrBasvuruSureciDto
             {
                 Hesaplandi = s.Hesaplandi,
                 EnstituKod = s.EnstituKod,
@@ -124,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 CmbOgrenimTipBilgi = s.CmbOgrenimTipBilgi
             }).ToList();
 
-            model.Data = qdata;
+            model.FrBasvuruSureciDtos = qdata;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IndexModel = IndexModel;
 
@@ -414,7 +414,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var _EOyilBilgi = new EOyilBilgi();
+            var _EOyilBilgi = new EgitimOgretimDonemDto();
             if (kModel.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = kModel.OgretimYili.Split('/').ToList();
@@ -1228,7 +1228,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       join e in db.AnabilimDallaris on new { s.AnabilimDaliKod, mdl.EnstituKod } equals new { e.AnabilimDaliKod, e.EnstituKod }
                                       join at in db.AlesTipleris on new { s.AlesTipID } equals new { at.AlesTipID }
 
-                                      select new frKotalar
+                                      select new FrKotalarDto
                                       {
                                           KotaID = k.KotaID,
                                           OgrenimTipKod = ot.OgrenimTipKod,
@@ -1281,7 +1281,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       join e in db.AnabilimDallaris on new { s.AnabilimDaliKod, mdl.EnstituKod } equals new { e.AnabilimDaliKod, e.EnstituKod }
                                       join kt in db.KullaniciTipleris on s.KullaniciTipID equals kt.KullaniciTipID
                                       where prkods.Contains(s.ProgramKod)
-                                      select new frKotalar
+                                      select new FrKotalarDto
                                       {
                                           KotaID = k.KotaID,
                                           OgrenimTipKod = k.OgrenimTipKod,
@@ -1522,14 +1522,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.ToplamOnaylananBasvuru = db.Basvurulars.Where(p => p.BasvuruSurecID == mdl.BasvuruSurecID && p.BasvuruDurumID == BasvuruDurumu.Onaylandı).Count();
                 var qModel = (from s in db.Ankets.Where(p => p.AnketID == mdl.AnketID)
                               join sa in db.AnketSorus on s.AnketID equals sa.AnketID
-                              select new frAnketDetay
+                              select new FrAnketDetayDto
                               {
                                   AnketSoruID = sa.AnketSoruID,
                                   AnketID = sa.AnketID,
                                   SoruAdi = sa.SoruAdi,
                                   SiraNo = sa.SiraNo,
-                                  frAnketSecenekDetay = (from ss in sa.AnketSoruSeceneks
-                                                         select new frAnketSecenekDetay
+                                  FrAnketSecenekDetay = (from ss in sa.AnketSoruSeceneks
+                                                         select new FrAnketSecenekDetayDto
                                                          {
                                                              AnketSoruID = ss.AnketSoruID,
                                                              AnketSoruSecenekID = ss.AnketSoruSecenekID,
@@ -2244,7 +2244,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     if (item.GonderilecekMails.Count > 0)
                     {
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
                         var enstitu = enstitus.Where(p => p.EnstituKod == bsurec.EnstituKod).First();
 
                         var sablon = sablons.Where(p => p.MailSablonTipID == MailSablonTipi.OtoMailSinavYerBilgi).FirstOrDefault();
@@ -2257,39 +2257,39 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         string SurecAdi = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + db.Donemlers.Where(p => p.DonemID == bsurec.DonemID).First().DonemAdi;
 
 
-                        var mtc = new mailTableContent();
+                        var mtc = new MailTableContentDto();
 
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Başvuru Dönemi", Aciklama = SurecAdi });
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Anabilim Dalı / Program", Aciklama = (item.AnabilimDaliAdi + " / " + item.ProgramAdi) });
-                        mtc.Detaylar.Add(new mailTableRow { Baslik = "Öğrenim Seviyesi", Aciklama = item.OgrenimTipAdi });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Dönemi", Aciklama = SurecAdi });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Anabilim Dalı / Program", Aciklama = (item.AnabilimDaliAdi + " / " + item.ProgramAdi) });
+                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = item.OgrenimTipAdi });
                         var mdHtml = new List<string>();
                         foreach (var itmMD in item.MulakatDetayB)
                         {
-                            var mtcSinavB = new mailTableContent();
+                            var mtcSinavB = new MailTableContentDto();
                             mtcSinavB.GrupBasligi = itmMD.MulakatSinavTurAdi;
-                            mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Kampüs", Aciklama = itmMD.KampusAdi });
-                            mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Yeri", Aciklama = itmMD.YerAdi });
-                            mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Tarihi", Aciklama = itmMD.SinavTarihi.ToFormatDateAndTime() });
-                            mtcSinavB.Detaylar.Add(new mailTableRow { Baslik = "Sınav Tipi", Aciklama = itmMD.MulakatSinavTurAdi });
+                            mtcSinavB.Detaylar.Add(new MailTableRowDto { Baslik = "Kampüs", Aciklama = itmMD.KampusAdi });
+                            mtcSinavB.Detaylar.Add(new MailTableRowDto { Baslik = "Sınav Yeri", Aciklama = itmMD.YerAdi });
+                            mtcSinavB.Detaylar.Add(new MailTableRowDto { Baslik = "Sınav Tarihi", Aciklama = itmMD.SinavTarihi.ToFormatDateAndTime() });
+                            mtcSinavB.Detaylar.Add(new MailTableRowDto { Baslik = "Sınav Tipi", Aciklama = itmMD.MulakatSinavTurAdi });
                             mdHtml.Add(ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavB));
 
                         }
-                        mtc.Detaylar.Add(new mailTableRow
+                        mtc.Detaylar.Add(new MailTableRowDto
                         {
                             Colspan2 = true,
                             Aciklama = string.Join(" ", mdHtml)
                         });
                         if (JuriBilgisiGonderilsin)
                         {
-                            var mtcSinavJ = new mailTableContent();
+                            var mtcSinavJ = new MailTableContentDto();
                             mtcSinavJ.IsJuriBilgi = true;
                             mtcSinavJ.GrupBasligi = "Jüri Bilgisi";
 
                             foreach (var itemJr in item.MulakatJuriB)
                             {
-                                mtcSinavJ.Detaylar.Add(new mailTableRow { SiraNo = itemJr.SiraNo, Baslik = itemJr.JuriAdi, Aciklama = itemJr.IsAsil ? "Asil" : "Yedek" });
+                                mtcSinavJ.Detaylar.Add(new MailTableRowDto { SiraNo = itemJr.SiraNo, Baslik = itemJr.JuriAdi, Aciklama = itemJr.IsAsil ? "Asil" : "Yedek" });
                             }
-                            mtc.Detaylar.Add(new mailTableRow
+                            mtc.Detaylar.Add(new MailTableRowDto
                             {
                                 Colspan2 = true,
                                 Aciklama = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtcSinavJ)
@@ -2301,7 +2301,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         var User = mailBilgi.SmtpKullaniciAdi;
                         var EMailList = item.GonderilecekMails.Distinct().Select(s => new MailSendList { EMail = s.Caption, ToOrBcc = false }).ToList();
-                        var snded = MailManager.sendMail(mailBilgi.EnstituKod, sablon.SablonAdi, htmlMail, EMailList, null);
+                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, sablon.SablonAdi, htmlMail, EMailList, null);
                         if (snded)
                         {
 
@@ -2434,7 +2434,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     foreach (var item in Bsonuc)
                     {
-                        var mmmC = new mdlMailMainContent();
+                        var mmmC = new MailMainContentDto();
 
                         item.WebAdresi = mailBilgi.WebAdresi;
                         item.Link = mailBilgi.SistemErisimAdresi + "/home/index?basvuruid=" + item.BasvuruID + "&rowid=" + item.RowID;
@@ -2562,7 +2562,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var attach = new List<System.Net.Mail.Attachment>();
                         if (attchL.Any(a => a.Key == (_cont.MailSablonTipID + "_"))) attach = selectedAttachL.Value;
 
-                        var snded = MailManager.sendMail(mailBilgi.EnstituKod, Konu, htmlMail, item.Email, attach);//item.Email
+                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, Konu, htmlMail, item.Email, attach);//item.Email
                         if (snded)
                         {
 
@@ -3051,7 +3051,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var Basvuru = btercih.Basvurular;
                     var EnstituL = Basvuru.BasvuruSurec.Enstituler;
-                    var ParamereDegerleri = new List<MailReplaceParameterModel>();
+                    var ParamereDegerleri = new List<MailReplaceParameterDto>();
                     var MailSablonTipID = KayitDurumID == KayitDurumu.KayitOldu ? MailSablonTipi.OtoMailKayitOldu : MailSablonTipi.OtoMailOnKayitOldu;
                     var Sablon = db.MailSablonlaris.Where(p => p.MailSablonTipID == MailSablonTipID && p.EnstituKod == EnstituL.EnstituKod).FirstOrDefault();
                     if (Sablon != null)
@@ -3079,25 +3079,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
                         }
                         if (Parametreler.Any(a => a == "@EnstituAdi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
                         if (Parametreler.Any(a => a == "@WebAdresi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "WebAdresi", Value = EnstituL.WebAdresi, IsLink = true });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = EnstituL.WebAdresi, IsLink = true });
                         if (Parametreler.Any(a => a == "@AdSoyad"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "AdSoyad", Value = Basvuru.Ad + " " + Basvuru.Soyad });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = Basvuru.Ad + " " + Basvuru.Soyad });
 
                         if (Parametreler.Any(a => a == "@ProgramAdi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "ProgramAdi", Value = ProgramBilgi.ProgramAdi });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = ProgramBilgi.ProgramAdi });
                         if (Parametreler.Any(a => a == "@OgrenciNo"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "OgrenciNo", Value = OgrenciNo });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = OgrenciNo });
                         if (Parametreler.Any(a => a == "@OgrenimSeviyesiAdi"))
-                            ParamereDegerleri.Add(new MailReplaceParameterModel { Key = "OgrenimSeviyesiAdi", Value = ProgramBilgi.OgrenimTipAdi });
+                            ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenimSeviyesiAdi", Value = ProgramBilgi.OgrenimTipAdi });
 
                         var mCOntent = SystemMails.GetSystemMailContent(EnstituL.EnstituAd, Sablon.SablonHtml, Sablon.SablonAdi, ParamereDegerleri);
                         try
                         {
                             //EMailList.Clear();
                             //EMailList.Add(new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true });
-                            var snded = MailManager.sendMail(EnstituL.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, Attachments);
+                            var snded = MailManager.SendMail(EnstituL.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, EMailList, Attachments);
 
                             if (snded)
                             {

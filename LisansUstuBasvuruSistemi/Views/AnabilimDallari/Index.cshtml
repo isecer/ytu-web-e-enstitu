@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
-@model  fmAnabilimDallari
+@model  FmAnabilimDallariDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -51,7 +51,7 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                foreach (var item in Model.data)
+                                foreach (var item in Model.FrAnabilimDallaris)
                                 {
                                     <tr>
                                         <td>@item.EnstituAd</td>

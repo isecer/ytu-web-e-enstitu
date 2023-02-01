@@ -23,11 +23,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmKotalar { PageSize = 15 });
+            return Index(new FmKotalarDto { PageSize = 15 });
         }
 
         [HttpPost]
-        public ActionResult Index(fmKotalar model, bool export = false)
+        public ActionResult Index(FmKotalarDto model, bool export = false)
         {
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var enstList = db.Enstitulers.Where(p => p.IsAktif).ToList();
@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join at in db.AlesTipleris on new { s.AlesTipID } equals new { at.AlesTipID } 
                     join enst in db.Enstitulers on new { k.EnstituKod} equals new { enst.EnstituKod}
                     where EnstKods.Contains(enst.EnstituKod)
-                    select new frKotalar
+                    select new FrKotalarDto
                     {
                         KotaID = k.KotaID,
                         OgrenimTipKod = k.OgrenimTipKod,
@@ -115,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.KotalarDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
 
 
 

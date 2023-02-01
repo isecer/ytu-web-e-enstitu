@@ -1,17 +1,17 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model fmDuyurular
+@model FmDuyurularDto
 @{
     Layout = null; 
 }
-@if (Model.Data != null && Model.Data.Count() > 0)
+@if (Model.DuyurularDtos != null && Model.DuyurularDtos.Count() > 0)
 {
     <div style="overflow-x:auto;max-height:600px;">
         <table class="table">
             <tbody>
 
-                @foreach (var item in Model.Data)
+                @foreach (var item in Model.DuyurularDtos)
                 {
 
                     <tr class="cls-@item.DuyuruID">

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class EOyilBilgi
+    public class EgitimOgretimDonemDto
     {
 
         public int BaslangicYili { get; set; }

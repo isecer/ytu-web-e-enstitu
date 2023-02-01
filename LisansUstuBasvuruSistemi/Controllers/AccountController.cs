@@ -18,6 +18,7 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -160,7 +161,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult OnlineUserCnt()
         {
 
-            var users = OnlineUsers.users;
+            var users = OnlineUsersHelper.GetUsers;
             int Count = users.Count();
             var q = Count.ToJsonResult();
             return q;
@@ -170,7 +171,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.KullanicilarOnlineKullanicilar)]
         public ActionResult getOnlineUserList()
         {
-            var users = OnlineUsers.users.ToList();
+            var users = OnlineUsersHelper.GetUsers.ToList();
             return View(users);
         }
 

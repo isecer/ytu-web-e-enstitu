@@ -6,7 +6,7 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     
-    public class BTSaatKontrolModel
+    public class SaatKontrolDto
     {
         public string HaftaGunleri { get; set; }
         public List<int> GHaftaGunleri { get; set; }

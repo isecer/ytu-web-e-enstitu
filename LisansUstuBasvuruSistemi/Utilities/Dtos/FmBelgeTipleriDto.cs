@@ -7,19 +7,15 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmBelgeTipDetay : PagerOption
+    public class FmBelgeTipleriDto : PagerOption
     {
         public string BelgeTipAdi { get; set; }
-        public string OgrenimDurumAdi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frBelgeTipDetay> data { get; set; }
+        public IEnumerable<FrBelgeTipleriDto> BelgeTipleriDtos { get; set; }
 
     }
-    public class frBelgeTipDetay : BelgeTipDetay
+    public class FrBelgeTipleriDto : BelgeTipleri
     {
-        public List<string> BelgeTipAdi { get; set; }
-        public List<BtSaatShowModel> Saatler { get; set; }
-        public string OgrenimDurumAdi { get; set; }
         public string IslemYapan { get; set; }
 
     }

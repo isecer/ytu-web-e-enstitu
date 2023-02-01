@@ -11,9 +11,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class NotConverterHelper
     {
-        public static CevrilenNotModel ToNotCevir(this double deger, int Sistem)
+        public static CevrilenNotDto ToNotCevir(this double deger, int Sistem)
         {
-            var mdl = new CevrilenNotModel();
+            var mdl = new CevrilenNotDto();
             if (Sistem == NotSistemi.Not1LikSistem)
             {  // && CSistem == 100
                 mdl.Not1Lik = 1;

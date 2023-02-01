@@ -7,7 +7,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var roller = (IEnumerable<CheckObjectX<Roller>>)ViewBag.Roller;
+    var roller = (IEnumerable<CheckObjectDto<Roller>>)ViewBag.Roller;
     var user = (Kullanicilar)ViewBag.Kullanici;
     var cats = (List<CmbIntDto>)ViewBag.cats;
     var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();

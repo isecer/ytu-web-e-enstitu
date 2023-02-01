@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
-@model  fmBirimler
+@model  FmBirimlerDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -48,7 +48,7 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                foreach (var item in Model.data.Select((s, Inx) => new { data = s, Index = Inx }))
+                                foreach (var item in Model.Birimlers.Select((s, Inx) => new { data = s, Index = Inx }))
                                 {
                                     <tr>
                                         <td>@(item.Index + 1)</td>

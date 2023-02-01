@@ -16,12 +16,15 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var surec = db.TalepSurecleris.First(p => p.TalepSurecID == talepSurecId);
-                var talepTipIDs = surec.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
-                var data = db.TalepTipleris.Where(p => (p.TalepTipID == talepTipId || talepTipIDs.Contains(p.TalepTipID))).OrderBy(o => o.TalepTipID).ToList();
-                foreach (var item in data)
+                var surec = db.TalepSurecleris.FirstOrDefault(p => p.TalepSurecID == talepSurecId);
+                if (surec != null)
                 {
-                    dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
+                    var talepTipIDs = surec.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
+                    var data = db.TalepTipleris.Where(p => (p.TalepTipID == talepTipId || talepTipIDs.Contains(p.TalepTipID))).OrderBy(o => o.TalepTipID).ToList();
+                    foreach (var item in data)
+                    {
+                        dct.Add(new CmbIntDto { Value = item.TalepTipID, Caption = item.TalepTipAdi });
+                    }
                 }
             }
             return dct;

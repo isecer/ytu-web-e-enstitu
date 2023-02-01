@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmTDOBasvuru : PagerOption
+    public class FmTdoBasvuruDto : PagerOption
     {
         public int? TDOBasvuruID { get; set; }
         public int? KullaniciID { get; set; }
@@ -31,9 +31,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? AktifEsDurumID { get; set; }
         public int? EsDurumID { get; set; }
         public DateTime RowDate { get; set; }
-        public IEnumerable<frTDOBasvuru> Data { get; set; }
+        public IEnumerable<FrTdoBasvuruDto> TdoBasvuruDtos { get; set; }
     }
-    public class frTDOBasvuru : TDOBasvuru
+    public class FrTdoBasvuruDto : TDOBasvuru
     {
         public int? TezDanismanID { get; set; }
         public string EnstituAdi { get; set; }

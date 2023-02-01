@@ -17,36 +17,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.TdoGelenBasvuru)]
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    public class TDOGelenBasvurularController : Controller
+    public class TdoGelenBasvurularController : Controller
     {
         // GET: TDOGelenBasvurular
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD, int? TDOBasvuruID, int? KullaniciID)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd, int? tdoBasvuruId, int? kullaniciId)
         {
 
-            return Index(new fmTDOBasvuru() { TDOBasvuruID = TDOBasvuruID, KullaniciID = KullaniciID, PageSize = 50 }, EKD);
+            return Index(new FmTdoBasvuruDto() { TDOBasvuruID = tdoBasvuruId, KullaniciID = kullaniciId, PageSize = 50 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmTDOBasvuru model, string EKD, bool export = false)
+        public ActionResult Index(FmTdoBasvuruDto model, string ekd, bool export = false)
         {
 
-            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var nowDate = DateTime.Now;
             var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var tdoGelenBasvuruKayit = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
 
-            var q = from s in db.TDOBasvurus
-                    join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID
-                    join o in db.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in db.Programlars on s.ProgramKod equals pr.ProgramKod
-                    join ab in db.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
-                    join en in db.Enstitulers on e.EnstituKod equals en.EnstituKod
-                    join ktip in db.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
-                    join ard in db.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
+            var q = from s in _entities.TDOBasvurus
+                    join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
+                    join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
+                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
+                    join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
+                    join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
                     from Ard in defard.DefaultIfEmpty()
-                    let ardEs = db.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == Ard.TDOBasvuruDanismanID)
-                    select new frTDOBasvuru
+                    let ardEs = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == Ard.TDOBasvuruDanismanID)
+                    select new FrTdoBasvuruDto
                     {
                         TezDanismanID = Ard.TezDanismanID,
                         TDOBasvuruID = s.TDOBasvuruID,
@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (Ard.EYKYaGonderildi == true && !Ard.EYKDaOnaylandi.HasValue ? Ard.EYKYaGonderildiIslemTarihi.Value : (Ard!=null?Ard.BasvuruTarihi:DateTime.MinValue))),
                         Sira = (Ard != null && (Ard.EYKYaGonderildi == true && Ard.EYKDaOnaylandi == null) || (ardEs != null && ardEs.EYKYaGonderildi == null)) ? 0 : 1,
                         TDODanismanDetayModels = (from x in s.TDOBasvuruDanismen
-                                                  join xd in db.TDOBasvuruEsDanismen on x.TDOBasvuruDanismanID equals xd.TDOBasvuruDanismanID into defX
+                                                  join xd in _entities.TDOBasvuruEsDanismen on x.TDOBasvuruDanismanID equals xd.TDOBasvuruDanismanID into defX
                                                   from xD in defX.DefaultIfEmpty()
                                                   select new TDODanismanFiltreModel
                                                   {
@@ -224,7 +224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
 
 
-            model.Data = qdata; 
+            model.TdoBasvuruDtos = qdata; 
             return View(model);
         }
 
@@ -232,30 +232,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return View();
         }
-        public ActionResult GetTutanakRaporuKontrolu(List<int> OgrenimTipKods, DateTime? BasTar, DateTime? BitTar)
+        public ActionResult GetTutanakRaporuKontrolu(List<int> ogrenimTipKods, DateTime? basTar, DateTime? bitTar)
         {
-            var mMessage = new MmMessage();
-            mMessage.MessageType = Msgtype.Success;
-            mMessage.IsSuccess = true;
+            var mMessage = new MmMessage
+            {
+                MessageType = Msgtype.Success,
+                IsSuccess = true
+            };
 
 
-            if (!BasTar.HasValue)
+            if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Başlangıç tarihini giriniz.");
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasTar" });
             }
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BasTar" });
-            if (!BasTar.HasValue)
+            if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
                 mMessage.Messages.Add("Bitiş tarihini giriniz.");
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitTar" });
             }
             else mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BitTar" });
-            if (BasTar.HasValue && BitTar.HasValue)
+            if (basTar.HasValue && bitTar.HasValue)
             {
-                if (BasTar > BitTar)
+                if (basTar > bitTar)
                 {
                     mMessage.IsSuccess = false;
                     mMessage.Messages.Add("Başlangıç tarihi bitiş tarihinden büyük olamaz.");
@@ -282,22 +284,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(string BasTar, string BitTar, string raporTarihi, int Sayi, string EKD)
+        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, string raporTarihi, int sayi, string ekd)
         {
 
             string raporAdi = "";
-            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var enstitu = db.Enstitulers.First(p => p.EnstituKod == enstituKod);
-            var baslangicTarihi = BasTar.ToDate().Value;
-            var bitisTarihi = BitTar.ToDate().Value; 
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
+            var baslangicTarihi = basTar.ToDate().Value;
+            var bitisTarihi = bitTar.ToDate().Value; 
 
 
-            var qData = db.TDOBasvurus.AsQueryable();
+            var qData = _entities.TDOBasvurus.AsQueryable();
 
             qData = qData.Where(p => p.EnstituKod == enstituKod && p.TDOBasvuruDanismen.Any(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))).OrderByDescending(o => o.OgrenimTipKod);
             var data = qData.SelectMany(s => s.TDOBasvuruDanismen).Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && a.EYKDaOnaylandiOnayTarihi <= bitisTarihi)).OrderBy(o => o.TDAnabilimDaliAdi).ThenBy(t => t.TDProgramAdi).ThenBy(t => t.TDOBasvuru.Ad).ThenBy(t => t.TDOBasvuru.Soyad).ToList();
           
-            RprTDOEYK rpr = new RprTDOEYK(raporTarihi.ToDate().Value, Sayi, enstitu.EnstituAd);
+            RprTDOEYK rpr = new RprTDOEYK(raporTarihi.ToDate().Value, sayi, enstitu.EnstituAd);
             rpr.DataSource = data.Select(s => new RprTDOEYKModel
             {
                 OgrenciNo = s.TDOBasvuru.OgrenciNo,
@@ -316,14 +318,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             raporAdi = "Danışman Önerisi EYK Tutanak Çıktısı";
             var ms = new MemoryStream(); 
             rpr.ExportToXlsx(ms);
-            return File(ms.ToArray(), "application/ms-excel", raporAdi + " (" + BasTar.Replace("-", ".") + "-" + BitTar.Replace("-", ".") + ")." + "xls"); 
+            return File(ms.ToArray(), "application/ms-excel", raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + "xls"); 
         }
 
         [Authorize(Roles = RoleNames.TdoeyKdaOnayYetkisi)]
         public ActionResult EYKGonderimOnay(string aktifDonemId)
         {
-            var qDanismans = (from s in db.TDOBasvurus
-                              join Ard in db.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals Ard.TDOBasvuruDanismanID
+            var qDanismans = (from s in _entities.TDOBasvurus
+                              join Ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals Ard.TDOBasvuruDanismanID
                               where Ard.DanismanOnayladi == true && !Ard.EYKYaGonderildi.HasValue && (Ard.DonemBaslangicYil + "" + Ard.DonemID) == aktifDonemId
                               select s.TDOBasvuruDanisman
                          ).ToList();
@@ -333,7 +335,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 item.EYKYaGonderildiIslemTarihi = DateTime.Now;
                 item.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
             }
-            db.SaveChanges();
+            _entities.SaveChanges();
             return new { qDanismans.Count }.ToJsonResult();
         }
     }

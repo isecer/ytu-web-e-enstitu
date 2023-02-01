@@ -34,11 +34,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Kullanicilar)]
         public ActionResult Index()
         {
-            return Index(new fmKullanicilar() { PageSize = 15, Expand = false });
+            return Index(new FmKullanicilarDto() { PageSize = 15, Expand = false });
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.Kullanicilar)]
-        public ActionResult Index(fmKullanicilar model, List<string> ProgramKod = null)
+        public ActionResult Index(FmKullanicilarDto model, List<string> ProgramKod = null)
         {
             ProgramKod = ProgramKod ?? new List<string>(); ;
             var userEnst = UserIdentity.Current.EnstituKods;
@@ -115,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderByDescending(o => o.OlusturmaTarihi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Select(s => new frKullanicilar
+            model.KullanicilarDtos = q.Select(s => new FrKullanicilarDto
             {
                 KullaniciID = s.KullaniciID,
                 EnstituAdi = s.EnstituAd,
@@ -726,7 +726,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var userRoles = UserBus.GetUserRoles(kid.Value);
             var Kullanici = UserBus.GetUser(kid.Value);
             ViewBag.Kullanici = Kullanici;
-            var data = roles.Select(s => new CheckObjectX<Roller>
+            var data = roles.Select(s => new CheckObjectDto<Roller>
             {
                 Value = s,
                 Disabled = userRoles.YetkiGrupRolleri.Any(a => a.RolID == s.RolID),

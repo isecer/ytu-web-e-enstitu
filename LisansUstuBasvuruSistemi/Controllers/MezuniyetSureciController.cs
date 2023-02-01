@@ -247,7 +247,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
             }
 
-            var _EOyilBilgi = new EOyilBilgi();
+            var _EOyilBilgi = new EgitimOgretimDonemDto();
             if (kModel.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = kModel.OgretimYili.Split('/').ToList();

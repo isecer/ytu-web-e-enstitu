@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.YgGelenBasvurular)]
         public ActionResult Index(string EKD, int? BelgeDetailBasvuruID = null)
         {
-            var model = new fmBasvurular() { PageSize = 10, Expand = false };
+            var model = new FmBasvurularDto() { PageSize = 10, Expand = false };
 
             model.BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituBus.GetSelectedEnstitu(EKD), BasvuruSurecTipi.YatayGecisBasvuru);
             model.Expand = model.BasvuruSurecID.HasValue;
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.YgGelenBasvurular)]
-        public ActionResult Index(fmBasvurular model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
+        public ActionResult Index(FmBasvurularDto model, string EKD, List<string> ProgramKod = null, bool export = false, int? BelgeDetailBasvuruID = null)
         {
 
             var nowDate = DateTime.Now;
@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s =>
-            new frBasvurular
+            new FrBasvurularDto
             {
                 KullaniciID = s.KullaniciID,
                 BasvuruSurecID = s.BasvuruSurecID,

@@ -18,14 +18,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmBelgeTipleri { });
+            return Index(new FmBelgeTipleriDto { });
         }
         [HttpPost]
-        public ActionResult Index(fmBelgeTipleri model)
+        public ActionResult Index(FmBelgeTipleriDto model)
         {
 
             var q = from s in db.BelgeTipleris
-                    select new frBelgeTipleri
+                    select new FrBelgeTipleriDto
                     {
                         BelgeTipID = s.BelgeTipID,
                         BelgeTipAdi = s.BelgeTipAdi,
@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.BelgeTipAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.BelgeTipleriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();

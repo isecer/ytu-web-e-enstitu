@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Net.Mail;
-
 using BiskaUtil;
-using System.Threading;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
-namespace LisansUstuBasvuruSistemi.Models
+namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
 
-    public class mdlMailMainContent
+    public class MailMainContentDto
     { 
         public string LogoPath { get; set; }
         public string UniversiteAdi { get; set; }
@@ -22,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string Content { get; set; }
 
     }
-    public class mailTableContent
+    public class MailTableContentDto
     {
         public bool IsJuriBilgi { get; set; } 
         public string AciklamaBasligi { get; set; }
@@ -30,23 +28,23 @@ namespace LisansUstuBasvuruSistemi.Models
         public bool AciklamaTextAlingCenter { get; set; }
         public string GrupBasligi { get; set; }
         public int CaptTdWidth { get; set; }
-        public List<mailTableRow> Detaylar { get; set; }
+        public List<MailTableRowDto> Detaylar { get; set; }
         public bool Success { get; set; }
-        public mailTableContent()
+        public MailTableContentDto()
         {
             CaptTdWidth = 200;
-            Detaylar = new List<mailTableRow>(); 
+            Detaylar = new List<MailTableRowDto>(); 
             AciklamaTextAlingCenter = false;
         }
 
     }
-    public class mailTableRow
+    public class MailTableRowDto
     {
         public bool Colspan2 { get; set; }
         public int SiraNo { get; set; }
         public string Baslik { get; set; }
         public string Aciklama { get; set; }
-        public mailTableRow()
+        public MailTableRowDto()
         {
             Colspan2 = false;
         }
@@ -58,13 +56,13 @@ namespace LisansUstuBasvuruSistemi.Models
     }
     public static class MailManager
     {
-        public static Exception sendMailRetVal(string EnstituKod, string Konu, string Icerik, string EMail, List<Attachment> attach, bool ToOrBCC = true)
+        public static Exception SendMailRetVal(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attach, bool toOrBcc = true)
         {
             Exception exRet = null;
 
             try
             {
-                MailManager.sendMail(EnstituKod, Konu, Icerik, EMail, attach, ToOrBCC);
+                MailManager.SendMail(enstituKod, konu, icerik, eMail, attach, toOrBcc);
 
             }
             catch (Exception ex)
@@ -74,13 +72,13 @@ namespace LisansUstuBasvuruSistemi.Models
 
             return exRet;
         }
-        public static Exception sendMailRetVal(string EnstituKod, string Konu, string Icerik, List<MailSendList> EMails, List<Attachment> attach)
+        public static Exception SendMailRetVal(string enstituKod, string konu, string icerik, List<MailSendList> eMails, List<Attachment> attach)
         {
             Exception exRet = null;
 
             try
             {
-                MailManager.sendMail(EnstituKod, Konu, Icerik, EMails, attach);
+                MailManager.SendMail(enstituKod, konu, icerik, eMails, attach);
 
             }
             catch (Exception ex)
@@ -90,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
             return exRet;
         }
-        public static void sendMail(int GonderilenMailID, string Konu, string Icerik, List<MailSendList> EMails, List<Attachment> Attachs)
+        public static void SendMail(int gonderilenMailId, string konu, string icerik, List<MailSendList> eMails, List<Attachment> attachs)
         {
 
             #region sendMail
@@ -98,16 +96,14 @@ namespace LisansUstuBasvuruSistemi.Models
             var uIp = UserIdentity.Ip;
             new System.Threading.Thread(() =>
             {
-                var UserID = uid;
-                var Ip = uIp;
                 try
                 {
                     using (var dbb = new LisansustuBasvuruSistemiEntities())
                     {
-                        var qeklenen = dbb.GonderilenMaillers.Where(p => p.GonderilenMailID == GonderilenMailID).First();
+                        var qeklenen = dbb.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
                         try
                         {
-                            MailManager.sendMail(qeklenen.EnstituKod, Konu, Icerik, EMails, Attachs);
+                            MailManager.SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
                             qeklenen.Gonderildi = true;
                             qeklenen.IslemTarihi = DateTime.Now;
                         }
@@ -127,37 +123,37 @@ namespace LisansUstuBasvuruSistemi.Models
 
             #endregion
         }
-        public static bool sendMail(string EnstituKod, string Konu, string Icerik, string EMail, List<Attachment> Attachs, bool ToOrBcc = true)
+        public static bool SendMail(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attachs, bool toOrBcc = true)
         {
-            var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(EnstituKod);
-            var EmailAdresi = mailBilgi.SmtpMailAdresi;
-            var Name = mailBilgi.SmtpKullaniciAdi;
-            var Sifre = mailBilgi.SmtpSifre;
-            var Port = mailBilgi.SmtpPortAdresi;
-            var Host = mailBilgi.SmtpHost;
-            var SSL = mailBilgi.SmtpSSL;
+            var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
+            var emailAdresi = mailBilgi.SmtpMailAdresi;
+            var name = mailBilgi.SmtpKullaniciAdi;
+            var sifre = mailBilgi.SmtpSifre;
+            var port = mailBilgi.SmtpPortAdresi;
+            var host = mailBilgi.SmtpHost;
+            var ssl = mailBilgi.SmtpSSL;
 
             using (var ePosta = new MailMessage())
             {
-                ePosta.From = new MailAddress(EmailAdresi, Name, System.Text.Encoding.UTF8);
+                ePosta.From = new MailAddress(emailAdresi, name, System.Text.Encoding.UTF8);
                 ePosta.IsBodyHtml = true;
-                ePosta.To.Add(EMail);
+                ePosta.To.Add(eMail);
 
-                ePosta.Subject = Konu;
-                ePosta.Body = Icerik;
+                ePosta.Subject = konu;
+                ePosta.Body = icerik;
                 ePosta.BodyEncoding = System.Text.Encoding.UTF8;
                 ePosta.Priority = MailPriority.High;
 
 
-                if (Attachs != null)
-                    foreach (var item in Attachs)
+                if (attachs != null)
+                    foreach (var item in attachs)
                         ePosta.Attachments.Add(item);
                 using (var smtp = new SmtpClient())
                 {
-                    smtp.Credentials = new System.Net.NetworkCredential(EmailAdresi, Sifre);
-                    smtp.Port = Port.ToInt().Value;
-                    smtp.Host = Host;
-                    smtp.EnableSsl = SSL;
+                    smtp.Credentials = new System.Net.NetworkCredential(emailAdresi, sifre);
+                    smtp.Port = port.ToInt().Value;
+                    smtp.Host = host;
+                    smtp.EnableSsl = ssl;
                     smtp.Timeout = 5 * 60 * 1000;
                     smtp.Send(ePosta);
                 }
@@ -167,40 +163,40 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
         }
-        public static bool sendMail(string EnstituKod, string Konu, string Icerik, List<MailSendList> EMails, List<Attachment> Attachs)
+        public static bool SendMail(string enstituKod, string konu, string icerik, List<MailSendList> eMails, List<Attachment> attachs)
         {
              
-            var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(EnstituKod);
-            var EmailAdresi = mailBilgi.SmtpMailAdresi;
-            var Name = mailBilgi.SmtpKullaniciAdi;
-            var Sifre = mailBilgi.SmtpSifre;
-            var Port = mailBilgi.SmtpPortAdresi;
-            var Host = mailBilgi.SmtpHost;
-            var SSL = mailBilgi.SmtpSSL;
+            var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
+            var emailAdresi = mailBilgi.SmtpMailAdresi;
+            var name = mailBilgi.SmtpKullaniciAdi;
+            var sifre = mailBilgi.SmtpSifre;
+            var port = mailBilgi.SmtpPortAdresi;
+            var host = mailBilgi.SmtpHost;
+            var ssl = mailBilgi.SmtpSSL;
 
             using (var ePosta = new MailMessage())
             {
-                ePosta.From = new MailAddress(EmailAdresi, Name, System.Text.Encoding.UTF8);
+                ePosta.From = new MailAddress(emailAdresi, name, System.Text.Encoding.UTF8);
                 ePosta.IsBodyHtml = true;
-                foreach (var item in EMails)
+                foreach (var item in eMails)
                 {
                     //item.Value == true ? TO: CC;
                     if (item.ToOrBcc) ePosta.To.Add(item.EMail);
                     else ePosta.Bcc.Add(item.EMail);
                 }
-                ePosta.Subject = Konu;
-                ePosta.Body = Icerik;  
+                ePosta.Subject = konu;
+                ePosta.Body = icerik;  
                 ePosta.BodyEncoding = System.Text.Encoding.UTF8;
                 ePosta.Priority = MailPriority.High;
-                if (Attachs != null)
-                    foreach (var item in Attachs)
+                if (attachs != null)
+                    foreach (var item in attachs)
                         ePosta.Attachments.Add(item);
                 using (var smtp = new SmtpClient())
                 {
-                    smtp.Credentials = new System.Net.NetworkCredential(EmailAdresi, Sifre);
-                    smtp.Port = Port.ToInt().Value;
-                    smtp.Host = Host;
-                    smtp.EnableSsl = SSL;
+                    smtp.Credentials = new System.Net.NetworkCredential(emailAdresi, sifre);
+                    smtp.Port = port.ToInt().Value;
+                    smtp.Host = host;
+                    smtp.EnableSsl = ssl;
                     smtp.Timeout = 5 * 60 * 1000;
                     smtp.Send(ePosta);
                 }
@@ -215,18 +211,18 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-    public class MailContentDetail
+    public class MailContentDetailDto
     {
         public string Title { get; set; }
         public string Content { get; set; }
         public string HtmlContent { get; set; }
         public List<string> AddMailList { get; set; }
-        public MailContentDetail()
+        public MailContentDetailDto()
         {
             AddMailList = new List<string>();
         }
     }
-    public class MailReplaceParameterModel
+    public class MailReplaceParameterDto
     {
         public string Key { get; set; }
         public string Value { get; set; }
@@ -234,13 +230,15 @@ namespace LisansUstuBasvuruSistemi.Models
     }
     public static class SystemMails
     {
-        public static MailContentDetail GetSystemMailContent(string EnstituAdi, string SablonHtml, string SablonAdi,  List<MailReplaceParameterModel> RPModel)
+        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi,  List<MailReplaceParameterDto> rpModel)
         {
-            RPModel = RPModel ?? new List<MailReplaceParameterModel>();
-            var model = new MailContentDetail();
-            model.Title = SablonAdi;
-            model.HtmlContent = SablonHtml;
-            foreach (var itemRp in RPModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            rpModel = rpModel ?? new List<MailReplaceParameterDto>();
+            var model = new MailContentDetailDto
+            {
+                Title = sablonAdi,
+                HtmlContent = sablonHtml
+            };
+            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
             {
                 model.Title=model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
                 model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
@@ -248,7 +246,7 @@ namespace LisansUstuBasvuruSistemi.Models
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
             var titleStrList = model.Title.Split(new string[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in RPModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 titleStrList = titleStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
@@ -259,15 +257,15 @@ namespace LisansUstuBasvuruSistemi.Models
 
             var contentStrList = model.HtmlContent.Split(new string[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
-            foreach (var itemRp in RPModel.Where(p => p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
                 contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.HtmlContent = string.Join("", contentStrList);
 
-            var mmmC = new mdlMailMainContent(); 
+            var mmmC = new MailMainContentDto(); 
             mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-            mmmC.EnstituAdi = EnstituAdi;
+            mmmC.EnstituAdi = enstituAdi;
             mmmC.LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png";
             mmmC.Content = model.HtmlContent.Replace("_removeRw_", "");
             model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);

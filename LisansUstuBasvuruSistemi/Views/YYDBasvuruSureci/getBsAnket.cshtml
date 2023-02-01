@@ -22,7 +22,7 @@
                             int inx = 0;
                             <tr>
                                 <th width="35" style="text-align:left;">#</th>
-                                @foreach (var item2 in item.frAnketSecenekDetay.OrderBy(o => o.SiraNo))
+                                @foreach (var item2 in item.FrAnketSecenekDetay.OrderBy(o => o.SiraNo))
                                 {
                                     <th style="text-align:left;font-size:10pt;">@item2.SecenekAdi</th>
                                 }
@@ -34,7 +34,7 @@
                                     <td width="35" style="text-align:left;">
                                         @inx
                                     </td>
-                                    @for (int i = 1; i <= item.frAnketSecenekDetay.Count; i++)
+                                    @for (int i = 1; i <= item.FrAnketSecenekDetay.Count; i++)
                                     {
                                         <td style="text-align:left;">@itemR.GetType().GetProperty("TabloVeri" + i).GetValue(itemR, null)</td>
                                     }
@@ -44,7 +44,7 @@
                         }
                         else
                         {
-                            foreach (var item2 in item.frAnketSecenekDetay.OrderBy(o => o.SiraNo))
+                            foreach (var item2 in item.FrAnketSecenekDetay.OrderBy(o => o.SiraNo))
                             {
 
                                 <tr>

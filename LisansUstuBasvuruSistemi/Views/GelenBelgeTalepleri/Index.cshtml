@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmBelgeTalepleri
+@model  FmBelgeTalepleriDto
 @{
     ViewBag.Title = "Index";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -159,7 +159,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;  
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.BelgeTalepleriDtos)
                                 {
                                     RowIndex++; 
                                     <tr class="mColor_@item.BelgeTalepID" style="color:@item.Color">

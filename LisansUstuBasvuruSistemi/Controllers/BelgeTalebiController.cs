@@ -22,10 +22,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string EKD)
         {
-            return Index(new fmBelgeTalepleri() { PageSize = 10 }, EKD);
+            return Index(new FmBelgeTalepleriDto() { PageSize = 10 }, EKD);
         }
         [HttpPost]
-        public ActionResult Index(fmBelgeTalepleri model, string EKD)
+        public ActionResult Index(FmBelgeTalepleriDto model, string EKD)
         {
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
@@ -158,7 +158,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
 
             IndexModel.Toplam = model.RowCount;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new frBelgeTalepleri
+            model.BelgeTalepleriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
             {
                 BelgeTalepID = item.BelgeTalepID,
                 BelgeDurumID = item.BelgeDurumID,
@@ -224,7 +224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                from kl in defk.DefaultIfEmpty()
                                join prg in db.Programlars on s.ProgramKod equals prg.ProgramKod
                                where s.BelgeTalepID == id
-                               select new BelgeTalepleriDetaymodel
+                               select new BelgeTalepleriDetayDto
                                {
                                    ClassName = s.BelgeDurumlari.ClassName,
                                    Color = s.BelgeDurumlari.Color,
@@ -802,8 +802,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             model.AnketCevapModel.Add(new AnketCevapDto
                             {
                                 SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                                SoruBilgi = new frAnketDetay { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
-                                SoruSecenek = item.Secenekler.Select(s => new frAnketSecenekDetay { AnketSoruSecenekID = s.Value, SiraNo = s.SiraNo, IsEkAciklamaGir = s.IsEkAciklamaGir, IsYaziOrSayi = s.IsYaziOrSayi, SecenekAdi = s.Caption }).ToList(),
+                                SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama, IsTabloVeriGirisi = item.IsTabloVeriGirisi, IsTabloVeriMaxSatir = item.IsTabloVeriMaxSatir, },
+                                SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto { AnketSoruSecenekID = s.Value, SiraNo = s.SiraNo, IsEkAciklamaGir = s.IsEkAciklamaGir, IsYaziOrSayi = s.IsYaziOrSayi, SecenekAdi = s.Caption }).ToList(),
                                 SelectListSoruSecenek = new SelectList(item.Secenekler.ToList(), "Value", "Caption", item.AnketSoruSecenekID)
                             });
                         }
@@ -844,8 +844,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         void bilgiMaili(BelgeTalepleri kModel, string DonemAdi, string _EnstituKodu)
         {
-            var htmlBigliRow = new List<mailTableRow>();
-            var contentBilgi = new mailTableContent();
+            var htmlBigliRow = new List<MailTableRowDto>();
+            var contentBilgi = new MailTableContentDto();
             var tutar = tutarHesapla(kModel);
             var btip = (from s in db.BelgeTipleris.Where(p => p.BelgeTipID == kModel.BelgeTipID)
                         join bt in db.BelgeTipDetays.Where(p => p.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == kModel.BelgeTipID)) on new { kModel.OgrenimDurumID, kModel.EnstituKod } equals new { bt.OgrenimDurumID, bt.EnstituKod }
@@ -853,22 +853,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var OD = db.OgrenimDurumlaris.Where(p => p.OgrenimDurumID == kModel.OgrenimDurumID).First();
 
 
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Ad Soyad", Aciklama = kModel.AdiSoyadi });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Öğrenci No", Aciklama = kModel.OgrenciNo });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Eğitim Öğretim Yılı", Aciklama = kModel.OgretimYiliBaslangic + "/" + kModel.OgretimYiliBitis + " " + DonemAdi });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Belge Tipi", Aciklama = btip.BelgeTipAdi });
-            if (kModel.BelgeAdi.IsNullOrWhiteSpace() == false) htmlBigliRow.Add(new mailTableRow { Baslik = "Belge Adı", Aciklama = kModel.BelgeAdi });
-            if (kModel.BelgeAciklamasi.IsNullOrWhiteSpace() == false) htmlBigliRow.Add(new mailTableRow { Baslik = "Belge Açıklaması", Aciklama = kModel.BelgeAciklamasi });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = kModel.AdiSoyadi });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenci No", Aciklama = kModel.OgrenciNo });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Eğitim Öğretim Yılı", Aciklama = kModel.OgretimYiliBaslangic + "/" + kModel.OgretimYiliBitis + " " + DonemAdi });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Belge Tipi", Aciklama = btip.BelgeTipAdi });
+            if (kModel.BelgeAdi.IsNullOrWhiteSpace() == false) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Belge Adı", Aciklama = kModel.BelgeAdi });
+            if (kModel.BelgeAciklamasi.IsNullOrWhiteSpace() == false) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Belge Açıklaması", Aciklama = kModel.BelgeAciklamasi });
 
-            htmlBigliRow.Add(new mailTableRow { Baslik = "İstenen Belge Sayısı", Aciklama = kModel.IstenenBelgeSayisi + " Adet" });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "İstenen Belge Sayısı", Aciklama = kModel.IstenenBelgeSayisi + " Adet" });
             //if (kModel.OgrenimDurumID == OgrenimDurum.Mezun) htmlBigliRow.Add(new HtmlContentBilgiRow { Baslik = "NOT", Aciklama = "Mezun olmamış öğrencilerin aynı dönem içinde alabileceği maksimum belge sayısı 3 adettir, eğer 3 adetten fazla belgeye ihtiyaç duyuyorsa daha önceden almış olduğu belgenin fotokopisini çektirip kurum tarafından 'Aslı Gibidir' kaşesi vurdurabilir." });
-            if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
-            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new mailTableRow { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
-            if (tutar.VerilenBelgeTutar > 0) htmlBigliRow.Add(new mailTableRow { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
-            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new mailTableRow { Baslik = "Ödeme Bilgisi", Aciklama = "<a href=" + btip.UcretAciklamasiLink + "> Ödeme bilgisi için tıklayınız.</a>" });
-            else htmlBigliRow.Add(new mailTableRow { Baslik = "Ücret Bilgisi", Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız." });
+            if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
+            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
+            if (tutar.VerilenBelgeTutar > 0) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
+            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ödeme Bilgisi", Aciklama = "<a href=" + btip.UcretAciklamasiLink + "> Ödeme bilgisi için tıklayınız.</a>" });
+            else htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ücret Bilgisi", Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız." });
 
-            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
+            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
             var konu = "";
             if (kModel.BelgeDurumID == BelgeTalepDurum.TalepEdildi)
             {
@@ -887,7 +887,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             contentBilgi.Detaylar = htmlBigliRow;
 
-            var mmmC = new mdlMailMainContent();
+            var mmmC = new MailMainContentDto();
             var enstituAdi = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKodu).First().EnstituAd;
             mmmC.EnstituAdi = enstituAdi;
             mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
@@ -902,10 +902,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
             mmmC.Content = HCB;
             string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-            var emailSend = MailManager.sendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
+            var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, konu, htmlMail, kModel.Email, null);
         }
 
-        mailTableContent getContent(int? BelgeTalepID, int BelgeTipID, string _EnstituKod, string Numara, int miktar, int OgrenimDurumID)
+        MailTableContentDto getContent(int? BelgeTalepID, int BelgeTipID, string _EnstituKod, string Numara, int miktar, int OgrenimDurumID)
         {
             var kModel = new BelgeTalepleri();
             kModel.EnstituKod = _EnstituKod;
@@ -940,8 +940,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var donem = db.Donemlers.Where(p => p.DonemID == kModel.DonemID).First();
             var AyniDonemAlinanBelge = AyniDonemAlinenBelgeSayisi(kModel);
             var AyniDonemTalepEdilenBelge = AyniDonemTalepEdilenBelgeSayisi(kModel);
-            var htmlBigliRow = new List<mailTableRow>();
-            var contentBilgi = new mailTableContent();
+            var htmlBigliRow = new List<MailTableRowDto>();
+            var contentBilgi = new MailTableContentDto();
             contentBilgi.CaptTdWidth = 200;
             var tutar = tutarHesapla(kModel);
 
@@ -972,22 +972,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AciklamaDetayi = GunHesap(kModel.TalepTarihi, kModel.EklenecekGun, kModel.TeslimBaslangicSaat.Value, kModel.TeslimBitisSaat.Value, kModel.UcretAlimiVar, BelgeAlimAdresi);
             }
 
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Eğitim Öğretim Yılı ", Aciklama = kModel.OgretimYiliBaslangic + "/" + kModel.OgretimYiliBitis + " " + donem.DonemAdi });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Belge Tip Adı", Aciklama = btip.BelgeTipAdi });
-            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Dönemde Alabileceğiniz Toplam Belge", Aciklama = kModel.DonemlikKota.Value + " Adet" });
-            if (kotaVar == false) htmlBigliRow.Add(new mailTableRow { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Dönemde Daha Önceden Alınan Toplam Belge Sayısı", Aciklama = AyniDonemAlinenBelgeSayisi(kModel) + " Adet" });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "Dönemde Daha Önceden Talep Edilip Henüz Alınmayan Toplam Belge", Aciklama = AyniDonemTalepEdilenBelge + " Adet" });
-            htmlBigliRow.Add(new mailTableRow { Baslik = "İstenilen Belge Sayısı", Aciklama = kModel.IstenenBelgeSayisi + " Adet" });
-            if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
-            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new mailTableRow { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
-            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new mailTableRow { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
-            else htmlBigliRow.Add(new mailTableRow { Baslik = "Ücret Bilgisi", Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız." });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Eğitim Öğretim Yılı ", Aciklama = kModel.OgretimYiliBaslangic + "/" + kModel.OgretimYiliBitis + " " + donem.DonemAdi });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Belge Tip Adı", Aciklama = btip.BelgeTipAdi });
+            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemde Alabileceğiniz Toplam Belge", Aciklama = kModel.DonemlikKota.Value + " Adet" });
+            if (kotaVar == false) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = "Bu belge tipi için dönemlik alınabilecek maksimum belge sayısı " + kModel.DonemlikKota.Value + " adettir, eğer " + kModel.DonemlikKota.Value + " adetten fazla belgeye ihtiyaç duyuluyorsa daha önceden alınmış olan belgenin fotokopisini çektirilip kurum tarafından 'Aslı Gibidir' kaşesi vurdurulabilir." });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemde Daha Önceden Alınan Toplam Belge Sayısı", Aciklama = AyniDonemAlinenBelgeSayisi(kModel) + " Adet" });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemde Daha Önceden Talep Edilip Henüz Alınmayan Toplam Belge", Aciklama = AyniDonemTalepEdilenBelge + " Adet" });
+            htmlBigliRow.Add(new MailTableRowDto { Baslik = "İstenilen Belge Sayısı", Aciklama = kModel.IstenenBelgeSayisi + " Adet" });
+            if (kModel.UcretsizMiktar.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Dönemlik ücretsiz alınabilecek belge sayısı", Aciklama = kModel.UcretsizMiktar.Value + " Adet" });
+            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Adet Fiyatı", Aciklama = kModel.BelgeFiyati.Value + " TL" });
+            if (kModel.UcretAlimiVar) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Toplam Fiyat", Aciklama = tutar.VerilenBelgeTutar + " TL" });
+            else htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ücret Bilgisi", Aciklama = "Belge Ücretsizdir lütfen verilen randevu zamanında belgenizi alınız." });
 
-            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Not", Aciklama = "İstediğiniz belge tipi için bu dönem alabileceğiniz toplam miktar " + kModel.DonemlikKota.Value + " adet dir. Daha fazla miktar için başvuru yapamazsınız!" });
+            if (kModel.DonemlikKota.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = "İstediğiniz belge tipi için bu dönem alabileceğiniz toplam miktar " + kModel.DonemlikKota.Value + " adet dir. Daha fazla miktar için başvuru yapamazsınız!" });
 
             if (kModel.UcretAlimiVar && kotaVar && kModel.VerilenBelgeTutar > 0 && kModel.UcretAciklamasiLink.IsNullOrWhiteSpace() == false)
-                htmlBigliRow.Add(new mailTableRow { Baslik = "Ödeme Bilgisi", Aciklama = "<a href=" + kModel.UcretAciklamasiLink + " target=_blank>Ödeme bilgisi için tıklayınız</a>" });
+                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ödeme Bilgisi", Aciklama = "<a href=" + kModel.UcretAciklamasiLink + " target=_blank>Ödeme bilgisi için tıklayınız</a>" });
             contentBilgi.AciklamaDetayi = AciklamaDetayi;
             contentBilgi.Success = kotaVar;
             contentBilgi.AciklamaBasligi = "Belge talep açıklaması";

@@ -19,10 +19,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Unvanlar)]
         public ActionResult Index()
         {
-            return Index(new fmBirimler { });
+            return Index(new FmBirimlerDto { });
         }
         [HttpPost]
-        public ActionResult Index(fmBirimler model)
+        public ActionResult Index(FmBirimlerDto model)
         {
 
             var q = from s in db.Birimlers
@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else q = q.OrderBy(o => o.BirimAdi);
             var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            model.Birimlers = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
             var IndexModel = new MIndexBilgi();
             IndexModel.Toplam = model.RowCount;
             IndexModel.Aktif = q.Where(p => p.IsAktif).Count();

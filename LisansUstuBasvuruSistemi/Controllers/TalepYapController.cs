@@ -696,17 +696,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           }).ToList();
             foreach (var Talep in Taleps)
             {
-                var htmlBigliRow = new List<mailTableRow>();
-                var contentBilgi = new mailTableContent();
-                htmlBigliRow.Add(new mailTableRow { Baslik = "Ad Soyad", Aciklama = Talep.AdSoyad });
+                var htmlBigliRow = new List<MailTableRowDto>();
+                var contentBilgi = new MailTableContentDto();
+                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Ad Soyad", Aciklama = Talep.AdSoyad });
                 if (Talep.YtuOgrencisi)
                 {
-                    if (!Talep.OgrenciNo.IsNullOrWhiteSpace()) htmlBigliRow.Add(new mailTableRow { Baslik = "Öğrenci No", Aciklama = Talep.OgrenciNo });
-                    if (Talep.OgrenimTipKod.HasValue) htmlBigliRow.Add(new mailTableRow { Baslik = "Öğrenim Seviyesi", Aciklama = Talep.OgrenimTipAdi });
-                    if (!Talep.ProgramAdi.IsNullOrWhiteSpace()) htmlBigliRow.Add(new mailTableRow { Baslik = "Program", Aciklama = Talep.ProgramAdi });
+                    if (!Talep.OgrenciNo.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenci No", Aciklama = Talep.OgrenciNo });
+                    if (Talep.OgrenimTipKod.HasValue) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = Talep.OgrenimTipAdi });
+                    if (!Talep.ProgramAdi.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program", Aciklama = Talep.ProgramAdi });
                 }
 
-                htmlBigliRow.Add(new mailTableRow { Baslik = "Talep Tipi", Aciklama = Talep.TalepTipAdi });
+                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi", Aciklama = Talep.TalepTipAdi });
                 string TalepTipAciklama = "";
                 if (Talep.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi)
                 {
@@ -723,16 +723,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";
                 }
                 else TalepTipAciklama = Talep.TalepTipAciklama;
-                if (!TalepTipAciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new mailTableRow { Baslik = "Talep Tipi Açıklaması", Aciklama = TalepTipAciklama });
-                htmlBigliRow.Add(new mailTableRow { Baslik = "Talep Tarihi", Aciklama = Talep.TalepTarihi.ToFormatDateAndTime() });
-                htmlBigliRow.Add(new mailTableRow { Baslik = "Talep Durumu", Aciklama = Talep.TalepDurumAdi });
-                if (Talep.TalepDurumID == TalepDurumu.Rededildi) htmlBigliRow.Add(new mailTableRow { Baslik = "Red Açıklaması", Aciklama = Talep.TalepDurumAciklamasi });
-                if (!Aciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new mailTableRow { Baslik = "Not", Aciklama = Aciklama });
+                if (!TalepTipAciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tipi Açıklaması", Aciklama = TalepTipAciklama });
+                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Tarihi", Aciklama = Talep.TalepTarihi.ToFormatDateAndTime() });
+                htmlBigliRow.Add(new MailTableRowDto { Baslik = "Talep Durumu", Aciklama = Talep.TalepDurumAdi });
+                if (Talep.TalepDurumID == TalepDurumu.Rededildi) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Red Açıklaması", Aciklama = Talep.TalepDurumAciklamasi });
+                if (!Aciklama.IsNullOrWhiteSpace()) htmlBigliRow.Add(new MailTableRowDto { Baslik = "Not", Aciklama = Aciklama });
 
                 contentBilgi.GrupBasligi = "'" + Talep.TalepTipAdi + "' talebiniz " + Talep.TalepDurumAdi;
                 contentBilgi.Detaylar = htmlBigliRow;
 
-                var mmmC = new mdlMailMainContent();
+                var mmmC = new MailMainContentDto();
                 var enstituAdi = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First().EnstituAd; 
                 mmmC.EnstituAdi = enstituAdi;
                 mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
@@ -747,7 +747,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var HCB = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
                 mmmC.Content = HCB;
                 string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                var emailSend = MailManager.sendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, Talep.EMail, null);
+                var emailSend = MailManager.SendMail(mailBilgi.EnstituKod, "Talep İşleminiz Hk.", htmlMail, Talep.EMail, null);
 
                 if (emailSend)
                 {

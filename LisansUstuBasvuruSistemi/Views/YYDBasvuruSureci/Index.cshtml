@@ -5,7 +5,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model fmBasvuruSureci
+@model FmBasvuruSureciDto
 @{
     /**/
 
@@ -60,7 +60,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.FrBasvuruSureciDtos)
                                 {
                                     var OtipJsonStr = Json.Encode(item.CmbOgrenimTipBilgi);
                                     bool suanAktif = (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now) || (item.AGNOGirisBaslangicTarihi <= DateTime.Now && item.AGNOGirisBitisTarihi >= DateTime.Now) || (item.SonucGirisBaslangicTarihi <= DateTime.Now && item.SonucGirisBitisTarihi >= DateTime.Now);

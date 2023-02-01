@@ -19,11 +19,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string EKD)
         {
 
-            return Index(new fmDuyurular() { PageSize = 10 }, EKD);
+            return Index(new FmDuyurularDto() { PageSize = 10 }, EKD);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(fmDuyurular model, string EKD)
+        public ActionResult Index(FmDuyurularDto model, string EKD)
         {
             var q = from s in db.Duyurulars
                     join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
@@ -58,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else q = q.OrderByDescending(o => o.Tarih);
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frDuyurular
+            model.DuyurularDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod, 
@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             
             string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var fModel = new fmDuyurular(); 
+            var fModel = new FmDuyurularDto(); 
             fModel.EnstituKod = _EnstituKod;
             var q = from s in db.Duyurulars
                     join e in db.Enstitulers on new {  s.EnstituKod } equals new {  e.EnstituKod }
@@ -117,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (PopupTipID == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
             else if (PopupTipID == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
             else q = q.Where(p => p.MezuniyetBasvuruPopupAc);
-            fModel.Data = q.Select(s => new frDuyurular
+            fModel.DuyurularDtos = q.Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod, 
@@ -139,9 +139,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).OrderByDescending(o => o.Tarih).ToList();
 
             string htmlDuyuru = ViewRenderHelper.RenderPartialView("KDuyurular", "DuyuruHtml", fModel);
-            return Json(new { ShowMessage = fModel.Data.Count() > 0, HtmlMessage = htmlDuyuru });
+            return Json(new { ShowMessage = fModel.DuyurularDtos.Count() > 0, HtmlMessage = htmlDuyuru });
         }
-        public ActionResult DuyuruHtml(fmDuyurular model)
+        public ActionResult DuyuruHtml(FmDuyurularDto model)
         {
 
             return View(model);

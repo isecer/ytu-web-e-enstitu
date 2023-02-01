@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmKotalar : PagerOption
+    public class FmKotalarDto : PagerOption
     {
         public bool? MulakatSurecineGirecek { get; set; }
         public bool? IsAlesYerineDosyaNotuIstensin { get; set; }
@@ -14,10 +14,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramAdi { get; set; }
         public int? OgrenimTipKod { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frKotalar> data { get; set; }
+        public IEnumerable<FrKotalarDto> KotalarDtos { get; set; }
 
     }
-    public class frKotalar : frProgramlar
+    public class FrKotalarDto : frProgramlar
     {
         public int KotaID { get; set; }
         public int OgrenimTipKod { get; set; }

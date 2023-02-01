@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  fmMailSablonlari
+@model  FmMailSablonlariDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -55,7 +55,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.MailSablonlariDtos)
                                 {
                                     RowIndex++;
                                     <tr>

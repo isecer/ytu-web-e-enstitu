@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMesajlar : PagerOption
+    public class FmMesajlarDto : PagerOption
     {
         public bool Expand { get; set; }
         public string EnstituKod { get; set; }
@@ -19,10 +19,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? IsDosyaEkDurum { get; set; }
         public string AdSoyad { get; set; }
         public int? MesajYili { get; set; }
-        public IEnumerable<frMesajlar> Data { get; set; }
+        public IEnumerable<FrMesajlarDto> MesajlarDtos { get; set; }
     }
 
-    public class frMesajlar : Mesajlar
+    public class FrMesajlarDto : Mesajlar
     {
         public int GrupNo { get; set; }
         public string GidenGelen { get; set; }
@@ -38,7 +38,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramAdi { get; set; }
 
         public int EkSayisi { get; set; }
-        public List<SubMessages> SubMesajList { get; set; }
+        public List<SubMessagesDto> SubMesajList { get; set; }
 
     }
 }

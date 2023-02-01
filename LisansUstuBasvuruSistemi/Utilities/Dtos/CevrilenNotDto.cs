@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class CevrilenNotModel
+    public class CevrilenNotDto
     {
         public double Not1Lik { get; set; }
         public double Not4Luk { get; set; }

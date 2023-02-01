@@ -17,25 +17,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    public class TDOBasvuruController : Controller
+    public class TdoBasvuruController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
         // GET: TDOBasvuru
         public ActionResult Index(string ekd, int? tdoBasvuruId, int? kullaniciId)
         {
 
-            return Index(new fmTDOBasvuru() { TDOBasvuruID = tdoBasvuruId, KullaniciID = kullaniciId, PageSize = 10 }, ekd);
+            return Index(new FmTdoBasvuruDto() { TDOBasvuruID = tdoBasvuruId, KullaniciID = kullaniciId, PageSize = 10 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmTDOBasvuru model, string ekd)
+        public ActionResult Index(FmTdoBasvuruDto model, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             #region bilgiModel
             var bbModel = new IndexPageInfoDto
             {
-                SistemBasvuruyaAcik = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean().Value
+                SistemBasvuruyaAcik = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean(false)
             };
 
             var kullaniciAdinaBasvuruYetki = RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent();
@@ -45,7 +45,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (model.TDOBasvuruID.HasValue || model.KullaniciID.HasValue)
                 {
-                    if (!model.KullaniciID.HasValue) model.KullaniciID = _db.TDOBasvurus.Where(p => p.TDOBasvuruID == model.TDOBasvuruID).Select(s => s.KullaniciID).FirstOrDefault();
+                    if (!model.KullaniciID.HasValue) model.KullaniciID = _entities.TDOBasvurus.Where(p => p.TDOBasvuruID == model.TDOBasvuruID).Select(s => s.KullaniciID).FirstOrDefault();
                 }
                 else model.KullaniciID = UserIdentity.Current.Id;
             }
@@ -54,11 +54,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.KullaniciID = UserIdentity.Current.Id;
             }
             var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(model.KullaniciID.Value);
-            var kul = _db.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
+            var kul = _entities.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
 
             if (kul.YtuOgrencisi)
             {
-                var otb = _db.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod);
+                var otb = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod);
 
                 bbModel.OgrenimDurumAdi = kul.OgrenimDurumlari.OgrenimDurumAdi;
                 bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
@@ -77,13 +77,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if ((kul.OgrenimTipKod == OgrenimTipi.Doktra || kul.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         bbModel.KullaniciTipYetki = true;
-                        var donemBilgi = _db.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
+                        var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
                         if (donemBilgi != null)
                         {
                             bbModel.KayitDonemi = kul.KayitYilBaslangic + "/" + (kul.KayitYilBaslangic + 1);
                         }
                         if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToString("dd.MM.yyyy");
-                        model.AktifOgrenimIcinBasvuruVar = _db.TDOBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenimTipKod == kul.OgrenimTipKod && a.ProgramKod == kul.ProgramKod);
+                        model.AktifOgrenimIcinBasvuruVar = _entities.TDOBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenimTipKod == kul.OgrenimTipKod && a.ProgramKod == kul.ProgramKod);
                     }
                     else
                     {
@@ -109,23 +109,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            bbModel.Enstitü = _db.Enstitulers.First(p => p.EnstituKod == enstituKod);
+            bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
             bbModel.Kullanici = kul;
 
             #endregion
             var nowDate = DateTime.Now;
-            var q = from s in _db.TDOBasvurus
-                    join en in _db.Enstitulers on s.EnstituKod equals en.EnstituKod
-                    join k in _db.Kullanicilars on s.KullaniciID equals k.KullaniciID
-                    join o in _db.OgrenimTipleris on new { s.OgrenimTipKod, en.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in _db.Programlars on s.ProgramKod equals pr.ProgramKod
-                    join ab in _db.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
-                    join ktip in _db.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
-                    join ard in _db.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
-                    from Ard in defard.DefaultIfEmpty()
-                    let ardEs = _db.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == Ard.TDOBasvuruDanismanID)
+            var q = from s in _entities.TDOBasvurus
+                    join en in _entities.Enstitulers on s.EnstituKod equals en.EnstituKod
+                    join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
+                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, en.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
+                    join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
+                    from ard in defard.DefaultIfEmpty()
+                    let ardEs = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == ard.TDOBasvuruDanismanID)
                     where s.EnstituKod == enstituKod && s.KullaniciID == model.KullaniciID
-                    select new frTDOBasvuru
+                    select new FrTdoBasvuruDto
                     {
                         TDOBasvuruID = s.TDOBasvuruID,
                         BasvuruTarihi = s.BasvuruTarihi,
@@ -146,15 +146,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTDOBasvuruDanismanID = s.AktifTDOBasvuruDanismanID,
-                        TDOBasvuruDanisman = Ard,
-                        AktifDonemID = Ard == null ? null : (Ard.DonemBaslangicYil + "" + Ard.DonemID),
-                        AktifDonemAdi = Ard == null ? "Danışman Önerisi Yok" : (Ard.DonemBaslangicYil + " / " + (Ard.DonemBaslangicYil + 1) + " " + (Ard.DonemID == 1 ? "Güz" : "Bahar")),
-                        VarolanTezDanismanID = Ard != null ? Ard.VarolanTezDanismanID : null,
-                        VarolanDanismanOnayladi = Ard != null ? Ard.VarolanDanismanOnayladi : null,
+                        TDOBasvuruDanisman = ard,
+                        AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
+                        AktifDonemAdi = ard == null ? "Danışman Önerisi Yok" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        VarolanTezDanismanID = ard != null ? ard.VarolanTezDanismanID : null,
+                        VarolanDanismanOnayladi = ard != null ? ard.VarolanDanismanOnayladi : null,
 
-                        DanismanOnayladi = Ard != null ? Ard.DanismanOnayladi : null,
-                        EYKYaGonderildi = Ard != null ? Ard.EYKYaGonderildi : null,
-                        EYKDaOnaylandi = Ard != null ? Ard.EYKDaOnaylandi : null,
+                        DanismanOnayladi = ard != null ? ard.DanismanOnayladi : null,
+                        EYKYaGonderildi = ard != null ? ard.EYKYaGonderildi : null,
+                        EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
                         EsDanismanOnerisiVar = ardEs != null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
                         Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null,
@@ -172,7 +172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
 
-            model.Data = qdata;
+            model.TdoBasvuruDtos = qdata;
 
             ViewBag.IndexModel = indexModel;
 
@@ -194,7 +194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kullaniciId = UserIdentity.Current.Id;
                 if (tdoBasvuruId.HasValue)
                 {
-                    var basvuru = _db.TDOBasvurus.Where(p => p.TDOBasvuruID == tdoBasvuruId.Value).FirstOrDefault();
+                    var basvuru = _entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId.Value);
                     if (kullaniciId.HasValue == false) kullaniciId = basvuru.KullaniciID;
                 }
             }
@@ -203,7 +203,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kullaniciId = UserIdentity.Current.Id;
             }
 
-            var kul = _db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
+            var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
 
             var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(enstituKod, kullaniciId, tdoBasvuruId);
 
@@ -213,7 +213,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.KayitTarihi = kul.KayitTarihi;
                 if (tdoBasvuruId.HasValue)
                 {
-                    var basvuru = _db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
+                    var basvuru = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                     model.EnstituKod = basvuru.EnstituKod;
                     model.TDOBasvuruID = basvuru.TDOBasvuruID;
                     model.BasvuruTarihi = DateTime.Now;
@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (kul.OgrenimTipKod.HasValue)
                 {
-                    model.OgrenimTipAdi = _db.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
+                    model.OgrenimTipAdi = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
                     var progLng = kul.Programlar;
                     model.AnabilimdaliAdi = progLng.AnabilimDallari.AnabilimDaliAdi;
                     model.ProgramAdi = progLng.ProgramAdi;
@@ -275,7 +275,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.toNullIntZero());
 
 
-            var kul = _db.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
+            var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
 
@@ -304,7 +304,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     isNewRecord = true;
                     kModel.BasvuruTarihi = DateTime.Now;
 
-                    data = _db.TDOBasvurus.Add(new TDOBasvuru
+                    data = _entities.TDOBasvurus.Add(new TDOBasvuru
                     {
                         EnstituKod = kModel.EnstituKod,
                         UniqueID = Guid.NewGuid(),
@@ -329,13 +329,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = UserIdentity.Ip
 
                     });
-                    _db.SaveChanges();
+                    _entities.SaveChanges();
                     TezDanismanOneriBus.ObsDanismanBasvurBilgiEslestir(data.KullaniciID, data.TDOBasvuruID);
                 }
                 else
                 {
 
-                    data = _db.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID);
+                    data = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.BasvuruTarihi = kModel.BasvuruTarihi;
                     data.KullaniciID = kModel.KullaniciID;
@@ -356,7 +356,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
-                    _db.SaveChanges();
+                    _entities.SaveChanges();
 
 
                 }
@@ -377,14 +377,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize]
-        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tDODanismanTalepTipID)
+        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipID)
         {
             tdoBasvuruDanismanId = tdoBasvuruDanismanId ?? 0;
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tDODanismanTalepTipID ?? TDODanismanTalepTip.TezDanismaniOnerisi };
+            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipID ?? TDODanismanTalepTip.TezDanismaniOnerisi };
             var mMessage = new MmMessage();
             string view = "";
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
-            var tdoBas = _db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
+            var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
@@ -468,11 +468,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (model.SinavTipID.HasValue)
                 {
-                    var sinav = _db.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
+                    var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == model.SinavTipID);
                     if (sinav.OzelNot) model.SListSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.SinavTipID.Value, true), "Value", "Caption", model.SinavPuani);
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
-                        var sinavTd = _db.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
+                        var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
                         if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.cmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
@@ -506,7 +506,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu Oluşturma İşlemi"
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
-            var tdoBas = _db.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
+            var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tdoBas.KullaniciID);
 
 
@@ -666,7 +666,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             if (kModel.SinavTipID.HasValue)
                             {
-                                var sinavTipi = _db.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID);
+                                var sinavTipi = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID);
                                 var sinavPuani = kModel.SinavPuani.ToDouble().Value;
                                 var sinavTipKriter = sinavTipi.SinavTipleriOTNotAraliklaris.FirstOrDefault(p => p.OgrenimTipKod == tdoBas.OgrenimTipKod && p.Ingilizce == tdoBas.Programlar.Ingilizce);
                                 if (sinavTipKriter != null)
@@ -809,7 +809,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var sendMail = false;
                 var isYeni = false;
-                var danisman = _db.Kullanicilars.First(p => p.KullaniciID == kModel.TezDanismanID);
+                var danisman = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.TezDanismanID);
                 if (isTezDiliTr == true)
                 {
                     kModel.SinavAdi = null;
@@ -831,7 +831,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
-                while (_db.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
+                while (_entities.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                 {
                     formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                 }
@@ -839,17 +839,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.FormKodu = formKodu;
                 TDOBasvuruDanisman tdoBasvuruDanis;
 
-                kModel.TDProgramAdi = _db.Programlars.First(p => p.ProgramKod == kModel.TDProgramKod).ProgramAdi;
-                kModel.TDAnabilimDaliAdi = _db.AnabilimDallaris.First(p => p.AnabilimDaliID == kModel.TDAnabilimDaliID).AnabilimDaliAdi;
+                kModel.TDProgramAdi = _entities.Programlars.First(p => p.ProgramKod == kModel.TDProgramKod).ProgramAdi;
+                kModel.TDAnabilimDaliAdi = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == kModel.TDAnabilimDaliID).AnabilimDaliAdi;
                 if (kModel.IsTezDiliTr == false)
                 {
-                    kModel.SinavAdi = _db.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID).SinavAdi;
-                    kModel.TDSinavAdi = kModel.TDSinavTipID > 0 ? _db.SinavTipleris.First(p => p.SinavTipID == kModel.TDSinavTipID).SinavAdi : "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu";
+                    kModel.SinavAdi = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID).SinavAdi;
+                    kModel.TDSinavAdi = kModel.TDSinavTipID > 0 ? _entities.SinavTipleris.First(p => p.SinavTipID == kModel.TDSinavTipID).SinavAdi : "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu";
                 }
 
                 if (kModel.TDOBasvuruDanismanID > 0)
                 {
-                    tdoBasvuruDanis = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+                    tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
                     if (
 
                         tdoBasvuruDanis.IsTezDiliTr != isTezDiliTr.Value ||
@@ -928,11 +928,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
 
                     isYeni = true;
-                    tdoBasvuruDanis = _db.TDOBasvuruDanismen.Add(kModel);
+                    tdoBasvuruDanis = _entities.TDOBasvuruDanismen.Add(kModel);
                     sendMail = true;
                     tdoBas.AktifTDOBasvuruDanismanID = kModel.TDOBasvuruDanismanID;
                 }
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 LogIslemleri.LogEkle("TDOBasvuruDanisman", isYeni ? IslemTipi.Insert : IslemTipi.Update, tdoBasvuruDanis.ToJson());
 
                 mMessage.IsSuccess = true;
@@ -953,7 +953,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult GetSinavTip(int tdoBasvuruId, int sinavTipId)
         {
-            var sinav = _db.SinavTipleris.First(p => p.SinavTipID == sinavTipId);
+            var sinav = _entities.SinavTipleris.First(p => p.SinavTipID == sinavTipId);
 
             var notlar = new List<CmbDoubleDto>();
             if (sinav.OzelNot) notlar = Management.cmbGetSinavTipOzelNot(sinavTipId, true);
@@ -974,7 +974,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu Danışman Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var tdoBasvuruDanis = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
             if (!RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.TezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");
@@ -1050,7 +1050,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (tdoBasvuruDanis.DanismanOnayladi != kModel.DanismanOnayladi)
                 {
                     var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
-                    while (_db.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
+                    while (_entities.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                     {
                         formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                     }
@@ -1070,7 +1070,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
@@ -1091,7 +1091,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu Danışman Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var tdoBasvuruDanis = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
             if (!RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.VarolanTezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");
@@ -1111,7 +1111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (tdoBasvuruDanis.DanismanOnayladi != kModel.DanismanOnayladi)
                 {
                     var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
-                    while (_db.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
+                    while (_entities.TDOBasvuruDanismen.Any(a => a.FormKodu == formKodu))
                     {
                         formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                     }
@@ -1127,12 +1127,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
                     LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
-                    var Messages = TezDanismanOneriBus.SendMailTdoDanismanOnay(kModel.TDOBasvuruDanismanID, tdoBasvuruDanis.VarolanDanismanOnayladi.Value);
+                    TezDanismanOneriBus.SendMailTdoDanismanOnay(kModel.TDOBasvuruDanismanID, tdoBasvuruDanis.VarolanDanismanOnayladi.Value);
                 }
             }
 
@@ -1140,14 +1140,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
         [Authorize]
-        public ActionResult TDOEYKYaGonderimPost(int tdoBasvuruDanismanId, bool? eykYaGonderildi)
+        public ActionResult TdoEykYaGonderimPost(int tdoBasvuruDanismanId, bool? eykYaGonderildi)
         {
             var mMessage = new MmMessage
             {
                 MessageType = Msgtype.Success,
                 Title = "Tez Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
-            var tdoBasvuruDanis = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
             if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
@@ -1169,7 +1169,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
                 mMessage.IsSuccess = true;
             }
@@ -1178,7 +1178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
         [Authorize]
-        public ActionResult TDOEYKDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
+        public ActionResult TdoEykDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
         {
             var mMessage = new MmMessage
             {
@@ -1186,7 +1186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var tdoBasvuruDanis = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
             if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'da onay yetkiniz bulunmamaktadır.");
@@ -1225,7 +1225,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
                 // TDOBasvuruDanis.TDOBasvuru.Kullanicilar.DanismanID = TDOBasvuruDanis.TezDanismanID;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
@@ -1247,8 +1247,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new TDOBasvuruEsDanisman() { TDOBasvuruDanismanID = tdoBasvuruDanismanId, IsDegisiklikTalebi = isDegisiklikTalebi };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var yYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
-            var tdoBasvuruDanismanData = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
-            if (tdoBasvuruEsDanismanId.HasValue) model = _db.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
+            var tdoBasvuruDanismanData = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
+            if (tdoBasvuruEsDanismanId.HasValue) model = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Tez Eş Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
@@ -1305,12 +1305,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [ValidateInput(false)]
         public ActionResult TdoEsDanismanFormuPost(TDOBasvuruEsDanisman kModel)
         {
-            var mMessage = new MmMessage();
-            mMessage.MessageType = Msgtype.Success;
-            mMessage.Title = "Tez Danışmanı Öneri Formu Oluşturma İşlemi";
+            var mMessage = new MmMessage
+            {
+                MessageType = Msgtype.Success,
+                Title = "Tez Danışmanı Öneri Formu Oluşturma İşlemi"
+            };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var yYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
-            var tdoBasvuruDanismanData = _db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+            var tdoBasvuruDanismanData = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
             if (!formYetki || (!yYetki && tdoBasvuruDanismanData.TezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Tez Eş Danışmanı Öneri Formu oluşturmaya yetkili değilsiniz.");
@@ -1393,7 +1395,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var insertOrUpdate = false;
                 TDOBasvuruEsDanisman tdoBasvuruEsDanis;
                 var formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
-                while (_db.TDOBasvuruEsDanismen.Any(a => a.FormKodu == formKodu))
+                while (_entities.TDOBasvuruEsDanismen.Any(a => a.FormKodu == formKodu))
                 {
                     formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                 }
@@ -1435,9 +1437,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     sendMail = true;
                     insertOrUpdate = true;
-                    tdoBasvuruEsDanis = _db.TDOBasvuruEsDanismen.Add(kModel);
+                    tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.Add(kModel);
                 }
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
@@ -1454,7 +1456,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize]
-        public ActionResult TdoEykyaGonderimPostEs(int tdoBasvuruEsDanismanId, bool? eykYaGonderildi)
+        public ActionResult TdoEykYaGonderimPostEs(int tdoBasvuruEsDanismanId, bool? eykYaGonderildi)
         {
             var mMessage = new MmMessage
             {
@@ -1462,7 +1464,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Eş Danışmanı Öneri Formu EYK'ya Gönderim İşlemi"
             };
             var tdoBasvuruEsDanis =
-                _db.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
+                _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
             if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
@@ -1485,7 +1487,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruEsDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
             }
@@ -1494,14 +1496,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
         [Authorize]
-        public ActionResult TdoEykdaOnayPostEs(int tdoBasvuruEsDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
+        public ActionResult TdoEykDaOnayPostEs(int tdoBasvuruEsDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
         {
             var mMessage = new MmMessage
             {
                 MessageType = Msgtype.Success,
                 Title = "Tez Eş Danışmanı Öneri Formu EYK'Da Onay İşlemi"
             };
-            var tdoBasvuruEsDanis = _db.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
+            var tdoBasvuruEsDanis = _entities.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tdoBasvuruEsDanismanId);
             if (!RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent())
             {
                 mMessage.Messages.Add("EYK'ya gönderme yetkiniz bulunmamaktadır.");
@@ -1545,7 +1547,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruEsDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
                 // TDOBasvuruDanis.TDOBasvuru.Kullanicilar.DanismanID = TDOBasvuruDanis.TezDanismanID;
-                _db.SaveChanges();
+                _entities.SaveChanges();
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
@@ -1566,7 +1568,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
             var tdoeyKyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
-            var qKayit = _db.TDOBasvuruDanismen.Where(p => p.TDOBasvuruID == id && p.TDOBasvuruDanismanID == tdoBasvuruDanismanId).AsQueryable();
+            var qKayit = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuruID == id && p.TDOBasvuruDanismanID == tdoBasvuruDanismanId).AsQueryable();
             if (!tdoDanismanOnayYetkisi && !tdoeyKyaGonderimYetkisi) qKayit = qKayit.Where(p => p.TDOBasvuru.KullaniciID == UserIdentity.Current.Id);
             else if (tdoDanismanOnayYetkisi && !tdoeyKyaGonderimYetkisi) qKayit = qKayit.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var tdoBasvuruDanisman = qKayit.FirstOrDefault();
@@ -1585,8 +1587,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID = tdoBasvuruDanisman.TDOBasvuru.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).Select(s => s.TDOBasvuruDanismanID).FirstOrDefault().toNullIntZero();
-                    _db.TDOBasvuruDanismen.Remove(tdoBasvuruDanisman);
-                    _db.SaveChanges();
+                    _entities.TDOBasvuruDanismen.Remove(tdoBasvuruDanisman);
+                    _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Delete, tdoBasvuruDanisman.ToJson());
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silindi.");
@@ -1611,7 +1613,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var tdoeyKdaOnayYetkisi = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
             var tdoeyKyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
-            var tdoEsDanisman = _db.TDOBasvuruEsDanismen.FirstOrDefault(p => p.UniqueID == uniqueID);
+            var tdoEsDanisman = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.UniqueID == uniqueID);
 
 
             if (!(tdoeyKdaOnayYetkisi || tdoeyKyaGonderimYetkisi))
@@ -1630,8 +1632,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    _db.TDOBasvuruEsDanismen.Remove(tdoEsDanisman);
-                    _db.SaveChanges();
+                    _entities.TDOBasvuruEsDanismen.Remove(tdoEsDanisman);
+                    _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
                     LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Delete, tdoEsDanisman.ToJson());
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silindi.");
@@ -1654,7 +1656,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.IsSuccess)
             {
-                var kayit = _db.TDOBasvurus.First(p => p.TDOBasvuruID == id);
+                var kayit = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == id);
 
                 var isAdminRemove = false;
                 if (UserIdentity.Current.IsAdmin)
@@ -1674,16 +1676,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var araRapors = kayit.TDOBasvuruDanismen.ToList();
                         foreach (var item in araRapors)
                         {
-                            if (item.TDOBasvuruEsDanismen.Any()) _db.TDOBasvuruEsDanismen.RemoveRange(item.TDOBasvuruEsDanismen);
-                            _db.TDOBasvuruDanismen.Remove(item);
+                            if (item.TDOBasvuruEsDanismen.Any()) _entities.TDOBasvuruEsDanismen.RemoveRange(item.TDOBasvuruEsDanismen);
+                            _entities.TDOBasvuruDanismen.Remove(item);
                         }
-                        _db.TDOBasvurus.Remove(kayit);
+                        _entities.TDOBasvurus.Remove(kayit);
                     }
                     else
                     {
-                        _db.TDOBasvurus.Remove(kayit);
+                        _entities.TDOBasvurus.Remove(kayit);
                     }
-                    _db.SaveChanges();
+                    _entities.SaveChanges();
                     LogIslemleri.LogEkle("TDOBasvuru", IslemTipi.Delete, kayit.ToJson());
 
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silindi.");

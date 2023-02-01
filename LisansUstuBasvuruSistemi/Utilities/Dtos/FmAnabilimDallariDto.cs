@@ -7,16 +7,16 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmAnabilimDallari : PagerOption
+    public class FmAnabilimDallariDto : PagerOption
     {
         public string EnstituKod { get; set; }
         public string AnabilimDaliKod { get; set; }
         public string AnabilimDaliAdi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frAnabilimDallari> data { get; set; }
+        public IEnumerable<FrAnabilimDallariDto> FrAnabilimDallaris { get; set; }
 
     }
-    public class frAnabilimDallari : AnabilimDallari
+    public class FrAnabilimDallariDto : AnabilimDallari
     {
         public string EnstituAd { get; set; }
         public string IslemYapan { get; set; }

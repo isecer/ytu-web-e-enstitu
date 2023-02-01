@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model frMesajlar
+@model FrMesajlarDto
 @{
     Layout = null;
 
@@ -15,8 +15,8 @@
             bool openRow = true;
             foreach (var itemx in Model.SubMesajList)
             {
-                bool IsGenelMesaj = itemx.Gonderilenler.Count == 0;
-                var rowCls = itemx.Gonderilenler.Count > 0 ? "success" : "warning";
+                bool IsGenelMesaj = itemx.GonderilenMailKullanicilars.Count == 0;
+                var rowCls = itemx.GonderilenMailKullanicilars.Count > 0 ? "success" : "warning";
                 var gd = Guid.NewGuid().ToString();
                 inxX--;
                 <tr class="MainRow @rowCls">
@@ -50,9 +50,9 @@
                         @itemx.AdSoyad
                     </td>
                     <td width="35" style="text-align:right;">
-                        @if (itemx.Ekler.Count > 0)
+                        @if (itemx.MesajEkleris.Count > 0)
                         {
-                           <b>@itemx.Ekler.Count</b> <img title="@itemx.Ekler.Count Adet Ek Mevcut" src="@Url.Content("/Images/Attachment.png")" style="height:16px;">
+                           <b>@itemx.MesajEkleris.Count</b> <img title="@itemx.MesajEkleris.Count Adet Ek Mevcut" src="@Url.Content("/Images/Attachment.png")" style="height:16px;">
                         }
                     </td>
                     <td width="120">
@@ -69,26 +69,26 @@
                                 @Html.Raw(itemx.Icerik)
                             </div>
                             <div class="panel-footer" style="padding-top:1px;padding-bottom:1px;"></div>
-                            @if (!IsGenelMesaj || itemx.Ekler.Count > 0)
+                            @if (!IsGenelMesaj || itemx.MesajEkleris.Count > 0)
                             {
                                 <table class="table" style="padding:0px;margin:0px;">
-                                    @if (itemx.Gonderilenler.Count > 0)
+                                    @if (itemx.GonderilenMailKullanicilars.Count > 0)
                                     {
                                         <tr>
                                             <td width="20"><img src="/Images/User-green.png" style="height:16px;"></td>
                                             <td width="130">Gönderilen Kişiler</td>
                                             <td width="5">:</td>
-                                            <td>@string.Join(", ", itemx.Gonderilenler.Select(s => s.Email))</td>
+                                            <td>@string.Join(", ", itemx.GonderilenMailKullanicilars.Select(s => s.Email))</td>
                                         </tr>
                                     }
-                                    @if (itemx.Ekler.Count > 0)
+                                    @if (itemx.MesajEkleris.Count > 0)
                                     {
                                         <tr>
                                             <td width="20"><img src="@Url.Content("/Images/Attachment.png")" style="height:16px;"></td>
                                             <td width="130">@(IsGenelMesaj ? "Gelen Ekler" : "Gönderilen Ekler")</td>
                                             <td width="5">:</td>
                                             <td>
-                                                @Html.Raw(string.Join(", ", itemx.Ekler.Select(s => "<a href='" + s.EkDosyaYolu + "' target='_blank'><span class='fa fa-download' style='color: green;'></span>&nbsp;" + s.EkAdi + "</a>")))
+                                                @Html.Raw(string.Join(", ", itemx.MesajEkleris.Select(s => "<a href='" + s.EkDosyaYolu + "' target='_blank'><span class='fa fa-download' style='color: green;'></span>&nbsp;" + s.EkAdi + "</a>")))
 
                                                 
                                            </td>
