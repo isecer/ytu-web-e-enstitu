@@ -111,8 +111,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     from Msd in defMsd.DefaultIfEmpty()
                     join qjOf in db.MezuniyetJuriOneriFormlaris on s.MezuniyetBasvurulariID equals qjOf.MezuniyetBasvurulariID into defJof
                     from jOf in defJof.DefaultIfEmpty()
-                    let SrT = s.SRTalepleris.OrderByDescending(o => o.SRTalepID).FirstOrDefault()
-                    let TD = s.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(o => o.MezuniyetBasvurulariTezDosyaID).FirstOrDefault()
+                    let SrT = s.SRTalepleris.OrderByDescending(ods => ods.SRTalepID).FirstOrDefault()
+                    let TD = s.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(ods => ods.MezuniyetBasvurulariTezDosyaID).FirstOrDefault()
                     where bs.Enstituler.EnstituKisaAd.Contains(EKD) && s.KullaniciID == model.KullaniciID
                     select new frMezuniyetBasvurulari
                     {
@@ -157,7 +157,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         UzatmaSuresiGun = mOT.MBSinavUzatmaSuresiGun,
                         MezuniyetSuresiGun = mOT.MBSinavUzatmaSuresiGun,
                         EYKTarihi = s.EYKTarihi,
-                        MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(s => s.MezuniyetYayinTurID).ToList(),
+                        MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(s2 => s2.MezuniyetYayinTurID).ToList(),
                         FormNo = jOf != null ? jOf.UniqueID : "",
                         MezuniyetJuriOneriFormu = jOf,
                         TezTeslimSonTarih = s.TezTeslimSonTarih,
@@ -1566,9 +1566,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddRow(MezuniyetBasvurulariYayin model)
+        public ActionResult AddRow()
         {
-            return View(model);
+            return View();
         }
 
 

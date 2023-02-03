@@ -149,14 +149,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var page = ViewRenderHelper.RenderPartialView("Anketler", "DetaySablon", qModel);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult DetaySablon(int model)
+        public ActionResult DetaySablon()
         {
-            return View(model);
+            return View();
         }
 
-        public ActionResult GetDetail2(int AnketSoruID)
+        public ActionResult GetDetail2(int anketSoruId)
         {
-            var qModel = (from s in db.AnketSorus.Where(p => p.AnketSoruID == AnketSoruID)
+            var qModel = (from s in db.AnketSorus.Where(p => p.AnketSoruID == anketSoruId)
                           join sa in db.AnketSoruSeceneks on s.AnketSoruID equals sa.AnketSoruID
                           select new FrAnketSecenekDetayDto
                           {
@@ -169,9 +169,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var page = ViewRenderHelper.RenderPartialView("Anketler", "DetaySablon2", qModel);
             return Json(new { page = page }, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult DetaySablon2(int model)
+        public ActionResult DetaySablon2()
         {
-            return View(model);
+            return View();
         }
 
         public ActionResult GetSoruEkle(int AnketID, int? AnketSoruID)

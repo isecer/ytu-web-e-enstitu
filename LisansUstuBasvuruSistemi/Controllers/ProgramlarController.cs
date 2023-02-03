@@ -58,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         LYLHerhangiBirindeGecenAlanIci = s.LYLHerhangiBirindeGecenAlanIci,
                         ProgramSecimiEkBilgi = s.ProgramSecimiEkBilgi, 
                         IsAlandisiBolumKisitlamasi = s.IsAlandisiBolumKisitlamasi,
-                        AlandisiBolumKisitListesi = s.ProgramlarAlandisiBolumKisitlamalaris.Select(s => s.OgrenciBolumleri.BolumAdi).OrderBy(o => o).ToList(),
+                        AlandisiBolumKisitListesi = s.ProgramlarAlandisiBolumKisitlamalaris.Select(s2 => s2.OgrenciBolumleri.BolumAdi).OrderBy(o => o).ToList(),
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
                         IslemYapanID = s.IslemYapanID,

@@ -487,10 +487,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (tbInx == 2)
             {
                 #region TercihBilgileri
-                mdl.LUniversiteAdi = _entities.Universitelers.Where(p => p.UniversiteID == basvuru.LUniversiteID).FirstOrDefault().Ad;
+                mdl.LUniversiteAdi = _entities.Universitelers.First(p => p.UniversiteID == basvuru.LUniversiteID).Ad;
                 mdl.LFakulteAdi = basvuru.LFakulteAdi;
-                mdl.LBolumAdi = _entities.OgrenciBolumleris.Where(p => p.OgrenciBolumID == basvuru.LOgrenciBolumID).First().BolumAdi;
-                mdl.LNotSistemi = _entities.NotSistemleris.Where(p => p.NotSistemID == basvuru.LNotSistemID).FirstOrDefault().NotSistemAdi;
+                mdl.LBolumAdi = _entities.OgrenciBolumleris.First(p => p.OgrenciBolumID == basvuru.LOgrenciBolumID).BolumAdi;
+                mdl.LNotSistemi = _entities.NotSistemleris.First(p => p.NotSistemID == basvuru.LNotSistemID).NotSistemAdi;
                 mdl.LMezuniyetNotu = basvuru.LMezuniyetNotu;
                 mdl.LMezuniyetNotu100LukSistem = basvuru.LMezuniyetNotu100LukSistem;
                 mdl.LEgitimDiliTurkce = basvuru.LEgitimDiliTurkce;
@@ -499,10 +499,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (basvuru.YLUniversiteID.HasValue)
                 {
                     mdl.YLUniversiteID = basvuru.YLUniversiteID;
-                    mdl.YLUniversiteAdi = _entities.Universitelers.Where(p => p.UniversiteID == basvuru.YLUniversiteID).FirstOrDefault().Ad;
+                    mdl.YLUniversiteAdi = _entities.Universitelers.First(p => p.UniversiteID == basvuru.YLUniversiteID).Ad;
                     mdl.YLFakulteAdi = basvuru.YLFakulteAdi;
-                    mdl.YLBolumAdi = _entities.OgrenciBolumleris.Where(p => p.OgrenciBolumID == basvuru.YLOgrenciBolumID).FirstOrDefault().BolumAdi;
-                    mdl.YLNotSistemi = _entities.NotSistemleris.Where(p => p.NotSistemID == basvuru.YLNotSistemID).FirstOrDefault().NotSistemAdi;
+                    mdl.YLBolumAdi = _entities.OgrenciBolumleris.First(p => p.OgrenciBolumID == basvuru.YLOgrenciBolumID).BolumAdi;
+                    mdl.YLNotSistemi = _entities.NotSistemleris.First(p => p.NotSistemID == basvuru.YLNotSistemID).NotSistemAdi;
                     mdl.YLMezuniyetNotu = basvuru.YLMezuniyetNotu;
                     mdl.YLMezuniyetNotu100LukSistem = basvuru.YLMezuniyetNotu100LukSistem;
                     mdl.YLEgitimDiliTurkce = basvuru.YLEgitimDiliTurkce;
@@ -511,10 +511,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (basvuru.DRUniversiteID.HasValue)
                 {
                     mdl.DRUniversiteID = basvuru.DRUniversiteID;
-                    mdl.DRUniversiteAdi = _entities.Universitelers.Where(p => p.UniversiteID == basvuru.DRUniversiteID).FirstOrDefault().Ad;
+                    mdl.DRUniversiteAdi = _entities.Universitelers.First(p => p.UniversiteID == basvuru.DRUniversiteID).Ad;
                     mdl.DRFakulteAdi = basvuru.DRFakulteAdi;
-                    mdl.DRBolumAdi = _entities.OgrenciBolumleris.Where(p => p.OgrenciBolumID == basvuru.DROgrenciBolumID).FirstOrDefault().BolumAdi;
-                    mdl.DRNotSistemi = _entities.NotSistemleris.Where(p => p.NotSistemID == basvuru.DRNotSistemID).FirstOrDefault().NotSistemAdi;
+                    mdl.DRBolumAdi = _entities.OgrenciBolumleris.First(p => p.OgrenciBolumID == basvuru.DROgrenciBolumID).BolumAdi;
+                    mdl.DRNotSistemi = _entities.NotSistemleris.First(p => p.NotSistemID == basvuru.DRNotSistemID).NotSistemAdi;
                     mdl.DRMezuniyetNotu = basvuru.DRMezuniyetNotu;
                     mdl.DRMezuniyetNotu100LukSistem = basvuru.DRMezuniyetNotu100LukSistem;
                     mdl.DREgitimDiliTurkce = basvuru.DREgitimDiliTurkce;
@@ -549,26 +549,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (tbInx == 3)
             {
                 #region SınavBilgileri
-                var BasvuruSurec = basvuru.BasvuruSurec;
-                var Sinavlars = basvuru.BasvurularSinavBilgis.ToList();
-                var SinavTipIDs = Sinavlars.Select(s => s.SinavTipID).ToList();
-                var SinavDilleris = Sinavlars.Where(p => p.SinavDilleri != null).Select(s => s.SinavDilleri).ToList();
+                var basvuruSurec = basvuru.BasvuruSurec;
+                var sinavlars = basvuru.BasvurularSinavBilgis.ToList();
+                var sinavTipIDs = sinavlars.Select(s => s.SinavTipID).ToList();
+                var sinavDilleris = sinavlars.Where(p => p.SinavDilleri != null).Select(s => s.SinavDilleri).ToList();
 
-                var BSurecSinavBilgis = basvuru.BasvuruSurec.BasvuruSurecSinavTipleris.Where(p => SinavTipIDs.Contains(p.SinavTipID)).ToList();
-                var SinavTipleris = BSurecSinavBilgis.Select(s => s.SinavTipleri).ToList();
-                var SinavTipGroups = Sinavlars.Select(s => s.SinavTipGruplari).ToList();
-                var SinavTipleriLngs = SinavTipleris.ToList();
+                var bSurecSinavBilgis = basvuru.BasvuruSurec.BasvuruSurecSinavTipleris.Where(p => sinavTipIDs.Contains(p.SinavTipID)).ToList();
+                var sinavTipleris = bSurecSinavBilgis.Select(s => s.SinavTipleri).ToList();
+                var SinavTipGroups = sinavlars.Select(s => s.SinavTipGruplari).ToList();
+                var SinavTipleriLngs = sinavTipleris.ToList();
                 mdl.LEgitimDiliTurkce = basvuru.LEgitimDiliTurkce;
                 mdl.YLEgitimDiliTurkce = basvuru.YLEgitimDiliTurkce;
                 mdl.IsTurkceProgramVar = basvuru.BasvurularTercihleris.Any(a => !a.Programlar.Ingilizce);
-                mdl.Sinavlars = (from s in Sinavlars
-                                 join bs in BSurecSinavBilgis on s.SinavTipID equals bs.SinavTipID
-                                 join st in SinavTipleris on s.SinavTipID equals st.SinavTipID
+                mdl.Sinavlars = (from s in sinavlars
+                                 join bs in bSurecSinavBilgis on s.SinavTipID equals bs.SinavTipID
+                                 join st in sinavTipleris on s.SinavTipID equals st.SinavTipID
                                  join stl in SinavTipleriLngs on st.SinavTipID equals stl.SinavTipID
                                  join stg in SinavTipGroups on s.SinavTipGrupID equals stg.SinavTipGrupID
                                  select new BasvuruSinavTipDto
                                  {
-                                     EnstituKod = BasvuruSurec.EnstituKod,
+                                     EnstituKod = basvuruSurec.EnstituKod,
                                      IsWebService = bs.WebService,
                                      TarihGirisMaxGecmisYil = bs.TarihGirisMaxGecmisYil,
                                      SinavTipKod = st.SinavTipKod,
@@ -584,7 +584,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      SinavSubPuani = s.BasvuruSurecSubNot,
                                      SinavPuani = s.SinavNotu,
                                      SinavDilID = s.SinavDilID,
-                                     SinavDilAdi = s.SinavDilID.HasValue ? SinavDilleris.Where(p => p.SinavDilID == s.SinavDilID).FirstOrDefault().DilAdi : (bs.WebService && s.SinavTipGrupID == SinavTipGrup.DilSinavlari ? s.WsSinavDili : ""),
+                                     SinavDilAdi = s.SinavDilID.HasValue ? sinavDilleris.Where(p => p.SinavDilID == s.SinavDilID).FirstOrDefault().DilAdi : (bs.WebService && s.SinavTipGrupID == SinavTipGrup.DilSinavlari ? s.WsSinavDili : ""),
                                      AlesXmlModel = s.SinavTipGrupID == SinavTipGrup.Ales_Gree && bs.WebService ? s.WsXmlData.toSinavSonucAlesXmlModel() : null,
                                  }).OrderBy(o => o.SinavTipGrupID).ToList();
 

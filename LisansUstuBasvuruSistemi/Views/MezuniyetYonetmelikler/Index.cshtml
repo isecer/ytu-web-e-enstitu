@@ -148,40 +148,6 @@
 
     }
      
-    function Sil(id) {
-
-        var btbx = bootbox.dialog({
-            message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Mezuniyet Yönetmeliğini Silmek İstiyor Musunuz?</td></tr></table>",
-            title: "Mezuninet Yönetmelik Silme İşlemi",
-            buttons: {
-                success: {
-                    label: "Mezuniyet Yönetmeliğini Sil",
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("Sil", "MezuniyetYonetmelik")',
-                            data: { id: id },
-                            success: function (result) {
-                                if (result.IsSuccess) {
-                                    $(".delrw_" + id).remove();
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) {
-                                alert(err.responseText);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: "Kapat",
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
-            }
-        });
-        $(btbx).find('.modal-dialog').addClass('modal-lg');
-    }
+   
 
 </script>

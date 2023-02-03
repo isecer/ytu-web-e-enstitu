@@ -786,7 +786,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  IsOzelNotAralik = notAr != null ? notAr.IsOzelNotAralik : false,
                                  Min = notAr != null ? notAr.Min : (double?)null,
                                  Max = notAr != null ? notAr.Max : (double?)null,
-                                 ProgramKods = notAr != null ? notAr.SinavTipleriOTNotAraliklariGecersizProgramlars.Select(s => s.ProgramKod).ToList() : new List<string>()
+                                 ProgramKods = notAr != null ? notAr.SinavTipleriOTNotAraliklariGecersizProgramlars.Select(s2 => s2.ProgramKod).ToList() : new List<string>()
                              }).ToList();
                 krNotAralikMld.AddRange(qotNA);
 

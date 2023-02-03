@@ -622,7 +622,7 @@
         var _panel = $('#pnglDB_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("mailGonderBolumSinavYerBilgiGiris", "YYDBasvuruSureci")',
+            url: '@Url.Action("mailGonderJuriYer", "YYDBasvuruSureci")',
             data: { 'id': id, 'isSinavYerOrSinavNotGiris': isSinavYerOrSinavNotGiris },
             success: function (result) {
                 _pRefresh(_panel, true);

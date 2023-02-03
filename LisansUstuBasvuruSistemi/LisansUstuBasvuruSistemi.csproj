@@ -265,8 +265,6 @@
     <Compile Include="Controllers\MezuniyetSureciController.cs" />
     <Compile Include="Controllers\MulakatSureciController.cs" />
     <Compile Include="Controllers\OgrenciBolumleriController.cs" />
-    <Compile Include="Controllers\OgrenimController.cs" />
-    <Compile Include="Controllers\OgrenimGelenBasvurularController.cs" />
     <Compile Include="Controllers\OgrenimTipleriController.cs" />
     <Compile Include="Controllers\AppEventController.cs" />
     <Compile Include="Controllers\MailSablonlariSistemController.cs" />
@@ -3229,10 +3227,8 @@
     <Content Include="Views\Sehirler\Index.cshtml" />
     <Content Include="Views\Sehirler\Kayit.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\LogOn.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LayoutPupupFrame.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_MenuPartial.cshtml" />
     <Content Include="Views\SinavTipleri\Index.cshtml" />
     <Content Include="Views\SinavTipleri\Kayit.cshtml" />
@@ -3341,7 +3337,6 @@
     <Content Include="Views\OnlineOdeme\Index.cshtml" />
     <Content Include="Views\OnlineOdeme\getPRdetay.cshtml" />
     <Content Include="Views\Ajax\PaymentResponse.cshtml" />
-    <Content Include="Views\Hatalar\Index.cshtml" />
     <Content Include="Views\Mesajlar\getMesajDetay.cshtml" />
     <Content Include="Views\Ajax\getImageUpload.cshtml" />
     <Content Include="Views\Ajax\GetAnketCevap.cshtml" />
@@ -3367,8 +3362,6 @@
     <Content Include="Views\Ajax\GetBasvuruOgrenimTercihBilgisi.cshtml" />
     <Content Include="Views\Ajax\GetBasvuruSinavBilgileri.cshtml" />
     <Content Include="Views\Ajax\GetBasvuruBelgeYukleme.cshtml" />
-    <Content Include="Views\Ogrenim\Index.cshtml" />
-    <Content Include="Views\Ogrenim\GelenBasvurular.cshtml" />
     <Content Include="Views\TIBasvuru\Index.cshtml" />
     <Content Include="Views\TIBasvuru\BasvuruYap.cshtml" />
     <Content Include="Views\Ajax\getDetailTIBasvuru.cshtml" />

@@ -611,60 +611,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             db.SaveChanges();
         }
 
-
-
-
-        [Authorize(Roles = RoleNames.MezuniyetSureciSil)]
-        public ActionResult Sil(int id)
-        {
-            var mmMessage = new MmMessage();
-
-            var kayit = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == id).FirstOrDefault();
-
-            string message = "";
-            if (kayit != null)
-            {
-                var qBil = (from s in db.MezuniyetSurecis
-                            join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
-                            join d in db.Donemlers on new { s.DonemID } equals new { d.DonemID }
-                            join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                            where s.MezuniyetSurecID == id
-                            select new
-                            {
-                                s.BaslangicYil,
-                                s.BitisYil,
-                                d.DonemAdi
-                            }).First();
-                try
-                {
-                    message = "'" + qBil.BaslangicYil + "/" + qBil.BitisYil + " " + qBil.DonemAdi + "' Dönemine ait mezuniyet süreci silindi!";
-                    db.MezuniyetSurecis.Remove(kayit);
-                    db.SaveChanges();
-                    mmMessage.Title = "Uyarı";
-                    mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Success;
-                    mmMessage.IsSuccess = true;
-                }
-                catch (Exception ex)
-                {
-                    message = "'" + qBil.BaslangicYil + "/" + qBil.BitisYil + " " + qBil.DonemAdi + "' Dönemine ait mezuniyet süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "MezuniyetSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
-                    mmMessage.Title = "Hata";
-                    mmMessage.Messages.Add(message);
-                    mmMessage.MessageType = Msgtype.Error;
-                    mmMessage.IsSuccess = false;
-                }
-            }
-            else
-            {
-                message = "Silmek istediğiniz mezuniyet süreci sistemde bulunamadı!";
-                mmMessage.Title = "Hata";
-                mmMessage.Messages.Add(message);
-                mmMessage.MessageType = Msgtype.Error;
-                mmMessage.IsSuccess = true;
-            }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
+         
     }
 }

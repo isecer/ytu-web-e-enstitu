@@ -37,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          EnstituKod = s.EnstituKod,
                          OgrenimDurumID = s.OgrenimDurumID,
                          OgrenimDurumAdi = so.OgrenimDurumAdi,
-                         BelgeTipAdi = db.BelgeTipleris.Where(p => s.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID)).Select(s => s.BelgeTipAdi).ToList(),
+                         BelgeTipAdi = db.BelgeTipleris.Where(p => s.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID)).Select(s2 => s2.BelgeTipAdi).ToList(),
                          UcretAlimiVar = s.UcretAlimiVar,
                          BelgeFiyati = s.BelgeFiyati,
                          UcretsizMiktar = s.UcretsizMiktar,
