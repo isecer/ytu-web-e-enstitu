@@ -506,7 +506,7 @@
         var _panelM = $('#pImageD');
         _pRefresh(_panelM, false);
         $.ajax({
-            url: '@Url.Action("getImageUpload", "Ajax")',
+            url: '@Url.Action("GetImageUpload", "Ajax")',
             data: {  'KullaniciID': @Model.KullaniciID },
             success: function (resultPG) {
                 _pRefresh(_panelM, true);

@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -8,12 +8,12 @@
 @{
     string KullaniciTipAdi = Model.KullaniciTipAdi;
     Layout = "~/Views/Shared/_Layout.cshtml";
-     
+
     var _MmMessage = (MmMessage)ViewBag._MmMessage;
     var BsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu;
 
     var dTipCultureEk = Model.OgrenimTipKod == OgrenimTipi.Doktra ? "DR" : "YL";
-    
+
 }
 
 <div class="row">
@@ -146,24 +146,25 @@
                                                 <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
-                                                    <div class="col-md-9 col-xs-10">
-                                                        <select id="IsTezDiliTr" name="IsTezDiliTr" class="form-control">
+                                                    <div class="col-md-9 col-xs-10"> 
+                                                        <select id="IsTezDiliTr"  disabled="disabled" class="form-control">
                                                             <option></option>
                                                             <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
                                                             <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
                                                         </select>
+                                                        @Html.HiddenFor(h=>h.IsTezDiliTr)
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" value="@Model.TezBaslikTr" class="form-control" />
+                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" readonly="readonly" maxlength="250" value="@Model.TezBaslikTr" class="form-control" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" value="@Model.TezBaslikEn" class="form-control" />
+                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" readonly="readonly" maxlength="250" value="@Model.TezBaslikEn" class="form-control" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -175,7 +176,7 @@
                                                                     <input type="text" name="TezDanismanUnvani" id="TezDanismanUnvani" readonly="readonly" maxlength="200" value="@Model.TezDanismanUnvani.ToUpper()" class="form-control" style="color:black;" />
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="TezDanismanAdi" id="TezDanismanAdi" readonly="readonly" maxlength="200" value="@Model.TezDanismanAdi.ToUpper()" class="form-control"  style="color:black;"/>
+                                                                    <input type="text" name="TezDanismanAdi" id="TezDanismanAdi" readonly="readonly" maxlength="200" value="@Model.TezDanismanAdi.ToUpper()" class="form-control" style="color:black;" />
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -208,8 +209,8 @@
 
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Özeti (Türkçe)</label>
-                                                    <div class="col-md-9 col-xs-10">  
-                                                        <textarea style="min-height:100px;width:100%; resize:vertical;"  name="TezOzet" id="TezOzet" autocomplete="off">@Model.TezOzet</textarea>
+                                                    <div class="col-md-9 col-xs-10">
+                                                        <textarea style="min-height:100px;width:100%; resize:vertical;" name="TezOzet" id="TezOzet" autocomplete="off">@Model.TezOzet</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -220,8 +221,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Özeti (İngilizce)</label>
-                                                    <div class="col-md-9 col-xs-10"> 
-                                                        <textarea style="min-height:100px;width:100%;resize:vertical;"   name="TezAbstract" id="TezAbstract" autocomplete="off">@Model.TezAbstract</textarea>
+                                                    <div class="col-md-9 col-xs-10">
+                                                        <textarea style="min-height:100px;width:100%;resize:vertical;" name="TezAbstract" id="TezAbstract" autocomplete="off">@Model.TezAbstract</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -233,9 +234,9 @@
                                                 @if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                 {
                                                     <div class="form-group">
-                                                        <label class="col-md-3 col-xs-4 control-label"> 
-                                                                @(Model.OgrenimTipKod == OgrenimTipi.Doktra? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")
-                                                              
+                                                        <label class="col-md-3 col-xs-4 control-label">
+                                                            @(Model.OgrenimTipKod == OgrenimTipi.Doktra? "Danışman İmzalı FR-0338 (DR) Formu" : "Danışman İmzalı FR-0338 (YL) Formu")
+
                                                         </label>
                                                         <div class="col-md-9 col-xs-8">
                                                             <table>
@@ -346,7 +347,7 @@
                                                     <tbody id="yRows">
                                                         @{
                                                             foreach (var item in Model.MezuniyetBasvuruYayinlari)
-                                                            { 
+                                                            {
                                                                 Html.RenderPartial("AddRow", item);
                                                             }
                                                         }
@@ -529,7 +530,7 @@
                 "DanismanImzaliFormDosyaAdi2":$('#DanismanImzaliFormDosya').length>0? $('#DanismanImzaliFormDosya').val().split('/').pop().split('\\').pop():""
             }
         }
-        else if (step == 2) { 
+        else if (step == 2) {
             frmD = getEklenenYayinTurs(null,step);
         }
         postD(frmD, step);
@@ -598,20 +599,20 @@
             _ProjeDeatKurulus.push($ProjeDeatKurulus.length > 0 ? $ProjeDeatKurulus.val().trim() : "");
             _TarihAraligi.push($TarihAraligi.length > 0 ? $TarihAraligi.val().trim() : "");
             _EtkinlikAdi.push(($EtkinlikAdi.length > 0 ? $EtkinlikAdi.val().trim() : ""));
-            _YerBilgisi.push(($YerBilgisi.length > 0 ? $YerBilgisi.val().trim() : "")); 
+            _YerBilgisi.push(($YerBilgisi.length > 0 ? $YerBilgisi.val().trim() : ""));
      })
         var frmD;
         if (secilenY != null) {
             _MezuniyetYayinTurID.push(secilenY.MezuniyetYayinTurID);
-            _MezuniyetYayinTarih.push(secilenY.MezuniyetYayinTarih); 
+            _MezuniyetYayinTarih.push(secilenY.MezuniyetYayinTarih);
             _Yayinlanmis.push(secilenY.Yayinlanmis);
             _YayinBasligi.push(secilenY.YayinBasligi);
             _MezuniyetYayinBelgesiAdi.push(secilenY.MezuniyetYayinBelgeAdi);
-            _MezuniyetYayinKaynakLinki.push(secilenY.MezuniyetYayinKaynakLinki);  
-            _YayinMetniBelgesiAdi.push(secilenY.MezuniyetYayinMetniBelgeAdi);  
-            _MezuniyetYayinLinki.push(secilenY.MezuniyetYayinLinki);  
-            _MezuniyetYayinIndexTurID.push(secilenY.MezuniyetYayinIndexTurID);  
-            _MezuniyetYayinKabulEdilmisMakaleAdi.push(secilenY.MezuniyetYayinKabulEdilmisMakaleAdi);  
+            _MezuniyetYayinKaynakLinki.push(secilenY.MezuniyetYayinKaynakLinki);
+            _YayinMetniBelgesiAdi.push(secilenY.MezuniyetYayinMetniBelgeAdi);
+            _MezuniyetYayinLinki.push(secilenY.MezuniyetYayinLinki);
+            _MezuniyetYayinIndexTurID.push(secilenY.MezuniyetYayinIndexTurID);
+            _MezuniyetYayinKabulEdilmisMakaleAdi.push(secilenY.MezuniyetYayinKabulEdilmisMakaleAdi);
 
             _YazarAdi.push(secilenY.YazarAdi);
             _DergiAdi.push(secilenY.DergiAdi);
@@ -622,7 +623,7 @@
             _ProjeDeatKurulus.push(secilenY.ProjeDeatKurulus);
             _TarihAraligi.push(secilenY.TarihAraligi);
             _EtkinlikAdi.push(secilenY.EtkinlikAdi);
-            _YerBilgisi.push(secilenY.YerBilgisi); 
+            _YerBilgisi.push(secilenY.YerBilgisi);
 
             frmD = {
                 "MezuniyetSurecID": @Model.MezuniyetSurecID,
@@ -672,7 +673,7 @@
 
             };
         }
-        else { 
+        else {
             frmD = {
                 "MezuniyetSurecID": @Model.MezuniyetSurecID,
                 "MezuniyetYayinKontrolDurumID": $('#MezuniyetYayinKontrolDurumID').val(),
@@ -714,7 +715,7 @@
             data: frmData,
             success: function (result) {
                 if (result.sbmtForm)
-                { 
+                {
                     if(result.EkAciklamalar!=""){
                         bootbox.dialog({
                             message: result.EkAciklamalar,

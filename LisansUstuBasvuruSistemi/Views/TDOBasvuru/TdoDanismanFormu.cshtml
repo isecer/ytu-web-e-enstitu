@@ -138,27 +138,17 @@
                     <div class="form-group">
                         <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni" : "") Danışman Anabilim Dalı</label>
                         <div class="col-md-8 col-xs-7">
-                            @if (tezBasligiDegisikligi)
-                            {
-                                @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);", disabled = "disabled" });
-                            }
-                            else
-                            {
-                                @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" });
-                            }
+
+                            @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" })
+
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-4 col-xs-5 control-label">@(yeniTezDanismani ? "Yeni Danışman" : "") Programı</label>
                         <div class="col-md-8 col-xs-7">
-                            @if (tezBasligiDegisikligi)
-                            {
-                                @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod", disabled = "disabled" })
-                            }
-                            else
-                            {
-                                @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
-                            }
+
+                            @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
+
                         </div>
                     </div>
                     <div class="form-group dilRow @(Model.IsTezDiliTr==false?"":"hide")">

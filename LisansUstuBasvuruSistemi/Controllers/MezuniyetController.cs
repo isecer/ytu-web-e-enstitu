@@ -288,6 +288,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.ProgramAdi = progLng.ProgramAdi;
                     model.TezDanismanAdi = (DanismanBilgi.Ad + " " + DanismanBilgi.Soyad).ToUpper();
                     model.TezDanismanUnvani = DanismanBilgi.Unvanlar.UnvanAdi.ToUpper();
+                    model.IsTezDiliTr = studentInfo.IsTezDiliTr;
+                    model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
+                    model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
                 }
                 var surec = db.MezuniyetSurecis.Where(p => p.MezuniyetSurecID == model.MezuniyetSurecID).First();
                 model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;

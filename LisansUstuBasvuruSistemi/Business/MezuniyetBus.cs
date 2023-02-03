@@ -1735,7 +1735,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
 
-                    var talep = db.SRTalepleris.Where(p => p.SRTalepID == srTalepId).First();
+                    var talep = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
 
                     var mb = talep.MezuniyetBasvurulari;
                     var juriOneriFormu = mb.MezuniyetJuriOneriFormlaris.First();

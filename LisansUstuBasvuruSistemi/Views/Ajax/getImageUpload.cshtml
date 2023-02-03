@@ -8,7 +8,7 @@
     Layout = null; 
 }
 
-@using (Ajax.BeginForm("getImageUploadPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "GetImageUploadForm" }))
+@using (Ajax.BeginForm("GetImageUploadPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "GetImageUploadForm" }))
 {
     <input type="hidden" name="KullaniciID" id="KullaniciID" value="@Model.KullaniciID" /> 
     <div class="panel panel-default form-horizontal" id="_ImageUploadPnl">

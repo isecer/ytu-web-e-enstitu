@@ -55,7 +55,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
 
                 var otb = db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod  && p.OgrenimTipKod == Kul.OgrenimTipKod).First();
-                bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value ).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
+                bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " +
+                                      db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi;
                 bbModel.OgrenimDurumAdi = Kul.OgrenimDurumlari.OgrenimDurumAdi;
                 bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
                 bbModel.AnabilimdaliAdi = Kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
