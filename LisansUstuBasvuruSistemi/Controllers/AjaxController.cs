@@ -274,11 +274,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 System.IO.File.Delete(rsm);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                Management.SistemBilgisiKaydet(ex, LogType.Hata);
+                                // ignored
                             }
-
                     }
                 }
             }
@@ -397,7 +396,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 IsBelgeYuklemeVar = basvuru.BasvuruSurec.IsBelgeYuklemeVar,
                 IsYerli = basvuru.KullaniciTipleri.Yerli
-            }; 
+            };
 
             mdl.SelectedTabIndex = tbInx;
             var page = ViewRenderHelper.RenderPartialView("Ajax", "GetBasvuruDetaySablon", mdl);
@@ -2709,7 +2708,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        
+
         [Authorize]
 
         public ActionResult getJuriEkleKontrol(string JuriAdi, string Email)

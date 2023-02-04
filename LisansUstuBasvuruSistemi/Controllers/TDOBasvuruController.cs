@@ -373,14 +373,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(kModel);
         }
 
-     
+
 
 
         [Authorize]
-        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipID)
+        public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
         {
             tdoBasvuruDanismanId = tdoBasvuruDanismanId ?? 0;
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipID ?? TDODanismanTalepTip.TezDanismaniOnerisi };
+            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TDODanismanTalepTip.TezDanismaniOnerisi };
             var mMessage = new MmMessage();
             string view = "";
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
@@ -843,8 +843,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.TDAnabilimDaliAdi = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == kModel.TDAnabilimDaliID).AnabilimDaliAdi;
                 if (kModel.IsTezDiliTr == false)
                 {
-                    kModel.SinavAdi = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID).SinavAdi;
-                    kModel.TDSinavAdi = kModel.TDSinavTipID > 0 ? _entities.SinavTipleris.First(p => p.SinavTipID == kModel.TDSinavTipID).SinavAdi : "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu";
+                    if (kModel.SinavTipID.HasValue) kModel.SinavAdi = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID).SinavAdi;
+                    if (kModel.TDSinavTipID.HasValue)
+                    {
+                        kModel.TDSinavAdi = kModel.TDSinavTipID > 0 ? _entities.SinavTipleris.First(p => p.SinavTipID == kModel.TDSinavTipID).SinavAdi : "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu";
+                    }
                 }
 
                 if (kModel.TDOBasvuruDanismanID > 0)

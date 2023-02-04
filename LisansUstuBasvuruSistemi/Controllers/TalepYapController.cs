@@ -29,48 +29,50 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTalep model, string EKD)
         {
             
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var kullanici = db.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
 
-            var bbModel = new IndexPageInfoDto();
-            bbModel.Kullanici = Kul;
-            var TalepSurecID = Management.getAktifTalepSurecID(_EnstituKod);
-            bbModel.SistemBasvuruyaAcik = TalepSurecID.HasValue;
-            bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(_EnstituKod) || UserIdentity.Current.SeciliEnstituKodu == _EnstituKod;
-            bbModel.Enstitü = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod ).First();
+            var bbModel = new IndexPageInfoDto
+            {
+                Kullanici = kullanici
+            };
+            var talepSurecId = Management.getAktifTalepSurecID(enstituKod);
+            bbModel.SistemBasvuruyaAcik = talepSurecId.HasValue;
+            bbModel.EnstituYetki = UserIdentity.Current.SeciliEnstituKodu.Contains(enstituKod) || UserIdentity.Current.SeciliEnstituKodu == enstituKod;
+            bbModel.Enstitü = db.Enstitulers.First(p => p.EnstituKod == enstituKod);
             if (bbModel.SistemBasvuruyaAcik)
             {
-                var Surec = db.TalepSurecleris.Where(p => p.TalepSurecID == TalepSurecID.Value).FirstOrDefault();
-                bbModel.DonemAdi = Surec.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm") + " / " +
-                                   Surec.BitisTarihi.ToString("yyyy-MM-dd HH:mm");
+                var surec = db.TalepSurecleris.First(p => p.TalepSurecID == talepSurecId.Value);
+                bbModel.DonemAdi = surec.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm") + " / " +
+                                   surec.BitisTarihi.ToString("yyyy-MM-dd HH:mm");
             }
-            bbModel.YtuOgrencisi = Kul.YtuOgrencisi;
+            bbModel.YtuOgrencisi = kullanici.YtuOgrencisi;
             bbModel.KullaniciTipYetki = true;
-            if (Kul.KayitDonemID.HasValue == false && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && Kul.KayitDonemID.HasValue == false)
+            if (kullanici.KayitDonemID.HasValue == false && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kullanici.KayitDonemID.HasValue == false)
             {
-                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(Kul.KullaniciID);
-                Kul = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
+                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
+                kullanici = db.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
             }
-            if (Kul.YtuOgrencisi)
+            if (kullanici.YtuOgrencisi)
             {
 
-                var otb = db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod  && p.OgrenimTipKod == Kul.OgrenimTipKod).First();
-                bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " +
-                                      db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi;
-                bbModel.OgrenimDurumAdi = Kul.OgrenimDurumlari.OgrenimDurumAdi;
+                var otb = db.OgrenimTipleris.First(p => p.EnstituKod == enstituKod  && p.OgrenimTipKod == kullanici.OgrenimTipKod);
+                bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " +
+                                      db.Donemlers.FirstOrDefault(p => p.DonemID == kullanici.KayitDonemID.Value)?.DonemAdi;
+                bbModel.OgrenimDurumAdi = kullanici.OgrenimDurumlari.OgrenimDurumAdi;
                 bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
-                bbModel.AnabilimdaliAdi = Kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                bbModel.ProgramAdi = Kul.Programlar.ProgramAdi;
-                bbModel.OgrenciNo = Kul.OgrenciNo;
+                bbModel.AnabilimdaliAdi = kullanici.Programlar.AnabilimDallari.AnabilimDaliAdi;
+                bbModel.ProgramAdi = kullanici.Programlar.ProgramAdi;
+                bbModel.OgrenciNo = kullanici.OgrenciNo;
 
-                if (Kul.Programlar.AnabilimDallari.EnstituKod != _EnstituKod)
+                if (kullanici.Programlar.AnabilimDallari.EnstituKod != enstituKod)
                 {
-                    var OncekiEnstitu = _EnstituKod == EnstituKodlari.FenBilimleri ? "fbe" : "sbe";
-                    var GidilecekEnstitu = _EnstituKod == EnstituKodlari.FenBilimleri ? "sbe" : "fbe";
+                    var oncekiEnstitu = enstituKod == EnstituKodlari.FenBilimleri ? "fbe" : "sbe";
+                    var gidilecekEnstitu = enstituKod == EnstituKodlari.FenBilimleri ? "sbe" : "fbe";
 
 
-                    var UrlStr = Url.Action("Index", "TalepYap").Replace(OncekiEnstitu, GidilecekEnstitu);
-                    return Redirect(UrlStr);
+                    var urlStr = Url.Action("Index", "TalepYap")?.Replace(oncekiEnstitu, gidilecekEnstitu);
+                    return Redirect(urlStr);
                 }
             }
 
@@ -85,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join td in db.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
                     join ags in db.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
                     from Ags in defAgs.DefaultIfEmpty()
-                    join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
+                    join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
                     from Ot in defO.DefaultIfEmpty()
                     join otl in db.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
                     from Otl in defOtl.DefaultIfEmpty()
@@ -93,7 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     from Prl in defprl.DefaultIfEmpty()
                     join abl in db.AnabilimDallaris on new { AnabilimDaliID = (Prl != null ? Prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
                     from Abl in defabl.DefaultIfEmpty()
-                    where s.KullaniciID == Kul.KullaniciID
+                    where s.KullaniciID == kullanici.KullaniciID
                     select new
                     {
                         s.TalepGelenTalepID,
@@ -104,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         tt.TaahhutAciklamasi,
                         s.KullaniciID,
                         kul.ResimAdi,
-                        YtuOgrencisi = s.ProgramKod == null ? false : true,
+                        YtuOgrencisi = s.ProgramKod != null,
                         s.TalepTipID,
                         tt.TalepTipAdi,
                         s.TalepDurumID,

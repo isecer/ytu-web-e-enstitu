@@ -330,16 +330,16 @@ namespace LisansUstuBasvuruSistemi.Models
                             }
 
                             #endregion
-                            db.SistemBilgilendirmes.Add(new SistemBilgilendirme()
-                            {
-                                Message = MzamanlayiciMsg,
-                                BilgiTipi = LogType.Uyarı,
-                                IslemYapanID = 1,
-                                IslemYapanIP = "::",
-                                IslemTarihi = DateTime.Now,
-                                StackTrace = "ApplicationClock"
-                            });
-                            db.SaveChanges();
+                            //db.SistemBilgilendirmes.Add(new SistemBilgilendirme()
+                            //{
+                            //    Message = MzamanlayiciMsg,
+                            //    BilgiTipi = LogType.Uyarı,
+                            //    IslemYapanID = 1,
+                            //    IslemYapanIP = "::",
+                            //    IslemTarihi = DateTime.Now,
+                            //    StackTrace = "ApplicationClock"
+                            //});
+                            //db.SaveChanges();
                         }
 
 
