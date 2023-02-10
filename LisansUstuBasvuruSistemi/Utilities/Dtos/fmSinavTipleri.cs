@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSinavTipleri : PagerOption
+    public class FmSinavTipleri : PagerOption
     {
         public string EnstituKod { get; set; }
         public string SinavAdi { get; set; }
@@ -17,10 +17,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? OzelNot { get; set; }
         public bool? KusuratVar { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frSinavTipleri> data { get; set; }
+        public IEnumerable<FrSinavTipleri> FrSinavTipleris { get; set; }
 
     }
-    public class frSinavTipleri : SinavTipleri
+    public class FrSinavTipleri : SinavTipleri
     {
         public int SelectedTabIndex { get; set; }
         public string EnstituAd { get; set; }
@@ -28,24 +28,43 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string WsSinavCekimTipAdi { get; set; }
         public string IslemYapan { get; set; }
 
-        public List<krSinavTipleriOTNotAraliklari> SinavTipleriOTNotAraliklariList { get; set; }
-        public List<krSinavTipleriDonems> krSinavTipleriDonems { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
+        public List<KrSinavTipleriDonem> KrSinavTipleriDonems { get; set; }
 
-        public List<frSinavTipleriSPA> frSinavTipleriSPA { get; set; }
+        public List<FrSinavTipleriSpa> FrSinavTipleriSpa { get; set; }
 
-        public frSinavTipleri()
+        public FrSinavTipleri()
         {
-            frSinavTipleriSPA = new List<frSinavTipleriSPA>();
+            FrSinavTipleriSpa = new List<FrSinavTipleriSpa>();
         }
     }
-    public class frSinavTipleriSPA : SinavTipleriOT_SNA
+    public class FrSinavTipleriSpa : SinavTipleriOT_SNA
     {
-        public List<krSinavTipleriOTNotAraliklari> SinavTipleriOTNotAraliklariList { get; set; }
-        public List<krSinavTipleriDonems> krSinavTipleriDonems { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
+        public List<KrSinavTipleriDonem> KrSinavTipleriDonems { get; set; }
 
     }
-    public class frBsSinavTipleriSPA : BasvuruSurecSinavTipleriOT_SNA
+    public class FrBsSinavTipleriSpa : BasvuruSurecSinavTipleriOT_SNA
     {
-        public List<krSinavTipleriOTNotAraliklari> SinavTipleriOTNotAraliklariList { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
+    }
+
+    public class KrSinavTipleriDonem : SinavTipleriDonem
+    {
+        public string DonemAdi { get; set; }
+    }
+    public class KrSinavTipleri : BasvuruSurecSinavTipleri
+    {
+        public string EnstituAd { get; set; }
+        public string SinavTipGrupAdi { get; set; }
+        public string SinavAdi { get; set; }
+        public string IslemYapan { get; set; }
+        public List<KrSinavTipleriDonem> SinavTipleriDonems { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
+        public List<FrBsSinavTipleriSpa> FrBsSinavTipleriSpas { get; set; }
+        public KrSinavTipleri()
+        {
+            FrBsSinavTipleriSpas = new List<FrBsSinavTipleriSpa>();
+        }
     }
 }

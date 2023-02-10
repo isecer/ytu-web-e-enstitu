@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
-@model IEnumerable<frMezuniyetYonetmelikler>
+@model IEnumerable<FrMezuniyetYonetmelikler>
 @{
     Layout = null;
 }
@@ -25,15 +25,15 @@
                     </thead>
                     <tbody>
                         @{
-                            int RowIndex = 0;
+                            int rowIndex = 0;
                             foreach (var item in Model)
                             {
-                                RowIndex++;
+                                rowIndex++;
                                 <tr class="delrw_@item.MezuniyetYonetmelikID">
                                     <td>
                                         <table>
                                             <tr>
-                                                <td style="width: 30px;">@RowIndex</td>
+                                                <td style="width: 30px;">@rowIndex</td>
                                                 <td>
                                                     <ul class="panel-controls">
                                                         <li id="iShow-Yontm-@item.MezuniyetYonetmelikID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MezuniyetYonetmelikID,'Yontm-')">

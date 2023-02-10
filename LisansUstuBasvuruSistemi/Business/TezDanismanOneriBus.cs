@@ -29,65 +29,65 @@ namespace LisansUstuBasvuruSistemi.Business
                 tekrarYukle:
                 model.TDOBasvuruDanisman = basvuru.TDOBasvuruDanisman;
                 model.TDOBasvuruDanismanList = (from s in basvuru.TDOBasvuruDanismen
-                    select new TdoBasvuruDanismanDto
-                    {
-                        UniqueID = s.UniqueID,
-                        IsObsData = s.IsObsData,
-                        TDODanismanTalepTipID = s.TDODanismanTalepTipID,
-                        TalepTipAdi = s.TDODanismanTalepTipleri.TalepTipAdi,
-                        DonemBaslangicYil = s.DonemBaslangicYil,
-                        DonemID = s.DonemID,
-                        DonemAdi = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + (s.DonemID == 1 ? "Güz" : "Bahar"),
-                        FormKodu = s.FormKodu,
-                        TDOBasvuruDanismanID = s.TDOBasvuruDanismanID,
-                        TDOBasvuruID = s.TDOBasvuruID,
-                        BasvuruTarihi = s.BasvuruTarihi,
-                        IsTezDiliTr = s.IsTezDiliTr,
-                        TezBaslikTr = s.TezBaslikTr,
-                        TezBaslikEn = s.TezBaslikEn,
-                        YeniTezBaslikTr = s.YeniTezBaslikTr,
-                        YeniTezBaslikEn = s.YeniTezBaslikEn,
-                        SinavAdi = s.SinavAdi,
-                        SinavPuani = s.SinavPuani,
-                        SinavYili = s.SinavYili,
-                        VarolanTezDanismanID = s.VarolanTezDanismanID,
-                        VarolanDanismanOnayladi = s.VarolanDanismanOnayladi,
-                        VarolanDanismanOnayTarihi = s.VarolanDanismanOnayTarihi,
-                        VarolanDanismanOnaylanmadiAciklama = s.VarolanDanismanOnaylanmadiAciklama,
+                                                select new TdoBasvuruDanismanDto
+                                                {
+                                                    UniqueID = s.UniqueID,
+                                                    IsObsData = s.IsObsData,
+                                                    TDODanismanTalepTipID = s.TDODanismanTalepTipID,
+                                                    TalepTipAdi = s.TDODanismanTalepTipleri.TalepTipAdi,
+                                                    DonemBaslangicYil = s.DonemBaslangicYil,
+                                                    DonemID = s.DonemID,
+                                                    DonemAdi = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + (s.DonemID == 1 ? "Güz" : "Bahar"),
+                                                    FormKodu = s.FormKodu,
+                                                    TDOBasvuruDanismanID = s.TDOBasvuruDanismanID,
+                                                    TDOBasvuruID = s.TDOBasvuruID,
+                                                    BasvuruTarihi = s.BasvuruTarihi,
+                                                    IsTezDiliTr = s.IsTezDiliTr,
+                                                    TezBaslikTr = s.TezBaslikTr,
+                                                    TezBaslikEn = s.TezBaslikEn,
+                                                    YeniTezBaslikTr = s.YeniTezBaslikTr,
+                                                    YeniTezBaslikEn = s.YeniTezBaslikEn,
+                                                    SinavAdi = s.SinavAdi,
+                                                    SinavPuani = s.SinavPuani,
+                                                    SinavYili = s.SinavYili,
+                                                    VarolanTezDanismanID = s.VarolanTezDanismanID,
+                                                    VarolanDanismanOnayladi = s.VarolanDanismanOnayladi,
+                                                    VarolanDanismanOnayTarihi = s.VarolanDanismanOnayTarihi,
+                                                    VarolanDanismanOnaylanmadiAciklama = s.VarolanDanismanOnaylanmadiAciklama,
 
-                        TDUniversiteAdi = s.TDUniversiteAdi,
-                        TezDanismanID = s.TezDanismanID,
-                        TDAdSoyad = s.TDAdSoyad,
-                        TDUnvanAdi = s.TDUnvanAdi,
-                        TDAnabilimDaliAdi = s.TDAnabilimDaliAdi,
-                        TDProgramAdi = s.TDProgramAdi,
-                        TDSinavTipID = s.TDSinavTipID,
-                        TDSinavAdi = s.TDSinavAdi,
-                        TDSinavYili = s.TDSinavYili,
-                        TDSinavPuani = s.TDSinavPuani,
-                        TDOgrenciSayisiDR = s.TDOgrenciSayisiDR,
-                        TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
-                        TDTezSayisiDR = s.TDTezSayisiDR,
-                        TDTezSayisiYL = s.TDTezSayisiYL,
-                        DanismanOnayladi = s.DanismanOnayladi,
-                        DanismanOnayTarihi = s.DanismanOnayTarihi,
-                        DanismanOnaylanmadiAciklama = s.DanismanOnaylanmadiAciklama,
+                                                    TDUniversiteAdi = s.TDUniversiteAdi,
+                                                    TezDanismanID = s.TezDanismanID,
+                                                    TDAdSoyad = s.TDAdSoyad,
+                                                    TDUnvanAdi = s.TDUnvanAdi,
+                                                    TDAnabilimDaliAdi = s.TDAnabilimDaliAdi,
+                                                    TDProgramAdi = s.TDProgramAdi,
+                                                    TDSinavTipID = s.TDSinavTipID,
+                                                    TDSinavAdi = s.TDSinavAdi,
+                                                    TDSinavYili = s.TDSinavYili,
+                                                    TDSinavPuani = s.TDSinavPuani,
+                                                    TDOgrenciSayisiDR = s.TDOgrenciSayisiDR,
+                                                    TDOgrenciSayisiYL = s.TDOgrenciSayisiYL,
+                                                    TDTezSayisiDR = s.TDTezSayisiDR,
+                                                    TDTezSayisiYL = s.TDTezSayisiYL,
+                                                    DanismanOnayladi = s.DanismanOnayladi,
+                                                    DanismanOnayTarihi = s.DanismanOnayTarihi,
+                                                    DanismanOnaylanmadiAciklama = s.DanismanOnaylanmadiAciklama,
 
-                        EYKYaGonderildi = s.EYKYaGonderildi,
-                        EYKYaGonderildiIslemTarihi = s.EYKYaGonderildiIslemTarihi,
-                        EYKYaGonderildiIslemYapanID = s.EYKYaGonderildiIslemYapanID,
+                                                    EYKYaGonderildi = s.EYKYaGonderildi,
+                                                    EYKYaGonderildiIslemTarihi = s.EYKYaGonderildiIslemTarihi,
+                                                    EYKYaGonderildiIslemYapanID = s.EYKYaGonderildiIslemYapanID,
 
-                        EYKDaOnaylandi = s.EYKDaOnaylandi,
-                        EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
-                        EYKDaOnaylandiOnayTarihi = s.EYKDaOnaylandiOnayTarihi,
-                        EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
-                        IslemTarihi = s.IslemTarihi,
-                        IslemYapanID = s.IslemYapanID,
-                        IslemYapanIP = s.IslemYapanIP,
-                        TDOBasvuruEsDanismen = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).ToList(),
-                        EsDanismanBilgi = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()
+                                                    EYKDaOnaylandi = s.EYKDaOnaylandi,
+                                                    EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
+                                                    EYKDaOnaylandiOnayTarihi = s.EYKDaOnaylandiOnayTarihi,
+                                                    EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
+                                                    IslemTarihi = s.IslemTarihi,
+                                                    IslemYapanID = s.IslemYapanID,
+                                                    IslemYapanIP = s.IslemYapanIP,
+                                                    TDOBasvuruEsDanismen = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).ToList(),
+                                                    EsDanismanBilgi = basvuru.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault()
 
-                    }).Where(p => p.TezDanismanID == (showAllRow ? p.TezDanismanID : UserIdentity.Current.Id) || p.VarolanTezDanismanID == (showAllRow ? p.VarolanTezDanismanID : UserIdentity.Current.Id)).OrderByDescending(o => o.BasvuruTarihi).ToList();
+                                                }).Where(p => p.TezDanismanID == (showAllRow ? p.TezDanismanID : UserIdentity.Current.Id) || p.VarolanTezDanismanID == (showAllRow ? p.VarolanTezDanismanID : UserIdentity.Current.Id)).OrderByDescending(o => o.BasvuruTarihi).ToList();
                 if (model.TDOBasvuruDanismanList.Any() && !basvuru.AktifTDOBasvuruDanismanID.HasValue)
                 {
                     basvuru.AktifTDOBasvuruDanismanID = model.TDOBasvuruDanismanList.Last().TDOBasvuruDanismanID;
@@ -196,7 +196,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuru.TDOBasvuruDanisman != null)
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
-                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null;
+                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.EYKDaOnaylandi != true);
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -221,7 +221,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return model;
 
-        } 
+        }
         public static bool ObsDanismanBasvurBilgiEslestir(int kullaniciId, int? tDoBasvuruId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -264,10 +264,10 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.TDProgramAdi = ogrenciInfo.DanismanInfo.PROGRAM_AD;
                         kModel.TDAnabilimDaliAdi = ogrenciInfo.DanismanInfo.ANABILIMDALI_AD;
 
-                        kModel.TDOgrenciSayisiYL = ogrenciInfo.DanismanInfo.DANISMAN_OLUNAN_YL_SAYI1.toIntObj();
-                        kModel.TDOgrenciSayisiDR = ogrenciInfo.DanismanInfo.DANISMAN_OLUNAN_DR_SAYI1.toIntObj();
-                        kModel.TDTezSayisiYL = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_YL_SAYI1.toIntObj();
-                        kModel.TDTezSayisiDR = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_DR_SAYI1.toIntObj();
+                        kModel.TDOgrenciSayisiYL = ogrenciInfo.DanismanInfo.DANISMAN_OLUNAN_YL_SAYI1.ToIntObj();
+                        kModel.TDOgrenciSayisiDR = ogrenciInfo.DanismanInfo.DANISMAN_OLUNAN_DR_SAYI1.ToIntObj();
+                        kModel.TDTezSayisiYL = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_YL_SAYI1.ToIntObj();
+                        kModel.TDTezSayisiDR = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_DR_SAYI1.ToIntObj();
 
                         kModel.DanismanOnayladi = true;
                         kModel.EYKYaGonderildi = true;
@@ -296,7 +296,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return false;
 
             }
-        } 
+        }
         public static MmMessage GetAktifTezDanismanOneriSurecKontrol(string enstituKod, int? kullaniciId, int? tdoBasvuruId = null)
         {
             var msg = new MmMessage
@@ -313,13 +313,13 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (kayitYetki == false) Management.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + tdoBasvuruId, "TDO Başvuru Düzelt", LogType.Uyarı);
+                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Tez danışmanı öneri Başvuru ID:" + tdoBasvuruId, "TDO Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.EnstituKod != enstituKod)
                         {
-                            Management.SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Uyarı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Tez danışmanı öneri başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Tez danışmanı öneri Başvuru Enstitü Kod:" + basvuru.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Uyarı);
                             enstituKod = basvuru.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -327,7 +327,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitüde yetkili değilsiniz.");
                             string message = "Bu enstitüye ait Tez danışmanı öneri başvurusu güncellemeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                         {
@@ -339,7 +339,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu işlem için yetkili değilsiniz.");
-                            Management.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Tez İzleme Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Tez danışmanı öneri Düzelt", LogType.Saldırı);
                         }
 
                     }
@@ -350,7 +350,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        Management.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
@@ -382,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return msg;
 
-        } 
+        }
         public static MmMessage GetTdoBasvuruSilKontrol(int tdoBasvuruId)
         {
             var msg = new MmMessage
@@ -406,7 +406,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         var message = "Bu enstitüye ait tez danışman başvurusu silmeye yetkili değilsiniz!\r\n Tez İzleme Başvuru ID: " + basvuru.TDOBasvuruID + " \r\n Tez İzleme Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Tez Danışman Başvuru Sil", LogType.Kritik);
                     }
                     else if (!TdoAyar.BasvurusuAcikmi.GetAyarTdo(basvuru.EnstituKod, "false").ToBoolean().Value && UserIdentity.Current.IsAdmin == false)
                     {
@@ -418,7 +418,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        Management.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Tez danışmanı öneri başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye Tez Danışman Başvuru Başvuru ID:" + basvuru.TDOBasvuruID + " \r\n Tez danışmanı öneri Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     //else if (KayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi)
                     //{
@@ -428,7 +428,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
             }
             return msg;
-        } 
+        }
         public static List<CmbIntDto> CmbTdoDanismanTalepTip(bool isDegisiklikTalebi, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -436,11 +436,11 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.TDODanismanTalepTipleris.Where(p => p.TDODanismanTalepTipID == (isDegisiklikTalebi ? p.TDODanismanTalepTipID : 1))
-                    select new
-                    {
-                        s.TDODanismanTalepTipID,
-                        s.TalepTipAdi
-                    }).AsQueryable();
+                            select new
+                            {
+                                s.TDODanismanTalepTipID,
+                                s.TalepTipAdi
+                            }).AsQueryable();
                 var qdata = data.ToList();
                 foreach (var item in qdata)
                 {
@@ -466,7 +466,7 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
             return dct;
-        } 
+        }
         public static List<CmbIntDto> CmbTdoEsOneriDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -480,7 +480,7 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 8, Caption = "EYK'Da Onaylandı" });
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
             return dct;
-        } 
+        }
         public static MmMessage SendMailTdoBilgisi(int tdoBasvuruDanismanId)
         {
             var mmMessage = new MmMessage();
@@ -693,7 +693,7 @@ namespace LisansUstuBasvuruSistemi.Business
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -932,7 +932,7 @@ namespace LisansUstuBasvuruSistemi.Business
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -1151,7 +1151,7 @@ namespace LisansUstuBasvuruSistemi.Business
             catch (Exception ex)
             {
                 var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
@@ -1323,22 +1323,22 @@ namespace LisansUstuBasvuruSistemi.Business
             catch (Exception ex)
             {
                 var message = "Tez Eş danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOEsBasvuruDanismanID:" + tdoBasvuruEsDanismanId;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
-        } 
-        public static MmMessage SendMailTdoEsEykOnay(int tdoBasvuruDanismanId, bool isOnayOrRed)
+        }
+        public static MmMessage SendMailTdoEsEykOnay(int tDoBasvuruEsDanismanId, bool isOnayOrRed)
         {
             var mmMessage = new MmMessage();
             try
             {
                 using (var db = new LisansustuBasvuruSistemiEntities())
                 {
-                    var tdoBasvuruDanisman = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == tdoBasvuruDanismanId);
-                    var esDanisman = tdoBasvuruDanisman.TDOBasvuruEsDanismen.First();
+                    var esDanisman = db.TDOBasvuruEsDanismen.First(p => p.TDOBasvuruEsDanismanID == tDoBasvuruEsDanismanId);
+                    var tdoBasvuruDanisman = esDanisman.TDOBasvuruDanisman;
                     var tdoBasvuru = tdoBasvuruDanisman.TDOBasvuru;
                     var danisman = db.Kullanicilars.First(p => p.KullaniciID == tdoBasvuruDanisman.TezDanismanID);
                     var ogrenci = tdoBasvuruDanisman.TDOBasvuru.Kullanicilar;
@@ -1527,8 +1527,8 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                var message = "Tez danışmanı öneri başvurusu için danışman ve öğrenciye mail gönderilirken bir hata oluştu! \r\nTDOBasvuruDanismanID:" + tdoBasvuruDanismanId;
-                Management.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTDOBilgisi \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
+                var message = "Tez Eş Danışmanı işlemi için mail gönderilirken bir hata oluştu!";
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata);
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;

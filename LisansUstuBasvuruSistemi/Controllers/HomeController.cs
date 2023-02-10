@@ -13,22 +13,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [System.Web.Mvc.OutputCache(Duration = 0, VaryByParam = "*")]
     public class HomeController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
 
-        public ActionResult Index(string EKD, string MesajGroupID, int? BasvuruID, string RowID, bool IsMesajGonder = false)
+        public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
         {
-            var enstitu = db.Enstitulers.Where(p => p.EnstituKisaAd.Contains(EKD)).First();
-            var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
+            var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
+            var donemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
 
          
 
 
             #region duyurular 
-            var q = from s in db.Duyurulars
-                    join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where s.IsAktif && s.Tarih <= DateTime.Now && (s.YayinSonTarih.HasValue ? s.YayinSonTarih.Value >= DateTime.Now : 1 == 1) && e.EnstituKisaAd.Contains(EKD) && s.AnaSayfadaGozuksun
+            var q = from s in _entities.Duyurulars
+                    join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    where s.IsAktif && s.Tarih <= DateTime.Now && (s.YayinSonTarih.HasValue ? s.YayinSonTarih.Value >= DateTime.Now : 1 == 1) && e.EnstituKisaAd.Contains(ekd) && s.AnaSayfadaGozuksun
                     select new
                     {
                         s.EnstituKod,
@@ -49,7 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IsAktif
                     };
 
-            var Data = q.Select(s => new FrDuyurularDto
+            var data = q.Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
                 EnstituKod = s.EnstituKod,
@@ -67,27 +67,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 BasvuruPopupAc = s.BasvuruPopupAc,
                 YayinSonTarih = s.YayinSonTarih
             }).OrderByDescending(o => o.Tarih).ToList();
-            ViewBag.Duyurular = Data;
+            ViewBag.Duyurular = data;
             #endregion
 
-            if (MesajGroupID.IsNullOrWhiteSpace() == false)
+            if (mesajGroupId.IsNullOrWhiteSpace() == false)
             {
-                var SecilenMesaj = db.Mesajlars.Where(p => p.GroupID == MesajGroupID).FirstOrDefault();
-                ViewBag.MesajGroupID = SecilenMesaj != null ? MesajGroupID : "";
+                var secilenMesaj = _entities.Mesajlars.FirstOrDefault(p => p.GroupID == mesajGroupId);
+                ViewBag.MesajGroupID = secilenMesaj != null ? mesajGroupId : "";
             }
             else ViewBag.MesajGroupID = "";
 
-            if (BasvuruID.HasValue && RowID.IsNullOrWhiteSpace() == false)
+            if (basvuruId.HasValue && rowId.IsNullOrWhiteSpace() == false)
             {
-                var nRwID = new Guid(RowID);
-                var basvuru = db.Basvurulars.Where(p => p.BasvuruID == BasvuruID.Value && p.RowID == nRwID).FirstOrDefault();
-                if (basvuru != null && basvuru.BasvuruSurec.KayitOlmayanlarAnketID.HasValue && !basvuru.AnketCevaplaris.Where(p => p.AnketID == basvuru.BasvuruSurec.KayitOlmayanlarAnketID).Any())
+                var nRwId = new Guid(rowId);
+                var basvuru = _entities.Basvurulars.FirstOrDefault(p => p.BasvuruID == basvuruId.Value && p.RowID == nRwId);
+                if (basvuru?.BasvuruSurec.KayitOlmayanlarAnketID != null && basvuru.AnketCevaplaris.All(p => p.AnketID != basvuru.BasvuruSurec.KayitOlmayanlarAnketID))
                 {
 
-                    var AnketID = basvuru.BasvuruSurec.KayitOlmayanlarAnketID.Value;
-                    var anketSorulari = (from bsa in db.Ankets.Where(p => p.AnketID == AnketID)
-                                         join aso in db.AnketSorus on bsa.AnketID equals aso.AnketID
-                                         join sb in db.AnketCevaplaris.Where(p => p.AnketID == AnketID && p.BasvuruID == BasvuruID) on aso.AnketSoruID equals sb.AnketSoruID into def1
+                    var anketId = basvuru.BasvuruSurec.KayitOlmayanlarAnketID.Value;
+                    var anketSorulari = (from bsa in _entities.Ankets.Where(p => p.AnketID == anketId)
+                                         join aso in _entities.AnketSorus on bsa.AnketID equals aso.AnketID
+                                         join sb in _entities.AnketCevaplaris.Where(p => p.AnketID == anketId && p.BasvuruID == basvuruId) on aso.AnketSoruID equals sb.AnketSoruID into def1
                                          from sbc in def1.DefaultIfEmpty()
                                          select new
                                          {
@@ -111,11 +111,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                                          }).OrderBy(o => o.SiraNo).ToList();
-                    var model = new kmAnketlerCevap();
-                    model.AnketTipID = 3;
-                    model.RowID = RowID;
-                    model.AnketID = AnketID;
-                    model.JsonStringData = anketSorulari.ToJsonText();
+                    var model = new KmAnketlerCevap
+                    {
+                        AnketTipID = 3,
+                        RowID = rowId,
+                        AnketID = anketId,
+                        JsonStringData = anketSorulari.ToJsonText()
+                    };
                     foreach (var item in anketSorulari)
                     {
                         model.AnketCevapModel.Add(new AnketCevapDto
@@ -134,12 +136,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         });
                     }
 
-                    var AnketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
-                    ViewBag.AnketGiris = AnketGiris;
+                    var anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
+                    ViewBag.AnketGiris = anketGiris;
 
                 }
             }
-            ViewBag.IsMesajGonder = IsMesajGonder;
+            ViewBag.IsMesajGonder = isMesajGonder;
 
             return View(enstitu);
         }

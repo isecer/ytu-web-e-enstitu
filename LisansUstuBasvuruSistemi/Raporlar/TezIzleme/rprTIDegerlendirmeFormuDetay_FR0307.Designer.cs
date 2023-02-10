@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
 {
-    partial class rprTIDegerlendirmeFormuDetay_FR0307
+    partial class RprTiDegerlendirmeFormuDetay_FR0307
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprTIDegerlendirmeFormuDetay_FR0307));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprTiDegerlendirmeFormuDetay_FR0307));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable22 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow92 = new DevExpress.XtraReports.UI.XRTableRow();

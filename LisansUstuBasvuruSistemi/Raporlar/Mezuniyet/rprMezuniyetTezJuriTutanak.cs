@@ -1,18 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetTezJuriTutanak : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezJuriTutanak : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetTezJuriTutanak(bool IsDoktoraOrYL)
+        public RprMezuniyetTezJuriTutanak(bool isDoktoraOrYl)
         {
             InitializeComponent();
 
-            if (!IsDoktoraOrYL)
+            if (!isDoktoraOrYl)
             {
                 trTik1.Visible = false;
                 trTik2.Visible = false;

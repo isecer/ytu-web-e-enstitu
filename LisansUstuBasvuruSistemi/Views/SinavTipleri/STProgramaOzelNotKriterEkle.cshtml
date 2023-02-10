@@ -1,7 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
-@model kmSinavTipleriSPNA
+@model KmSinavTipleriSpna
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_LayoutPupupFrame.cshtml";
@@ -39,7 +39,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="_ozelNotRow">
-                                            @foreach (var item in Model.SinavTipleriOTNotAraliklari)
+                                            @foreach (var item in Model.KrSinavTipleriOtNotAraliklaris)
                                             {
                                                 var dil = item.Ingilizce ? "En" : "Tr";
                                                 <tr>

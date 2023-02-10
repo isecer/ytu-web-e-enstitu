@@ -266,7 +266,7 @@
 
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("TalepYap", "SR" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="@Url.Action("TalepYap", "Sr" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="getDetail('@item.SRTalepID',true,this)"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Sil"></i></a>
                                         </td>
                                     </tr>
@@ -301,7 +301,7 @@
             var ibtID = $('#SRDurumID_' + id).val();
             var ibTipAciklama = $('#SRDurumAciklamasi_' + id).val();
             $.ajax({
-                url: '@Url.Action("Istenenkaydet", "SRGelenTalepler")',
+                url: '@Url.Action("Istenenkaydet", "SrGelenTalepler")',
                 data: {
                     'id': id,
                     'SRDurumID': ibtID,
@@ -341,7 +341,7 @@
         var _panel = $('#SRDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetail", "SR")',
+            url: '@Url.Action("GetDetail", "Sr")',
             data: { id: id, IsDelete: (Isdelete == true)},
             success: function (result) {
                 if (Isdelete != true) {
@@ -382,7 +382,7 @@
     }
     function sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "SR")',
+            url: '@Url.Action("Sil", "Sr")',
             data: { id: id },
             success: function (result) {
                 if (result.IsSuccess) {

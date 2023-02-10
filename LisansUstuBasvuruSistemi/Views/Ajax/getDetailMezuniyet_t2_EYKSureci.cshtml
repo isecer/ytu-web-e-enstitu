@@ -6,19 +6,13 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model MezuniyetBasvuruDetayDto
-@{
-
-
+@{ 
     Layout = null;
-    bool JuriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
-    bool JuriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
-    bool JuriOneriFormuOnayYetkiEYKDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
-    var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-
-
+    bool juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
+    bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SRTalepDurum.Onaylandı);
+    bool juriOneriFormuOnayYetkiEykDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SRTalepDurum.Onaylandı);
+    var juriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-
-
 }
 
 <div class="tab-pane @(Model.SelectedTabIndex == 2 ? "active" : "") " id="@tbName-2">
@@ -27,17 +21,17 @@
             <table style="width:100%;">
                 <tbody>
                     <tr>
-                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(Model.OgrenimTipKod == OgrenimTipi.Doktra ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</td>
+                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(Model.OgrenimTipKod.IsDoktora() ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</td>
                         <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
-                            @if (JuriOneriFormuKyetki)
+                            @if (juriOneriFormuKyetki)
                             {
-                                <span class="label label-@(JuriOneriFormu==null?"primary":"info")" style="cursor:pointer;" onclick="GetJuriOneriFormu(@Model.MezuniyetBasvurulariID)"><i class="fa fa-@(JuriOneriFormu!=null?"edit":"plus") fa-lg"></i> @(JuriOneriFormu == null ? "Yeni Jüri öneri Formu Oluştur" : "Jüri Öneri Formunu Düzenle")</span>
+                                <span class="label label-@(juriOneriFormu==null?"primary":"info")" style="cursor:pointer;" onclick="GetJuriOneriFormu(@Model.MezuniyetBasvurulariID)"><i class="fa fa-@(juriOneriFormu!=null?"edit":"plus") fa-lg"></i> @(juriOneriFormu == null ? "Yeni Jüri öneri Formu Oluştur" : "Jüri Öneri Formunu Düzenle")</span>
                             }
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding-left:10px;text-align:left;">
-                            @if (JuriOneriFormu == null)
+                            @if (juriOneriFormu == null)
                             {
                                 <table style="width:100%;table-layout:fixed;">
                                     <tr>
@@ -51,7 +45,7 @@
                                     <tr>
                                         <td class="CaptionTd" width="160">Form Kodu</td>
                                         <td class="CaptionTd" width="10">:</td>
-                                        <td class="ValueTd">@JuriOneriFormu.UniqueID</td>
+                                        <td class="ValueTd">@juriOneriFormu.UniqueID</td>
                                     </tr>
                                     <tr>
                                         <td class="CaptionTd">Tez Dili</td>
@@ -68,17 +62,17 @@
                                         <td class="CaptionTd" style="font-weight:bold;">:</td>
                                         <td class="ValueTd">@Model.TezBaslikEn</td>
                                     </tr>
-                                    @if (JuriOneriFormu.IsTezBasligiDegisti == true)
+                                    @if (juriOneriFormu.IsTezBasligiDegisti == true)
                                     {
                                         <tr>
                                             <td class="CaptionTd" style="font-weight:bold;">Yeni Tez Başlığı Türkçe</td>
                                             <td class="CaptionTd" style="font-weight:bold;">:</td>
-                                            <td class="ValueTd">@JuriOneriFormu.YeniTezBaslikTr</td>
+                                            <td class="ValueTd">@juriOneriFormu.YeniTezBaslikTr</td>
                                         </tr>
                                         <tr>
                                             <td class="CaptionTd" style="font-weight:bold;">Yeni Tez Başlığı İngilizce</td>
                                             <td class="CaptionTd" style="font-weight:bold;">:</td>
-                                            <td class="ValueTd">@JuriOneriFormu.YeniTezBaslikEn</td>
+                                            <td class="ValueTd">@juriOneriFormu.YeniTezBaslikEn</td>
                                         </tr>
                                     }
                                     <tr>
@@ -88,24 +82,24 @@
                                             <div class="btn-group">
                                                 <a href="javascript:void(0);" data-toggle="dropdown" class="btn dropdown-toggle" aria-expanded="false">Form Çıktılarını İndir <span class="caret"></span></a>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    @if (Model.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans)
+                                                    @if (Model.OgrenimTipKod.IsDoktora())
                                                     {
                                                         <li>
                                                             <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Mezuniyet Jüri Öneri Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriOneriFormuRaporu&ID=@Model.MezuniyetBasvurulariID' , 'auto', 'modal-dialog modal-lg' )">
                                                                 <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0339 Yüksek Lisans Tez Jüri Öneri Formunu İndir
                                                             </a>
                                                         </li>
-                                                        if (JuriOneriFormu.EYKDaOnaylandi == true)
+                                                        if (juriOneriFormu.EYKDaOnaylandi == true)
                                                         {
                                                             if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                             {
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@JuriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0341 Yüksek Lisans Jüri Üyelerine Tez Teslim Formunu İndir
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@JuriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
                                                                     </a>
                                                                 </li>
@@ -121,17 +115,17 @@
                                                                 <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0300 Doktora Tez Jüri Öneri Formunu İndir
                                                             </a>
                                                         </li>
-                                                        if (JuriOneriFormu.EYKDaOnaylandi == true)
+                                                        if (juriOneriFormu.EYKDaOnaylandi == true)
                                                         {
                                                             if (!Model.DanismanImzaliFormDosyaAdi.IsNullOrWhiteSpace())
                                                             {
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@JuriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Tez Teslim Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0302 Doktora Jüri Üyelerine Tez Teslim Formunu İndir
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@JuriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Yayınları Değerlendirme Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezdenUretilenYayinlariDegerlendirmeFormu&MezuniyetJuriOneriFormID=@juriOneriFormu.MezuniyetJuriOneriFormID' , 'auto', 'modal-dialog modal-lg' )">
                                                                         <i class="fa fa-file-pdf-o" style="font-size:13pt;font-weight:bold;"></i> FR-0304 Tezden Üretilen Yayınları Değerlendirme Formunu İndir
                                                                     </a>
                                                                 </li>
@@ -160,7 +154,7 @@
                                         <tr>
                                             <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in JuriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
+                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
                                                     {
                                                         <tr>
                                                             <td width="35">
@@ -198,21 +192,21 @@
                                                                 }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
-                                                                @if (JuriOneriFormuOnayYetkiEYKDa && JuriOneriFormu.EYKYaGonderildi == true && JuriOneriFormu.EYKDaOnaylandi != true)
+                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                 {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.JuriTipAdi + "_" + JuriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + JuriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
+                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
                                                                     if (itemJr.IsAsilOrYedek.HasValue)
                                                                     {
                                                                         <script>
                                                                                                 setTimeout(function () {
-                                                                                                    $('#IsAsilOryedek_@(itemJr.JuriTipAdi)_@(JuriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.IsAsilOrYedek.ToString())');
+                                                                                                    $('#IsAsilOryedek_@(itemJr.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.IsAsilOrYedek.ToString())');
                                                                                                 }, 50);
                                                                         </script>
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    @(JuriOneriFormu.EYKDaOnaylandi == true ? itemJr.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
                                                                 }
                                                             </td>
                                                         </tr>
@@ -277,7 +271,7 @@
                                         <tr>
                                             <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in JuriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
+                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
                                                         <tr>
                                                             <td width="35">
@@ -314,21 +308,21 @@
                                                                 }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
-                                                                @if (JuriOneriFormuOnayYetkiEYKDa && JuriOneriFormu.EYKYaGonderildi == true && JuriOneriFormu.EYKDaOnaylandi != true)
+                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                 {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + JuriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + JuriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
+                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last: center" })
                                                                     if (itemJr.s.IsAsilOrYedek.HasValue)
                                                                     {
                                                                         <script>
                                                                             setTimeout(function () {
-                                                                                $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(JuriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
+                                                                                $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
                                                                             }, 50);
                                                                         </script>
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    @(JuriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
                                                                 }
                                                             </td>
                                                         </tr>
@@ -393,7 +387,7 @@
                                         <tr>
                                             <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
-                                                    @foreach (var itemJr in JuriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
+                                                    @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
                                                         <tr>
                                                             <td width="35">
@@ -430,21 +424,21 @@
                                                                 }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
-                                                                @if (JuriOneriFormuOnayYetkiEYKDa && JuriOneriFormu.EYKYaGonderildi == true && JuriOneriFormu.EYKDaOnaylandi != true)
+                                                                @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                 {
-                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + JuriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + JuriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last : center" })
+                                                                    @Html.DropDownList("IsAsilOryedek", Model.SIsAsilOryedek, new { id = "IsAsilOryedek_" + itemJr.s.JuriTipAdi + "_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormAsilYedekDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ",'" + itemJr.s.JuriTipAdi + "')", @class = "form-control", @style = "text-align-last : center" })
                                                                     if (itemJr.s.IsAsilOrYedek.HasValue)
                                                                     {
                                                                         <script>
                                                                             setTimeout(function () {
-                                                                                $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(JuriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
+                                                                                $('#IsAsilOryedek_@(itemJr.s.JuriTipAdi)_@(juriOneriFormu.MezuniyetJuriOneriFormID)').val('@(itemJr.s.IsAsilOrYedek.ToString())');
                                                                             }, 50);
                                                                         </script>
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    @(JuriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
+                                                                    @(juriOneriFormu.EYKDaOnaylandi == true ? itemJr.s.IsAsilOrYedek.ToAsilYedek() : "Belirlenmedi")
                                                                 }
                                                             </td>
                                                         </tr>
@@ -518,20 +512,20 @@
                                                                 </td>
                                                                 <td class="CaptionTd" width="10">:</td>
                                                                 <td class="ValueTd">
-                                                                    @if (JuriOneriFormuOnayYetki && JuriOneriFormu.EYKDaOnaylandi != true)
+                                                                    @if (juriOneriFormuOnayYetki && juriOneriFormu.EYKDaOnaylandi != true)
                                                                     {
-                                                                        @Html.DropDownList("EYKYaGonderildi", Model.SEYKYaGonderildi, new { id = "EYKYaGonderildi_" + JuriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + JuriOneriFormu.MezuniyetJuriOneriFormID + ", false)", @class = "form-control" })
+                                                                        @Html.DropDownList("EYKYaGonderildi", Model.SEYKYaGonderildi, new { id = "EYKYaGonderildi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoFormDurumKayit(this," + Model.MezuniyetBasvurulariID + "," + juriOneriFormu.MezuniyetJuriOneriFormID + ", false)", @class = "form-control" })
                                                                     }
                                                                     else
                                                                     {
 
-                                                                        if (!JuriOneriFormu.EYKYaGonderildi.HasValue)
+                                                                        if (!juriOneriFormu.EYKYaGonderildi.HasValue)
                                                                         {
                                                                             @("İşlem Görmedi")
                                                                         }
-                                                                        else if (JuriOneriFormu.EYKYaGonderildi == true)
+                                                                        else if (juriOneriFormu.EYKYaGonderildi == true)
                                                                         {
-                                                                            @("EYK'ya Gönderimi Onaylandı") @(" (" + JuriOneriFormu.EYKYaGonderildiIslemTarihi.Value.ToFormatDateAndTime() + ")")
+                                                                            @("EYK'ya Gönderimi Onaylandı") @(" (" + juriOneriFormu.EYKYaGonderildiIslemTarihi.Value.ToFormatDateAndTime() + ")")
                                                                         }
                                                                         else
                                                                         {
@@ -545,45 +539,45 @@
                                                                 <td class="CaptionTd">EYK'da Onay Durumu</td>
                                                                 <td class="CaptionTd">:</td>
                                                                 <td class="ValueTd">
-                                                                    @if (JuriOneriFormuOnayYetkiEYKDa && JuriOneriFormu.EYKYaGonderildi == true)
+                                                                    @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true)
                                                                     {
-                                                                        @Html.DropDownList("EYKDaOnaylandi", Model.SEYKDaOnaylandi, new { id = "EYKDaOnaylandi_" + JuriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoOnayDurumAcklmVisible(this," + JuriOneriFormu.MezuniyetJuriOneriFormID + ")", @class = "form-control" })
+                                                                        @Html.DropDownList("EYKDaOnaylandi", Model.SEYKDaOnaylandi, new { id = "EYKDaOnaylandi_" + juriOneriFormu.MezuniyetJuriOneriFormID, onchange = "JoOnayDurumAcklmVisible(this," + juriOneriFormu.MezuniyetJuriOneriFormID + ")", @class = "form-control" })
 
                                                                     }
                                                                     else
                                                                     {
 
-                                                                        if (!JuriOneriFormu.EYKDaOnaylandi.HasValue)
+                                                                        if (!juriOneriFormu.EYKDaOnaylandi.HasValue)
                                                                         {
                                                                             @("İşlem Görmedi")
                                                                         }
-                                                                        else if (JuriOneriFormu.EYKDaOnaylandi == true)
+                                                                        else if (juriOneriFormu.EYKDaOnaylandi == true)
                                                                         {
                                                                             @("EYK'da Onaylandı")
                                                                         }
                                                                         else
                                                                         {
                                                                             @("EYK'da Onaylanmadı") <br />
-                                                                            @("(" + JuriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi + ")")
+                                                                            @("(" + juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi + ")")
                                                                         }
                                                                     }
                                                                 </td>
                                                             </tr>
 
-                                                            @if (JuriOneriFormuOnayYetkiEYKDa && JuriOneriFormu.EYKYaGonderildi == true)
+                                                            @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true)
                                                             {
-                                                                <tr id="jOneriFormOnayAckRow_@JuriOneriFormu.MezuniyetJuriOneriFormID" class="@(JuriOneriFormu.EYKDaOnaylandi==false?"":"hide")">
+                                                                <tr id="jOneriFormOnayAckRow_@juriOneriFormu.MezuniyetJuriOneriFormID" class="@(juriOneriFormu.EYKDaOnaylandi==false?"":"hide")">
                                                                     <td class="CaptionTd">Onaylanmama Sebebi</td>
                                                                     <td class="CaptionTd">:</td>
                                                                     <td class="ValueTd">
-                                                                        <textarea style="width:100%;" id="EYKDaOnaylanmadiDurumAciklamasi_@JuriOneriFormu.MezuniyetJuriOneriFormID">@JuriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi.toStrObjEmptString().Trim()</textarea>
+                                                                        <textarea style="width:100%;" id="EYKDaOnaylanmadiDurumAciklamasi_@juriOneriFormu.MezuniyetJuriOneriFormID">@juriOneriFormu.EYKDaOnaylanmadiDurumAciklamasi.ToStrObjEmptString().Trim()</textarea>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td class="value">
-                                                                        <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="JoFormDurumKayit(this,@Model.MezuniyetBasvurulariID, @JuriOneriFormu.MezuniyetJuriOneriFormID,true);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                                                        <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="JoFormDurumKayit(this,@Model.MezuniyetBasvurulariID, @juriOneriFormu.MezuniyetJuriOneriFormID,true);"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
                                                                     </td>
                                                                 </tr>
                                                             }

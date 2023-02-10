@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    partial class rprMezuniyetTezJuriTutanak
+    partial class RprMezuniyetTezJuriTutanak
     {
         /// <summary>
         /// Required designer variable.

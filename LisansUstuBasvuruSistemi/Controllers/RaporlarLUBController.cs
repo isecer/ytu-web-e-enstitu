@@ -7,15 +7,14 @@ using LisansUstuBasvuruSistemi.Business;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.LisansustuBasvuruRapor)]
-    public class RaporlarLUBController : Controller
+    public class RaporlarLubController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         // GET: RaporlarLUB
-        public ActionResult Index(string EKD)
+        public ActionResult Index(string ekd)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
            
-            ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(_EnstituKod, BasvuruSurecTipi.LisansustuBasvuru ,true), "Value", "Caption");
+            ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(enstituKod, BasvuruSurecTipi.LisansustuBasvuru ,true), "Value", "Caption");
             return View();
         }
     }

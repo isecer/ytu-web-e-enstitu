@@ -7,7 +7,7 @@
 
 
     var haftaGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
-    var Salonlar = (List<CmbIntDto>)ViewBag.Salonlar;
+    var salonlar = (List<CmbIntDto>)ViewBag.Salonlar;
 }
 
 
@@ -68,7 +68,7 @@
                             <td style="border: none;">:</td>
                             <td style="border: none; padding: 4px;">
                                 <select id="SRSalonID" name="SRSalonID" multiple class="form-control select">
-                                    @foreach (var item2 in Salonlar)
+                                    @foreach (var item2 in salonlar)
                                     {
                                         <option value="@item2.Value" @(Model.SRSalonID.Contains(item2.Value.Value) ? "selected=selected" : "")>@item2.Caption</option>
                                     }
@@ -199,7 +199,7 @@
         var _panel = $('#SRDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetail", "SR")',
+            url: '@Url.Action("GetDetail", "Sr")',
             data: { id: id, 'IsDelete': true, 'EnstituKod': EKD},
             success: function (result) {
                 $('#cls-GT_' + id).html(result);
@@ -216,7 +216,7 @@
         var _panel = $('#dvDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetail", "SROzelTanimlar")',
+            url: '@Url.Action("GetDetail", "SrOzelTanimlar")',
             data: { id: id },
             success: function (result) {
                 $('#cls-' + rwnx + '_' + id).html(result);

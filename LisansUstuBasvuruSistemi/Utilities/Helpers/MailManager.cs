@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -110,14 +111,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                         catch (Exception ex)
                         {
                             qeklenen.HataMesaji = ex.ToExceptionMessage();
-                            Management.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi yapılamadı! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
                         }
                         dbb.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Management.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderim işlemi sırasında bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, uid, uIp);
                 }
             }).Start();
 

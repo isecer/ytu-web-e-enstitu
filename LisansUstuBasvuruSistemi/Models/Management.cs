@@ -30,7 +30,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using System.Xml; 
+using System.Xml;
+using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
+using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -38,17 +41,7 @@ namespace LisansUstuBasvuruSistemi.Models
     {
 
         public static string Tuz = "@BİSKAmcumu";
-        public static int UniversiteYtuKod { get; } = 67;
-      
-
-
-      
-
-       
-
-   
-      
-
+        public static int UniversiteYtuKod { get; } = 67; 
         #region gsisData
 
 
@@ -98,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else
                 {
                     mdl.AciklamaSelectedLng = "Hata oluştu";
-                    Management.SistemBilgisiKaydet("Gsis Program Ücreti Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + ")", "Management/GetGsisProgramUcretKontrol/getProgramFee ProgramKod:" + mdl.ProgramKod + " OgrenimTipKod:" + mdl.OgrenimTipKod + " Dönen Hata Kodu:" + data.returnInfo, LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Program Ücreti Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + ")", "Management/GetGsisProgramUcretKontrol/getProgramFee ProgramKod:" + mdl.ProgramKod + " OgrenimTipKod:" + mdl.OgrenimTipKod + " Dönen Hata Kodu:" + data.returnInfo, LogType.Kritik);
 
                 }
 
@@ -120,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (OdemeBasTarih == "-1" || OdemeBasTarih == "-2")
                 {
                     _Msj = "Hata";
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getFirstPaymentDate Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getFirstPaymentDate Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
                     returnValue = false;
                 }
                 else
@@ -131,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     returnValue = false;
                     _Msj = "Hata";
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü!", "Management/GetGsisUcretOdemeTarihKontrol/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
                 }
                 else
                 {
@@ -163,7 +156,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (OdemeBasTarih == "-1" || OdemeBasTarih == "-2")
                     {
 
-                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/getFirstPaymentDate/paymentControl Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Başlangıç Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/getFirstPaymentDate/paymentControl Dönen Hata Kodu:" + OdemeBasTarih, LogType.Kritik);
                     }
                     else
                     {
@@ -171,7 +164,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     if (OdemeBitTarih == "-1" || OdemeBitTarih == "-2")
                     {
-                        Management.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Öğrenci Borcuna Ait Ödeme Bitiş Tarihi Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/getLastPaymentDate Dönen Hata Kodu:" + OdemeBitTarih, LogType.Kritik);
                     }
                     else
                     {
@@ -208,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     mdl.AciklamaSelectedLng = "Hata Oluştu!";
                     //sistem hatası
-                    Management.SistemBilgisiKaydet("Gsis Öğrenci Borcu Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/paymentControl Dönen Hata Kodu:" + RetVal, LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Gsis Öğrenci Borcu Sorgulanırken Servis Hata Döndürdü! (" + mdl.AdSoyad + " [" + mdl.OgrenciNo + "])", "Management/GetOnlineOdemeProgramDetay/paymentControl Dönen Hata Kodu:" + RetVal, LogType.Kritik);
                 }
 
             }
@@ -297,7 +290,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     model.KayitVar = false;
                     model.Mesaj = "Yök öğrenci sorgulama servisinden sorgulanan öğrenci için sonuç bilgisi başarılı dönmemektedir." + " \r\n\r\nSonuç Kod:" + deger.Sonuc.SonucKod + "\r\nSonucMesaj:" + deger.Sonuc.SonucMesaj;
                     model.Mesaj += "\r\n\r\n" + JsonConvert.SerializeObject(deger);
-                    SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogType.Kritik);
 
                 }
             }
@@ -306,7 +299,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 model.KayitVar = false;
                 model.Hata = true;
                 model.Mesaj = "YÖK Servisinden Öğrenci Bilgisi kontrol edilirken bir hata oluştu.Hata:" + ex.ToExceptionMessage();
-                SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
             return model;
@@ -316,10 +309,9 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             var oTurList = new List<int>();
             oTurList.Add(1);// - NORMAL ÖĞRETİM
-                            //oTurList.Add(2);// - İKİNCİ ÖĞRETİM
+            //oTurList.Add(2);// - İKİNCİ ÖĞRETİM
             oTurList.Add(3);// - UZAKTAN ÖĞRETİM
-            oTurList.Add(4);// - AÇIK ÖĞRETİM
-
+            oTurList.Add(4);// - AÇIK ÖĞRETİM 
             return oTurList;
         }
 
@@ -2591,7 +2583,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     SinavNotu = (
                                                               s.DilIsteniyor ?
                                                                   (s.DWebService == true ?
-                                                                           (s.DSinavNotu > 0 ? (s.DSinavNotu ?? s.DWsXmlData.toStrObjEmptString().toSinavSonucDil(s.BasvuruID)) : null)
+                                                                           (s.DSinavNotu > 0 ? (s.DSinavNotu ?? s.DWsXmlData.ToStrObjEmptString().toSinavSonucDil(s.BasvuruID)) : null)
                                                                            :
                                                                            s.DSinavNotu
                                                                    )
@@ -3087,51 +3079,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbIntDto> cmbGetTumOgrenimTipleri(string EnstituKod, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == EnstituKod).OrderBy(o => o.OgrenimTipAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbAktifOgrenimTipleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.OgrenimTipleris.Where(p => p.IsAktif).OrderBy(o => o.OgrenimTipAdi).Select(s => new { s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct().ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbIntDto> cmbAktifOgrenimTipleri(string EnstituKod, bool bosSecimVar = false, bool? Aktif = true, int? HaricOgreniTipKod = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == EnstituKod && (Aktif.HasValue ? p.IsAktif == Aktif.Value : true) && (HaricOgreniTipKod.HasValue ? p.OgrenimTipKod != HaricOgreniTipKod.Value : true)).OrderBy(o => o.OgrenimTipAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OgrenimTipKod, Caption = item.OgrenimTipAdi });
-                }
-            }
-            return dct;
-
-        }
+    
+   
+     
         public static List<CmbIntDto> cmbGetAktifAnketler(string EnstituKod, bool bosSecimVar = false, int? DahilAnketID = null)
         {
             var dct = new List<CmbIntDto>();
@@ -3501,7 +3451,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (mdl.WebService && mdl.WsSinavCekimTipID.HasValue && mdl.WsSinavCekimTipID.Value == WsCekimTipi.Tarih)
                 {
                     mdl.SinavTipleriDonems = (from sq in db.BasvuruSurecSinavTipleriDonems.Where(p => p.BasvuruSurecSinavTipID == mdl.BasvuruSurecSinavTipID)
-                                              select new krSinavTipleriDonems
+                                              select new KrSinavTipleriDonem
                                               {
                                                   SinavTipID = sq.BasvuruSurecSinavTipID,
                                                   SinavTipDonemID = sq.BasvuruSurecSinavTipDonemID,
@@ -3520,7 +3470,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
 
                     mdl.SinavTipleriDonems = (from sq in db.BasvuruSurecSinavTipleriDonems.Where(p => p.BasvuruSurecSinavTipID == mdl.BasvuruSurecSinavTipID)
-                                              select new krSinavTipleriDonems
+                                              select new KrSinavTipleriDonem
                                               {
                                                   SinavTipID = sq.BasvuruSurecSinavTipID,
                                                   SinavTipDonemID = sq.BasvuruSurecSinavTipDonemID,
@@ -3749,14 +3699,14 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                                 mdl.Puan = 0;
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
                                         }
                                         else
                                         {
                                             mdl.WsXmlData = null;
                                             mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
-                                            mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
+                                            mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
                                         }
 
                                     }
@@ -3775,9 +3725,9 @@ namespace LisansUstuBasvuruSistemi.Models
                                             {
                                                 mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                                 mdl.Puan = 0;
-                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
+                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SAY_PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
                                             mdl.AlesTipID = AlesTipBilgi.Sayısal;
                                         }
@@ -3792,9 +3742,9 @@ namespace LisansUstuBasvuruSistemi.Models
                                             {
                                                 mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                                 mdl.Puan = 0;
-                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
+                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
                                                 string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SOZ_PUAN;
-                                                Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                             }
 
                                         }
@@ -3806,7 +3756,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                                     mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                     mdl.ShowIsTaahhutVar = sinav.SinavTipleriDonems.Any(a => a.Yil == Yil.ToInt().Value && a.IsTaahhutVar);
-                                    mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
+                                    mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
                                     //string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n Donem=" + DonemB + "\r\n TcKimlikNo=" + Tck + " \r\nSonuç kodu:" + sonuc.SonucKodu + " \r\n Acıklama: " + sonuc.Aciklama;
                                     //Management.SistemBilgisiKaydet("Web servisinden  sınav bilgisi çekilemedi! \r\nDetay: " + bilgi, "Management/getSinavTipSonucModel", BilgiTipi.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
 
@@ -3818,11 +3768,11 @@ namespace LisansUstuBasvuruSistemi.Models
                                 mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                 mdl.ShowIsTaahhutVar = sinav.SinavTipleriDonems.Any(a => a.Yil == Yil.ToInt().Value && a.IsTaahhutVar);
 
-                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.toStrObjEmptString();
+                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
                                 if (sonuc.SonucKodu.ToString() != "KayitBulunamadi")
                                 {
                                     string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + " \r\nSonuç kodu:" + sonuc.SonucKodu + " \r\n Acıklama: " + sonuc.Aciklama;
-                                    Management.SistemBilgisiKaydet("Web servisinden  sınav bilgisi çekilemedi! \r\nDetay: " + bilgi, "Management/getSinavTipSonucModel", LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
+                                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden  sınav bilgisi çekilemedi! \r\nDetay: " + bilgi, "Management/getSinavTipSonucModel", LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
 
                                 }
 
@@ -3867,7 +3817,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                         mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
                                         mdl.Puan = 0;
                                         string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + qSonuc.Sonuc;
-                                        Management.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
                                     }
                                 }
                                 else
@@ -4003,7 +3953,7 @@ namespace LisansUstuBasvuruSistemi.Models
             catch (Exception ex)
             {
                 string bilgi = "SinavID=" + SinavTipID + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck;
-                Management.SistemBilgisiKaydet("Web servisinden sınav bilgisi çekilirken bir hata oluştu!\r\n" + bilgi + " \r\n Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden sınav bilgisi çekilirken bir hata oluştu!\r\n" + bilgi + " \r\n Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Kritik, UserIdentity.Current.Id, UserIdentity.Ip);
             }
             return mdl;
         }
@@ -4399,7 +4349,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (mdlSinavTip.WebService)
                 {
 
-                    krSinavTipleriDonems bsSdonemBilgi = null;
+                    KrSinavTipleriDonem bsSdonemBilgi = null;
                     if (SinavDonem.IsNullOrWhiteSpace())
                     {
                         string msg = mdlSinavTip.SinavAdi + " Sınavı için Dönem seçiniz!";
@@ -4415,7 +4365,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         if (bsSdonemBilgi == null)
                         {
 
-                            Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                             _yil = 0001;
 
                             _MmMessage.Messages.Add(mdlSinavTip.SinavAdi + " Sınavı için sınav sonucu bilgisi alınamadı! Lütfen bilgileri doğru girdiğinizden emin olunuz.");
@@ -4729,78 +4679,7 @@ namespace LisansUstuBasvuruSistemi.Models
        
 
 
-        public static void SistemBilgisiKaydet(Exception ex, byte BilgiTipi)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
-                {
-                    BilgiTipi = BilgiTipi,
-                    Message = ex.ToExceptionMessage(),
-                    IslemYapanID = UserIdentity.Current != null && UserIdentity.Current.IsAuthenticated && UserIdentity.Current.Id > 0 ? UserIdentity.Current.Id : (int?)null,
-                    IslemYapanIP = UserIdentity.Ip,
-                    IslemTarihi = DateTime.Now,
-                    StackTrace = ex.ToExceptionStackTrace()
-                });
-                db.SaveChanges();
-            }
-        }
-
-        public static void SistemBilgisiKaydet(Exception ex, string Message, byte BilgiTipi)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
-                {
-                    BilgiTipi = BilgiTipi,
-                    Message = Message,
-                    IslemYapanID = UserIdentity.Current != null && UserIdentity.Current.IsAuthenticated && UserIdentity.Current.Id > 0 ? UserIdentity.Current.Id : (int?)null,
-                    IslemYapanIP = UserIdentity.Ip,
-                    IslemTarihi = DateTime.Now,
-                    StackTrace = ex.ToExceptionStackTrace()
-                });
-                db.SaveChanges();
-            }
-        }
-        public static void SistemBilgisiKaydet(string Mesaj, string StakTrace, byte BilgiTipi)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
-                {
-                    Message = Mesaj,
-                    BilgiTipi = BilgiTipi,
-                    IslemYapanID = UserIdentity.Current != null && UserIdentity.Current.IsAuthenticated && UserIdentity.Current.Id > 0 ? UserIdentity.Current.Id : (int?)null,
-                    IslemYapanIP = UserIdentity.Ip,
-                    IslemTarihi = DateTime.Now,
-                    StackTrace = StakTrace
-                });
-                db.SaveChanges();
-            }
-        }
-
-        public static void SistemBilgisiKaydet(string Mesaj, string StakTrace, byte BilgiTipi, int? KullaniciID, string KullaniciIP)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                db.SistemBilgilendirmes.Add(new SistemBilgilendirme
-                {
-                    Message = Mesaj,
-                    BilgiTipi = BilgiTipi,
-                    IslemYapanID = KullaniciID,
-                    IslemYapanIP = !KullaniciIP.IsNullOrWhiteSpace() ? KullaniciIP : UserIdentity.Ip,
-                    IslemTarihi = DateTime.Now,
-                    StackTrace = StakTrace
-                });
-                db.SaveChanges();
-            }
-        }
+       
         public static bool ResimBilgisiLazimOlanKayitVarMi(int KullaniciID)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4856,29 +4735,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 return rTalepSurecID > 0 ? rTalepSurecID : (int?)null;
             }
         }
-        public static frTalepSurec GetTalepSurec(int TalepSurecID)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var nowDate = DateTime.Now;
-                var xD = (from s in db.TalepSurecleris.Where(p => p.TalepSurecID == TalepSurecID)
-                          join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                          select new frTalepSurec
-                          {
-                              TalepSurecID = s.TalepSurecID,
-                              EnstituKod = s.EnstituKod,
-                              BaslangicTarihi = s.BaslangicTarihi,
-                              BitisTarihi = s.BitisTarihi,
-                              IsAktif = s.IsAktif,
-                              IslemYapanID = s.IslemYapanID,
-                              IslemYapan = k.KullaniciAdi,
-                              IslemTarihi = s.IslemTarihi,
-                              IslemYapanIP = s.IslemYapanIP,
-                              AktifSurec = (s.BaslangicTarihi <= nowDate && s.BitisTarihi >= nowDate)
-                          }).FirstOrDefault();
-                return xD;
-            }
-        }
+        
         public static int? getAktifBSMulakatDahilSurecID(string EnstituKod, int? BasvuruSurecID = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4927,7 +4784,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                         string message = "Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!\r\n Başvuru ID: " + basvuru.BasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        Management.SistemBilgisiKaydet(message, "Başvuru Sil", LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Sil", LogType.Kritik);
                     }
                     else if (!getAktifBasvuruSurecID(basvuru.BasvuruSurec.EnstituKod, BasvuruSurecTipID, basvuru.BasvuruSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                     {
@@ -4939,7 +4796,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     else if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false && (basvuru.BasvuruDurumID != BasvuruDurumu.Gonderildi && basvuru.BasvuruDurumID == BasvuruDurumu.Onaylandı))
                     {
@@ -4950,7 +4807,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız!");
-                        SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Sil", LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda silme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Sil", LogType.Kritik);
                     }
                 }
             }
@@ -4969,13 +4826,13 @@ namespace LisansUstuBasvuruSistemi.Models
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false) SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Başvuru ID:" + BasvuruID, "Başvuru Düzelt", LogType.Uyarı);
+                        if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Başvuru ID:" + BasvuruID, "Başvuru Düzelt", LogType.Uyarı);
                     }
                     else
                     {
                         if (basvuru.BasvuruSurec.EnstituKod != EnstituKod)
                         {
-                            SistemBilgisiKaydet("Seçilen başvuru Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Başvuru Enstitü Kod:" + basvuru.BasvuruSurec.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Uyarı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen başvuru Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Başvuru Enstitü Kod:" + basvuru.BasvuruSurec.EnstituKod + " \r\n Aktif Enstitü Kod:" + EnstituKod + " \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Uyarı);
                             EnstituKod = basvuru.BasvuruSurec.EnstituKod;
                         }
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.BasvuruSurec.EnstituKod) && RoleNames.GelenBasvurularKayit.InRoleCurrent() && basvuru.KullaniciID != UserIdentity.Current.Id)
@@ -4983,7 +4840,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu enstitüye ait başvuruyu güncellemeye yetkili değilsiniz!");
                             string message = "Bu enstitüye ait başvuruyu güncellemeye yetkili değilsiniz!\r\n Başvuru ID: " + basvuru.BasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            Management.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!getAktifBasvuruSurecID(EnstituKod, BasvuruSurecTipID, basvuru.BasvuruSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                         {
@@ -4995,13 +4852,13 @@ namespace LisansUstuBasvuruSistemi.Models
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur!");
-                            SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Saldırı);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuruyu düzenlemeye hakkınız yoktur! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (RoleNames.GelenBasvurularKayit.InRoleCurrent() && basvuru.MulakatSonuclaris.Any(a => a.KayitDurumID.HasValue && a.KayitDurumlari.IsKayitOldu == true) && UserIdentity.Current.IsAdmin == false)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız!");
-                            SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Kritik);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başvuru durumu '" + basvuru.BasvuruDurumlari.BasvuruDurumAdi + "' olan başvurularda düzenleme işlemi yapamazsınız! \r\n Çağrılan Başvuru ID:" + basvuru.BasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Başvuru Düzelt", LogType.Kritik);
                         }
 
                     }
@@ -5013,7 +4870,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (KullaniciID.HasValue == false) KullaniciID = UserIdentity.Current.Id;
                     else if (KullaniciID != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Başvury Yap", LogType.Saldırı);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + KullaniciID + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Başvury Yap", LogType.Saldırı);
                         KullaniciID = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID.Value).First();
@@ -5516,7 +5373,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var gd = Guid.NewGuid().ToString().Substr(0, 5);
 
                     var MezuniyetBasvurulariID = DataID[0].Value;
-                    var rpr = new rprMezuniyetYayinSartiOnayiFormu(MezuniyetBasvurulariID);
+                    var rpr = new RprMezuniyetYayinSartiOnayiFormu(MezuniyetBasvurulariID);
                     rpr.CreateDocument();
                     rpr.DisplayName = "MezuniyetBasvuruFormu_" + gd + ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
@@ -5533,7 +5390,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var MBID = DataID[0].Value;
                     var IlkOrIkinci = DataID[1].Value;
                     var MB = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == MBID).First();
-                    var rpr = new rprMezuniyetTezTeslimFormu_FR0338(MB.RowID, IlkOrIkinci == 1);
+                    var rpr = new RprMezuniyetTezTeslimFormu_FR0338(MB.RowID, IlkOrIkinci == 1);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5549,7 +5406,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
 
                     var SRTalepID = DataID[0].Value;
-                    var rpr = new rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(DataID[0].Value);
+                    var rpr = new RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(DataID[0].Value);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5566,7 +5423,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var SRTalepID = DataID[0].Value;
                     var SrTalep = db.SRTalepleris.Where(p => p.SRTalepID == SRTalepID).First();
 
-                    var rpr = new rprTezSinavSonucTutanagi_FR0342_FR0377(SrTalep.UniqueID.Value);
+                    var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(SrTalep.UniqueID.Value);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5581,7 +5438,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (raporTipID == RaporTipleri.MezuniyetJuriUyelerineTezTeslimFormu)
                 {
                     var MezuniyetJuriOneriFormID = DataID[0].Value;
-                    var rpr = new rprJuriUyelerineTezTeslimFormu_FR0341_FR0302(MezuniyetJuriOneriFormID);
+                    var rpr = new RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(MezuniyetJuriOneriFormID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5597,7 +5454,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     var MezuniyetJuriOneriFormID = DataID[0].Value;
                     var MezuniyetJuriOneriFormuJuriID = DataID[1];
-                    var rpr = new rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
+                    var rpr = new RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5613,7 +5470,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     var MezuniyetJuriOneriFormID = DataID[0].Value;
                     var MezuniyetJuriOneriFormuJuriID = DataID[1];
-                    var rpr = new rprMezuniyetTezDegerlendirmeFormu_FR0303(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
+                    var rpr = new RprMezuniyetTezDegerlendirmeFormu_FR0303(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5628,7 +5485,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (raporTipID == RaporTipleri.MezuniyetTezKontrolFormu)
                 {
                     var ID = DataID[0].Value;
-                    var rpr = new rprMezuniyetTezKontrolFormu(null, ID);
+                    var rpr = new RprMezuniyetTezKontrolFormu(null, ID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5643,15 +5500,15 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (raporTipID == RaporTipleri.TezIzlemeDegerlendirmeFormu)
                 {
                     var ID = DataID[0].Value;
-                    var rpr = new rprTIDegerlendirmeFormu_FR0307(ID);
+                    var rpr = new RprTiDegerlendirmeFormu_FR0307(ID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
                     var IsSwhoRaporDetay = false;
-                    if (DataID.Count > 1) IsSwhoRaporDetay = DataID[1].toIntToBooleanObj() ?? false;
+                    if (DataID.Count > 1) IsSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
                     if (IsSwhoRaporDetay)
                     {
-                        var rpr2 = new rprTIDegerlendirmeFormuDetay_FR0307(ID);
+                        var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(ID);
                         rpr2.CreateDocument();
                         rpr2.DisplayName = rpr2.DisplayName + ".pdf";
                         rpr.Pages.AddRange(rpr2.Pages);
@@ -5667,7 +5524,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (raporTipID == RaporTipleri.TezDanismanOneriFormu)
                 {
                     var ID = DataID[0].Value;
-                    var rpr = new rprTezDanismaniOneriFormu_FR0347(ID);
+                    var rpr = new RprTezDanismaniOneriFormu_FR0347(ID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5682,7 +5539,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else if (raporTipID == RaporTipleri.TezEsDanismanOneriFormu)
                 {
                     var ID = DataID[0].Value; // tdo es danisman id
-                    var rpr = new rprTezEsDanismaniOneriFormu_FR0320(ID);
+                    var rpr = new RprTezEsDanismaniOneriFormu_FR0320(ID);
 
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
@@ -5697,52 +5554,12 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return mdl;
         }
-
-     
-      
-     
+         
         #endregion
 
-        #region Extension
-         
-
-
+        #region Extension 
+        public static int PageSize = 15; 
      
-
-        public static int PageSize = 15;
-
-        //public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
-        //{
-        //    var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-        //    var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-        //    return r.Replace(input, replacement);
-        //}
-        //public static string ReplaceSpecialCharacter(this string gelenStr)
-        //{
-        //    string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-        //    Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-        //    var fname = r.Replace(gelenStr, "");
-        //    return fname;
-
-        //}
-        //public static bool IsSpecialCharacterCheck(this string gelenStr)
-        //{
-        //    var regexItem = new Regex("^[a-zA-Z0-9 ]*$");
-        //    return regexItem.IsMatch(gelenStr);
-        //}
-
-       
- 
-        public static DateTime TodateToShortDate(this DateTime Tarih)
-        {
-            var data1 = Tarih.ToDateString().ToDate().Value;
-            return data1;
-        }
-        public static DateTime? TodateToShortDate(this DateTime? Tarih)
-        {
-            if (Tarih != null) return Tarih.ToDateString().ToDate().Value;
-            else return null;
-        }
 
        
  
@@ -5782,119 +5599,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return obj.toSinavSonucDilXmlModel().PUAN.ToDouble();
 
         }
-
-       
-
-        
-
-       
-      
-       
-       
-
-       
-       
-         public static string toDeviceType(this string ua)
-        {
-            string ret = "";
-            // Check if user agent is a smart TV - http://goo.gl/FocDk
-            if (Regex.IsMatch(ua, @"GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML", RegexOptions.IgnoreCase))
-            {
-                ret = "Tv";
-            }
-            // Check if user agent is a TV Based Gaming Console
-            else if (Regex.IsMatch(ua, "Xbox|PLAYSTATION.3|Wii", RegexOptions.IgnoreCase))
-            {
-                ret = "Tv";
-            }
-            // Check if user agent is a Tablet
-            else if ((Regex.IsMatch(ua, "iP(a|ro)d", RegexOptions.IgnoreCase) || (Regex.IsMatch(ua, "tablet", RegexOptions.IgnoreCase)) && (!Regex.IsMatch(ua, "RX-34", RegexOptions.IgnoreCase)) || (Regex.IsMatch(ua, "FOLIO", RegexOptions.IgnoreCase))))
-            {
-                ret = "Tablet";
-            }
-            // Check if user agent is an Android Tablet
-            else if ((Regex.IsMatch(ua, "Linux", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, "Android", RegexOptions.IgnoreCase)) && (!Regex.IsMatch(ua, "Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945", RegexOptions.IgnoreCase)))
-            {
-                ret = "Tablet";
-            }
-            // Check if user agent is a Kindle or Kindle Fire
-            else if ((Regex.IsMatch(ua, "Kindle", RegexOptions.IgnoreCase)) || (Regex.IsMatch(ua, "Mac.OS", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, "Silk", RegexOptions.IgnoreCase)))
-            {
-                ret = "Tablet";
-            }
-            // Check if user agent is a pre Android 3.0 Tablet
-            else if ((Regex.IsMatch(ua, @"GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook", RegexOptions.IgnoreCase)) || (Regex.IsMatch(ua, "MB511", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, "RUTEM", RegexOptions.IgnoreCase)))
-            {
-                ret = "Tablet";
-            }
-            // Check if user agent is unique Mobile User Agent
-            else if ((Regex.IsMatch(ua, "BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder", RegexOptions.IgnoreCase)))
-            {
-                ret = "Mobile";
-            }
-            // Check if user agent is an odd Opera User Agent - http://goo.gl/nK90K
-            else if ((Regex.IsMatch(ua, "Opera", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, "Windows.NT.5", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, @"HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9", RegexOptions.IgnoreCase)))
-            {
-                ret = "Mobile";
-            }
-            // Check if user agent is Windows Desktop
-            else if ((Regex.IsMatch(ua, "Windows.(NT|XP|ME|9)")) && (!Regex.IsMatch(ua, "Phone", RegexOptions.IgnoreCase)) || (Regex.IsMatch(ua, "Win(9|.9|NT)", RegexOptions.IgnoreCase)))
-            {
-                ret = "Desktop";
-            }
-            // Check if agent is Mac Desktop
-            else if ((Regex.IsMatch(ua, "Macintosh|PowerPC", RegexOptions.IgnoreCase)) && (!Regex.IsMatch(ua, "Silk", RegexOptions.IgnoreCase)))
-            {
-                ret = "Desktop";
-            }
-            // Check if user agent is a Linux Desktop
-            else if ((Regex.IsMatch(ua, "Linux", RegexOptions.IgnoreCase)) && (Regex.IsMatch(ua, "X11", RegexOptions.IgnoreCase)))
-            {
-                ret = "Desktop";
-            }
-            // Check if user agent is a Solaris, SunOS, BSD Desktop
-            else if ((Regex.IsMatch(ua, "Solaris|SunOS|BSD", RegexOptions.IgnoreCase)))
-            {
-                ret = "Desktop";
-            }
-            // Check if user agent is a Desktop BOT/Crawler/Spider
-            else if ((Regex.IsMatch(ua, "Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye", RegexOptions.IgnoreCase)) && (!Regex.IsMatch(ua, "Mobile", RegexOptions.IgnoreCase)))
-            {
-                ret = "Desktop";
-            }
-            // Otherwise assume it is a Mobile Device
-            else
-            {
-                ret = "Mobile";
-            }
-            return ret;
-        }
+         
 
       
-
-        public static List<CmbIntDto> CmbCardBonusType()
-        {
-            var mdl = new List<CmbIntDto>();
-            mdl.Add(new CmbIntDto { Value = null, Caption = "" });
-            mdl.Add(new CmbIntDto { Value = 1, Caption = "Bonus Kart Özelliği Var" });
-            mdl.Add(new CmbIntDto { Value = 0, Caption = "Bonus Kart Özelliği Yok" });
-            return mdl;
-        }
-        public static List<CmbIntDto> CmbCardMaximumType()
-        {
-            var mdl = new List<CmbIntDto>();
-            mdl.Add(new CmbIntDto { Value = null, Caption = "" });
-            mdl.Add(new CmbIntDto { Value = 1, Caption = "Var" });
-            mdl.Add(new CmbIntDto { Value = 0, Caption = "Yok" });
-            return mdl;
-        }
-        public static List<CmbIntDto> CmbTaksitList()
-        {
-            var mdl = new List<CmbIntDto>();
-            mdl.Add(new CmbIntDto { Value = null, Caption = "Taksit İstemiyorum" });
-            mdl.Add(new CmbIntDto { Value = 5, Caption = "5 Taksit" });
-            return mdl;
-        }
 
 
         public static string DekontOdemeIsle(string SiparisNo, DateTime DekontTarih, string Ucret, string taksit, string CardNo)
@@ -5930,7 +5637,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                             if (!IsSuccess)
                             {
-                                Management.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", LogType.Kritik);
+                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Sanal pos ödeme sonrası dekont bilgisi işlenemedi! (" + kul.Ad + " " + kul.Soyad + ") " + msj, "Management/DekontOdemeIsle", LogType.Kritik);
                             }
 
                         }
@@ -6019,7 +5726,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                     EkDosyaYolu = itemSe.EkDosyaYolu,
                                 });
                             }
-                            else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
+                            else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Management/sendMailMezuniyetSinavYerBilgisi", LogType.Uyarı);
                         }
                         var sndMail = MailManager.SendMail(EnstituKod, Sablon.SablonAdi, htmlMail, EMailList, Attachments);
 
@@ -6057,7 +5764,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 else
                 {
                     msg = "Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi!";
-                    Management.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Ödeme İşleminden Sonra Sipariş Numarası Hiçbir Program Tercihi İle Eşleşmedi! <br/>Sipariş No: " + SiparisNo, "Management/DekontOdemeIsle", LogType.Kritik);
                 }
                 return msg;
             }

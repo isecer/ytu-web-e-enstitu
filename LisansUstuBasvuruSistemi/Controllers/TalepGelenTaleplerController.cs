@@ -20,22 +20,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class TalepGelenTaleplerController : Controller
     {
         // GET: TalepGelenTalepler
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var TalepSurecID = Management.getAktifTalepSurecID(_EnstituKod);
-            return Index(new fmTalep() { PageSize = 15, TalepSurecID = TalepSurecID, Expand = TalepSurecID.HasValue }, EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var talepSurecId = Management.getAktifTalepSurecID(enstituKod);
+            return Index(new FmTalep() { PageSize = 15, TalepSurecID = talepSurecId, Expand = talepSurecId.HasValue }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmTalep model, string EKD, bool export = false)
+        public ActionResult Index(FmTalep model, string ekd, bool export = false)
         {
             
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var kulls = db.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
-            if (!kulls.KullaniciEnstituYetkileris.Any(a => a.EnstituKod == _EnstituKod))
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var kulls = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
+            if (kulls.KullaniciEnstituYetkileris.All(a => a.EnstituKod != enstituKod))
             {
-                _EnstituKod = "";
+                enstituKod = "";
             }
 
             var bbModel = new IndexPageInfoDto();
@@ -45,20 +45,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.bModel = bbModel;
 
             #region data
-            var q = from s in db.TalepGelenTaleplers
-                    join ts in db.TalepSurecleris.Where(p => p.EnstituKod == _EnstituKod) on s.TalepSurecID equals ts.TalepSurecID
-                    join kul in db.Kullanicilars on s.KullaniciID equals kul.KullaniciID
-                    join tt in db.TalepTipleris on s.TalepTipID equals tt.TalepTipID
-                    join td in db.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
-                    join ags in db.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
+            var q = from s in _entities.TalepGelenTaleplers
+                    join ts in _entities.TalepSurecleris.Where(p => p.EnstituKod == enstituKod) on s.TalepSurecID equals ts.TalepSurecID
+                    join kul in _entities.Kullanicilars on s.KullaniciID equals kul.KullaniciID
+                    join tt in _entities.TalepTipleris on s.TalepTipID equals tt.TalepTipID
+                    join td in _entities.TalepDurumlaris on s.TalepDurumID equals td.TalepDurumID
+                    join ags in _entities.TalepArGorStatuleris on s.TalepArGorStatuID equals ags.TalepArGorStatuID into defAgs
                     from Ags in defAgs.DefaultIfEmpty()
-                    join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == _EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
+                    join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod into defO
                     from Ot in defO.DefaultIfEmpty()
-                    join otl in db.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
+                    join otl in _entities.OgrenimTipleris on Ot.OgrenimTipID equals otl.OgrenimTipID into defOtl
                     from Otl in defOtl.DefaultIfEmpty()
-                    join prl in db.Programlars on s.ProgramKod equals prl.ProgramKod into defprl
+                    join prl in _entities.Programlars on s.ProgramKod equals prl.ProgramKod into defprl
                     from Prl in defprl.DefaultIfEmpty()
-                    join abl in db.AnabilimDallaris on new { AnabilimDaliID = (Prl != null ? Prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
+                    join abl in _entities.AnabilimDallaris on new { AnabilimDaliID = (Prl != null ? Prl.AnabilimDaliID : (int?)null) } equals new { AnabilimDaliID = (int?)abl.AnabilimDaliID } into defabl
                     from Abl in defabl.DefaultIfEmpty()
 
                     select new
@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         td.Color,
                         s.TalepTarihi,
                         s.AdSoyad,
-                        YtuOgrencisi = s.ProgramKod == null ? false : true,
+                        YtuOgrencisi = s.ProgramKod != null,
                         s.OgrenciNo,
                         s.OgrenimTipID,
                         s.OgrenimTipKod,
@@ -120,23 +120,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else ViewBag.KTalepGelenTalepIDs = new List<int>();
 
-            if (model.Sort.IsNullOrWhiteSpace() == false) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.TalepTarihi);
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
 
 
             model.RowCount = q.Count();
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
 
-            var IndexModel = new MIndexBilgi();
+            var indexModel = new MIndexBilgi();
             var btDurulari = TaleplerBus.GetTalepDurumList();
             foreach (var item in btDurulari)
             {
-                var tipCount = q.Where(p => p.TalepDurumID == item.TalepDurumID).Count();
-                IndexModel.ListB.Add(new mxRowModel { Key = item.TalepDurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
+                var tipCount = q.Count(p => p.TalepDurumID == item.TalepDurumID);
+                indexModel.ListB.Add(new mxRowModel { Key = item.TalepDurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
-            IndexModel.Toplam = model.RowCount;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new frTalep()
+            indexModel.Toplam = model.RowCount;
+            model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
             {
                 TalepGelenTalepID = item.TalepGelenTalepID,
                 IsbelgeYuklemesiVar = item.IsBelgeYuklemeVar,
@@ -149,13 +148,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 TalepTipID = item.TalepTipID,
                 TalepTipAdi = item.TalepTipAdi,
                 TalepTipAciklama = item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi ?
-                                (item.OgrenimTipKod == OgrenimTipi.Doktra ?
+                                (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek öğrenciler, doktora tez önerisinden başarılı olmuş ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir. "
                                     :
                                     "Bu talep tipini seçecek öğrenciler Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşamasını tamamlamış ve dönem harç ücreti varsa ödemiş olmaları gerekmektedir. Aksi takdirde talepleri kabul edilmeyecektir.")
                                  :
                                  item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi ?
-                                 (item.OgrenimTipKod == OgrenimTipi.Doktra ?
+                                 (item.OgrenimTipKod.IsDoktora() ?
                                     "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
                                     :
                                     "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir."
@@ -192,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (export && model.RowCount > 0)
             {
                 GridView gv = new GridView();
-                var qExp = q.AsQueryable();
+                var qExp = q.ToList();
 
                 gv.DataSource = qExp.Select(s => new
                 {
@@ -210,7 +209,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     TezOneriTarihi = s.DoktoraTezOneriTarihi,
                     ArGorYTU = s.IsYtuArGor == true ? "YTU'de Ar. Gör." : "-",
                     ArGorStatuAdi = s.TalepArGorStatuID.HasValue ? s.StatuAdi : "",
-                    DersYukuTamamlandiMi = (!s.OgrenimTipKod.HasValue || s.OgrenimTipKod == OgrenimTipi.Doktra ? "" : (s.IsDersYukuTamamlandi == true ? "Evet" : "Hayır")),
+                    DersYukuTamamlandiMi = (!s.OgrenimTipKod.HasValue || s.OgrenimTipKod.IsDoktora() ? "" : (s.IsDersYukuTamamlandi == true ? "Evet" : "Hayır")),
                     HarcBorcuVarMi = s.IsHarcBorcuVar.HasValue ? (s.IsHarcBorcuVar == true ? "Var" : "Yok") : "",
                 }).ToList();
                 gv.DataBind();
@@ -224,15 +223,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TalepListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
-            ViewBag.TalepSurecID = new SelectList(TaleplerBus.GetCmbTalepSurecleri(_EnstituKod ,true), "Value", "Caption", model.TalepSurecID);
+            ViewBag.TalepSurecID = new SelectList(TaleplerBus.GetCmbTalepSurecleri(enstituKod ,true), "Value", "Caption", model.TalepSurecID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.TalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari( true), "Value", "Caption", model.TalepDurumID);
             ViewBag.TalepTipID = new SelectList(TaleplerBus.GetCmbTalepTipleri(true), "Value", "Caption", model.TalepTipID);
             ViewBag.KTalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari(false), "Value", "Caption");
             ViewBag.IsDersYukuTamamlandi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsDersYukuTamamlandi);
             ViewBag.IsTezOnerisiYapildi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsTezOnerisiYapildi);
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             return View(model);
         }
 

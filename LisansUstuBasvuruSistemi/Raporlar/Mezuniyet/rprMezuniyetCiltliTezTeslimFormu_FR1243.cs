@@ -1,19 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; 
-using BiskaUtil;
-using System.Linq;
+﻿using System.Linq;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetCiltliTezTeslimFormu_FR1243 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetCiltliTezTeslimFormu_FR1243 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetCiltliTezTeslimFormu_FR1243(int ID)
+        public RprMezuniyetCiltliTezTeslimFormu_FR1243(int id)
         {
             InitializeComponent();
 
@@ -30,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                             join osl in db.OgrenimTipleris on new { mb.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
                             join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.SRTalepleriBezCiltFormID == ID
+                            where s.SRTalepleriBezCiltFormID == id
                             select new
                             {
                                 s.SRTalepleriBezCiltFormID,

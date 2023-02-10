@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMulakatNotGiris
+    public class FmMulakatNotGiris
     {
 
         public int SinavBilgisiGirilenProgramCount { get; set; }
@@ -21,9 +21,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int YerJuriBilgisiGirisCount { get; set; }
         public bool SinavYerBilgisiMailiGonderildi { get; set; }
         public DateTime? SinavYerBilgisiMailiGonderimTarihi { get; set; }
-        public List<frMulakatNotGirisDetay> MulakatNotGirisDetay { get; set; }
+        public List<FrMulakatNotGirisDetay> MulakatNotGirisDetay { get; set; }
     }
-    public class frMulakatNotGirisDetay
+    public class FrMulakatNotGirisDetay
     {
         public bool MulakatSurecineGirecek { get; set; }
         public bool IsAlesYerineDosyaNotuIstensin { get; set; }

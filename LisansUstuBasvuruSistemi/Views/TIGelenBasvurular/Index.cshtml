@@ -258,7 +258,7 @@
         var _panel = $('#bsvrDet_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetailTIBasvuru", "Ajax")',
+            url: '@Url.Action("GetDetailTiBasvuru", "Ajax")',
             data: { id: id, UniqueID: '@Model.IsDegerlendirme',  IsDelete: (Isdelete == true) },
             success: function (result) {
                 if (Isdelete != true) {

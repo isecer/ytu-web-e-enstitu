@@ -11,14 +11,13 @@
     //Model.DegerlendirenUniqueID = new Guid("60b7a378-df50-4bb3-aa3d-0b164a795c9e");
     Layout = null;
 
-    var IsDelete = (bool)ViewBag.IsDelete;
-    string DColor = Model.DurumColor;
-    var IsDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
-    var IsOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
-    bool ToplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
-    bool DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
-    bool DegerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
-    bool FormOlusturmaYetki = (DegerlendirmeYetki || DegerlendirmeDuzeltmeYetki || IsDanismani || Model.KullaniciID == UserIdentity.Current.Id);
+    var isDelete = (bool)ViewBag.IsDelete;
+    var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
+    var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
+    bool toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
+    bool degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+    bool degerlendirmeDuzeltmeYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+    bool formOlusturmaYetki = (degerlendirmeYetki || degerlendirmeDuzeltmeYetki || isDanismani || Model.KullaniciID == UserIdentity.Current.Id);
 
 }
 <style>
@@ -40,12 +39,12 @@
 
         @if (Model.DegerlendirenUniqueID.HasValue)
         {
-            var item = Model.TIBasvuruAraRaporList.Where(p => p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID)).First();
-            var itemJr = item.TIBasvuruAraRaporKomites.Where(a => a.UniqueID == Model.DegerlendirenUniqueID).First();
-            var ShowDegerlendirme = !itemJr.IsBasarili.HasValue;
-            var IsDegerlendirmeAcik = ShowDegerlendirme || DegerlendirmeDuzeltmeYetki;
+            var item = Model.TIBasvuruAraRaporList.First(p => p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID));
+            var itemJr = item.TIBasvuruAraRaporKomites.First(a => a.UniqueID == Model.DegerlendirenUniqueID);
+            var showDegerlendirme = !itemJr.IsBasarili.HasValue;
+            var isDegerlendirmeAcik = showDegerlendirme || degerlendirmeDuzeltmeYetki;
             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray;padding:6px 10px;margin-bottom:0px;margin-top:0px; min-height:20px;">
-                @if (IsDegerlendirmeAcik)
+                @if (isDegerlendirmeAcik)
                 {
                     <table style="width:100%;">
                         <tr>
@@ -205,7 +204,7 @@
                                                         <td class="CaptionTd" width="275">Tez İzleme ile Tez Önerisi Uyumluluğu</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
-                                                            @if (ShowDegerlendirme)
+                                                            @if (showDegerlendirme)
                                                             {
                                                                 <select style="width:100px;" id="IsTezIzlemeRaporuTezOnerisiUygun_@itemJr.UniqueID">
                                                                     <option></option>
@@ -221,14 +220,14 @@
                                                             }
                                                         </td>
                                                     </tr>
-                                                    @if (item.IsYokDrBursiyeriVar && (DegerlendirmeYetki || DegerlendirmeDuzeltmeYetki) && itemJr.JuriTipAdi == "TezDanismani")
+                                                    @if (item.IsYokDrBursiyeriVar && (degerlendirmeYetki || degerlendirmeDuzeltmeYetki) && itemJr.JuriTipAdi == "TezDanismani")
                                                     {
 
                                                         <tr>
                                                             <td class="CaptionTd">Tez İzleme Raporu ile 100/2000 YÖK Bursu Alt Alan Uyumlu mu?</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                @if (ShowDegerlendirme)
+                                                                @if (showDegerlendirme)
                                                                 {
                                                                     <select style="width:100px;" id="IsTezIzlemeRaporuAltAlanUygun_@itemJr.UniqueID">
                                                                         <option></option>
@@ -251,7 +250,7 @@
                                                         <td class="CaptionTd">Tez İzleme Raporunun Değerlendirme Sonucu</td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd">
-                                                            @if (ShowDegerlendirme)
+                                                            @if (showDegerlendirme)
                                                             {
                                                                 <select style="width:100px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.TIBasvuruAraRaporKomiteID').removeClass('hide'); }else{$('.RwJAck_@itemJr.TIBasvuruAraRaporKomiteID').addClass('hide');}" id="IsBasarili_@itemJr.UniqueID">
                                                                     <option></option>
@@ -275,7 +274,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="ValueTd">
-                                                                        @if (ShowDegerlendirme)
+                                                                        @if (showDegerlendirme)
                                                                         {
                                                                             <textarea placeholder="Tez İzleme Raporu Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
                                                                         }
@@ -288,7 +287,7 @@
                                                             </table>
                                                         </td>
                                                     </tr>
-                                                    @if (ShowDegerlendirme)
+                                                    @if (showDegerlendirme)
                                                     {
                                                         <tr class="RwKBtn_@itemJr.TIBasvuruAraRaporKomiteID" style="border-top:1px solid;">
                                                             <td class="CaptionTd"></td>
@@ -373,12 +372,12 @@
 
                 </table>
             </div>
-            <div class="widget widget-default @(IsDelete?"hide":"")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
+            <div class="widget widget-default @(isDelete?"hide":"")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
                 <table style="width:100%;">
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Tez İzleme Raporları</td>
                         <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
-                            @if (FormOlusturmaYetki)
+                            @if (formOlusturmaYetki)
                             {
                                 <span class="label label-info" id="YeniRaporBtn_@Model.TIBasvuruID" style="cursor:pointer;" onclick="GetTIAraRaporFormu(@Model.TIBasvuruID);"><i class="fa fa-plus"></i> Yeni Rapor Oluştur</span>
                             }
@@ -410,7 +409,7 @@
                                     @foreach (var item in Model.TIBasvuruAraRaporList)
                                     {
                                         inxRw++;
-                                        bool ShowRow = !IsDelete && (inxRw == 1);
+                                        bool ShowRow = !isDelete && (inxRw == 1);
                                         if (Model.DegerlendirenUniqueID.HasValue && item.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID)) { ShowRow = true; }
                                         var SrTalebiYapildi = item.SRModel != null;
                                         var IsDanismanOnayDurum = item.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault();
@@ -432,7 +431,7 @@
                                                 @item.TIBasvuruAraaRaporDurumAdi
                                             </td>
                                             <td>
-                                                @if (inxRw == 1 && FormOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TIAraRaporDurumu.DegerlendirmeSureciBaslatildi)
+                                                @if (inxRw == 1 && formOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TIAraRaporDurumu.DegerlendirmeSureciBaslatildi)
                                                 {
                                                     <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-original-title="Raporu Düzelt"></i> Düzelt</a>
 
@@ -566,9 +565,9 @@
                                                             @foreach (var itemJr in item.TIBasvuruAraRaporKomites.OrderBy(o => o.JuriTipAdi))
                                                             {
                                                                 var IsKomiteTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
-                                                                var OpenRow = (IsDanismani && IsKomiteTezDanismani);
-                                                                var OpenDegerlendirme = SrTalebiYapildi && ((OpenRow && DegerlendirmeYetki && !itemJr.IsBasarili.HasValue) || DegerlendirmeDuzeltmeYetki);
-                                                                var SendLink = SrTalebiYapildi && (IsDanismani && !IsKomiteTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (DegerlendirmeDuzeltmeYetki));
+                                                                var OpenRow = (isDanismani && IsKomiteTezDanismani);
+                                                                var OpenDegerlendirme = SrTalebiYapildi && ((OpenRow && degerlendirmeYetki && !itemJr.IsBasarili.HasValue) || degerlendirmeDuzeltmeYetki);
+                                                                var SendLink = SrTalebiYapildi && (isDanismani && !IsKomiteTezDanismani && item.TIBasvuruAraRaporKomites.Count != item.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue) || (degerlendirmeDuzeltmeYetki));
 
                                                                 <tr>
                                                                     <td>
@@ -589,7 +588,7 @@
                                                                         <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                     </td>
                                                                     <td>
-                                                                        @if (!IsOgrenci || DegerlendirmeYetki || DegerlendirmeDuzeltmeYetki)
+                                                                        @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                         {
                                                                             if (!SrTalebiYapildi)
                                                                             {
@@ -614,7 +613,7 @@
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (IsDanismani && IsKomiteTezDanismani)
+                                                                                if (isDanismani && IsKomiteTezDanismani)
                                                                                 {
                                                                                     <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapmanız Bekleniyor.</span>
 
@@ -697,7 +696,7 @@
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
-                                                                        @if (!IsOgrenci || DegerlendirmeYetki || DegerlendirmeDuzeltmeYetki)
+                                                                        @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                         {
                                                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                 <table style="width:100%;">
@@ -795,7 +794,7 @@
 
                                                                                     @if (OpenDegerlendirme)
                                                                                     {
-                                                                                        if (IsDanismani && IsKomiteTezDanismani && !itemJr.IsBasarili.HasValue)
+                                                                                        if (isDanismani && IsKomiteTezDanismani && !itemJr.IsBasarili.HasValue)
                                                                                         {
                                                                                             <tr>
                                                                                                 <td colspan="3" class="ValueTd" style="color:maroon;">
@@ -831,7 +830,7 @@
                                                         <tr>
                                                             <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg"></i> Toplantı Bilgileri</td>
                                                             <td width="120" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding-bottom:2px;">
-                                                                @if (ToplantiYetki && item.TIBasvuruAraRaporDurumID <= TIAraRaporDurumu.ToplantiBilgileriGirildi)
+                                                                @if (toplantiYetki && item.TIBasvuruAraRaporDurumID <= TIAraRaporDurumu.ToplantiBilgileriGirildi)
                                                                 {
                                                                     <span class="label label-info" style="cursor:pointer;" onclick="showSRDialog(@item.TIBasvuruID,@item.TIBasvuruAraRaporID,@(SrTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(SrTalebiYapildi?"edit":"plus") fa-lg"></i> @(SrTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
                                                                 }

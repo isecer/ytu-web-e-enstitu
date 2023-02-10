@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmSinavTipleriSPNA : SinavTipleriOT_SNA
+    public class KmSinavTipleriSpna : SinavTipleriOT_SNA
     {
 
         public List<int> NAOgrenimTipKod { get; set; }
@@ -17,22 +17,22 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<double?> NAMax { get; set; }
         public List<string> IPProgramKod { get; set; }
 
-        public List<krSinavTipleriOTNotAraliklari> SinavTipleriOTNotAraliklari { get; set; }
-        public kmSinavTipleriSPNA()
+        public List<KrSinavTipleriOtNotAraliklari> KrSinavTipleriOtNotAraliklaris { get; set; }
+        public KmSinavTipleriSpna()
         {
             IPProgramKod = new List<string>();
-            SinavTipleriOTNotAraliklari = new List<krSinavTipleriOTNotAraliklari>();
+            KrSinavTipleriOtNotAraliklaris = new List<KrSinavTipleriOtNotAraliklari>();
 
         }
     }
-    public class krSinavTipleriOTNotAraliklari : SinavTipleriOTNotAraliklari
+    public class KrSinavTipleriOtNotAraliklari : SinavTipleriOTNotAraliklari
     {
         public string OgrenimTipAdi { get; set; }
         public bool? SuccessRow { get; set; }
         public List<string> PropName { get; set; }
         public List<string> ProgramKods { get; set; }
         public List<CmbStringDto> IstenmeyenProgramlar { get; set; }
-        public krSinavTipleriOTNotAraliklari()
+        public KrSinavTipleriOtNotAraliklari()
         {
             PropName = new List<string>();
             ProgramKods = new List<string>();

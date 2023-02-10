@@ -16,28 +16,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize]
     public class GelenBelgeTalepleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
-        public ActionResult Index(string EKD)
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmBelgeTalepleriDto() { PageSize = 10, Expand = false }, EKD);
+            return Index(new FmBelgeTalepleriDto() { PageSize = 10, Expand = false }, ekd);
         }
 
         [HttpPost]
         [Authorize(Roles = RoleNames.GelenBelgeTalepleri)]
-        public ActionResult Index(FmBelgeTalepleriDto model, string EKD)
+        public ActionResult Index(FmBelgeTalepleriDto model, string ekd)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             #region data
-            var q = from s in db.BelgeTalepleris
-                    join ibt in db.BelgeTipleris on s.BelgeTipID equals ibt.BelgeTipID
-                    join bdrm in db.BelgeDurumlaris on s.BelgeDurumID equals bdrm.BelgeDurumID
-                    join d in db.Donemlers on s.DonemID equals d.DonemID
-                    join dk in db.SistemDilleris on s.BelgeDilKodu equals dk.DilKodu
-                    join ot in db.OgrenimTipleris on new { s.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                    join od in db.OgrenimDurumlaris on s.OgrenimDurumID equals od.OgrenimDurumID
-                    join kul in db.Kullanicilars on s.OgrenciNo equals kul.OgrenciNo into defk
-                    where s.EnstituKod == _EnstituKod && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
+            var q = from s in _entities.BelgeTalepleris
+                    join ibt in _entities.BelgeTipleris on s.BelgeTipID equals ibt.BelgeTipID
+                    join bdrm in _entities.BelgeDurumlaris on s.BelgeDurumID equals bdrm.BelgeDurumID
+                    join d in _entities.Donemlers on s.DonemID equals d.DonemID
+                    join dk in _entities.SistemDilleris on s.BelgeDilKodu equals dk.DilKodu
+                    join ot in _entities.OgrenimTipleris on new { s.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                    join od in _entities.OgrenimDurumlaris on s.OgrenimDurumID equals od.OgrenimDurumID
+                    join kul in _entities.Kullanicilars on s.OgrenciNo equals kul.OgrenciNo into defk
+                    where s.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
                     from kl in defk.DefaultIfEmpty()
                     select new
                     {
@@ -114,34 +114,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var t1 = DateTime.Now.TodateToShortDate();
                     var t2 = Convert.ToDateTime((DateTime.Now.ToShortDateString() + " 23:59:59"));
                     var basS = TimeSpan.Parse(model.BuGunkuKayitlar.Split('-')[0]);
-                    var BitS = TimeSpan.Parse(model.BuGunkuKayitlar.Split('-')[1]);
+                    var bitS = TimeSpan.Parse(model.BuGunkuKayitlar.Split('-')[1]);
 
 
                     q = q.Where(p => p.TalepTarihi >= guncTar &&
                                    (
                                     (EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) >= t1 && EntityFunctions.AddDays(p.TalepTarihi, p.EklenecekGun) <= t2)
-                                    && p.TeslimBaslangicSaat == basS && p.TeslimBitisSaat == BitS
+                                    && p.TeslimBaslangicSaat == basS && p.TeslimBitisSaat == bitS
                                     )
                               );
                 }
             }
 
-            if (model.Sort.IsNullOrWhiteSpace() == false) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.TalepTarihi);
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
 
             model.RowCount = q.Count();
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
 
-            var IndexModel = new MIndexBilgi();
+            var indexModel = new MIndexBilgi();
             var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
             foreach (var item in btDurulari)
             {
-                var tipCount = q.Where(p => p.BelgeDurumID == item.BelgeDurumID).Count();
-                IndexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
+                var tipCount = q.Count(p => p.BelgeDurumID == item.BelgeDurumID);
+                indexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
-            IndexModel.Toplam = model.RowCount;
-            model.BelgeTalepleriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
+            indexModel.Toplam = model.RowCount;
+            model.BelgeTalepleriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
             {
                 BelgeTalepID = item.BelgeTalepID,
                 BelgeDurumID = item.BelgeDurumID,
@@ -183,13 +182,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             #endregion
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
             ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(_EnstituKod, true), "Value", "Caption", model.ProgramKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);
             ViewBag.BuGunkuKayitlar = new SelectList(BelgeTalepBus.GetCmbBelgeTeslimSaatler(), "Value", "Caption", model.BuGunkuKayitlar);
             return View(model);
@@ -199,11 +198,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var mmMessage = new MmMessage();
-            var kayit = db.BelgeTalepleris.Where(p => p.BelgeTalepID == id).FirstOrDefault();
+            var kayit = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == id);
             try
             {
-                db.BelgeTalepleris.Remove(kayit);
-                db.SaveChanges();
+                _entities.BelgeTalepleris.Remove(kayit);
+                _entities.SaveChanges();
                 mmMessage.Messages.Add("Belge Talebi Silindi.");
                 mmMessage.IsSuccess = true;
                 mmMessage.MessageType = Msgtype.Success;
@@ -213,7 +212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Belge Talebi Silinemedi.");
-                Management.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogType.OnemsizHata);
             }
             return mmMessage.ToJsonResult();
         }

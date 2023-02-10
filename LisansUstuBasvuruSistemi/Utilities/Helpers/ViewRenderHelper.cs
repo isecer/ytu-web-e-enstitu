@@ -80,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return new HtmlString(strView);
         }
 
-        public static IHtmlString ToMezuniyetDurum(this frMezuniyetBasvurulari model)
+        public static IHtmlString ToMezuniyetDurum(this FrMezuniyetBasvurulari model)
         {
 
 

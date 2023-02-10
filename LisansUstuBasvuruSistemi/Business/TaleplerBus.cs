@@ -10,6 +10,30 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class TaleplerBus
     {
+        public static FrTalepSurec GetTalepSurec(int talepSurecId)
+        {
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var nowDate = DateTime.Now;
+                var xD = (from s in db.TalepSurecleris.Where(p => p.TalepSurecID == talepSurecId)
+                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    select new FrTalepSurec
+                    {
+                        TalepSurecID = s.TalepSurecID,
+                        EnstituKod = s.EnstituKod,
+                        BaslangicTarihi = s.BaslangicTarihi,
+                        BitisTarihi = s.BitisTarihi,
+                        IsAktif = s.IsAktif,
+                        IslemYapanID = s.IslemYapanID,
+                        IslemYapan = k.KullaniciAdi,
+                        IslemTarihi = s.IslemTarihi,
+                        IslemYapanIP = s.IslemYapanIP,
+                        AktifSurec = (s.BaslangicTarihi <= nowDate && s.BitisTarihi >= nowDate)
+                    }).FirstOrDefault();
+                return xD;
+            }
+        }
+
         public static List<CmbIntDto> GetCmbTalepTipleriSurec(int talepSurecId, int talepTipId, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

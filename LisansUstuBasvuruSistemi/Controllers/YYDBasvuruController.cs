@@ -266,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == kModel.BasvuruSurecID).First();
             kModel.EnstituKod = bsurec.EnstituKod;
             kModel.DonemAdi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
-            _MmMessage = Management.getAktifBasvurSurecKontrol(kModel.EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru, kModel.KullaniciID, kModel.BasvuruID.toNullIntZero());
+            _MmMessage = Management.getAktifBasvurSurecKontrol(kModel.EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru, kModel.KullaniciID, kModel.BasvuruID.ToNullIntZero());
             if (kModel.BasvuruID <= 0)
             {
                 kModel.BasvuruSurecID = Management.getAktifBasvuruSurecID(kModel.EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru) ?? 0;
@@ -1163,7 +1163,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!uygunMu)
                 {
 
-                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n DilID:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n DilID:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                     _yil = 0001;
                 }
             }
@@ -1173,7 +1173,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (!uygunMu)
                 {
 
-                    Management.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("BasvuruSurecID:" + BasvuruSurecID + "\n SinavTipID:" + SinavTipID + "\n Yil:" + _yil + "\n Bilgisi sistemde bulunamadı! Konsoldan müdahale olabilir!", "Basvuru/getSinavTipSonuc", LogType.Saldırı);
                     _yil = 0001;
                 }
             }
@@ -1262,7 +1262,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

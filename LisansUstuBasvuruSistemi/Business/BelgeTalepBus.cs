@@ -66,7 +66,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         talepZamani = new TimeSpan(1, 1, 1);
                         goto tekrarKontrol;
                     }
-                    btSaat.EklenecekGun = (tarih - bastarih).TotalDays.toIntObj().Value;
+                    btSaat.EklenecekGun = (tarih - bastarih).TotalDays.ToIntObj().Value;
                 }
                 return btSaat;
             }

@@ -7,7 +7,7 @@
 @model  FmTalepler
 @{
     ViewBag.Title = "Index";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
 }
@@ -20,7 +20,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Salon Rezervasyonu Gelen Talepler</h3>
                     <ul class="panel-controls">
-                        @foreach (var item in IndexModel.ListB)
+                        @foreach (var item in indexModel.ListB)
                         {
                             <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
@@ -140,7 +140,7 @@
                                         <td>
                                             @if (!item.MezuniyetBasvurulariID.HasValue)
                                             {
-                                                <a href="@Url.Action("TalepYap", "SR" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="@Url.Action("TalepYap", "Sr" , new { id=item.SRTalepID })"><i style="font-size:11pt; color:@item.Color" class="fa fa-edit tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="getDetail('@item.SRTalepID',true,this)"><i style="font-size:11pt; color:@item.Color" class="glyphicon glyphicon-trash tooltips mColor_@item.SRTalepID" data-style="blue" data-original-title="Sil"></i></a>
                                             }
                                         </td>
@@ -176,7 +176,7 @@
             var ibtID = $('#SRDurumID_' + id).val();
             var ibTipAciklama = $('#SRDurumAciklamasi_' + id).val();
             $.ajax({
-                url: '@Url.Action("Istenenkaydet", "SRGelenTalepler")',
+                url: '@Url.Action("Istenenkaydet", "SrGelenTalepler")',
                 data: {
                     'id': id,
                     'SRDurumID': ibtID,
@@ -215,7 +215,7 @@
         }
         function sil(sndr, id) {
             $.ajax({
-                url: '@Url.Action("Sil", "SR")',
+                url: '@Url.Action("Sil", "Sr")',
                 data: { id: id },
                 success: function (result) {
                     if (result.IsSuccess) {
@@ -245,7 +245,7 @@
         var _panel = $('#SRDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetail", "SR")',
+            url: '@Url.Action("GetDetail", "Sr")',
             data: { id: id, IsDelete: (Isdelete == true)  },
             success: function (result) {
                 if (Isdelete != true) {
@@ -286,7 +286,7 @@
     }
     function sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "SRGelenTalepler")',
+            url: '@Url.Action("Sil", "SrGelenTalepler")',
             data: { id: id },
             success: function (result) {
                 if (result.IsSuccess) {

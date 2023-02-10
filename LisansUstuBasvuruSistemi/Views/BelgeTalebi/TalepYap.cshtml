@@ -3,7 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @model BelgeTalepleri
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
 
 }
@@ -97,7 +97,7 @@
         var BelgeTalepID = $('#BelgeTalepID').val();
         if (btipID != null && OgrNo != null && btipID != "" && OgrNo != "")
             $.ajax({
-                url: '@Url.Action("getBelgeSayisiA", "BelgeTalebi")',
+                url: '@Url.Action("GetBelgeSayisiA", "BelgeTalebi")',
                 data: { 'BelgeTalepID': BelgeTalepID, 'OgrenciNo': OgrNo, 'BelgeTipID': btipID },
                 success: function (result) {
                     var opts = "<option></option>";
@@ -141,7 +141,7 @@
         }
         if (btipID != null && OgrNo != null && Miktar != null && btipID != "" && OgrNo != "" && Miktar != "") {
             $.ajax({
-                url: '@Url.Action("getBilgi", "BelgeTalebi")',
+                url: '@Url.Action("GetBilgi", "BelgeTalebi")',
                 data: { 'BelgeTalepID': BelgeTalepID, 'BelgeTipID': btipID, 'miktar': Miktar },
                 success: function (result) {
                     $('#BilgiContent').html(result.Deger);
@@ -155,7 +155,7 @@
 
     }
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

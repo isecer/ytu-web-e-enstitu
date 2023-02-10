@@ -10,19 +10,19 @@
 
 
     Layout = null;
-    bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    bool TdKayitYetki = KayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
+    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    bool tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
 
 
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var itemOnaylananSR = Model.MezuniyetSRModel.SalonRezervasyonlari.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili).FirstOrDefault();
+    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
 
-    var BezCiltForm = itemOnaylananSR != null ? itemOnaylananSR.SRTalepleriBezCiltFormus.FirstOrDefault() : null;
+    var bezCiltForm = itemOnaylananSr?.SRTalepleriBezCiltFormus.FirstOrDefault();
 
-    var IsTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
-    var item = itemOnaylananSR;
-    var OnayBekleyen = Model.MezuniyetBasvurulariTezDosyalaris.Where(p => !p.IsOnaylandiOrDuzeltme.HasValue).FirstOrDefault();
-    var frmID = "TezDosyaEklePost_" + item.SRTalepID;
+    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
+    var item = itemOnaylananSr;
+    var onayBekleyen = Model.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(p => !p.IsOnaylandiOrDuzeltme.HasValue);
+    var frmId = "TezDosyaEklePost_" + item.SRTalepID;
 }
 
 
@@ -36,14 +36,14 @@
                     </tr>
                     <tr>
                         <td style="padding-left:10px;text-align:left;">
-                            @using (Ajax.BeginForm("TezDosyaEklePost", "Mezuniyet", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmID }))
+                            @using (Ajax.BeginForm("TezDosyaEklePost", "Mezuniyet", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmId }))
                             {
-                                var IsBelgeVar = OnayBekleyen != null;
-                                var IsOnaylandi = IsBelgeVar && OnayBekleyen.IsOnaylandiOrDuzeltme.HasValue;
+                                var IsBelgeVar = onayBekleyen != null;
+                                var IsOnaylandi = IsBelgeVar && onayBekleyen.IsOnaylandiOrDuzeltme.HasValue;
                                 var colorKb = !IsBelgeVar ? "#353333" : "#2f8c8d";
                                 var colorOb = !IsOnaylandi ? "#8d4a2f" : "#2f8c8d";
                                 var FileDialogShow = true;
-                                if (BezCiltForm == null && !IsTdYuklemeKapali)
+                                if (bezCiltForm == null && !isTdYuklemeKapali)
                                 {
                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8pt;padding:6px 10px;min-height:30px;">
                                         <table style="width:100%;">
@@ -60,10 +60,10 @@
                                                                                     @if (IsBelgeVar)
                                                                                     {
                                                                                         <td width="35">
-                                                                                            <span class="input-group-addon openFl" id="BelgeIcon_@item.SRTalepID" FPath="@OnayBekleyen.TezDosyaYolu" FName="@OnayBekleyen.TezDosyaAdi" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                            <span class="input-group-addon openFl" id="BelgeIcon_@item.SRTalepID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <input type="text" class="form-control openFl" id="BelgeAdi_@item.SRTalepID" FPath="@OnayBekleyen.TezDosyaYolu" FName="@OnayBekleyen.TezDosyaAdi" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(IsBelgeVar ? OnayBekleyen.TezDosyaAdi : "Dosya Yüklenmedi")">
+                                                                                            <input type="text" class="form-control openFl" id="BelgeAdi_@item.SRTalepID" FPath="@onayBekleyen.TezDosyaYolu" FName="@onayBekleyen.TezDosyaAdi" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(IsBelgeVar ? onayBekleyen.TezDosyaAdi : "Dosya Yüklenmedi")">
                                                                                         </td>
                                                                                     }
                                                                                     else
@@ -79,14 +79,14 @@
                                                                                         <span class="input-group-addon" id="DosyaSec_@item.SRTalepID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@item.SRTalepID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
                                                                                     </td>
                                                                                     <td width="120" style="padding:1px;">
-                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@item.SRTalepID" onclick="BasvuruBelgeKaydet('@frmID','@item.SRTalepID',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(IsBelgeVar ? "Değiştir" : "Kaydet")</span>
+                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@item.SRTalepID" onclick="BasvuruBelgeKaydet('@frmId','@item.SRTalepID',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(IsBelgeVar ? "Değiştir" : "Kaydet")</span>
                                                                                     </td>
 
                                                                                 </tr>
 
                                                                             </table>
                                                                             <input type="text" class="hide" name="RowID" value="@Model.RowID" />
-                                                                            <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(OnayBekleyen != null ? OnayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
+                                                                            <input type="text" class="hide" name="MezuniyetBasvurulariTezDosyaID" value="@(onayBekleyen != null ? onayBekleyen.MezuniyetBasvurulariTezDosyaID.ToString() : "")" />
                                                                             <input class="hide" type="file" name="BelgeDosyasi" accept="application/pdf" id="Belge_@item.SRTalepID" onchange="ChangeFile(this,'@item.SRTalepID');" />
 
                                                                         </div>
@@ -122,7 +122,7 @@
                                             var RwColor = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "green" : "maroon") : "black");
                                             var Icon = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "fa fa-thumbs-o-up" : "fa fa-edit fa-lg") : "fa fa-clock-o");
                                             var DurumAdi = (itemTD.IsOnaylandiOrDuzeltme.HasValue ? (itemTD.IsOnaylandiOrDuzeltme.Value ? "Onaylandı" : "Düzeltme Talep Edildi") : "İşlem Bekliyor");
-                                            var Yetki = TdKayitYetki && item.IsSonSRTalebi && Model.IsDelete == false && item.SRTalepleriBezCiltFormus.Count == 0;
+                                            var Yetki = tdKayitYetki && item.IsSonSRTalebi && Model.IsDelete == false && item.SRTalepleriBezCiltFormus.Count == 0;
                                             <tr>
                                                 <td>
 

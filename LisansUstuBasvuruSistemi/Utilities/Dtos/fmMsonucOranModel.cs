@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMsonucOranModel
+    public class FmMsonucOranModel
     {
         public bool MulakatSurecineGirecek { get; set; }
         public int AlanTipID { get; set; }

@@ -131,8 +131,9 @@
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _RaporTarihi = $('#BitTar').val();
                                                                                 var _Sayi = $('#Sayi').val();
+                                                                                var _isDanismanOrEsDanisman = $('#isDanismanOrEsDanisman').val();
 
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' +_Sayi;
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' + _Sayi + '&isDanismanOrEsDanisman=' + _isDanismanOrEsDanisman;
 
                                                                             }
                                                                             else {
@@ -482,7 +483,7 @@
         var _panel = $('#bsvrDet_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetailTDOBasvuru", "Ajax")',
+            url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
             data: { id: id, IsDelete: (Isdelete == true) },
             success: function (result) {
                 if (Isdelete != true) {

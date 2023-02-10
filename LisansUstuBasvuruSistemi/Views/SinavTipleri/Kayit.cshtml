@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 col-xs-3 control-label">Sinav Tip Kodu</label>
                                 <div class="col-md-10 col-xs-9">
-                                    <input type="text" name="SinavTipKod" id="SinavTipKod" value="@Model.SinavTipKod.toEmptyStringZero()" class="form-control" />
+                                    <input type="text" name="SinavTipKod" id="SinavTipKod" value="@Model.SinavTipKod.ToEmptyStringZero()" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -987,7 +987,7 @@
         }
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getWsCekimTipDetay", "SinavTipleri")',
+                url: '@Url.Action("GetWsCekimTipDetay", "SinavTipleri")',
                 data: { 'WsSinavCekimTipID': sndrVal, 'SinavTipKod': snvTipKod },
                 success: function (result) {
                     $('#SWsDonemKod').empty();
@@ -1047,7 +1047,7 @@
         _pRefresh(_panel, false);
         if (enstituKod != null && enstituKod != "") {
             $.ajax({
-                url: '@Url.Action("getOtBilgi", "SinavTipleri")',
+                url: '@Url.Action("GetOtBilgi", "SinavTipleri")',
                 data: { 'EnstituKod': enstituKod, 'SinavTipID': sinavTipID },
                 success: function (result) {
                     $('#_OtBilgi').html(result);

@@ -42,7 +42,7 @@ namespace LisansUstuBasvuruSistemi
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
 
-            bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().toBooleanObj() ?? false;
+            bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
             if (OtomatikMailBilgilendirmeServisiniCalistir)
             {
                 ApplicationClock ap = new ApplicationClock();
@@ -276,7 +276,7 @@ namespace LisansUstuBasvuruSistemi
                     //var q = HttpContext.Current.Request.UserAgent.ToString().toDeviceType();  
 
                     //var userAgent = HttpContext.Current.Request.UserAgent; 
-                    var UniqueId = Session["UserId"].toStrObj();
+                    var UniqueId = Session["UserId"].ToStrObj();
 
                     if (UniqueId != null)
                     {

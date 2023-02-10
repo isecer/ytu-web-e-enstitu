@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmTalep : PagerOption
+    public class FmTalep : PagerOption
     {
         public bool Expand { get; set; }
         public int? TalepSurecID { get; set; }
@@ -19,9 +19,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramKod { get; set; }
         public bool? IsTezOnerisiYapildi { get; set; }
         public bool? IsDersYukuTamamlandi { get; set; }
-        public IEnumerable<frTalep> Data { get; set; }
+        public IEnumerable<FrTalep> Data { get; set; }
     }
-    public class frTalep : TalepGelenTalepler
+    public class FrTalep : TalepGelenTalepler
     {
         public bool YtuOgrencisi { get; set; }
         public bool IsbelgeYuklemesiVar { get; set; }

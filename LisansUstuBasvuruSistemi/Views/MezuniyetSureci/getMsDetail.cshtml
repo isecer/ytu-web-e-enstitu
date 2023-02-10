@@ -3,10 +3,10 @@
 @model msUrecDetay
 @{
     Layout = null;
-    var IsDelete = (bool)ViewBag.IsDelete;
-    string Id = IsDelete ? Model.MezuniyetSurecID.ToString() + "_cp" : Model.MezuniyetSurecID.ToString();
-    string Color = "color=blue";
-    var tbName = TabAdlari.MezuniyetSureciTN + "-" + Id;
+    var isDelete = (bool)ViewBag.IsDelete;
+    string id = isDelete ? Model.MezuniyetSurecID.ToString() + "_cp" : Model.MezuniyetSurecID.ToString();
+    string color = "color=blue";
+    var tbName = TabAdlari.MezuniyetSureciTN + "-" + id;
 }
 <style>
     .myCaptionTdx {
@@ -36,12 +36,12 @@
 <div class="panel panel-success" style="vertical-align:top;height:95%;" id="pnglDB_@Model.MezuniyetSurecID">
     <div class="panel-body" style="margin: 0px; padding: 0px;">
         <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
-            <ul class="nav nav-tabs MsTabBtn_@Id" role="tablist">
-                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@Id',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@Color"></i>&nbsp; <span class="myCaptionTdx" style="@Color">Süreç</span></a></li>
-                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@Id',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@Color"></i>&nbsp; <span class="myCaptionTdx" style="@Color">Yönetmelik Bilgileri</span></a></li>
-                     @if (!IsDelete)
+            <ul class="nav nav-tabs MsTabBtn_@id" role="tablist">
+                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@id',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i>&nbsp; <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@id',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i>&nbsp; <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
+                     @if (!isDelete)
                 {
-                    <li><a href="javascript:void(0);" onclick="subData('@Id');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@Color"></span></a></li>
+                    <li><a href="javascript:void(0);" onclick="subData('@id');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@color"></span></a></li>
                 }
             </ul>
             <div class="panel-body tab-content" style="padding:0px;">

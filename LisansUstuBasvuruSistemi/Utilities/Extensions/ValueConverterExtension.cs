@@ -15,18 +15,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return JsonConvert.SerializeObject(obj); ;
         }
-        public static string toStrObj(this object obj)
+        public static string ToStrObj(this object obj)
         {
             if (obj != null) return Convert.ToString(obj);
             else return (string)null;
         }
 
-        public static string toStrObjEmptString(this object obj)
+        public static string ToStrObjEmptString(this object obj)
         {
             if (obj != null)
             {
-                var Str = Convert.ToString(obj);
-                return Str.Trim();
+                var str = Convert.ToString(obj);
+                return str.Trim();
             }
             else return "";
         }
@@ -48,35 +48,35 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (decimal.TryParse(moneyStr, out def)) return def;
             return null;
         }
-        public static decimal? toDecimalObj(this object obj)
+        public static decimal? ToDecimalObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
             else return (decimal?)null;
         }
-        public static bool? toIntToBooleanObj(this object obj)
+        public static bool? ToIntToBooleanObj(this object obj)
         {
-            var IntValue = obj.toIntObj();
-            if (obj != null && IntValue.HasValue)
+            var intValue = obj.ToIntObj();
+            if (obj != null && intValue.HasValue)
             {
 
-                if (IntValue == 1) return true;
-                else if (IntValue == 0) return false;
+                if (intValue == 1) return true;
+                else if (intValue == 0) return false;
                 else return (bool?)null;
             }
             else return (bool?)null;
         }
-        public static bool? toBooleanObj(this object obj)
+        public static bool? ToBooleanObj(this object obj)
         {
             bool dgr;
             if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
             else return (bool?)null;
         }
-        public static double? toDoubleObj(this object obj)
+        public static double? ToDoubleObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
             else return (double?)null;
         }
-        public static int? toIntObj(this object obj)
+        public static int? ToIntObj(this object obj)
         {
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
             else return (int?)null;
@@ -87,13 +87,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && obj.ToString().Trim() != "") retval = obj.ToString().ToInt().Value;
             return retval;
         }
-        public static int? toNullIntZero(this object obj)
+        public static int? ToNullIntZero(this object obj)
         {
             int? retval = null;
             if (obj != null && obj.ToString() != "0") retval = obj.ToString().ToInt();
             return retval;
         }
-        public static string toEmptyStringZero(this object obj)
+        public static string ToEmptyStringZero(this object obj)
         {
             string retval = "";
             if (obj != null && obj.ToString() != "0") retval = obj.ToString();
@@ -127,7 +127,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return datetime == DateTime.MinValue ? "" : datetime.ToString("HH.mm");
         }
-        
+        public static DateTime TodateToShortDate(this DateTime Tarih)
+        {
+            var data1 = Tarih.ToDateString().ToDate().Value;
+            return data1;
+        }
+        public static DateTime? TodateToShortDate(this DateTime? Tarih)
+        {
+            if (Tarih != null) return Tarih.ToDateString().ToDate().Value;
+            else return null;
+        }
         public static string ToBelirtilmemis(this int? sayi)
         {
             return !sayi.HasValue ? "Belirtilmemiş" : sayi.Value.ToString();

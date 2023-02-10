@@ -7,32 +7,41 @@
         <div class="panel-body">
             @using (Ajax.BeginForm("GetTutanakRaporuKontrolu", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TutanakRprForm" }))
             {
-            <div class="panel-body form-group-separated"> 
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <table>
-                            <tr>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
-                                <td>/</td>
-                                <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
-                            </tr>
-                        </table>
+                <div class="panel-body form-group-separated">
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Rapor Türü</label>
+                        <div class="col-md-9 col-xs-9">
+                            <select id="isDanismanOrEsDanisman" name="isDanismanOrEsDanisman" class="form-control">
+                                <option selected="selected" value="true">Danışman Tutanak Çıktısı</option>
+                                <option value="false">Eş Danışman Tutanak Çıktısı</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Başlangıç / Bitiş Tarihi</label>
+                        <div class="col-md-9 col-xs-9">
+                            <table>
+                                <tr>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BasTar" name="BasTar"> </td>
+                                    <td>/</td>
+                                    <td><input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="BitTar" name="BitTar"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
+                        <div class="col-md-9 col-xs-9">
+                            <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-3 control-label">Rapor Sayısı</label>
+                        <div class="col-md-9 col-xs-9">
+                            <input class="form-control" autocomplete="off" size="10" type="text" id="Sayi" name="Sayi">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Tarihi</label>
-                    <div class="col-md-9 col-xs-9">
-                        <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="10" type="text" id="RaporTarihi" name="RaporTarihi">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 col-xs-3 control-label">Rapor Sayısı</label>
-                    <div class="col-md-9 col-xs-9">
-                        <input class="form-control" autocomplete="off" size="10" type="text" id="Sayi" name="Sayi">
-                    </div>
-                </div>
-            </div>
             }
         </div>
     </div>

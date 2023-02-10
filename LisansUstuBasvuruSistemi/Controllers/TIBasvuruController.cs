@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if ((Kul.OgrenimTipKod == OgrenimTipi.Doktra || Kul.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora) && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                        if (Kul.OgrenimTipKod.IsDoktora()  && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                         {
                             bbModel.KullaniciTipYetki = true;
                             var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == Kul.KayitDonemID.Value);
@@ -268,7 +268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
-            mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.toNullIntZero());
+            mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
 
             var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
@@ -836,24 +836,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      ad.Inx,
                                      at.TabID,
                                      jt.JuriTipAdi,
-                                     AdSoyad = ad.AdSoyad.toStrObjEmptString(),
+                                     AdSoyad = ad.AdSoyad.ToStrObjEmptString(),
                                      AdSoyadSuccess = !ad.AdSoyad.IsNullOrWhiteSpace(),
-                                     UnvanAdi = un.UnvanAdi.toStrObjEmptString(),
+                                     UnvanAdi = un.UnvanAdi.ToStrObjEmptString(),
                                      UnvanAdiSuccess = !un.UnvanAdi.IsNullOrWhiteSpace(),
-                                     EMail = em.EMail.toStrObjEmptString(),
+                                     EMail = em.EMail.ToStrObjEmptString(),
                                      EMailSuccess = !em.EMail.IsNullOrWhiteSpace() && !em.EMail.ToIsValidEmail(),
                                      uni.UniversiteID,
                                      UniversiteIDSuccess = uni.UniversiteID.HasValue,
-                                     AnabilimdaliProgramAdi = abd.AnabilimdaliProgramAdi.toStrObjEmptString(),
+                                     AnabilimdaliProgramAdi = abd.AnabilimdaliProgramAdi.ToStrObjEmptString(),
                                      AnabilimdaliProgramAdiSuccess = !abd.AnabilimdaliProgramAdi.IsNullOrWhiteSpace(),
                                      IsDilSinaviOrUniversite = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false ? ids.IsDilSinaviOrUniversite.ToBoolean() : null,
-                                     IsDilSinaviOrUniversiteSuccess = !kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || ids.IsDilSinaviOrUniversite.toBooleanObj().HasValue,
-                                     DilSinavAdi = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false ? ds.DilSinavAdi.toStrObjEmptString() : "",
+                                     IsDilSinaviOrUniversiteSuccess = !kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || ids.IsDilSinaviOrUniversite.ToBooleanObj().HasValue,
+                                     DilSinavAdi = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false ? ds.DilSinavAdi.ToStrObjEmptString() : "",
                                      DilSinavAdiSuccess = !kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || !ds.DilSinavAdi.IsNullOrWhiteSpace(),
-                                     DilPuani = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false && ids.IsDilSinaviOrUniversite.ToBoolean() == true ? dp.DilPuani.toStrObjEmptString() : null,
+                                     DilPuani = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false && ids.IsDilSinaviOrUniversite.ToBoolean() == true ? dp.DilPuani.ToStrObjEmptString() : null,
                                      DilPuaniSuccessMsg = (!kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || ids.IsDilSinaviOrUniversite.ToBoolean() == false) ? "" : dp.DilPuani.IsSuccessSinavPuanUye(sinavPuanKontroluYap, puanKriteri),
-                                     SinavTarihi = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false ? st.SinavTarihi.toIntObj() : null,
-                                     SinavTarihiSuccess = !kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || ids.IsDilSinaviOrUniversite.ToBoolean() == false || (st.SinavTarihi.toIntObj().HasValue && st.SinavTarihi.toIntObj() <= DateTime.Now.Year),
+                                     SinavTarihi = kModel.IsTezDiliDegisecek && kModel.YeniTezDiliTr == false ? st.SinavTarihi.ToIntObj() : null,
+                                     SinavTarihiSuccess = !kModel.IsTezDiliDegisecek || kModel.YeniTezDiliTr != false || ids.IsDilSinaviOrUniversite.ToBoolean() == false || (st.SinavTarihi.ToIntObj().HasValue && st.SinavTarihi.ToIntObj() <= DateTime.Now.Year),
 
                                  }).Select(s => new
                                  {
@@ -1104,7 +1104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            Management.SistemBilgisiKaydet(hataMsj, "TIBasvuru/TIAraRaporFormuPost", LogType.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "TIBasvuru/TIAraRaporFormuPost", LogType.Hata);
                         }
 
 
@@ -1357,7 +1357,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = Msgtype.Error;
                         mmMessage.Messages.Add("İşlem yapılırken bir hata oluştu.");
-                        Management.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), "TIBasvuru/RezervasyonAlPost<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Kritik);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Tez izleme toplantı bilgisi oluşturulurken bir hata oluştu! Hata:" + ex.ToExceptionMessage(), "TIBasvuru/RezervasyonAlPost<br/><br/>" + ex.ToExceptionStackTrace(), LogType.Kritik);
                     }
 
                 }
@@ -1692,7 +1692,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }
@@ -1729,7 +1729,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     _entities.SRTalepleris.RemoveRange(araRapor.SRTalepleris);
                     _entities.TIBasvuruAraRaporKomites.RemoveRange(araRapor.TIBasvuruAraRaporKomites);
-                    araRapor.TIBasvuru.AktifTIBasvuruAraRaporID = araRapor.TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID != tiBasvuruAraRaporId).OrderByDescending(o => o.AraRaporSayisi).Select(s => s.TIBasvuruAraRaporID).FirstOrDefault().toNullIntZero();
+                    araRapor.TIBasvuru.AktifTIBasvuruAraRaporID = araRapor.TIBasvuru.TIBasvuruAraRapors.Where(p => p.TIBasvuruAraRaporID != tiBasvuruAraRaporId).OrderByDescending(o => o.AraRaporSayisi).Select(s => s.TIBasvuruAraRaporID).FirstOrDefault().ToNullIntZero();
                     _entities.TIBasvuruAraRapors.Remove(araRapor);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -1740,7 +1740,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silinemedi.");
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TIBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;

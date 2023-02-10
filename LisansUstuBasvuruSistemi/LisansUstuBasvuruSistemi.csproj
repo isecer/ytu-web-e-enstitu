@@ -220,7 +220,9 @@
     <Compile Include="Business\MenulerBus.cs" />
     <Compile Include="Business\MesajlarBus.cs" />
     <Compile Include="Business\MezuniyetBus.cs" />
+    <Compile Include="Business\OgrenimTipleriBus.cs" />
     <Compile Include="Business\RollerBus.cs" />
+    <Compile Include="Business\SistemBilgilendirmeBus.cs" />
     <Compile Include="Business\SrTalepleriBus.cs" />
     <Compile Include="Business\TaleplerBus.cs" />
     <Compile Include="Business\TezDanismanOneriBus.cs" />
@@ -274,13 +276,13 @@
     <Compile Include="Controllers\RaporlarBTController.cs" />
     <Compile Include="Controllers\RaporlarLUBController.cs" />
     <Compile Include="Controllers\SikcaSorulanSorularController.cs" />
-    <Compile Include="Controllers\SRSalonBilgiController.cs" />
-    <Compile Include="Controllers\SRTalepTipleriController.cs" />
-    <Compile Include="Controllers\SRAyarlarController.cs" />
-    <Compile Include="Controllers\SRController.cs" />
-    <Compile Include="Controllers\SRGelenTaleplerController.cs" />
-    <Compile Include="Controllers\SROzelTanimlarController.cs" />
-    <Compile Include="Controllers\SRSalonlarController.cs" />
+    <Compile Include="Controllers\SrSalonBilgiController.cs" />
+    <Compile Include="Controllers\SrTalepTipleriController.cs" />
+    <Compile Include="Controllers\SrAyarlarController.cs" />
+    <Compile Include="Controllers\SrController.cs" />
+    <Compile Include="Controllers\SrGelenTaleplerController.cs" />
+    <Compile Include="Controllers\SrOzelTanimlarController.cs" />
+    <Compile Include="Controllers\SrSalonlarController.cs" />
     <Compile Include="Controllers\SehirlerController.cs" />
     <Compile Include="Controllers\SinavTipleriController.cs" />
     <Compile Include="Controllers\SistemAyarlariController.cs" />
@@ -859,11 +861,11 @@
     <Compile Include="Models\ZamanTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.cs">
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.Designer.cs">
-      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.Designer.cs">
+      <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
     <Compile Include="Utilities\Dtos\LoginAjaxDto.cs" />
@@ -891,7 +893,6 @@
     <Compile Include="Utilities\Dtos\kmMulakatSonuc.cs" />
     <Compile Include="Utilities\Dtos\kotaKontrolModel.cs" />
     <Compile Include="Utilities\Dtos\krOgrenimTip.cs" />
-    <Compile Include="Utilities\Dtos\krSinavTipleri.cs" />
     <Compile Include="Utilities\Dtos\kulaniciProgramYetkiModel.cs" />
     <Compile Include="Utilities\Dtos\mailBsonucModel.cs" />
     <Compile Include="Utilities\Dtos\mailListModel.cs" />
@@ -976,7 +977,7 @@
     <Compile Include="Utilities\Dtos\FmMesajlarDto.cs" />
     <Compile Include="Utilities\Dtos\FmBasvuruSureciDto.cs" />
     <Compile Include="Utilities\Dtos\FmBasvurularDto.cs" />
-    <Compile Include="Utilities\Dtos\fmMezuniyetBasvurulari.cs" />
+    <Compile Include="Utilities\Dtos\FmMezuniyetBasvurulari.cs" />
     <Compile Include="Utilities\Dtos\FmMailGondermeDto.cs" />
     <Compile Include="Utilities\Dtos\fmSehirler.cs" />
     <Compile Include="Utilities\Dtos\fmUniversiteler.cs" />
@@ -984,7 +985,7 @@
     <Compile Include="Utilities\Dtos\FmEnstitulerDto.cs" />
     <Compile Include="Utilities\Dtos\FmAnabilimDallariDto.cs" />
     <Compile Include="Utilities\Dtos\FmAlesTipleriDto.cs" />
-    <Compile Include="Utilities\Dtos\fmOgrenciBolumleri.cs" />
+    <Compile Include="Utilities\Dtos\FmOgrenciBolumleri.cs" />
     <Compile Include="Utilities\Dtos\fmProgramlar.cs" />
     <Compile Include="Utilities\Dtos\fmSinavTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmBolumEslestirDto.cs" />
@@ -995,23 +996,22 @@
     <Compile Include="Utilities\Dtos\fmTalep.cs" />
     <Compile Include="Utilities\Dtos\fmTalepSurec.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTipleriDto.cs" />
-    <Compile Include="Utilities\Dtos\fmSRTalepTipleri.cs" />
+    <Compile Include="Utilities\Dtos\FmSrTalepTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTipDetayDto.cs" />
-    <Compile Include="Utilities\Dtos\fmMulakatSinavTurleri.cs" />
     <Compile Include="Utilities\Dtos\fmSinavSonuclari.cs" />
-    <Compile Include="Utilities\Dtos\fmMulakatSureci.cs" />
-    <Compile Include="Utilities\Dtos\fmMsonucOranModel.cs" />
-    <Compile Include="Utilities\Dtos\fmMulakatSonuc.cs" />
-    <Compile Include="Utilities\Dtos\fmMulakatNotGiris.cs" />
+    <Compile Include="Utilities\Dtos\FmMulakatSureci.cs" />
+    <Compile Include="Utilities\Dtos\FmMsonucOranModel.cs" />
+    <Compile Include="Utilities\Dtos\FmMulakatSonuc.cs" />
+    <Compile Include="Utilities\Dtos\FmMulakatNotGiris.cs" />
     <Compile Include="Utilities\Dtos\fmSalonlar.cs" />
     <Compile Include="Utilities\Dtos\fmTalepler.cs" />
     <Compile Include="Utilities\Dtos\fmSalonBilgi.cs" />
-    <Compile Include="Utilities\Dtos\fmOzelTanimlar.cs" />
+    <Compile Include="Utilities\Dtos\FmOzelTanimlar.cs" />
     <Compile Include="Utilities\Dtos\fmTDOBasvuru.cs" />
     <Compile Include="Utilities\Dtos\fmTIBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\fmMezuniyetSureci.cs" />
-    <Compile Include="Utilities\Dtos\fmMezuniyetYonetmelikler.cs" />
-    <Compile Include="Utilities\Dtos\fmMezuniyetYayinTurleri.cs" />
+    <Compile Include="Utilities\Dtos\FmMezuniyetSureci.cs" />
+    <Compile Include="Utilities\Dtos\FmMezuniyetYonetmelikler.cs" />
+    <Compile Include="Utilities\Dtos\FmMezuniyetYayinTurleri.cs" />
     <Compile Include="Utilities\Enums\AlanTipi.cs" />
     <Compile Include="Utilities\Enums\AlesTipBilgi.cs" />
     <Compile Include="Utilities\Enums\BasvuruAgnoAlimTipi.cs" />
@@ -1089,11 +1089,11 @@
     <Compile Include="Utilities\SystemSetting\SrAyar.cs" />
     <Compile Include="Utilities\Helpers\ThreeDHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raporlar\Genel\rprAnket.cs">
+    <Compile Include="Raporlar\Genel\RprAnket.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Genel\rprAnket.Designer.cs">
-      <DependentUpon>rprAnket.cs</DependentUpon>
+    <Compile Include="Raporlar\Genel\RprAnket.Designer.cs">
+      <DependentUpon>RprAnket.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\BelgeTalep\RaporBT.cs">
       <SubType>Component</SubType>
@@ -1143,11 +1143,11 @@
     <Compile Include="Raporlar\LUB\rprBasvuruYL.Designer.cs">
       <DependentUpon>rprBasvuruYL.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Genel\rprBolumProgramListesi.cs">
+    <Compile Include="Raporlar\Genel\RprBolumProgramListesi.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Genel\rprBolumProgramListesi.Designer.cs">
-      <DependentUpon>rprBolumProgramListesi.cs</DependentUpon>
+    <Compile Include="Raporlar\Genel\RprBolumProgramListesi.Designer.cs">
+      <DependentUpon>RprBolumProgramListesi.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\LUB\rprKesinKayitResimListesi.cs">
       <SubType>Component</SubType>
@@ -1155,77 +1155,77 @@
     <Compile Include="Raporlar\LUB\rprKesinKayitResimListesi.Designer.cs">
       <DependentUpon>rprKesinKayitResimListesi.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezKontrolFormu.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezKontrolFormu.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezKontrolFormu.Designer.cs">
-      <DependentUpon>rprMezuniyetTezKontrolFormu.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezKontrolFormu.Designer.cs">
+      <DependentUpon>RprMezuniyetTezKontrolFormu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetYayinSartiOnayiFormu.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetYayinSartiOnayiFormu.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetYayinSartiOnayiFormu.Designer.cs">
-      <DependentUpon>rprMezuniyetYayinSartiOnayiFormu.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetYayinSartiOnayiFormu.Designer.cs">
+      <DependentUpon>RprMezuniyetYayinSartiOnayiFormu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetCiltliTezTeslimFormu_FR1243.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetCiltliTezTeslimFormu_FR1243.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetCiltliTezTeslimFormu_FR1243.Designer.cs">
-      <DependentUpon>rprMezuniyetCiltliTezTeslimFormu_FR1243.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetCiltliTezTeslimFormu_FR1243.Designer.cs">
+      <DependentUpon>RprMezuniyetCiltliTezTeslimFormu_FR1243.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakDR.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakDR.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakDR.Designer.cs">
-      <DependentUpon>rprMezuniyetMezunlarTutanakDR.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakDR.Designer.cs">
+      <DependentUpon>RprMezuniyetMezunlarTutanakDR.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakYL.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakYL.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakYL.Designer.cs">
-      <DependentUpon>rprMezuniyetMezunlarTutanakYL.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakYL.Designer.cs">
+      <DependentUpon>RprMezuniyetMezunlarTutanakYL.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezDegerlendirmeFormu_FR0303.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezDegerlendirmeFormu_FR0303.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezDegerlendirmeFormu_FR0303.Designer.cs">
-      <DependentUpon>rprMezuniyetTezDegerlendirmeFormu_FR0303.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezDegerlendirmeFormu_FR0303.Designer.cs">
+      <DependentUpon>RprMezuniyetTezDegerlendirmeFormu_FR0303.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.Designer.cs">
-      <DependentUpon>rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.Designer.cs">
+      <DependentUpon>RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.Designer.cs">
-      <DependentUpon>rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.Designer.cs">
+      <DependentUpon>RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriOneriFormu_FR0300_FR0339.Designer.cs">
-      <DependentUpon>rprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriOneriFormu_FR0300_FR0339.Designer.cs">
+      <DependentUpon>RprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriTutanak.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriTutanak.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriTutanak.Designer.cs">
-      <DependentUpon>rprMezuniyetTezJuriTutanak.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriTutanak.Designer.cs">
+      <DependentUpon>RprMezuniyetTezJuriTutanak.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprJuriUyelerineTezTeslimFormu_FR0341_FR0302.Designer.cs">
-      <DependentUpon>rprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprJuriUyelerineTezTeslimFormu_FR0341_FR0302.Designer.cs">
+      <DependentUpon>RprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprTezSinavSonucTutanagi_FR0342_FR0377.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_FR0342_FR0377.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprTezSinavSonucTutanagi_FR0342_FR0377.Designer.cs">
-      <DependentUpon>rprTezSinavSonucTutanagi_FR0342_FR0377.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_FR0342_FR0377.Designer.cs">
+      <DependentUpon>RprTezSinavSonucTutanagi_FR0342_FR0377.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\LUB\rprBasvuruMulakatsizOgrenciList.cs">
       <SubType>Component</SubType>
@@ -1233,38 +1233,35 @@
     <Compile Include="Raporlar\LUB\rprBasvuruMulakatsizOgrenciList.Designer.cs">
       <DependentUpon>rprBasvuruMulakatsizOgrenciList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezTeslimFormu_0338.cs">
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezTeslimFormu_0338.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\Mezuniyet\rprMezuniyetTezTeslimFormu_0338.Designer.cs">
-      <DependentUpon>rprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
+    <Compile Include="Raporlar\Mezuniyet\RprMezuniyetTezTeslimFormu_0338.Designer.cs">
+      <DependentUpon>RprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\RprTDOEYK.cs">
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezEsDanismaniOneriFormu_FR0320.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezEsDanismaniOneriFormu_FR0320.cs">
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezEsDanismaniOneriFormu_FR0320.Designer.cs">
+      <DependentUpon>RprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniDegisiklikFormu_FR0308.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezEsDanismaniOneriFormu_FR0320.Designer.cs">
-      <DependentUpon>rprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
+    <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniDegisiklikFormu_FR0308.Designer.cs">
+      <DependentUpon>RprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.cs">
+    <Compile Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormuDetay_FR0307.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.Designer.cs">
-      <DependentUpon>rprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
+    <Compile Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormuDetay_FR0307.Designer.cs">
+      <DependentUpon>RprTiDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>
     </Compile>
-    <Compile Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormuDetay_FR0307.cs">
+    <Compile Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormu_FR0307.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormuDetay_FR0307.Designer.cs">
-      <DependentUpon>rprTIDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormu_FR0307.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormu_FR0307.Designer.cs">
-      <DependentUpon>rprTIDegerlendirmeFormu_FR0307.cs</DependentUpon>
+    <Compile Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormu_FR0307.Designer.cs">
+      <DependentUpon>RprTiDegerlendirmeFormu_FR0307.cs</DependentUpon>
     </Compile>
     <Compile Include="Service References\LdapService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -3180,17 +3177,17 @@
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Account\getOnlineUserList.cshtml" />
+    <Content Include="Views\Account\GetOnlineUserList.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\ParolaSifirla.cshtml" />
-    <Content Include="Views\Ajax\getKullaniciDetay.cshtml" />
-    <Content Include="Views\Ajax\getMessage.cshtml" />
-    <Content Include="Views\Ajax\getSinavBilgi.cshtml" />
+    <Content Include="Views\Ajax\GetKullaniciDetay.cshtml" />
+    <Content Include="Views\Ajax\GetMessage.cshtml" />
+    <Content Include="Views\Ajax\GetSinavBilgi.cshtml" />
     <Content Include="Views\BasvuruSureci\getBsDetail.cshtml" />
     <Content Include="Views\BasvuruSureci\Index.cshtml" />
     <Content Include="Views\BasvuruSureci\Kayit.cshtml" />
     <Content Include="Views\Basvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\Basvuru\getbbModel.cshtml" />
+    <Content Include="Views\Basvuru\GetbbModel.cshtml" />
     <Content Include="Views\Basvuru\getOTdetay.cshtml" />
     <Content Include="Views\Basvuru\getPRdetay.cshtml" />
     <Content Include="Views\Basvuru\getSinavTip.cshtml" />
@@ -3246,7 +3243,7 @@
     <Content Include="Views\GelenBelgeTalepleri\Index.cshtml" />
     <Content Include="Views\BelgeTalebi\Index.cshtml" />
     <Content Include="Views\BelgeTalebi\TalepYap.cshtml" />
-    <Content Include="Views\BelgeTalebi\getdetay.cshtml" />
+    <Content Include="Views\BelgeTalebi\GetDetay.cshtml" />
     <Content Include="Views\BelgeTipleri\Index.cshtml" />
     <Content Include="Views\BelgeTipleri\Kayit.cshtml" />
     <Content Include="Views\BelgeTalepAyar\Index.cshtml" />
@@ -3257,11 +3254,11 @@
     <Content Include="Views\MulakatSureci\Index.cshtml" />
     <Content Include="Views\Kullanicilar\KullaniciProgramYetkileri.cshtml" />
     <Content Include="Views\MulakatSureci\MulakatKayit.cshtml" />
-    <Content Include="Views\MulakatSureci\getMulakatDetay.cshtml" />
+    <Content Include="Views\MulakatSureci\GetMulakatDetay.cshtml" />
     <Content Include="Views\BasvuruSureci\getBasvuruSonucDetay.cshtml" />
-    <Content Include="Views\Ajax\getMailContent.cshtml" />
-    <Content Include="Views\Ajax\getMailTableContent.cshtml" />
-    <Content Include="Views\Ajax\getMailTableJuriContent.cshtml" />
+    <Content Include="Views\Ajax\GetMailContent.cshtml" />
+    <Content Include="Views\Ajax\GetMailTableContent.cshtml" />
+    <Content Include="Views\Ajax\GetMailTableJuriContent.cshtml" />
     <Content Include="Views\SRSalonlar\Index.cshtml" />
     <Content Include="Views\SRGelenTalepler\Index.cshtml" />
     <Content Include="Views\SR\Index.cshtml" />
@@ -3269,18 +3266,18 @@
     <Content Include="Views\AppEvent\Error.cshtml" />
     <Content Include="Views\SRAyarlar\Index.cshtml" />
     <Content Include="Views\SR\TalepYap.cshtml" />
-    <Content Include="Views\Ajax\getSaatlerView.cshtml" />
-    <Content Include="Views\SR\getDetail.cshtml" />
+    <Content Include="Views\Ajax\GetSaatlerView.cshtml" />
+    <Content Include="Views\SR\GetDetail.cshtml" />
     <Content Include="Views\SROzelTanimlar\Index.cshtml" />
     <Content Include="Views\SRTalepTipleri\Index.cshtml" />
     <Content Include="Views\SROzelTanimlar\Kayit.cshtml" />
     <Content Include="Views\SRTalepTipleri\Kayit.cshtml" />
-    <Content Include="Views\SROzelTanimlar\getSaatlerView.cshtml" />
-    <Content Include="Views\Ajax\getGunler.cshtml" />
+    <Content Include="Views\SROzelTanimlar\GetSaatlerView.cshtml" />
+    <Content Include="Views\Ajax\GetGunler.cshtml" />
     <Content Include="Views\SRSalonBilgi\Index.cshtml" />
-    <Content Include="Views\SROzelTanimlar\getDetail.cshtml" />
+    <Content Include="Views\SROzelTanimlar\GetDetail.cshtml" />
     <Content Include="Views\KDuyurular\DuyuruHtml.cshtml" />
-    <Content Include="Views\SinavTipleri\getDetail.cshtml" />
+    <Content Include="Views\SinavTipleri\GetDetail.cshtml" />
     <Content Include="Views\BasvuruSureci\getBsSinavTipleri.cshtml" />
     <Content Include="Views\BasvuruSureci\getBsDetAnaBilgi.cshtml" />
     <Content Include="Views\BasvuruSureci\getBsKotalar.cshtml" />
@@ -3301,10 +3298,10 @@
     <Content Include="Views\BasvuruSureci\getOtBilgi.cshtml" />
     <Content Include="Views\MailSablonlariSistem\Index.cshtml" />
     <Content Include="Views\MailSablonlariSistem\Kayit.cshtml" />
-    <Content Include="Views\SinavTipleri\getOtBilgi.cshtml" />
+    <Content Include="Views\SinavTipleri\GetOtBilgi.cshtml" />
     <Content Include="Views\RaporlarLUB\Index.cshtml" />
     <Content Include="Views\RaporlarBT\Index.cshtml" />
-    <Content Include="Views\Ajax\getGBNDetail.cshtml" />
+    <Content Include="Views\Ajax\GetGBNDetail.cshtml" />
     <None Include="Service References\Ws_Osym_1\SonucBusiness.wsdl" />
     <Content Include="Views\MezuniyetGelenBasvurular\Index.cshtml" />
     <Content Include="Views\MezuniyetSureci\Index.cshtml" />
@@ -3312,18 +3309,18 @@
     <Content Include="Views\MezuniyetYayinTurleri\Index.cshtml" />
     <Content Include="Views\MezuniyetSureci\Kayit.cshtml" />
     <Content Include="Views\MezuniyetYayinTurleri\Kayit.cshtml" />
-    <Content Include="Views\MezuniyetSureci\getMsDetail.cshtml" />
-    <Content Include="Views\MezuniyetSureci\getMsDetAnaBilgi.cshtml" />
-    <Content Include="Views\Mezuniyet\getbbModel.cshtml" />
+    <Content Include="Views\MezuniyetSureci\GetMsDetail.cshtml" />
+    <Content Include="Views\MezuniyetSureci\GetMsDetAnaBilgi.cshtml" />
+    <Content Include="Views\Mezuniyet\GetbbModel.cshtml" />
     <Content Include="Views\MezuniyetAyarlar\Index.cshtml" />
     <Content Include="Views\MezuniyetYonetmelikler\Index.cshtml" />
     <Content Include="Views\MezuniyetYonetmelikler\Kayit.cshtml" />
-    <Content Include="Views\MezuniyetYonetmelikler\getMyDetail.cshtml" />
-    <Content Include="Views\MezuniyetSureci\getYonetmelikBilgi.cshtml" />
+    <Content Include="Views\MezuniyetYonetmelikler\GetMyDetail.cshtml" />
+    <Content Include="Views\MezuniyetSureci\GetYonetmelikBilgi.cshtml" />
     <Content Include="Views\Mezuniyet\BasvuruYap.cshtml" />
-    <Content Include="Views\Mezuniyet\getYayinTur.cshtml" />
+    <Content Include="Views\Mezuniyet\GetYayinTur.cshtml" />
     <Content Include="Views\Mezuniyet\AddRow.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\YayinKontrol.cshtml" />
     <Content Include="Views\DosyaKontrol\Index.cshtml" />
     <Content Include="Views\Anketler\Index.cshtml" />
@@ -3332,13 +3329,13 @@
     <Content Include="Views\Anketler\SoruEkle.cshtml" />
     <Content Include="Views\Anketler\SoruSecenekEkle.cshtml" />
     <Content Include="Views\Anketler\DetaySablon2.cshtml" />
-    <Content Include="Views\Ajax\getAnket.cshtml" />
+    <Content Include="Views\Ajax\GetAnket.cshtml" />
     <Content Include="Views\BasvuruSureci\getBsAnket.cshtml" />
     <Content Include="Views\OnlineOdeme\Index.cshtml" />
     <Content Include="Views\OnlineOdeme\getPRdetay.cshtml" />
     <Content Include="Views\Ajax\PaymentResponse.cshtml" />
-    <Content Include="Views\Mesajlar\getMesajDetay.cshtml" />
-    <Content Include="Views\Ajax\getImageUpload.cshtml" />
+    <Content Include="Views\Mesajlar\GetMesajDetay.cshtml" />
+    <Content Include="Views\Ajax\GetImageUpload.cshtml" />
     <Content Include="Views\Ajax\GetAnketCevap.cshtml" />
     <Content Include="Views\RaporlarAnket\Index.cshtml" />
     <Content Include="Views\Mezuniyet\RezervasyonAl.cshtml" />
@@ -3348,7 +3345,7 @@
     <Content Include="Views\MezuniyetGelenBasvurular\JuriOneriFormu.cshtml" />
     <Content Include="Views\Ajax\GetChkList.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\GetTutanakRaporu.cshtml" />
-    <Content Include="Views\MezuniyetSureci\getOtBilgiM.cshtml" />
+    <Content Include="Views\MezuniyetSureci\GetOtBilgiM.cshtml" />
     <Content Include="Views\Basvuru\CreateTercihRowHtml.cshtml" />
     <Content Include="Views\Ajax\BasvuruGonderilenMailler.cshtml" />
     <None Include="Service References\Ws_YokOgrenciSorgula\egitim.wsdl" />
@@ -3364,7 +3361,7 @@
     <Content Include="Views\Ajax\GetBasvuruBelgeYukleme.cshtml" />
     <Content Include="Views\TIBasvuru\Index.cshtml" />
     <Content Include="Views\TIBasvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\Ajax\getDetailTIBasvuru.cshtml" />
+    <Content Include="Views\Ajax\GetDetailTIBasvuru.cshtml" />
     <Content Include="Views\TIGelenBasvurular\Index.cshtml" />
     <Content Include="Views\TIBasvuru\TIAraRaporFormu.cshtml" />
     <Content Include="Views\TIBasvuru\RezervasyonAl.cshtml" />
@@ -3423,19 +3420,19 @@
     <Content Include="Views\TDOBasvuru\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\BasvuruYap.cshtml" />
     <Content Include="Views\TDOBasvuru\TdoDanismanFormu.cshtml" />
-    <Content Include="Views\Ajax\getDetailTDOBasvuru.cshtml" />
+    <Content Include="Views\Ajax\GetDetailTDOBasvuru.cshtml" />
     <Content Include="Views\TDOGelenBasvurular\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\TdoEsDanismanFormu.cshtml" />
     <Content Include="Views\TDOGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\Mezuniyet\GSinavDegerlendir.cshtml" />
     <Content Include="Views\Mezuniyet\BasvuruDurumView.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet_t1_Basvuru.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet_t2_EYKSureci.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet_t3_SinavSureci.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet_t4_TezKontrolSureci.cshtml" />
-    <Content Include="Views\Ajax\getDetailMezuniyet_t5_MezuniyetSureci.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet_t1_Basvuru.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet_t2_EYKSureci.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet_t3_SinavSureci.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet_t4_TezKontrolSureci.cshtml" />
+    <Content Include="Views\Ajax\GetDetailMezuniyet_t5_MezuniyetSureci.cshtml" />
     <Content Include="Views\Account\HesapKayit.cshtml" />
-    <Content Include="Views\Ajax\getEkAciklamaContent.cshtml" />
+    <Content Include="Views\Ajax\GetEkAciklamaContent.cshtml" />
     <Content Include="Views\Mezuniyet\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\SRJuriDegistir.cshtml" />
     <Content Include="Views\Ajax\ObsOgrenciSorgula.cshtml" />
@@ -3465,8 +3462,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Raporlar\Genel\rprAnket.resx">
-      <DependentUpon>rprAnket.cs</DependentUpon>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
+      <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\BelgeTalep\RaporBT.resx">
       <DependentUpon>RaporBT.cs</DependentUpon>
@@ -3495,69 +3493,66 @@
     <EmbeddedResource Include="Raporlar\LUB\rprBasvuruMulakatsizOgrenciList.resx">
       <DependentUpon>rprBasvuruMulakatsizOgrenciList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Genel\rprBolumProgramListesi.resx">
-      <DependentUpon>rprBolumProgramListesi.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Genel\RprBolumProgramListesi.resx">
+      <DependentUpon>RprBolumProgramListesi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\LUB\rprKesinKayitResimListesi.resx">
       <DependentUpon>rprKesinKayitResimListesi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezKontrolFormu.resx">
-      <DependentUpon>rprMezuniyetTezKontrolFormu.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezKontrolFormu.resx">
+      <DependentUpon>RprMezuniyetTezKontrolFormu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetYayinSartiOnayiFormu.resx">
-      <DependentUpon>rprMezuniyetYayinSartiOnayiFormu.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetYayinSartiOnayiFormu.resx">
+      <DependentUpon>RprMezuniyetYayinSartiOnayiFormu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetCiltliTezTeslimFormu_FR1243.resx">
-      <DependentUpon>rprMezuniyetCiltliTezTeslimFormu_FR1243.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetCiltliTezTeslimFormu_FR1243.resx">
+      <DependentUpon>RprMezuniyetCiltliTezTeslimFormu_FR1243.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakDR.resx">
-      <DependentUpon>rprMezuniyetMezunlarTutanakDR.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakDR.resx">
+      <DependentUpon>RprMezuniyetMezunlarTutanakDR.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetMezunlarTutanakYL.resx">
-      <DependentUpon>rprMezuniyetMezunlarTutanakYL.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetMezunlarTutanakYL.resx">
+      <DependentUpon>RprMezuniyetMezunlarTutanakYL.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezDegerlendirmeFormu_FR0303.resx">
-      <DependentUpon>rprMezuniyetTezDegerlendirmeFormu_FR0303.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezDegerlendirmeFormu_FR0303.resx">
+      <DependentUpon>RprMezuniyetTezDegerlendirmeFormu_FR0303.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.resx">
-      <DependentUpon>rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.resx">
+      <DependentUpon>RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.resx">
-      <DependentUpon>rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.resx">
+      <DependentUpon>RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriOneriFormu_FR0300_FR0339.resx">
-      <DependentUpon>rprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriOneriFormu_FR0300_FR0339.resx">
+      <DependentUpon>RprMezuniyetTezJuriOneriFormu_FR0300_FR0339.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezJuriTutanak.resx">
-      <DependentUpon>rprMezuniyetTezJuriTutanak.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezJuriTutanak.resx">
+      <DependentUpon>RprMezuniyetTezJuriTutanak.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprJuriUyelerineTezTeslimFormu_FR0341_FR0302.resx">
-      <DependentUpon>rprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprJuriUyelerineTezTeslimFormu_FR0341_FR0302.resx">
+      <DependentUpon>RprJuriUyelerineTezTeslimFormu_FR0341_FR0302.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprTezSinavSonucTutanagi_FR0342_FR0377.resx">
-      <DependentUpon>rprTezSinavSonucTutanagi_FR0342_FR0377.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprTezSinavSonucTutanagi_FR0342_FR0377.resx">
+      <DependentUpon>RprTezSinavSonucTutanagi_FR0342_FR0377.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\Mezuniyet\rprMezuniyetTezTeslimFormu_0338.resx">
-      <DependentUpon>rprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezTeslimFormu_0338.resx">
+      <DependentUpon>RprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTDOEYK.resx">
-      <DependentUpon>RprTDOEYK.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.resx">
+      <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezDanismaniOneriFormu_FR0347.resx">
-      <DependentUpon>rprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezEsDanismaniOneriFormu_FR0320.resx">
+      <DependentUpon>RprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezEsDanismaniOneriFormu_FR0320.resx">
-      <DependentUpon>rprTezEsDanismaniOneriFormu_FR0320.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezDanismaniDegisiklikFormu_FR0308.resx">
+      <DependentUpon>RprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezDanismanOneri\rprTezDanismaniDegisiklikFormu_FR0308.resx">
-      <DependentUpon>rprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormuDetay_FR0307.resx">
+      <DependentUpon>RprTiDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormuDetay_FR0307.resx">
-      <DependentUpon>rprTIDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\TezIzleme\rprTIDegerlendirmeFormu_FR0307.resx">
-      <DependentUpon>rprTIDegerlendirmeFormu_FR0307.cs</DependentUpon>
+    <EmbeddedResource Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormu_FR0307.resx">
+      <DependentUpon>RprTiDegerlendirmeFormu_FR0307.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -3596,7 +3591,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57298/</IISUrl>
+          <IISUrl>http://localhost:57228/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

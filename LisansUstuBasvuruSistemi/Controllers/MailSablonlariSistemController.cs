@@ -18,19 +18,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.MailSablonlariSistem)]
     public class MailSablonlariSistemController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmMailSablonlariDto() { PageSize = 15 }, EKD);
+            return Index(new FmMailSablonlariDto() { PageSize = 15 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmMailSablonlariDto model, string EKD)
+        public ActionResult Index(FmMailSablonlariDto model, string ekd)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.MailSablonlaris
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    join ens in db.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
-                    where EnstKods.Contains(s.EnstituKod) && s.MailSablonTipleri.SistemMaili
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.MailSablonlaris
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
+                    where enstKods.Contains(s.EnstituKod) && s.MailSablonTipleri.SistemMaili
                     select new FrMailSablonlariDto
                     {
                         EnstituKod = s.EnstituKod,
@@ -58,37 +58,39 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
 
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.EnstituAdi).ThenBy(t => t.SablonTipAdi);
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount
+            };
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) 
+                : q.OrderBy(o => o.EnstituAdi).ThenBy(t => t.SablonTipAdi);
             model.MailSablonlariDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true), "Value", "Caption", model.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
-        public ActionResult Kayit(int? id, string EKD)
+        public ActionResult Kayit(int? id, string ekd)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new MailSablonlari();
-            if (id.HasValue && id > 0)
+            if (id > 0)
             {
-                var data = db.MailSablonlaris.Where(p => p.MailSablonlariID == id && p.MailSablonTipleri.SistemMaili).FirstOrDefault();
+                var data = _entities.MailSablonlaris.FirstOrDefault(p => p.MailSablonlariID == id && p.MailSablonTipleri.SistemMaili);
                 if (data != null) model = data;
             }
             string sEnstituKod = "";
-            if (EnstKods.Count == 1)
+            if (enstKods.Count == 1)
             {
-                sEnstituKod = EnstKods.First();
+                sEnstituKod = enstKods.First();
             }
-            else sEnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == model.MailSablonTipID).FirstOrDefault();
+            else sEnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            ViewBag.SablonTipi = _entities.MailSablonTipleris.FirstOrDefault(p => p.MailSablonTipID == model.MailSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
-            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, id > 0 ? false : true), "Value", "Caption", model.MailSablonTipID);
+            ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, !(id > 0)), "Value", "Caption", model.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -96,58 +98,58 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(MailSablonlari kModel, List<string> EkAdi, List<HttpPostedFileBase> DosyaEki, List<int?> MailSablonlariEkiID)
+        public ActionResult Kayit(MailSablonlari kModel, List<string> ekAdi, List<HttpPostedFileBase> dosyaEki, List<int?> mailSablonlariEkiId)
         {
-            var MmMessage = new MmMessage();
-            MailSablonlariEkiID = MailSablonlariEkiID == null ? new List<int?>() : MailSablonlariEkiID;
-            EkAdi = EkAdi == null ? new List<string>() : EkAdi;
-            DosyaEki = DosyaEki == null ? new List<HttpPostedFileBase>() : DosyaEki;
-            var qDosyaEkAdi = EkAdi.Select((s, inx) => new { s, inx }).ToList();
-            var qDosyaEki = DosyaEki.Select((s, inx) => new { s, inx }).ToList();
-            var qDuyuruDosyaEkID = MailSablonlariEkiID.Select((s, inx) => new { s, inx }).ToList();
-            var qDosyalar = (from EkGirilenAd in qDosyaEkAdi
-                             join EklenenEk in qDosyaEki on EkGirilenAd.inx equals EklenenEk.inx
-                             select new { EkGirilenAd.inx, DosyaEkAdi = EkGirilenAd.s, Dosya = EklenenEk.s }).ToList();
+            var mmMessage = new MmMessage();
+            mailSablonlariEkiId = mailSablonlariEkiId ?? new List<int?>();
+            ekAdi = ekAdi ?? new List<string>();
+            dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
+            var qDosyaEkAdi = ekAdi.Select((s, inx) => new { s, inx }).ToList();
+            var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
+            var qDuyuruDosyaEkId = mailSablonlariEkiId.Select((s, inx) => new { s, inx }).ToList();
+            var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
+                             join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                             select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).ToList();
 
             var qVarolanlar = (from s in qDosyaEkAdi
-                               join sid in qDuyuruDosyaEkID on s.inx equals sid.inx
+                               join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
                                select new { s.inx, DosyaEkAdi = s.s, MailSablonlariEkiID = sid.s });
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Şablonun Ekleneceği Enstitüyü Seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Şablonun Ekleneceği Enstitüyü Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
 
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
 
             if (kModel.MailSablonTipID <= 0)
             {
-                MmMessage.Messages.Add("Şablon Tipini Seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MailSablonTipID" });
+                mmMessage.Messages.Add("Şablon Tipini Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MailSablonTipID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MailSablonTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MailSablonTipID" });
             if (kModel.SablonAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Mail Konusu Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SablonAdi" });
+                mmMessage.Messages.Add("Mail Konusu Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SablonAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SablonAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SablonAdi" });
 
             if (kModel.Sablon.IsNullOrWhiteSpace() && kModel.SablonHtml.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Sablon Açıklaması Giriniz.");
+                mmMessage.Messages.Add("Sablon Açıklaması Giriniz.");
             }
             #endregion
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                if (db.MailSablonlaris.Any(p => p.EnstituKod == kModel.EnstituKod && p.MailSablonlariID != kModel.MailSablonlariID && p.MailSablonTipleri.SistemMaili && p.MailSablonTipID == kModel.MailSablonTipID))
+                if (_entities.MailSablonlaris.Any(p => p.EnstituKod == kModel.EnstituKod && p.MailSablonlariID != kModel.MailSablonlariID && p.MailSablonTipleri.SistemMaili && p.MailSablonTipID == kModel.MailSablonTipID))
                 {
-                    MmMessage.Messages.Add("Sistem mail şablonu bir Enstitü için aynı dilde bir kere tanımlanabilir!");
+                    mmMessage.Messages.Add("Sistem mail şablonu bir Enstitü için aynı dilde bir kere tanımlanabilir!");
                 }
             }
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -157,24 +159,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.MailSablonlariID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var eklenen = db.MailSablonlaris.Add(kModel);
+                    var eklenen = _entities.MailSablonlaris.Add(kModel);
 
                     foreach (var item in qDosyalar)
                     {
-                        string DosyaYolu = "/DuyuruDosyaları/" + item.DosyaEkAdi.ToFileNameAddGuid(item.Dosya.FileName.GetFileExtension());
-                        item.Dosya.SaveAs(Server.MapPath("~" + DosyaYolu));
+                        string dosyaYolu = "/DuyuruDosyaları/" + item.DosyaEkAdi.ToFileNameAddGuid(item.Dosya.FileName.GetFileExtension());
+                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
 
-                        db.MailSablonlariEkleris.Add(new MailSablonlariEkleri
+                        _entities.MailSablonlariEkleris.Add(new MailSablonlariEkleri
                         {
                             MailSablonlariID = eklenen.MailSablonlariID,
                             EkAdi = item.DosyaEkAdi,
-                            EkDosyaYolu = DosyaYolu
+                            EkDosyaYolu = dosyaYolu
                         });
                     }
                 }
                 else
                 {
-                    var data = db.MailSablonlaris.Where(p => p.MailSablonlariID == kModel.MailSablonlariID && p.MailSablonTipleri.SistemMaili).First();
+                    var data = _entities.MailSablonlaris.First(p => p.MailSablonlariID == kModel.MailSablonlariID && p.MailSablonTipleri.SistemMaili);
                     data.EnstituKod = kModel.EnstituKod;
                     data.MailSablonTipID = kModel.MailSablonTipID;
                     data.GonderilecekEkEpostalar = kModel.GonderilecekEkEpostalar;
@@ -187,54 +189,54 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
 
-                    var SilinenDuyuruEkleri = db.MailSablonlariEkleris.Where(p => MailSablonlariEkiID.Contains(p.MailSablonlariEkiID) == false && p.MailSablonlariID == data.MailSablonlariID).ToList();
-                    var VarolanDuyuruEkleri = db.MailSablonlariEkleris.Where(p => MailSablonlariEkiID.Contains(p.MailSablonlariEkiID) && p.MailSablonlariID == data.MailSablonlariID).ToList();
-                    foreach (var item in VarolanDuyuruEkleri)
+                    var silinenDuyuruEkleri = _entities.MailSablonlariEkleris.Where(p => mailSablonlariEkiId.Contains(p.MailSablonlariEkiID) == false && p.MailSablonlariID == data.MailSablonlariID).ToList();
+                    var varolanDuyuruEkleri = _entities.MailSablonlariEkleris.Where(p => mailSablonlariEkiId.Contains(p.MailSablonlariEkiID) && p.MailSablonlariID == data.MailSablonlariID).ToList();
+                    foreach (var item in varolanDuyuruEkleri)
                     {
-                        var qd = qVarolanlar.Where(p => p.MailSablonlariEkiID == item.MailSablonlariEkiID).FirstOrDefault();
+                        var qd = qVarolanlar.FirstOrDefault(p => p.MailSablonlariEkiID == item.MailSablonlariEkiID);
                         if (qd != null)
                         {
                             item.EkAdi = qd.DosyaEkAdi;
                         }
                     }
-                    db.MailSablonlariEkleris.RemoveRange(SilinenDuyuruEkleri);
+                    _entities.MailSablonlariEkleris.RemoveRange(silinenDuyuruEkleri);
                     foreach (var item in qDosyalar)
                     {
                         var dosyaTipi = item.Dosya.FileName.Split('.').Last();
-                        var DosyaAdi = item.Dosya.FileName.Replace('.' + dosyaTipi, "_" + Guid.NewGuid().ToString().Substr(0, 4) + "." + dosyaTipi);
-                        string DosyaYolu = "/DuyuruDosyaları/" + DosyaAdi;
-                        item.Dosya.SaveAs(Server.MapPath("~" + DosyaYolu));
+                        var dosyaAdi = item.Dosya.FileName.Replace('.' + dosyaTipi, "_" + Guid.NewGuid().ToString().Substr(0, 4) + "." + dosyaTipi);
+                        string dosyaYolu = "/DuyuruDosyaları/" + dosyaAdi;
+                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
 
-                        db.MailSablonlariEkleris.Add(new MailSablonlariEkleri
+                        _entities.MailSablonlariEkleris.Add(new MailSablonlariEkleri
                         {
                             MailSablonlariID = data.MailSablonlariID,
                             EkAdi = item.DosyaEkAdi,
-                            EkDosyaYolu = DosyaYolu
+                            EkDosyaYolu = dosyaYolu
                         });
                     }
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            ViewBag.MmMessage = MmMessage;
-            ViewBag.SablonTipi = db.MailSablonTipleris.Where(p => p.MailSablonTipID == kModel.MailSablonTipID).FirstOrDefault();
+            ViewBag.MmMessage = mmMessage;
+            ViewBag.SablonTipi = _entities.MailSablonTipleris.FirstOrDefault(p => p.MailSablonTipID == kModel.MailSablonTipID);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.MailSablonTipID = new SelectList(MailSablonTipleriBus.GetCmbMailSablonTipleri(true, true, kModel.MailSablonTipID > 0 ? false : true), "Value", "Caption", kModel.MailSablonTipID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
-        public ActionResult getSablonTipParametre(int MailSablonTipID)
+        public ActionResult GetSablonTipParametre(int mailSablonTipId)
         {
-            var Stip = db.MailSablonTipleris.Where(p => p.MailSablonTipID == MailSablonTipID).First();
+            var Stip = _entities.MailSablonTipleris.First(p => p.MailSablonTipID == mailSablonTipId);
             return Json(Stip.Parametreler, "application/json", JsonRequestBehavior.AllowGet);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.MailSablonlaris.Where(p => p.MailSablonlariID == id && p.MailSablonTipleri.SistemMaili).FirstOrDefault();
+            var kayit = _entities.MailSablonlaris.FirstOrDefault(p => p.MailSablonlariID == id && p.MailSablonTipleri.SistemMaili);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -244,8 +246,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     message = "'" + kayit.SablonAdi + "' Şablon Şablon Silindi!";
                     var dosyalar = kayit.MailSablonlariEkleris.ToList();
 
-                    db.MailSablonlaris.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.MailSablonlaris.Remove(kayit);
+                    _entities.SaveChanges();
                     foreach (var item in dosyalar)
                     {
                         System.IO.File.Delete(Server.MapPath("~" + item.EkDosyaYolu));
@@ -255,7 +257,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.SablonAdi + "' Başlıklı Şablon! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "MailSablonlari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MailSablonlari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -263,13 +265,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Şablon sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _entities.Dispose();
             base.Dispose(disposing);
         }
     }

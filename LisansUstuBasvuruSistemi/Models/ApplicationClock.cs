@@ -241,7 +241,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                                         EkDosyaYolu = itemSe.EkDosyaYolu,
                                                     });
                                                 }
-                                                else Management.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
+                                                else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + itemSe.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "ApplicationClock", LogType.Uyarı);
                                             }
                                             if (Parametreler.Any(a => a == "@EnstituAdi"))
                                                 ParamereDegerleri.Add(new MailReplaceParameterDto { Key = "EnstituAdi", Value = EnstituL.EnstituAd });
@@ -349,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 }
                 catch (Exception e)
                 {
-                    Management.SistemBilgisiKaydet("Toplu mail gönderilirken bir hata oluştu! hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), LogType.Hata, 1, "::");
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Toplu mail gönderilirken bir hata oluştu! hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), LogType.Hata, 1, "::");
                 }
             }
         }

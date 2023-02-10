@@ -10,13 +10,13 @@
 @{
     var urlInfo = Request.Url.toUrlInfo();
 
-    bool FixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].toBooleanObj().Value : false;
-    bool FixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].toBooleanObj().Value : false;
-    bool ScrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") ? UserIdentity.Current.Informations["ScrollSidebar"].toBooleanObj().Value : false;
-    bool RightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") ? UserIdentity.Current.Informations["RightSidebar"].toBooleanObj().Value : false;
-    bool CustomNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "CustomNavigation") ? UserIdentity.Current.Informations["CustomNavigation"].toBooleanObj().Value : true;
-    bool ToggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") ? UserIdentity.Current.Informations["ToggledNavigation"].toBooleanObj().Value : false;
-    bool BoxedOrFullWidth = UserIdentity.Current.Informations.Any(p => p.Key == "BoxedOrFullWidth") ? UserIdentity.Current.Informations["BoxedOrFullWidth"].toBooleanObj().Value : true;
+    bool FixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value : false;
+    bool FixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value : false;
+    bool ScrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") ? UserIdentity.Current.Informations["ScrollSidebar"].ToBooleanObj().Value : false;
+    bool RightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") ? UserIdentity.Current.Informations["RightSidebar"].ToBooleanObj().Value : false;
+    bool CustomNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "CustomNavigation") ? UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value : true;
+    bool ToggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") ? UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value : false;
+    bool BoxedOrFullWidth = UserIdentity.Current.Informations.Any(p => p.Key == "BoxedOrFullWidth") ? UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value : true;
     string ThemeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
     string BackgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
     if (BoxedOrFullWidth)
@@ -1314,7 +1314,7 @@
         }
         function showDuyuru(PopupTipID, redirectUrl) {
             $.ajax({
-                url: '@Url.Action("getDuyuruJson", "KDuyurular")',
+                url: '@Url.Action("GetDuyuruJson", "KDuyurular")',
                 type: 'POST',
                 enctype: "multipart/form-data",
                 cache: false,

@@ -11,14 +11,12 @@
 <table class="table table-hover" style="margin-bottom:0px;"> 
     <tbody>
         @{
-            int inxX = Model.SubMesajList.Count + 1;
             bool openRow = true;
             foreach (var itemx in Model.SubMesajList)
             {
-                bool IsGenelMesaj = itemx.GonderilenMailKullanicilars.Count == 0;
+                bool isGenelMesaj = itemx.GonderilenMailKullanicilars.Count == 0;
                 var rowCls = itemx.GonderilenMailKullanicilars.Count > 0 ? "success" : "warning";
                 var gd = Guid.NewGuid().ToString();
-                inxX--;
                 <tr class="MainRow @rowCls">
                     <td width="35">
                         <ul class="panel-controls">
@@ -41,7 +39,7 @@
                         </span>
                     </td>
                     <td width="20">
-                        @if (IsGenelMesaj)
+                        @if (isGenelMesaj)
                         {
                             <a href="javascript:void(0)" title="Cevapla" onclick="senMx('@(itemx.KullaniciID > 0 ? itemx.KullaniciID.ToString() : itemx.EMail)',@Model.MesajID,@itemx.MesajID)"><i class="fa fa-mail-reply fa-2x"></i></a>
                         }
@@ -56,7 +54,7 @@
                         }
                     </td>
                     <td width="120">
-                        @(IsGenelMesaj ? "Gelen Mesaj" : "Giden Mail" )
+                        @(isGenelMesaj ? "Gelen Mesaj" : "Giden Mail" )
                     </td>
                     <td width="120">@itemx.Tarih.ToFormatDateAndTime()</td>
 
@@ -69,7 +67,7 @@
                                 @Html.Raw(itemx.Icerik)
                             </div>
                             <div class="panel-footer" style="padding-top:1px;padding-bottom:1px;"></div>
-                            @if (!IsGenelMesaj || itemx.MesajEkleris.Count > 0)
+                            @if (!isGenelMesaj || itemx.MesajEkleris.Count > 0)
                             {
                                 <table class="table" style="padding:0px;margin:0px;">
                                     @if (itemx.GonderilenMailKullanicilars.Count > 0)
@@ -85,7 +83,7 @@
                                     {
                                         <tr>
                                             <td width="20"><img src="@Url.Content("/Images/Attachment.png")" style="height:16px;"></td>
-                                            <td width="130">@(IsGenelMesaj ? "Gelen Ekler" : "Gönderilen Ekler")</td>
+                                            <td width="130">@(isGenelMesaj ? "Gelen Ekler" : "Gönderilen Ekler")</td>
                                             <td width="5">:</td>
                                             <td>
                                                 @Html.Raw(string.Join(", ", itemx.MesajEkleris.Select(s => "<a href='" + s.EkDosyaYolu + "' target='_blank'><span class='fa fa-download' style='color: green;'></span>&nbsp;" + s.EkAdi + "</a>")))

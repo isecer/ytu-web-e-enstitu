@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
@@ -15,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.BelgeTipleri)]
     public class BelgeTipleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
             return Index(new FmBelgeTipleriDto { });
@@ -24,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmBelgeTipleriDto model)
         {
 
-            var q = from s in db.BelgeTipleris
+            var q = from s in _entities.BelgeTipleris
                     select new FrBelgeTipleriDto
                     {
                         BelgeTipID = s.BelgeTipID,
@@ -40,27 +41,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (!model.BelgeTipAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.BelgeTipAdi.Contains(model.BelgeTipAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.BelgeTipAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.BelgeTipleriDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.BelgeTipAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.BelgeTipleriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id )
         {
-            var MmMessage = new MmMessage(); 
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage(); 
+            ViewBag.MmMessage = mmMessage;
             var model = new BelgeTipleri();
             if (id.HasValue)
             {
-                var data = db.BelgeTipleris.Where(p => p.BelgeTipID == id).FirstOrDefault();
+                var data = _entities.BelgeTipleris.FirstOrDefault(p => p.BelgeTipID == id);
                 if (data != null)
                 {
                     model = data; 
@@ -72,15 +74,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BelgeTipleriKayıt)]
         public ActionResult Kayit(BelgeTipleri kModel)
         {
-            var MmMessage = new MmMessage(); 
+            var mmMessage = new MmMessage(); 
             #region Kontrol
             if (kModel.BelgeTipAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Belge Tip Adını Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "BelgeTipAdi" });
+                mmMessage.Messages.Add("Belge Tip Adını Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "BelgeTipAdi" });
             }
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 if (kModel.BelgeTipID <= 0)
                 {
@@ -88,11 +90,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemTarihi = DateTime.Now;
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
-                   db.BelgeTipleris.Add(kModel);
+                   _entities.BelgeTipleris.Add(kModel);
                 }
                 else
                 {
-                    var data = db.BelgeTipleris.Where(p => p.BelgeTipID == kModel.BelgeTipID).First();
+                    var data = _entities.BelgeTipleris.First(p => p.BelgeTipID == kModel.BelgeTipID);
                     data.BelgeTipAdi = kModel.BelgeTipAdi;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
@@ -100,21 +102,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = DateTime.Now; 
                 }
                
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
              
-            ViewBag.MmMessage = MmMessage; 
+            ViewBag.MmMessage = mmMessage; 
             return View(kModel);
         }
         [Authorize(Roles = RoleNames.BelgeTipleriSil)]
         public ActionResult Sil(int? id)
         {
-            var data = db.BelgeTipleris.Where(p => p.BelgeTipID == id).FirstOrDefault(); 
+            var data = _entities.BelgeTipleris.FirstOrDefault(p => p.BelgeTipID == id); 
             string message = "";
             bool success = true;
             if (data != null)
@@ -123,14 +125,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + data.BelgeTipAdi + "' İsimli belge tipi Silindi!";
-                    db.BelgeTipleris.Remove(data);
-                    db.SaveChanges();
+                    _entities.BelgeTipleris.Remove(data);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + data.BelgeTipAdi + "' İsimli belge tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "BelgeTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -138,7 +140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Belge tipi sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

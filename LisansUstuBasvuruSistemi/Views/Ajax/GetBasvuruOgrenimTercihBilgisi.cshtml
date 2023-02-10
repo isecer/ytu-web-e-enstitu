@@ -3,19 +3,19 @@
 @model BasvuruDetayDto
 @{
     Layout = null;
-    var Color = Model.DurumColor; 
+    var color = Model.DurumColor; 
 
 }
 
 <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
     <div class="panel-heading padding-0">
-        <h3 class="panel-title"><i class="fa fa-graduation-cap fa-lg " style="color:@Color;"></i>&nbsp; <span style="color:@Color;">Öğrenim Bilgisi</span></h3>
+        <h3 class="panel-title"><i class="fa fa-graduation-cap fa-lg " style="color:@color;"></i>&nbsp; <span style="color:@color;">Öğrenim Bilgisi</span></h3>
     </div>
     <div class="panel-body form-group-separated" style="padding:0px;">
         <div class="col-md-@(Model.YLUniversiteID.HasValue == false || Model.DRUniversiteID.HasValue ? "12" : "6")" style="margin:0px auto;">
-            <table class="table" style="color:@Color;margin:2px;">
+            <table class="table" style="color:@color;margin:2px;">
                 <tr>
-                    <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                    <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@color;">
                         Lisans Eğitim Bilgisi
                     </th>
                 </tr>
@@ -80,13 +80,13 @@
             <div class="col-md-@(Model.DRUniversiteID.HasValue ? "12" : "6")">
                 <table class="table" style="margin:0px;">
                     <tr>
-                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@color;">
                              Yüksek Lisans Eğitim Bilgisi
                         </th>
                     </tr>
                     <tr>
                         <td>
-                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@color;">
                                 <tr>
                                     <td style="text-align:right;" @(Model.YLUniversiteID.HasValue == false ? "" : "width=120")>Üniversite</td>
                                     <td style="width:10px;">:</td>
@@ -137,13 +137,13 @@
             <div class="col-md-12">
                 <table class="table" style="margin:0px;">
                     <tr>
-                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                        <th style="text-align:center;font-size:11pt;margin:0px;width:100%;table-layout:fixed;color:@color;">
                             Doktora Eğitim Bilgisi
                         </th>
                     </tr>
                     <tr>
                         <td>
-                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@Color;">
+                            <table class="table" style="font-size:9pt;margin:0px;width:100%;table-layout:fixed;color:@color;">
                                 <tr>
                                     <td style="text-align:right;" @(Model.YLUniversiteID.HasValue == false ? "" : "width=120")>Üniversite</td>
                                     <td style="width:10px;">:</td>
@@ -194,12 +194,12 @@
 <div class="panel panel-default" style="padding: 0px; margin: 0px;">
     <div class="panel-heading padding-0">
         <h3 class="panel-title">
-            <i class="fa fa-plus " style="color:@Color;"></i>&nbsp; <span style="color:@Color;">Eklenen Tercihler</span>
+            <i class="fa fa-plus " style="color:@color;"></i>&nbsp; <span style="color:@color;">Eklenen Tercihler</span>
 
         </h3>
         @if (Model.IsHesaplandi && false)
         {
-            <a style="float:right; cursor:pointer;color:@Color;" onclick="yeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
+            <a style="float:right; cursor:pointer;color:@color;" onclick="yeniDialogBB(null, 'Başvuru Sonuç','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.BasvuruSonucListesi&BasvuruSurecID=@Model.BasvuruSurecID&RowID=@Model.RowID' , 'auto', 'modal-dialog modal-lg' )">
                 <span style="font-size:12pt;margin-top:7px;" title="Sonuç Listesini Göster" class="fa fa-list"> Sonuç Listesini Göster</span>
 
             </a>
@@ -215,7 +215,7 @@
 
                     <li class="dd-item dd3-item ">
                         <div class="dd3-content" style="margin:1px;padding :5px;">
-                            <table style="width:100%;table-layout:fixed;color:@Color;">
+                            <table style="width:100%;table-layout:fixed;color:@color;">
                                 <tbody>
 
                                     <tr>

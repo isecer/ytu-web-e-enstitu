@@ -11,24 +11,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SistemAyarlari)]
     public class SistemAyarlariController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            var data = db.Ayarlars.OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            var data = _entities.Ayarlars.OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
-            var PanelToggled = new Dictionary<string, bool>();
+            var panelToggled = new Dictionary<string, bool>();
             foreach (var item in cats)
             {
-                PanelToggled.Add(item.Kategori, item.Toggle);
+                panelToggled.Add(item.Kategori, item.Toggle);
             }
-            ViewBag.PanelToggled = PanelToggled;
+            ViewBag.PanelToggled = panelToggled;
             return View(data);
         }
         [HttpPost]
-        public ActionResult Index(List<string> AyarAdi, List<string> AyarDegeri, List<string> PanelToggled)
+        public ActionResult Index(List<string> ayarAdi, List<string> ayarDegeri, List<string> panelToggled)
         {
-            var qSistemAyarAdi = AyarAdi.Select((s, Index) => new { inx = Index, s }).ToList();
-            var qSistemAyarDegeri = AyarDegeri.Select((s, Index) => new { inx = Index, s }).ToList();
+            var qSistemAyarAdi = ayarAdi.Select((s, index) => new { inx = index, s }).ToList();
+            var qSistemAyarDegeri = ayarDegeri.Select((s, index) => new { inx = index, s }).ToList();
 
             var qModel = (from sa in qSistemAyarAdi
                           join sad in qSistemAyarDegeri on sa.inx equals sad.inx
@@ -40,22 +40,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           }).ToList();
             foreach (var item in qModel)
             {
-                var ayar = db.Ayarlars.Where(p => p.AyarAdi == item.AyarAdi).FirstOrDefault();
+                var ayar = _entities.Ayarlars.FirstOrDefault(p => p.AyarAdi == item.AyarAdi);
                 if (ayar != null)
                 {
                     ayar.AyarDegeri = item.AyarDegeri;
                 }
             }
-            db.SaveChanges();
+            _entities.SaveChanges();
             MessageBox.Show("Sistem Ayarları Güncellendi", MessageBox.MessageType.Success);
-            var data = db.Ayarlars.OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
-            var _PanelToggled = new Dictionary<string, bool>();
-            foreach (var item in PanelToggled)
+            var data = _entities.Ayarlars.OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            var panelToggledx = new Dictionary<string, bool>();
+            foreach (var item in panelToggled)
             {
-                var _ptg = item.Replace("__","◘").Split('◘');
-                _PanelToggled.Add(_ptg[0], _ptg[1].ToBoolean().Value);
+                var ptg = item.Replace("__","◘").Split('◘');
+                panelToggledx.Add(ptg[0], ptg[1].ToBoolean().Value);
             } 
-            ViewBag.PanelToggled = _PanelToggled;
+            ViewBag.PanelToggled = panelToggledx;
             return View(data);
         }
 

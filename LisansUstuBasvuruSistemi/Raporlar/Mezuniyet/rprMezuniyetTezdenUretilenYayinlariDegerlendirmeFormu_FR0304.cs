@@ -1,69 +1,64 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System.Linq;
+﻿using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(int MezuniyetJuriOneriFormID, int? MezuniyetJuriOneriFormuJuriID)
+        public RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(int mezuniyetJuriOneriFormId, int? mezuniyetJuriOneriFormuJuriId)
         {
             InitializeComponent();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var JoForm = db.MezuniyetJuriOneriFormlaris.Where(p => p.MezuniyetJuriOneriFormID == MezuniyetJuriOneriFormID).First();
+                var joForm = db.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
 
-                var MBasvuru = JoForm.MezuniyetBasvurulari;
+                var mBasvuru = joForm.MezuniyetBasvurulari;
 
-                bool IsYlOrDiger = MBasvuru.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans;
+                 
 
-                xrCellEOYil.Text = MBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + MBasvuru.MezuniyetSureci.BitisYil.ToString();
-                xrChkYariyilGuz.Checked = MBasvuru.MezuniyetSureci.DonemID == DonemBilgi.GuzYariyili;
-                xrChkYariyilBahar.Checked = MBasvuru.MezuniyetSureci.DonemID == DonemBilgi.BaharYariyili;
-                xrCellEnstituAdi.Text = MBasvuru.MezuniyetSureci.Enstituler.EnstituAd.ToUpper();
-                xrCellAnabilimdaliProgramAdi.Text = MBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.ToUpper() + " - " + MBasvuru.Programlar.ProgramAdi.ToUpper();
-                xrCellOgrenciNo.Text = MBasvuru.OgrenciNo;
-                xrCellOgrenciAdi.Text = MBasvuru.Ad + " " + MBasvuru.Soyad;
+                xrCellEOYil.Text = mBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + mBasvuru.MezuniyetSureci.BitisYil.ToString();
+                xrChkYariyilGuz.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.GuzYariyili;
+                xrChkYariyilBahar.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.BaharYariyili;
+                xrCellEnstituAdi.Text = mBasvuru.MezuniyetSureci.Enstituler.EnstituAd.ToUpper();
+                xrCellAnabilimdaliProgramAdi.Text = mBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.ToUpper() + " - " + mBasvuru.Programlar.ProgramAdi.ToUpper();
+                xrCellOgrenciNo.Text = mBasvuru.OgrenciNo;
+                xrCellOgrenciAdi.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
 
-                var DanismanBilgi = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi == "TezDanismani").First();
-                xrCellTezDanismanBilgi.Text = DanismanBilgi.UnvanAdi + " " + DanismanBilgi.AdSoyad;
+                var danismanBilgi = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
+                xrCellTezDanismanBilgi.Text = danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad;
 
-                chkTurkce.Checked = MBasvuru.IsTezDiliTr == true;
-                chkYabanci.Checked = MBasvuru.IsTezDiliTr == false;
+                chkTurkce.Checked = mBasvuru.IsTezDiliTr == true;
+                chkYabanci.Checked = mBasvuru.IsTezDiliTr == false;
 
                 var tezBasligiTr = "";
                 var tezBasligiEn = "";
 
-                tezBasligiTr = JoForm.IsTezBasligiDegisti == true
-                    ? JoForm.YeniTezBaslikTr
-                    : MBasvuru.TezBaslikTr;
-                tezBasligiEn = JoForm.IsTezBasligiDegisti == true
-                    ? JoForm.YeniTezBaslikEn
-                    : MBasvuru.TezBaslikEn;
+                tezBasligiTr = joForm.IsTezBasligiDegisti == true
+                    ? joForm.YeniTezBaslikTr
+                    : mBasvuru.TezBaslikTr;
+                tezBasligiEn = joForm.IsTezBasligiDegisti == true
+                    ? joForm.YeniTezBaslikEn
+                    : mBasvuru.TezBaslikEn;
 
                 xrCellTezBaslikTr.Text = tezBasligiTr;
                 xrCellTezBaslikEn.Text = tezBasligiEn;
 
-                if (!MBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
+                if (!mBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
                 {
-                    xrCellTezEsDanismanBilgi.Text = MBasvuru.TezEsDanismanUnvani + " " + MBasvuru.TezEsDanismanAdi;
+                    xrCellTezEsDanismanBilgi.Text = mBasvuru.TezEsDanismanUnvani + " " + mBasvuru.TezEsDanismanAdi;
                 }
                 #region YayinBilgi
 
-                var YayinSartiVar = MezuniyetBus.GetMezuniyetAktifYonetmelik(MBasvuru.MezuniyetSurecID, MBasvuru.KullaniciID,MBasvuru.MezuniyetBasvurulariID).MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == MBasvuru.OgrenimTipKod && a.IsZorunlu);
-                chkYayinSartiVardir.Checked = YayinSartiVar;
-                chkYayinSartYoktur.Checked = !YayinSartiVar;
+                var yayinSartiVar = MezuniyetBus.GetMezuniyetAktifYonetmelik(mBasvuru.MezuniyetSurecID, mBasvuru.KullaniciID,mBasvuru.MezuniyetBasvurulariID).MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == mBasvuru.OgrenimTipKod && a.IsZorunlu);
+                chkYayinSartiVardir.Checked = yayinSartiVar;
+                chkYayinSartYoktur.Checked = !yayinSartiVar;
 
-                var yayins = (from qs in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == MBasvuru.MezuniyetBasvurulariID)
+                var yayins = (from qs in db.MezuniyetBasvurulariYayins.Where(p => p.MezuniyetBasvurulariID == mBasvuru.MezuniyetBasvurulariID)
                               join s in db.MezuniyetSureciYayinTurleris on new { qs.MezuniyetBasvurulari.MezuniyetSurecID, qs.MezuniyetYayinTurID } equals new { s.MezuniyetSurecID, s.MezuniyetYayinTurID }
                               join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
                               join inx in db.MezuniyetYayinIndexTurleris on new { qs.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)inx.MezuniyetYayinIndexTurID } into definx
@@ -78,13 +73,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar
 
 
                               }).ToList();
-                xrRowYayinBilgiBaslik.Visible = YayinSartiVar || yayins.Count > 0;
+                xrRowYayinBilgiBaslik.Visible = yayinSartiVar || yayins.Count > 0;
                 this.DataSource = yayins;
                 #endregion
 
-                if (MezuniyetJuriOneriFormuJuriID.HasValue)
+                if (mezuniyetJuriOneriFormuJuriId.HasValue)
                 {
-                    var secilenJuri = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == MezuniyetJuriOneriFormuJuriID).First();
+                    var secilenJuri = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == mezuniyetJuriOneriFormuJuriId);
                     xrCellJuriAdSoyad.Text = secilenJuri.UnvanAdi + " " + secilenJuri.AdSoyad;
                     xrCellJuriUniversiteAdi.Text = secilenJuri.UniversiteID.HasValue ? secilenJuri.Universiteler.Ad.ToUpper() : secilenJuri.UniversiteAdi.ToUpper();
                     xrCellJuriTelefon.Text = "";
@@ -99,7 +94,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     xrCellJuriFaks.Text = "";
                     xrCellJuriEPosta.Text = "";
                 }
-                this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0304 Tezden Üretilen Yayınları Değerlendirme Formu";
+                this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0304 Tezden Üretilen Yayınları Değerlendirme Formu";
 
             }
         }

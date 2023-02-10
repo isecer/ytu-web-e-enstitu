@@ -2,10 +2,10 @@
 @using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model fmTalepSurec
+@model FmTalepSurec
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
 
 
 }
@@ -21,9 +21,9 @@
                     <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Talep Süreci İşlemleri</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-primary label-form"><a href="@Url.Action("Kayit")" style="color:white;"><i class="fa fa-plus fa-lg"></i> Yeni</a></span></li>
-                        <li><span class="label label-info label-form">Toplam: <b>@IndexModel.Toplam</b></span></li>
-                        <li><span class="label label-success label-form">Aktif: <b>@IndexModel.Aktif</b></span></li>
-                        <li><span class="label label-danger label-form">Pasif: <b>@IndexModel.Pasif</b></span></li>
+                        <li><span class="label label-info label-form">Toplam: <b>@indexModel.Toplam</b></span></li>
+                        <li><span class="label label-success label-form">Aktif: <b>@indexModel.Aktif</b></span></li>
+                        <li><span class="label label-danger label-form">Pasif: <b>@indexModel.Pasif</b></span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>

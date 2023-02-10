@@ -4,7 +4,7 @@
 @using BiskaUtil 
 @model SROzelTanimlar
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var hGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
@@ -275,7 +275,7 @@
                 getGunler();
             },
         });
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
     function getSaatler(date) {
@@ -289,7 +289,7 @@
             var _panel = $('.pnlRfrsh');
             _pRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("getSaatList", "SROzelTanimlar")', 
+                url: '@Url.Action("GetSaatList", "SrOzelTanimlar")', 
                 data: { 'SRSalonID': salon, 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SROzelTanimID': '@(Model.SROzelTanimID<=0?"":Model.SROzelTanimID.ToString())' },
                 success: function (result) {
                     $('#saatLstContnt').html(result.Deger);
@@ -322,7 +322,7 @@
             return;
         }
         $.ajax({
-            url: '@Url.Action("getSalonlar", "Ajax")',
+            url: '@Url.Action("GetSalonlar", "Ajax")',
             data: { 'EnstituKod': enstituKod, 'SRTalepTipID': ttip },
             success: function (result) {
                 $('#SRSalonID').empty();
@@ -355,7 +355,7 @@
             return;
         }
         $.ajax({
-            url: '@Url.Action("getGunler", "Ajax")',
+            url: '@Url.Action("GetGunler", "Ajax")',
             data: { 'SRSalonID': srSalonID, 'SRTalepTipID': ttip, 'Tarih': tar1, 'Tarih2': tar2, 'SROzelTanimID': '@(Model.SROzelTanimID<=0?"":Model.SROzelTanimID.ToString())' },
             success: function (result) {       
                 $('#hgunDrpd').html(result);

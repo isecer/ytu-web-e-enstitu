@@ -241,7 +241,7 @@
         var sndrVal = $(sndr).val(); 
         if (sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getSablonTipParametre", "MailSablonlariSistem")',
+                url: '@Url.Action("GetSablonTipParametre", "MailSablonlariSistem")',
                 data: { MailSablonTipID: sndrVal },
                 success: function (result) { 
                     $('#_parametre').html(result);

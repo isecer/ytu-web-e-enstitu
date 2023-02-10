@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IEnumerable<FrKotalarDto> KotalarDtos { get; set; }
 
     }
-    public class FrKotalarDto : frProgramlar
+    public class FrKotalarDto : FrProgramlar
     {
         public int KotaID { get; set; }
         public int OgrenimTipKod { get; set; }

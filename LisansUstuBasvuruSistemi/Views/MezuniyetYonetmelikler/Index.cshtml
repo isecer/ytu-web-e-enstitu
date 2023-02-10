@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@model fmMezuniyetYonetmelikler
+@model FmMezuniyetYonetmelikler
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel; 
@@ -135,7 +135,7 @@
     function getDetail(id, Isdelete, sndr) {
 
         $.ajax({
-            url: '@Url.Action("getMyDetail", "MezuniyetYonetmelikler")',
+            url: '@Url.Action("GetMyDetail", "MezuniyetYonetmelikler")',
             data: { id: id },
             async: false,
             success: function (result) {

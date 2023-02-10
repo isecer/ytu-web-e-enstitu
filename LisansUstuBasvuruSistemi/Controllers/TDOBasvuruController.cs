@@ -69,12 +69,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kullKayitB.KayitVar == false)
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "GSIS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                    bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
                 }
                 else
                 {
 
-                    if ((kul.OgrenimTipKod == OgrenimTipi.Doktra || kul.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                    if ((kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         bbModel.KullaniciTipYetki = true;
                         var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
@@ -272,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult BasvuruYap(KmTDOBasvuru kModel, string ekd)
         {
             if (RoleNames.TdoGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
-            var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.toNullIntZero());
+            var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.ToNullIntZero());
 
 
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
@@ -1589,7 +1589,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID = tdoBasvuruDanisman.TDOBasvuru.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).Select(s => s.TDOBasvuruDanismanID).FirstOrDefault().toNullIntZero();
+                    tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID = tdoBasvuruDanisman.TDOBasvuru.TDOBasvuruDanismen.Where(p => p.TDOBasvuruDanismanID != tdoBasvuruDanismanId).OrderByDescending(o => o.TDOBasvuruDanismanID).Select(s => s.TDOBasvuruDanismanID).FirstOrDefault().ToNullIntZero();
                     _entities.TDOBasvuruDanismen.Remove(tdoBasvuruDanisman);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -1600,7 +1600,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silinemedi.");
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1645,7 +1645,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silinemedi.");
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/DetaySilEs<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1701,7 +1701,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TDOBasvuru/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 
             }

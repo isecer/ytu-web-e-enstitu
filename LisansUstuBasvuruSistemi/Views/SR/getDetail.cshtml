@@ -8,19 +8,19 @@
 @model FrTalepler
 @{
     Layout = null;
-    var _color = Model.Color;
-    bool IsDelete = (bool)ViewBag.IsDelete;
+    var color = Model.Color;
+    bool isDelete = (bool)ViewBag.IsDelete;
     var kRole = RoleNames.SrTalepDuzelt.InRoleCurrent(); 
 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
 
 
 }
-<div class="panel panel-success" id="SRDetay_@Model.SRTalepID" style="color:@_color">
+<div class="panel panel-success" id="SRDetay_@Model.SRTalepID" style="color:@color">
 
     <div class="panel-heading  padding-0">
         <h3 class="panel-title"><i class="fa fa-file-text"></i>&nbsp;Talep Detayı</h3>
-        @if (IsDelete == false)
+        @if (isDelete == false)
         {
             <ul class="panel-controls">
                 <li><a href="javascript:void(0)" onclick="getDetail('@Model.SRTalepID')" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
@@ -163,7 +163,7 @@
                                     <div class="form-group">
                                         <label class="col-md-4 col-xs-4 control-label">İşlem Durumu</label>
                                         <div class="col-md-8 col-xs-8">
-                                            @if (kRole && IsDelete == false)
+                                            @if (kRole && isDelete == false)
                                             {
                                                 @Html.DropDownList("SRDurumID", null, new { id = _id, onchange = "DurumKontrol(" + Model.SRTalepID + ")" })
                                             }
@@ -176,9 +176,9 @@
                                     <div class="form-group @(Model.SRDurumID == BelgeTalepDurum.Kapatildi ? "" : "hide")" id="aciklamabilgi_@Model.SRTalepID">
                                         <label class="col-md-4 col-xs-4 control-label">Açıklama</label>
                                         <div class="col-md-8 col-xs-8">
-                                            @if (kRole && IsDelete == false)
+                                            @if (kRole && isDelete == false)
                                             {
-                                                <textarea style="width:100%;" id="SRDurumAciklamasi_@Model.SRTalepID" name="SRDurumAciklamasi_">@Model.SRDurumAciklamasi.toStrObjEmptString().Trim()</textarea>
+                                                <textarea style="width:100%;" id="SRDurumAciklamasi_@Model.SRTalepID" name="SRDurumAciklamasi_">@Model.SRDurumAciklamasi.ToStrObjEmptString().Trim()</textarea>
                                             }
                                             else
                                             {
@@ -186,7 +186,7 @@
                                             }
                                         </div>
                                     </div>
-                                    if (kRole && IsDelete == false)
+                                    if (kRole && isDelete == false)
                                     {
                                         <div class="form-group" id="btnKyt_@Model.SRTalepID">
                                             <label class="col-md-4 col-xs-4 control-label"></label>

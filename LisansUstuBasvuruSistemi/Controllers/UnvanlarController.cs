@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
@@ -15,46 +16,49 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Unvanlar)]
     public class UnvanlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         [Authorize(Roles = RoleNames.Unvanlar)]
         public ActionResult Index()
         {
-            return Index(new fmUnvanlar { });
+            return Index(new FmUnvanlar { });
         }
         [HttpPost]
-        public ActionResult Index(fmUnvanlar model)
+        public ActionResult Index(FmUnvanlar model)
         {
 
-            var q = from s in db.Unvanlars
+            var q = from s in _entities.Unvanlars
                     select s;
 
             if (model.UnvanSiraNo.HasValue) q = q.Where(p => p.UnvanSiraNo == model.UnvanSiraNo);
             if (!model.UnvanAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.UnvanAdi.Contains(model.UnvanAdi));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.UnvanAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.UnvanAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string dlgid)
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
-            ViewBag.MmMessage = MmMessage;
-            var model = new Unvanlar();
-            if (id.HasValue && id > 0)
+            var mmMessage = new MmMessage
             {
-                var data = db.Unvanlars.Where(p => p.UnvanID == id).FirstOrDefault();
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+            ViewBag.MmMessage = mmMessage;
+            var model = new Unvanlar();
+            if (id > 0)
+            {
+                var data = _entities.Unvanlars.FirstOrDefault(p => p.UnvanID == id);
                 if (data != null) model = data;
             }
 
@@ -63,9 +67,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(Unvanlar kModel, string dlgid = "")
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+
             #region Kontrol
 
             //if (kModel.UnvanSiraNo <= 0)
@@ -76,15 +83,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //}
             //else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanSiraNo" });
             if (kModel.UnvanAdi.IsNullOrWhiteSpace())
-            {
-                string msg = "Ünvan Adı Boş bırakılamaz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "UnvanAdi" });
+            { 
+                mmMessage.Messages.Add("Ünvan Adı Boş bırakılamaz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "UnvanAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanAdi" });
             #endregion
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
 
                 if (kModel.UnvanID <= 0)
@@ -94,11 +100,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemYapanIP = UserIdentity.Ip;
                     kModel.IslemTarihi = DateTime.Now;
 
-                    db.Unvanlars.Add(kModel);
+                    _entities.Unvanlars.Add(kModel);
                 }
                 else
                 {
-                    var data = db.Unvanlars.Where(p => p.UnvanID == kModel.UnvanID).First();
+                    var data = _entities.Unvanlars.First(p => p.UnvanID == kModel.UnvanID);
                     //data.UnvanSiraNo = kModel.UnvanSiraNo;
                     data.UnvanAdi = kModel.UnvanAdi;
                     data.IsAktif = kModel.IsAktif;
@@ -106,20 +112,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.Unvanlars.Where(p => p.UnvanID == id).FirstOrDefault();
+            var kayit = _entities.Unvanlars.FirstOrDefault(p => p.UnvanID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -128,14 +134,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.UnvanAdi + "' İsimli Ünvan Silindi!";
-                    db.Unvanlars.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.Unvanlars.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.UnvanAdi + "' İsimli Ünvan Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -143,11 +149,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Ünvan sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _entities.Dispose();
             base.Dispose(disposing);
         }
     }

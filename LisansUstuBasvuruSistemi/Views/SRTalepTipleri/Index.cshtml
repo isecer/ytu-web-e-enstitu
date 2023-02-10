@@ -2,9 +2,9 @@
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  LisansUstuBasvuruSistemi.Utilities.Dtos.fmSRTalepTipleri
+@model  LisansUstuBasvuruSistemi.Utilities.Dtos.FmSrTalepTipleri
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var aylar = (List<CmbIntDto>)ViewBag.Aylar;
@@ -22,13 +22,13 @@
         <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;Salon Rez.Tipleri</h3>
         <ul class="panel-controls">
             <li>
-                <span class="label label-success label-form">T:@IndexModel.Toplam</span>
+                <span class="label label-success label-form">T:@indexModel.Toplam</span>
             </li>
             <li>
-                <span class="label label-info label-form">A:@IndexModel.Aktif</span>
+                <span class="label label-info label-form">A:@indexModel.Aktif</span>
             </li>
             <li>
-                <span class="label label-danger label-form">P:@IndexModel.Pasif</span>
+                <span class="label label-danger label-form">P:@indexModel.Pasif</span>
             </li>
             <li>
                 <a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh">
@@ -108,7 +108,7 @@
                             <a href="@Url.Action("Kayit")">
                                 <i class="fa fa-plus tooltips" data-style="blue" data-original-title="Yeni"></i>
                             </a>
-                            <a href="@Url.Action("Kayit", "SRTalepTipleri", new { id = item.SRTalepTipID })">
+                            <a href="@Url.Action("Kayit", "SrTalepTipleri", new { id = item.SRTalepTipID })">
                                 <i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i>
                             </a>
                             <a href="javascript:void(0)" onclick="silmeOnay(this,'@item.SRTalepTipID')">
@@ -267,7 +267,7 @@
     }
     function sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "SRTalepTipleri")',
+            url: '@Url.Action("Sil", "SrTalepTipleri")',
             data: { id: id },
             success: function (result) {
                 toastr[result.success ? "success" : "error"](result.message, "Talep Tipi Silme İşlemi")

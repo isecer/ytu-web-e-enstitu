@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    partial class rprTezSinavSonucTutanagi_FR0342_FR0377
+    partial class RprTezSinavSonucTutanagi_FR0342_FR0377
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprTezSinavSonucTutanagi_FR0342_FR0377));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprTezSinavSonucTutanagi_FR0342_FR0377));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable42 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow83 = new DevExpress.XtraReports.UI.XRTableRow();

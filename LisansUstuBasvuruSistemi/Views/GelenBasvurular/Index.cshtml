@@ -7,13 +7,13 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmBasvurularDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kayit = RoleNames.GelenBasvurularKayit.InRoleCurrent();
     var sil = RoleNames.GelenBasvurularSil.InRoleCurrent();
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel; 
-    var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
+    var selectedPrograms = (List<string>)ViewBag.SelectedPrograms;
     var mKids = (List<int>)ViewBag.kIds;
 }
 
@@ -179,7 +179,7 @@
         <script type="text/javascript">
 
             $(function () {
-                var sProgs = '@Html.Raw(Json.Encode(SelectedPrograms))';
+                var sProgs = '@Html.Raw(Json.Encode(selectedPrograms))';
                 var nVal = JSON.parse(sProgs);
                 setTimeout(function () {
                     $('#ProgramKod').selectpicker('val', nVal);
@@ -196,7 +196,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvuru Listesi</h3>
                     <ul class="panel-controls">
-                        @foreach (var item in IndexModel.ListB)
+                        @foreach (var item in indexModel.ListB)
                         {
                             <li style="color:@item.Color;">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
@@ -490,7 +490,7 @@
         }
         function getGBNDet(bsvID) {
             $.ajax({
-                url: '@Url.Action("getGBNDetail", "Ajax")',
+                url: '@Url.Action("GetGbnDetail", "Ajax")',
                 data: { id: bsvID },
                 success: function (result) {
                     bootbox.dialog({

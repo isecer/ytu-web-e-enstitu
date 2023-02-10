@@ -1,14 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Genel
 {
-    public partial class rprBolumProgramListesi : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprBolumProgramListesi : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprBolumProgramListesi(string Enst)
+        public RprBolumProgramListesi(string Enst)
         {
             InitializeComponent();
             lblEnstituAdi.Text = Enst;

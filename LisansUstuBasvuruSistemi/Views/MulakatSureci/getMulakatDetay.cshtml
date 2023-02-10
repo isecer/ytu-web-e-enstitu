@@ -8,50 +8,50 @@
 @model BasvuruMulakatDetayDto
 @{
     Layout = null;
-    var IsBootBox = (bool)ViewBag.IsBootBox;
-    var IsDelete = (bool)ViewBag.IsDelete;
-    var nID = !IsBootBox ? Model.MulakatID.ToString() : (Model.BasvuruSurecID + "_" + Model.OgrenimTipKod + "_" + Model.ProgramKod);
-    var Id = Model.MulakatID;
-    string Color = "color=blue;"; 
+    var isBootBox = (bool)ViewBag.IsBootBox;
+    var isDelete = (bool)ViewBag.IsDelete;
+    var nId = !isBootBox ? Model.MulakatID.ToString() : (Model.BasvuruSurecID + "_" + Model.OgrenimTipKod + "_" + Model.ProgramKod);
+    var id = Model.MulakatID;
+    string color = "color=blue;"; 
 
     var nowDate = DateTime.Now;
-    bool MulakatBilgiGirisAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
-    bool MulakatNotGirisAcik = Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi <= nowDate && Model.SonucGirisBitisTarihi >= nowDate;
-    bool AgnoNotGirisAcik = Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi <= nowDate && Model.AGNOGirisBitisTarihi >= nowDate;
+    bool mulakatBilgiGirisAcik = Model.BaslangicTarihi <= nowDate && Model.BitisTarihi >= nowDate;
+    bool mulakatNotGirisAcik = Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi <= nowDate && Model.SonucGirisBitisTarihi >= nowDate;
+    bool agnoNotGirisAcik = Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi <= nowDate && Model.AGNOGirisBitisTarihi >= nowDate;
     var mAlanIciData = Model.MulakatSonuc.Where(p => p.AlanTipID == AlanTipi.AlanIci).ToList();
     var mAlanDisiData = Model.MulakatSonuc.Where(p => p.AlanTipID == AlanTipi.AlanDisi).ToList();
     var mulakatSGirisyetki = RoleNames.MulakatKayıt.InRoleCurrent();
     var bSurecKayit = RoleNames.BasvuruSureciKayit.InRoleCurrent();
-    string _colorAna = "#268a8b";
-    string _colorMul = "green";
-    string _colorSG = "gray";
-    string _colorUyari = "red";
+    string colorAna = "#268a8b";
+    string colorMul = "green";
+    string colorSg = "gray";
+    string colorUyari = "red";
 
-    var NotGirisiAcik = Model.MulakatSurecineGirecek ? (Model.MulakatSurecineGirecek && Model.MulakatID > 0 && mulakatSGirisyetki && (Model.MulakatSinavNotGirisiAktif || UserIdentity.Current.IsAdmin) && Model.SonucHesaplandi == false) : (mulakatSGirisyetki && Model.IsAlesYerineDosyaNotuIstensin && Model.SonucHesaplandi == false);
+    var notGirisiAcik = Model.MulakatSurecineGirecek ? (Model.MulakatSurecineGirecek && Model.MulakatID > 0 && mulakatSGirisyetki && (Model.MulakatSinavNotGirisiAktif || UserIdentity.Current.IsAdmin) && Model.SonucHesaplandi == false) : (mulakatSGirisyetki && Model.IsAlesYerineDosyaNotuIstensin && Model.SonucHesaplandi == false);
 
-    var tbName = TabAdlari.MulakatDetayTN + "-" + nID;
+    var tbName = TabAdlari.MulakatDetayTN + "-" + nId;
 }
-<div id="bb_MD_@nID">
-    <div class="panel panel-success" id="pndMD_@nID">
+<div id="bb_MD_@nId">
+    <div class="panel panel-success" id="pndMD_@nId">
         <div class="panel-body" style="margin: 0px; padding: 0px;">
             <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
                 <ul class="nav nav-tabs" role="tablist">
                     @if (Model.MulakatSurecineGirecek)
                     {
-                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Süreç Bilgisi</span></a></li>
-                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Sınav Notu Girişi (Alan İçi)</span></a></li>
-                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Sınav Notu Girişi (Alan Dışı)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color">Süreç Bilgisi</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color">Sınav Notu Girişi (Alan İçi)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 3 ? "active" : "") bnt-@tbName-3"><a onclick="tabchangeSet('@tbName',3)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color">Sınav Notu Girişi (Alan Dışı)</span></a></li>
 
                     }
                     else
                     {
-                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Başvuranlar (Alan İçi)</span></a></li>
-                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@Color">Başvuranlar (Alan Dışı)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a onclick="tabchangeSet('@tbName',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color">Başvuranlar (Alan İçi)</span></a></li>
+                        <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a onclick="tabchangeSet('@tbName',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-book" style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color"></i>&nbsp; <span style="text-align: right;font-weight: bold;font-size: 11pt;margin: 0px;@color">Başvuranlar (Alan Dışı)</span></a></li>
 
                     }
-                    @if (!IsDelete)
+                    @if (!isDelete)
                     {
-                        <li><a href="javascript:void(0);" onclick="getMDDetail('@Id','@Model.BasvuruSurecID','@Model.OgrenimTipKod','@Model.ProgramKod')" class="panel-refresh" title="Yenile"><span class="fa fa-refresh myValueTd" style="@Color"></span></a></li>
+                        <li><a href="javascript:void(0);" onclick="getMDDetail('@id','@Model.BasvuruSurecID','@Model.OgrenimTipKod','@Model.ProgramKod')" class="panel-refresh" title="Yenile"><span class="fa fa-refresh myValueTd" style="@color"></span></a></li>
                     }
                 </ul>
                 <div class="panel-body tab-content" style="padding:0px;">
@@ -60,25 +60,25 @@
                         <tr>
                             <td style="text-align:right;" width="230">Eğitim Öğretim Yılı</td>
                             <td style="width:4px;">:</td>
-                            <td style="font-weight:bold;"><span style="color:@(MulakatBilgiGirisAcik || MulakatNotGirisAcik ? _colorMul : _colorSG);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
+                            <td style="font-weight:bold;"><span style="color:@(mulakatBilgiGirisAcik || mulakatNotGirisAcik ? colorMul : colorSg);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
                         </tr>
                         <tr>
                             <td style="text-align:right;">Başvuru, Mülakat Jüri&Yer Bilgisi Süreci</td>
                             <td>:</td>
                             <td style="font-weight:bold;">
-                                @if (MulakatBilgiGirisAcik)
+                                @if (mulakatBilgiGirisAcik)
                                 {
-                                    <span style="color:@_colorMul;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
+                                    <span style="color:@colorMul;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Aktif)</span>
                                 }
                                 else
                                 {
                                     if (Model.BitisTarihi < nowDate)
                                     {
-                                        <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                        <span style="color:@colorSg;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
                                     }
                                     else if (Model.BaslangicTarihi > nowDate)
                                     {
-                                        <span style="color:@_colorSG;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
+                                        <span style="color:@colorSg;">@Model.BaslangicTarihi.ToFormatDateAndTime() / @Model.BitisTarihi.ToFormatDateAndTime() (Pasif)</span>
                                     }
 
                                 }
@@ -90,23 +90,23 @@
                                 <td style="text-align:right;">AGNO Not Giriş Süreci</td>
                                 <td>:</td>
                                 <td style="font-weight:bold;">
-                                    @if (AgnoNotGirisAcik)
+                                    @if (agnoNotGirisAcik)
                                     {
-                                        <span style="color:@_colorMul;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
+                                        <span style="color:@colorMul;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
                                     }
                                     else
                                     {
                                         if (Model.AGNOGirisBitisTarihi.HasValue && Model.AGNOGirisBitisTarihi.Value < nowDate)
                                         {
-                                            <span style="color:@_colorSG;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                            <span style="color:@colorSg;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
                                         }
                                         else if (Model.AGNOGirisBaslangicTarihi.HasValue && Model.AGNOGirisBaslangicTarihi.Value > nowDate)
                                         {
-                                            <span style="color:@_colorSG;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                            <span style="color:@colorSg;">@Model.AGNOGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.AGNOGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
                                         }
                                         else
                                         {
-                                            <span style="color:@_colorUyari;">Süreç Tarihleri Belirlenmedi</span>
+                                            <span style="color:@colorUyari;">Süreç Tarihleri Belirlenmedi</span>
                                         }
                                     }
                                 </td>
@@ -128,23 +128,23 @@
                             <td style="font-weight:bold;">
                                 @if (Model.MulakatSurecineGirecek)
                                 {
-                                    if (MulakatNotGirisAcik)
+                                    if (mulakatNotGirisAcik)
                                     {
-                                        <span style="color:@_colorMul;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
+                                        <span style="color:@colorMul;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Aktif)</span>
                                     }
                                     else
                                     {
                                         if (Model.SonucGirisBitisTarihi.HasValue && Model.SonucGirisBitisTarihi.Value < nowDate)
                                         {
-                                            <span style="color:@_colorSG;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                            <span style="color:@colorSg;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
                                         }
                                         else if (Model.SonucGirisBaslangicTarihi.HasValue && Model.SonucGirisBaslangicTarihi.Value > nowDate)
                                         {
-                                            <span style="color:@_colorSG;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
+                                            <span style="color:@colorSg;">@Model.SonucGirisBaslangicTarihi.Value.ToFormatDateAndTime() / @Model.SonucGirisBitisTarihi.Value.ToFormatDateAndTime() (Pasif)</span>
                                         }
                                         else
                                         {
-                                            <span style="color:@_colorUyari;">Süreç Tarihleri Belirlenmedi</span>
+                                            <span style="color:@colorUyari;">Süreç Tarihleri Belirlenmedi</span>
                                         }
                                     }
                                 }
@@ -198,7 +198,7 @@
                                     <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp;Mülakat Sınavı Yer Bilgisi</h3>
                                 </div>
                                 <div class="panel panel-default form-horizontal" style="margin:0px;">
-                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@Color">
+                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@color">
                                         <thead>
                                             <tr>
                                                 <th width="80">Sınav Türü</th>
@@ -248,7 +248,7 @@
                                     <h3 class="panel-title"><i class="fa fa-group"></i>&nbsp;Mülakat Jüri Bilgisi</h3>
                                 </div>
                                 <div class="panel panel-default form-horizontal" style="margin:0px;">
-                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@Color">
+                                    <table class="table table-hover" style="width:100%;table-layout:fixed;@color">
                                         <thead>
                                             <tr>
                                                 <th width="60">Sıra No</th>
@@ -349,7 +349,7 @@
                                             <td><input style="color:red;" type="text" name="search" id="AI_filterInp_@Model.MulakatID" placeholder="ara..."></td>
 
                                             <td><a href="javascript:void(0);" onclick="flter($('#AI_filterInp_@Model.MulakatID'),'@AlanTipi.AlanIci',@Model.MulakatID)" class="label label-warning panel-refresh"> Ara</a></td>
-                                            @if (NotGirisiAcik)
+                                            @if (notGirisiAcik)
                                             {
                                                 <td style="width:120px;text-align:right;">
                                                     @if (mAlanIciData.Count > 0)
@@ -364,7 +364,7 @@
 
                             </div>
                             <div class="panel panel-default form-horizontal" style="margin:0px;">
-                                <table class="table " style="@Color">
+                                <table class="table " style="@color">
                                     <thead>
                                         <tr>
                                             <th width="40">S.No</th>
@@ -422,7 +422,7 @@
                                                                         </td>
                                                                     }
                                                                     <td width="80">
-                                                                        @if (NotGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
+                                                                        @if (notGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
                                                                         {
                                                                             <input type="text" name="AlesNotuOrDosyaNotu" class="DosyNot_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.AlesNotuOrDosyaNotu" />
                                                                         }
@@ -448,7 +448,7 @@
                                                                     @if (Model.MulakatSurecineGirecek)
                                                                     {
                                                                         <td width="110">
-                                                                            @if (NotGirisiAcik && Model.YaziliNotuIstensin)
+                                                                            @if (notGirisiAcik && Model.YaziliNotuIstensin)
                                                                             {
                                                                                 <table>
                                                                                     <tr>
@@ -485,7 +485,7 @@
                                                                             }
                                                                         </td>
                                                                         <td width="110">
-                                                                            @if (NotGirisiAcik && Model.SozluNotuIstensin)
+                                                                            @if (notGirisiAcik && Model.SozluNotuIstensin)
                                                                             {
                                                                                 <table>
                                                                                     <tr>
@@ -543,11 +543,11 @@
                                             <th colspan="8">
                                                 <table width="450" style="margin:0px auto;">
                                                     <tr>
-                                                        <td width="150" style="text-align:center;color:@_colorAna">Toplam: @mAlanIciData.Count</td>
+                                                        <td width="150" style="text-align:center;color:@colorAna">Toplam: @mAlanIciData.Count</td>
                                                         @if (Model.MulakatSurecineGirecek)
                                                         {
-                                                            <td width="150" style="text-align:center;color:@_colorMul" id="nGirisTamamC_@(Model.MulakatID)_AI">Tamamlanan: @(mAlanIciData.Where(p => p.SuccessRow).Count())</td>
-                                                            <td style="text-align:center;color:@_colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AI">Eksik Olan: @(mAlanIciData.Where(p => !p.SuccessRow).Count())</td>
+                                                            <td width="150" style="text-align:center;color:@colorMul" id="nGirisTamamC_@(Model.MulakatID)_AI">Tamamlanan: @(mAlanIciData.Where(p => p.SuccessRow).Count())</td>
+                                                            <td style="text-align:center;color:@colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AI">Eksik Olan: @(mAlanIciData.Where(p => !p.SuccessRow).Count())</td>
                                                         }
                                                     </tr>
                                                 </table>
@@ -615,7 +615,7 @@
                                             <td style="padding-right: 2px; padding-left: 2px; " class="text-center" id="AD_filtreKelime_@Model.MulakatID"></td>
                                             <td><input style="color:red;" type="text" name="search" id="AD_filterInp_@Model.MulakatID" placeholder="ara..."></td>
                                             <td><a href="javascript:void(0);" onclick="flter($('#AD_filterInp_@Model.MulakatID'),'@AlanTipi.AlanDisi',@Model.MulakatID)" class="label label-warning panel-refresh"> Ara</a></td>
-                                            @if (NotGirisiAcik)
+                                            @if (notGirisiAcik)
                                             {
                                                 <td style="width:120px;text-align:right;">
                                                     @if (mAlanDisiData.Count > 0)
@@ -630,7 +630,7 @@
 
                             </div>
                             <div class="panel panel-default form-horizontal" style="margin:0px;">
-                                <table class="table " style="@Color">
+                                <table class="table " style="@color">
                                     <thead>
                                         <tr>
                                             <th width="40">S.No</th>
@@ -687,7 +687,7 @@
                                                                         </td>
                                                                     }
                                                                     <td width="80">
-                                                                        @if (NotGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
+                                                                        @if (notGirisiAcik && Model.IsAlesYerineDosyaNotuIstensin)
                                                                         {
                                                                             <input type="text" name="AlesNotuOrDosyaNotu" class="DosyNot_@item.BasvuruTercihID" onkeydown="kDownEvent(window.event,this)" style="width:65px;height:20px;" value="@item.AlesNotuOrDosyaNotu" />
                                                                         }
@@ -711,7 +711,7 @@
                                                                     @if (Model.MulakatSurecineGirecek)
                                                                     {
                                                                         <td width="110">
-                                                                            @if (NotGirisiAcik && Model.YaziliNotuIstensin)
+                                                                            @if (notGirisiAcik && Model.YaziliNotuIstensin)
                                                                             {
                                                                                 <table>
                                                                                     <tr>
@@ -749,7 +749,7 @@
                                                                             }
                                                                         </td>
                                                                         <td width="110">
-                                                                            @if (NotGirisiAcik && Model.SozluNotuIstensin)
+                                                                            @if (notGirisiAcik && Model.SozluNotuIstensin)
                                                                             {
                                                                                 <table>
                                                                                     <tr>
@@ -809,11 +809,11 @@
                                             <th colspan="8">
                                                 <table width="450" style="margin:0px auto;">
                                                     <tr>
-                                                        <td width="150" style="text-align:center;color:@_colorAna">Toplam: @mAlanDisiData.Count</td>
+                                                        <td width="150" style="text-align:center;color:@colorAna">Toplam: @mAlanDisiData.Count</td>
                                                         @if (Model.MulakatSurecineGirecek)
                                                         {
-                                                            <td width="150" style="text-align:center;color:@_colorMul" id="nGirisTamamC_@(Model.MulakatID)_AD">Tamamlanan: @(mAlanDisiData.Where(p => p.SuccessRow).Count())</td>
-                                                            <td style="text-align:center;color:@_colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AD">Eksik Olan: @(mAlanDisiData.Where(p => !p.SuccessRow).Count())</td>
+                                                            <td width="150" style="text-align:center;color:@colorMul" id="nGirisTamamC_@(Model.MulakatID)_AD">Tamamlanan: @(mAlanDisiData.Where(p => p.SuccessRow).Count())</td>
+                                                            <td style="text-align:center;color:@colorUyari" id="nGirisEksikC_@(Model.MulakatID)_AD">Eksik Olan: @(mAlanDisiData.Where(p => !p.SuccessRow).Count())</td>
                                                         }
                                                     </tr>
                                                 </table>
@@ -844,7 +844,7 @@
                     className: "btn-danger",
                     callback: function () {
                         var id = '@Model.BasvuruSurecID';
-                        var _panel = $('#pndMD_' + '@nID');
+                        var _panel = $('#pndMD_' + '@nId');
                         _pRefresh(_panel, false);
                         $.ajax({
                             url: '@Url.Action("AlanDegistirmeIslemi", "MulakatSureci")',
@@ -854,7 +854,7 @@
                                 if (result.Messages.length > 0)
                                     showMmMessage(result.Messages, 'Tamam');
 
-                                getMDDetail('@Id', '@Model.BasvuruSurecID', '@Model.OgrenimTipKod', '@Model.ProgramKod');
+                                getMDDetail('@id', '@Model.BasvuruSurecID', '@Model.OgrenimTipKod', '@Model.ProgramKod');
 
                             },
                             error: function (err) {
@@ -1011,7 +1011,7 @@
     }
 
     function Kaydet(mlktID, aTip, cnt) {
-        var _panel = $('#pndMD_' + '@nID');
+        var _panel = $('#pndMD_' + '@nId');
         var _tAtip=aTip=='@AlanTipi.AlanIci'?"AI":"AD";
         var _BilimselHazirlik = "[";
         var _BasvuruTercihID = "[";
@@ -1116,7 +1116,7 @@
         });
     }
     function getDetailOgr(id) {
-        var _panel = $('#pndMD_' + '@nID');
+        var _panel = $('#pndMD_' + '@nId');
          var tbName = "@TabAdlari.MulakatDetayTN-" + id;
         var tID = getSelectedTabID(tbName);
         _pRefresh(_panel, false);
@@ -1171,22 +1171,22 @@
             });
         }
 </script>
-@if (IsBootBox)
+@if (isBootBox)
 {
     <script type="text/javascript">
 
         function getMDDetail(id, bsrID, otID, prKod, Isdelete, sndr) {
 
-            var _panel = $('#pndMD_' + '@nID');
+            var _panel = $('#pndMD_' + '@nId');
             var tbName = "@tbName";
             var tID = getSelectedTabID(tbName);
             _pRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("getMulakatDetay", "MulakatSureci")',
-                data: {  BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod,  tbInx: tID, IsDelete: (Isdelete == true),IsBootBox:'@IsBootBox' },
+                data: {  BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod,  tbInx: tID, IsDelete: (Isdelete == true),IsBootBox:'@isBootBox' },
                 success: function (result) {
                     if (Isdelete != true) {
-                        $('#bb_MD_@nID').html(result);
+                        $('#bb_MD_@nId').html(result);
                         _pRefresh(_panel, true);
                     }
                     else {

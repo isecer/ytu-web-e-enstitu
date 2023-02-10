@@ -1,37 +1,33 @@
 ﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Linq;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
 
-    public partial class rprMezuniyetTezKontrolFormu : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezKontrolFormu : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetTezKontrolFormu(Guid? RowID, int? MezuniyetBasvurulariTezDosyaID)
+        public RprMezuniyetTezKontrolFormu(Guid? rowId, int? mezuniyetBasvurulariTezDosyaId)
         {
             InitializeComponent();
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var MezuniyetBasvurulariTezDosyasi = db.MezuniyetBasvurulariTezDosyalaris.Where(p => p.RowID == (RowID ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (MezuniyetBasvurulariTezDosyaID ?? p.MezuniyetBasvurulariTezDosyaID)).First();
-                var basvuru = MezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulari;
+                var mezuniyetBasvurulariTezDosyasi = db.MezuniyetBasvurulariTezDosyalaris.First(p => p.RowID == (rowId ?? p.RowID) && p.MezuniyetBasvurulariTezDosyaID == (mezuniyetBasvurulariTezDosyaId ?? p.MezuniyetBasvurulariTezDosyaID));
+                var basvuru = mezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulari;
                 var enstituLng = basvuru.MezuniyetSureci.Enstituler;
                 lblEnstituAdi.Text = enstituLng.EnstituAd;
-                var onaylayan = db.Kullanicilars.Where(p => p.KullaniciID == MezuniyetBasvurulariTezDosyasi.OnayYapanID).First();
+                var onaylayan = db.Kullanicilars.First(p => p.KullaniciID == mezuniyetBasvurulariTezDosyasi.OnayYapanID);
                 cell_OnaylayanKisi.Text = onaylayan.Ad + " " + onaylayan.Soyad;
-                cellOnayTarihi.Text = MezuniyetBasvurulariTezDosyasi.OnayTarihi.ToFormatDateAndTime(); 
-                var KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).First().DonemAdi + " - " + basvuru.KayitTarihi.ToDateString();
+                cellOnayTarihi.Text = mezuniyetBasvurulariTezDosyasi.OnayTarihi.ToFormatDateAndTime(); 
+                var kayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + basvuru.KayitTarihi.ToDateString();
                 lngLbl_AkademikTarih.Text = "Eğitim Öğretim Yılı";
-                cell_AkademikYil.Text = basvuru.MezuniyetSureci.BaslangicYil + "-" + basvuru.MezuniyetSureci.BitisYil + " " + db.Donemlers.Where(p => p.DonemID == basvuru.MezuniyetSureci.DonemID).First().DonemAdi;
+                cell_AkademikYil.Text = basvuru.MezuniyetSureci.BaslangicYil + "-" + basvuru.MezuniyetSureci.BitisYil + " " + db.Donemlers.First(p => p.DonemID == basvuru.MezuniyetSureci.DonemID).DonemAdi;
                 lblKayitTarihi.Text = "Kayıt Tarihi";
-                cell_KayitTarihi.Text = KayitDonemi;
+                cell_KayitTarihi.Text = kayitDonemi;
                 Lbl_AdSoyad.Text = "Ad Soyad";
                 cell_AdiSoyadi.Text = basvuru.Ad + " " + basvuru.Soyad;
                 lbl_AnabilimdaliProg.Text = "Anabilim Dalı / Program";
@@ -41,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 lbl_OgrenimTipi.Text = "Öğrenim Seviyesi";
                 cell_OgrenimTipi.Text = db.OgrenimTipleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod && p.EnstituKod == basvuru.MezuniyetSureci.EnstituKod).OgrenimTipAdi;
 
-                var urlAdd = enstituLng.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBTDO_" + MezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulariID + "_" + MezuniyetBasvurulariTezDosyasi.RowID.ToString();
+                var urlAdd = enstituLng.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBTDO_" + mezuniyetBasvurulariTezDosyasi.MezuniyetBasvurulariID + "_" + mezuniyetBasvurulariTezDosyasi.RowID.ToString();
                 xrQRCode.ImageUrl = urlAdd;
                 xrQRCode.Image = urlAdd.CreateQrCode();
                 this.DisplayName = (basvuru.Ad + " " + basvuru.Soyad) + " Mezuniyet Tez Kontrol Formu";

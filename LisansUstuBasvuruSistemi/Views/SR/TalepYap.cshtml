@@ -2,10 +2,10 @@
 @using BiskaUtil
 @model kmSRTalep
 @{              
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";   
-    var IsTezSinavi = (bool)ViewBag.IsTezSinavi;
-    int? kID = (Model.SRTalepID <= 0 ? (int?)null : Model.SRTalepID);
+    var isTezSinavi = (bool)ViewBag.IsTezSinavi;
+    int? kId = (Model.SRTalepID <= 0 ? (int?)null : Model.SRTalepID);
 
 }
 <div class="row">
@@ -17,7 +17,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.SRTalepID <= 0 ? "Yeni Rezervasyon Talebi Yap" : "Rezervasyon Talebi Düzenle")</h3>
                     <ul class="panel-controls">
-                        <li><a href="@Url.Action("TalepYap", "SR", new { id = kID })" class="">
+                        <li><a href="@Url.Action("TalepYap", "Sr", new { id = kId })" class="">
                              <span class="fa fa-refresh"></span>
                         </a></li>
                     </ul>
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tezX @(Model.SRTalepTipID<=0?"hide":(IsTezSinavi?"":"hide"))">   
+                            <div class="tezX @(Model.SRTalepTipID<=0?"hide":(isTezSinavi?"":"hide"))">   
                                 
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-2 control-label">Danışman Adı</label>
@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="digerX @(Model.SRTalepTipID<=0?"hide":(IsTezSinavi?"hide":""))">
+                            <div class="digerX @(Model.SRTalepTipID<=0?"hide":(isTezSinavi?"hide":""))">
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-2 control-label">Açıklama</label>
                                     <div class="col-md-9 col-xs-10">
@@ -354,7 +354,7 @@
         }
 
         $.ajax({
-            url: '@Url.Action("getSalonlar", "Ajax")',
+            url: '@Url.Action("GetSalonlar", "Ajax")',
             data: { 'EnstituKod': '@Model.EnstituKod', 'SRTalepTipID': _val,'TalepYapanID':@Model.TalepYapanID,'id':'@(Model.SRTalepID<=0?"":Model.SRTalepID.ToString())'},
             success: function (result) {    
                 if (result.IsTezSinavi) {
@@ -414,7 +414,7 @@
     }
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

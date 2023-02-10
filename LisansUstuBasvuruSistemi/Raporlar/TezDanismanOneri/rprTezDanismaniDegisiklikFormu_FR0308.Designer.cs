@@ -1,7 +1,7 @@
 ﻿
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
-    partial class rprTezDanismaniDegisiklikFormu_FR0308
+    partial class RprTezDanismaniDegisiklikFormu_FR0308
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprTezDanismaniDegisiklikFormu_FR0308));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprTezDanismaniDegisiklikFormu_FR0308));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow16 = new DevExpress.XtraReports.UI.XRTableRow();

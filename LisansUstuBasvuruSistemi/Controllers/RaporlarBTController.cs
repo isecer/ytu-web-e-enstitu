@@ -10,15 +10,15 @@ using LisansUstuBasvuruSistemi.Business;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.BelgeTalepleriRapor)]
-    public class RaporlarBTController : Controller
+    public class RaporlarBtController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         // GET: RaporlarBelgeTalep
-        public ActionResult Index(string EKD)
+        public ActionResult Index(string ekd)
         {
-            var eKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var btBaslangicTarihi = db.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderBy(s => s.TalepTarihi).FirstOrDefault();
-            var btBitisTarihi = db.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderByDescending(s => s.TalepTarihi).FirstOrDefault();
+            var eKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var btBaslangicTarihi = _entities.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderBy(s => s.TalepTarihi).FirstOrDefault();
+            var btBitisTarihi = _entities.BelgeTalepleris.Where(p => p.EnstituKod == eKod).OrderByDescending(s => s.TalepTarihi).FirstOrDefault();
             var t1 = new List<CmbStringDto>();
             var t2 = new List<CmbStringDto>();
 

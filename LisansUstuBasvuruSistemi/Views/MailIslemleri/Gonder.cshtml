@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @model GonderilenMailler
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var elist = (List<CmbIntDto>)ViewBag.EmailList;
 
@@ -101,14 +101,14 @@
         </div>
     </form>
 </div>    
-@if (MmMessage.IsCloseDialog)
+@if (mmMessage.IsCloseDialog)
 {
     <script type="text/javascript">
 
         //var el = $('form');
         //App.blockUI(el);
         setTimeout(function () {
-            window.top.dialogKapat('@MmMessage.DialogID', '@MmMessage.ReturnUrl');
+            window.top.dialogKapat('@mmMessage.DialogID', '@mmMessage.ReturnUrl');
         }, 2500);
     </script>
 }

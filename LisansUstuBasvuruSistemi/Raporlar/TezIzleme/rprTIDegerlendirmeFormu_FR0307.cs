@@ -1,18 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
+﻿using System.Linq;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using BiskaUtil;
-using System.Linq;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
 {
-    public partial class rprTIDegerlendirmeFormu_FR0307 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprTiDegerlendirmeFormu_FR0307 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprTIDegerlendirmeFormu_FR0307(int ID)
+        public RprTiDegerlendirmeFormu_FR0307(int id)
         {
             InitializeComponent();
 
@@ -27,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                             join e in db.Enstitulers on mb.EnstituKod equals e.EnstituKod 
                             join prg in db.Programlars  on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris  on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.TIBasvuruAraRaporID == ID
+                            where s.TIBasvuruAraRaporID == id
                             select new
                             {
                                 k.OgrenciNo,
@@ -60,9 +55,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                                 IsTezIzlemeRaporuAltAlanUygun = s.TIBasvuruAraRaporKomites.Any(p => p.JuriTipAdi == "TezDanismani" && p.IsTezIzlemeRaporuAltAlanUygun == true),
                                 IsBasariliCount = s.TIBasvuruAraRaporKomites.Count(p => p.IsBasarili == true),
                                 IsBasariliDegilCount = s.TIBasvuruAraRaporKomites.Count(p => p.IsBasarili == false),
-                                Danisman = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault(),
-                                TikUyesi1 = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TikUyesi1").FirstOrDefault(),
-                                TikUyesi2 = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TikUyesi2").FirstOrDefault(),
+                                Danisman = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani"),
+                                TikUyesi1 = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi1"),
+                                TikUyesi2 = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi2"),
                                 s.IsTezBasligiDegisti,
                                 YeniTezBaslikTr = s.IsTezBasligiDegisti ? s.YeniTezBaslikTr : "",
                                 YeniTezBaslikEn = s.IsTezBasligiDegisti ? s.YeniTezBaslikEn : "",
@@ -84,21 +79,21 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 cellTezBasligiTr.Text = data.TezBaslikTr;
                 cellTezBasligiEn.Text = data.TezBaslikEn;
                 cellToplantiSekli.Text = data.ToplantiSekli;
-                cellToplantiTarihi.Text = data.ToplantiTarihi.ToLongDateString() + "\n\r" + string.Format("{0:hh\\:mm}", data.ToplantiSaati);
+                cellToplantiTarihi.Text = data.ToplantiTarihi.ToLongDateString() + "\n\r" +$"{data.ToplantiSaati:hh\\:mm}";
                 cellToplantiyeri.Text = data.Toplantiyeri;
                 cellTezIzlemeRaporDonemAdi.Text = data.TezIzlemeRaporDonemi;
                 cellTezIzlemeRaporSayisi.Text = data.AraRaporSayisi.ToString();
-                bool TezOnerisiUygun = data.IsTezIzlemeRaporuTezOnerisiUygunCount > data.IsTezIzlemeRaporuTezOnerisiUygunDegilCount;
-                bool TezOnerisiUygunOyBirligiOrCoklugu = (TezOnerisiUygun ? data.IsTezIzlemeRaporuTezOnerisiUygunCount : data.IsTezIzlemeRaporuTezOnerisiUygunDegilCount) == data.KomiteCount;
-                cellTezOnerisiUyumu.Text = (TezOnerisiUygunOyBirligiOrCoklugu ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + (TezOnerisiUygun ? "UYGUN " : "UYGUN DEĞİL") + "\r\n(" + (TezOnerisiUygunOyBirligiOrCoklugu ? "UNANIMOUSLY " : "BY MAJORITY ") + (TezOnerisiUygun ? "COMPATIBLE " : "INCOMPATIBLE") + ")";
+                bool tezOnerisiUygun = data.IsTezIzlemeRaporuTezOnerisiUygunCount > data.IsTezIzlemeRaporuTezOnerisiUygunDegilCount;
+                bool tezOnerisiUygunOyBirligiOrCoklugu = (tezOnerisiUygun ? data.IsTezIzlemeRaporuTezOnerisiUygunCount : data.IsTezIzlemeRaporuTezOnerisiUygunDegilCount) == data.KomiteCount;
+                cellTezOnerisiUyumu.Text = (tezOnerisiUygunOyBirligiOrCoklugu ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + (tezOnerisiUygun ? "UYGUN " : "UYGUN DEĞİL") + "\r\n(" + (tezOnerisiUygunOyBirligiOrCoklugu ? "UNANIMOUSLY " : "BY MAJORITY ") + (tezOnerisiUygun ? "COMPATIBLE " : "INCOMPATIBLE") + ")";
                 if (data.IsYokDrBursiyeriVar)
                 {
                     cellTezYok2000BursAltAlanUyumu.Text = (data.IsTezIzlemeRaporuAltAlanUygun ? "UYGUN " : "UYGUN DEĞİL") + "\r\n(" + (data.IsTezIzlemeRaporuAltAlanUygun ? "COMPATIBLE " : "INCOMPATIBLE") + ")";
                 }
                 else cellTezYok2000BursAltAlanUyumu.Text = "";
-                bool TezDegerlendirmeBasarili = data.IsBasariliCount > data.IsBasariliDegilCount;
-                bool TezDegerlendirmeBasariliOyBirligiOrCoklugu = (TezDegerlendirmeBasarili ? data.IsBasariliCount : data.IsBasariliDegilCount) == data.KomiteCount;
-                cellTezDegerlendirmeSonucu.Text = (TezDegerlendirmeBasariliOyBirligiOrCoklugu ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + (TezDegerlendirmeBasarili ? "BAŞARILI " : "BAŞARISIZ") + "\r\n(" + (TezDegerlendirmeBasariliOyBirligiOrCoklugu ? "UNANIMOUSLY " : "BY MAJORITY ") + (TezDegerlendirmeBasarili ? "SUCCESSFUL " : "UNSUCCESSFUL") + ")";
+                bool tezDegerlendirmeBasarili = data.IsBasariliCount > data.IsBasariliDegilCount;
+                bool tezDegerlendirmeBasariliOyBirligiOrCoklugu = (tezDegerlendirmeBasarili ? data.IsBasariliCount : data.IsBasariliDegilCount) == data.KomiteCount;
+                cellTezDegerlendirmeSonucu.Text = (tezDegerlendirmeBasariliOyBirligiOrCoklugu ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + (tezDegerlendirmeBasarili ? "BAŞARILI " : "BAŞARISIZ") + "\r\n(" + (tezDegerlendirmeBasariliOyBirligiOrCoklugu ? "UNANIMOUSLY " : "BY MAJORITY ") + (tezDegerlendirmeBasarili ? "SUCCESSFUL " : "UNSUCCESSFUL") + ")";
 
                 cellYeniTezBaslikTr.Text = data.YeniTezBaslikTr;
                 cellYeniTezBaslikEn.Text = data.YeniTezBaslikEn;

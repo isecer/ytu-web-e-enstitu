@@ -18,23 +18,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Duyurular)]
     public class DuyurularController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmDuyurularDto() { PageSize = 15 }, EKD);
+            return Index(new FmDuyurularDto() { PageSize = 15 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmDuyurularDto model, string EKD)
-        {
-
-
-
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.Duyurulars
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    join ens in db.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
+        public ActionResult Index(FmDuyurularDto model, string ekd)
+        { 
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.Duyurulars
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
                     // where ens.Enstituler.EnstituKisaAd.Contains(EKD)
-                    where EnstKods.Contains(s.EnstituKod)
+                    where enstKods.Contains(s.EnstituKod)
                     select new
                     {
 
@@ -71,10 +68,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.Tarih);
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount
+            };
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
             model.DuyurularDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
@@ -99,27 +97,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 YayinSonTarih = s.YayinSonTarih
             }).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
-        public ActionResult Kayit(int? id, string EKD)
+        public ActionResult Kayit(int? id, string ekd)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new Duyurular();
-            if (id.HasValue && id > 0)
+            if (id > 0)
             {
-                var data = db.Duyurulars.Where(p => p.DuyuruID == id).FirstOrDefault();
+                var data = _entities.Duyurulars.FirstOrDefault(p => p.DuyuruID == id);
                 if (data != null) model = data;
             }
             string sEnstituKod = "";
-            if (EnstKods.Count == 1)
+            if (enstKods.Count == 1)
             {
-                sEnstituKod = EnstKods.First();
+                sEnstituKod = enstKods.First();
             }
-            else sEnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            else sEnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -128,67 +126,62 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(Duyurular kModel, List<string> DosyaEkiAdi, List<HttpPostedFileBase> DosyaEki, List<int?> DuyuruDosyaEkID)
+        public ActionResult Kayit(Duyurular kModel, List<string> dosyaEkiAdi, List<HttpPostedFileBase> dosyaEki, List<int?> duyuruDosyaEkId)
         {
-            var MmMessage = new MmMessage();
-            DuyuruDosyaEkID = DuyuruDosyaEkID == null ? new List<int?>() : DuyuruDosyaEkID;
-            DosyaEkiAdi = DosyaEkiAdi == null ? new List<string>() : DosyaEkiAdi;
-            DosyaEki = DosyaEki == null ? new List<HttpPostedFileBase>() : DosyaEki;
-            var qDosyaEkAdi = DosyaEkiAdi.Select((s, inx) => new { s, inx }).ToList();
-            var qDosyaEki = DosyaEki.Select((s, inx) => new { s, inx }).ToList();
-            var qDuyuruDosyaEkID = DuyuruDosyaEkID.Select((s, inx) => new { s, inx }).ToList();
-            var qDosyalar = (from EkGirilenAd in qDosyaEkAdi
-                             join EklenenEk in qDosyaEki on EkGirilenAd.inx equals EklenenEk.inx
-                             select new { EkGirilenAd.inx, DosyaEkAdi = EkGirilenAd.s, Dosya = EklenenEk.s }).ToList();
+            var mmMessage = new MmMessage();
+            duyuruDosyaEkId = duyuruDosyaEkId ?? new List<int?>();
+            dosyaEkiAdi = dosyaEkiAdi ?? new List<string>();
+            dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
+            var qDosyaEkAdi = dosyaEkiAdi.Select((s, inx) => new { s, inx }).ToList();
+            var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
+            var qDuyuruDosyaEkId = duyuruDosyaEkId.Select((s, inx) => new { s, inx }).ToList();
+            var qDosyalar = (from ekGirilenAd in qDosyaEkAdi
+                             join eklenenEk in qDosyaEki on ekGirilenAd.inx equals eklenenEk.inx
+                             select new { ekGirilenAd.inx, DosyaEkAdi = ekGirilenAd.s, Dosya = eklenenEk.s }).ToList();
 
             var qVarolanlar = (from s in qDosyaEkAdi
-                               join sid in qDuyuruDosyaEkID on s.inx equals sid.inx
+                               join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
                                select new { s.inx, DosyaEkAdi = s.s, DuyuruDosyaEkID = sid.s });
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            {
-                string msg = "Duyurunun Yayınlanacağı Enstitüyü Seçiniz";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+            { 
+                mmMessage.Messages.Add("Duyurunun Yayınlanacağı Enstitüyü Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
 
             }
 
             if (kModel.Tarih == DateTime.MinValue)
-            {
-                string msg = "Geçerli Bir Tarih Giriniz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+            { 
+                mmMessage.Messages.Add("Geçerli Bir Tarih Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
             }
             else
             {
                 if (kModel.YayinSonTarih.HasValue)
                 {
                     if (kModel.YayinSonTarih.Value <= kModel.Tarih)
-                    {
-                        string msg = "Duyurunun yayınlanacağı son tarih Duyuru tarihinden tarihten küçük ya da eşit olamaz! ";
-                        MmMessage.Messages.Add(msg);
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YayinSonTarih" });
+                    { 
+                        mmMessage.Messages.Add("Duyurunun yayınlanacağı son tarih Duyuru tarihinden tarihten küçük ya da eşit olamaz! ");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YayinSonTarih" });
                     }
                 }
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih" });
             }
             if (kModel.Baslik.IsNullOrWhiteSpace())
-            {
-                string msg = "Başlık Giriniz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Baslik" });
+            { 
+                mmMessage.Messages.Add("Başlık Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Baslik" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Baslik" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Baslik" });
 
             if (kModel.Aciklama.IsNullOrWhiteSpace() && kModel.AciklamaHtml.IsNullOrWhiteSpace())
-            {
-                string msg = "Aciklama Giriniz.";
-                MmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Aciklama Giriniz.");
             }
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -197,24 +190,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.DuyuruID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var eklenen = db.Duyurulars.Add(kModel);
+                    var eklenen = _entities.Duyurulars.Add(kModel);
 
                     foreach (var item in qDosyalar)
                     {
-                        string DosyaYolu = "/DuyuruDosyaları/" + item.DosyaEkAdi.ToFileNameAddGuid(item.Dosya.FileName.GetFileExtension());
-                        item.Dosya.SaveAs(Server.MapPath("~" + DosyaYolu));
+                        string dosyaYolu = "/DuyuruDosyaları/" + item.DosyaEkAdi.ToFileNameAddGuid(item.Dosya.FileName.GetFileExtension());
+                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
 
-                        db.DuyuruEkleris.Add(new DuyuruEkleri
+                        _entities.DuyuruEkleris.Add(new DuyuruEkleri
                         {
                             DuyuruID = eklenen.DuyuruID,
                             DosyaEkAdi = item.DosyaEkAdi,
-                            DosyaYolu = DosyaYolu
+                            DosyaYolu = dosyaYolu
                         });
                     }
                 }
                 else
                 {
-                    var data = db.Duyurulars.Where(p => p.DuyuruID == kModel.DuyuruID).First();
+                    var data = _entities.Duyurulars.First(p => p.DuyuruID == kModel.DuyuruID);
                     data.Baslik = kModel.Baslik;
                     data.Aciklama = kModel.Aciklama;
                     data.AciklamaHtml = kModel.AciklamaHtml;
@@ -232,45 +225,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
 
-                    var SilinenDuyuruEkleri = db.DuyuruEkleris.Where(p => DuyuruDosyaEkID.Contains(p.DuyuruDosyaEkID) == false && p.DuyuruID == data.DuyuruID).ToList();
-                    var VarolanDuyuruEkleri = db.DuyuruEkleris.Where(p => DuyuruDosyaEkID.Contains(p.DuyuruDosyaEkID) && p.DuyuruID == data.DuyuruID).ToList();
-                    foreach (var item in VarolanDuyuruEkleri)
+                    var silinenDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) == false && p.DuyuruID == data.DuyuruID).ToList();
+                    var varolanDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) && p.DuyuruID == data.DuyuruID).ToList();
+                    foreach (var item in varolanDuyuruEkleri)
                     {
-                        var qd = qVarolanlar.Where(p => p.DuyuruDosyaEkID == item.DuyuruDosyaEkID).FirstOrDefault();
+                        var qd = qVarolanlar.FirstOrDefault(p => p.DuyuruDosyaEkID == item.DuyuruDosyaEkID);
                         if (qd != null)
                         {
                             item.DosyaEkAdi = qd.DosyaEkAdi;
                         }
                     }
-                    db.DuyuruEkleris.RemoveRange(SilinenDuyuruEkleri);
+                    _entities.DuyuruEkleris.RemoveRange(silinenDuyuruEkleri);
                     foreach (var item in qDosyalar)
                     {
-                        string DosyaYolu = "/DuyuruDosyaları/" + item.Dosya.FileName.ToFileNameAddGuid();
-                        item.Dosya.SaveAs(Server.MapPath("~" + DosyaYolu));
+                        string dosyaYolu = "/DuyuruDosyaları/" + item.Dosya.FileName.ToFileNameAddGuid();
+                        item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
 
-                        db.DuyuruEkleris.Add(new DuyuruEkleri
+                        _entities.DuyuruEkleris.Add(new DuyuruEkleri
                         {
                             DuyuruID = data.DuyuruID,
                             DosyaEkAdi = item.DosyaEkAdi,
-                            DosyaYolu = DosyaYolu
+                            DosyaYolu = dosyaYolu
                         });
                     }
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.Duyurulars.Where(p => p.DuyuruID == id).FirstOrDefault();
+            var kayit = _entities.Duyurulars.FirstOrDefault(p => p.DuyuruID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -280,8 +273,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru Silindi!";
                     var dosyalar = kayit.DuyuruEkleris.ToList();
 
-                    db.Duyurulars.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.Duyurulars.Remove(kayit);
+                    _entities.SaveChanges();
                     foreach (var item in dosyalar)
                     {
                         System.IO.File.Delete(Server.MapPath("~" + item.DosyaYolu));
@@ -291,7 +284,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.Baslik + "' Başlıklı Duyuru! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Duyurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Duyurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -299,15 +292,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Duyuru sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-
-
-
-
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
+        } 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _entities.Dispose();
             base.Dispose(disposing);
         }
     }

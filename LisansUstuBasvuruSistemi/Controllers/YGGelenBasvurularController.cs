@@ -243,7 +243,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.IndexModel = IndexModel;
             ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(_EnstituKod, BasvuruSurecTipi.YatayGecisBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.BasvuruDurumID = new SelectList(Management.cmbBasvuruDurumListe( true, true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.MulakatSonucTipID = new SelectList(Management.cmbMulakatSonucTip( true), "Value", "Caption", model.MulakatSonucTipID);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar( _EnstituKod, false), "Value", "Caption", model.ProgramKod);
@@ -288,7 +288,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Başvuru Silinemedi.");
                     mmMessage.Title = "Hata";
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
@@ -325,7 +325,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add(adSoyad + " Öğrencisine ait başvuru taslak durumuna çevrilemedi. Hata:" + ex.ToExceptionMessage());
-                    Management.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGGelenBasvurular/TaslagaCevir<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGGelenBasvurular/TaslagaCevir<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

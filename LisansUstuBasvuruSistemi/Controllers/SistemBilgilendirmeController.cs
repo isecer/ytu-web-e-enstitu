@@ -2,9 +2,9 @@
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -15,10 +15,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmSistemBilgilendirme());
+            return Index(new FmSistemBilgilendirme());
         }
         [HttpPost]
-        public ActionResult Index(fmSistemBilgilendirme model)
+        public ActionResult Index(FmSistemBilgilendirme model)
         {
             var q = from s in db.SistemBilgilendirmes
                     join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID into defK
@@ -50,15 +50,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.RowCount = q.Count();
 
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.IslemTarihi);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.IslemTarihi);
 
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount
+            };
 
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s => new frSistemBilgilendirme
+            model.FrSistemBilgilendirmes = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(s => new FrSistemBilgilendirme
             {
                 SistemBilgiID = s.SistemBilgiID,
                 BilgiTipi = s.BilgiTipi,
@@ -73,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToArray();
             var btip = new LogTypeData();
             ViewBag.BilgiTipi = new SelectList(btip.LogTipiData.Select(s => new { s.BilgiTipID, s.BilgiTipAdi }).ToList(), "BilgiTipID", "BilgiTipAdi", model.BilgiTipi);
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             return View(model);
         }
       

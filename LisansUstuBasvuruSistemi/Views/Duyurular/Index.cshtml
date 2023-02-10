@@ -5,7 +5,7 @@
 @model FmDuyurularDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
 }
 
 <div class="row">
@@ -18,7 +18,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-bullhorn"></i>&nbsp; Duyuru Listesi</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -60,16 +60,16 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int rowIndex = Model.StartRowIndex; string trCls = "odd";
                                 foreach (var item in Model.DuyurularDtos)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++;
+                                    trCls = rowIndex % 2 == 1 ? "" : "even";
                                     <tr class="@trCls">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width:30px;">@RowIndex</td>
+                                                    <td style="width:30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.DuyuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.DuyuruID)">

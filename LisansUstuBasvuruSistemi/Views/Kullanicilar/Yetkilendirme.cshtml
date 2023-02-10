@@ -128,7 +128,7 @@
         }
         else
             $.ajax({
-            url: '@Url.Action("getYetkiGrubuRolIDs", "Kullanicilar")',
+            url: '@Url.Action("GetYetkiGrubuRolIDs", "Kullanicilar")',
             data: { id: id,KullaniciID:'@user.KullaniciID' },
             success: function (result) {
                 var kategori = $('.chks');

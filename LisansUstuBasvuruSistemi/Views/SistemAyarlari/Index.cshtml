@@ -23,7 +23,7 @@
                     @foreach (var cat in grup)
                     {
                         var ayar = Model.Where(p => p.Kategori == cat).ToArray();
-                        var toggleC = dctGrupToggle.Where(p => p.Key == cat).First();
+                        var toggleC = dctGrupToggle.First(p => p.Key == cat);
                         <div class="panel panel-warning @(toggleC.Value?"panel-toggled":"")">
                             <div class="panel-heading padding-0">
                                 <div class="portlet-title">

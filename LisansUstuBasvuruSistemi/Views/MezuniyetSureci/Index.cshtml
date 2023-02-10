@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model fmMezuniyetSureci
+@model FmMezuniyetSureci
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -160,7 +160,7 @@
         }
         else {
             $.ajax({
-                url: '@Url.Action("getMsDetail", "MezuniyetSureci")',
+                url: '@Url.Action("GetMsDetail", "MezuniyetSureci")',
                 data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
                 async: false,
                 success: function (result) { 
@@ -190,7 +190,7 @@
         if (IsDelete == true) tID = 1;
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getMsSubData", "MezuniyetSureci")',
+            url: '@Url.Action("GetMsSubData", "MezuniyetSureci")',
             data: { id: id, tbInx: tID  }, 
             success: function (result) {
 

@@ -49,28 +49,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.EnstituAd.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituAd.Contains(model.EnstituAd));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.EnstituAd);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.EnstitulerDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.EnstitulerDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(string id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new Enstituler();
             if (!id.IsNullOrWhiteSpace())
             {
 
-                var data = db.Enstitulers.Where(p => p.EnstituKod == id).FirstOrDefault();
+                var data = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
                 if (data != null)
                 {
                     model = data;
@@ -82,81 +83,73 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(Enstituler kModel)
         {
-            var MmMessage = new MmMessage();
-            #region Kontrol
-
-
-
-
-
+            var mmMessage = new MmMessage();
+            #region Kontrol 
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Enstitü Kodu Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Enstitü Kodu Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.SmtpHost.IsNullOrWhiteSpace())
             {
 
-                MmMessage.Messages.Add("Smtp Host Adresi Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpHost" });
+                mmMessage.Messages.Add("Smtp Host Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpHost" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpHost" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpHost" });
             if (kModel.SmtpKullaniciAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Smtp Kullanıcı Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpKullaniciAdi" });
+                mmMessage.Messages.Add("Smtp Kullanıcı Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpKullaniciAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpKullaniciAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpKullaniciAdi" });
             if (kModel.SmtpMailAdresi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Smtp E-Posta Adresi Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpMailAdresi" });
+                mmMessage.Messages.Add("Smtp E-Posta Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpMailAdresi" });
             }
             else if (kModel.SmtpMailAdresi.ToIsValidEmail())
             {
-                MmMessage.Messages.Add("Lütfen E-Posta Adresini Doğru Formatta Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpMailAdresi" });
+                mmMessage.Messages.Add("Lütfen E-Posta Adresini Doğru Formatta Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpMailAdresi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpMailAdresi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpMailAdresi" });
             if (kModel.SmtpPortAdresi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Smtp Port Bilgisini Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpPortAdresi" });
+                mmMessage.Messages.Add("Smtp Port Bilgisini Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpPortAdresi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpPortAdresi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpPortAdresi" });
             if (kModel.SmtpSifre.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Smtp E-Posta Şifresi Bilgisini Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpSifre" });
+                mmMessage.Messages.Add("Smtp E-Posta Şifresi Bilgisini Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SmtpSifre" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpSifre" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SmtpSifre" });
             if (kModel.SistemErisimAdresi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Sistem Erişim Adresi Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SistemErisimAdresi" });
+                mmMessage.Messages.Add("Sistem Erişim Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SistemErisimAdresi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SistemErisimAdresi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SistemErisimAdresi" });
 
             if (kModel.WebAdresi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Web Adresi Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebAdresi" });
+                mmMessage.Messages.Add("Web Adresi Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebAdresi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebAdresi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebAdresi" });
 
             if (kModel.ToplamKayitKota <= 0)
             { 
-                MmMessage.Messages.Add("Toplam Kayıt Kotasını Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ToplamKayitKota" });
+                mmMessage.Messages.Add("Toplam Kayıt Kotasını Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ToplamKayitKota" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ToplamKayitKota" });
-
-
-            
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ToplamKayitKota" }); 
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 if (kModel.EnstituKod.IsNullOrWhiteSpace())
                 {
@@ -169,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var data = db.Enstitulers.Where(p => p.EnstituKod == kModel.EnstituKod).First();
+                    var data = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
                     data.EnstituKod = kModel.EnstituKod;
                     data.EnstituAd = kModel.EnstituAd;
                     data.EnstituKisaAd = kModel.EnstituKisaAd;
@@ -196,16 +189,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             
 
-            ViewBag.MmMessage = MmMessage;  
+            ViewBag.MmMessage = mmMessage;  
             return View(kModel);
         }
         public ActionResult Sil(string id)
         {
-            var kayit = db.Enstitulers.Where(p => p.EnstituKod == id).FirstOrDefault();
+            var kayit = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -221,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + kayit.EnstituAd + "' İsimli Enstitü Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Enstituler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Enstituler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

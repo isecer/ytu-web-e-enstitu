@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model AnabilimDallari
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Anabilim Dalı Kodu</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="AnabilimDaliKod" id="AnabilimDaliKod" value="@Model.AnabilimDaliKod.toEmptyStringZero()" class="form-control" />
+                                    <input type="text" name="AnabilimDaliKod" id="AnabilimDaliKod" value="@Model.AnabilimDaliKod.ToEmptyStringZero()" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -67,7 +67,7 @@
 <script>
 
     $(function () {
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 </script>

@@ -346,7 +346,7 @@
         var ptipID = $('#KullaniciTipID').val();
         if (ptipID == null || ptipID == "") return;
         $.ajax({
-            url: '@Url.Action("pTipKontrol", "Ajax")',
+            url: '@Url.Action("PTipKontrol", "Ajax")',
             data: { id: ptipID },
             success: function (result) {
                 if (result.KurumIci) {
@@ -399,7 +399,7 @@
         _pRefresh(_panel, false);
         setTimeout(function () {
             $.ajax({
-                url: '@Url.Action("rotateImage", "Ajax")',
+                url: '@Url.Action("RotateImage", "Ajax")',
                 data: { LeftOrRight: rotate, KullaniciID: KullaniciID },
                 success: function (result) {
                     _pRefresh(_panel, true);
@@ -431,7 +431,7 @@
 
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getProgramlarEkod", "Ajax")',
+                url: '@Url.Action("GetProgramlarEkod", "Ajax")',
                 data: { 'EnstituKod': sndrVal },
                 success: function (result) {
 
@@ -461,7 +461,7 @@
 
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getOts", "Ajax")',
+                url: '@Url.Action("GetOts", "Ajax")',
                 data: { 'EnstituKod': sndrVal },
                 success: function (result) {
                     var opt = "";

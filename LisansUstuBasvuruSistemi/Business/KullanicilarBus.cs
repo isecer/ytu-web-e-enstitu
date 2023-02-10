@@ -18,7 +18,11 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public class KullanicilarBus
     {
-
+        public static List<int> GetDanismanUnvanIds()
+        {
+            //Doç.Dr Prof.Dr, Dr. Öğr. Üye
+            return new List<int> { 17, 42, 73 };
+        }
         public static StudentControl KullaniciObsOgrenciBilgisiGuncelle(int kullaniciId)
         {
             var kayitBilgi = new StudentControl();
@@ -28,7 +32,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (kulls.YtuOgrencisi)
                 {
                     kayitBilgi = Management.StudentControl(kulls.TcKimlikNo);
-                    if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj() == kulls.OgrenimTipKod)
+                    if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kulls.OgrenimTipKod)
                     {
                         kulls.KayitDonemID = kayitBilgi.DonemID;
                         kulls.KayitYilBaslangic = kayitBilgi.BaslangicYil;
@@ -345,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception ex)
                     {
-                        Management.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Resmin boyutlandırma işlemi yapılıp kayıt edilirken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
                     }
                 }
                 else
@@ -384,7 +388,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     catch (Exception errQuality)
                     {
-                        Management.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogType.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(errQuality, "Resmin kalitesi değiştirilirken hata oluştu.\r\n Hata:" + errQuality.ToExceptionMessage(), LogType.OnemsizHata);
                     }
                     #endregion
                 }
@@ -411,13 +415,13 @@ namespace LisansUstuBasvuruSistemi.Business
                         File.Delete(path2);
                         if (rotasYonDegisimLog)
                         {
-                            Management.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, "Management/resimKaydet", LogType.Bilgi);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Rotasyon farklılığı görünen resim düzeltildi! Resim:" + resimYolu, "Management/resimKaydet", LogType.Bilgi);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Management.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, "Hesap kayıt sırasında resim rotasyonu yapılırken bir hata oluştu.\r\n Hata:" + ex.ToExceptionMessage(), LogType.OnemsizHata);
                 }
                 #endregion
 
@@ -426,7 +430,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                Management.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, null, UserIdentity.Ip);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet("Resim kaydedilirken bir hata oluştu! Hata: " + ex.ToExceptionMessage(), ex.ToExceptionStackTrace(), LogType.Hata, null, UserIdentity.Ip);
                 return null;
             }
         }

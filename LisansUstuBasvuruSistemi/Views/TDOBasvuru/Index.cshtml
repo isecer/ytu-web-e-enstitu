@@ -325,7 +325,7 @@
         _pRefresh(_panel, false);
 
         $.ajax({
-            url: '@Url.Action("getDetailTDOBasvuru", "Ajax")',
+            url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
             data: { id: id,  IsDelete: (Isdelete == true) },
             success: function (result) {
                 if (Isdelete != true) {

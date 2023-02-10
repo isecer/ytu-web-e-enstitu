@@ -5,7 +5,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmMezuniyetBasvurulari
+@model  FmMezuniyetBasvurulari
 @{
     //var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     //var IndexModel2 = (MIndexBilgi)ViewBag.IndexModel2;
@@ -324,9 +324,9 @@
 
                             @if (Model.RowCount > 0)
                             {
-
+                                 
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.FrMezuniyetBasvurularis)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -393,11 +393,11 @@
 </div>
 <div id="msgsB" style="display: none;">
 </div>
-@if (Model.RowCount > 0 && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
+@if (Model.RowCount > 0 && Model.FrMezuniyetBasvurularis.First().TezDanismanID == UserIdentity.Current.Id)
 {
     <script>
         $(function () {
-            showDetail('@Model.Data.First().MezuniyetBasvurulariID');
+            showDetail('@Model.FrMezuniyetBasvurularis.First().MezuniyetBasvurulariID');
         },200)
     </script>
 }
@@ -753,7 +753,7 @@
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("SRDurumKaydet", "MezuniyetGelenBasvurular")',
+            url: '@Url.Action("SrDurumKaydet", "MezuniyetGelenBasvurular")',
             data: {
                 'id': SRTalepID,
                 'SRDurumID': ibtID,
@@ -785,7 +785,7 @@
             dt = _ay + "-" + _gun + "-" + _yil;
         }
         $.ajax({
-            url: '@Url.Action("SRSinavDurumKaydet", "MezuniyetGelenBasvurular")',
+            url: '@Url.Action("SrSinavDurumKaydet", "MezuniyetGelenBasvurular")',
             data: {
                 'id': SRTalepID,
                 'MezuniyetSinavDurumID': snvDrmID,

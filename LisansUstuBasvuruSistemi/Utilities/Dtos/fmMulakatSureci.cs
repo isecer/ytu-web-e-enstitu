@@ -7,15 +7,15 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMulakatSureci : PagerOption
+    public class FmMulakatSureci : PagerOption
     {
         public string ProgramAdi { get; set; }
         public string ProgramKod { get; set; }
         public int? OgrenimTipKod { get; set; }
         public int? BasvuruSurecID { get; set; }
-        public IEnumerable<frMulakatSureci> Data { get; set; }
+        public IEnumerable<FrMulakatSureci> Data { get; set; }
     }
-    public class frMulakatSureci : Mulakat
+    public class FrMulakatSureci : Mulakat
     {
         public DateTime BaslangicTarihi { get; set; }
         public DateTime BitisTarihi { get; set; }

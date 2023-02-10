@@ -8,24 +8,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.SrSalonBilgi)]
-    public class SRSalonBilgiController : Controller
+    public class SrSalonBilgiController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
 
-            return Index(new fmSalonBilgi { }, EKD);
+            return Index(new fmSalonBilgi { }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmSalonBilgi model, string EKD)
+        public ActionResult Index(fmSalonBilgi model, string ekd)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            model.EnstituKod = _EnstituKod;
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            model.EnstituKod = enstituKod;
             
             DateTime? t1 = null;
             DateTime? t2 = null;
@@ -65,10 +66,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var doV = i.DayOfWeek.ToString("d").ToInt().Value;
 
-                var qGT = from s in db.SRSalonlars 
-                          join ss in db.SRSaatlers.Where(p => p.HaftaGunID == doV) on s.SRSalonID equals ss.SRSalonID
-                          join hg in db.HaftaGunleris on ss.HaftaGunID equals hg.HaftaGunID
-                          join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
+                var qGT = from s in _entities.SRSalonlars 
+                          join ss in _entities.SRSaatlers.Where(p => p.HaftaGunID == doV) on s.SRSalonID equals ss.SRSalonID
+                          join hg in _entities.HaftaGunleris on ss.HaftaGunID equals hg.HaftaGunID
+                          join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                           select new frSalonBilgi
                           {
                               EnstituKod = s.EnstituKod,
@@ -80,14 +81,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                               BitSaat = ss.BitSaat,
                               SRSalonID = s.SRSalonID,
                               SalonAdi = s.SalonAdi,
-                              GTID = db.SRTalepleris.Where(a => a.SRSalonID == s.SRSalonID && (a.SRDurumID == SRTalepDurum.Onaylandı || a.SRDurumID == SRTalepDurum.TalepEdildi) && a.Tarih == i &&
+                              GTID = _entities.SRTalepleris.Where(a => a.SRSalonID == s.SRSalonID && (a.SRDurumID == SRTalepDurum.Onaylandı || a.SRDurumID == SRTalepDurum.TalepEdildi) && a.Tarih == i &&
                                          (
                                            (a.BasSaat == ss.BasSaat || a.BitSaat == ss.BitSaat) ||
                                          (
                                              (a.BasSaat < ss.BasSaat && a.BitSaat > ss.BasSaat) || a.BasSaat < ss.BitSaat && a.BitSaat > ss.BitSaat) ||
                                              (a.BasSaat > ss.BasSaat && a.BasSaat < ss.BitSaat) || a.BitSaat > ss.BasSaat && a.BitSaat < ss.BitSaat)
                                         ).Select(s2 => s2.SRTalepID).FirstOrDefault(),
-                              OTID = db.SROzelTanimlars.Where(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
+                              OTID = _entities.SROzelTanimlars.Where(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
                                                                                   (p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day) ||
                                                                                   (p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == s.SRSalonID && p.Tarih == i && p.SROzelTanimSaatlers.Any(a =>
                                                                                     (
@@ -100,7 +101,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                                  (p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == s.SRSalonID && p.SROzelTanimGunlers.Any(a => a.HaftaGunID == ss.HaftaGunID) && p.BasTarih.Value <= i && p.BitTarih >= i)
                                                 )).Select(s2 => s2.SROzelTanimID).FirstOrDefault(),
 
-                              RemoveRow = db.SROzelTanimlars.Any(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
+                              RemoveRow = _entities.SROzelTanimlars.Any(p => p.IsAktif && ((p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= i && p.BitTarih >= i) ||
                                                                                     (p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == i.Month && p.Gun == i.Day)))
 
 
@@ -124,9 +125,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.RowCount = data.Count();
 
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = data.Skip(PS.StartRowIndex).Take(model.PageSize).OrderBy(o => o.Tarih).ThenBy(t => t.BasSaat).ToList();
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = data.Skip(ps.StartRowIndex).Take(model.PageSize).OrderBy(o => o.Tarih).ThenBy(t => t.BasSaat).ToList();
 
 
 

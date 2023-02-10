@@ -1,9 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @model SRSalonSaatlerModel
-@{
-    /**/
-
+@{ 
     Layout = null;
 }
 
@@ -19,7 +17,7 @@
     <div class="panel-body" style="padding-top:2px;padding-bottom:2px;">
         @if (Model.HaftaGunundeSaatlerVar)
         {
-            var seciliOlan = Model.Data.Where(p => p.SalonDurumID == SRSalonDurum.Alındı).FirstOrDefault();
+            var seciliOlan = Model.Data.FirstOrDefault(p => p.SalonDurumID == SRSalonDurum.Alındı);
             if (seciliOlan != null)
             {
                 <input type="text" name="BasSaat" id="BasSaat" style="display:none;" value="@seciliOlan.BasSaat" />

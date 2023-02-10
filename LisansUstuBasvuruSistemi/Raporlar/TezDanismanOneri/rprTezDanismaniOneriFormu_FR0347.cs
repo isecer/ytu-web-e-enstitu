@@ -1,19 +1,14 @@
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
-    public partial class rprTezDanismaniOneriFormu_FR0347 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprTezDanismaniOneriFormu_FR0347 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprTezDanismaniOneriFormu_FR0347(int id)
+        public RprTezDanismaniOneriFormu_FR0347(int id)
         {
             InitializeComponent();
 

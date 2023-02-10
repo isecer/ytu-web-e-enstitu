@@ -6,27 +6,27 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSistemBilgilendirme : PagerOption
+    public class FmSistemBilgilendirme : PagerOption
     {
-        public Nullable<byte> BilgiTipi { get; set; }
+        public byte? BilgiTipi { get; set; }
         public string Kategori { get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
-        public Nullable<System.DateTime> IslemZamani { get; set; }
+        public System.DateTime? IslemZamani { get; set; }
         public string IpAdresi { get; set; }
         public string AdSoyad { get; set; }
 
-        public IEnumerable<frSistemBilgilendirme> data { get; set; }
+        public IEnumerable<FrSistemBilgilendirme> FrSistemBilgilendirmes { get; set; }
 
     }
-    public class frSistemBilgilendirme
+    public class FrSistemBilgilendirme
     {
         public int SistemBilgiID { get; set; }
-        public Nullable<byte> BilgiTipi { get; set; }
+        public byte? BilgiTipi { get; set; }
         public string Kategori { get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
-        public Nullable<System.DateTime> IslemZamani { get; set; }
+        public System.DateTime? IslemZamani { get; set; }
         public int? IslemYapanID { get; set; }
         public string IpAdresi { get; set; }
         public string AdSoyad { get; set; }

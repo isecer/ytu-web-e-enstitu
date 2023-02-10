@@ -7,16 +7,16 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmOgrenciBolumleri : PagerOption
+    public class FmOgrenciBolumleri : PagerOption
     {
         public string EnstituKod { get; set; }
         public int? OgrenciBolumID { get; set; }
         public string BolumAdi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frOgrenciBolumleri> data { get; set; }
+        public IEnumerable<FrOgrenciBolumleri> data { get; set; }
 
     }
-    public class frOgrenciBolumleri : OgrenciBolumleri
+    public class FrOgrenciBolumleri : OgrenciBolumleri
     {
         public string EnstituAd { get; set; }
 

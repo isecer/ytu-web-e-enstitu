@@ -1,14 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetMezunlarTutanakDR : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetMezunlarTutanakDr : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetMezunlarTutanakDR()
+        public RprMezuniyetMezunlarTutanakDr()
         {
             InitializeComponent();
         }

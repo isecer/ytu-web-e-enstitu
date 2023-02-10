@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @model TalepGelenTalepler
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -118,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Model.OgrenimTipKod != OgrenimTipi.Doktra)
+                            @if (!Model.OgrenimTipKod.IsDoktora())
                             {
                                 <div class="form-group AllGroup EkSureYL DondurmaYL">
                                     <label class="col-md-3 col-xs-5 control-label">Ders Yükü Tamamlandı Mı?</label>

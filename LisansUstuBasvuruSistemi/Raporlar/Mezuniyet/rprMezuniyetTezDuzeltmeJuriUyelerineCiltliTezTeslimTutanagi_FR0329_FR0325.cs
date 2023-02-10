@@ -1,91 +1,67 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System.Linq;
+﻿using System.Linq;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(int SRTalepID)
+        public RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(int srTalepId)
         {
             InitializeComponent();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var SRTalep = db.SRTalepleris.Where(p => p.SRTalepID == SRTalepID).First();
-                var MBasvuru = SRTalep.MezuniyetBasvurulari;
+                var srTalep = db.SRTalepleris.First(p => p.SRTalepID == srTalepId);
+                var mBasvuru = srTalep.MezuniyetBasvurulari;
 
-                bool IsYlOrDiger = MBasvuru.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans;
+               
 
-                xrCellEOYil.Text = xrCellEOYil.Text + MBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + MBasvuru.MezuniyetSureci.BitisYil.ToString();
-                xrChkYariyilGuz.Checked = MBasvuru.MezuniyetSureci.DonemID == DonemBilgi.GuzYariyili;
-                xrChkYariyilBahar.Checked = MBasvuru.MezuniyetSureci.DonemID == DonemBilgi.BaharYariyili;
-                xrCellEnstituAdi.Text = MBasvuru.MezuniyetSureci.Enstituler.EnstituAd;
-                xrCellAnabilimdaliAdi.Text = MBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                xrCellProgramAdi.Text = MBasvuru.Programlar.ProgramAdi;
-                xrCellOgrenciNo.Text = MBasvuru.OgrenciNo;
-                xrCellOgrenciAdSoyad.Text = MBasvuru.Ad + " " + MBasvuru.Soyad;
-                var JoForm = MBasvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+                xrCellEOYil.Text = xrCellEOYil.Text + mBasvuru.MezuniyetSureci.BaslangicYil.ToString() + "-" + mBasvuru.MezuniyetSureci.BitisYil.ToString();
+                xrChkYariyilGuz.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.GuzYariyili;
+                xrChkYariyilBahar.Checked = mBasvuru.MezuniyetSureci.DonemID == DonemBilgi.BaharYariyili;
+                xrCellEnstituAdi.Text = mBasvuru.MezuniyetSureci.Enstituler.EnstituAd;
+                xrCellAnabilimdaliAdi.Text = mBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
+                xrCellProgramAdi.Text = mBasvuru.Programlar.ProgramAdi;
+                xrCellOgrenciNo.Text = mBasvuru.OgrenciNo;
+                xrCellOgrenciAdSoyad.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
+                var joForm = mBasvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
 
-                var DanismanBilgi = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi == "TezDanismani").First();
-                xrCellTezDanismaniUnvaniAdSoyadi.Text = DanismanBilgi.UnvanAdi + " " + DanismanBilgi.AdSoyad;
-                if (!MBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
+                var danismanBilgi = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
+                xrCellTezDanismaniUnvaniAdSoyadi.Text = danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad;
+                if (!mBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
                 {
-                    xrCellTezEsDanismaniUnvaniAdSoyadi.Text = MBasvuru.TezEsDanismanUnvani + "  " + MBasvuru.TezEsDanismanAdi;
+                    xrCellTezEsDanismaniUnvaniAdSoyadi.Text = mBasvuru.TezEsDanismanUnvani + "  " + mBasvuru.TezEsDanismanAdi;
                 }
                 else { xrCellTezEsDanismaniUnvaniAdSoyadi.Text = ""; }
  
 
-                cellTezDili.Text = MBasvuru.IsTezDiliTr == true ? "Türkçe": "İngilizce";
+                cellTezDili.Text = mBasvuru.IsTezDiliTr == true ? "Türkçe": "İngilizce";
                 var tezBasligiTr = "";
                 var tezBasligiEn = "";
 
-                tezBasligiTr = JoForm.IsTezBasligiDegisti == true
-                    ? JoForm.YeniTezBaslikTr
-                    : MBasvuru.TezBaslikTr;
-                tezBasligiEn = JoForm.IsTezBasligiDegisti == true
-                    ? JoForm.YeniTezBaslikEn
-                    : MBasvuru.TezBaslikEn;
+                tezBasligiTr = joForm.IsTezBasligiDegisti == true
+                    ? joForm.YeniTezBaslikTr
+                    : mBasvuru.TezBaslikTr;
+                tezBasligiEn = joForm.IsTezBasligiDegisti == true
+                    ? joForm.YeniTezBaslikEn
+                    : mBasvuru.TezBaslikEn;
 
                 cellTezBaslikTr.Text = tezBasligiTr;
                 cellTezBaslikEn.Text = tezBasligiEn;
 
-                string SinavTarihi = SRTalep.Tarih.ToString("dd.MM.yyyy");
+                string sinavTarihi = srTalep.Tarih.ToString("dd.MM.yyyy");
                 xrRichEdit.Html = "<table style='width:100%;table-layour:fixed;font:arial;font-size:11pt;'>" +
                                   "<tbody><tr><td style='font-weight:bold;  text-align:center;'>ENSTİTÜ MÜDÜRLÜĞÜNE </td></tr>" +
-                                          "<tr><td>Yukarıda bilgileri verilen ve " + SinavTarihi + " tarihinde girdiği Yüksek Lisans tez savunma sınavından başarılı olan öğrenci; " +
+                                          "<tr><td>Yukarıda bilgileri verilen ve " + sinavTarihi + " tarihinde girdiği Yüksek Lisans tez savunma sınavından başarılı olan öğrenci; " +
                                           "<span style='color:red;'>üyelerinin gerekli gördüğü düzeltmeleri yapmış ve tezini her bir jüri üyesine ciltli olarak teslim etmiştir.</span>" +
                                           "<br><br>Gereğini bilgilerinize saygılarımızla arz ederiz. " +
                                           "</td></tr></tbody></table>";
 
-                xrCellDanismanBilgi.Text = DanismanBilgi.UnvanAdi + " " + DanismanBilgi.AdSoyad;
-                if (IsYlOrDiger)
-                {
-                    lblOgrenimTipAdi.Text = "YÜKSEK LİSANS";
-                    xrCellUye1Baslik.Text = "Üye";
-                    xrCellUye2Baslik.Text = "Üye";
-                    xrJur3Row.Visible = false;
-                    xrJur4Row.Visible = false;
-                    lblFormNo.Text = "(Form No: FR-0329; Revizyon Tarihi: 01.11.2013; Revizyon No:01)";
-                    this.DisplayName = "FR-0329 Yükseklisans Tez Duzeltme ve Juri Uyelerine Ciltli Tez Teslim Tutanagi";
-                    var Uyeler = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).ToList();
-                    var Uye1 = Uyeler.First();
-                    xrCellUye1Bilgi.Text = Uye1.UnvanAdi + " " + Uye1.AdSoyad;
-
-                    var Uye2 = Uyeler[1];
-                    xrCellUye2Bilgi.Text = Uye2.UnvanAdi + " " + Uye2.AdSoyad;
-
-
-
-                }
-                else
+                xrCellDanismanBilgi.Text = danismanBilgi.UnvanAdi + " " + danismanBilgi.AdSoyad;
+                if (mBasvuru.OgrenimTipKod.IsDoktora()) 
                 {
                     lblOgrenimTipAdi.Text = "DOKTORA";
                     xrCellUye1Baslik.Text = "Tik Üyesi";
@@ -94,18 +70,37 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     xrJur4Row.Visible = false;
                     lblFormNo.Text = "(Form No: FR-0325; Revizyon Tarihi: 25.02.2014; Revizyon No: 02)";
                     this.DisplayName = "FR-0325 Doktora Tez Duzeltme ve Juri Uyelerine Ciltli Tez Teslim Tutanagi";
-                    var Uyeler = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).ToList();
-                    var Tik1 = Uyeler.Where(p => p.JuriTipAdi == "TikUyesi1").First();
-                    xrCellUye1Bilgi.Text = Tik1.UnvanAdi + " " + Tik1.AdSoyad;
+                    var uyeler = joForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).ToList();
+                    var tik1 = uyeler.First(p => p.JuriTipAdi == "TikUyesi1");
+                    xrCellUye1Bilgi.Text = tik1.UnvanAdi + " " + tik1.AdSoyad;
 
-                    var Tik2 = Uyeler.Where(p => p.JuriTipAdi == "TikUyesi2").First();
-                    xrCellUye2Bilgi.Text = Tik2.UnvanAdi + " " + Tik2.AdSoyad;
+                    var tik2 = uyeler.First(p => p.JuriTipAdi == "TikUyesi2");
+                    xrCellUye2Bilgi.Text = tik2.UnvanAdi + " " + tik2.AdSoyad;
 
-                    var Uye3 = Uyeler[2];
-                    xrCellUye3Bilgi.Text = Uye3.UnvanAdi + " " + Uye3.AdSoyad;
+                    var uye3 = uyeler[2];
+                    xrCellUye3Bilgi.Text = uye3.UnvanAdi + " " + uye3.AdSoyad;
 
-                    var Uye4 = Uyeler[3];
-                    xrCellUye4Bilgi.Text = Uye4.UnvanAdi + " " + Uye4.AdSoyad;
+                    var uye4 = uyeler[3];
+                    xrCellUye4Bilgi.Text = uye4.UnvanAdi + " " + uye4.AdSoyad;
+                }
+                else
+                {
+                    lblOgrenimTipAdi.Text = "YÜKSEK LİSANS";
+                    xrCellUye1Baslik.Text = "Üye";
+                    xrCellUye2Baslik.Text = "Üye";
+                    xrJur3Row.Visible = false;
+                    xrJur4Row.Visible = false;
+                    lblFormNo.Text = "(Form No: FR-0329; Revizyon Tarihi: 01.11.2013; Revizyon No:01)";
+                    this.DisplayName = "FR-0329 Yükseklisans Tez Duzeltme ve Juri Uyelerine Ciltli Tez Teslim Tutanagi";
+                    var uyeler = joForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi != "TezDanismani" && p.IsAsilOrYedek == true).ToList();
+                    var uye1 = uyeler.First();
+                    xrCellUye1Bilgi.Text = uye1.UnvanAdi + " " + uye1.AdSoyad;
+
+                    var uye2 = uyeler[1];
+                    xrCellUye2Bilgi.Text = uye2.UnvanAdi + " " + uye2.AdSoyad;
+
+
+
                 }
             }
         }

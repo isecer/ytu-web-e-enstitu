@@ -10,15 +10,11 @@
 
 
     Layout = null;
-    bool KayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    bool JuriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
-    bool JuriOneriFormuOnayYetkiEYKDa = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuEykOnay.InRoleCurrent() && !Model.MezuniyetSRModel.SalonRezervasyonlari.Any(a => a.SRDurumID == SRTalepDurum.Onaylandı);
-
-    var JuriOneriFormu = Model.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();  
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
-    var IsTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
-    var itemOnaylananSR = Model.MezuniyetSRModel.SalonRezervasyonlari.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili).FirstOrDefault();
-    var BezCiltForm = itemOnaylananSR != null ? itemOnaylananSR.SRTalepleriBezCiltFormus.FirstOrDefault() : null;
+    var isTdYuklemeKapali = Model.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true);
+    var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
+    var bezCiltForm = itemOnaylananSr?.SRTalepleriBezCiltFormus.FirstOrDefault();
 
 
 }
@@ -56,7 +52,7 @@
                     {
                         <li class="@(Model.SelectedTabIndex == 4 ? "active" : "") bnt-@tbName-4" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',4)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-file-text-o fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Tez Kontrol Süreci</span></a></li>
                     }
-                    @if ((Model.KullaniciID == UserIdentity.Current.Id || KayitYetki) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && (IsTdYuklemeKapali || BezCiltForm != null))
+                    @if ((Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && (isTdYuklemeKapali || bezCiltForm != null))
                     {
                         <li class="@(Model.SelectedTabIndex == 5 ? "active" : "") bnt-@tbName-5" style="margin-right:3px;"><a onclick="tabchangeSet('@tbName',5)" style="cursor:pointer;margin:0px;padding-left:6px;padding-right:6px;" role="tab" data-toggle="tab"> <i class="fa fa-graduation-cap fa-lg"></i> <span style="text-align:right;font-size:9pt;margin:0px;"> Mezuniyet Süreci</span></a></li>
                     }
@@ -137,7 +133,7 @@
                                                         <td id="eykInp_@Model.MezuniyetBasvurulariID" class="hide">
                                                             <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToString("dd-MM-yyyy"))" id="InpEyk_@Model.MezuniyetBasvurulariID">
                                                         </td>
-                                                        @if (KayitYetki)
+                                                        @if (kayitYetki)
                                                         {
                                                             <td width="25" style="text-align:right;font-size:10pt;">
                                                                 <a href="javascript:void(0)" onclick="ShowEykTarih(@Model.MezuniyetBasvurulariID,this)"><i class="fa fa-edit fa-lg" title="EYK Tarihini Düzenle"></i></a>
@@ -176,7 +172,7 @@
                                                                         dt = _ay + "-" + _gun + "-" + _yil ;
                                                                     }
                                                                     $.ajax({
-                                                                        url: '@Url.Action("EYKTarihiKaydet", "MezuniyetGelenBasvurular")',
+                                                                        url: '@Url.Action("EykTarihiKaydet", "MezuniyetGelenBasvurular")',
                                                                         data: { 'id': id, 'EYKTarihi': dt },
                                                                         success: function (result) {
                                                                             getMsg(result.MmMessage);
@@ -221,7 +217,7 @@
                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi && Model.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
                     {
                         @Model.ToMezuniyetDetayTezKontrolSureci()
-                        if ((Model.KullaniciID == UserIdentity.Current.Id || KayitYetki) && (IsTdYuklemeKapali || BezCiltForm != null))
+                        if ((Model.KullaniciID == UserIdentity.Current.Id || kayitYetki) && (isTdYuklemeKapali || bezCiltForm != null))
                         {
                             @Model.ToMezuniyetDetayMezuniyetSureci()
                         }

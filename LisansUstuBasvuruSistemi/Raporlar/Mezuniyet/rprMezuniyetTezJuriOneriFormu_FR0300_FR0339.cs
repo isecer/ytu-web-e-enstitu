@@ -1,29 +1,25 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using BiskaUtil;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using BiskaUtil;
+using DevExpress.XtraReports.UI;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetTezJuriOneriFormu_FR0300_FR0339 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezJuriOneriFormu_FR0300_FR0339 : DevExpress.XtraReports.UI.XtraReport
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public rprMezuniyetTezJuriOneriFormu_FR0300_FR0339(int MezuniyetBasvurulariID)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public RprMezuniyetTezJuriOneriFormu_FR0300_FR0339(int mezuniyetBasvurulariId)
         {
             InitializeComponent();
 
 
 
-            var MBasvuru = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == MezuniyetBasvurulariID).First();
-            bool IsDrOrYL = MBasvuru.OgrenimTipKod == OgrenimTipi.Doktra;
-            var mezuniyetJuriOneriFormu = MBasvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+            var mBasvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+            bool isDrOrYl = mBasvuru.OgrenimTipKod.IsDoktora();
+            var mezuniyetJuriOneriFormu = mBasvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
 
             var cells = new List<XRTableCell>();
             var xrTable = new List<XRTable> { tableYtuIciJuri, tableYtuDisiJuri, tableDilSinav1, tableDilSinav2, tableDilSinav3, tableDilSinav4, tableDilSinav5, tableDilSinav6, tableDilSinav7, tableDilSinav8, tableDilSinav9, tableDilSinav10, tableDilSinav11 };
@@ -42,16 +38,16 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             if (mezuniyetJuriOneriFormu != null)
             {
                 txtFormKodu.Text = "Form Kodu: " + mezuniyetJuriOneriFormu.UniqueID;
-                var Program = MBasvuru.Programlar;
-                var AbdAdi = Program.AnabilimDallari;
-                txtAnabilimdaliProgramAdi.Text = AbdAdi.AnabilimDaliAdi + " - " + Program.ProgramAdi;
-                txtAdSoyad.Text = MBasvuru.Ad + " " + MBasvuru.Soyad;
-                txtNumara.Text = MBasvuru.OgrenciNo;
-                chkIsTurkce.Checked = MBasvuru.IsTezDiliTr == true;
-                chkIsEnglish.Checked = MBasvuru.IsTezDiliTr == false;
+                var program = mBasvuru.Programlar;
+                var abdAdi = program.AnabilimDallari;
+                txtAnabilimdaliProgramAdi.Text = abdAdi.AnabilimDaliAdi + " - " + program.ProgramAdi;
+                txtAdSoyad.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
+                txtNumara.Text = mBasvuru.OgrenciNo;
+                chkIsTurkce.Checked = mBasvuru.IsTezDiliTr == true;
+                chkIsEnglish.Checked = mBasvuru.IsTezDiliTr == false;
 
-                cellTezBaslikTr.Text = MBasvuru.TezBaslikTr;
-                cellTezBaslikEn.Text = MBasvuru.TezBaslikEn;
+                cellTezBaslikTr.Text = mBasvuru.TezBaslikTr;
+                cellTezBaslikEn.Text = mBasvuru.TezBaslikEn;
 
                 cellYeniTezBaslikTr.Text = mezuniyetJuriOneriFormu.YeniTezBaslikTr;
                 cellYeniTezBaslikEn.Text = mezuniyetJuriOneriFormu.YeniTezBaslikEn;
@@ -59,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
 
                 TbRowYeniTB.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikTr.IsNullOrWhiteSpace();
                 TbRowYeniTBCeviri.Visible = !mezuniyetJuriOneriFormu.YeniTezBaslikEn.IsNullOrWhiteSpace();
-                if (MBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri)
+                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri)
                 {
                     txtMudurlukAdiTr.Text = "FEN BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF NATURAL and APPLIED SCIENCE";
@@ -70,8 +66,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF SOCIAL SCIENCE";
                 }
 
-                var RowIDs = new List<string>();
-                if (IsDrOrYL)
+                List<string> RowIDs;
+                if (isDrOrYl)
                 {
                     RowIDs = new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2", "YtuIciJuri1", "YtuIciJuri2", "YtuIciJuri3", "YtuIciJuri4", "YtuDisiJuri1", "YtuDisiJuri2", "YtuDisiJuri3", "YtuDisiJuri4" };
                     TbRowTik1.Visible = true;
@@ -84,10 +80,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Different than TMC)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri (Tik Haricinde)";
                     txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals (Different than TMC)";
-                   
+
                     cellAcklama1.Text = "Yukarıda adı yazılı doktora öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir.\r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above mentioned doctoral student is stated below. \r\nI respectfully submit for your consideration.";
-                    this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0300 Doktora Tez Jüri Öneri Formu";
+                    this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0300 Doktora Tez Jüri Öneri Formu";
 
                 }
                 else
@@ -102,39 +98,39 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Obligatorily from the Department)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri";
                     txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals";
-                   
+
                     cellAcklama1.Text = "Yukarıda adı yazılı yüksek lisans öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir. \r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above-mentioned master’s student is stated below. \r\nI respectfully submit for your consideration.";
-                    this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0339 Yüksek Lisans Tez Jüri Öneri Formu";
+                    this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0339 Yüksek Lisans Tez Jüri Öneri Formu";
                 }
 
                 foreach (var item in RowIDs)
                 {
-                    var itmData = mezuniyetJuriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi == item).FirstOrDefault();
+                    var itmData = mezuniyetJuriOneriFormu.MezuniyetJuriOneriFormuJurileris.FirstOrDefault(p => p.JuriTipAdi == item);
                     if (itmData != null)
                     {
 
                         if (itmData.UniversiteID.HasValue) itmData.UniversiteAdi = itmData.Universiteler.KisaAd;
 
-                        var UnvanAdi = cells.Where(p => p.Name == "txt" + item + "UnvanAdi").FirstOrDefault();
-                        if (UnvanAdi != null) UnvanAdi.Text = itmData.UnvanAdi;
+                        var unvanAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "UnvanAdi");
+                        if (unvanAdi != null) unvanAdi.Text = itmData.UnvanAdi;
 
-                        var AdSoyad = cells.Where(p => p.Name == "txt" + item + "AdSoyad").FirstOrDefault();
-                        if (AdSoyad != null) AdSoyad.Text = itmData.AdSoyad;
-                        var EMail = cells.Where(p => p.Name == "txt" + item + "EMail").FirstOrDefault();
-                        if (EMail != null) EMail.Text = itmData.EMail;
-                        var UniversiteAdi = cells.Where(p => p.Name == "txt" + item + "UniversiteAdi").FirstOrDefault();
-                        if (UniversiteAdi != null) UniversiteAdi.Text = itmData.UniversiteAdi;
-                        var AnabilimdaliProgramAdi = cells.Where(p => p.Name == "txt" + item + "AnabilimdaliProgramAdi").FirstOrDefault();
-                        if (AnabilimdaliProgramAdi != null) AnabilimdaliProgramAdi.Text = itmData.AnabilimdaliProgramAdi;
-                        var UzmanlikAlani = cells.Where(p => p.Name == "txt" + item + "UzmanlikAlani").FirstOrDefault();
-                        if (UzmanlikAlani != null) UzmanlikAlani.Text = itmData.UzmanlikAlani;
-                        var BilimselCalismalarAnahtarSozcukler = cells.Where(p => p.Name == "txt" + item + "BilimselCalismalarAnahtarSozcukler").FirstOrDefault();
-                        if (BilimselCalismalarAnahtarSozcukler != null) BilimselCalismalarAnahtarSozcukler.Text = itmData.BilimselCalismalarAnahtarSozcukler;
-                        var DilSinavAdi = cells.Where(p => p.Name == "txt" + item + "DilSinavAdi").FirstOrDefault();
-                        if (DilSinavAdi != null) DilSinavAdi.Text = itmData.DilSinavAdi;
-                        var DilPuani = cells.Where(p => p.Name == "txt" + item + "DilPuani").FirstOrDefault();
-                        if (DilPuani != null) DilPuani.Text = itmData.DilPuani;
+                        var adSoyad = cells.FirstOrDefault(p => p.Name == "txt" + item + "AdSoyad");
+                        if (adSoyad != null) adSoyad.Text = itmData.AdSoyad;
+                        var eMail = cells.FirstOrDefault(p => p.Name == "txt" + item + "EMail");
+                        if (eMail != null) eMail.Text = itmData.EMail;
+                        var universiteAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "UniversiteAdi");
+                        if (universiteAdi != null) universiteAdi.Text = itmData.UniversiteAdi;
+                        var anabilimdaliProgramAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "AnabilimdaliProgramAdi");
+                        if (anabilimdaliProgramAdi != null) anabilimdaliProgramAdi.Text = itmData.AnabilimdaliProgramAdi;
+                        var uzmanlikAlani = cells.FirstOrDefault(p => p.Name == "txt" + item + "UzmanlikAlani");
+                        if (uzmanlikAlani != null) uzmanlikAlani.Text = itmData.UzmanlikAlani;
+                        var bilimselCalismalarAnahtarSozcukler = cells.FirstOrDefault(p => p.Name == "txt" + item + "BilimselCalismalarAnahtarSozcukler");
+                        if (bilimselCalismalarAnahtarSozcukler != null) bilimselCalismalarAnahtarSozcukler.Text = itmData.BilimselCalismalarAnahtarSozcukler;
+                        var dilSinavAdi = cells.FirstOrDefault(p => p.Name == "txt" + item + "DilSinavAdi");
+                        if (dilSinavAdi != null) dilSinavAdi.Text = itmData.DilSinavAdi;
+                        var dilPuani = cells.FirstOrDefault(p => p.Name == "txt" + item + "DilPuani");
+                        if (dilPuani != null) dilPuani.Text = itmData.DilPuani;
 
                     }
                 }

@@ -7,13 +7,13 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmTalepSurec : PagerOption
+    public class FmTalepSurec : PagerOption
     {
         public bool? IsAktif { get; set; }
         public string EnstituKod { get; set; }
-        public IEnumerable<frTalepSurec> Data { get; set; }
+        public IEnumerable<FrTalepSurec> Data { get; set; }
     }
-    public class frTalepSurec : TalepSurecleri
+    public class FrTalepSurec : TalepSurecleri
     {
         public string EnstituAdi { get; set; }
         public string IslemYapan { get; set; }

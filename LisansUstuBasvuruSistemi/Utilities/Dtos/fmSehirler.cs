@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSehirler : PagerOption
+    public class FmSehirler : PagerOption
     {
         public int? SehirKod { get; set; }
         public string Ad { get; set; }

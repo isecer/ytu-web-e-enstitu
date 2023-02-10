@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    partial class rprMezuniyetTezTeslimFormu_FR0338
+    partial class RprMezuniyetTezTeslimFormu_FR0338
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprMezuniyetTezTeslimFormu_FR0338));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprMezuniyetTezTeslimFormu_FR0338));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable64 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow128 = new DevExpress.XtraReports.UI.XRTableRow();

@@ -1,13 +1,12 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil;
-@using LisansUstuBasvuruSistemi.Business
+@using BiskaUtil; 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model BasvuruDetaySecilenDto
 @{
     Layout = null; 
-    string Color = Model.DurumColor;
+    string color = Model.DurumColor;
 }
 
 <table style="margin:0px;">
@@ -17,7 +16,7 @@
         </td>
         <td style="padding-left:10px;text-align:left;">
 
-            <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+            <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@color;">
                 <tr>
                     <td width="140">Ad Soyad</td>
                     <td width="10">:</td>
@@ -41,7 +40,7 @@
                     <td>
                         @if (!Model.DurumClassName.IsNullOrWhiteSpace())
                         {
-                            <span style="color:@Color;">
+                            <span style="color:@color;">
                                 <i class="@Model.DurumClassName" style="font-size:17pt;font-weight:bold;"></i> @Model.BasvuruDurumAdi
                             </span>
                         }
@@ -179,7 +178,7 @@
         var _LNotSistemID=$('#gLNotSistemID').val();
         var _LMezuniyetNotu=$('#gLMezuniyetNotu').val();
         $.ajax({
-            url: '@Url.Action("setGBNDetail", "Ajax")',
+            url: '@Url.Action("SetGbnDetail", "Ajax")',
             type: 'POST',
             enctype: "multipart/form-data",
             cache: false,

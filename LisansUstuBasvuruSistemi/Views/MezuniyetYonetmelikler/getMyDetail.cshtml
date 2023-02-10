@@ -2,10 +2,10 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model kmMezuniyetYonetmelik
+@model KmMezuniyetYonetmelik
 @{
     Layout = null;
-    var ots = Model.krMezuniyetYonetmelikOT.Where(p => p.IsGecerli).Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
+    var ots = Model.KrMezuniyetYonetmelikOt.Where(p => p.IsGecerli).Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
 
 }
 
@@ -51,7 +51,7 @@
                         <td colspan="3">                                
                                 @foreach (var Otip in ots)
                                 {
-                                    var modelOt = Model.krMezuniyetYonetmelikOT.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
+                                    var modelOt = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
                                     <div class="form-group">
                                         <div class="col-md-12 col-xs-12" id="_otBilgi">
                                             <div class="panel panel-default" style="padding: 0px; margin: 0px;">

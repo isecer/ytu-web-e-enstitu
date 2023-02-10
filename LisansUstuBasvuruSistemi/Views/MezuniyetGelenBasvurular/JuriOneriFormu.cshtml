@@ -519,7 +519,7 @@
                                                                         Üniversitesi (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        @Html.Hidden("UniversiteID", (RowData != null ? RowData.UniversiteID.toStrObjEmptString() : ""), new { id = "YtuIciJuri" + i + "UniversiteID" })
+                                                                        @Html.Hidden("UniversiteID", (RowData != null ? RowData.UniversiteID.ToStrObjEmptString() : ""), new { id = "YtuIciJuri" + i + "UniversiteID" })
                                                                         @Html.DropDownList("xUniversiteID", (RowData != null ? RowData.SListUniversiteID : Model.SListUniversiteID), new { @class = "form-control", disabled = "disabled", @style = "width:100%;color:black;", id = "xYtuIciJuri" + i + "UniversiteID" })
                                                                         @if (RowData != null && RowData.UniversiteID.HasValue)
                                                                         {

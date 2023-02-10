@@ -14,23 +14,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class SikcaSorulanSorularController : Controller
     {
         // GET: SikcaSorulanSorular 
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var ssS = db.SikcaSorulanSorulars.Where(p => p.EnstituKod == _EnstituKod .ToLower());
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var ssS = _entities.SikcaSorulanSorulars.Where(p => p.EnstituKod == enstituKod .ToLower());
             var yetki = RoleNames.SssKayit.InRoleCurrent();
             if (yetki == false) ssS = ssS.Where(p => p.IsAktif); 
             return View(ssS.FirstOrDefault());
         }
         [Authorize(Roles = RoleNames.SssKayit)]
-        public ActionResult Kayit(string EKD)
+        public ActionResult Kayit(string ekd)
         {
             var mdl = new SikcaSorulanSorular();
-            var MmMessage = new MmMessage();
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var mmMessage = new MmMessage();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
-            var sss = db.SikcaSorulanSorulars.Where(p => p.EnstituKod == _EnstituKod .ToLower()).FirstOrDefault();
+            var sss = _entities.SikcaSorulanSorulars.FirstOrDefault(p => p.EnstituKod == enstituKod .ToLower());
             if (sss != null)
             {
                 if (UserIdentity.Current.EnstituKods.Contains(sss.EnstituKod))
@@ -39,15 +39,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    MmMessage.Messages.Add("Bu enstitü için işlem yapmaya yetkili değilsiniz!");
-                    MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
-                    return RedirectToAction("Index", new { EKD = EKD });
+                    mmMessage.Messages.Add("Bu enstitü için işlem yapmaya yetkili değilsiniz!");
+                    MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
+                    return RedirectToAction("Index", new { EKD = ekd });
                 }
             }
             
 
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(false), "Value", "Caption", mdl.EnstituKod ?? _EnstituKod);
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(false), "Value", "Caption", mdl.EnstituKod ?? enstituKod);
+            ViewBag.MmMessage = mmMessage;
             return View(mdl);
         }
         [HttpPost]
@@ -55,30 +55,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.SssKayit)]
         public ActionResult Kayit(SikcaSorulanSorular kmodel)
         {
-            var MmMessage = new MmMessage();
+            var mmMessage = new MmMessage();
             if (kmodel.EnstituKod.IsNullOrWhiteSpace())
-            {
-                string msg = "Sıkça sorulan soruların yayınlanacağı Enstitüyü Seçiniz";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+            { 
+                mmMessage.Messages.Add("Sıkça sorulan soruların yayınlanacağı Enstitüyü Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kmodel.Aciklama.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Sıkça sorulan sorular için açıklamaları giriniz!");
+                mmMessage.Messages.Add("Sıkça sorulan sorular için açıklamaları giriniz!");
             }
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kmodel.IslemTarihi = DateTime.Now;
                 kmodel.IslemYapanID = UserIdentity.Current.Id;
                 kmodel.IslemYapanIP = UserIdentity.Ip;
-                if (db.SikcaSorulanSorulars.Any(a => a.EnstituKod == kmodel.EnstituKod) == false)
+                if (_entities.SikcaSorulanSorulars.Any(a => a.EnstituKod == kmodel.EnstituKod) == false)
                 {
-                    db.SikcaSorulanSorulars.Add(kmodel);
+                    _entities.SikcaSorulanSorulars.Add(kmodel);
                 }
                 else
                 {
-                    var sss = db.SikcaSorulanSorulars.Where(a => a.EnstituKod == kmodel.EnstituKod).First();
+                    var sss = _entities.SikcaSorulanSorulars.First(a => a.EnstituKod == kmodel.EnstituKod);
                     sss.EnstituKod = kmodel.EnstituKod; 
                     sss.Aciklama = kmodel.Aciklama;
                     sss.AciklamaHtml = kmodel.AciklamaHtml;
@@ -88,15 +87,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     sss.IslemYapanIP = UserIdentity.Ip;
 
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(false), "Value", "Caption", kmodel.EnstituKod);
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return View(kmodel);
         }
     }

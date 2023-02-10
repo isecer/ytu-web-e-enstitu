@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  fmSalonlar
+@model  FmSalonlar
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     var STT = (List<SRTalepTipleri>)ViewBag.TT;
@@ -55,7 +55,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.data)
+                                foreach (var item in Model.FrSalonlars)
                                 {
                                     RowIndex++;
                                     <tr>
@@ -79,7 +79,7 @@
                                         
                                         <td id="tdMad_@item.SRSalonID">
                                             @item.SalonAdi <br />
-                                            <span style="color:maroon;" title="Salon Talep Tipleri">STT: @string.Join(",", STT.Where(p => item.SRSalonTalepTipleri.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</span>
+                                            <span style="color:maroon;" title="Salon Talep Tipleri">STT: @string.Join(",", STT.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</span>
                                         </td>
                                         <td id="tdIa_@item.SRSalonID" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
@@ -110,7 +110,7 @@
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-2 control-label">Talep Tipleri</label>
-                                                                        <div class="col-md-9 col-xs-10">@string.Join(",", STT.Where(p => item.SRSalonTalepTipleri.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</div>
+                                                                        <div class="col-md-9 col-xs-10">@string.Join(",", STT.Where(p => item.SrSalonTalepTipleris.Any(a => a.SRTalepTipID == p.SRTalepTipID)).Select(s => s.TalepTipAdi))</div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-2 control-label">Salon Adı</label>
@@ -215,7 +215,7 @@
     }
     function sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "SRSalonlar")',
+            url: '@Url.Action("Sil", "SrSalonlar")',
             data: { id: id },
             success: function (result) {
                 toastr[result.success ? "success" : "error"](result.message, "Salon Silme İşlemi")

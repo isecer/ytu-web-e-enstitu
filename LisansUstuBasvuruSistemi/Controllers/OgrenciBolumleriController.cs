@@ -17,20 +17,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.OgrenciBolumleri)]
     public class OgrenciBolumleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmOgrenciBolumleri { });
+            return Index(new FmOgrenciBolumleri { });
         }
         [HttpPost]
-        public ActionResult Index(fmOgrenciBolumleri model)
+        public ActionResult Index(FmOgrenciBolumleri model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.OgrenciBolumleris
-                    join se in db.OgrenciBolumleris on new { s.OgrenciBolumID } equals new { se.OgrenciBolumID }
-                    join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
-                    where EnstKods.Contains(s.EnstituKod)
-                    select new frOgrenciBolumleri
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.OgrenciBolumleris
+                    join se in _entities.OgrenciBolumleris on new { s.OgrenciBolumID } equals new { se.OgrenciBolumID }
+                    join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
+                    where enstKods.Contains(s.EnstituKod)
+                    select new FrOgrenciBolumleri
                     {
 
                         OgrenciBolumID = s.OgrenciBolumID,
@@ -50,27 +50,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (!model.BolumAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.BolumAdi.Contains(model.BolumAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.EnstituAd).ThenBy(o => o.BolumAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.BolumAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new OgrenciBolumleri();
 
-            var data = db.OgrenciBolumleris.Where(p => p.OgrenciBolumID == id).FirstOrDefault();
+            var data = _entities.OgrenciBolumleris.FirstOrDefault(p => p.OgrenciBolumID == id);
             if (data != null)
             {
                 model = data;
@@ -84,62 +85,62 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(OgrenciBolumleri kModel)
         {
-            var MmMessage = new MmMessage();
+            var mmMessage = new MmMessage();
             #region Kontrol
 
 
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Enstitü seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Enstitü seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.BolumAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Bölüm Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BolumAdi" });
+                mmMessage.Messages.Add("Bölüm Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BolumAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BolumAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BolumAdi" });
 
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 kModel.IslemTarihi = DateTime.Now;
 
-                var OgrenciBolumu = db.OgrenciBolumleris.Where(p => p.OgrenciBolumID == kModel.OgrenciBolumID).FirstOrDefault();
-                if (OgrenciBolumu == null)
+                var ogrenciBolumu = _entities.OgrenciBolumleris.FirstOrDefault(p => p.OgrenciBolumID == kModel.OgrenciBolumID);
+                if (ogrenciBolumu == null)
                 {
                     kModel.IsAktif = true;
-                    db.OgrenciBolumleris.Add(kModel);
+                    _entities.OgrenciBolumleris.Add(kModel);
                 }
                 else
                 {
-                    OgrenciBolumu.EnstituKod = kModel.EnstituKod;
-                    OgrenciBolumu.BolumAdi = kModel.BolumAdi;
-                    OgrenciBolumu.IsAktif = kModel.IsAktif;
-                    OgrenciBolumu.IslemYapanID = kModel.IslemYapanID;
-                    OgrenciBolumu.IslemYapanIP = kModel.IslemYapanIP;
-                    OgrenciBolumu.IslemTarihi = kModel.IslemTarihi;
+                    ogrenciBolumu.EnstituKod = kModel.EnstituKod;
+                    ogrenciBolumu.BolumAdi = kModel.BolumAdi;
+                    ogrenciBolumu.IsAktif = kModel.IsAktif;
+                    ogrenciBolumu.IslemYapanID = kModel.IslemYapanID;
+                    ogrenciBolumu.IslemYapanIP = kModel.IslemYapanIP;
+                    ogrenciBolumu.IslemTarihi = kModel.IslemTarihi;
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
         public ActionResult Sil(int? id)
         {
-            var kayit = db.OgrenciBolumleris.Where(p => p.OgrenciBolumID == id).FirstOrDefault(); 
+            var kayit = _entities.OgrenciBolumleris.FirstOrDefault(p => p.OgrenciBolumID == id); 
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -148,14 +149,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.BolumAdi + "' İsimli Öğrenci Bölüm Silindi!";
-                    db.OgrenciBolumleris.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.OgrenciBolumleris.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.BolumAdi + "' İsimli Öğrenci Bölüm Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Bolumler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Bolumler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -163,7 +164,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Öğrenci Bölüm sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
     }

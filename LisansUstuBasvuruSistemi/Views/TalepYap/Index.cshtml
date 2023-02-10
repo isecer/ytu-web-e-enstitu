@@ -2,8 +2,9 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil 
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  fmTalep
+@model  FmTalep
 @{
     ViewBag.Title = "Index";
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -237,7 +238,7 @@
                                                                             <td>@item.ProgramAdi</td>
                                                                         </tr>
                                                                     }
-                                                                    @if (item.OgrenimTipKod == OgrenimTipi.Doktra && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
                                                                     {
                                                                         <tr>
                                                                             <td>Tez Önerisi Yapıldı Mı?</td>
@@ -284,7 +285,7 @@
                                                                                 <td>@item.StatuAdi</td>
                                                                             </tr>
                                                                         }
-                                                                        if (item.OgrenimTipKod != OgrenimTipi.Doktra)
+                                                                        if (!item.OgrenimTipKod.IsDoktora())
                                                                         {
                                                                             <tr>
                                                                                 <td>Ders Yükü Tamamlandı Mı?</td>

@@ -10,6 +10,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -85,8 +86,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mdl = Management.GetOnlineOdemeProgramDetay(UniqueID, false, true, true);
             ViewBag.ExpireYear = new SelectList(Management.GetKrediKartAktifYilList(false), "Value", "Caption", DateTime.Now.Year);
             ViewBag.ExpireMonth = new SelectList(Management.GetAYList(false), "Value", "Caption", 12);
-            ViewBag.MaximumTipID = new SelectList(Management.CmbCardMaximumType(), "Value", "Caption");
-            ViewBag.Taksit = new SelectList(Management.CmbTaksitList(), "Value", "Caption");
+            ViewBag.MaximumTipID = new SelectList(ComboData.CmbCardMaximumType(), "Value", "Caption");
+            ViewBag.Taksit = new SelectList(ComboData.CmbTaksitList(), "Value", "Caption");
 
             return View(mdl);
         }

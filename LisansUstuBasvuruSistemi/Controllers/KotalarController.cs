@@ -129,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = IndexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             //ViewBag.EnstituKod2 = new SelectList(Management.cmbGetYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.MulakatSurecineGirecek = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.MulakatSurecineGirecek);
             ViewBag.IsAlesYerineDosyaNotuIstensin = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsAlesYerineDosyaNotuIstensin);
             return View(model);
@@ -175,7 +175,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", tEnstKod);
             ViewBag.AnabilimDaliKod = new SelectList(Management.cmbGetYetkiliProgramAnabilimDallari(true, tEnstKod), "Value", "Caption", AnabilimDaliKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, tEnstKod, AnabilimDaliKod, true), "Value", "Caption", model.ProgramKod);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(tEnstKod, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(tEnstKod, true), "Value", "Caption", model.OgrenimTipKod);
             return View(model);
         }
         [HttpPost]
@@ -315,7 +315,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AnabilimDaliKod = new SelectList(Management.cmbGetYetkiliProgramAnabilimDallari(true, EnstituKod), "Value", "Caption", AnabilimDaliKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, EnstituKod, AnabilimDaliKod, true), "Value", "Caption", kModel.ProgramKod);
 
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod, true), "Value", "Caption", kModel.OgrenimTipKod);
             return View(kModel);
         }
 
@@ -345,20 +345,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             message += "<br/>Tanımsız program kodları mevcut! <br/>Program Kod: " + string.Join("<br/>Program Kod: ", olmayanlar);
                         }
-                        Management.SistemBilgisiKaydet(message.Replace("<br/>", "\r\n"), "Kotalar/getWsData", LogType.Bilgi);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message.Replace("<br/>", "\r\n"), "Kotalar/getWsData", LogType.Bilgi);
                     }
                     else
                     {
                         success = false;
                         message = "Çekilecek bir kota bilgisi bulunamadı!";
-                        Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Bilgi);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Bilgi);
                     }
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "Kota bilgisi güncellenirken bir hata oluştu! Hata: " + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Kritik);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Kotalar/getWsData", LogType.Kritik);
                 }
             }
             else
@@ -387,7 +387,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     success = false;
                     message = "'" + PAdi.ProgramAdi + "' İsimli Programının " + otL.OgrenimTipAdi + " öğrenim tipine ait kota bilgisi silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Kotalar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Kotalar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else

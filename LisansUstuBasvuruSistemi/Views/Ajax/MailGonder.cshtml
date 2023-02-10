@@ -1,7 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @model KmMailGonder
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = null;
 }
 
@@ -225,10 +225,10 @@
 </div>
 <script src="~/Content/ckeditor/ckeditor.js"></script>
 <script src="~/Content/ckeditor/showCk.js"></script>
-@if (MmMessage.IsCloseDialog)
+@if (mmMessage.IsCloseDialog)
 {
     <script>
-        setTimeout(function () { window.top.dialogKapat('@MmMessage.DialogID'); }, 2000);
+        setTimeout(function () { window.top.dialogKapat('@mmMessage.DialogID'); }, 2000);
 
     </script>
 }

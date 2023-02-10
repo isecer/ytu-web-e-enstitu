@@ -6,6 +6,7 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
@@ -15,16 +16,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Sehirler)]
     public class SehirlerController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmSehirler { });
+            return Index(new FmSehirler { });
         }
         [HttpPost]
-        public ActionResult Index(fmSehirler model)
+        public ActionResult Index(FmSehirler model)
         {
 
-            var q = from s in db.Sehirlers
+            var q = from s in _entities.Sehirlers
                     select s;
 
             if (model.SehirKod.HasValue) q = q.Where(p => p.SehirKod == model.SehirKod);
@@ -32,93 +33,97 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
 
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.Ad);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.Ad);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id, string dlgid)
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+            ViewBag.MmMessage = mmMessage;
             var model = new Sehirler();
             if (id.HasValue && id > 0)
             {
-                var data = db.Sehirlers.Where(p => p.SehirKod == id).FirstOrDefault();
+                var data = _entities.Sehirlers.FirstOrDefault(p => p.SehirKod == id);
                 if (data != null) model = data;
             }
             ViewBag.OldID = model.SehirKod;
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(Sehirler kModel, int OldID, string dlgid = "")
+        public ActionResult Kayit(Sehirler kModel, int oldId, string dlgid = "")
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+
             #region Kontrol
-            if (OldID <= 0)
+            if (oldId <= 0)
             {
                 if (kModel.SehirKod <= 0)
-                {
-                    string msg = "Şehir kodu giriniz.";
-                    MmMessage.Messages.Add(msg);
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SehirKod" });
+                { 
+                    mmMessage.Messages.Add("Şehir kodu giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SehirKod" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SehirKod" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SehirKod" });
             }
             if (kModel.Ad.IsNullOrWhiteSpace())
-            {
-                string msg = "Şehir adı Boş bırakılamaz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ad" });
+            { 
+                mmMessage.Messages.Add("Şehir adı Boş bırakılamaz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ad" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ad" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ad" });
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
-                if (OldID <= 0)
+                if (oldId <= 0)
                 {
                     kModel.IsAktif = true;
-                    db.Sehirlers.Add(kModel);
+                    _entities.Sehirlers.Add(kModel);
                 }
                 else
                 {
-                    var data = db.Sehirlers.Where(p => p.SehirKod == OldID).First();
+                    var data = _entities.Sehirlers.First(p => p.SehirKod == oldId);
                     data.Ad = kModel.Ad;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemTarihi = kModel.IslemTarihi;
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
-            ViewBag.MmMessage = MmMessage;
-            ViewBag.OldID = OldID;
+            ViewBag.MmMessage = mmMessage;
+            ViewBag.OldID = oldId;
             return View(kModel);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.Sehirlers.Where(p => p.SehirKod == id).FirstOrDefault();
+            var kayit = _entities.Sehirlers.FirstOrDefault(p => p.SehirKod == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -127,14 +132,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.Ad + "' İsimli Şehir Silindi!";
-                    db.Sehirlers.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.Sehirlers.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.Ad + "' İsimli Şehir Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Sehirler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Sehirler/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -142,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Şehir sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public List<SinavDilleri> BsSinavDilleri { get; set; }
         public string SinavDilleriStr { get; set; }
-        public List<krSinavTipleriDonems> SinavTipleriDonems { get; set; }
+        public List<KrSinavTipleriDonem> SinavTipleriDonems { get; set; }
         public string SinavAdi { get; set; }
         public BasvurularSinavBilgi BasvuruSinavData { get; set; }
         public bool IsTurkceProgramVar { get; set; }
@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public SinavBilgiModel()
         {
             BsSinavDilleri = new List<SinavDilleri>();
-            SinavTipleriDonems = new List<krSinavTipleriDonems>();
+            SinavTipleriDonems = new List<KrSinavTipleriDonem>();
         }
 
     }

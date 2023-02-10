@@ -11,7 +11,7 @@
 }
 
 <tr>
-    <td class="rownum">@Model.RowNum.toStrObjEmptString()</td>
+    <td class="rownum">@Model.RowNum.ToStrObjEmptString()</td>
     <td><ul class="panel-controls"><li id="iShow_@Model.guID" style="font-size:8pt;" onclick="showDetailY('@Model.guID','ana-')"><a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a></li></ul></td>
     <td>@Model.MezuniyetYayinTurAdi</td>
     <td>@Model.YayinBasligi</td>
@@ -156,7 +156,7 @@
                                     }
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.IsProjeTamamlandiOrDevamEdiyor.toStrObjEmptString().ToLower()" name="_IsProjeTamamlandiOrDevamEdiyor">
+                                        <input type="text" class="hide" value="@Model.IsProjeTamamlandiOrDevamEdiyor.ToStrObjEmptString().ToLower()" name="_IsProjeTamamlandiOrDevamEdiyor">
                                     }
                                 </td>
                             </tr>
@@ -227,7 +227,7 @@
                                 <td class="fileYayinBelge">
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.MezuniyetYayinBelgeAdi.toStrObjEmptString()" name="_MezuniyetYayinBelgesiAdi">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinBelgeAdi.ToStrObjEmptString()" name="_MezuniyetYayinBelgesiAdi">
                                         if (Model.MezuniyetBasvurulariYayinID > 0)
                                         {<input type="file" class="hide" name="_MezuniyetYayinBelgesi" id="_MezuniyetYayinBelgesi@(Model.guID)">}
                                     }
@@ -256,7 +256,7 @@
                                     }
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKaynakLinki.toStrObjEmptString()" name="_MezuniyetYayinKaynakLinki">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKaynakLinki.ToStrObjEmptString()" name="_MezuniyetYayinKaynakLinki">
                                     }
                                 </td>
                             </tr>
@@ -267,7 +267,7 @@
                                 <td class="fileYayinMetni">
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.MezuniyetYayinMetniBelgeAdi.toStrObjEmptString()" name="_YayinMetniBelgesiAdi">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinMetniBelgeAdi.ToStrObjEmptString()" name="_YayinMetniBelgesiAdi">
                                         if (Model.MezuniyetBasvurulariYayinID > 0)
                                         {
                                             <input type="file" class="hide" name="_YayinMetniBelgesi" id="_YayinMetniBelgesi@(Model.guID)">
@@ -299,7 +299,7 @@
                                     }
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.MezuniyetYayinLinki.toStrObjEmptString()" name="_MezuniyetYayinLinki">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinLinki.ToStrObjEmptString()" name="_MezuniyetYayinLinki">
                                     }
                                 </td>
                             </tr>
@@ -350,7 +350,7 @@
                                 <td class="fileKabulEdilenYayin">
                                     @if (!Model.IsDataShow)
                                     {
-                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKabulEdilmisMakaleAdi.toStrObjEmptString()" name="_MezuniyetYayinKabulEdilmisMakaleAdi">
+                                        <input type="text" class="hide" value="@Model.MezuniyetYayinKabulEdilmisMakaleAdi.ToStrObjEmptString()" name="_MezuniyetYayinKabulEdilmisMakaleAdi">
                                         if (Model.MezuniyetBasvurulariYayinID > 0)
                                         {
                                             <input type="file" class="hide" name="_MezuniyetYayinKabulEdilmisMakaleBelgesi" id="_MezuniyetYayinKabulEdilmisMakaleBelgesi@(Model.guID)">

@@ -5,14 +5,14 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmTalep
+@model  FmTalep
 @{
     ViewBag.Title = "Index";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
-    var KYetki = RoleNames.GelenTalepKayit.InRoleCurrent();
-    var KTalepGelenTalepIDs = (List<int>)ViewBag.KTalepGelenTalepIDs;
+    var kYetki = RoleNames.GelenTalepKayit.InRoleCurrent();
+    var kTalepGelenTalepIDs = (List<int>)ViewBag.KTalepGelenTalepIDs;
 }
 
 
@@ -31,7 +31,7 @@
                     <ul class="panel-controls">
                         @if (Model.RowCount > 0)
                         {
-                            if (UserIdentity.Current.IsAdmin && KTalepGelenTalepIDs.Count > 0)
+                            if (UserIdentity.Current.IsAdmin && kTalepGelenTalepIDs.Count > 0)
                             {
 
                                 <li>
@@ -46,13 +46,13 @@
                                             </tr>
                                             <tr>
                                                 <td></td>
-                                                <td>Kontrol aşamasında olan '@KTalepGelenTalepIDs.Count' adet başvuruyu onaylamak istiyor musunuz?</td>
+                                                <td>Kontrol aşamasında olan '@kTalepGelenTalepIDs.Count' adet başvuruyu onaylamak istiyor musunuz?</td>
                                             </tr>
                                         </table>
                                     </div>
                                     <script>
                                     function IslemGormeyenlerOnay() {
-                                        var KTIDs ='@Html.Raw(Json.Encode(KTalepGelenTalepIDs))';
+                                        var KTIDs ='@Html.Raw(Json.Encode(kTalepGelenTalepIDs))';
                                         var KTalepGelenTalepIDs = JSON.parse(KTIDs);
                                         var btbx = bootbox.dialog({
                                             message: $('#BbOnayContent').html(),
@@ -200,7 +200,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Talepler</h3>
                     <ul class="panel-controls">
-                        @foreach (var item in IndexModel.ListB)
+                        @foreach (var item in indexModel.ListB)
                         {
                             <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
@@ -350,7 +350,7 @@
                                                                             <td>@item.ProgramAdi</td>
                                                                         </tr>
                                                                     }
-                                                                    @if (item.OgrenimTipKod == OgrenimTipi.Doktra && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
+                                                                    @if (item.OgrenimTipKod.IsDoktora() && (item.TalepTipID == TalepTipi.LisansustuSureUzatmaTalebi || item.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi))
                                                                     {
                                                                         <tr>
                                                                             <td>Tez Önerisi Yapıldı Mı?</td>
@@ -460,7 +460,7 @@
                                                                             </td>
                                                                         </tr>
                                                                     }
-                                                                    @if (KYetki)
+                                                                    @if (kYetki)
                                                                     {
                                                                         <tr>
                                                                             <td>Talep Durumu</td>

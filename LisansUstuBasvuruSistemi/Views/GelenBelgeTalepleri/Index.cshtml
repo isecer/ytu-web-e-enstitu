@@ -362,7 +362,7 @@
         var _panel = $('#btDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getdetay", "BelgeTalebi")',
+            url: '@Url.Action("Getdetay", "BelgeTalebi")',
             data: { id: id  },
             success: function (result) {
                     $('#cls-' + id).html(result);

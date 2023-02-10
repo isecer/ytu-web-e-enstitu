@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static bool IsNumberX(this object value)
         {
             double Deger;
-            var durum = double.TryParse(value.toStrObj(), out Deger);
+            var durum = double.TryParse(value.ToStrObj(), out Deger);
             return durum;
         }
         public static bool IsASCII(this string value)

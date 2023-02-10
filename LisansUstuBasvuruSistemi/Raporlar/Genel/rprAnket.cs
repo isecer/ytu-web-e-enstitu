@@ -1,21 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using DevExpress.XtraReports.Parameters;
-using System.Linq;
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Genel
 {
-    public partial class rprAnket : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprAnket : DevExpress.XtraReports.UI.XtraReport
     { 
-        public rprAnket( string EnstituAdi,string AnketAdi,string Tarih)
+        public RprAnket( string enstituAdi,string anketAdi,string tarih)
         {
             InitializeComponent();
-            lblEnstituAdi.Text = EnstituAdi;
-            lblRaporAdi.Text = AnketAdi;
-            lblTarih.Text = Tarih;
+            lblEnstituAdi.Text = enstituAdi;
+            lblRaporAdi.Text = anketAdi;
+            lblTarih.Text = tarih;
           
         }
 

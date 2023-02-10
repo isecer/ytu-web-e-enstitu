@@ -4,8 +4,7 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model SikcaSorulanSorular
-@{ 
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     bool kayityetki = false;
     if (UserIdentity.Current.IsAuthenticated)

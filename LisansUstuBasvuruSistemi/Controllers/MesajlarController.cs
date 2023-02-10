@@ -20,21 +20,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Mesajlar)]
     public class MesajlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            return Index(new FmMesajlarDto() { PageSize = 10, Expand = true, EnstituKod = enstituKod }, EKD);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            return Index(new FmMesajlarDto() { PageSize = 10, Expand = true, EnstituKod = enstituKod });
         }
         [HttpPost]
-        public ActionResult Index(FmMesajlarDto model, string EKD, bool export = false)
+        public ActionResult Index(FmMesajlarDto model, bool export = false)
         {
 
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.Mesajlars.Where(p => EnstKods.Contains(p.EnstituKod) && p.UstMesajID.HasValue == false && (model.Konu != null && model.Konu.Trim() != "" ? p.Aciklama.Contains(model.Konu) : true))
-                    join ens in db.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
-                    join mk in db.MesajKategorileris on s.MesajKategoriID equals mk.MesajKategoriID
-                    join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID into defK
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.Mesajlars.Where(p => enstKods.Contains(p.EnstituKod) && p.UstMesajID.HasValue == false && (model.Konu == null || model.Konu.Trim() == "" || p.Aciklama.Contains(model.Konu)))
+                    join ens in _entities.Enstitulers on new { s.EnstituKod } equals new { ens.EnstituKod }
+                    join mk in _entities.MesajKategorileris on s.MesajKategoriID equals mk.MesajKategoriID
+                    join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID into defK
                     from kul in defK.DefaultIfEmpty()
                     where s.Silindi == false
                     select new
@@ -47,7 +47,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.UstMesajID,
                         Tarih = s.SonMesajTarihi,
                         s.Konu,
-                        Email = kul != null ? kul.EMail : s.Email, 
+                        Email = kul != null ? kul.EMail : s.Email,
                         s.AdSoyad,
                         ResimAdi = kul != null ? kul.ResimAdi : null,
                         s.IslemYapanIP,
@@ -72,22 +72,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.MesajYili.HasValue) q = q.Where(p => p.Tarih.Year == model.MesajYili);
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = model.IsAktif == true ? model.RowCount : q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = model.IsAktif == false ? model.RowCount : (IndexModel.Toplam - IndexModel.Aktif);
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.Tarih);
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = model.IsAktif == true ? model.RowCount : q.Count(p => p.IsAktif)
+            };
+            indexModel.Pasif = model.IsAktif == false ? model.RowCount : (indexModel.Toplam - indexModel.Aktif);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
 
 
             if (export && model.RowCount > 0)
             {
-                var MesajIDs = q.Select(s => s.MesajID).ToList();
+                var mesajIDs = q.Select(s => s.MesajID).ToList();
                 GridView gv = new GridView();
 
                 if (model.MesajKategoriID.HasValue && model.MesajKategoriID == 37)
                 {
-                    var data = GetMesajDetails(MesajIDs).Select(s => new
+                    var data = GetMesajDetails(mesajIDs).Select(s => new
                     {
                         s.GrupNo,
                         GelenGiden = s.GidenGelen,
@@ -109,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var data = GetMesajDetails(MesajIDs).Select(s => new
+                    var data = GetMesajDetails(mesajIDs).Select(s => new
                     {
                         s.GrupNo,
                         GelenGiden = s.GidenGelen,
@@ -142,7 +143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 KategoriAdi = s.KategoriAdi,
                 MesajID = s.MesajID,
                 Konu = s.Konu,
-                Email = s.Email, 
+                Email = s.Email,
                 Tarih = s.Tarih,
                 AdSoyad = s.AdSoyad,
                 ResimAdi = s.ResimAdi,
@@ -153,34 +154,34 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.MesajKategoriID = new SelectList(MesajlarBus.cmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAcikKapaliData(true), "Value", "Caption", model.IsAktif);
             ViewBag.IsDosyaEkDurum = new SelectList(ComboData.GetCmbDosyaEkiDurumData(true), "Value", "Caption", model.IsDosyaEkDurum);
             ViewBag.MesajYili = new SelectList(MesajlarBus.cmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
 
             return View(model);
         }
-        public ActionResult GetAcikMsjCount(string EnstituKod)
+        public ActionResult GetAcikMsjCount(string enstituKod)
         {
-            var model = MesajlarBus.GetCevaplanmamisMesajCount(EnstituKod);
+            var model = MesajlarBus.GetCevaplanmamisMesajCount(enstituKod);
             return new { mCount = model.Value.Value, HtmlContent = model.Caption }.ToJsonResult();
         }
-        public ActionResult DurumKayit(int id, bool IsAktif, bool? MainFilter)
+        public ActionResult DurumKayit(int id, bool isAktif, bool? mainFilter)
         {
-            var kayit = db.Mesajlars.Where(p => p.MesajID == id).FirstOrDefault();
+            var kayit = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == id);
             string message = "";
             bool success = true;
             try
             {
-                message = "'" + kayit.Konu + "' Konulu Mesaj durumu " + (!IsAktif ? "Açık" : "Kapalı") + " olarak İşaretlendi";
-                kayit.IsAktif = IsAktif;
-                db.SaveChanges();
+                message = "'" + kayit.Konu + "' Konulu Mesaj durumu " + (!isAktif ? "Açık" : "Kapalı") + " olarak İşaretlendi";
+                kayit.IsAktif = isAktif;
+                _entities.SaveChanges();
             }
             catch (Exception ex)
             {
                 success = false;
                 message = "'" + kayit.Konu + "'Konulu Mesaj Durumu Güncellenemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(message, "Mesajlar/DurumKayit<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Mesajlar/DurumKayit<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
             }
             return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
         }
@@ -192,26 +193,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mSilYetki)
             {
-                var kayit = db.Mesajlars.Where(p => p.MesajID == id).FirstOrDefault();
+                var kayit = _entities.Mesajlars.FirstOrDefault(p => p.MesajID == id);
                 if (kayit != null)
                 {
                     try
                     {
                         message = "'" + kayit.Konu + "' Konulu Mesaj Silindi!";
                         kayit.Silindi = true;
-                        var mails = db.GonderilenMaillers.Where(p => p.MesajID == kayit.MesajID).ToList();
+                        var mails = _entities.GonderilenMaillers.Where(p => p.MesajID == kayit.MesajID).ToList();
                         foreach (var item in mails)
                         {
                             item.Silindi = true;
                         }
-                        db.SaveChanges();
+                        _entities.SaveChanges();
 
                     }
                     catch (Exception ex)
                     {
                         success = false;
                         message = "'" + kayit.Konu + "' Başlıklı Konu! <br/> Bilgi:" + ex.ToExceptionMessage();
-                        Management.SistemBilgisiKaydet(message, "Mesajlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Mesajlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     }
                 }
                 else
@@ -225,13 +226,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Mesaj silmeye yetkiniz bulunmuyor!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
 
-        public ActionResult getMesajDetay(int MesajID)
+        public ActionResult GetMesajDetay(int mesajId)
         {
-            var mesaj = db.Mesajlars.Where(p => p.UstMesajID.HasValue == false && p.MesajID == MesajID).Select(s => new FrMesajlarDto
+            var mesaj = _entities.Mesajlars.Where(p => p.UstMesajID.HasValue == false && p.MesajID == mesajId).Select(s => new FrMesajlarDto
             {
                 MesajKategoriID = s.MesajKategoriID,
                 MesajID = s.MesajID,
@@ -247,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MesajEkleris = s.MesajEkleris.ToList()
             }).First();
 
-            var groupMesajs = db.Mesajlars.Where(p => p.UstMesajID == mesaj.MesajID).ToList().Select(s => new SubMessagesDto
+            var groupMesajs = _entities.Mesajlars.Where(p => p.UstMesajID == mesaj.MesajID).ToList().Select(s => new SubMessagesDto
             {
                 MesajID = s.MesajID,
                 KullaniciID = s.KullaniciID ?? 0,
@@ -275,7 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>(),
                 MesajEkleris = mesaj.MesajEkleris.Select(s => new MesajEkleri { EkAdi = s.EkAdi, EkDosyaYolu = s.EkDosyaYolu }).ToList(),
             });
-            var gMesajs = db.GonderilenMaillers.Where(p => p.MesajID == mesaj.MesajID).ToList();
+            var gMesajs = _entities.GonderilenMaillers.Where(p => p.MesajID == mesaj.MesajID).ToList();
             foreach (var item in gMesajs)
             {
                 var kul = item.Kullanicilar;
@@ -297,22 +298,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mesaj.SubMesajList = groupMesajs.OrderByDescending(o => o.Tarih).ToList();
             return View(mesaj);
         }
-        public List<FrMesajlarDto> GetMesajDetails(List<int> MesajID)
+        public List<FrMesajlarDto> GetMesajDetails(List<int> mesajId)
         {
-            var MesajList = new List<FrMesajlarDto>();
-            var mesajLar = (from s in db.Mesajlars.Where(p => p.UstMesajID.HasValue == false && MesajID.Contains(p.MesajID))
-                            join mk in db.MesajKategorileris on new { s.MesajKategoriID } equals new { mk.MesajKategoriID }
-                            join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID into defk
+            var mesajList = new List<FrMesajlarDto>();
+            var mesajLar = (from s in _entities.Mesajlars.Where(p => p.UstMesajID.HasValue == false && mesajId.Contains(p.MesajID))
+                            join mk in _entities.MesajKategorileris on new { s.MesajKategoriID } equals new { mk.MesajKategoriID }
+                            join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID into defk
                             from K in defk.DefaultIfEmpty()
-                            join kt in db.KullaniciTipleris on K.KullaniciTipID equals kt.KullaniciTipID into defkt
+                            join kt in _entities.KullaniciTipleris on K.KullaniciTipID equals kt.KullaniciTipID into defkt
                             from Kt in defkt.DefaultIfEmpty()
-                            join kd in db.Donemlers on K.KayitDonemID equals kd.DonemID into defkd
+                            join kd in _entities.Donemlers on K.KayitDonemID equals kd.DonemID into defkd
                             from Kd in defkd.DefaultIfEmpty()
-                            join ot in db.OgrenimTipleris on K.OgrenimTipKod equals ot.OgrenimTipKod into defot
+                            join ot in _entities.OgrenimTipleris on K.OgrenimTipKod equals ot.OgrenimTipKod into defot
                             from Ot in defot.DefaultIfEmpty()
-                            join pr in db.Programlars on K.ProgramKod equals pr.ProgramKod into defpr
+                            join pr in _entities.Programlars on K.ProgramKod equals pr.ProgramKod into defpr
                             from Pr in defpr.DefaultIfEmpty()
-                            join ab in db.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
+                            join ab in _entities.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
                             from Ab in defab.DefaultIfEmpty()
                             select new FrMesajlarDto
                             {
@@ -333,18 +334,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 ProgramAdi = Pr != null ? Pr.ProgramAdi : "",
 
                             }).ToList();
-            var altMesaj = (from s in db.Mesajlars.Where(p => MesajID.Contains(p.UstMesajID ?? 0))
-                            join k in db.Kullanicilars on s.KullaniciID equals k.KullaniciID into defk
+            var altMesaj = (from s in _entities.Mesajlars.Where(p => mesajId.Contains(p.UstMesajID ?? 0))
+                            join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID into defk
                             from K in defk.DefaultIfEmpty()
-                            join kt in db.KullaniciTipleris on K.KullaniciTipID equals kt.KullaniciTipID into defkt
+                            join kt in _entities.KullaniciTipleris on K.KullaniciTipID equals kt.KullaniciTipID into defkt
                             from Kt in defkt.DefaultIfEmpty()
-                            join kd in db.Donemlers on K.KayitDonemID equals kd.DonemID into defkd
+                            join kd in _entities.Donemlers on K.KayitDonemID equals kd.DonemID into defkd
                             from Kd in defkd.DefaultIfEmpty()
-                            join ot in db.OgrenimTipleris on K.OgrenimTipKod equals ot.OgrenimTipKod into defot
+                            join ot in _entities.OgrenimTipleris on K.OgrenimTipKod equals ot.OgrenimTipKod into defot
                             from Ot in defot.DefaultIfEmpty()
-                            join pr in db.Programlars on K.ProgramKod equals pr.ProgramKod into defpr
+                            join pr in _entities.Programlars on K.ProgramKod equals pr.ProgramKod into defpr
                             from Pr in defpr.DefaultIfEmpty()
-                            join ab in db.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
+                            join ab in _entities.AnabilimDallaris on Pr.AnabilimDaliKod equals ab.AnabilimDaliKod into defab
                             from Ab in defab.DefaultIfEmpty()
                             select new FrMesajlarDto
                             {
@@ -364,7 +365,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             }).ToList();
 
-            altMesaj.AddRange(db.GonderilenMaillers.Where(p => MesajID.Contains(p.MesajID ?? 0)).Select(s => new FrMesajlarDto
+            altMesaj.AddRange(_entities.GonderilenMaillers.Where(p => mesajId.Contains(p.MesajID ?? 0)).Select(s => new FrMesajlarDto
             {
                 GidenGelen = "Giden Mail",
                 MesajID = s.MesajID.Value,
@@ -377,11 +378,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             foreach (var item in mesajLar)
             {
                 item.GrupNo = inx;
-                MesajList.Add(item);
-                var Secilenler = altMesaj.Where(p => p.MesajID == item.MesajID || p.UstMesajID == item.MesajID).ToList();
-                foreach (var item2 in Secilenler.OrderByDescending(o => o.Tarih))
+                mesajList.Add(item);
+                var secilenler = altMesaj.Where(p => p.MesajID == item.MesajID || p.UstMesajID == item.MesajID).ToList();
+                foreach (var item2 in secilenler.OrderByDescending(o => o.Tarih))
                 {
-                    MesajList.Add(new FrMesajlarDto
+                    mesajList.Add(new FrMesajlarDto
                     {
                         GidenGelen = item2.GidenGelen,
                         GrupNo = item.GrupNo,
@@ -404,7 +405,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 inx++;
 
             }
-            return MesajList;
+            return mesajList;
 
         }
 

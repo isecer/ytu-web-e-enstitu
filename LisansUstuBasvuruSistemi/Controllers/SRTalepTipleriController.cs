@@ -15,21 +15,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.SrTalepTipleri)]
-    public class SRTalepTipleriController : Controller
+    public class SrTalepTipleriController : Controller
     {
 
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmSRTalepTipleri { });
+            return Index(new FmSrTalepTipleri { });
         }
         [HttpPost]
-        public ActionResult Index(fmSRTalepTipleri model)
+        public ActionResult Index(FmSrTalepTipleri model)
         {
 
-            var q = from s in db.SRTalepTipleris
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    select new frSRTalepTipleri
+            var q = from s in _entities.SRTalepTipleris
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    select new FrSRTalepTipleri
                     {
                         SRTalepTipID = s.SRTalepTipID,
                         IsTezSinavi = s.IsTezSinavi,
@@ -42,8 +42,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapan = k.Ad + " " + k.Soyad,
                         IslemYapanIP = s.IslemYapanIP,
                         TalepTipAdi = s.TalepTipAdi,
-                        TalepTipAktifAyIds = db.SRTalepTipleriAktifAylars.Where(p => p.SRTalepTipID == s.SRTalepTipID).Select(s2 => s2.AyID).ToList(),
-                        KullaniciTipIDs = db.SRTalepTipKullanicilars.Where(p => p.SRTalepTipID == s.SRTalepTipID).Select(s2 => s2.KullaniciTipID).ToList(),
+                        TalepTipAktifAyIds = _entities.SRTalepTipleriAktifAylars.Where(p => p.SRTalepTipID == s.SRTalepTipID).Select(s2 => s2.AyID).ToList(),
+                        KullaniciTipIDs = _entities.SRTalepTipKullanicilars.Where(p => p.SRTalepTipID == s.SRTalepTipID).Select(s2 => s2.KullaniciTipID).ToList(),
 
                     };
 
@@ -51,19 +51,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsTezSinavi.HasValue) q = q.Where(p => p.IsTezSinavi == model.IsTezSinavi);
             if (!model.TalepTipAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.TalepTipAdi.Contains(model.TalepTipAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.TalepTipAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.TalepTipAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
             var aylar = SrTalepleriBus.GetCmbAylar(false);
             ViewBag.Aylar = aylar;
             ViewBag.KullaniciTipleri = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsTezSinavi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsTezSinavi);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
@@ -71,12 +72,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Kayit(int? id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new SRTalepTipleri();  
             if (id.HasValue)
             {
-                var data = db.SRTalepTipleris.Where(p => p.SRTalepTipID == id).FirstOrDefault();
+                var data = _entities.SRTalepTipleris.FirstOrDefault(p => p.SRTalepTipID == id);
                 if (data != null)
                 {
                     model = data;  
@@ -87,34 +88,34 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(SRTalepTipleri kModel, List<int> AyIDs, List<int> KullaniciTipIDs)
+        public ActionResult Kayit(SRTalepTipleri kModel, List<int> ayIDs, List<int> kullaniciTipIDs)
         {
-            AyIDs = AyIDs ?? new List<int>();
-            KullaniciTipIDs = KullaniciTipIDs ?? new List<int>();
-            var StAylars = AyIDs.Select(s => new SRTalepTipleriAktifAylar { AyID = s }).ToList();
-            var StKullanicis = KullaniciTipIDs.Select(s => new SRTalepTipKullanicilar { KullaniciTipID = s }).ToList();
-            var MmMessage = new MmMessage();
+            ayIDs = ayIDs ?? new List<int>();
+            kullaniciTipIDs = kullaniciTipIDs ?? new List<int>();
+            var stAylars = ayIDs.Select(s => new SRTalepTipleriAktifAylar { AyID = s }).ToList();
+            var stKullanicis = kullaniciTipIDs.Select(s => new SRTalepTipKullanicilar { KullaniciTipID = s }).ToList();
+            var mmMessage = new MmMessage();
             #region Kontrol
             if (kModel.TalepTipAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Talpe Tip Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipAdi" });
+                mmMessage.Messages.Add("Talpe Tip Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipAdi" });
-            if (KullaniciTipIDs.Count == 0)
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipAdi" });
+            if (kullaniciTipIDs.Count == 0)
             {
-                MmMessage.Messages.Add("Kullanıcı Tipi Seçiniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
+                mmMessage.Messages.Add("Kullanıcı Tipi Seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
             }
-            if (AyIDs.Count == 0)
+            if (ayIDs.Count == 0)
             {
-                MmMessage.Messages.Add("Ay Seçiniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
+                mmMessage.Messages.Add("Ay Seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AyID" });
             }
 
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
               
                 if (kModel.IsTezSinavi == false) { kModel.IstenenJuriSayisiDR = null; kModel.IstenenJuriSayisiYL = null; }
@@ -125,22 +126,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
                     kModel.IslemTarihi = DateTime.Now;
-                    db.SRTalepTipleris.Add(new SRTalepTipleri
+                    _entities.SRTalepTipleris.Add(new SRTalepTipleri
                     {
                         IsTezSinavi = kModel.IsTezSinavi,
                         IstenenJuriSayisiDR = kModel.IstenenJuriSayisiDR,
                         IstenenJuriSayisiYL = kModel.IstenenJuriSayisiYL,
                         MaxCevaplanmamisTalep = kModel.MaxCevaplanmamisTalep,
                         IsAktif = kModel.IsAktif,
-                        SRTalepTipleriAktifAylars = StAylars,
-                        SRTalepTipKullanicilars = StKullanicis
+                        SRTalepTipleriAktifAylars = stAylars,
+                        SRTalepTipKullanicilars = stKullanicis
 
                     });
-                    db.SaveChanges();
+                    _entities.SaveChanges();
                 }
                 else
                 {
-                    var data = db.SRTalepTipleris.Where(p => p.SRTalepTipID == kModel.SRTalepTipID).First();
+                    var data = _entities.SRTalepTipleris.First(p => p.SRTalepTipID == kModel.SRTalepTipID);
                     data.IsTezSinavi = kModel.IsTezSinavi;
                     data.IstenenJuriSayisiDR = kModel.IstenenJuriSayisiDR;
                     data.IstenenJuriSayisiYL = kModel.IstenenJuriSayisiYL;
@@ -149,30 +150,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now; 
-                    db.SRTalepTipKullanicilars.RemoveRange(data.SRTalepTipKullanicilars); 
-                    db.SRTalepTipleriAktifAylars.RemoveRange(data.SRTalepTipleriAktifAylars);
-                    data.SRTalepTipleriAktifAylars = StAylars;
-                    data.SRTalepTipKullanicilars = StKullanicis;
+                    _entities.SRTalepTipKullanicilars.RemoveRange(data.SRTalepTipKullanicilars); 
+                    _entities.SRTalepTipleriAktifAylars.RemoveRange(data.SRTalepTipleriAktifAylars);
+                    data.SRTalepTipleriAktifAylars = stAylars;
+                    data.SRTalepTipKullanicilars = stKullanicis;
                 }
 
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                kModel.SRTalepTipleriAktifAylars = StAylars;
-                kModel.SRTalepTipKullanicilars = StKullanicis;
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                kModel.SRTalepTipleriAktifAylars = stAylars;
+                kModel.SRTalepTipKullanicilars = stKullanicis;
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
              
-            ViewBag.MmMessage = MmMessage; 
+            ViewBag.MmMessage = mmMessage; 
             ViewBag.Aylars = SrTalepleriBus.GetCmbAylar(false);
             ViewBag.KullaniciTipleris = KullanicilarBus.GetCmbKullaniciTipleri(false, false);
             return View(kModel);
         }
         public ActionResult Sil(int? id)
         {
-            var data = db.SRTalepTipleris.Where(p => p.SRTalepTipID == id).FirstOrDefault(); 
+            var data = _entities.SRTalepTipleris.FirstOrDefault(p => p.SRTalepTipID == id); 
             string message = "";
             bool success = true;
             if (data != null)
@@ -181,14 +182,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + data.TalepTipAdi + "' İsimli talep tipi Silindi!";
-                    db.SRTalepTipleris.Remove(data);
-                    db.SaveChanges();
+                    _entities.SRTalepTipleris.Remove(data);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + data.TalepTipAdi + "' İsimli talep tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "SRTalepTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SRTalepTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -196,7 +197,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Talep tipi sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -2,11 +2,11 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 
-@model kmMezuniyetYonetmelik
+@model KmMezuniyetYonetmelik
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ots = Model.krMezuniyetYonetmelikOT.Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
+    var ots = Model.KrMezuniyetYonetmelikOt.Select(s => new { OgrenimTipKod = s.OgrenimTipKod, s.OgrenimTipAdi }).Distinct();
     var gKod = (List<CmbStringDto>)ViewBag.GrupKodu;
     var veVeya = (List<CmbBoolDto>)ViewBag.VeVeya;
 }
@@ -64,7 +64,7 @@
                             </div>
                             @foreach (var Otip in ots)
                             {
-                                var modelOt = Model.krMezuniyetYonetmelikOT.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
+                                var modelOt = Model.KrMezuniyetYonetmelikOt.Where(p => p.OgrenimTipKod == Otip.OgrenimTipKod).ToList();
                                 <div class="form-group">
                                     <div class="col-md-12 col-xs-12" id="_otBilgi">
                                         <div class="panel panel-default" style="padding: 0px; margin: 0px;">
@@ -86,7 +86,7 @@
                                                     <tbody id="Rw_tbody">
                                                         @foreach (var item in modelOt)
                                                         {
-                                                            var gID = item.OgrenimTipKod + "_" + item.MezuniyetYayinTurID;
+                                                            var gId = item.OgrenimTipKod + "_" + item.MezuniyetYayinTurID;
 
                                                             <tr class="rw_bst">
                                                                 <td>
@@ -97,42 +97,42 @@
                                                                                 @item.MezuniyetYayinTurAdi
                                                                             </label>
                                                                         </div>
-                                                                        <input type="text" class="hide" name="_MezuniyetYayinTurID" value="@gID" />
+                                                                        <input type="text" class="hide" name="_MezuniyetYayinTurID" value="@gId" />
                                                                     </div>
                                                                 <td>
                                                                     <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
                                                                         <div class="make-switch" data-on-label="Gçrli" data-off-label="Gçrsz" data-on="info" data-off="danger">
-                                                                            <input type="checkbox" id="chkIsGecerli_@gID" class="toggle" onchange="checkKontrol(this, '@gID')" @item.IsGecerli.ToChecked() />
+                                                                            <input type="checkbox" id="chkIsGecerli_@gId" class="toggle" onchange="checkKontrol(this, '@gId')" @item.IsGecerli.ToChecked() />
                                                                         </div>
-                                                                        <input type="text" class="hide" name="_IsGecerli" id="IsGecerli_@gID" value="@(gID)_@(item.IsGecerli ? 1 : 0)" />
+                                                                        <input type="text" class="hide" name="IsGecerlis" id="IsGecerli_@gId" value="@(gId)_@(item.IsGecerli ? 1 : 0)" />
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
                                                                         <div class="make-switch" data-on-label="Zorunlu" data-off-label="Z.Değil" data-on="info" data-off="danger">
-                                                                            <input type="checkbox" id="chkIsZorunlu_@gID" class="toggle" onchange="checkKontrol(this, '@gID')" @item.IsZorunlu.ToChecked() />
+                                                                            <input type="checkbox" id="chkIsZorunlu_@gId" class="toggle" onchange="checkKontrol(this, '@gId')" @item.IsZorunlu.ToChecked() />
                                                                         </div>
-                                                                        <input type="text" class="hide" name="_IsZorunlu" id="IsZorunlu_@gID" value="@(gID)_@(item.IsZorunlu ? 1 : 0)" />
+                                                                        <input type="text" class="hide" name="IsZorunlus" id="IsZorunlu_@gId" value="@(gId)_@(item.IsZorunlu ? 1 : 0)" />
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <select name="_GrupKodu" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gID">
+                                                                        <select name="GrupKodus" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gId">
                                                                             @foreach (var item2 in gKod)
                                                                             {
                                                                                 bool contains = item.GrupKodu == item2.Value;
-                                                                                <option value="@(gID + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
+                                                                                <option value="@(gId + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
                                                                             }
                                                                         </select>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="form-group @(item.Success.HasValue?(item.Success.Value?"has-success":"has-error"):"")">
-                                                                        <select name="_IsVeOrVeya" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gID">
+                                                                        <select name="IsVeOrVeyas" class="form-control select @(item.IsZorunlu?"":"hide") isZorunlu_@gId">
                                                                             @foreach (var item2 in veVeya)
                                                                             {
                                                                                 bool contains = item.IsVeOrVeya == item2.Value;
-                                                                                <option value="@(gID + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
+                                                                                <option value="@(gId + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>
                                                                             }
                                                                         </select>
                                                                     </div>

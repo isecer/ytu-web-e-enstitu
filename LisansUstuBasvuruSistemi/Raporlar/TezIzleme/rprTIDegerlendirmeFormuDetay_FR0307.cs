@@ -1,31 +1,26 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+﻿using System.Linq;
 using BiskaUtil;
-using System.Linq;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.TezIzleme
 {
-    public partial class rprTIDegerlendirmeFormuDetay_FR0307 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprTiDegerlendirmeFormuDetay_FR0307 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprTIDegerlendirmeFormuDetay_FR0307(int ID)
+        public RprTiDegerlendirmeFormuDetay_FR0307(int id)
         {
             InitializeComponent();
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.TIBasvuruAraRapors
-                            where s.TIBasvuruAraRaporID == ID
+                            where s.TIBasvuruAraRaporID == id
                             select new
                             {
                                 s.IsYokDrBursiyeriVar,
-                                Danisman = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault(),
-                                TikUyesi1 = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TikUyesi1").FirstOrDefault(),
-                                TikUyesi2 = s.TIBasvuruAraRaporKomites.Where(p => p.JuriTipAdi == "TikUyesi2").FirstOrDefault(),
+                                Danisman = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani"),
+                                TikUyesi1 = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi1"),
+                                TikUyesi2 = s.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi2"),
                             }).First();
 
                 this.DisplayName = "FR-0307 DOKTORA TEZ İZLEME RAPOR FORMU DEĞERLENDİRME EKİ";

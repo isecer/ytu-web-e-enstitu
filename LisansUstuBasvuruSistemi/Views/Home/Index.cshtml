@@ -6,12 +6,12 @@
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml"; 
-    bool IsMesajGonder = (bool)ViewBag.IsMesajGonder;
-    var MesajGroupID = (string)ViewBag.MesajGroupID;
-    var Duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
-    var AnketGiris = (string)ViewBag.AnketGiris;
+    bool isMesajGonder = (bool)ViewBag.IsMesajGonder;
+    var mesajGroupId = (string)ViewBag.MesajGroupID;
+    var duyurular = (List<FrDuyurularDto>)ViewBag.Duyurular;
+    var anketGiris = (string)ViewBag.AnketGiris;
 }
-@if (Duyurular.Count > 0)
+@if (duyurular.Count > 0)
 {
     <div class="row">
 
@@ -33,7 +33,7 @@
                         <table class="table">
                             <tbody>
 
-                                @foreach (var item in Duyurular)
+                                @foreach (var item in duyurular)
                                 {
 
                                     <tr class="cls-@item.DuyuruID">
@@ -176,16 +176,16 @@
 </div>
 
 
-@if ((MesajGroupID != null && MesajGroupID != ""))
+@if ((mesajGroupId != null && mesajGroupId != ""))
 {
     <script>
 
         setTimeout(function () {
-            mesGonder('@MesajGroupID');
+            mesGonder('@mesajGroupId');
         }, 1200);
     </script>
 }
-else if (IsMesajGonder)
+else if (isMesajGonder)
 {
     <script>
         setTimeout(function () {
@@ -193,7 +193,7 @@ else if (IsMesajGonder)
         }, 1200);
     </script>
 }
-@if (AnketGiris != null)
+@if (anketGiris != null)
 {
 
     <script src="~/Content/assets/plugins/bootbox/bootbox.min.js"></script>
@@ -201,7 +201,7 @@ else if (IsMesajGonder)
 
         setTimeout(getAnket(), 10);
         function getAnket() {
-            var _AnketGiris = @Html.Raw(Json.Encode(AnketGiris));
+            var _AnketGiris = @Html.Raw(Json.Encode(anketGiris));
             var btbxxFS = bootbox.dialog({
                 message: _AnketGiris,
                 buttons:

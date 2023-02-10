@@ -7,10 +7,10 @@
 @model BasvuruSinavBilgiGrupDto
 @{
     Layout = null;
-    string Color = Model.DurumColor; 
+    string color = Model.DurumColor; 
 }
 
-<table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@Color;">
+<table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@color;">
     <tr>
         <td width="140" class="myCaptionTd">
             Sınav Türü
@@ -216,7 +216,7 @@
                     }
                     else
                     {
-                        minNot = Model.SinavDetay.Min.toStrObjEmptString();
+                        minNot = Model.SinavDetay.Min.ToStrObjEmptString();
                     }
                     var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrup.Tomer ? 
                                     (Model.IsTurkceProgramVar ? "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim." : "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.") 

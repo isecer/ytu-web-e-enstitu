@@ -2,7 +2,7 @@
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMulakatSonuc
+    public class FmMulakatSonuc
     {
         public int ToplamTercihCount { get; set; }
         public int HesaplananTercihCount { get; set; }
@@ -12,19 +12,21 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool TumProgramlarHesaplandi { get; set; }
         public int MulakatSurecineGirecekToplamBasvuru { get; set; }
         public int MulakatSurecineGirmeyecekToplamBasvuru { get; set; }
-        public List<fmMsonucOranModel> OranModel { get; set; }
-        public List<frMulakatSonucDetay> MulakatSonucDetay { get; set; }
-        public fmMulakatSonuc()
+        public List<FmMsonucOranModel> OranModel { get; set; }
+        public List<FrMulakatSonucDetay> MulakatSonucDetay { get; set; }
+        public FmMulakatSonuc()
         {
-            MulakatSonucDetay = new List<frMulakatSonucDetay>();
-            OranModel = new List<fmMsonucOranModel>();
-            OranModel.Add(new fmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanIci });
-            OranModel.Add(new fmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanDisi });
-            OranModel.Add(new fmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanIci });
-            OranModel.Add(new fmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanDisi });
+            MulakatSonucDetay = new List<FrMulakatSonucDetay>();
+            OranModel = new List<FmMsonucOranModel>
+            {
+                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanIci },
+                new FmMsonucOranModel { MulakatSurecineGirecek = true, AlanTipID = AlanTipi.AlanDisi },
+                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanIci },
+                new FmMsonucOranModel { MulakatSurecineGirecek = false, AlanTipID = AlanTipi.AlanDisi }
+            };
         }
     }
-    public class frMulakatSonucDetay
+    public class FrMulakatSonucDetay
     {
         public int? MulakatID { get; set; }
         public int OgrenimTipKod { get; set; }

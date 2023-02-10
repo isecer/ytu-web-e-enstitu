@@ -1,14 +1,14 @@
+using System.Linq;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
-using System.Linq;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
-    public partial class rprTezDanismaniDegisiklikFormu_FR0308 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprTezDanismaniDegisiklikFormu_FR0308 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprTezDanismaniDegisiklikFormu_FR0308(int id)
+        public RprTezDanismaniDegisiklikFormu_FR0308(int id)
         {
             InitializeComponent();
 
@@ -29,7 +29,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                          select new
                          {
                              s.TDODanismanTalepTipID,
-                             isDrBasvurusu = b.OgrenimTipKod == OgrenimTipi.Doktra || b.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora,
+                             b.OgrenimTipKod,
                              s.BasvuruTarihi,
                              s.FormKodu,
                              urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TDOF_" + s.TDOBasvuruDanismanID + "_" + s.UniqueID,
@@ -107,10 +107,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     cellYeniTezBaslikTr.Text = q.YeniTezBaslikTr;
                     cellYeniTezBaslikEn.Text = q.YeniTezBaslikEn;
                 }
-                this.detGrupTezDiliDr.Visible = q.isDrBasvurusu;
-                this.rwTezOneriTarihDr.Visible = q.isDrBasvurusu;
-                this.rwTezOneriYapildiDr.Visible = q.isDrBasvurusu;
-                this.rwTezSayisiDr.Visible = q.isDrBasvurusu;
+                this.detGrupTezDiliDr.Visible = q.OgrenimTipKod.IsDoktora();
+                this.rwTezOneriTarihDr.Visible = q.OgrenimTipKod.IsDoktora();
+                this.rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
+                this.rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();
 
                 this.CellMevcutDanismanAd.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
                 this.cellMevcutDanismanAnabilimDali.Text = q.VarolanTDAnabilimDaliAdi;

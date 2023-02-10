@@ -2,7 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  fmMezuniyetYayinTurleri
+@model  FmMezuniyetYayinTurleri
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -48,7 +48,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.data)
+                                foreach (var item in Model.Data)
                                 {
                                     RowIndex++;
                                     <tr>

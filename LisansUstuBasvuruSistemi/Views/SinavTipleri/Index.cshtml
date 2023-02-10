@@ -1,9 +1,9 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
-@model  fmSinavTipleri
+@model  FmSinavTipleri
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
@@ -16,9 +16,9 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Sınav Tipi Listesi</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -63,16 +63,15 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.data)
+                                int rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.FrSinavTipleris)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++;
                                     <tr>
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.SinavTipID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SinavTipID')">
@@ -151,7 +150,7 @@
         var tbName = "@TabAdlari.SinavTipTN-" + id;
         var tID = getSelectedTabID(tbName);
         $.ajax({
-            url: '@Url.Action("getDetail", "SinavTipleri")',
+            url: '@Url.Action("GetDetail", "SinavTipleri")',
             data: { id: id, tbInx: tID },
             success: function (result) {
                 if (Isdelete != true) {
@@ -217,7 +216,7 @@
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("SilSTPK", "SinavTipleri")',
+                            url: '@Url.Action("SilStpk", "SinavTipleri")',
                             data: { id: id },
                             success: function (result) {
                                 toastr[result.success ? "success" : "error"](result.message, "Programa özel not kriteri silme işlemi")

@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmProgramlar : PagerOption
+    public class FmProgramlar : PagerOption
     {
         public bool Expand { get; set; }
         public string EnstituKod { get; set; }
@@ -22,10 +22,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? ProgramSecimiEkBilgi { get; set; }
         public bool? IsAlandisiBolumKisitlamasi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frProgramlar> data { get; set; }
+        public IEnumerable<FrProgramlar> data { get; set; }
 
     }
-    public class frProgramlar : Programlar
+    public class FrProgramlar : Programlar
     {
         public string EnstituKod { get; set; }
         public string EnstituAd { get; set; }

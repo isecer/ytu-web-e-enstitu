@@ -4,9 +4,8 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmMezuniyetBasvurulari
-@{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+@model  FmMezuniyetBasvurulari
+@{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     var kyetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
@@ -141,7 +140,7 @@
                             {
 
                                 var rowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.Data)
+                                foreach (var item in Model.FrMezuniyetBasvurularis)
                                 {
                                     rowIndex++;
                                     trCls = rowIndex % 2 == 1 ? "" : "even";
@@ -210,7 +209,7 @@
 {
     <script>
         $(function () {
-            showDetail('@(Model.Data.First().MezuniyetBasvurulariID)',@(Model.RowID.HasValue?4:1));
+            showDetail('@(Model.FrMezuniyetBasvurularis.First().MezuniyetBasvurulariID)',@(Model.RowID.HasValue?4:1));
         },200)
     </script>
 }
@@ -542,7 +541,7 @@
             var ibtID = $('#SRDurumID_' + SRTalepID).val();
             var ibTipAciklama = $('#SRDurumAciklamasi_' + SRTalepID).val();
             $.ajax({
-                url: '@Url.Action("SRDurumKaydet", "MezuniyetGelenBasvurular")',
+                url: '@Url.Action("SrDurumKaydet", "MezuniyetGelenBasvurular")',
                 data: {
                     'id': SRTalepID,
                     'SRDurumID': ibtID,
@@ -571,7 +570,7 @@
                 dt = _ay + "-" + _gun + "-" + _yil;
             }
             $.ajax({
-                url: '@Url.Action("SRSinavDurumKaydet", "MezuniyetGelenBasvurular")',
+                url: '@Url.Action("SrSinavDurumKaydet", "MezuniyetGelenBasvurular")',
                 data: {
                     'id': SRTalepID,
                     'MezuniyetSinavDurumID': snvDrmID,

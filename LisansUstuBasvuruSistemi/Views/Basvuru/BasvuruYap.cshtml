@@ -709,7 +709,7 @@
 
                                                         $dst.empty();
                                                         $.ajax({
-                                                            url: '@Url.Action("dAktifSinavlar", "Ajax")',
+                                                            url: '@Url.Action("DAktifSinavlar", "Ajax")',
                                                             type: 'POST',
                                                             enctype: "multipart/form-data",
                                                             cache: false,
@@ -1073,7 +1073,7 @@
         }
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getBolumler", "Ajax")',
+                url: '@Url.Action("GetBolumler", "Ajax")',
                 data: { 'BasvuruSurecID': _BasvuruSurecID, 'otKod': sndrVal, 'KTipID': kTipID },
                 success: function (result) {
                     $('#AnabilimdaliKod').empty();
@@ -1236,7 +1236,7 @@
         var kulTipID =@Model.KullaniciTipID;
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getProgramlar", "Ajax")',
+                url: '@Url.Action("GetProgramlar", "Ajax")',
                 data: { 'bolID': sndrVal, 'otID': otID, 'BasvuruSurecID': bSurecID, 'KullaniciTipID': kulTipID },
                 success: function (result) {
                     $('#ProgramKod').empty();

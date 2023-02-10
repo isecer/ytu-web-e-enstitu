@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmAnketlerCevap
+    public class KmAnketlerCevap
     {
         public int AnketTipID { get; set; }
         public string RowID { get; set; }
@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> TabloVeri4 { get; set; }
         public List<string> TabloVeri5 { get; set; }
         public List<string> AnketSoruSecenekAciklama { get; set; }
-        public kmAnketlerCevap()
+        public KmAnketlerCevap()
         {
             AnketCevapModel = new List<AnketCevapDto>();
             AnketSoruID = new List<int>();

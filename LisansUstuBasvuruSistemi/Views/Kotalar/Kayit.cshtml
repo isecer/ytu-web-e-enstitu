@@ -164,7 +164,7 @@
         }
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getKullaniciBolumProgramList", "Ajax")',
+                url: '@Url.Action("GetKullaniciBolumProgramList", "Ajax")',
                 data: { 'EnstituKod': EnstituKod, 'BolumKod': sndrVal, 'Tip': tip },
                 success: function (result) {
                     var opt = "";
@@ -199,7 +199,7 @@
         mlktKontrol();
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getOts", "Ajax")',
+                url: '@Url.Action("GetOts", "Ajax")',
                 data: { 'EnstituKod': sndrVal },
                 success: function (result) {
                     var opt = "";

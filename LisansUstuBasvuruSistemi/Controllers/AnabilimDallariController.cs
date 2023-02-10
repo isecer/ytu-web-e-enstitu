@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.AnabilimDallari)]
     public class AnabilimDallariController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
             return Index(new FmAnabilimDallariDto { });
@@ -25,10 +25,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmAnabilimDallariDto model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.AnabilimDallaris
-                    join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    where EnstKods.Contains(s.EnstituKod)
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.AnabilimDallaris
+                    join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
+                    where enstKods.Contains(s.EnstituKod)
                     select new FrAnabilimDallariDto
                     {
                         AnabilimDaliID = s.AnabilimDaliID,
@@ -48,28 +48,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AnabilimDaliAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliAdi.Contains(model.AnabilimDaliAdi));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.AnabilimDaliAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.FrAnabilimDallaris = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.FrAnabilimDallaris = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
         public ActionResult Kayit(int? id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new AnabilimDallari();
             if (id > 0)
             {
-                var data = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == id).FirstOrDefault();
+                var data = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == id);
                 if (data != null)
                 {
                     model = data;
@@ -83,45 +84,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(AnabilimDallari kModel)
         {
-            var MmMessage = new MmMessage(); 
+            var mmMessage = new MmMessage(); 
             #region Kontrol
             
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            {
-                string msg = "Enstitü seçiniz";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod"});
+            { 
+                mmMessage.Messages.Add("Enstitü seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod"});
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.AnabilimDaliKod.IsNullOrWhiteSpace())
-            {
-                string msg = "Anabilim Dalı Kodunu Giriniz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
+            { 
+                mmMessage.Messages.Add("Anabilim Dalı Kodunu Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliKod" });
             if (kModel.AnabilimDaliAdi.IsNullOrWhiteSpace())
-            {
-                string msg = "Anabilim Dalı Adını Giriniz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi"});
+            { 
+                mmMessage.Messages.Add("Anabilim Dalı Adını Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi"});
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliAdi" });
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                var cnt = db.AnabilimDallaris.Where(p => p.AnabilimDaliKod == kModel.AnabilimDaliKod && p.EnstituKod == kModel.EnstituKod && p.AnabilimDaliID != kModel.AnabilimDaliID).Count();
+                var cnt = _entities.AnabilimDallaris.Count(p => p.AnabilimDaliKod == kModel.AnabilimDaliKod && p.EnstituKod == kModel.EnstituKod && p.AnabilimDaliID != kModel.AnabilimDaliID);
                 if (cnt > 0)
-                {
-                    string msg = "Tanımlamak istediğiniz Anabilim Dalı kodu daha önceden sisteme tanımlanmıştır.";
-                    MmMessage.Messages.Add(msg);
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
+                { 
+                    mmMessage.Messages.Add("Tanımlamak istediğiniz Anabilim Dalı kodu daha önceden sisteme tanımlanmıştır.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
                 }
 
             }
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
@@ -129,11 +126,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.AnabilimDaliID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var enst = db.AnabilimDallaris.Add(kModel);
+                    var enst = _entities.AnabilimDallaris.Add(kModel);
                 }
                 else
                 {
-                    var data = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == kModel.AnabilimDaliID).First();
+                    var data = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == kModel.AnabilimDaliID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.AnabilimDaliKod = kModel.AnabilimDaliKod;
                     data.AnabilimDaliAdi = kModel.AnabilimDaliAdi;
@@ -143,22 +140,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = DateTime.Now; ;
 
                 } 
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod); 
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == id).FirstOrDefault(); 
+            var kayit = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == id); 
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -167,14 +164,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.AnabilimDaliAdi + "' İsimli Anabilim Dalı Silindi!";
-                    db.AnabilimDallaris.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.AnabilimDallaris.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + kayit.AnabilimDaliAdi + "' İsimli Anabilim Dalı Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "AnabilimDallari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "AnabilimDallari/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -182,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Anabilim Dalı sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

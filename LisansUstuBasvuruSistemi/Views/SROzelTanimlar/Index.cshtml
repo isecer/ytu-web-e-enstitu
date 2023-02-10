@@ -2,10 +2,9 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
-@model  fmOzelTanimlar
+@model  FmOzelTanimlar
 @{
     ViewBag.Title = "Index";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     var haftaGunleri = (List<HaftaGunleri>)ViewBag.HaftaGunleri;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -67,7 +66,7 @@
                             {
 
                                 int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.data)
+                                foreach (var item in Model.FrOzelTanimlars)
                                 {
                                     RowIndex++;
                                     trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -131,7 +130,7 @@
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Kayit", "SROzelTanimlar" , new { id=item.SROzelTanimID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="@Url.Action("Kayit", "SrOzelTanimlar" , new { id=item.SROzelTanimID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="getDetail('@item.SROzelTanimID',true,this)"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                         </td>
                                     </tr>
@@ -173,7 +172,7 @@
         var _panel = $('#dvDetay_' + id);
         _pRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getDetail", "SROzelTanimlar")',
+            url: '@Url.Action("GetDetail", "SrOzelTanimlar")',
             data: { id: id },
             success: function (result) {
                 if (Isdelete != true) {
@@ -214,7 +213,7 @@
     }
     function sil(sndr, id) {
         $.ajax({
-            url: '@Url.Action("Sil", "SROzelTanimlar")',
+            url: '@Url.Action("Sil", "SrOzelTanimlar")',
             data: { id: id },
             success: function (result) {
                 toastr[result.success ? "success" : "error"](result.message, "Özel Tanım Silme İşlemi")

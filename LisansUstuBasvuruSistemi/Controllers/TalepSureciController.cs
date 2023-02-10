@@ -19,21 +19,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class TalepSureciController : Controller
     {
         // GET: FRDonemIslemleri
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmTalepSurec() { PageSize = 15 });
+            return Index(new FmTalepSurec() { PageSize = 15 });
         }
         [HttpPost]
-        public ActionResult Index(fmTalepSurec model)
+        public ActionResult Index(FmTalepSurec model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var nowDate = DateTime.Now;
-            var q = from s in db.TalepSurecleris
-                    join el in db.Enstitulers on s.EnstituKod equals el.EnstituKod
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where EnstKods.Contains(s.EnstituKod)
-                    select new frTalepSurec()
+            var q = from s in _entities.TalepSurecleris
+                    join el in _entities.Enstitulers on s.EnstituKod equals el.EnstituKod
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    where enstKods.Contains(s.EnstituKod)
+                    select new FrTalepSurec()
                     {
                         EnstituAdi = el.EnstituAd,
                         TalepSurecID = s.TalepSurecID,
@@ -48,25 +48,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AktifSurec = (s.BaslangicTarihi <= nowDate && s.BitisTarihi >= nowDate)
                     };
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(t => t.BaslangicTarihi);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(t => t.BaslangicTarihi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
-            var IndexModel = new MIndexBilgi() { Toplam = model.RowCount, Pasif = q.Where(p => !p.IsAktif).Count() };
-            IndexModel.Aktif = IndexModel.Toplam - IndexModel.Pasif;
-            ViewBag.IndexModel = IndexModel;
+            var indexModel = new MIndexBilgi() { Toplam = model.RowCount, Pasif = q.Count(p => !p.IsAktif) };
+            indexModel.Aktif = indexModel.Toplam - indexModel.Pasif;
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", model.IsAktif);
             return View(model);
         }
-        public ActionResult Kayit(int? id, string EKD)
+        public ActionResult Kayit(int? id, string ekd)
         {
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
-            var model = new TalepSurecleri();
-            model.IsAktif = true;
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
+            var model = new TalepSurecleri
+            {
+                IsAktif = true
+            };
             if (id.HasValue && id > 0)
             {
-                var data = db.TalepSurecleris.Where(p => p.TalepSurecID == id).FirstOrDefault();
+                var data = _entities.TalepSurecleris.FirstOrDefault(p => p.TalepSurecID == id);
 
                 if (data != null)
                 {
@@ -84,91 +85,89 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else model.TalepSureciTalepTipleris = new List<TalepSureciTalepTipleri>();
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
-            ViewBag.TalepTipleris = db.TalepTipleris.ToList();
+            ViewBag.TalepTipleris = _entities.TalepTipleris.ToList();
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", model.IsAktif);
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? _EnstituKod);
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod ?? enstituKod);
             ViewBag.TalepTipID = model.TalepSureciTalepTipleris.Select(s => s.TalepTipID).ToList();
             return View(model);
         }
         [HttpPost]
 
-        public ActionResult Kayit(TalepSurecleri kModel, List<int> TalepTipID)
+        public ActionResult Kayit(TalepSurecleri kModel, List<int> talepTipId)
         {
-            var MmMessage = new MmMessage();
-            TalepTipID = TalepTipID ?? new List<int>();
+            var mmMessage = new MmMessage();
+            talepTipId = talepTipId ?? new List<int>();
             #region Kontrol  
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            {
-                string msg = "Enstitü Seçiniz";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+            { 
+                mmMessage.Messages.Add("Enstitü Seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
 
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.BaslangicTarihi == DateTime.MinValue || kModel.BitisTarihi == DateTime.MinValue)
             {
                 if (kModel.BaslangicTarihi == DateTime.MinValue)
                 {
-                    MmMessage.Messages.Add("Başlangıç Tarihi Seçiniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.Messages.Add("Başlangıç Tarihi Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
 
                 }
                 if (kModel.BitisTarihi == DateTime.MinValue)
                 {
-                    MmMessage.Messages.Add("Bitiş Tarihi Seçiniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.Messages.Add("Bitiş Tarihi Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
 
                 }
 
             }
             else if (kModel.BaslangicTarihi >= kModel.BitisTarihi)
             {
-                MmMessage.Messages.Add("Başlangıç Tarihi Bitiş Tarihinden Büyükya daEşit Olamaz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                mmMessage.Messages.Add("Başlangıç Tarihi Bitiş Tarihinden Büyükya daEşit Olamaz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
             }
             else
             {
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BaslangicTarihi" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BitisTarihi" });
             }
 
-            if (TalepTipID.Count == 0)
-            {
-                string msg = "En az bir talep tipi seçilmelidir";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipID" });
+            if (talepTipId.Count == 0)
+            { 
+                mmMessage.Messages.Add("En az bir talep tipi seçilmelidir");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipID" });
 
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
-            if (MmMessage.Messages.Count == 0)
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
+            if (mmMessage.Messages.Count == 0)
             {
-                if (db.TalepSurecleris.Any(a => a.EnstituKod == kModel.EnstituKod &&
+                if (_entities.TalepSurecleris.Any(a => a.EnstituKod == kModel.EnstituKod &&
                                                 a.TalepSurecID != kModel.TalepSurecID &&
                                                 (
                                                     (a.BaslangicTarihi <= kModel.BaslangicTarihi && a.BitisTarihi >= kModel.BaslangicTarihi) ||
                                                     (a.BaslangicTarihi <= kModel.BitisTarihi && a.BitisTarihi >= kModel.BitisTarihi)))
                                                 )
                 {
-                    MmMessage.Messages.Add("Seçilen başlangıç bitiş tarihleri daha önceden kayıt edilen süreçlerle çakışmaması gerekmektedir.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
+                    mmMessage.Messages.Add("Seçilen başlangıç bitiş tarihleri daha önceden kayıt edilen süreçlerle çakışmaması gerekmektedir.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BitisTarihi" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BaslangicTarihi" });
                 }
             }
             #endregion
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
-                var Table = new TalepSurecleri();
-                var TalepTipleris = db.TalepTipleris.Where(p => TalepTipID.Contains(p.TalepTipID)).ToList();
-                var TalepSureciTalepTipleris =
-                     TalepTipleris.Select(s => new TalepSureciTalepTipleri { TalepTipID = s.TalepTipID, IsBelgeYuklemeVar = s.IsBelgeYuklemeVar, IsTaahhutIsteniyor = s.IsTaahhutIsteniyor }).ToList();
+                TalepSurecleri table;
+                var talepTipleris = _entities.TalepTipleris.Where(p => talepTipId.Contains(p.TalepTipID)).ToList();
+                var talepSureciTalepTipleris =
+                     talepTipleris.Select(s => new TalepSureciTalepTipleri { TalepTipID = s.TalepTipID, IsBelgeYuklemeVar = s.IsBelgeYuklemeVar, IsTaahhutIsteniyor = s.IsTaahhutIsteniyor }).ToList();
                 if (kModel.TalepSurecID <= 0)
                 {
-                    Table = db.TalepSurecleris.Add(new TalepSurecleri()
+                    table = _entities.TalepSurecleris.Add(new TalepSurecleri()
                     {
                         EnstituKod = kModel.EnstituKod,
                         BaslangicTarihi = kModel.BaslangicTarihi,
@@ -177,36 +176,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemTarihi = kModel.IslemTarihi,
                         IslemYapanID = kModel.IslemYapanID,
                         IslemYapanIP = kModel.IslemYapanIP,
-                        TalepSureciTalepTipleris = TalepSureciTalepTipleris
+                        TalepSureciTalepTipleris = talepSureciTalepTipleris
 
                     });
                 }
                 else
                 {
-                    Table = db.TalepSurecleris.Where(p => p.TalepSurecID == kModel.TalepSurecID).First();
-                    Table.EnstituKod = kModel.EnstituKod;
-                    Table.BaslangicTarihi = kModel.BaslangicTarihi;
-                    Table.BitisTarihi = kModel.BitisTarihi;
-                    Table.IsAktif = kModel.IsAktif;
-                    Table.IslemTarihi = DateTime.Now;
-                    Table.IslemYapanID = kModel.IslemYapanID;
-                    Table.IslemYapanIP = kModel.IslemYapanIP;
-                    db.TalepSureciTalepTipleris.RemoveRange(Table.TalepSureciTalepTipleris);
-                    Table.TalepSureciTalepTipleris = TalepSureciTalepTipleris;
+                    table = _entities.TalepSurecleris.First(p => p.TalepSurecID == kModel.TalepSurecID);
+                    table.EnstituKod = kModel.EnstituKod;
+                    table.BaslangicTarihi = kModel.BaslangicTarihi;
+                    table.BitisTarihi = kModel.BitisTarihi;
+                    table.IsAktif = kModel.IsAktif;
+                    table.IslemTarihi = DateTime.Now;
+                    table.IslemYapanID = kModel.IslemYapanID;
+                    table.IslemYapanIP = kModel.IslemYapanIP;
+                    _entities.TalepSureciTalepTipleris.RemoveRange(table.TalepSureciTalepTipleris);
+                    table.TalepSureciTalepTipleris = talepSureciTalepTipleris;
 
 
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            ViewBag.TalepTipleris = db.TalepTipleris.ToList();
-            ViewBag.TalepTipID = TalepTipID;
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.TalepTipleris = _entities.TalepTipleris.ToList();
+            ViewBag.TalepTipID = talepTipId;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
@@ -216,7 +215,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
 
-            var kayit = db.TalepSurecleris.Where(p => p.TalepSurecID == id).FirstOrDefault();
+            var kayit = _entities.TalepSurecleris.FirstOrDefault(p => p.TalepSurecID == id);
 
             string message = "";
             if (kayit != null)
@@ -224,8 +223,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.BaslangicTarihi.ToFormatDateAndTime() + " / " + kayit.BitisTarihi.ToFormatDateAndTime() + "' Tarihli Talep Süreci Silindi!";
-                    db.TalepSurecleris.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.TalepSurecleris.Remove(kayit);
+                    _entities.SaveChanges();
                     mmMessage.Title = "Uyarı";
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = Msgtype.Success;
@@ -234,7 +233,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     message = "'" + kayit.BaslangicTarihi.ToFormatDateAndTime() + " / " + kayit.BitisTarihi.ToFormatDateAndTime() + "' Tarihli Talep Süreci Silinirken Bir Hata Oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "TalepSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     mmMessage.Title = "Hata";
                     mmMessage.Messages.Add(message);
                     mmMessage.MessageType = Msgtype.Error;
@@ -250,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = true;
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

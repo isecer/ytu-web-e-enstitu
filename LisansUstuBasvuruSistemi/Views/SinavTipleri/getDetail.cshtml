@@ -3,7 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model frSinavTipleri
+@model FrSinavTipleri
 @{
 
     Layout = null;
@@ -64,7 +64,7 @@
                                             <label class="col-md-4 col-sm-5 control-label">Web servisi dönemler</label>
                                             <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
                                                 <table class="table" style="width:100%;table-layout:fixed;">
-                                                    @if (Model.krSinavTipleriDonems.Count == 0)
+                                                    @if (Model.KrSinavTipleriDonems.Count == 0)
                                                     {
                                                         <tr>
                                                             <td colspan="3" style="color:red;">Dönem Tanımlaması Yapılmamış! <br /> Lütfen Dönem Tanımlamas Yapınız!</td>
@@ -76,7 +76,7 @@
                                                             <th>Yıl</th> 
                                                             <th width="110"></th>
                                                         </tr>
-                                                        foreach (var kt in Model.krSinavTipleriDonems.OrderBy(o => o.Yil).ThenBy(t => t.WsDonemKod))
+                                                        foreach (var kt in Model.KrSinavTipleriDonems.OrderBy(o => o.Yil).ThenBy(t => t.WsDonemKod))
                                                         {
                                                             <tr>
                                                                 <td>@kt.Yil</td> 
@@ -242,7 +242,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (var item2 in Model.SinavTipleriOTNotAraliklariList)
+                                                    @foreach (var item2 in Model.SinavTipleriOtNotAraliklariList)
                                                     {
                                                         <tr>
                                                             <td>
@@ -334,7 +334,7 @@
                                         <div class="panel-heading  padding-0">
                                             <div class="portlet-title">
                                                 <ul class="panel-controls">
-                                                    <li><a href="javascript:void(0)" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("STProgramaOzelNotKriterEkle", "SinavTipleri", new { id = "", SinavTipID = Model.SinavTipID })')" class="panel-refresh" title="Yeni Ekle"><span class="fa fa-plus"></span></a></li>
+                                                    <li><a href="javascript:void(0)" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("StProgramaOzelNotKriterEkle", "SinavTipleri", new { id = "", SinavTipID = Model.SinavTipID })')" class="panel-refresh" title="Yeni Ekle"><span class="fa fa-plus"></span></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -351,10 +351,10 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if (Model.frSinavTipleriSPA.Count > 0)
+                                                    @if (Model.FrSinavTipleriSpa.Count > 0)
                                                     {
                                                         int RowIndex = 0; string trCls = "odd";
-                                                        foreach (var item in Model.frSinavTipleriSPA)
+                                                        foreach (var item in Model.FrSinavTipleriSpa)
                                                         {
                                                             RowIndex++;
                                                             trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -376,7 +376,7 @@
                                                                 <td>Kriter @RowIndex</td>
                                                                 <td style="text-align:center;">@item.SinavTipleriOT_SNA_PR.Count</td>
                                                                 <td>
-                                                                    <a href="javascript:void(0);" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("STProgramaOzelNotKriterEkle", "SinavTipleri", new { id = item.SinavTipleriOT_SNAID, SinavTipID = Model.SinavTipID })')"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                                    <a href="javascript:void(0);" onclick="STProgramaOzelNotKriteriEkle('@Url.Action("StProgramaOzelNotKriterEkle", "SinavTipleri", new { id = item.SinavTipleriOT_SNAID, SinavTipID = Model.SinavTipID })')"><i class="fa fa-edit  tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                                                     <a href="javascript:void(0);" onclick="STPKSil('@item.SinavTipleriOT_SNAID',@Model.SinavTipID)"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                                                 </td>
                                                             </tr>
@@ -410,7 +410,7 @@
                                                                                                             </tr>
                                                                                                         </thead>
                                                                                                         <tbody>
-                                                                                                            @foreach (var item2 in item.SinavTipleriOTNotAraliklariList)
+                                                                                                            @foreach (var item2 in item.SinavTipleriOtNotAraliklariList)
                                                                                                             {
                                                                                                                 <tr>
                                                                                                                     <td>

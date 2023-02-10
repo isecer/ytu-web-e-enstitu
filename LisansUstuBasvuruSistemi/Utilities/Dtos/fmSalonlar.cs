@@ -7,20 +7,20 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSalonlar : PagerOption
+    public class FmSalonlar : PagerOption
     {
         public string EnstituKod { get; set; }
         public string SalonAdi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frSalonlar> data { get; set; }
+        public IEnumerable<FrSalonlar> FrSalonlars { get; set; }
 
     }
-    public class frSalonlar : SRSalonlar
+    public class FrSalonlar : SRSalonlar
     {
         public string EnstituAdi { get; set; }
         public string IslemYapan { get; set; }
         public List<SRSaatlerMDL> Saatler { get; set; }
-        public List<SRSalonTalepTipleri> SRSalonTalepTipleri { get; set; }
+        public List<SRSalonTalepTipleri> SrSalonTalepTipleris { get; set; }
 
     }
 }

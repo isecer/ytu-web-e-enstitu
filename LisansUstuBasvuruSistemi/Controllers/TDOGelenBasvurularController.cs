@@ -74,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AktifDonemAdi = Ard == null ? "Danışman Önerisi Yok" : (Ard.DonemBaslangicYil + " / " + (Ard.DonemBaslangicYil + 1) + " " + (Ard.DonemID == 1 ? "Güz" : "Bahar")),
                         EYKYaGonderildiIslemTarihi = Ard == null ? null : Ard.EYKYaGonderildiIslemTarihi,
                         EYKYaGonderildiIslemTarihiES = ardEs == null ? null : ardEs.EYKYaGonderildiIslemTarihi,
-                        TDOBasvuruDanisman = Ard, 
+                        TDOBasvuruDanisman = Ard,
                         VarolanTezDanismanID = Ard != null ? Ard.VarolanTezDanismanID : null,
                         VarolanDanismanOnayladi = Ard != null ? Ard.VarolanDanismanOnayladi : null,
                         DanismanOnayladi = Ard != null ? Ard.DanismanOnayladi : null,
@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EsDanismanOnerisiVar = ardEs != null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
                         Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null,
-                        RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (Ard.EYKYaGonderildi == true && !Ard.EYKDaOnaylandi.HasValue ? Ard.EYKYaGonderildiIslemTarihi.Value : (Ard!=null?Ard.BasvuruTarihi:DateTime.MinValue))),
+                        RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (Ard.EYKYaGonderildi == true && !Ard.EYKDaOnaylandi.HasValue ? Ard.EYKYaGonderildiIslemTarihi.Value : (Ard != null ? Ard.BasvuruTarihi : DateTime.MinValue))),
                         Sira = (Ard != null && (Ard.EYKYaGonderildi == true && Ard.EYKDaOnaylandi == null) || (ardEs != null && ardEs.EYKYaGonderildi == null)) ? 0 : 1,
                         TDODanismanDetayModels = (from x in s.TDOBasvuruDanismen
                                                   join xd in _entities.TDOBasvuruEsDanismen on x.TDOBasvuruDanismanID equals xd.TDOBasvuruDanismanID into defX
@@ -103,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                       Es_EYKYaGonderildi = xD != null ? xD.EYKYaGonderildi : null,
                                                       Es_EYKDaOnaylandi = xD != null ? xD.EYKDaOnaylandi : null,
                                                       Es_FormKodu = xD != null ? xD.FormKodu : null
-                                                  }).ToList(), 
+                                                  }).ToList(),
                     };
             var q2 = q;
             if (tdoDanismanOnayYetkisi && !tdoGelenBasvuruKayit)
@@ -119,7 +119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.AktifDurumID == TDODansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
                 else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylandi) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false&& !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false && !p.EYKDaOnaylandi.HasValue);
                 else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnayBekleniyor) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
                 else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnaylandi) q = q.Where(p => p.EYKDaOnaylandi == true);
                 else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.EYKDaOnaylandi == false);
@@ -161,13 +161,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var isFiltered = q != q2;
 
-            model.RowCount = q.Count(); 
+            model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
             else if (model.AktifDurumID == 5 || model.DurumID == 5)
                 q = q.OrderBy(o => o.EYKYaGonderildiIslemTarihi);
             else if (model.AktifEsDurumID == 5 || model.EsDurumID == 5)
                 q = q.OrderBy(o => o.EYKYaGonderildiIslemTarihiES);
-            else q = q.OrderBy(o => o.Sira).ThenByDescending(o => o.RowDate); 
+            else q = q.OrderBy(o => o.Sira).ThenByDescending(o => o.RowDate);
 
             var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = ps.PageIndex;
@@ -193,7 +193,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     DanismanOnayladi = s.TDOBasvuruDanisman != null ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
                     EYKYaGonderildi = s.TDOBasvuruDanisman != null ? (s.EYKYaGonderildi.HasValue ? (s.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Danışman Yok",
                     EYKDaOnaylandi = s.TDOBasvuruDanisman != null ? (s.EYKYaGonderildi.HasValue ? (s.EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Danışman Yok",
-                    EsDanismanAdSoyad = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
+                    EsDanismanAdSoyad = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanismen.SelectMany(s2 => s2.TDOBasvuruEsDanismen).Any() ? (s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad) : "Danışman Yok",
                     EsDanismanOnayladi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.DanismanOnayladi.HasValue ? (s.DanismanOnayladi.Value ? "Danışman Onayladı" : "Danışman Onaylamadı") : "Danışman Onayı Bekleniyor") : "Danışman Yok",
                     EsDanismanEYKYaGonderildi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.FirstOrDefault().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.FirstOrDefault().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
                     EsDanismanEYKDaOnaylandi = s.TDOBasvuruDanisman != null && s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.Any() ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.FirstOrDefault().EYKYaGonderildi.HasValue ? (s.TDOBasvuruDanisman.TDOBasvuruEsDanismen.FirstOrDefault().EYKYaGonderildi.Value ? "EYK'ya Gönderimi Onaylandı" : "EYK'ya Gönderimi Onaylanmadı") : "EYK'ya Gönderim Onayı Bekleniyor") : "Eş Danışman Yok",
@@ -224,7 +224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.EsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
 
 
-            model.TdoBasvuruDtos = qdata; 
+            model.TdoBasvuruDtos = qdata;
             return View(model);
         }
 
@@ -284,42 +284,86 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, string raporTarihi, int sayi, string ekd)
+        public ActionResult GetTutanakRaporuExport(bool isDanismanOrEsDanisman, string basTar, string bitTar, string raporTarihi, int sayi, string ekd)
         {
 
-            string raporAdi = "";
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
             var baslangicTarihi = basTar.ToDate().Value;
-            var bitisTarihi = bitTar.ToDate().Value; 
-
-
-            var qData = _entities.TDOBasvurus.AsQueryable();
-
-            qData = qData.Where(p => p.EnstituKod == enstituKod && p.TDOBasvuruDanismen.Any(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))).OrderByDescending(o => o.OgrenimTipKod);
-            var data = qData.SelectMany(s => s.TDOBasvuruDanismen).Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && a.EYKDaOnaylandiOnayTarihi <= bitisTarihi)).OrderBy(o => o.TDAnabilimDaliAdi).ThenBy(t => t.TDProgramAdi).ThenBy(t => t.TDOBasvuru.Ad).ThenBy(t => t.TDOBasvuru.Soyad).ToList();
-          
-            RprTDOEYK rpr = new RprTDOEYK(raporTarihi.ToDate().Value, sayi, enstitu.EnstituAd);
-            rpr.DataSource = data.Select(s => new RprTDOEYKModel
+            var bitisTarihi = bitTar.ToDate().Value;
+            var raporAdi = "";
+            var gv = new GridView();
+            if (isDanismanOrEsDanisman)
             {
-                OgrenciNo = s.TDOBasvuru.OgrenciNo,
-                OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
-                OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuru.Programlar.ProgramAdi,
-                YL_DR = s.TDOBasvuru.OgrenimTipKod == OgrenimTipi.Doktra ? "D" : (s.TDOBasvuru.OgrenimTipKod == OgrenimTipi.ButunlesikDoktora ? "BD" : "YL"),
-                DanismanAdSoyad = s.TDUnvanAdi + " " + s.TDAdSoyad,
-                DanismanAnabilimDali = s.TDAnabilimDaliAdi,
-                TezBaslikTr = s.TezBaslikTr,
-                TezBaslikEn = s.TezBaslikEn,
-                TezDili = s.IsTezDiliTr ? "Tür" : "İng",
-                DanismanYukYlDrSayi = (s.TDOgrenciSayisiDR ?? 0) + (s.TDOgrenciSayisiYL ?? 0),
-                MezunSayisi = (s.TDTezSayisiDR ?? 0) + (s.TDTezSayisiYL ?? 0),
-            });
-            rpr.CreateDocument();
-            raporAdi = "Danışman Önerisi EYK Tutanak Çıktısı";
-            var ms = new MemoryStream(); 
-            rpr.ExportToXlsx(ms);
-            return File(ms.ToArray(), "application/ms-excel", raporAdi + " (" + basTar.Replace("-", ".") + "-" + bitTar.Replace("-", ".") + ")." + "xls"); 
+                var qData = _entities.TDOBasvurus.Where(p => p.EnstituKod == enstituKod && p.TDOBasvuruDanismen.Any(a =>
+                        a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
+                                                     a.EYKDaOnaylandiOnayTarihi <= bitisTarihi)))
+                    .OrderByDescending(o => o.OgrenimTipKod);
+                var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
+                    .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
+                                                             a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
+                    .OrderBy(o => o.TDAnabilimDaliAdi).ThenBy(t => t.TDProgramAdi).ThenBy(t => t.TDOBasvuru.Ad)
+                    .ThenBy(t => t.TDOBasvuru.Soyad).ToList();
+                var dataSource = data.Select(s => new
+                {
+                    s.TDODanismanTalepTipleri.TalepTipAdi,
+                    s.TDOBasvuru.OgrenciNo,
+                    OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
+                    OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
+                                                 s.TDOBasvuru.Programlar.ProgramAdi,
+                    YL_DR = s.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                    DanismanAdSoyad = s.TDUnvanAdi + " " + s.TDAdSoyad,
+                    DanismanAnabilimDali = s.TDAnabilimDaliAdi,
+                    TezBaslikTr = s.TezBaslikTr,
+                    TezBaslikEn = s.TezBaslikEn,
+                    TezDili = s.IsTezDiliTr ? "Türkçe" : "İngilizce",
+                    DanismanYukYlDrSayi = (s.TDOgrenciSayisiDR ?? 0) + (s.TDOgrenciSayisiYL ?? 0),
+                    MezunSayisi = (s.TDTezSayisiDR ?? 0) + (s.TDTezSayisiYL ?? 0),
+                }).ToList();
+                gv.DataSource = dataSource;
+                gv.DataBind();
+                raporAdi = $"TEZ DANIŞMAN ATAMALARI {raporTarihi}/{sayi} GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU.xls";
+            }
+            else
+            {
+                var dataEsList = _entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.EnstituKod == enstituKod && p.EYKDaOnaylandi == true && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
+                                                     p.EYKDaOnaylandiOnayTarihi <= bitisTarihi)).OrderByDescending(o => o.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod).ToList().Select(s => new
+                                                     {
+                                                         TalepTuru = s.IsDegisiklikTalebi ? "Eş Danışman Değişiklik Talebi" : "Yeni Eş Danışman Talebi", 
+                                                         s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
+                                                         OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
+                                                         OgrenciAnabilimdaliProgram = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
+                                                     s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
+                                                         YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                                                         DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
+                                                         DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
+                                                         s.TDOBasvuruDanisman.TezBaslikTr,
+                                                         s.TDOBasvuruDanisman.TezBaslikEn,
+                                                         TezDili = s.TDOBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce",
+                                                         DanismanYukYlDrSayi = (s.TDOBasvuruDanisman.TDOgrenciSayisiDR ?? 0) + (s.TDOBasvuruDanisman.TDOgrenciSayisiYL ?? 0),
+                                                         MezunSayisi = (s.TDOBasvuruDanisman.TDTezSayisiDR ?? 0) + (s.TDOBasvuruDanisman.TDTezSayisiYL ?? 0),
+                                                         EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
+                                                         EsDanismanAdSoyad = s.AdSoyad,
+                                                         EsDanismanAnabilimDali = s.AnabilimDaliAdi,
+                                                         EsDanismanProgramAdi = s.ProgramAdi,
+
+                                                     }
+                    ).OrderBy(o => o.DanismanAnabilimDali).ThenBy(t => t.EsDanismanProgramAdi).ThenBy(t => t.OgrenciAdSoyad).ToList();
+                gv.DataSource = dataEsList;
+                gv.DataBind();
+                raporAdi = $"TEZ EŞ DANIŞMAN ATAMALARI {raporTarihi}/{sayi} GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU.xls";
+            }
+
+            Response.ContentType = "application/ms-excel";
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
+            Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+            var stringWriter = new StringWriter();
+            var htw = new HtmlTextWriter(stringWriter);
+            gv.RenderControl(htw);
+            return File(System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString()), Response.ContentType, raporAdi);
         }
+
+
+
 
         [Authorize(Roles = RoleNames.TdoeyKdaOnayYetkisi)]
         public ActionResult EYKGonderimOnay(string aktifDonemId)

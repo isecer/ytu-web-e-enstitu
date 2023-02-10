@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMezuniyetBasvurulari : PagerOption
+    public class FmMezuniyetBasvurulari : PagerOption
     {
         public int? SMezuniyetBID { get; set; }
         public int? STabID { get; set; }
@@ -36,9 +36,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? MBaslangicTarihi { get; set; }
         public DateTime? MBitisTarihi { get; set; }
 
-        public IEnumerable<frMezuniyetBasvurulari> Data { get; set; }
+        public IEnumerable<FrMezuniyetBasvurulari> FrMezuniyetBasvurularis { get; set; }
     }
-    public class frMezuniyetBasvurulari : MezuniyetBasvurulari
+    public class FrMezuniyetBasvurulari : MezuniyetBasvurulari
     {
         public string EnstituKod { get; set; }
         public string EnstituAdi { get; set; }

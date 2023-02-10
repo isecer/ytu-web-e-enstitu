@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmMezuniyetYonetmelik : MezuniyetYonetmelikleri
+    public class KmMezuniyetYonetmelik : MezuniyetYonetmelikleri
     {
         public string EnstituAdi { get; set; }
         public string OgretimYili { get; set; }
@@ -14,25 +14,25 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TarihKriterAdi { get; set; }
         public string IslemYapan { get; set; }
 
-        public List<string> _MezuniyetYayinTurID { get; set; }
-        public List<string> _IsGecerli { get; set; }
-        public List<string> _IsZorunlu { get; set; }
-        public List<string> _GrupKodu { get; set; }
-        public List<string> _IsVeOrVeya { get; set; }
+        public List<string> MezuniyetYayinTurIDs { get; set; }
+        public List<string> IsGecerlis { get; set; }
+        public List<string> IsZorunlus { get; set; }
+        public List<string> GrupKodus { get; set; }
+        public List<string> IsVeOrVeyas { get; set; }
 
 
-        public IEnumerable<krMezuniyetYonetmelikOT> krMezuniyetYonetmelikOT { get; set; }
-        public kmMezuniyetYonetmelik()
+        public IEnumerable<KrMezuniyetYonetmelikOt> KrMezuniyetYonetmelikOt { get; set; }
+        public KmMezuniyetYonetmelik()
         {
-            krMezuniyetYonetmelikOT = new List<krMezuniyetYonetmelikOT>();
-            _MezuniyetYayinTurID = new List<string>();
-            _IsGecerli = new List<string>();
-            _IsZorunlu = new List<string>();
-            _GrupKodu = new List<string>();
-            _IsVeOrVeya = new List<string>();
+            KrMezuniyetYonetmelikOt = new List<KrMezuniyetYonetmelikOt>();
+            MezuniyetYayinTurIDs = new List<string>();
+            IsGecerlis = new List<string>();
+            IsZorunlus = new List<string>();
+            GrupKodus = new List<string>();
+            IsVeOrVeyas = new List<string>();
         }
     }
-    public class krMezuniyetYonetmelikOT : MezuniyetYonetmelikleriOT
+    public class KrMezuniyetYonetmelikOt : MezuniyetYonetmelikleriOT
     {
         public bool? Success { get; set; }
         public string EnstituKod { get; set; }

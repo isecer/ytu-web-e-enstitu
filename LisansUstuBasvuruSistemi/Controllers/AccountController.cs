@@ -25,12 +25,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AccountController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Login(bool? logout, string dlgId, string ReturnUrl)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Login(bool? logout, string dlgId, string returnUrl)
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgId.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgId;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgId.IsNullOrWhiteSpace(),
+                DialogID = dlgId
+            };
             if (logout == true)
             {
                 FormsAuthenticationUtil.SignOut();
@@ -38,34 +40,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (UserIdentity.Current.IsAuthenticated) return RedirectToAction("Index", "Home");
             ViewBag.UserName = "";
-            MmMessage.ReturnUrl = ReturnUrl;
-            ViewBag.MmMessage = MmMessage;
+            mmMessage.ReturnUrl = returnUrl;
+            ViewBag.MmMessage = mmMessage;
             return PartialView();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string UserName, string Password, string CaptchaInputText, bool? RememberMe, string ReturnUrl, string dlgId)
+        public ActionResult Login(string userName, string password, string captchaInputText, bool? rememberMe, string returnUrl, string dlgId)
         {
 
 
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgId.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgId;
-            MmMessage.ReturnUrl = ReturnUrl;
-            ViewBag.UserName = UserName;
-            ViewBag.Password = Password;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgId.IsNullOrWhiteSpace(),
+                DialogID = dlgId,
+                ReturnUrl = returnUrl
+            };
+            ViewBag.UserName = userName;
+            ViewBag.Password = password;
             string Hata = null;
             try
             {
-                if (UserName.IsNullOrWhiteSpace())
+                if (userName.IsNullOrWhiteSpace())
                 {
                     Hata = "Kullanıcı Adı Boş Bırakılamaz.";
                 }
-                else if (Password.IsNullOrWhiteSpace())
+                else if (password.IsNullOrWhiteSpace())
                 {
                     Hata = "Şifre Giriniz.";
                 }
-                else if (CaptchaInputText.IsNullOrWhiteSpace())
+                else if (captchaInputText.IsNullOrWhiteSpace())
                 {
                     Hata = "Resimdeki Karakterleri Giriniz.";
                 }
@@ -76,21 +80,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     string msg = "";
-                    var user = UserBus.GetLoginUser(UserName);
+                    var user = UserBus.GetLoginUser(userName);
                     Kullanicilar loginUser = null;
                     if (user != null)
                     {
                         if (user.IsActiveDirectoryUser == false)
                         {
-                            loginUser = UserBus.Login(UserName, Password);
+                            loginUser = UserBus.Login(userName, password);
                         }
                         else
                         {
                             LdapService.SecureSoapClient ld = new LdapService.SecureSoapClient();
 
-                            var WsPwd = ConfigurationManager.AppSettings["ldapServicePassword"];
-                            var IsSueccess = ld.Login(UserName, Password, WsPwd);
-                            if (IsSueccess)
+                            var wsPwd = ConfigurationManager.AppSettings["ldapServicePassword"];
+                            var isSueccess = ld.Login(userName, password, wsPwd);
+                            if (isSueccess)
                             {
                                 loginUser = user;
                             }
@@ -105,24 +109,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             try
                             {
-                                var lastTdo = db.TDOBasvurus.OrderByDescending(p => p.KullaniciID == loginUser.KullaniciID).FirstOrDefault();
+                                var lastTdo = _entities.TDOBasvurus.OrderByDescending(p => p.KullaniciID == loginUser.KullaniciID).FirstOrDefault();
                                 if (lastTdo != null) TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(lastTdo.TDOBasvuruID, null);
                             }
                             catch (Exception ex)
                             {
                             }
-                            RememberMe = RememberMe ?? false;
-                            FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", RememberMe.Value);
+                            rememberMe = rememberMe ?? false;
+                            FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", rememberMe.Value);
                             UserBus.SetLastLogon();
-                            MmMessage.IsCloseDialog = true;
-                            if (MmMessage.IsDialog)
+                            mmMessage.IsCloseDialog = true;
+                            if (mmMessage.IsDialog)
                             {
-                                if (ReturnUrl.IsNullOrWhiteSpace()) MmMessage.ReturnUrl = Url.Action("Index", "Home");
+                                if (returnUrl.IsNullOrWhiteSpace()) mmMessage.ReturnUrl = Url.Action("Index", "Home");
                             }
                             else
                             {
-                                if (ReturnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
-                                else return Redirect(ReturnUrl);
+                                if (returnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
+                                else return Redirect(returnUrl);
                             }
 
                         }
@@ -148,24 +152,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             catch (Exception ex)
             {
-                MmMessage.IsSuccess = false;
-                MmMessage.Messages.Add("Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage());
+                mmMessage.IsSuccess = false;
+                mmMessage.Messages.Add("Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage());
                 Hata = "Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage();
             }
             ViewBag.Hata = Hata;
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return PartialView();
 
         }
         [Authorize(Roles = RoleNames.KullanicilarOnlineKullanicilar)]
         public ActionResult OnlineUserCnt()
         {
-
             var users = OnlineUsersHelper.GetUsers;
-            int Count = users.Count();
-            var q = Count.ToJsonResult();
-            return q;
-
+            return users.Count().ToJsonResult();
         }
 
         [Authorize(Roles = RoleNames.KullanicilarOnlineKullanicilar)]
@@ -177,23 +177,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        public ActionResult ParolaSifirla(string psKod, int? KullaniciID = null, string dlgId = "")
+        public ActionResult ParolaSifirla(string psKod, int? kullaniciId = null, string dlgId = "")
         {
 
-            MmMessage msg = new MmMessage();
-            msg.ReturnUrlTimeOut = 4000;
-            msg.IsDialog = !dlgId.IsNullOrWhiteSpace();
-            msg.DialogID = dlgId;
-            if (psKod.IsNullOrWhiteSpace() && KullaniciID.HasValue == false) return RedirectToAction("Index", "Home");
-
-            //if (Lng.IsNullOrWhiteSpace()) Lng = Management.getSelectedCulture();
-            //Response.Cookies["CacheLang"].Value = Lng;
-            //UserIdentity.Current.SeciliSDilKodu = Lng;
+            MmMessage msg = new MmMessage
+            {
+                ReturnUrlTimeOut = 4000,
+                IsDialog = !dlgId.IsNullOrWhiteSpace(),
+                DialogID = dlgId
+            };
+            if (psKod.IsNullOrWhiteSpace() && kullaniciId.HasValue == false) return RedirectToAction("Index", "Home");
 
             var kul = new Kullanicilar();
-            if (KullaniciID.HasValue == false)
+            if (kullaniciId.HasValue == false)
             {
-                kul = db.Kullanicilars.Where(p => p.IsAktif && p.ParolaSifirlamaKodu == psKod).FirstOrDefault();
+                kul = _entities.Kullanicilars.FirstOrDefault(p => p.IsAktif && p.ParolaSifirlamaKodu == psKod);
 
                 if (kul != null)
                 {
@@ -218,8 +216,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (UserIdentity.Current.IsAuthenticated)
                 {
-                    KullaniciID = UserIdentity.Current.Id;
-                    kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).FirstOrDefault();
+                    kullaniciId = UserIdentity.Current.Id;
+                    kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
                     if (kul != null)
                     {
                         kul.ResimAdi = kul.ResimAdi.ToKullaniciResim();
@@ -236,189 +234,186 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             Session["ShwMesaj"] = msg;
             ViewBag.MmMessage = msg;
-            ViewBag.KullaniciID = KullaniciID;
+            ViewBag.KullaniciID = kullaniciId;
             ViewBag.EskiSifre = "";
             ViewBag.YeniSifre = "";
             ViewBag.YeniSifreTekrar = "";
             return View(kul);
         }
         [HttpPost]
-        public ActionResult ParolaSifirla(string psKod, string EskiSifre, string YeniSifre, string YeniSifreTekrar, int? KullaniciID = null, string dlgId = "")
+        public ActionResult ParolaSifirla(string psKod, string eskiSifre, string yeniSifre, string yeniSifreTekrar, int? kullaniciId = null, string dlgId = "")
         {
-            MmMessage MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgId.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgId;
-            MmMessage.ReturnUrlTimeOut = 4000;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgId.IsNullOrWhiteSpace(),
+                DialogID = dlgId,
+                ReturnUrlTimeOut = 4000
+            };
             if (psKod.IsNullOrWhiteSpace() == true)
             {
-                MmMessage.MessageType = Msgtype.Error;
-                MmMessage.Title = "Şifre değiştirme işlemi başarısız!";
-                MmMessage.ReturnUrl = Url.Action("Index", "Home");
+                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.Title = "Şifre değiştirme işlemi başarısız!";
+                mmMessage.ReturnUrl = Url.Action("Index", "Home");
             }
-            var kul = new Kullanicilar();
-            if (KullaniciID.HasValue) kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).FirstOrDefault();
-            else kul = db.Kullanicilars.Where(p => p.ParolaSifirlamaKodu == psKod).FirstOrDefault();
+
+            var kul = kullaniciId.HasValue ? _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId)
+                : _entities.Kullanicilars.FirstOrDefault(p => p.ParolaSifirlamaKodu == psKod);
             if (kul != null)
             {
-                if (KullaniciID.HasValue == false)
+                if (kullaniciId.HasValue == false)
                     if (kul.ParolaSifirlamGecerlilikTarihi.HasValue && kul.ParolaSifirlamGecerlilikTarihi.Value < DateTime.Now)
                     {
-                        MmMessage.MessageType = Msgtype.Error;
-                        MmMessage.Messages.Add("Parola Sıfırlama linkinin geçerlilik süresi dolmuştur!");
-                        MmMessage.ReturnUrl = Url.Action("Index", "Home");
+                        mmMessage.MessageType = Msgtype.Error;
+                        mmMessage.Messages.Add("Parola Sıfırlama linkinin geçerlilik süresi dolmuştur!");
+                        mmMessage.ReturnUrl = Url.Action("Index", "Home");
                     }
-                if (KullaniciID.HasValue)
+                if (kullaniciId.HasValue)
                 {
-                    if (EskiSifre.IsNullOrWhiteSpace())
+                    if (eskiSifre.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Varolan şifrenizi giriniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EskiSifre" });
+                        mmMessage.Messages.Add("Varolan şifrenizi giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EskiSifre" });
                     }
-                    else if (!(kul.Sifre == EskiSifre.ComputeHash(Management.Tuz)))
+                    else if (kul.Sifre != eskiSifre.ComputeHash(Management.Tuz))
                     {
-                        MmMessage.Messages.Add("Varolan şifrenizi yanlış girdiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EskiSifre" });
+                        mmMessage.Messages.Add("Varolan şifrenizi yanlış girdiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EskiSifre" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EskiSifre" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EskiSifre" });
                 }
-                if (MmMessage.Messages.Count == 0)
+                if (mmMessage.Messages.Count == 0)
                 {
 
-                    if (YeniSifre.Length < 4)
+                    if (yeniSifre.Length < 4)
                     {
-                        MmMessage.Messages.Add("Yeni şifreniz en az 4 haneli olmalıdır!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifre" });
+                        mmMessage.Messages.Add("Yeni şifreniz en az 4 haneli olmalıdır!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifre" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifre" });
-                    if (YeniSifreTekrar.Length < 4)
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifre" });
+                    if (yeniSifreTekrar.Length < 4)
                     {
-                        MmMessage.Messages.Add("Yeni şifre tekrar en az 4 haneli olmalıdır!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
+                        mmMessage.Messages.Add("Yeni şifre tekrar en az 4 haneli olmalıdır!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
-                    if (MmMessage.Messages.Count == 0)
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
+                    if (mmMessage.Messages.Count == 0)
                     {
-                        if (YeniSifreTekrar != YeniSifre)
+                        if (yeniSifreTekrar != yeniSifre)
                         {
-                            MmMessage.Messages.Add("Yeni şifre ile yeni şifre tekrar birbiriyle uyuşmuyor!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifre" });
+                            mmMessage.Messages.Add("Yeni şifre ile yeni şifre tekrar birbiriyle uyuşmuyor!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifreTekrar" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YeniSifre" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifre" });
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifreTekrar" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifre" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YeniSifreTekrar" });
                         }
                     }
                 }
 
-                if (MmMessage.Messages.Count == 0)
+                if (mmMessage.Messages.Count == 0)
                 {
-                    kul.Sifre = YeniSifreTekrar.ComputeHash(Management.Tuz);
+                    kul.Sifre = yeniSifreTekrar.ComputeHash(Management.Tuz);
                     kul.ParolaSifirlamGecerlilikTarihi = DateTime.Now;
-                    db.SaveChanges();
-                    MmMessage.MessageType = Msgtype.Success;
-                    MmMessage.Title = "Şifre değiştirme işlemi";
-                    if (KullaniciID.HasValue == false)
+                    _entities.SaveChanges();
+                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.Title = "Şifre değiştirme işlemi";
+                    if (kullaniciId.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Şifreniz değiştirildi! Giriş sayfasına yönlendiriliyorsunuz...");
-                        MmMessage.ReturnUrl = Url.Action("Login", "Account");
+                        mmMessage.Messages.Add("Şifreniz değiştirildi! Giriş sayfasına yönlendiriliyorsunuz...");
+                        mmMessage.ReturnUrl = Url.Action("Login", "Account");
                     }
                     else
                     {
-                        MmMessage.IsCloseDialog = true;
-                        MmMessage.Messages.Add("Şifreniz değiştirildi!");
+                        mmMessage.IsCloseDialog = true;
+                        mmMessage.Messages.Add("Şifreniz değiştirildi!");
                     }
                 }
                 else
                 {
-                    MmMessage.MessageType = Msgtype.Error;
-                    MmMessage.Title = "Şifre değiştirme işlemi başarısız!";
-                    // Management.SistemBilgisiKaydet("Şifre değiştirme işlemi başarısız! Hata:" + string.Join("\r\n", MmMessage.Messages) + "\r\n KullanıcıAdı:" + kul.KullaniciAdi, "Account/ParolaSifirla", BilgiTipi.Bilgi);
+                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.Title = "Şifre değiştirme işlemi başarısız!";
                 }
                 kul.ResimAdi = kul.ResimAdi.ToKullaniciResim();
             }
             else
             {
-                MmMessage.MessageType = Msgtype.Error;
-                MmMessage.Title = "Şifre değiştirme işlemi başarısız!";
+                mmMessage.MessageType = Msgtype.Error;
+                mmMessage.Title = "Şifre değiştirme işlemi başarısız!";
             }
-            if (MmMessage.Messages.Count > 0)
+            if (mmMessage.Messages.Count > 0)
             {
                 if (UserIdentity.Current.IsAuthenticated)
                 {
-                    MessageBox.Show(MmMessage.Title, MmMessage.MessageType == Msgtype.Success ? MessageBox.MessageType.Success : MessageBox.MessageType.Error, MmMessage.Messages.ToArray());
+                    MessageBox.Show(mmMessage.Title, mmMessage.MessageType == Msgtype.Success ? MessageBox.MessageType.Success : MessageBox.MessageType.Error, mmMessage.Messages.ToArray());
                 }
                 else
                 {
-                    Session["ShwMesaj"] = MmMessage;
+                    Session["ShwMesaj"] = mmMessage;
                 }
             }
 
 
-            ViewBag.MmMessage = MmMessage;
-            ViewBag.KullaniciID = KullaniciID;
-            ViewBag.EskiSifre = EskiSifre;
-            ViewBag.YeniSifre = YeniSifre;
-            ViewBag.YeniSifreTekrar = YeniSifreTekrar;
+            ViewBag.MmMessage = mmMessage;
+            ViewBag.KullaniciID = kullaniciId;
+            ViewBag.EskiSifre = eskiSifre;
+            ViewBag.YeniSifre = yeniSifre;
+            ViewBag.YeniSifreTekrar = yeniSifreTekrar;
             return View(kul);
         }
 
 
 
 
-        public ActionResult HesapKayit(int? id, string EKD)
+        public ActionResult HesapKayit(int? id, string ekd)
         {
-            var KayitYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-            var MmMessage = new MmMessage();
-            var model = new Kullanicilar();
+            var kayitYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+            var mmMessage = new MmMessage();
+            var model = new Kullanicilar
+            {
+                EnstituKod = EnstituBus.GetSelectedEnstitu(ekd),
+                IsAktif = true
+            };
 
-            model.EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            model.IsAktif = true;
-            bool IsKurumIci = true;
-            bool IsYerli = true;
-            bool ResimVar = false;
+            bool isKurumIci = true;
+            bool isYerli = true;
+            bool resimVar = false;
 
             if (UserIdentity.Current.IsAuthenticated)
             {
                 if (!id.HasValue || id <= 0) id = UserIdentity.Current.Id;
-                if (!KayitYetki && id != UserIdentity.Current.Id) id = UserIdentity.Current.Id;
+                if (!kayitYetki && id != UserIdentity.Current.Id) id = UserIdentity.Current.Id;
 
-                var data = db.Kullanicilars.Where(p => p.KullaniciID == id).FirstOrDefault();
+                var data = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == id);
                 if (data != null)
                 {
-                    IsKurumIci = data.KullaniciTipleri.KurumIci;
-                    IsYerli = data.KullaniciTipleri.Yerli;
-                    ResimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
+                    isKurumIci = data.KullaniciTipleri.KurumIci;
+                    isYerli = data.KullaniciTipleri.Yerli;
+                    resimVar = data.ResimAdi.IsNullOrWhiteSpace() == false;
                     data.ResimAdi = data.ResimAdi;
                     model = data;
 
                 }
-                MmMessage.IsSuccess = true;
+                mmMessage.IsSuccess = true;
                 model.Sifre = "";
             }
             else
             {
                 if (id > 0) id = null;
             }
-            if (RoleNames.KullanicilarKayit.InRoleCurrent())
-            {
-                ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            }
-            else
-            {
-                ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
-            }
-            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (KayitYetki ? false : true)), "Value", "Caption", model.KullaniciTipID);
+            ViewBag.EnstituKod = RoleNames.KullanicilarKayit.InRoleCurrent() ? new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod)
+                : new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true, (!kayitYetki)), "Value", "Caption", model.KullaniciTipID);
             ViewBag.UnvanID = new SelectList(Management.cmbUnvanlar(true), "Value", "Caption", model.UnvanID);
             ViewBag.BirimID = new SelectList(Management.cmbBirimler(true), "Value", "Caption", model.BirimID);
             ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
             ViewBag.YetkiGrupID = new SelectList(Management.cmbYetkiGruplari(), "Value", "Caption", model.YetkiGrupID);
 
-            var kulTipi = db.KullaniciTipleris.Where(p => p.KullaniciTipID == model.KullaniciTipID).FirstOrDefault();
+            var kulTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);
 
             if (kulTipi != null)
             {
@@ -429,215 +424,215 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.KullaniciTipAdi = "";
             }
 
-            ViewBag.IsKurumIci = IsKurumIci;
-            ViewBag.IsYerli = IsYerli;
-            ViewBag.ResimVar = ResimVar;
+            ViewBag.IsKurumIci = isKurumIci;
+            ViewBag.IsYerli = isYerli;
+            ViewBag.ResimVar = resimVar;
             return View(model);
         }
         [HttpPost]
-        public ActionResult HesapKayit(Kullanicilar kModel, string EKD, bool IsKurumIci, bool IsYerli)
+        public ActionResult HesapKayit(Kullanicilar kModel, string ekd, bool isKurumIci, bool isYerli)
         {
 
-            var MmMessage = new MmMessage();
-            MmMessage.Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi";
-            var resimBilgi = new CmbStringDto { Caption = "", Value = "" };
+            var mmMessage = new MmMessage
+            {
+                Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi"
+            };
             var kKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+             
+            var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
             #region Kontrol
-            if (ErisimYetki)
+            if (erisimYetki)
             {
                 if (kModel.YetkiGrupID <= 0)
                 {
-                    MmMessage.Messages.Add("Yetki Grubu Seçiniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YetkiGrupID" });
+                    mmMessage.Messages.Add("Yetki Grubu Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YetkiGrupID" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YetkiGrupID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YetkiGrupID" });
             }
             if (kModel.KullaniciTipID <= 0)
             {
-                MmMessage.Messages.Add("Kullanıcı Tipi Seçiniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciTipID" });
+                mmMessage.Messages.Add("Kullanıcı Tipi Seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciTipID" });
             }
             else
             {
-                var ktp = db.KullaniciTipleris.Where(p => p.KullaniciTipID == kModel.KullaniciTipID).First();
-                IsKurumIci = ktp.KurumIci;
-                IsYerli = ktp.Yerli;
+                var ktp = _entities.KullaniciTipleris.First(p => p.KullaniciTipID == kModel.KullaniciTipID);
+                isKurumIci = ktp.KurumIci;
+                isYerli = ktp.Yerli;
 
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciTipID" });
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciTipID" });
             }
 
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Enstitü Seçiniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Enstitü Seçiniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.KullaniciTipID > 0)
             {
                 if (kModel.ResimAdi.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("Profil Resmi Yükleyiniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ResimAdi" });
+                    mmMessage.Messages.Add("Profil Resmi Yükleyiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ResimAdi" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ResimAdi" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ResimAdi" });
                 if (kModel.Ad.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("Ad Giriniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ad" });
+                    mmMessage.Messages.Add("Ad Giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ad" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ad" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ad" });
                 if (kModel.Soyad.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("Soyad Giriniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Soyad" });
+                    mmMessage.Messages.Add("Soyad Giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Soyad" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Soyad" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Soyad" });
 
                 if (kModel.TcKimlikNo.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("T.C. kimlik Numarası Giriniz.");
+                    mmMessage.Messages.Add("T.C. kimlik Numarası Giriniz.");
 
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
                 }
                 else if (kModel.TcKimlikNo.IsNumber() == false)
                 {
-                    MmMessage.Messages.Add("T.C. Kimlik Numarası Sadece Sayıdan Oluşmalıdır.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                    mmMessage.Messages.Add("T.C. Kimlik Numarası Sadece Sayıdan Oluşmalıdır.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
 
                 }
                 else if (kModel.TcKimlikNo.Length != 11)
                 {
-                    MmMessage.Messages.Add("T.C. Kimlik Numarası uzunluğu 11 Hane Olmalıdır.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                    mmMessage.Messages.Add("T.C. Kimlik Numarası uzunluğu 11 Hane Olmalıdır.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
 
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-                if (!IsYerli)
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
+                if (!isYerli)
                     if (kModel.PasaportNo.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Pasaport No Giriniz.");
+                        mmMessage.Messages.Add("Pasaport No Giriniz.");
 
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "PasaportNo" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "PasaportNo" });
                 if (!kModel.CinsiyetID.HasValue)
                 {
-                    MmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CinsiyetID" });
+                    mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CinsiyetID" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CinsiyetID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CinsiyetID" });
 
 
 
                 if (kModel.CepTel.IsNullOrWhiteSpace())
                 {
 
-                    MmMessage.Messages.Add("Cep Telefonu Numarası Giriniz");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CepTel" });
+                    mmMessage.Messages.Add("Cep Telefonu Numarası Giriniz");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CepTel" });
                 }
                 else
                 {
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CepTel" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CepTel" });
                 }
 
                 if (kModel.EMail.IsNullOrWhiteSpace())
                 {
 
-                    MmMessage.Messages.Add("E-Posta Bilgisini Giriniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                    mmMessage.Messages.Add("E-Posta Bilgisini Giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
                 }
                 else if (kModel.EMail.ToIsValidEmail())
                 {
-                    MmMessage.Messages.Add("Girilen E-Posta Formatı uygun Değildir.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                    mmMessage.Messages.Add("Girilen E-Posta Formatı uygun Değildir.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
                 }
                 else
                 {
 
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
                 }
 
-                if (!IsKurumIci || !IsYerli)
+                if (!isKurumIci || !isYerli)
                     if (kModel.Adres.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Açık Adres Bilgisini Giriniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Adres" });
+                        mmMessage.Messages.Add("Açık Adres Bilgisini Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Adres" });
                     }
                     else
                     {
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Adres" });
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Adres" });
                     }
 
-                if (IsKurumIci)
+                if (isKurumIci)
                     if (!kModel.BirimID.HasValue)
                     {
-                        MmMessage.Messages.Add("Birim Seçiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BirimID" });
+                        mmMessage.Messages.Add("Birim Seçiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BirimID" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BirimID" });
-                if (IsKurumIci)
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BirimID" });
+                if (isKurumIci)
                     if (!kModel.UnvanID.HasValue)
                     {
-                        MmMessage.Messages.Add("Unvan Seçiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "UnvanID" });
+                        mmMessage.Messages.Add("Unvan Seçiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "UnvanID" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanID" });
-                if (IsKurumIci)
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UnvanID" });
+                if (isKurumIci)
                     if (kModel.SicilNo.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Sicil No Giriniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SicilNo" });
+                        mmMessage.Messages.Add("Sicil No Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SicilNo" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SicilNo" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SicilNo" });
 
                 if (kModel.YtuOgrencisi)
                 {
                     if (kModel.OgrenciNo.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Öğrenci No Bilgisini Giriniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                        mmMessage.Messages.Add("Öğrenci No Bilgisini Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
                     }
 
                     else if (kModel.OgrenciNo.Length != 8)
                     {
-                        MmMessage.Messages.Add("Öğrenci Numarası 8 Haneden Oluşmalıdır.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                        mmMessage.Messages.Add("Öğrenci Numarası 8 Haneden Oluşmalıdır.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
 
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenciNo" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenciNo" });
                     if (kModel.OgrenimTipKod.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Öğrenim Seviyesi Seçiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                        mmMessage.Messages.Add("Öğrenim Seviyesi Seçiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimTipKod" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimTipKod" });
                     if (kModel.ProgramKod.IsNullOrWhiteSpace())
                     {
 
-                        MmMessage.Messages.Add("Program Seçiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                        mmMessage.Messages.Add("Program Seçiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
                     if (kModel.OgrenimDurumID.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Öğrenim Durumu Seçiniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimDurumID" });
+                        mmMessage.Messages.Add("Öğrenim Durumu Seçiniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimDurumID" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimDurumID" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimDurumID" });
 
                 }
                 if (kKayit)
                 {
                     if (kModel.KullaniciAdi.IsNullOrWhiteSpace())
                     {
-                        MmMessage.Messages.Add("Kullanıcı Adı Giriniz.");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciAdi" });
+                        mmMessage.Messages.Add("Kullanıcı Adı Giriniz.");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciAdi" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciAdi" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciAdi" });
 
 
                     if (kModel.KullaniciID <= 0)
@@ -645,100 +640,91 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (kModel.Sifre.IsNullOrWhiteSpace())
                         {
 
-                            MmMessage.Messages.Add("Şifre Giriniz.");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
+                            mmMessage.Messages.Add("Şifre Giriniz.");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
                         }
                         else if (kModel.Sifre.Length < 4)
                         {
 
-                            MmMessage.Messages.Add("Şifre En Az 4 Haneden Oluşmalıdır.");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
+                            mmMessage.Messages.Add("Şifre En Az 4 Haneden Oluşmalıdır.");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
                         }
-                        else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Sifre" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Sifre" });
                     }
                     else if (!kModel.Sifre.IsNullOrWhiteSpace())
                     {
                         if (kModel.Sifre.Length < 4 && kModel.KullaniciID > 0)
                         {
-                            MmMessage.Messages.Add("Şifre En Az 4 Haneden Oluşmalıdır.");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
+                            mmMessage.Messages.Add("Şifre En Az 4 Haneden Oluşmalıdır.");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Sifre" });
                         }
-                        else if (kModel.Sifre.Length >= 4 && kModel.KullaniciID > 0) MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Sifre" });
+                        else if (kModel.Sifre.Length >= 4 && kModel.KullaniciID > 0) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Sifre" });
                     }
                 }
             }
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                var ktip = db.KullaniciTipleris.Where(p => p.KullaniciTipID == kModel.KullaniciTipID).First();
-                IsKurumIci = ktip.KurumIci;
-                IsYerli = ktip.Yerli;
-                var qPersonel = db.Kullanicilars.AsQueryable();
-                var Kul = db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).FirstOrDefault();
-
-                var cUserName = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.KullaniciAdi == kModel.KullaniciAdi).Count();
-                if (cUserName > 0)
+                var ktip = _entities.KullaniciTipleris.First(p => p.KullaniciTipID == kModel.KullaniciTipID);
+                isKurumIci = ktip.KurumIci;
+                isYerli = ktip.Yerli;
+                var qPersonel = _entities.Kullanicilars.AsQueryable();
+                var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kModel.KullaniciID); 
+                if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.KullaniciAdi == kModel.KullaniciAdi))
                 {
 
-                    MmMessage.Messages.Add("Tanımlamak istediğiniz kullanıcı adı sistemde zaten mevcut!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciAdi" });
+                    mmMessage.Messages.Add("Tanımlamak istediğiniz kullanıcı adı sistemde zaten mevcut!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciAdi" });
                 }
-                if (Kul == null || Kul.EMail.ToLower() != kModel.EMail.Trim().ToLower())
-                {
-                    var cEmail = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.EMail == kModel.EMail).Count();
-                    if (cEmail > 0)
+                if (kul == null || kul.EMail.ToLower() != kModel.EMail.Trim().ToLower())
+                { 
+                    if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.EMail == kModel.EMail))
                     {
 
-                        MmMessage.Messages.Add("Tanımlamak istediğiniz E-Posta sistemde zaten mevcut!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                        mmMessage.Messages.Add("Tanımlamak istediğiniz E-Posta sistemde zaten mevcut!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
                     }
                 }
 
-                if (Kul == null || Kul.TcKimlikNo != kModel.TcKimlikNo.Trim())
-                {
-                    var cTc = qPersonel.Where(p =>
-                            p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.TcKimlikNo == kModel.TcKimlikNo)
-                        .Count();
-                    if (cTc > 0)
+                if (kul == null || kul.TcKimlikNo != kModel.TcKimlikNo.Trim())
+                { 
+                    if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.TcKimlikNo == kModel.TcKimlikNo))
                     {
-                        MmMessage.Messages.Add("Tanımlamak istediğiniz Kimlik No sistemde zaten mevcut!");
-                        MmMessage.MessagesDialog.Add(new MrMessage
+                        mmMessage.Messages.Add("Tanımlamak istediğiniz Kimlik No sistemde zaten mevcut!");
+                        mmMessage.MessagesDialog.Add(new MrMessage
                         { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
                     }
                 }
 
                 if (kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
                 {
-                    if (Kul == null || Kul.PasaportNo != kModel.PasaportNo.Trim())
-                    {
-                        var cTc = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.PasaportNo == kModel.PasaportNo).Count();
-                        if (cTc > 0)
+                    if (kul == null || kul.PasaportNo != kModel.PasaportNo.Trim())
+                    { 
+                        if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.PasaportNo == kModel.PasaportNo))
                         {
-                            MmMessage.Messages.Add("Tanımlamak istediğiniz Pasaport No sistemde zaten mevcut!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
+                            mmMessage.Messages.Add("Tanımlamak istediğiniz Pasaport No sistemde zaten mevcut!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
                         }
                     }
                 }
-                if (IsKurumIci)
+                if (isKurumIci)
                 {
-                    if (Kul == null || Kul.SicilNo != kModel.SicilNo.Trim())
-                    {
-                        var cSicil = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo).Count();
-                        if (cSicil > 0)
+                    if (kul == null || kul.SicilNo != kModel.SicilNo.Trim())
+                    { 
+                        if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo))
                         {
-                            MmMessage.Messages.Add("Tanımlamak istediğiniz Sicil No sistemde zaten mevcut!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SicilNo" });
+                            mmMessage.Messages.Add("Tanımlamak istediğiniz Sicil No sistemde zaten mevcut!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SicilNo" });
                         }
                     }
                 }
                 if (kModel.YtuOgrencisi)
                 {
-                    if (Kul == null || Kul.OgrenciNo != kModel.OgrenciNo.Trim())
-                    {
-                        var cOgrNo = qPersonel.Where(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.OgrenciNo == kModel.OgrenciNo).Count();
-                        if (cOgrNo > 0)
+                    if (kul == null || kul.OgrenciNo != kModel.OgrenciNo.Trim())
+                    { 
+                        if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.OgrenciNo == kModel.OgrenciNo))
                         {
-                            MmMessage.Messages.Add("Girmiş olduğunuz öğrenci numarası ile daha önceden sisteme kayıt yapılmıştır. Tekrar kayıt yapamazsınız!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                            mmMessage.Messages.Add("Girmiş olduğunuz öğrenci numarası ile daha önceden sisteme kayıt yapılmıştır. Tekrar kayıt yapamazsınız!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
                         }
                     }
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
@@ -746,24 +732,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
-                            MmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
+                            mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
                         }
                         else
                         {
-                            if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj())
-                            {
-                                var Program = db.Programlars.Where(p => p.ProgramKod == kModel.ProgramKod).First();
-                                kModel.ProgramKod = Program.ProgramKod;
-                                kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.toIntObj().Value;
+                            if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                            { 
+                                kModel.ProgramKod = kModel.ProgramKod;
+                                kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
                                 kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
                                 kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
                                 kModel.KayitDonemID = ogrenciBilgi.DonemID;
                             }
                             else
                             {
-                                MmMessage.Messages.Add(
+                                mmMessage.Messages.Add(
                                     "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
-                                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
                             }
 
                         }
@@ -771,9 +756,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                if (IsKurumIci && kModel.KullaniciID <= 0)
+                if (isKurumIci && kModel.KullaniciID <= 0)
                 {
                     if (kModel.EMail.Contains("@yildiz.edu.tr"))
                     {
@@ -789,49 +774,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            if (MmMessage.Messages.Count == 0 && IsKurumIci)
+            if (mmMessage.Messages.Count == 0 && isKurumIci)
             {
                 if (kModel.IsActiveDirectoryUser && kModel.EMail.Contains("@yildiz.edu.tr") == false)
                 {
-                    MmMessage.Messages.Add("Active Directori Girişi Yapmasını İstediğiniz Kullanıcının yildiz.edu.tr uzantılı mailini tanımlamanız gerekir!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsActiveDirectoryUser" });
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                    mmMessage.Messages.Add("Active Directori Girişi Yapmasını İstediğiniz Kullanıcının yildiz.edu.tr uzantılı mailini tanımlamanız gerekir!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsActiveDirectoryUser" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
                 }
 
             }
-            if (MmMessage.Messages.Count == 0 && kModel.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci)
-            {
-                //var kimlikDogrulama = SistemAyar.getAyar(SistemAyar.KullaniciHesapKaydiKimlikDogrula).ToBoolean().Value;
-                //if (kimlikDogrulama && kModel.DogumYeriKod != 9100)
-                //{
-                //    Ws_KimlikDogrula.KPSPublicV2SoapClient kimlik = new Ws_KimlikDogrula.KPSPublicV2SoapClient();
-                //    long tc = long.Parse(kModel.TcKimlikNo);
-                //    string adi = kModel.Ad.ToUpper();
-                //    string soyadi = kModel.Soyad.ToUpper();
-                //    var dogumTar = kModel.DogumTarihi.Value;
-                //    try
-                //    {
-                //        var sonuc = kimlik.KisiVeCuzdanDogrula(tc, adi, soyadi, false, dogumTar.Day, false, dogumTar.Month, false, dogumTar.Year, null, null, null);
-                //        if (!sonuc)
-                //        {
-                //            MmMessage.Messages.Add("tckimlik.nvi.gov.tr tarafından sağlanan kimlik doğrulama sevisine göre girmiş olduğunuz bilgiler doğrulanamadı. Lütfen TC kimlik no, Ad, Soyad ve Doğum tarihi bilgilerini doğru girdiğinizden emin olunuz.");
-                //            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ad" });
-                //            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Soyad" });
-                //            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                //            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DogumTarihi" });
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        var msg = "'tckimlik.nvi.gov.tr' aracılığı ile Kimlik bilgisi doğrulanırken bir hata oluştu. <br/>" + "Hata" + ", " + ex.ToExceptionMessage().Trim();
-                //        MmMessage.Messages.Add(msg);
-                //        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                //    }
-
-                //}
-            }
+            
             #endregion
-            if (kModel.KullaniciID <= 0 && MmMessage.Messages.Count == 0)
+            if (kModel.KullaniciID <= 0 && mmMessage.Messages.Count == 0)
             {
                 if (kModel.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci || kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
                 {
@@ -849,26 +804,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, kModel.Sifre);
                 if (excpt != null)
                 {
-                    MmMessage.Messages.Add("Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + excpt.ToExceptionMessage());
+                    mmMessage.Messages.Add("Mail gönderme hatası, Hesap oluşturulamadı!  Hata" + " : " + excpt.ToExceptionMessage());
                 }
             }
 
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanIP = UserIdentity.Ip;
                 kModel.Ad = kModel.Ad.Trim();
                 kModel.Soyad = kModel.Soyad.Trim();
-                if (!IsKurumIci)
+                if (!isKurumIci)
                 {
                     kModel.BirimID = null;
                     kModel.UnvanID = null;
                     kModel.SicilNo = "";
 
                 }
-                if (IsKurumIci)
+                if (isKurumIci)
                 {
                     kModel.Adres = "";
 
@@ -883,12 +838,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.KayitYilBaslangic = null;
                     kModel.KayitDonemID = null;
                 }
-                var _SifreUnCrypet = kModel.Sifre;
-                var YeniKullanici = kModel.KullaniciID <= 0;
-                if (YeniKullanici)
-                {
-                    var DanismanUnvanIDs = new List<int>() { 17, 42, 73 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye
-                    kModel.YetkiGrupID = ErisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && DanismanUnvanIDs.Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
+                var sifreUnCrypet = kModel.Sifre;
+                var yeniKullanici = kModel.KullaniciID <= 0;
+                if (yeniKullanici)
+                { 
+                    kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && KullanicilarBus.GetDanismanUnvanIds().Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;
                     kModel.FixedHeader = false;
@@ -901,10 +855,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.ThemeName = "/Content/css/theme-forest.css";
                     kModel.BackgroundImage = "wall_2";
                     kModel.Sifre = kModel.Sifre.ComputeHash(Management.Tuz);
-                    kModel = db.Kullanicilars.Add(kModel);
-                    db.SaveChanges();
+                    kModel = _entities.Kullanicilars.Add(kModel);
+                    _entities.SaveChanges();
 
-                    db.KullaniciEnstituYetkileris.Add(new KullaniciEnstituYetkileri
+                    _entities.KullaniciEnstituYetkileris.Add(new KullaniciEnstituYetkileri
                     {
                         EnstituKod = kModel.EnstituKod,
                         KullaniciID = kModel.KullaniciID,
@@ -913,23 +867,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = UserIdentity.Ip
 
                     });
-                    db.SaveChanges();
+                    _entities.SaveChanges();
 
-                    MmMessage.IsCloseDialog = true;
-                    MmMessage.IsSuccess = true;
-                    MmMessage.MessageType = Msgtype.Success;
-                    MmMessage.Messages.Add("Kullanıcı hesabı oluşturuldu!");
-                    MmMessage.Messages.Add("Hesap bilgileri " + kModel.EMail + " E-Posta adresinize gönderildi.");
-                    MmMessage.Messages.Add("Not: Sistem üzerinden mail hesabınıza mail gönderilememe durumuna karşı aşağıdaki şifreyi lütfen kopyalayınız ve sisteme giriş için bu şifreyi kullanınız.");
+                    mmMessage.IsCloseDialog = true;
+                    mmMessage.IsSuccess = true;
+                    mmMessage.MessageType = Msgtype.Success;
+                    mmMessage.Messages.Add("Kullanıcı hesabı oluşturuldu!");
+                    mmMessage.Messages.Add("Hesap bilgileri " + kModel.EMail + " E-Posta adresinize gönderildi.");
+                    mmMessage.Messages.Add("Not: Sistem üzerinden mail hesabınıza mail gönderilememe durumuna karşı aşağıdaki şifreyi lütfen kopyalayınız ve sisteme giriş için bu şifreyi kullanınız.");
 
-                    if (kModel.IsActiveDirectoryUser == false) MmMessage.Messages.Add("KullanıcıAdı:" + kModel.KullaniciAdi + " Şifre: " + _SifreUnCrypet);
-                    else MmMessage.Messages.Add("KullanıcıAdı:" + kModel.KullaniciAdi + " Şifre: E-Posta şifreniz ile aynı");
+                    if (kModel.IsActiveDirectoryUser == false) mmMessage.Messages.Add("KullanıcıAdı:" + kModel.KullaniciAdi + " Şifre: " + sifreUnCrypet);
+                    else mmMessage.Messages.Add("KullanıcıAdı:" + kModel.KullaniciAdi + " Şifre: E-Posta şifreniz ile aynı");
                 }
                 else
                 {
-                    var data = db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).First();
+                    var data = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
                     data.EnstituKod = kModel.EnstituKod;
-                    if (ErisimYetki) data.YetkiGrupID = kModel.YetkiGrupID;
+                    if (erisimYetki) data.YetkiGrupID = kModel.YetkiGrupID;
                     data.KullaniciTipID = kModel.KullaniciTipID;
                     data.Ad = kModel.Ad;
                     data.Soyad = kModel.Soyad;
@@ -972,44 +926,44 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = kModel.IslemTarihi;
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.ToKullaniciResim(); }
-                    db.SaveChanges();
-                    MmMessage.Messages.Add("'" + data.Ad + " " + data.Soyad + "' Kullanıcı hesabı güncellendi.");
-                    MmMessage.IsCloseDialog = true;
-                    MmMessage.IsSuccess = true;
-                    MmMessage.MessageType = Msgtype.Success;
+                    _entities.SaveChanges();
+                    mmMessage.Messages.Add("'" + data.Ad + " " + data.Soyad + "' Kullanıcı hesabı güncellendi.");
+                    mmMessage.IsCloseDialog = true;
+                    mmMessage.IsSuccess = true;
+                    mmMessage.MessageType = Msgtype.Success;
                     LogIslemleri.LogEkle("Kullanicilar", IslemTipi.Update, data.ToJson());
                 }
             }
             else
             {
-                MmMessage.Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz.";
-                MmMessage.MessageType = Msgtype.Warning;
+                mmMessage.Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi İçin Aşağıdaki Uyarıları Kontrol Ediniz.";
+                mmMessage.MessageType = Msgtype.Warning;
             }
-            return MmMessage.ToJsonResult();
+            return mmMessage.ToJsonResult();
         }
 
 
         [HttpPost]
-        public ActionResult ImageUploadPost(int? KullaniciID, HttpPostedFileBase KImage, string EskiResimAdi = "")
+        public ActionResult ImageUploadPost(int? kullaniciId, HttpPostedFileBase kImage, string eskiResimAdi = "")
         {
             var mMessage = new MmMessage();
-            string YeniResimAdi = "";
+            string yeniResimAdi = "";
             mMessage.Title = "Profil resmi yükleme işlemi";
             mMessage.IsSuccess = false;
             mMessage.MessageType = Msgtype.Warning;
-            if (KImage == null || KImage.ContentLength <= 0)
+            if (kImage == null || kImage.ContentLength <= 0)
             {
                 mMessage.Messages.Add("Profil Resmi Seçiniz");
                 // MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProfilResmi" });
             }
-            else if (RoleNames.KullanicilarKayit.InRoleCurrent() == false && KullaniciID != UserIdentity.Current.Id)
+            else if (RoleNames.KullanicilarKayit.InRoleCurrent() == false && kullaniciId != UserIdentity.Current.Id)
             {
                 mMessage.Messages.Add("Başka bir kullanıcı adına resim yüklemesi yapmaya yetkili değilsiniz.");
             }
             else
             {
-                var contentlength = KImage.ContentLength;
-                string uzanti = KImage.FileName.GetFileExtension();
+                var contentlength = kImage.ContentLength;
+                string uzanti = kImage.FileName.GetFileExtension();
                 if ((uzanti == ".jpg" || uzanti == ".JPG" || uzanti == ".jpeg" || uzanti == ".JPEG" || uzanti == ".png" || uzanti == ".PNG" || uzanti == ".bmp" || uzanti == ".BMP") == false)
 
                 {
@@ -1024,26 +978,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (UserIdentity.Current.IsAuthenticated)
                     {
 
-                        var kul = db.Kullanicilars.Where(p => p.KullaniciID == KullaniciID).First();
-                        EskiResimAdi = kul.ResimAdi;
+                        var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                        eskiResimAdi = kul.ResimAdi;
 
-                        kul.ResimAdi = YeniResimAdi = KullanicilarBus.ResimKaydet(KImage);
+                        kul.ResimAdi = yeniResimAdi = KullanicilarBus.ResimKaydet(kImage);
                         kul.IslemYapanID = UserIdentity.Current.Id;
                         kul.IslemYapanIP = UserIdentity.Ip;
                         kul.IslemTarihi = DateTime.Now;
-                        db.SaveChanges();
+                        _entities.SaveChanges();
 
 
-                        if (EskiResimAdi.IsNullOrWhiteSpace() == false)
+                        if (eskiResimAdi.IsNullOrWhiteSpace() == false)
                         {
-                            var ResimKlasorAdi = SistemAyar.KullaniciResimYolu;
-                            var rsm = Server.MapPath("~/" + ResimKlasorAdi + "/" + EskiResimAdi);
+                            var resimKlasorAdi = SistemAyar.KullaniciResimYolu;
+                            var rsm = Server.MapPath("~/" + resimKlasorAdi + "/" + eskiResimAdi);
                             try
                             {
                                 if (System.IO.File.Exists(rsm)) System.IO.File.Delete(rsm);
                             }
                             catch (Exception)
                             {
+                                // ignored
                             }
                         }
                         mMessage.IsSuccess = true;
@@ -1051,19 +1006,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        YeniResimAdi = KullanicilarBus.ResimKaydet(KImage);
-                        if (EskiResimAdi.IsNullOrWhiteSpace() == false)
+                        yeniResimAdi = KullanicilarBus.ResimKaydet(kImage);
+                        if (eskiResimAdi.IsNullOrWhiteSpace() == false)
                         {
-                            var ResimKlasorAdi = SistemAyar.KullaniciResimYolu;
-                            var rsm = Server.MapPath("~/" + ResimKlasorAdi + "/" + EskiResimAdi);
+                            var resimKlasorAdi = SistemAyar.KullaniciResimYolu;
+                            var rsm = Server.MapPath("~/" + resimKlasorAdi + "/" + eskiResimAdi);
                             try
                             {
                                 if (System.IO.File.Exists(rsm)) System.IO.File.Delete(rsm);
                             }
                             catch (Exception)
                             {
+                                // ignored
                             }
-
                         }
                         mMessage.IsSuccess = true;
                         mMessage.Messages.Add("profil resmi sisteme yüklendi.");
@@ -1072,29 +1027,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            var YeniResimYolu = YeniResimAdi.ToKullaniciResim();
-            UserIdentity.Current.ImagePath = YeniResimYolu;
-            return new { mMessage, YeniResimAdi, YeniResimYolu }.ToJsonResult();
+            var yeniResimYolu = yeniResimAdi.ToKullaniciResim();
+            UserIdentity.Current.ImagePath = yeniResimYolu;
+            return new { mMessage, YeniResimAdi = yeniResimAdi, YeniResimYolu = yeniResimYolu }.ToJsonResult();
         }
         [HttpPost]
-        public ActionResult RotateImage(bool LeftOrRight, string ResimAdi)
+        public ActionResult RotateImage(bool leftOrRight, string resimAdi)
         {
 
-            if (ResimAdi.IsNullOrWhiteSpace() == false)
+            if (resimAdi.IsNullOrWhiteSpace() == false)
             {
-                var ResimKlasorAdi = SistemAyar.KullaniciResimYolu;
-                var rsm = Server.MapPath("~/" + ResimKlasorAdi + "/" + ResimAdi);
+                var resimKlasorAdi = SistemAyar.KullaniciResimYolu;
+                var rsm = Server.MapPath("~/" + resimKlasorAdi + "/" + resimAdi);
                 if (System.IO.File.Exists(rsm))
                 {
                     using (Image img = Image.FromFile(rsm))
                     {
-                        img.RotateFlip(LeftOrRight ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
+                        img.RotateFlip(leftOrRight ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
                         img.Save(rsm, System.Drawing.Imaging.ImageFormat.Jpeg);
                     }
                 }
 
             }
-            var YeniResimYolu = ResimAdi.ToKullaniciResim();
+            var YeniResimYolu = resimAdi.ToKullaniciResim();
 
             return new { YeniResimYolu }.ToJsonResult();
         }
@@ -1102,7 +1057,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _entities.Dispose();
             base.Dispose(disposing);
         }
     }

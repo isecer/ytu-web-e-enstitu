@@ -18,33 +18,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.BelgeTipleri)]
     public class BelgeTipDetayController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            return Index(new FmBelgeTipDetayDto { }, EKD);
+            return Index(new FmBelgeTipDetayDto { }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(FmBelgeTipDetayDto model, string EKD)
+        public ActionResult Index(FmBelgeTipDetayDto model, string ekd)
         {
 
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var q = (from s in db.BelgeTipDetays
-                     join so in db.OgrenimDurumlaris on new { s.OgrenimDurumID } equals new { so.OgrenimDurumID }
-                     where s.EnstituKod == _EnstituKod
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var q = (from s in _entities.BelgeTipDetays
+                     join so in _entities.OgrenimDurumlaris on new { s.OgrenimDurumID } equals new { so.OgrenimDurumID }
+                     where s.EnstituKod == enstituKod
                      select new FrBelgeTipDetayDto
                      {
                          BelgeTipDetayID = s.BelgeTipDetayID,
                          EnstituKod = s.EnstituKod,
                          OgrenimDurumID = s.OgrenimDurumID,
                          OgrenimDurumAdi = so.OgrenimDurumAdi,
-                         BelgeTipAdi = db.BelgeTipleris.Where(p => s.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID)).Select(s2 => s2.BelgeTipAdi).ToList(),
+                         BelgeTipAdi = _entities.BelgeTipleris.Where(p => s.BelgeTipDetayBelgelers.Any(a => a.BelgeTipID == p.BelgeTipID)).Select(s2 => s2.BelgeTipAdi).ToList(),
                          UcretAlimiVar = s.UcretAlimiVar,
                          BelgeFiyati = s.BelgeFiyati,
                          UcretsizMiktar = s.UcretsizMiktar,
                          DonemlikKota = s.DonemlikKota,
                          UcretAciklamasiLink = s.UcretAciklamasiLink,
-                         Saatler = (from s in db.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == s.BelgeTipDetayID)
-                                    join gn in db.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
+                         Saatler = (from s in _entities.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == s.BelgeTipDetayID)
+                                    join gn in _entities.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
                                     group new { s.TalepBaslangicSaat, s.TalepBitisSaat, s.HaftaGunID, gn.HaftaGunAdi, s.TeslimBaslangicSaat, s.TeslimBitisSaat, s.EklenecekGun }
                                        by new
                                        {
@@ -75,19 +75,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.OgrenimDurumAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.OgrenimDurumAdi.Contains(model.OgrenimDurumAdi));
             if (!model.BelgeTipAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.BelgeTipAdi.Contains(model.BelgeTipAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace())
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.IslemTarihi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.BelgeTipDetayDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
             {
-                q = q.OrderBy(model.Sort);
-            }
-            else q = q.OrderBy(o => o.IslemTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.BelgeTipDetayDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -95,12 +93,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Kayit(int? id)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new BelgeTipDetayKayitDto();
             if (id.HasValue)
             {
-                var data = db.BelgeTipDetays.Where(p => p.BelgeTipDetayID == id).FirstOrDefault();
+                var data = _entities.BelgeTipDetays.FirstOrDefault(p => p.BelgeTipDetayID == id);
                 if (data != null)
                 {
                     model.BelgeTipDetayID = data.BelgeTipDetayID;
@@ -121,9 +119,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
-            model.SeciliBelgeTipler = db.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID).Select(s => s.BelgeTipID).ToList();
-            model.Saatler = (from s in db.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID)
-                             join gn in db.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
+            model.SeciliBelgeTipler = _entities.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID).Select(s => s.BelgeTipID).ToList();
+            model.Saatler = (from s in _entities.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == model.BelgeTipDetayID)
+                             join gn in _entities.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
                              group new { s.TalepBaslangicSaat, s.TalepBitisSaat, s.HaftaGunID, gn.HaftaGunAdi, s.TeslimBaslangicSaat, s.TeslimBitisSaat, s.EklenecekGun }
                                 by new
                                 {
@@ -151,9 +149,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BelgeTipleriKayıt)]
         public ActionResult Kayit(BelgeTipDetayKayitDto kModel, string EKD)
         {
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            kModel.EnstituKod = _EnstituKod;
-            var MmMessage = new MmMessage(); 
+            var enstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            kModel.EnstituKod = enstituKod;
+            var mmMessage = new MmMessage(); 
             kModel.TalepBaslangicSaat = kModel.TalepBaslangicSaat ?? new List<TimeSpan>();
             kModel.TalepBitisSaat = kModel.TalepBitisSaat ?? new List<TimeSpan>();
             kModel.EklenecekGun = kModel.EklenecekGun ?? new List<int>();
@@ -181,56 +179,52 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 TeslimBaslangicSaat = qtsb.s,
                                 TeslimBitisSaat = qtsbt.s,
                                 EklenecekGun = qEg.s,
-                                GunNos = db.HaftaGunleris.Where(p => qhg.s.Contains(p.HaftaGunID)).Select(s => new CmbIntDto { Value = s.HaftaGunID, Caption = s.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
+                                GunNos = _entities.HaftaGunleris.Where(p => qhg.s.Contains(p.HaftaGunID)).Select(s => new CmbIntDto { Value = s.HaftaGunID, Caption = s.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
                             }).OrderBy(t => t.GunNos.Min(m => m.Value)).ThenBy(t => t.TalepBaslangicSaat).ToList();
 
             #region Kontrol 
             if (kModel.BelgeTipID.Count == 0)
-            {
-                string msg = "Kayıt işlemini yapabilmeniz belge tipini seçmeniz gerekmektedir!";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+            { 
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz belge tipini seçmeniz gerekmektedir!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
             if (kModel.OgrenimDurumID <= 0)
-            {
-                string msg = "Kayıt işlemini yapabilmeniz öğrenim durumunu seçmeniz gerekmektedir!";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimDurumID" });
+            { 
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz öğrenim durumunu seçmeniz gerekmektedir!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimDurumID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimDurumID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OgrenimDurumID" });
 
             if (kModel.UcretAlimiVar)
             {
                 if (kModel.BelgeFiyati.HasValue == false || kModel.BelgeFiyati <= 0)
-                {
-                    string msg = "Kayıt işlemini yapabilmeniz belge fiyatının 0 dan büyük bir değeri olması gerekmektedir!";
-                    MmMessage.Messages.Add(msg);
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeFiyati" });
+                { 
+                    mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz belge fiyatının 0 dan büyük bir değeri olması gerekmektedir!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeFiyati" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeFiyati" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeFiyati" });
             }
 
             if (qSaatler.Count == 0)
-            {
-                string msg = "Kayıt işlemini yapabilmeniz saat kriterlerini tanımlayınız!";
-                MmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz saat kriterlerini tanımlayınız!");
             }
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                var anyData = db.BelgeTipDetayBelgelers.Where(a => kModel.BelgeTipID.Contains(a.BelgeTipID) && a.BelgeTipDetay.OgrenimDurumID == kModel.OgrenimDurumID && a.BelgeTipDetayID != kModel.BelgeTipDetayID).ToList();
+                var anyData = _entities.BelgeTipDetayBelgelers.Where(a => kModel.BelgeTipID.Contains(a.BelgeTipID) && a.BelgeTipDetay.OgrenimDurumID == kModel.OgrenimDurumID && a.BelgeTipDetayID != kModel.BelgeTipDetayID).ToList();
                 if (anyData.Count > 0)
                 {
                     var ids = anyData.Select(s => s.BelgeTipID).ToList();
-                    var belgeTipleri = db.BelgeTipleris.Where(p => ids.Contains(p.BelgeTipID)).Select(s => s.BelgeTipAdi).ToList();
+                    var belgeTipleri = _entities.BelgeTipleris.Where(p => ids.Contains(p.BelgeTipID)).Select(s => s.BelgeTipAdi).ToList();
                     string msg = "Eklemeye çalıştığınız '" + string.Join(", ", belgeTipleri) + "' belge tipleri sistemde zaten tanımlıdır!";
-                    MmMessage.Messages.Add(msg);
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
+                    mmMessage.Messages.Add(msg);
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BelgeTipID" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BelgeTipID" });
             }
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IsAktif = kModel.IsAktif;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -245,7 +239,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.BelgeTipDetayID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var eklenen = db.BelgeTipDetays.Add(new BelgeTipDetay
+                    var eklenen = _entities.BelgeTipDetays.Add(new BelgeTipDetay
                     {
                         EnstituKod = kModel.EnstituKod,
                         OgrenimDurumID = kModel.OgrenimDurumID,
@@ -260,12 +254,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = kModel.IslemYapanIP
 
                     });
-                    db.SaveChanges();
+                    _entities.SaveChanges();
                     kModel.BelgeTipDetayID = eklenen.BelgeTipDetayID;
                 }
                 else
                 {
-                    var data = db.BelgeTipDetays.Where(p => p.BelgeTipDetayID == kModel.BelgeTipDetayID).First();
+                    var data = _entities.BelgeTipDetays.First(p => p.BelgeTipDetayID == kModel.BelgeTipDetayID);
                     data.OgrenimDurumID = kModel.OgrenimDurumID;
                     data.UcretAlimiVar = kModel.UcretAlimiVar;
                     data.BelgeFiyati = kModel.BelgeFiyati <= 0 ? null : kModel.BelgeFiyati;
@@ -277,23 +271,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
 
-                    var _saatler = db.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == data.BelgeTipDetayID).ToList();
-                    db.BelgeTipDetaySaatlers.RemoveRange(_saatler);
+                    var saatler = _entities.BelgeTipDetaySaatlers.Where(p => p.BelgeTipDetayID == data.BelgeTipDetayID).ToList();
+                    _entities.BelgeTipDetaySaatlers.RemoveRange(saatler);
 
-                    var _btipler = db.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetayID == data.BelgeTipDetayID).ToList();
-                    db.BelgeTipDetayBelgelers.RemoveRange(_btipler);
-                    db.SaveChanges();
+                    var btipler = _entities.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetayID == data.BelgeTipDetayID).ToList();
+                    _entities.BelgeTipDetayBelgelers.RemoveRange(btipler);
+                    _entities.SaveChanges();
                 }
 
                 foreach (var item in kModel.BelgeTipID)
                 {
-                    db.BelgeTipDetayBelgelers.Add(new BelgeTipDetayBelgeler { BelgeTipDetayID = kModel.BelgeTipDetayID, BelgeTipID = item });
+                    _entities.BelgeTipDetayBelgelers.Add(new BelgeTipDetayBelgeler { BelgeTipDetayID = kModel.BelgeTipDetayID, BelgeTipID = item });
                 }
                 foreach (var item in qSaatler)
                 {
                     foreach (var item2 in item.GunNos)
                     {
-                        db.BelgeTipDetaySaatlers.Add(new BelgeTipDetaySaatler
+                        _entities.BelgeTipDetaySaatlers.Add(new BelgeTipDetaySaatler
                         {
                             BelgeTipDetayID = kModel.BelgeTipDetayID,
                             HaftaGunID = item2.Value.Value,
@@ -306,41 +300,43 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             kModel.Saatler = qSaatler;
             kModel.SeciliBelgeTipler = kModel.BelgeTipID;
             var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.BelgeTipleriList = BelgeTalepBus.GetCmbBelgeTipleri(false);
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.OgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", kModel.OgrenimDurumID);
             return View(kModel);
         }
 
 
-        public ActionResult saatEkleKontrol(SaatKontrolDto model)
+        public ActionResult SaatEkleKontrol(SaatKontrolDto model)
         {
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = true;
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = true
+            };
             model.GHaftaGunleri = model.HaftaGunleri.IsNullOrWhiteSpace() ? new List<int>() : model.HaftaGunleri.Split(',').Select(s => s.ToInt().Value).ToList();
 
             model.HaftaGunleriList = model.HaftaGunleriList ?? new List<string>();
             model.TalepBaslangicSaatList = model.TalepBaslangicSaatList ?? new List<TimeSpan>();
             model.TalepBitisSaatList = model.TalepBitisSaatList ?? new List<TimeSpan>();
-            var _TalepBaslangcSaati = model.TalepBaslangicSaatList.Select((s, inx) => new { s, inx }).ToList();
-            var _TalepBitisSaati = model.TalepBitisSaatList.Select((s, inx) => new { s, inx }).ToList();
-            var _HaftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s, inx }).ToList();
-            var _GHaftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s = s.Split(',').Select(s2 => s2.ToInt().Value).ToList(), inx }).ToList();
-            var qSaatler = (from tbs in _TalepBaslangcSaati
-                            join tbt in _TalepBitisSaati on tbs.inx equals tbt.inx
-                            join hgl in _HaftaGunleriList on tbs.inx equals hgl.inx
-                            join ghgl in _GHaftaGunleriList on tbs.inx equals ghgl.inx
+            var talepBaslangcSaati = model.TalepBaslangicSaatList.Select((s, inx) => new { s, inx }).ToList();
+            var talepBitisSaati = model.TalepBitisSaatList.Select((s, inx) => new { s, inx }).ToList();
+            var haftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s, inx }).ToList();
+            var gHaftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s = s.Split(',').Select(s2 => s2.ToInt().Value).ToList(), inx }).ToList();
+            var qSaatler = (from tbs in talepBaslangcSaati
+                            join tbt in talepBitisSaati on tbs.inx equals tbt.inx
+                            join hgl in haftaGunleriList on tbs.inx equals hgl.inx
+                            join ghgl in gHaftaGunleriList on tbs.inx equals ghgl.inx
 
                             select new
                             {
@@ -413,7 +409,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BelgeTipleriSil)]
         public ActionResult Sil(int? id)
         {
-            var data = db.BelgeTipDetays.Where(p => p.BelgeTipDetayID == id).FirstOrDefault();
+            var data = _entities.BelgeTipDetays.FirstOrDefault(p => p.BelgeTipDetayID == id);
             string message = "";
             bool success = true;
             if (data != null)
@@ -422,14 +418,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "Belge Tip detay kaydı silindi!";
-                    db.BelgeTipDetays.Remove(data);
-                    db.SaveChanges();
+                    _entities.BelgeTipDetays.Remove(data);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "Belge Tip detay kaydı silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "BelgeTipDetay/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -437,7 +433,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Belge tip detayı sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }
 }

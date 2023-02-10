@@ -147,7 +147,7 @@
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getOtBilgiM", "MezuniyetSureci")',
+                url: '@Url.Action("GetOtBilgiM", "MezuniyetSureci")',
                 data: { EnstituKod: sndrVal, MezuniyetSurecID: '@Model.MezuniyetSurecID' },
                 success: function (result) {
                     $("#_otBilgi").html(result);

@@ -10,28 +10,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.SrAyarları)]
-    public class SRAyarlarController : Controller
+    public class SrAyarlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var data = db.SRAyarlars.Where(p => p.EnstituKod == _EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var data = _entities.SRAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
-            var PanelToggled = new Dictionary<string, bool>();
+            var panelToggled = new Dictionary<string, bool>();
             foreach (var item in cats)
             {
-                PanelToggled.Add(item.Kategori, item.Toggle);
+                panelToggled.Add(item.Kategori, item.Toggle);
             }
-            ViewBag.PanelToggled = PanelToggled;
+            ViewBag.PanelToggled = panelToggled;
             return View(data);
         }
         [HttpPost]
-        public ActionResult Index(List<string> AyarAdi, List<string> AyarDegeri, List<string> PanelToggled, string EKD)
+        public ActionResult Index(List<string> ayarAdi, List<string> ayarDegeri, List<string> panelToggled, string ekd)
         {
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var qSistemAyarAdi = AyarAdi.Select((s, Index) => new { inx = Index, s }).ToList();
-            var qSistemAyarDegeri = AyarDegeri.Select((s, Index) => new { inx = Index, s }).ToList();
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var qSistemAyarAdi = ayarAdi.Select((s, index) => new { inx = index, s }).ToList();
+            var qSistemAyarDegeri = ayarDegeri.Select((s, index) => new { inx = index, s }).ToList();
 
             var qModel = (from sa in qSistemAyarAdi
                           join sad in qSistemAyarDegeri on sa.inx equals sad.inx
@@ -43,26 +43,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           }).ToList();
             foreach (var item in qModel)
             {
-                var ayar = db.SRAyarlars.Where(p => p.AyarAdi == item.AyarAdi && p.EnstituKod == _EnstituKod).FirstOrDefault();
+                var ayar = _entities.SRAyarlars.FirstOrDefault(p => p.AyarAdi == item.AyarAdi && p.EnstituKod == enstituKod);
                 if (ayar != null)
                 {
                     ayar.AyarDegeri = item.AyarDegeri;
                 }
             }
-            db.SaveChanges();
+            _entities.SaveChanges();
             MessageBox.Show("Salon Rezervasyon Ayarları Güncellendi", MessageBox.MessageType.Success);
-            var data = db.SRAyarlars.Where(p => p.EnstituKod == _EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
-            var _PanelToggled = new Dictionary<string, bool>();
-            foreach (var item in PanelToggled)
+            var data = _entities.SRAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
+            var panelToggledx = new Dictionary<string, bool>();
+            foreach (var item in panelToggled)
             {
                 var _ptg = item.Replace("__", "◘").Split('◘');
-                _PanelToggled.Add(_ptg[0], _ptg[1].ToBoolean().Value);
-            }
-            //LojmanInfoDownloader.BasvuruTercihleriGuncelle();
-            //siraAyarla();
-            ViewBag.PanelToggled = _PanelToggled;
-            //LojmanInfoDownloader.BasvuruTercihleriGuncelle();
-            //siraAyarla();
+                panelToggledx.Add(_ptg[0], _ptg[1].ToBoolean().Value);
+            } 
+            ViewBag.PanelToggled = panelToggledx; 
             return View(data);
         }
 

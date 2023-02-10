@@ -82,7 +82,7 @@
 
                     <td>
                         <div class="form-group @(item.Value.Success.HasValue?(item.Value.Success.Value?"has-success":"has-error"):"")">
-                            <input class="form-control" name="Kota" id="Kota" value="@item.Value.Kota.toEmptyStringZero()" />
+                            <input class="form-control" name="Kota" id="Kota" value="@item.Value.Kota.ToEmptyStringZero()" />
                         </div>
                     </td>
                     <td>

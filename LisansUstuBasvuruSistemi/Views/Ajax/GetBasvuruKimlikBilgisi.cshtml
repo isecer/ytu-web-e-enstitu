@@ -3,15 +3,15 @@
 @model BasvuruDetayDto
 @{
     Layout = null; 
-    var Color = Model.DurumColor;  
+    var color = Model.DurumColor;  
 }
 
 <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
     <div class="panel-heading padding-0">
-        <h3 class="panel-title"><i class="fa fa-id-card-o fa-lg myCaptionTd" style="color:@Color;"></i>&nbsp; <span class="myCaptionTd" style="color:@Color;">Kimlik / Adres Bilgisi</span></h3>
+        <h3 class="panel-title"><i class="fa fa-id-card-o fa-lg myCaptionTd" style="color:@color;"></i>&nbsp; <span class="myCaptionTd" style="color:@color;">Kimlik / Adres Bilgisi</span></h3>
     </div>
     <div class="panel-body form-group-separated" style="padding:0px;">
-        <table class="table" style="font-size:9pt;margin:0px;color:@Color;">
+        <table class="table" style="font-size:9pt;margin:0px;color:@color;">
 
             <tr>
                 <td width="170" style="text-align:right;">@(Model.IsYerli ? "T.C. kimlik No" : "Pasaport No")</td>

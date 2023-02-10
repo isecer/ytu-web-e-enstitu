@@ -17,29 +17,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.MezuniyetYayinTurleri)]
     public class MezuniyetYayinTurleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _context = new LisansustuBasvuruSistemiEntities();
 
-        public ActionResult Index(string EKD)
+        public ActionResult Index(string ekd)
         {
-            var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
-            return Index(new fmMezuniyetYayinTurleri { PageSize = Management.PageSize, Expand = false });
+            var sEkod = EnstituBus.GetSelectedEnstitu(ekd);
+            return Index(new FmMezuniyetYayinTurleri { PageSize = Management.PageSize, Expand = false });
         }
         [HttpPost]
-        public ActionResult Index(fmMezuniyetYayinTurleri model)
+        public ActionResult Index(FmMezuniyetYayinTurleri model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from my in db.MezuniyetYayinTurleris
-                    join myt in db.MezuniyetYayinTurleris on new { my.MezuniyetYayinTurID } equals new { myt.MezuniyetYayinTurID } into defmytD
+            var q = from my in _context.MezuniyetYayinTurleris
+                    join myt in _context.MezuniyetYayinTurleris on new { my.MezuniyetYayinTurID } equals new { myt.MezuniyetYayinTurID } into defmytD
                     from mytD in defmytD.DefaultIfEmpty()
-                    join mbt in db.MezuniyetYayinBelgeTurleris on new { my.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)mbt.MezuniyetYayinBelgeTurID } into defmbtD
+                    join mbt in _context.MezuniyetYayinBelgeTurleris on new { my.MezuniyetYayinBelgeTurID } equals new { MezuniyetYayinBelgeTurID = (int?)mbt.MezuniyetYayinBelgeTurID } into defmbtD
                     from mbtD in defmbtD.DefaultIfEmpty()
-                    join mklt in db.MezuniyetYayinLinkTurleris on new { my.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)mklt.MezuniyetYayinLinkTurID } into defmltD
+                    join mklt in _context.MezuniyetYayinLinkTurleris on new { my.KaynakMezuniyetYayinLinkTurID } equals new { KaynakMezuniyetYayinLinkTurID = (int?)mklt.MezuniyetYayinLinkTurID } into defmltD
                     from mkltD in defmltD.DefaultIfEmpty()
-                    join mmt in db.MezuniyetYayinMetinTurleris on new { my.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)mmt.MezuniyetYayinMetinTurID } into defmmtD
+                    join mmt in _context.MezuniyetYayinMetinTurleris on new { my.MezuniyetYayinMetinTurID } equals new { MezuniyetYayinMetinTurID = (int?)mmt.MezuniyetYayinMetinTurID } into defmmtD
                     from mmtD in defmmtD.DefaultIfEmpty()
-                    join mylt in db.MezuniyetYayinLinkTurleris on new { my.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)mylt.MezuniyetYayinLinkTurID } into defmyltD
+                    join mylt in _context.MezuniyetYayinLinkTurleris on new { my.YayinMezuniyetYayinLinkTurID } equals new { YayinMezuniyetYayinLinkTurID = (int?)mylt.MezuniyetYayinLinkTurID } into defmyltD
                     from myltD in defmyltD.DefaultIfEmpty()
-                    select new frMezuniyetYayinTurleri
+                    select new FrMezuniyetYayinTurleri
                     {
                         MezuniyetYayinTurID = my.MezuniyetYayinTurID,
                         MezuniyetYayinBelgeTurID = my.MezuniyetYayinBelgeTurID,
@@ -78,35 +77,35 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (!model.MezuniyetYayinTurAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.MezuniyetYayinTurAdi.Contains(model.MezuniyetYayinTurAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.MezuniyetYayinTurAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.MezuniyetYayinTurAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
 
 
 
-        public ActionResult Kayit(int? id, string EKD)
+        public ActionResult Kayit(int? id, string ekd)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
             var model = new MezuniyetYayinTurleri();
 
             if (id.HasValue && id.Value > 0)
             {
-                var data = db.MezuniyetYayinTurleris.Where(p => p.MezuniyetYayinTurID == id).FirstOrDefault();
+                var data = _context.MezuniyetYayinTurleris.FirstOrDefault(p => p.MezuniyetYayinTurID == id);
                 if (data != null)
                 {
-                    model = data;
-
+                    model = data; 
                 }
                 else model.IsAktif = true;
             }
@@ -130,30 +129,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [ValidateInput(false)]
         public ActionResult Kayit(MezuniyetYayinTurleri kModel, string dlgid = "")
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
 
             #region Kontrol
 
             if (kModel.MezuniyetYayinTurAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Yayın Türü Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MezuniyetYayinTurAdi" });
+                mmMessage.Messages.Add("Yayın Türü Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "MezuniyetYayinTurAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MezuniyetYayinTurAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "MezuniyetYayinTurAdi" });
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.MezuniyetYayinBelgeTurID = kModel.MezuniyetYayinBelgeTurID;
-                kModel.BelgeZorunlu = kModel.MezuniyetYayinBelgeTurID.HasValue ? kModel.BelgeZorunlu : false;
+                kModel.BelgeZorunlu = kModel.MezuniyetYayinBelgeTurID.HasValue && kModel.BelgeZorunlu;
                 kModel.KaynakMezuniyetYayinLinkTurID = kModel.KaynakMezuniyetYayinLinkTurID;
-                kModel.KaynakLinkiZorunlu = kModel.KaynakMezuniyetYayinLinkTurID.HasValue ? kModel.KaynakLinkiZorunlu : false;
+                kModel.KaynakLinkiZorunlu = kModel.KaynakMezuniyetYayinLinkTurID.HasValue && kModel.KaynakLinkiZorunlu;
                 kModel.MezuniyetYayinMetinTurID = kModel.MezuniyetYayinMetinTurID;
-                kModel.MetinZorunlu = kModel.MezuniyetYayinMetinTurID.HasValue ? kModel.MetinZorunlu : false;
+                kModel.MetinZorunlu = kModel.MezuniyetYayinMetinTurID.HasValue && kModel.MetinZorunlu;
                 kModel.YayinMezuniyetYayinLinkTurID = kModel.YayinMezuniyetYayinLinkTurID;
-                kModel.YayinLinkiZorunlu = kModel.YayinMezuniyetYayinLinkTurID.HasValue ? kModel.YayinLinkiZorunlu : false;
+                kModel.YayinLinkiZorunlu = kModel.YayinMezuniyetYayinLinkTurID.HasValue && kModel.YayinLinkiZorunlu;
                 kModel.YayinIndexTurIstensin = kModel.YayinIndexTurIstensin;
                 kModel.YayinKabulEdilmisMakaleIstensin = kModel.YayinKabulEdilmisMakaleIstensin;
                 kModel.TarihIstensin = kModel.TarihIstensin;
@@ -174,12 +175,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.MezuniyetYayinTurID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var myt = db.MezuniyetYayinTurleris.Add(kModel);
-                    db.SaveChanges();
+                    var myt = _context.MezuniyetYayinTurleris.Add(kModel);
+                    _context.SaveChanges();
                 }
                 else
                 {
-                    var data = db.MezuniyetYayinTurleris.Where(p => p.MezuniyetYayinTurID == kModel.MezuniyetYayinTurID).First();
+                    var data = _context.MezuniyetYayinTurleris.First(p => p.MezuniyetYayinTurID == kModel.MezuniyetYayinTurID);
                     data.MezuniyetYayinBelgeTurID = kModel.MezuniyetYayinBelgeTurID;
                     data.BelgeZorunlu = kModel.BelgeZorunlu;
                     data.KaynakMezuniyetYayinLinkTurID = kModel.KaynakMezuniyetYayinLinkTurID;
@@ -207,15 +208,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = kModel.IslemTarihi;
 
                 } 
-                db.SaveChanges();
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             ViewBag.MezuniyetYayinBelgeTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinBelgeTurleri(true), "Value", "Caption", kModel.MezuniyetYayinBelgeTurID);
             ViewBag.KaynakMezuniyetYayinLinkTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinLinkTurleri(true, true), "Value", "Caption", kModel.KaynakMezuniyetYayinLinkTurID);
             ViewBag.MezuniyetYayinMetinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinMetinTurleri(true), "Value", "Caption", kModel.MezuniyetYayinMetinTurID);
@@ -226,8 +227,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Sil(int id)
         {
-            var kayit = db.MezuniyetYayinTurleris.Where(p => p.MezuniyetYayinTurID == id).FirstOrDefault();
-            var ytAdi = db.MezuniyetYayinTurleris.Where(p => p.MezuniyetYayinTurID == id).First();
+            var kayit = _context.MezuniyetYayinTurleris.FirstOrDefault(p => p.MezuniyetYayinTurID == id);
+            var ytAdi = _context.MezuniyetYayinTurleris.First(p => p.MezuniyetYayinTurID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -236,14 +237,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + ytAdi.MezuniyetYayinTurAdi + "' İsimli Yayın Türü Silindi!";
-                    db.MezuniyetYayinTurleris.Remove(kayit);
-                    db.SaveChanges();
+                    _context.MezuniyetYayinTurleris.Remove(kayit);
+                    _context.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + ytAdi.MezuniyetYayinTurAdi + "' İsimli Yayın Türü Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "MezuniyetYayinTurleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "MezuniyetYayinTurleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -251,7 +252,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Yayın Türü sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
 

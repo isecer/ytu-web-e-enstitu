@@ -7,15 +7,15 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSRTalepTipleri : PagerOption
+    public class FmSrTalepTipleri : PagerOption
     {
         public string TalepTipAdi { get; set; }
         public bool? IsTezSinavi { get; set; }
         public bool? IsAktif { get; set; }
-        public IEnumerable<frSRTalepTipleri> data { get; set; }
+        public IEnumerable<FrSRTalepTipleri> data { get; set; }
 
     }
-    public class frSRTalepTipleri : SRTalepTipleri
+    public class FrSRTalepTipleri : SRTalepTipleri
     {
 
         public bool IsTezSinavi { get; set; }

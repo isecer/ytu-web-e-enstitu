@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    partial class rprMezuniyetCiltliTezTeslimFormu_FR1243
+    partial class RprMezuniyetCiltliTezTeslimFormu_FR1243
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprMezuniyetCiltliTezTeslimFormu_FR1243));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprMezuniyetCiltliTezTeslimFormu_FR1243));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.lblEkBilgi = new DevExpress.XtraReports.UI.XRLabel();
             this.xrRichKaraBigi = new DevExpress.XtraReports.UI.XRRichText();

@@ -79,7 +79,7 @@
                                             <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
                                                 <ul class="nav nav-tabs" role="tablist">
                                                     <li class="active"><a href="#tab-@item.SinavTipID-1" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-file-text myCaptionTdx"></i>&nbsp; <span class="myCaptionTdx">Ana Not Kriterleri</span></a></li>
-                                                    @if (item.frSinavTipleriSPA.Count > 0)
+                                                    @if (item.FrBsSinavTipleriSpas.Count > 0)
                                                     {
                                                         <li><a href="#tab-@item.SinavTipID-2" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx"></i>&nbsp; <span class="myCaptionTdx">Programa Göre Not Kriteleri</span></a></li>
                                                     }
@@ -294,7 +294,7 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    @foreach (var item2 in item.SinavTipleriOTNotAraliklariList)
+                                                                                    @foreach (var item2 in item.SinavTipleriOtNotAraliklariList)
                                                                                     {
                                                                                         <tr>
                                                                                             <td>
@@ -374,7 +374,7 @@
 
                                                     </div>
                                                 </div>
-                                                @if (item.frSinavTipleriSPA.Count > 0)
+                                                @if (item.FrBsSinavTipleriSpas.Count > 0)
                                                 {
                                                     <div class="tab-pane" id="tab-@item.SinavTipID-2">
                                                         <div class="panel-body" style="padding: 0px;">
@@ -389,10 +389,10 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        @if (item.frSinavTipleriSPA.Count > 0)
+                                                                        @if (item.FrBsSinavTipleriSpas.Count > 0)
                                                                         {
                                                                             int RowIndex2 = 0;
-                                                                            foreach (var item2 in item.frSinavTipleriSPA)
+                                                                            foreach (var item2 in item.FrBsSinavTipleriSpas)
                                                                             {
                                                                                 RowIndex2++;
                                                                                 trCls = RowIndex % 2 == 1 ? "" : "even";
@@ -444,7 +444,7 @@
                                                                                                                                 </tr>
                                                                                                                             </thead>
                                                                                                                             <tbody>
-                                                                                                                                @foreach (var item3 in item2.SinavTipleriOTNotAraliklariList)
+                                                                                                                                @foreach (var item3 in item2.SinavTipleriOtNotAraliklariList)
                                                                                                                                 {
                                                                                                                                     <tr>
                                                                                                                                         <td>

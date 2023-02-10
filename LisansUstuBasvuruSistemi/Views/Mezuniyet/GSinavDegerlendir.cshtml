@@ -197,7 +197,7 @@
                                                     </select>
                                                 </td>
                                             </tr>
-                                            if (new List<int> { OgrenimTipi.Doktra, OgrenimTipi.ButunlesikDoktora }.Contains(MezuniyetBasvurusu.OgrenimTipKod))
+                                            if (MezuniyetBasvurusu.OgrenimTipKod.IsDoktora())
                                             {
 
                                                 <tr>
@@ -317,7 +317,7 @@
 
                                                 </td>
                                             </tr>
-                                            if (new List<int> { OgrenimTipi.Doktra, OgrenimTipi.ButunlesikDoktora }.Contains(BOgtrenimTipi.OgrenimTipKod) && item.IsYokDrBursiyeriVar.HasValue)
+                                            if (BOgtrenimTipi.OgrenimTipKod.IsDoktora() && item.IsYokDrBursiyeriVar.HasValue)
                                             {
                                                 <tr>
                                                     <td class="CaptionTd" width="140">100/2000 YÖK Bursiyeri</td>

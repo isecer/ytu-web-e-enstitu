@@ -17,21 +17,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.SinavTipleri)]
     public class SinavTipleriController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmSinavTipleri { PageSize = 15 });
+            return Index(new FmSinavTipleri { PageSize = 15 });
         }
         [HttpPost]
-        public ActionResult Index(fmSinavTipleri model)
+        public ActionResult Index(FmSinavTipleri model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
-            var q = from s in db.SinavTipleris
-                    join sl in db.SinavTipleris on s.SinavTipID equals sl.SinavTipID
-                    join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
-                    where EnstKods.Contains(s.EnstituKod)
-                    select new frSinavTipleri
+            var q = from s in _entities.SinavTipleris
+                    join sl in _entities.SinavTipleris on s.SinavTipID equals sl.SinavTipID
+                    join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
+                    where enstKods.Contains(s.EnstituKod)
+                    select new FrSinavTipleri
                     {
                         SinavTipID = s.SinavTipID,
                         SinavTipKod = s.SinavTipKod,
@@ -60,33 +60,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemTarihi = s.IslemTarihi,
                         IslemYapan = s.Kullanicilar.KullaniciAdi,
                         IslemYapanID = s.IslemYapanID,
-                        IslemYapanIP = s.IslemYapanIP,
-                        //SinavNotlaris = s.SinavNotlaris.ToList(),
-                        //SinavTiplerSubSinavAraliks = s.SinavTiplerSubSinavAraliks.ToList(),
-                        //SinavTarihleris = s.SinavTarihleris.ToList(),
-                        //krSinavTipleriDonems = (from sq in s.SinavTipleriDonems
-                        //                        join dn in db.Donemlers on sq.WsDonemKod equals dn.Donemler.WsDonemKod
-                        //                        select new krSinavTipleriDonems
-                        //                        {
-                        //                            SinavTipID = sq.SinavTipID,
-                        //                            SinavTipDonemID = sq.SinavTipDonemID,
-                        //                            Yil = sq.Yil,
-                        //                            WsDonemKod = sq.WsDonemKod,
-                        //                            DonemAdi = dn.DonemAdi,
-                        //                            IsTaahhutVar = sq.IsTaahhutVar,
-                        //                        }).ToList(),
-
-                        //SinavTipleriOTNotAraliklariList = (from s2 in s.SinavTipleriOTNotAraliklaris.Where(p => p.EnstituKod == s.EnstituKod && p.SinavTipID == s.SinavTipID)
-                        //                                   join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == s.EnstituKod) on s2.OgrenimTipKod equals ot.OgrenimTipKod
-                        //                                   join otl in db.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
-                        //                                   select new krSinavTipleriOTNotAraliklari
-                        //                                   {
-                        //                                       OgrenimTipKod = s2.OgrenimTipKod,
-                        //                                       OgrenimTipAdi = otl.OgrenimTipAdi,
-                        //                                       Ingilizce = s2.Ingilizce,
-                        //                                       Min = s2.Min,
-                        //                                       Max = s2.Max
-                        //                                   }).ToList()
+                        IslemYapanIP = s.IslemYapanIP
+                       
                     };
             q = q.Where(p => UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
@@ -98,30 +73,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.KusuratVar.HasValue) q = q.Where(p => p.KusuratVar == model.KusuratVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.EnstituAd).ThenBy(o => o.SinavAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.SinavAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.FrSinavTipleris = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
-        public ActionResult Kayit(int? id, string EKD)
+        public ActionResult Kayit(int? id, string ekd)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
-            var model = new KmSinavTipleri();
-            model.EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
+            var model = new KmSinavTipleri
+            {
+                EnstituKod = EnstituBus.GetSelectedEnstitu(ekd)
+            };
             if (id.HasValue)
             {
-                var data = db.SinavTipleris.Where(p => p.SinavTipID == id).Select(s => new KmSinavTipleri
+                var data = _entities.SinavTipleris.Where(p => p.SinavTipID == id).Select(s => new KmSinavTipleri
                 {
                     SinavTipID = s.SinavTipID,
                     EnstituKod = s.EnstituKod,
@@ -161,37 +139,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            var OgrenimTipleris = db.OgrenimTipleris.Where(p => p.EnstituKod == model.EnstituKod && p.IsAktif).ToList();
-            var SinavTipleriOTNotAraliklaris = new List<SinavTipleriOTNotAraliklari>();
-            var Dils = new List<bool> { true, false };
-            foreach (var itemD in Dils)
+            var ogrenimTipleris = _entities.OgrenimTipleris.Where(p => p.EnstituKod == model.EnstituKod && p.IsAktif).ToList();
+            var sinavTipleriOtNotAraliklaris = new List<SinavTipleriOTNotAraliklari>();
+            var dils = new List<bool> { true, false };
+            foreach (var itemD in dils)
             {
-                foreach (var itemOt in OgrenimTipleris)
+                foreach (var itemOt in ogrenimTipleris)
                 {
-                    var Kayit = model.SinavTipleriOTNotAraliklaris.Where(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD).FirstOrDefault();
-                    SinavTipleriOTNotAraliklaris.Add(
+                    var kayit = model.SinavTipleriOTNotAraliklaris.FirstOrDefault(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
+                    sinavTipleriOtNotAraliklaris.Add(
                          new SinavTipleriOTNotAraliklari
                          {
                              EnstituKod = model.EnstituKod,
                              SinavTipID = model.SinavTipID,
                              OgrenimTipKod = itemOt.OgrenimTipKod,
-                             IsGecerli = Kayit != null ? Kayit.IsGecerli : false,
-                             IsIstensin = Kayit != null ? Kayit.IsIstensin : false,
+                             IsGecerli = kayit?.IsGecerli ?? false,
+                             IsIstensin = kayit?.IsIstensin ?? false,
                              Ingilizce = itemD,
-                             IsOzelNotAralik = Kayit != null ? Kayit.IsOzelNotAralik : false,
-                             Min = Kayit != null ? Kayit.Min : null,
-                             Max = Kayit != null ? Kayit.Max : null,
-                             SinavTipleriOTNotAraliklariGecersizProgramlars = Kayit != null ? Kayit.SinavTipleriOTNotAraliklariGecersizProgramlars : new List<SinavTipleriOTNotAraliklariGecersizProgramlar>()
+                             IsOzelNotAralik = kayit?.IsOzelNotAralik ?? false,
+                             Min = kayit?.Min,
+                             Max = kayit?.Max,
+                             SinavTipleriOTNotAraliklariGecersizProgramlars = kayit != null ? kayit.SinavTipleriOTNotAraliklariGecersizProgramlars : new List<SinavTipleriOTNotAraliklariGecersizProgramlar>()
 
                          });
                 }
             }
-            model.SinavTipleriOTNotAraliklaris = SinavTipleriOTNotAraliklaris;
+            model.SinavTipleriOTNotAraliklaris = sinavTipleriOtNotAraliklaris;
 
 
-            ViewBag.OgrenimTipleris = OgrenimTipleris;
-            ViewBag.SinavDilleris = db.SinavDilleris.ToList();
-            ViewBag.Programlars = db.Programlars.Where(p => p.AnabilimDallari.EnstituKod == model.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+            ViewBag.OgrenimTipleris = ogrenimTipleris;
+            ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
+            ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == model.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", model.SinavTipGrupID);
             ViewBag.OzelTarihTipID = new SelectList(Management.cmbGetOzelTarihTipleri(true), "Value", "Caption", model.OzelTarihTipID);
@@ -200,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.WsSinavCekimTipID = new SelectList(Management.cmbGetWsSinavCekimTipleri(true, WsCekimTipi.Donemsel), "Value", "Caption", model.WsSinavCekimTipID);
             ViewBag.SWsDonemKod = new SelectList(Management.cmbGetWsSinavCekimTipDetay(model.WsSinavCekimTipID ?? 0, false), "Value", "Caption");
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(model.EnstituKod), "Value", "Caption");
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(model.EnstituKod), "Value", "Caption");
             return View(model);
         }
         [HttpPost]
@@ -208,7 +186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Kayit(KmSinavTipleri kModel)
         {
 
-            var MmMessage = new MmMessage();
+            var mmMessage = new MmMessage();
 
             #region SetDetayData
             //Sınav Puanı Bilgileri  
@@ -216,7 +194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qIsTaahhutVar = kModel.IsTaahhutVar.Select((s, inx) => new { s, inx }).ToList();
             var qWebServisDonemlari = (from snWsY in qWebServisYil
                                        join th in qIsTaahhutVar on snWsY.inx equals th.inx
-                                       select new krSinavTipleriDonems
+                                       select new KrSinavTipleriDonem
                                        {
                                            WsDonemKod = null,
                                            Yil = snWsY.s,
@@ -226,9 +204,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             //Sınav Tarihi Bilgileri
-            var qSinavTarihleriID = kModel.SinavTarihleriID.Select((s, inx) => new { s, inx }).ToList();
+            var qSinavTarihleriId = kModel.SinavTarihleriID.Select((s, inx) => new { s, inx }).ToList();
             var qSinavTarihi = kModel.SinavTarihi.Select((s, inx) => new { s, inx }).ToList();
-            var qSinavTarihleri = (from stID in qSinavTarihleriID
+            var qSinavTarihleri = (from stID in qSinavTarihleriId
                                    join stTar in qSinavTarihi on stID.inx equals stTar.inx
                                    select new
                                    {
@@ -237,27 +215,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                        SinavTarihi = stTar.s
                                    }).ToList();
             //Sınav Puanı Bilgileri
-            var qSinavNotlariID = kModel.SinavNotlariID.Select((s, inx) => new { s, inx }).ToList();
+            var qSinavNotlariId = kModel.SinavNotlariID.Select((s, inx) => new { s, inx }).ToList();
             var qSinavNotAdi = kModel.SinavNotAdi.Select((s, inx) => new { s, inx }).ToList();
             var qSinavNotDeger = kModel.SinavNotDeger.Select((s, inx) => new { s, inx }).ToList();
-            var qSinavNotlari = (from snID in qSinavNotlariID
-                                 join snAd in qSinavNotAdi on snID.inx equals snAd.inx
-                                 join snNot in qSinavNotDeger on snID.inx equals snNot.inx
+            var qSinavNotlari = (from snId in qSinavNotlariId
+                                 join snAd in qSinavNotAdi on snId.inx equals snAd.inx
+                                 join snNot in qSinavNotDeger on snId.inx equals snNot.inx
                                  select new
                                  {
-                                     Index = snID.inx,
-                                     SinavNotlariID = snID.s,
+                                     Index = snId.inx,
+                                     SinavNotlariID = snId.s,
                                      SinavNotAdi = snAd.s,
                                      SinavNotDeger = snNot.s
                                  }).ToList();
 
-            var qSubSinavAralikID = kModel.SubSinavAralikID.Select((s, inx) => new { s, inx }).ToList();
+            var qSubSinavAralikId = kModel.SubSinavAralikID.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavAralikAdi = kModel.SubSinavAralikAdi.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavMin = kModel.SubSinavMin.Select((s, inx) => new { s, inx }).ToList();
             var qSubSinavMax = kModel.SubSinavMax.Select((s, inx) => new { s, inx }).ToList();
             var qNotDonusumFormulu = kModel.SubNotDonusumFormulu.Select((s, inx) => new { s, inx }).ToList();
             var qNotDonusum = kModel.SubNotDonusum.Select((s, inx) => new { s, inx }).ToList();
-            var qSubSinavAralik = (from snID in qSubSinavAralikID
+            var qSubSinavAralik = (from snID in qSubSinavAralikId
                                    join snAd in qSubSinavAralikAdi on snID.inx equals snAd.inx
                                    join snNotmin in qSubSinavMin on snID.inx equals snNotmin.inx
                                    join snNotmax in qSubSinavMax on snID.inx equals snNotmax.inx
@@ -275,22 +253,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                    }).ToList();
 
             //Sinav ogrenimTip Not Araliklari
-            var qNAOgrenimTipKod = kModel.NAOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
-            var qNAIngilizce = kModel.NAIngilizce.Select((s, inx) => new { s, inx }).ToList();
-            var qNAIsIstensin = kModel.NAIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNAIsGecerli = kModel.NAIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNAMin = kModel.NAMin.Select((s, inx) => new { s, inx }).ToList();
-            var qNAMax = kModel.NAMax.Select((s, inx) => new { s, inx }).ToList();
-            var qIPProgramKod = kModel.IPProgramKod.Select(s => new { ID = s.Split('_')[0], ProgramKod = s.Split('_')[1] }).ToList();
+            var qNaOgrenimTipKod = kModel.NAOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIngilizce = kModel.NAIngilizce.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIsIstensin = kModel.NAIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaIsGecerli = kModel.NAIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaMin = kModel.NAMin.Select((s, inx) => new { s, inx }).ToList();
+            var qNaMax = kModel.NAMax.Select((s, inx) => new { s, inx }).ToList();
+            var qIpProgramKod = kModel.IPProgramKod.Select(s => new { ID = s.Split('_')[0], ProgramKod = s.Split('_')[1] }).ToList();
 
-            var qNAOgrenimTipKodNotAralik = (from ot in qNAOgrenimTipKod
-                                             join ing in qNAIngilizce on ot.inx equals ing.inx
-                                             join gcr in qNAIsGecerli on ot.inx equals gcr.inx
-                                             join ist in qNAIsIstensin on ot.inx equals ist.inx
-                                             join min in qNAMin on ot.inx equals min.inx
-                                             join max in qNAMax on ot.inx equals max.inx
-                                             join otl in db.OgrenimTipleris on ot.s equals otl.OgrenimTipID
-                                             select new krSinavTipleriOTNotAraliklari
+            var qNaOgrenimTipKodNotAralik = (from ot in qNaOgrenimTipKod
+                                             join ing in qNaIngilizce on ot.inx equals ing.inx
+                                             join gcr in qNaIsGecerli on ot.inx equals gcr.inx
+                                             join ist in qNaIsIstensin on ot.inx equals ist.inx
+                                             join min in qNaMin on ot.inx equals min.inx
+                                             join max in qNaMax on ot.inx equals max.inx
+                                             join otl in _entities.OgrenimTipleris on ot.s equals otl.OgrenimTipID
+                                             select new KrSinavTipleriOtNotAraliklari
                                              {
                                                  OgrenimTipKod = ot.s,
                                                  OgrenimTipAdi = otl.OgrenimTipAdi,
@@ -300,52 +278,52 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                  IsOzelNotAralik = ist.s && (min.s.HasValue && max.s.HasValue),
                                                  Min = min.s,
                                                  Max = max.s,
-                                                 ProgramKods = qIPProgramKod.Where(p => p.ID == ("ProgramKod-" + ot.s + "-" + (ing.s ? "En" : "Tr"))).Select(s => s.ProgramKod).ToList()
+                                                 ProgramKods = qIpProgramKod.Where(p => p.ID == ("ProgramKod-" + ot.s + "-" + (ing.s ? "En" : "Tr"))).Select(s => s.ProgramKod).ToList()
                                              }).ToList();
             #endregion
 
             #region kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Enstitü seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
+                mmMessage.Messages.Add("Enstitü seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
 
             if (kModel.SinavTipGrupID <= 0)
             {
-                MmMessage.Messages.Add("Sınav tip grup bilgisini seçiniz!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipGrupID" });
+                mmMessage.Messages.Add("Sınav tip grup bilgisini seçiniz!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipGrupID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipGrupID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipGrupID" });
             if (kModel.SinavDilIDs.Count <= 0)
             {
-                MmMessage.Messages.Add("Sınav tipine ait Sınav Dillerini Seçiniz!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavDilIDs" });
+                mmMessage.Messages.Add("Sınav tipine ait Sınav Dillerini Seçiniz!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavDilIDs" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavDilIDs" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavDilIDs" });
             if (kModel.SinavTipKod <= 0)
             {
-                MmMessage.Messages.Add("Sınav tip kodu bilgisini giriniz!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
+                mmMessage.Messages.Add("Sınav tip kodu bilgisini giriniz!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavTipKod" });
             if (kModel.SinavAdi.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Sınav Adı bilgisini giriniz!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavAdi" });
+                mmMessage.Messages.Add("Sınav Adı bilgisini giriniz!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SinavAdi" });
             if (kModel.WebService)
             {
                 if (kModel.WsSinavCekimTipID.HasValue == false)
                 {
-                    MmMessage.Messages.Add("Web servisi veri çekim tipini seçiniz!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WsSinavCekimTipID" });
+                    mmMessage.Messages.Add("Web servisi veri çekim tipini seçiniz!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WsSinavCekimTipID" });
                 }
                 else
                 {
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WsSinavCekimTipID" });
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WsSinavCekimTipID" });
                     if (kModel.WsSinavCekimTipID == WsCekimTipi.Tarih)
                     {
 
@@ -361,24 +339,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (kModel.WebServiceKod.IsNullOrWhiteSpace())
                         {
-                            MmMessage.Messages.Add("Web servisi seçeneği işaretli olan Sınav tiplerinin Web Servisi Kodu tanımlanması zorunludur!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebServiceKod" });
+                            mmMessage.Messages.Add("Web servisi seçeneği işaretli olan Sınav tiplerinin Web Servisi Kodu tanımlanması zorunludur!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebServiceKod" });
                         }
-                        else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebServiceKod" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebServiceKod" });
                         if (qWebServisDonemlari.Count == 0)
                         {
-                            MmMessage.Messages.Add("Web servisi için Yıl bilgilerinin girilmesi zorunludur!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebService" });
+                            mmMessage.Messages.Add("Web servisi için Yıl bilgilerinin girilmesi zorunludur!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebService" });
                         }
-                        else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebService" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebService" });
                     }
                 }
                 if (kModel.TarihGirisMaxGecmisYil.HasValue == false)
                 {
-                    MmMessage.Messages.Add("Web servisi seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
+                    mmMessage.Messages.Add("Web servisi seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
 
 
 
@@ -392,68 +370,68 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (kModel.Tarih1.HasValue == false)
                         {
-                            MmMessage.Messages.Add("Seçilen özel tarih kriteri için Tarih bilgisi girilmesi gerekmektedir!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih1" });
+                            mmMessage.Messages.Add("Seçilen özel tarih kriteri için Tarih bilgisi girilmesi gerekmektedir!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih1" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih1" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih1" });
                         }
                     }
                     else if (kModel.OzelTarihTipID == OzelTarihTip.IkiTarihArasi)
                     {
                         if (kModel.Tarih1.HasValue == false)
                         {
-                            MmMessage.Messages.Add("Seçilen özel tarih kriteri için Başlangıç Tarihi bilgisi girilmesi gerekmektedir!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih1" });
+                            mmMessage.Messages.Add("Seçilen özel tarih kriteri için Başlangıç Tarihi bilgisi girilmesi gerekmektedir!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih1" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih1" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih1" });
                         }
                         if (kModel.Tarih2.HasValue == false)
                         {
-                            MmMessage.Messages.Add("Seçilen özel tarih kriteri için Bitiş Tarihi bilgisi girilmesi gerekmektedir!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih2" });
+                            mmMessage.Messages.Add("Seçilen özel tarih kriteri için Bitiş Tarihi bilgisi girilmesi gerekmektedir!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih2" });
                         }
                         else
                         {
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih2" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih2" });
                         }
                     }
                     else if (kModel.OzelTarihTipID == OzelTarihTip.BelirliTarihler)
                     {
                         if (qSinavTarihleri.Count == 0)
                         {
-                            MmMessage.Messages.Add("Seçilen özel tarih kriteri için  tarih bilgilerinin eklenmesi zorunludur!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelTarih" });
+                            mmMessage.Messages.Add("Seçilen özel tarih kriteri için  tarih bilgilerinin eklenmesi zorunludur!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelTarih" });
                         }
-                        else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelTarih" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelTarih" });
                     }
                     else if (kModel.OzelTarihTipID == OzelTarihTip.MaksGecmisYil)
                     {
                         if (kModel.TarihGirisMaxGecmisYil.HasValue == false)
                         {
-                            MmMessage.Messages.Add("Özel tarih seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
+                            mmMessage.Messages.Add("Özel tarih seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
                         }
-                        else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
+                        else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
                     }
                     else if (kModel.OzelTarihTipID.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Özel tarih seçeneği işaretli iken özel tarih tipi seçimi zorunludur!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelTarihTipID" });
+                        mmMessage.Messages.Add("Özel tarih seçeneği işaretli iken özel tarih tipi seçimi zorunludur!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelTarihTipID" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelTarihTipID" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelTarihTipID" });
                 }
                 else
                 {
                     if (kModel.TarihGirisMaxGecmisYil.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Özel Not seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
+                        mmMessage.Messages.Add("Özel Not seçeneği işaretli olan Sınav tiplerinin Maks Geçmiş Yıl Kabul bilgisinin tanımlanması zorunludur!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TarihGirisMaxGecmisYil" });
                     }
-                    else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
+                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TarihGirisMaxGecmisYil" });
 
                 }
 
@@ -461,8 +439,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     if (kModel.OzelNotTipID.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not tipinin belirlenmesi gerekmektedir!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNotTipID" });
+                        mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not tipinin belirlenmesi gerekmektedir!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNotTipID" });
                     }
                     else
                     {
@@ -470,19 +448,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             if (qSinavNotlari.Count == 0)
                             {
-                                MmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not bilgilerinin girilmesi zorunludur!");
-                                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
+                                mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not bilgilerinin girilmesi zorunludur!");
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
                             }
-                            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
+                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
                         }
                         else if (kModel.OzelNotTipID == OzelNotTip.SeciliNotAraliklari)
                         {
                             if (qSubSinavAralik.Count == 0)
                             {
-                                MmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not aralık bilgilerinin girilmesi zorunludur!");
-                                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
+                                mmMessage.Messages.Add("Sınav tipi için özel not seçeneği seçildiğinden özel not aralık bilgilerinin girilmesi zorunludur!");
+                                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OzelNot" });
                             }
-                            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
+                            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "OzelNot" });
                         }
                     }
                 }
@@ -490,18 +468,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            if (qNAOgrenimTipKodNotAralik.Where(p => p.IsIstensin).Count() == 0)
+            if (!qNaOgrenimTipKodNotAralik.Any(p => p.IsIstensin))
             {
-                MmMessage.Messages.Add("Kayıt edilmek istenen sınav tipinin hangi öğrenim seviyelerinde isteneceğini belirleyiniz!");
+                mmMessage.Messages.Add("Kayıt edilmek istenen sınav tipinin hangi öğrenim seviyelerinde isteneceğini belirleyiniz!");
             }
-            foreach (var item in qNAOgrenimTipKodNotAralik)
+            foreach (var item in qNaOgrenimTipKodNotAralik)
             {
 
                 if (item.IsIstensin || true) // tez danışmanı önerisinde sınav bilgileri not aralıkları kullanılacağından not aralıkları her koşulda girilmesi gerekmekte
                 {
                     if (item.Min.HasValue == false || item.Max.HasValue == false)
                     {
-                        MmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları boş bırakılamaz");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları boş bırakılamaz");
                         item.SuccessRow = false;
                         if (item.Min.HasValue == false) item.PropName.Add("NAMin");
                         if (item.Max.HasValue == false) item.PropName.Add("NAMax");
@@ -509,14 +487,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else if (item.Min.Value < 0 || item.Max.Value < 0)
                     {
-                        MmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları 0 dan büyük olmalıdır");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları 0 dan büyük olmalıdır");
                         item.SuccessRow = false;
                         if (item.Min.Value < 0) item.PropName.Add("NAMin");
                         if (item.Max.Value < 0) item.PropName.Add("NAMax");
                     }
                     else if (item.Min.Value > item.Max.Value)
                     {
-                        MmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min not max not'dan büyük olamaz");
+                        mmMessage.Messages.Add(item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min not max not'dan büyük olamaz");
                         item.SuccessRow = false;
                         item.PropName.Add("NAMin");
                         item.PropName.Add("NAMax");
@@ -526,23 +504,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.NotDonusum)
                 if (kModel.NotDonusumFormulu.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("Not dönüşümü olacak seçeneği seçildiğinde not dönüşüm formulünün girilmesi zorunludur!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "NotDonusumFormulu" });
+                    mmMessage.Messages.Add("Not dönüşümü olacak seçeneği seçildiğinde not dönüşüm formulünün girilmesi zorunludur!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "NotDonusumFormulu" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "NotDonusumFormulu" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "NotDonusumFormulu" });
 
-            if (MmMessage.Messages.Count == 0)
-            {
-                var cnt = db.SinavTipleris.Where(p => p.SinavTipKod == kModel.SinavTipKod && p.EnstituKod == kModel.EnstituKod && p.SinavTipID != kModel.SinavTipID).Count();
-                if (cnt > 0)
+            if (mmMessage.Messages.Count == 0)
+            { 
+                if (_entities.SinavTipleris.Any(p => p.SinavTipKod == kModel.SinavTipKod && p.EnstituKod == kModel.EnstituKod && p.SinavTipID != kModel.SinavTipID))
                 {
-                    MmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
+                    mmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SinavTipKod" });
                 }
             }
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
@@ -574,7 +551,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     Yil = s.Yil,
                     WsDonemKod = "",
                     WsDonemAd = "",
-                    IsTaahhutVar = kModel.SinavTipGrupID == SinavTipGrup.Ales_Gree ? false : s.IsTaahhutVar
+                    IsTaahhutVar = kModel.SinavTipGrupID != SinavTipGrup.Ales_Gree && s.IsTaahhutVar
                 }).ToList();
                 var newSinavTarihleris = qSinavTarihleri.Select(s => new SinavTarihleri
                 {
@@ -596,7 +573,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     NotDonusum = s.NotDonusum,
                     NotDonusumFormulu = s.NotDonusum ? s.NotDonusumFormulu : null
                 }).ToList();
-                var newSinavTipleriOTNotAraliklaris = qNAOgrenimTipKodNotAralik.Select(s => new SinavTipleriOTNotAraliklari
+                var newSinavTipleriOtNotAraliklaris = qNaOgrenimTipKodNotAralik.Select(s => new SinavTipleriOTNotAraliklari
                 {
                     EnstituKod = kModel.EnstituKod,
                     OgrenimTipKod = s.OgrenimTipKod,
@@ -612,7 +589,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.SinavTipID <= 0)
                 {
                     kModel.IsAktif = true;
-                    db.SinavTipleris.Add(new SinavTipleri
+                    _entities.SinavTipleris.Add(new SinavTipleri
                     {
                         EnstituKod = kModel.EnstituKod,
                         SinavTipGrupID = kModel.SinavTipGrupID,
@@ -628,7 +605,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         OzelTarihTipID = kModel.OzelTarihTipID,
                         Tarih1 = kModel.Tarih1,
                         Tarih2 = kModel.Tarih2,
-                        GIsTaahhutVar = kModel.WebService ? false : kModel.GIsTaahhutVar,
+                        GIsTaahhutVar = !kModel.WebService && kModel.GIsTaahhutVar,
                         KusuratVar = kModel.KusuratVar,
                         Min = kModel.Min,
                         Max = kModel.Max,
@@ -643,12 +620,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SinavTarihleris = newSinavTarihleris,
                         SinavNotlaris = newSinavNotlaris,
                         SinavTiplerSubSinavAraliks = newSinavTiplerSubSinavAraliks,
-                        SinavTipleriOTNotAraliklaris = newSinavTipleriOTNotAraliklaris
+                        SinavTipleriOTNotAraliklaris = newSinavTipleriOtNotAraliklaris
                     });
                 }
                 else
                 {
-                    var data = db.SinavTipleris.Where(p => p.SinavTipID == kModel.SinavTipID).First();
+                    var data = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.SinavTipGrupID = kModel.SinavTipGrupID;
                     data.SinavTipKod = kModel.SinavTipKod;
@@ -666,33 +643,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.KusuratVar = kModel.KusuratVar;
                     data.Min = kModel.Min;
                     data.Max = kModel.Max;
-                    data.GIsTaahhutVar = kModel.WebService ? false : kModel.GIsTaahhutVar;
+                    data.GIsTaahhutVar = !kModel.WebService && kModel.GIsTaahhutVar;
                     data.NotDonusum = kModel.NotDonusum;
                     data.NotDonusumFormulu = kModel.NotDonusumFormulu;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
-                    db.SinavTipleriDils.RemoveRange(data.SinavTipleriDils);
-                    db.SinavTipleriDonems.RemoveRange(data.SinavTipleriDonems);
-                    db.SinavTarihleris.RemoveRange(data.SinavTarihleris);
-                    db.SinavNotlaris.RemoveRange(data.SinavNotlaris);
-                    db.SinavTiplerSubSinavAraliks.RemoveRange(data.SinavTiplerSubSinavAraliks);
-                    db.SinavTipleriOTNotAraliklaris.RemoveRange(data.SinavTipleriOTNotAraliklaris);
+                    _entities.SinavTipleriDils.RemoveRange(data.SinavTipleriDils);
+                    _entities.SinavTipleriDonems.RemoveRange(data.SinavTipleriDonems);
+                    _entities.SinavTarihleris.RemoveRange(data.SinavTarihleris);
+                    _entities.SinavNotlaris.RemoveRange(data.SinavNotlaris);
+                    _entities.SinavTiplerSubSinavAraliks.RemoveRange(data.SinavTiplerSubSinavAraliks);
+                    _entities.SinavTipleriOTNotAraliklaris.RemoveRange(data.SinavTipleriOTNotAraliklaris);
 
                     data.SinavTipleriDils = newSinanTipleriDils;
                     data.SinavTipleriDonems = newSinavTipleriDonems;
                     data.SinavTarihleris = newSinavTarihleris;
                     data.SinavNotlaris = newSinavNotlaris;
                     data.SinavTiplerSubSinavAraliks = newSinavTiplerSubSinavAraliks;
-                    data.SinavTipleriOTNotAraliklaris = newSinavTipleriOTNotAraliklaris;
+                    data.SinavTipleriOTNotAraliklaris = newSinavTipleriOtNotAraliklaris;
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
             #region ReturnData
@@ -722,37 +699,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.SinavTipleriDonems.Add(new SinavTipleriDonem { Yil = item.Yil, WsDonemKod = "", WsDonemAd = "" });
             }
 
-            var OgrenimTipleris = db.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif).ToList();
-            var SinavTipleriOTNotAraliklaris = new List<SinavTipleriOTNotAraliklari>();
-            var Dils = new List<bool> { true, false };
-            foreach (var itemD in Dils)
+            var ogrenimTipleris = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod && p.IsAktif).ToList();
+            var sinavTipleriOtNotAraliklaris = new List<SinavTipleriOTNotAraliklari>();
+            var dils = new List<bool> { true, false };
+            foreach (var itemD in dils)
             {
-                foreach (var itemOt in OgrenimTipleris)
+                foreach (var itemOt in ogrenimTipleris)
                 {
-                    var Kayit = qNAOgrenimTipKodNotAralik.Where(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD).FirstOrDefault();
-                    SinavTipleriOTNotAraliklaris.Add(
+                    var kayit = qNaOgrenimTipKodNotAralik.FirstOrDefault(p => p.OgrenimTipKod == itemOt.OgrenimTipKod && p.Ingilizce == itemD);
+                    sinavTipleriOtNotAraliklaris.Add(
                                              new SinavTipleriOTNotAraliklari
                                              {
                                                  EnstituKod = kModel.EnstituKod,
                                                  SinavTipID = kModel.SinavTipID,
                                                  OgrenimTipKod = itemOt.OgrenimTipKod,
-                                                 IsGecerli = Kayit != null ? Kayit.IsGecerli : false,
-                                                 IsIstensin = Kayit != null ? Kayit.IsIstensin : false,
+                                                 IsGecerli = kayit != null && kayit.IsGecerli,
+                                                 IsIstensin = kayit != null && kayit.IsIstensin,
                                                  Ingilizce = itemD,
-                                                 IsOzelNotAralik = Kayit != null ? Kayit.IsOzelNotAralik : false,
-                                                 Min = Kayit != null ? Kayit.Min : null,
-                                                 Max = Kayit != null ? Kayit.Max : null,
-                                                 SinavTipleriOTNotAraliklariGecersizProgramlars = Kayit.ProgramKods.Select(s => new SinavTipleriOTNotAraliklariGecersizProgramlar { ProgramKod = s }).ToList()
+                                                 IsOzelNotAralik = kayit != null && kayit.IsOzelNotAralik,
+                                                 Min = kayit?.Min,
+                                                 Max = kayit?.Max,
+                                                 SinavTipleriOTNotAraliklariGecersizProgramlars = kayit.ProgramKods.Select(s => new SinavTipleriOTNotAraliklariGecersizProgramlar { ProgramKod = s }).ToList()
 
                                              });
                 }
             }
-            kModel.SinavTipleriOTNotAraliklaris = SinavTipleriOTNotAraliklaris;
+            kModel.SinavTipleriOTNotAraliklaris = sinavTipleriOtNotAraliklaris;
 
-            ViewBag.MmMessage = MmMessage;
-            ViewBag.OgrenimTipleris = OgrenimTipleris;
-            ViewBag.SinavDilleris = db.SinavDilleris.ToList();
-            ViewBag.Programlars = db.Programlars.Where(p => p.AnabilimDallari.EnstituKod == kModel.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+            ViewBag.MmMessage = mmMessage;
+            ViewBag.OgrenimTipleris = ogrenimTipleris;
+            ViewBag.SinavDilleris = _entities.SinavDilleris.ToList();
+            ViewBag.Programlars = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == kModel.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.SinavTipGrupID = new SelectList(Management.cmbGetSinavTipGruplari(true), "Value", "Caption", kModel.SinavTipGrupID);
             ViewBag.OzelTarihTipID = new SelectList(Management.cmbGetOzelTarihTipleri(true), "Value", "Caption", kModel.OzelTarihTipID);
@@ -761,38 +738,38 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.WsSinavCekimTipID = new SelectList(Management.cmbGetWsSinavCekimTipleri(true, WsCekimTipi.Donemsel), "Value", "Caption", kModel.WsSinavCekimTipID);
             ViewBag.SWsDonemKod = new SelectList(Management.cmbGetWsSinavCekimTipDetay(kModel.WsSinavCekimTipID ?? 0, false), "Value", "Caption");
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
-            ViewBag.OgrenimTipKod = new SelectList(Management.cmbAktifOgrenimTipleri(kModel.EnstituKod), "Value", "Caption");
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(kModel.EnstituKod), "Value", "Caption");
             #endregion
             return View(kModel);
         }
-        public ActionResult getOtBilgi(string EnstituKod, int SinavTipID)
+        public ActionResult GetOtBilgi(string enstituKod, int sinavTipId)
         {
 
-            var ots = db.OgrenimTipleris.Where(p => p.EnstituKod == EnstituKod && p.IsAktif).ToList();
+            var ots = _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod && p.IsAktif).ToList();
             var dilDOngu = new List<bool> { { true }, { false } };
-            var krNotAralikMld = new List<krSinavTipleriOTNotAraliklari>();
+            var krNotAralikMld = new List<KrSinavTipleriOtNotAraliklari>();
             foreach (var item in dilDOngu)
             {
-                var qotNA = (from s in ots
-                             join na in db.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == SinavTipID && p.EnstituKod == EnstituKod) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
+                var qotNa = (from s in ots
+                             join na in _entities.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == sinavTipId && p.EnstituKod == enstituKod) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
                              from notAr in def1.DefaultIfEmpty()
-                             select new krSinavTipleriOTNotAraliklari
+                             select new KrSinavTipleriOtNotAraliklari
                              {
                                  OgrenimTipKod = s.OgrenimTipKod,
                                  OgrenimTipAdi = s.OgrenimTipAdi,
                                  Ingilizce = item,
-                                 IsGecerli = notAr != null ? notAr.IsGecerli : false,
-                                 IsIstensin = notAr != null ? notAr.IsIstensin : false,
-                                 IsOzelNotAralik = notAr != null ? notAr.IsOzelNotAralik : false,
-                                 Min = notAr != null ? notAr.Min : (double?)null,
-                                 Max = notAr != null ? notAr.Max : (double?)null,
+                                 IsGecerli = notAr?.IsGecerli ?? false,
+                                 IsIstensin = notAr?.IsIstensin ?? false,
+                                 IsOzelNotAralik = notAr != null && notAr.IsOzelNotAralik,
+                                 Min = notAr?.Min,
+                                 Max = notAr?.Max,
                                  ProgramKods = notAr != null ? notAr.SinavTipleriOTNotAraliklariGecersizProgramlars.Select(s2 => s2.ProgramKod).ToList() : new List<string>()
                              }).ToList();
-                krNotAralikMld.AddRange(qotNA);
+                krNotAralikMld.AddRange(qotNa);
 
             }
-            var prK = db.SinavTipleriOTNotAraliklariGecersizProgramlars.Where(p => p.SinavTipleriOTNotAraliklari.SinavTipID == SinavTipID).Select(s => s.ProgramKod).ToList();
-            var pr = db.Programlars.Where(p => p.AnabilimDallari.EnstituKod == EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+            var prK = _entities.SinavTipleriOTNotAraliklariGecersizProgramlars.Where(p => p.SinavTipleriOTNotAraliklari.SinavTipID == sinavTipId).Select(s => s.ProgramKod).ToList();
+            var pr = _entities.Programlars.Where(p => p.AnabilimDallari.EnstituKod == enstituKod).OrderBy(o => o.ProgramAdi).ToList();
             var dataR = pr.Select(s => new CheckObject<Programlar>
             {
                 Value = s,
@@ -804,20 +781,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(krNotAralikMld);
         }
 
-        public ActionResult getProgramlar(int MailSablonlariID)
+        public ActionResult GetProgramlar(int mailSablonlariId)
         {
-            var KulID = UserIdentity.Current.Id;
-            var sbl = db.MailSablonlaris.Where(p => p.MailSablonlariID == MailSablonlariID).Select(s => new { s.Sablon, s.SablonHtml, MailSablonlariEkleri = s.MailSablonlariEkleris.Select(s2 => new { s2.MailSablonlariEkiID, s2.EkAdi, s2.EkDosyaYolu }) }).First();
+            var sbl = _entities.MailSablonlaris.Where(p => p.MailSablonlariID == mailSablonlariId).Select(s => new { s.Sablon, s.SablonHtml, MailSablonlariEkleri = s.MailSablonlariEkleris.Select(s2 => new { s2.MailSablonlariEkiID, s2.EkAdi, s2.EkDosyaYolu }) }).First();
             return Json(new { sbl.Sablon, sbl.SablonHtml, sbl.MailSablonlariEkleri }, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult getDetail(int id, int tbInx)
+        public ActionResult GetDetail(int id, int tbInx)
         {
 
-            var model = (from s in db.SinavTipleris
-                         join sl in db.SinavTipleris on s.SinavTipID equals sl.SinavTipID
-                         join e in db.Enstitulers on s.EnstituKod equals e.EnstituKod
+            var model = (from s in _entities.SinavTipleris
+                         join sl in _entities.SinavTipleris on s.SinavTipID equals sl.SinavTipID
+                         join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                          where s.SinavTipID == id
-                         select new frSinavTipleri
+                         select new FrSinavTipleri
                          {
                              SinavTipID = s.SinavTipID,
                              SinavTipKod = s.SinavTipKod,
@@ -851,8 +827,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              SinavNotlaris = s.SinavNotlaris.ToList(),
                              SinavTiplerSubSinavAraliks = s.SinavTiplerSubSinavAraliks.ToList(),
                              SinavTarihleris = s.SinavTarihleris.ToList(),
-                             krSinavTipleriDonems = (from sq in s.SinavTipleriDonems
-                                                     select new krSinavTipleriDonems
+                             KrSinavTipleriDonems = (from sq in s.SinavTipleriDonems
+                                                     select new KrSinavTipleriDonem
                                                      {
                                                          SinavTipID = sq.SinavTipID,
                                                          SinavTipDonemID = sq.SinavTipDonemID,
@@ -861,11 +837,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                          IsTaahhutVar = sq.IsTaahhutVar,
                                                      }).ToList(),
 
-                             SinavTipleriOTNotAraliklariList = (from s2 in s.SinavTipleriOTNotAraliklaris.Where(p => p.EnstituKod == s.EnstituKod && p.SinavTipID == s.SinavTipID)
-                                                                join ot in db.OgrenimTipleris on new { s.EnstituKod, s2.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                                                join otl in db.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
+                             SinavTipleriOtNotAraliklariList = (from s2 in s.SinavTipleriOTNotAraliklaris.Where(p => p.EnstituKod == s.EnstituKod && p.SinavTipID == s.SinavTipID)
+                                                                join ot in _entities.OgrenimTipleris on new { s.EnstituKod, s2.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                                                                join otl in _entities.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
 
-                                                                select new krSinavTipleriOTNotAraliklari
+                                                                select new KrSinavTipleriOtNotAraliklari
                                                                 {
                                                                     OgrenimTipKod = s2.OgrenimTipKod,
                                                                     OgrenimTipAdi = otl.OgrenimTipAdi,
@@ -878,19 +854,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                 }).ToList()
                          }).First();
 
-            if (db.SinavTipleriOT_SNA.Any(p => p.SinavTipID == model.SinavTipID))
+            if (_entities.SinavTipleriOT_SNA.Any(p => p.SinavTipID == model.SinavTipID))
             {
-                var qmodel = (from s in db.SinavTipleriOT_SNA.Where(p => p.SinavTipID == model.SinavTipID)
-                              select new frSinavTipleriSPA
+                var qmodel = (from s in _entities.SinavTipleriOT_SNA.Where(p => p.SinavTipID == model.SinavTipID)
+                              select new FrSinavTipleriSpa
                               {
                                   SinavTipleriOT_SNAID = s.SinavTipleriOT_SNAID,
                                   SinavTipID = s.SinavTipID,
                                   SinavTipleriOT_SNA_PR = s.SinavTipleriOT_SNA_PR.ToList(),
-                                  SinavTipleriOTNotAraliklariList = (from s2 in s.SinavTipleriOT_SNA_OT.Where(p => p.SinavTipleriOT_SNAID == s.SinavTipleriOT_SNAID)
-                                                                     join ot in db.OgrenimTipleris on new { s.SinavTipleri.EnstituKod, s2.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                                                     join otl in db.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
+                                  SinavTipleriOtNotAraliklariList = (from s2 in s.SinavTipleriOT_SNA_OT.Where(p => p.SinavTipleriOT_SNAID == s.SinavTipleriOT_SNAID)
+                                                                     join ot in _entities.OgrenimTipleris on new { s.SinavTipleri.EnstituKod, s2.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
+                                                                     join otl in _entities.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
 
-                                                                     select new krSinavTipleriOTNotAraliklari
+                                                                     select new KrSinavTipleriOtNotAraliklari
                                                                      {
                                                                          OgrenimTipKod = s2.OgrenimTipKod,
                                                                          OgrenimTipAdi = otl.OgrenimTipAdi,
@@ -901,48 +877,50 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                          Max = s2.Max,
                                                                      }).ToList()
                               }).OrderBy(o => o.SinavTipleriOT_SNAID).ToList();
-                model.frSinavTipleriSPA = qmodel;
+                model.FrSinavTipleriSpa = qmodel;
             }
 
-            var ots = db.OgrenimTipleris.Where(p => p.EnstituKod == model.EnstituKod && p.IsAktif).ToList();
+            var ots = _entities.OgrenimTipleris.Where(p => p.EnstituKod == model.EnstituKod && p.IsAktif).ToList();
             var dilDOngu = new List<bool> { { true }, { false } };
-            var krNotAralikMld = new List<krSinavTipleriOTNotAraliklari>();
+            var krNotAralikMld = new List<KrSinavTipleriOtNotAraliklari>();
             foreach (var item in dilDOngu)
             {
-                var qotNA = (from s in ots
-                             join na in db.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == model.SinavTipID && p.EnstituKod == model.EnstituKod) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
+                var qotNa = (from s in ots
+                             join na in _entities.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == model.SinavTipID && p.EnstituKod == model.EnstituKod) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
                              from notAr in def1.DefaultIfEmpty()
-                             select new krSinavTipleriOTNotAraliklari
+                             select new KrSinavTipleriOtNotAraliklari
                              {
                                  OgrenimTipKod = s.OgrenimTipKod,
                                  OgrenimTipAdi = s.OgrenimTipAdi,
                                  Ingilizce = item,
-                                 IsGecerli = notAr != null ? notAr.IsGecerli : false,
-                                 IsIstensin = notAr != null ? notAr.IsIstensin : false,
-                                 IsOzelNotAralik = notAr != null ? notAr.IsOzelNotAralik : false,
-                                 Min = notAr != null ? notAr.Min : (double?)null,
-                                 Max = notAr != null ? notAr.Max : (double?)null,
+                                 IsGecerli = notAr?.IsGecerli ?? false,
+                                 IsIstensin = notAr?.IsIstensin ?? false,
+                                 IsOzelNotAralik = notAr != null && notAr.IsOzelNotAralik,
+                                 Min = notAr?.Min,
+                                 Max = notAr?.Max,
                                  IstenmeyenProgramlar = notAr != null ? (notAr.SinavTipleriOTNotAraliklariGecersizProgramlars.Select(sq => new CmbStringDto { Value = sq.ProgramKod, Caption = sq.Programlar.ProgramAdi }).ToList()) : new List<CmbStringDto>()
                              }).ToList();
-                krNotAralikMld.AddRange(qotNA);
+                krNotAralikMld.AddRange(qotNa);
             }
-            model.SinavTipleriOTNotAraliklariList = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
+            model.SinavTipleriOtNotAraliklariList = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
             model.SelectedTabIndex = tbInx;
             return View(model);
         }
 
-        public ActionResult STProgramaOzelNotKriterEkle(int? id, int SinavTipID, string dlgid)
+        public ActionResult StProgramaOzelNotKriterEkle(int? id, int sinavTipId, string dlgid)
         {
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
-            ViewBag.MmMessage = MmMessage;
-            var model = new kmSinavTipleriSPNA();
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+            ViewBag.MmMessage = mmMessage;
+            var model = new KmSinavTipleriSpna();
 
-            var stip = db.SinavTipleris.Where(p => p.SinavTipID == SinavTipID).First();
+            var stip = _entities.SinavTipleris.First(p => p.SinavTipID == sinavTipId);
             if (id.HasValue)
             {
-                var data = db.SinavTipleriOT_SNA.Where(p => p.SinavTipleriOT_SNAID == id).FirstOrDefault();
+                var data = _entities.SinavTipleriOT_SNA.FirstOrDefault(p => p.SinavTipleriOT_SNAID == id);
                 if (data != null)
                 {
                     model.SinavTipleriOT_SNAID = data.SinavTipleriOT_SNAID;
@@ -950,36 +928,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IPProgramKod = data.SinavTipleriOT_SNA_PR.Select(s => s.ProgramKod).ToList();
                 }
 
-                var ots = db.OgrenimTipleris.Where(p => p.EnstituKod == stip.EnstituKod && p.IsAktif).ToList();
+                var ots = _entities.OgrenimTipleris.Where(p => p.EnstituKod == stip.EnstituKod && p.IsAktif).ToList();
                 var dilDOngu = new List<bool> { { true }, { false } };
-                var krNotAralikMld = new List<krSinavTipleriOTNotAraliklari>();
+                var krNotAralikMld = new List<KrSinavTipleriOtNotAraliklari>();
                 foreach (var item in dilDOngu)
                 {
-                    var qotNA = (from s in ots
+                    var qotNa = (from s in ots
                                  join st in stip.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == model.SinavTipID && p.EnstituKod == stip.EnstituKod) on s.OgrenimTipKod equals st.OgrenimTipKod into def2
                                  from notAnaAr in def2.DefaultIfEmpty()
-                                 join na in db.SinavTipleriOT_SNA_OT.Where(p => p.Ingilizce == item && p.SinavTipleriOT_SNAID == model.SinavTipleriOT_SNAID) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
+                                 join na in _entities.SinavTipleriOT_SNA_OT.Where(p => p.Ingilizce == item && p.SinavTipleriOT_SNAID == model.SinavTipleriOT_SNAID) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
                                  from notAr in def1.DefaultIfEmpty()
-                                 select new krSinavTipleriOTNotAraliklari
+                                 select new KrSinavTipleriOtNotAraliklari
                                  {
                                      OgrenimTipKod = s.OgrenimTipKod,
                                      OgrenimTipAdi = s.OgrenimTipAdi,
                                      Ingilizce = item,
-                                     IsGecerli = notAr != null ? notAr.IsGecerli : (notAnaAr != null ? notAnaAr.IsGecerli : false),
-                                     IsIstensin = notAr != null ? notAr.IsIstensin : (notAnaAr != null ? notAnaAr.IsIstensin : false),
-                                     IsOzelNotAralik = notAr != null ? notAr.IsOzelNotAralik : (notAnaAr != null ? notAnaAr.IsOzelNotAralik : false),
-                                     Min = notAr != null ? notAr.Min : (notAnaAr != null ? notAnaAr.Min : (double?)null),
-                                     Max = notAr != null ? notAr.Max : (notAnaAr != null ? notAnaAr.Max : (double?)null)
+                                     IsGecerli = notAr?.IsGecerli ?? (notAnaAr?.IsGecerli ?? false),
+                                     IsIstensin = notAr?.IsIstensin ?? (notAnaAr?.IsIstensin ?? false),
+                                     IsOzelNotAralik = notAr?.IsOzelNotAralik ?? (notAnaAr != null && notAnaAr.IsOzelNotAralik),
+                                     Min = notAr != null ? notAr.Min : notAnaAr?.Min,
+                                     Max = notAr != null ? notAr.Max : notAnaAr?.Max
                                  }).ToList();
-                    krNotAralikMld.AddRange(qotNA);
+                    krNotAralikMld.AddRange(qotNa);
 
 
                 }
-                model.SinavTipleriOTNotAraliklari = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
+                model.KrSinavTipleriOtNotAraliklaris = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
             }
             else
             {
-                var data = db.SinavTipleris.Where(p => p.SinavTipID == SinavTipID).FirstOrDefault();
+                var data = _entities.SinavTipleris.FirstOrDefault(p => p.SinavTipID == sinavTipId);
                 if (data != null)
                 {
                     model.SinavTipID = data.SinavTipID;
@@ -987,37 +965,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
-                var ots = db.OgrenimTipleris.Where(p => p.EnstituKod == stip.EnstituKod && p.IsAktif).ToList();
+                var ots = _entities.OgrenimTipleris.Where(p => p.EnstituKod == stip.EnstituKod && p.IsAktif).ToList();
                 var dilDOngu = new List<bool> { { true }, { false } };
-                var krNotAralikMld = new List<krSinavTipleriOTNotAraliklari>();
+                var krNotAralikMld = new List<KrSinavTipleriOtNotAraliklari>();
                 foreach (var item in dilDOngu)
                 {
-                    var qotNA = (from s in ots
+                    var qotNa = (from s in ots
                                  join na in data.SinavTipleriOTNotAraliklaris.Where(p => p.Ingilizce == item && p.SinavTipID == model.SinavTipID && p.EnstituKod == stip.EnstituKod) on s.OgrenimTipKod equals na.OgrenimTipKod into def1
                                  from notAr in def1.DefaultIfEmpty()
-                                 select new krSinavTipleriOTNotAraliklari
+                                 select new KrSinavTipleriOtNotAraliklari
                                  {
                                      OgrenimTipKod = s.OgrenimTipKod,
                                      OgrenimTipAdi = s.OgrenimTipAdi,
                                      Ingilizce = item,
-                                     IsGecerli = notAr != null ? notAr.IsGecerli : false,
-                                     IsIstensin = notAr != null ? notAr.IsIstensin : false,
-                                     IsOzelNotAralik = notAr != null ? notAr.IsOzelNotAralik : false,
-                                     Min = notAr != null ? notAr.Min : (double?)null,
-                                     Max = notAr != null ? notAr.Max : (double?)null
+                                     IsGecerli = notAr?.IsGecerli ?? false,
+                                     IsIstensin = notAr?.IsIstensin ?? false,
+                                     IsOzelNotAralik = notAr != null && notAr.IsOzelNotAralik,
+                                     Min = notAr?.Min,
+                                     Max = notAr?.Max
                                  }).ToList();
-                    krNotAralikMld.AddRange(qotNA);
+                    krNotAralikMld.AddRange(qotNa);
 
 
                 }
-                model.SinavTipleriOTNotAraliklari = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
+                model.KrSinavTipleriOtNotAraliklaris = krNotAralikMld.OrderBy(o => o.Ingilizce).ThenBy(t => t.OgrenimTipAdi).ToList();
             }
 
 
 
 
-            var nContains = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == model.SinavTipID && p.SinavTipleriOT_SNAID != model.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
-            var pr = db.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+            var nContains = _entities.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == model.SinavTipID && p.SinavTipleriOT_SNAID != model.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
+            var pr = _entities.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
             var dataR = pr.Select(s => new KulaniciProgramYetkiModel
             {
                 ProgramKod = s.ProgramKod,
@@ -1030,33 +1008,35 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [HttpPost]
-        public ActionResult STProgramaOzelNotKriterEkle(kmSinavTipleriSPNA kModel, string dlgid = "")
+        public ActionResult StProgramaOzelNotKriterEkle(KmSinavTipleriSpna kModel, string dlgid = "")
         {
 
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
             //Sınav Puanı Bilgileri 
 
-            var stip = db.SinavTipleris.Where(p => p.SinavTipID == kModel.SinavTipID).First();
+            var stip = _entities.SinavTipleris.First(p => p.SinavTipID == kModel.SinavTipID);
 
 
             //Sinav ogrenimTip Not Araliklari
-            var qNAOgrenimTipKod = kModel.NAOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
-            var qNAIngilizce = kModel.NAIngilizce.Select((s, inx) => new { s, inx }).ToList();
-            var qNAIsIstensin = kModel.NAIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNAIsGecerli = kModel.NAIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
-            var qNAMin = kModel.NAMin.Select((s, inx) => new { s, inx }).ToList();
-            var qNAMax = kModel.NAMax.Select((s, inx) => new { s, inx }).ToList();
+            var qNaOgrenimTipKod = kModel.NAOgrenimTipKod.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIngilizce = kModel.NAIngilizce.Select((s, inx) => new { s, inx }).ToList();
+            var qNaIsIstensin = kModel.NAIsIstensin.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaIsGecerli = kModel.NAIsGecerli.Select((s, inx) => new { s = (s == 1 ? true : false), inx }).ToList();
+            var qNaMin = kModel.NAMin.Select((s, inx) => new { s, inx }).ToList();
+            var qNaMax = kModel.NAMax.Select((s, inx) => new { s, inx }).ToList();
 
-            var qNAOgrenimTipKodNotAralik = (from ot in qNAOgrenimTipKod
-                                             join ing in qNAIngilizce on ot.inx equals ing.inx
-                                             join gcr in qNAIsGecerli on ot.inx equals gcr.inx
-                                             join ist in qNAIsIstensin on ot.inx equals ist.inx
-                                             join min in qNAMin on ot.inx equals min.inx
-                                             join max in qNAMax on ot.inx equals max.inx
-                                             join otl in db.OgrenimTipleris on ot.s equals otl.OgrenimTipID
-                                             select new krSinavTipleriOTNotAraliklari
+            var qNaOgrenimTipKodNotAralik = (from ot in qNaOgrenimTipKod
+                                             join ing in qNaIngilizce on ot.inx equals ing.inx
+                                             join gcr in qNaIsGecerli on ot.inx equals gcr.inx
+                                             join ist in qNaIsIstensin on ot.inx equals ist.inx
+                                             join min in qNaMin on ot.inx equals min.inx
+                                             join max in qNaMax on ot.inx equals max.inx
+                                             join otl in _entities.OgrenimTipleris on ot.s equals otl.OgrenimTipID
+                                             select new KrSinavTipleriOtNotAraliklari
                                              {
                                                  OgrenimTipKod = ot.s,
                                                  OgrenimTipAdi = otl.OgrenimTipAdi,
@@ -1072,12 +1052,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-            if (qNAOgrenimTipKodNotAralik.Where(p => p.IsIstensin).Count() == 0)
-            {
-                string msg = "Kayıt edilmek istenen sınav tipinin hangi öğrenim seviyelerinde isteneceğini belirleyiniz!";
-                MmMessage.Messages.Add(msg);
+            if (!qNaOgrenimTipKodNotAralik.Any(p => p.IsIstensin))
+            { 
+                mmMessage.Messages.Add("Kayıt edilmek istenen sınav tipinin hangi öğrenim seviyelerinde isteneceğini belirleyiniz!");
             }
-            foreach (var item in qNAOgrenimTipKodNotAralik)
+            foreach (var item in qNaOgrenimTipKodNotAralik)
             {
 
                 if (item.IsIstensin)
@@ -1085,7 +1064,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (item.Min.HasValue == false || item.Max.HasValue == false)
                     {
                         string msg = item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları boş bırakılamaz";
-                        MmMessage.Messages.Add(msg);
+                        mmMessage.Messages.Add(msg);
                         item.SuccessRow = false;
                         if (item.Min.HasValue == false) item.PropName.Add("NAMin");
                         if (item.Max.HasValue == false) item.PropName.Add("NAMax");
@@ -1094,7 +1073,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else if (item.Min.Value < 0 || item.Max.Value < 0)
                     {
                         string msg = item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min ve max not aralıkları 0 dan büyük olmalıdır";
-                        MmMessage.Messages.Add(msg);
+                        mmMessage.Messages.Add(msg);
                         item.SuccessRow = false;
                         if (item.Min.Value < 0) item.PropName.Add("NAMin");
                         if (item.Max.Value < 0) item.PropName.Add("NAMax");
@@ -1102,7 +1081,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else if (item.Min.Value > item.Max.Value)
                     {
                         string msg = item.OgrenimTipAdi + " " + (item.Ingilizce ? " İngilizce" : " Türkçe") + " not aralık kriteri için min not max not'dan büyük olamaz";
-                        MmMessage.Messages.Add(msg);
+                        mmMessage.Messages.Add(msg);
                         item.SuccessRow = false;
                         item.PropName.Add("NAMin");
                         item.PropName.Add("NAMax");
@@ -1110,47 +1089,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            var qprKods = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNAID != kModel.SinavTipleriOT_SNAID && p.SinavTipleriOT_SNA.SinavTipID == kModel.SinavTipID).Select(s => s.ProgramKod).Distinct().ToList();
+            var qprKods = _entities.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNAID != kModel.SinavTipleriOT_SNAID && p.SinavTipleriOT_SNA.SinavTipID == kModel.SinavTipID).Select(s => s.ProgramKod).Distinct().ToList();
             kModel.IPProgramKod = kModel.IPProgramKod.Where(p => !qprKods.Contains(p)).ToList();
             if (kModel.IPProgramKod.Count == 0)
-            {
-
-                string msg = "Yeni not tanımını kayıt edebilmek için en az 1 program seçmeniz gerekmektedir!";
-                MmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Yeni not tanımını kayıt edebilmek için en az 1 program seçmeniz gerekmektedir!");
             }
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
 
 
                 if (kModel.SinavTipleriOT_SNAID <= 0)
                 {
-                    var enst = db.SinavTipleriOT_SNA.Add(new SinavTipleriOT_SNA
+                    var enst = _entities.SinavTipleriOT_SNA.Add(new SinavTipleriOT_SNA
                     {
                         SinavTipID = kModel.SinavTipID
                     });
-                    db.SaveChanges();
+                    _entities.SaveChanges();
                     kModel.SinavTipleriOT_SNAID = enst.SinavTipleriOT_SNAID;
 
                 }
                 else
                 {
-                    var data = db.SinavTipleriOT_SNA.Where(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID).First();
-                    var lstPr = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID).ToList();
-                    db.SinavTipleriOT_SNA_PR.RemoveRange(lstPr);
+                    var data = _entities.SinavTipleriOT_SNA.First(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID);
+                    var lstPr = _entities.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID).ToList();
+                    _entities.SinavTipleriOT_SNA_PR.RemoveRange(lstPr);
 
-                    var otNotAr = db.SinavTipleriOT_SNA_OT.Where(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID).ToList();
-                    db.SinavTipleriOT_SNA_OT.RemoveRange(otNotAr);
+                    var otNotAr = _entities.SinavTipleriOT_SNA_OT.Where(p => p.SinavTipleriOT_SNAID == kModel.SinavTipleriOT_SNAID).ToList();
+                    _entities.SinavTipleriOT_SNA_OT.RemoveRange(otNotAr);
                 }
                 foreach (var item in kModel.IPProgramKod)
                 {
-                    db.SinavTipleriOT_SNA_PR.Add(new Models.SinavTipleriOT_SNA_PR { SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID, ProgramKod = item });
+                    _entities.SinavTipleriOT_SNA_PR.Add(new Models.SinavTipleriOT_SNA_PR { SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID, ProgramKod = item });
                 }
 
                 if (stip.SinavTipGrupID == SinavTipGrup.DilSinavlari || stip.SinavTipGrupID == SinavTipGrup.Ales_Gree)
-                    foreach (var item in qNAOgrenimTipKodNotAralik)
+                    foreach (var item in qNaOgrenimTipKodNotAralik)
                     {
-                        var qST = db.SinavTipleriOT_SNA_OT.Add(new SinavTipleriOT_SNA_OT
+                        var qST = _entities.SinavTipleriOT_SNA_OT.Add(new SinavTipleriOT_SNA_OT
                         {
                             SinavTipleriOT_SNAID = kModel.SinavTipleriOT_SNAID,
                             OgrenimTipKod = item.OgrenimTipKod,
@@ -1162,26 +1139,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             Max = item.IsOzelNotAralik ? item.Max.Value : (double?)null
                         });
                     }
-                db.SaveChanges();
-                MmMessage.IsSuccess = true;
+                _entities.SaveChanges();
+                mmMessage.IsSuccess = true;
                 MessageBox.Show("Not kriteri tanımlandı", "Kayıt işlemi");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            if (MmMessage.IsSuccess) MmMessage.IsCloseDialog = true;
+            if (mmMessage.IsSuccess) mmMessage.IsCloseDialog = true;
 
-            ViewBag.MmMessage = MmMessage;
-            kModel.SinavTipleriOTNotAraliklari = qNAOgrenimTipKodNotAralik;
-            foreach (var item in qNAOgrenimTipKodNotAralik)
+            ViewBag.MmMessage = mmMessage;
+            kModel.KrSinavTipleriOtNotAraliklaris = qNaOgrenimTipKodNotAralik;
+            foreach (var item in qNaOgrenimTipKodNotAralik)
             {
                 item.IsOzelNotAralik = item.IsIstensin;
             }
 
             var prK = kModel.IPProgramKod;
-            var nContains = db.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == kModel.SinavTipID && p.SinavTipleriOT_SNAID != kModel.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
-            var pr = db.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+            var nContains = _entities.SinavTipleriOT_SNA_PR.Where(p => p.SinavTipleriOT_SNA.SinavTipID == kModel.SinavTipID && p.SinavTipleriOT_SNAID != kModel.SinavTipleriOT_SNAID).Select(s => s.ProgramKod).ToList();
+            var pr = _entities.Programlars.Where(p => nContains.Contains(p.ProgramKod) == false && p.AnabilimDallari.EnstituKod == stip.EnstituKod && p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
             var dataR = pr.Select(s => new KulaniciProgramYetkiModel
             {
                 ProgramKod = s.ProgramKod,
@@ -1194,28 +1171,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult getWsCekimTipDetay(int WsSinavCekimTipID, int SinavTipKod)
+        public ActionResult GetWsCekimTipDetay(int wsSinavCekimTipId, int sinavTipKod)
         {
 
-            var cekimTip = db.WsSinavCekimTipleris.Where(p => p.WsSinavCekimTipID == WsSinavCekimTipID).First();
-            var list = new List<CmbStringDto>();
-            if (cekimTip.GetLocalData == false)
-            {
-                list = Management.cmbGetWsSinavCekimTipDetay(WsSinavCekimTipID, false);
-            }
-            else
-            {
-                list = Management.cmbGetWsSinavCekimTipDetayGetLocalData(WsSinavCekimTipID, SinavTipKod, false);
-
-            }
+            var cekimTip = _entities.WsSinavCekimTipleris.First(p => p.WsSinavCekimTipID == wsSinavCekimTipId);
+            var list = cekimTip.GetLocalData == false ? Management.cmbGetWsSinavCekimTipDetay(wsSinavCekimTipId, false)
+                : Management.cmbGetWsSinavCekimTipDetayGetLocalData(wsSinavCekimTipId, sinavTipKod, false);
             return list.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
-        public ActionResult Sil(int id, string EnstituKod)
+        public ActionResult Sil(int id, string enstituKod)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
 
-            var kayit = db.SinavTipleris.Where(p => p.SinavTipID == id && EnstKods.Contains(p.EnstituKod) && p.EnstituKod == EnstituKod).FirstOrDefault();
-            var PAdi = db.SinavTipleris.Where(p => p.SinavTipID == id).First();
+            var kayit = _entities.SinavTipleris.FirstOrDefault(p => p.SinavTipID == id && enstKods.Contains(p.EnstituKod) && p.EnstituKod == enstituKod);
+            var pAdi = _entities.SinavTipleris.First(p => p.SinavTipID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -1223,15 +1192,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 try
                 {
-                    message = "'" + PAdi.SinavAdi + "' İsimli Sınav Tipi Silindi!";
-                    db.SinavTipleris.Remove(kayit);
-                    db.SaveChanges();
+                    message = "'" + pAdi.SinavAdi + "' İsimli Sınav Tipi Silindi!";
+                    _entities.SinavTipleris.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
-                    message = "'" + PAdi.SinavAdi + "' Sınav Tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    message = "'" + pAdi.SinavAdi + "' Sınav Tipi Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Ünvanlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -1239,13 +1208,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Sınav Tipi sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult SilSTPK(int id)
+        public ActionResult SilStpk(int id)
         {
 
-            var kayit = db.SinavTipleriOT_SNA.Where(p => p.SinavTipleriOT_SNAID == id).FirstOrDefault();
-            var PAdi = db.SinavTipleris.Where(p => p.SinavTipID == kayit.SinavTipID).First();
+            var kayit = _entities.SinavTipleriOT_SNA.FirstOrDefault(p => p.SinavTipleriOT_SNAID == id);
+            var pAdi = _entities.SinavTipleris.First(p => p.SinavTipID == kayit.SinavTipID);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -1253,15 +1222,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 try
                 {
-                    message = "'" + PAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silindi!";
-                    db.SinavTipleriOT_SNA.Remove(kayit);
-                    db.SaveChanges();
+                    message = "'" + pAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silindi!";
+                    _entities.SinavTipleriOT_SNA.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
-                    message = "'" + PAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "SinavTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    message = "'" + pAdi.SinavAdi + "' İsimli Sınav tipine ait programa özel not kriteri Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SinavTipleri/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -1269,7 +1238,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Sınav tipine ait programa özel not kriteri sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
     }

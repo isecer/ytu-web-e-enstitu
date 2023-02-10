@@ -9,12 +9,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class RprModelProgramDilBilgi
     {
         public string SinavAdi { get; set; }
-        public List<krSinavTipleriOTNotAraliklari> OgretimNotKriterleri { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> OgretimNotKriterleri { get; set; }
         public List<SinavNotlari> SinavNotlariList { get; set; }
         public List<SinavTiplerSubSinavAralik> SinavNotAralikList { get; set; }
         public RprModelProgramDilBilgi()
         {
-            OgretimNotKriterleri = new List<krSinavTipleriOTNotAraliklari>();
+            OgretimNotKriterleri = new List<KrSinavTipleriOtNotAraliklari>();
             SinavNotlariList = new List<SinavNotlari>();
             SinavNotAralikList = new List<SinavTiplerSubSinavAralik>();
         }

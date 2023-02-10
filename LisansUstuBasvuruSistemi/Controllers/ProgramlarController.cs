@@ -17,24 +17,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Programlar)]
     public class ProgramlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        public ActionResult Index(string ekd)
         {
-            var sEkod = EnstituBus.GetSelectedEnstitu(EKD);
-            return Index(new fmProgramlar { PageSize = 15, EnstituKod = sEkod, Expand = false });
+            var sEkod = EnstituBus.GetSelectedEnstitu(ekd);
+            return Index(new FmProgramlar { PageSize = 15, EnstituKod = sEkod, Expand = false });
         }
         [HttpPost]
-        public ActionResult Index(fmProgramlar model)
+        public ActionResult Index(FmProgramlar model)
         {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in db.Programlars
-                    join sl in db.Programlars on new { s.ProgramKod } equals new { sl.ProgramKod } into defP
+            var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
+            var q = from s in _entities.Programlars
+                    join sl in _entities.Programlars on new { s.ProgramKod } equals new { sl.ProgramKod } into defP
                     from slP in defP.DefaultIfEmpty()
-                    join e in db.AnabilimDallaris on s.AnabilimDaliID equals e.AnabilimDaliID
-                    join at in db.AlesTipleris on new { s.AlesTipID } equals new { at.AlesTipID }
-                    join enst in db.Enstitulers on new { e.EnstituKod } equals new { enst.EnstituKod }
-                    where EnstKods.Contains(enst.EnstituKod)
-                    select new frProgramlar
+                    join e in _entities.AnabilimDallaris on s.AnabilimDaliID equals e.AnabilimDaliID
+                    join at in _entities.AlesTipleris on new { s.AlesTipID } equals new { at.AlesTipID }
+                    join enst in _entities.Enstitulers on new { e.EnstituKod } equals new { enst.EnstituKod }
+                    where enstKods.Contains(enst.EnstituKod)
+                    select new FrProgramlar
                     {
                         AnabilimDaliID = s.AnabilimDaliID,
                         EnstituKod = enst.EnstituKod,
@@ -79,48 +79,49 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.ProgramAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.ProgramAdi.Contains(model.ProgramAdi) || p.AnabilimDaliAdi.Contains(model.ProgramAdi) || p.ProgramKod == model.ProgramAdi);
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID);
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(o => o.ProgramAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(o => o.ProgramAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.AlesTipID = new SelectList(Management.cmbGetAktifAlesTipleri(true), "Value", "Caption", model.AlesTipID);
-            var KullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
-            ViewBag.KullaniciTipID = new SelectList(KullaniciTipList, "Value", "Caption", model.KullaniciTipID);
+            var kullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
+            ViewBag.KullaniciTipID = new SelectList(kullaniciTipList, "Value", "Caption", model.KullaniciTipID);
             ViewBag.Ucretli = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.Ucretli);
-            var AlesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { }, new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
-            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(AlesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
+            var alesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { }, new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
+            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(alesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
             ViewBag.LYLHerhangiBirindeGecenAlanIci = new SelectList(Management.cmbAlanEslesmeData(true), "Value", "Caption", model.LYLHerhangiBirindeGecenAlanIci);
             ViewBag.ProgramSecimiEkBilgi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.ProgramSecimiEkBilgi);
             ViewBag.IsAlandisiBolumKisitlamasi = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsAlandisiBolumKisitlamasi);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
-        public ActionResult Kayit(string id, string EKD)
+        public ActionResult Kayit(string id, string ekd)
         {
-            var MmMessage = new MmMessage();
-            ViewBag.MmMessage = MmMessage;
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
+            var mmMessage = new MmMessage();
+            ViewBag.MmMessage = mmMessage;
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var model = new Programlar();
-            List<int> SAlesTipIDs = null;
-            var OgrenciBolumIDs = new List<int>();
+            List<int> sAlesTipIDs = null;
+            var ogrenciBolumIDs = new List<int>();
             if (id.IsNullOrWhiteSpace() == false)
             {
-                var data = db.Programlars.Where(p => p.ProgramKod == id).FirstOrDefault();
+                var data = _entities.Programlars.FirstOrDefault(p => p.ProgramKod == id);
                 if (data != null)
                 {
                     model = data;
 
-                    OgrenciBolumIDs = data.ProgramlarAlandisiBolumKisitlamalaris.Select(s => s.OgrenciBolumID).Distinct().ToList();
-                    SAlesTipIDs = data.ProgramlarAlesEslesmeleris.Select(s => s.AlesTipID).ToList();
-                    _EnstituKod = data.AnabilimDallari.EnstituKod;
+                    ogrenciBolumIDs = data.ProgramlarAlandisiBolumKisitlamalaris.Select(s => s.OgrenciBolumID).Distinct().ToList();
+                    sAlesTipIDs = data.ProgramlarAlesEslesmeleris.Select(s => s.AlesTipID).ToList();
+                    enstituKod = data.AnabilimDallari.EnstituKod;
 
 
                 }
@@ -132,90 +133,90 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.Diller2 = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
-            var KullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
-            ViewBag.KullaniciTipID = new SelectList(KullaniciTipList, "Value", "Caption", model.KullaniciTipID);
+            var kullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
+            ViewBag.KullaniciTipID = new SelectList(kullaniciTipList, "Value", "Caption", model.KullaniciTipID);
             ViewBag.LYLHerhangiBirindeGecenAlanIci = new SelectList(Management.cmbAlanEslesmeData(false), "Value", "Caption", model.LYLHerhangiBirindeGecenAlanIci);
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.BasvuruAgnoAlimTipID = new SelectList(Management.cmbGetBasvuruAgnoAlimTipleri(true), "Value", "Caption", model.BasvuruAgnoAlimTipID);
-            var AlesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
-            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(AlesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
+            var alesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
+            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(alesTipNotSecimList, "Value", "Caption", model.AlesNotuYuksekOlanAlinsin);
 
-            var _roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
-            var kuls = UserBus.GetRoluOlanKullanicilar(_roleName, _EnstituKod);
+            var roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
+            var kuls = UserBus.GetRoluOlanKullanicilar(roleName, enstituKod);
             var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, model.ProgramKod);
             ViewBag.KullaniciIDs = rolls.Where(p => p.Checked == true).Select(s => s.Value.KullaniciID).ToList();
 
-            var oBolIds = db.BolumEslestirs.Where(p => p.ProgramKod == model.ProgramKod).Select(s => s.OgrenciBolumID).ToList();
+            var oBolIds = _entities.BolumEslestirs.Where(p => p.ProgramKod == model.ProgramKod).Select(s => s.OgrenciBolumID).ToList();
 
             ViewBag.AOgrenciBolumID = oBolIds;
-            ViewBag.OgrenciBolumIDs = OgrenciBolumIDs;
+            ViewBag.OgrenciBolumIDs = ogrenciBolumIDs;
             ViewBag.AlesTipIDs = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
-            ViewBag.SAlesTipIDs = SAlesTipIDs;
+            ViewBag.SAlesTipIDs = sAlesTipIDs;
             ViewBag.OldID = model.ProgramKod;
-            ViewBag.EnstituKod = _EnstituKod;
+            ViewBag.EnstituKod = enstituKod;
             return View(model);
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(Programlar kModel, string EnstituKod, string OldID, List<int> KullaniciID, List<int> OgrenciBolumID, List<int> OgrenciBolumIDs, List<int> AlesTipIDs)
+        public ActionResult Kayit(Programlar kModel, string enstituKod, string oldId, List<int> kullaniciId, List<int> ogrenciBolumId, List<int> ogrenciBolumIDs, List<int> alesTipIDs)
         {
-            var MmMessage = new MmMessage();
-            string ID = OldID.IsNullOrWhiteSpace() ? kModel.ProgramKod : OldID;
-            AlesTipIDs = AlesTipIDs ?? new List<int>();
+            var mmMessage = new MmMessage();
+            string id = oldId.IsNullOrWhiteSpace() ? kModel.ProgramKod : oldId;
+            alesTipIDs = alesTipIDs ?? new List<int>();
             #region Kontrol 
 
-            if (KullaniciID == null) KullaniciID = new List<int>();
-            if (OgrenciBolumID == null) OgrenciBolumID = new List<int>();
-            if (OgrenciBolumIDs == null) OgrenciBolumIDs = new List<int>();
+            if (kullaniciId == null) kullaniciId = new List<int>();
+            if (ogrenciBolumId == null) ogrenciBolumId = new List<int>();
+            if (ogrenciBolumIDs == null) ogrenciBolumIDs = new List<int>();
 
-            if (ID.IsNullOrWhiteSpace())
+            if (id.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Program kodu boş bırakılamaz ve 0 dan büyük bir değer olmalıdır!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                mmMessage.Messages.Add("Program kodu boş bırakılamaz ve 0 dan büyük bir değer olmalıdır!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
             if (kModel.AnabilimDaliID <= 0)
             {
-                MmMessage.Messages.Add("Anabilim Dalı seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliID" });
+                mmMessage.Messages.Add("Anabilim Dalı seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliID" });
             if (kModel.AlesTipID <= 0)
             {
-                MmMessage.Messages.Add("Ales Tipi seçiniz");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AlesTipID" });
+                mmMessage.Messages.Add("Ales Tipi seçiniz");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AlesTipID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AlesTipID" });
-            if (kModel.ProgramKod.IsNullOrWhiteSpace() && OldID.IsNullOrWhiteSpace())
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AlesTipID" });
+            if (kModel.ProgramKod.IsNullOrWhiteSpace() && oldId.IsNullOrWhiteSpace())
             {
-                MmMessage.Messages.Add("Kayıt işlemini yapabilmeni için Kod kısmını doldurmanız gerekmektedir!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeni için Kod kısmını doldurmanız gerekmektedir!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ProgramKod" });
             if (kModel.KullaniciTipID <= 0)
             {
-                MmMessage.Messages.Add("Kayıt işlemini yapabilmeniz öğrenci tipi seçiniz!");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciTipID" });
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz öğrenci tipi seçiniz!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciTipID" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciTipID" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "KullaniciTipID" });
             if (kModel.Ucretli)
             {
                 if (kModel.Ucret.HasValue == false)
                 {
-                    MmMessage.Messages.Add("Ücretli seçilen programın ücret bilgisinin girilmesi gerekmektedir!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ucret" });
+                    mmMessage.Messages.Add("Ücretli seçilen programın ücret bilgisinin girilmesi gerekmektedir!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Ucret" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ucret" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Ucret" });
 
             }
             if (kModel.AlesNotuYuksekOlanAlinsin)
             {
-                if (AlesTipIDs.Count == 0)
+                if (alesTipIDs.Count == 0)
                 {
-                    MmMessage.Messages.Add("Ales notu yüksek olan seçeneğini seçebilmeniz için sağındaki kutucukta bulunan Ales tiplerini seçiniz!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AlesTipIDs" });
+                    mmMessage.Messages.Add("Ales notu yüksek olan seçeneğini seçebilmeniz için sağındaki kutucukta bulunan Ales tiplerini seçiniz!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AlesTipIDs" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AlesTipIDs" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AlesTipIDs" });
 
             }
             if (kModel.BasvuruAgnoAlimTipID.HasValue)
@@ -224,91 +225,91 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     if (kModel.LYuzdeOran.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Lisans % oran bilgisinin girilmesi gerekmektedir!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "LYuzdeOran" });
+                        mmMessage.Messages.Add("Lisans % oran bilgisinin girilmesi gerekmektedir!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "LYuzdeOran" });
                     }
                     else if (kModel.YLYuzdeOran.HasValue == false)
                     {
-                        MmMessage.Messages.Add("Yüksek Lisans % oran bilgisinin girilmesi gerekmektedir!");
-                        MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLYuzdeOran" });
+                        mmMessage.Messages.Add("Yüksek Lisans % oran bilgisinin girilmesi gerekmektedir!");
+                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLYuzdeOran" });
                     }
                     else
                     {
                         if (kModel.LYuzdeOran + kModel.YLYuzdeOran != 100)
                         {
-                            MmMessage.Messages.Add("Lisans % oranı ve Yüksek Lisans % oranı toplamı 100 e eşit olacak şekilde giriniz!");
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "LYuzdeOran" });
-                            MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLYuzdeOran" });
+                            mmMessage.Messages.Add("Lisans % oranı ve Yüksek Lisans % oranı toplamı 100 e eşit olacak şekilde giriniz!");
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "LYuzdeOran" });
+                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLYuzdeOran" });
                         }
                     }
 
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvuruAgnoAlimTipID" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvuruAgnoAlimTipID" });
 
             }
             if (kModel.YLAgnoKriteri.HasValue)
             {
                 if (!(kModel.YLAgnoKriteri.Value >= 0 && kModel.YLAgnoKriteri.Value <= 100))
                 {
-                    MmMessage.Messages.Add("Girilecek Tezsiz Y.Lisans Min Agno not kriteri 0 ile 100 arasında olmalıdır");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLAgnoKriteri" });
+                    mmMessage.Messages.Add("Girilecek Tezsiz Y.Lisans Min Agno not kriteri 0 ile 100 arasında olmalıdır");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLAgnoKriteri" });
                 }
             }
             if (kModel.TYLAgnoKriteri.HasValue)
             {
                 if (!(kModel.TYLAgnoKriteri.Value >= 0 && kModel.TYLAgnoKriteri.Value <= 100))
                 {
-                    MmMessage.Messages.Add("Girilecek Yüksek Tezli Y.Lisans Min Agno not kriteri 0 ile 100 arasında olmalıdır");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TYLAgnoKriteri" });
+                    mmMessage.Messages.Add("Girilecek Yüksek Tezli Y.Lisans Min Agno not kriteri 0 ile 100 arasında olmalıdır");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TYLAgnoKriteri" });
                 }
             }
             if (kModel.DAgnoKriteri.HasValue)
             {
                 if (!(kModel.DAgnoKriteri.Value >= 0 && kModel.DAgnoKriteri.Value <= 100))
                 {
-                    MmMessage.Messages.Add("Girilecek Doktora Min Agno not kriteri 0 ile 100 arasında olmalıdır");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DAgnoKriteri" });
+                    mmMessage.Messages.Add("Girilecek Doktora Min Agno not kriteri 0 ile 100 arasında olmalıdır");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DAgnoKriteri" });
                 }
             }
             if (kModel.ProgramSecimiEkBilgi)
             {
                 if (kModel.Aciklama.IsNullOrWhiteSpace())
                 {
-                    MmMessage.Messages.Add("Açıklama Giriniz.");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Aciklama" });
+                    mmMessage.Messages.Add("Açıklama Giriniz.");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Aciklama" });
                 }
-                else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Aciklama" });
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Aciklama" });
 
             }
-            if (kModel.IsAlandisiBolumKisitlamasi && OgrenciBolumIDs.Count == 0)
+            if (kModel.IsAlandisiBolumKisitlamasi && ogrenciBolumIDs.Count == 0)
             {
-                MmMessage.Messages.Add("Alan dışı öğrenci bölümü kısıtlaması seçeneği aktif edildiğinde kabul edilecek en az 1 öğrenci bölümünü listeden seçmeniz gerekmektedir.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsAlandisiBolumKisitlamasi" });
+                mmMessage.Messages.Add("Alan dışı öğrenci bölümü kısıtlaması seçeneği aktif edildiğinde kabul edilecek en az 1 öğrenci bölümünü listeden seçmeniz gerekmektedir.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsAlandisiBolumKisitlamasi" });
             }
 
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                int NewOrEd = OldID.IsNullOrWhiteSpace() ? 1 : 0;
-                var cnt = db.Programlars.Where(p => p.ProgramKod == ID).Count() + NewOrEd;
+                int newOrEd = oldId.IsNullOrWhiteSpace() ? 1 : 0;
+                var cnt = _entities.Programlars.Count(p => p.ProgramKod == id) + newOrEd;
                 if (cnt > 1)
                 {
-                    MmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
-                    MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
+                    mmMessage.Messages.Add("Tanımlamak istediğiniz kod daha önceden sisteme tanımlanmıştır, tekrar tanımlanamaz!");
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
                 }
             }
 
 
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                var bolm = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == kModel.AnabilimDaliID).First();
-                if (OldID.IsNullOrWhiteSpace())
+                var bolm = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == kModel.AnabilimDaliID);
+                if (oldId.IsNullOrWhiteSpace())
                 {
-                    var prg = db.Programlars.Add(new Programlar
+                    var prg = _entities.Programlars.Add(new Programlar
                     {
                         AnabilimDaliID = kModel.AnabilimDaliID,
                         AnabilimDaliKod = bolm.AnabilimDaliKod,
-                        ProgramKod = ID,
+                        ProgramKod = id,
                         ProgramAdi = kModel.ProgramAdi,
                         Aciklama = kModel.Aciklama,
                         AlesTipID = kModel.AlesTipID,
@@ -333,13 +334,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = UserIdentity.Ip,
                         IslemTarihi = DateTime.Now
                     });
-                    if (kModel.AlesNotuYuksekOlanAlinsin) prg.ProgramlarAlesEslesmeleris = AlesTipIDs.Select(s => new ProgramlarAlesEslesmeleri { AlesTipID = s }).ToList();
-                    db.SaveChanges();
-                    ID = prg.ProgramKod;
+                    if (kModel.AlesNotuYuksekOlanAlinsin) prg.ProgramlarAlesEslesmeleris = alesTipIDs.Select(s => new ProgramlarAlesEslesmeleri { AlesTipID = s }).ToList();
+                    _entities.SaveChanges();
+                    id = prg.ProgramKod;
                 }
                 else
                 {
-                    var data = db.Programlars.Where(p => p.ProgramKod == ID).First();
+                    var data = _entities.Programlars.First(p => p.ProgramKod == id);
                     data.AnabilimDaliID = kModel.AnabilimDaliID;
                     data.AnabilimDaliKod = bolm.AnabilimDaliKod;
                     data.ProgramAdi = kModel.ProgramAdi;
@@ -365,42 +366,42 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
-                    db.ProgramlarAlesEslesmeleris.RemoveRange(data.ProgramlarAlesEslesmeleris);
-                    if (kModel.AlesNotuYuksekOlanAlinsin) data.ProgramlarAlesEslesmeleris = AlesTipIDs.Select(s => new ProgramlarAlesEslesmeleri { AlesTipID = s }).ToList();
+                    _entities.ProgramlarAlesEslesmeleris.RemoveRange(data.ProgramlarAlesEslesmeleris);
+                    if (kModel.AlesNotuYuksekOlanAlinsin) data.ProgramlarAlesEslesmeleris = alesTipIDs.Select(s => new ProgramlarAlesEslesmeleri { AlesTipID = s }).ToList();
 
                     if (kModel.IsAlandisiBolumKisitlamasi)
                     {
-                        db.ProgramlarAlandisiBolumKisitlamalaris.RemoveRange(db.ProgramlarAlandisiBolumKisitlamalaris.Where(p => p.ProgramKod == ID));
+                        _entities.ProgramlarAlandisiBolumKisitlamalaris.RemoveRange(_entities.ProgramlarAlandisiBolumKisitlamalaris.Where(p => p.ProgramKod == id));
 
-                        db.ProgramlarAlandisiBolumKisitlamalaris.AddRange(OgrenciBolumIDs.Select(s => new ProgramlarAlandisiBolumKisitlamalari
+                        _entities.ProgramlarAlandisiBolumKisitlamalaris.AddRange(ogrenciBolumIDs.Select(s => new ProgramlarAlandisiBolumKisitlamalari
                         {
                             OgrenciBolumID = s,
-                            ProgramKod = ID
+                            ProgramKod = id
 
                         }));
                     }
                 }
 
-                var Onceki = db.KullaniciProgramlaris.Where(p => p.ProgramKod == kModel.ProgramKod).ToList();
-                db.KullaniciProgramlaris.RemoveRange(Onceki);
-                foreach (var item in KullaniciID)
+                var onceki = _entities.KullaniciProgramlaris.Where(p => p.ProgramKod == kModel.ProgramKod).ToList();
+                _entities.KullaniciProgramlaris.RemoveRange(onceki);
+                foreach (var item in kullaniciId)
                 {
-                    db.KullaniciProgramlaris.Add(new KullaniciProgramlari
+                    _entities.KullaniciProgramlaris.Add(new KullaniciProgramlari
                     {
                         KullaniciID = item,
-                        ProgramKod = ID
+                        ProgramKod = id
                     });
 
 
                 }
-                var OncekiOb = db.BolumEslestirs.Where(p => p.ProgramKod == kModel.ProgramKod).ToList();
-                db.BolumEslestirs.RemoveRange(OncekiOb);
-                foreach (var item in OgrenciBolumID)
+                var oncekiOb = _entities.BolumEslestirs.Where(p => p.ProgramKod == kModel.ProgramKod).ToList();
+                _entities.BolumEslestirs.RemoveRange(oncekiOb);
+                foreach (var item in ogrenciBolumId)
                 {
-                    db.BolumEslestirs.Add(new BolumEslestir
+                    _entities.BolumEslestirs.Add(new BolumEslestir
                     {
                         OgrenciBolumID = item,
-                        ProgramKod = ID,
+                        ProgramKod = id,
                         IslemTarihi = DateTime.Now,
                         IslemYapanID = UserIdentity.Current.Id,
                         IslemYapanIP = UserIdentity.Ip
@@ -408,60 +409,60 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
 
 
 
-            ViewBag.EnstituKod = EnstituKod;
-            ViewBag.MmMessage = MmMessage;
-            ViewBag.OldID = OldID;
+            ViewBag.EnstituKod = enstituKod;
+            ViewBag.MmMessage = mmMessage;
+            ViewBag.OldID = oldId;
             ViewBag.AnabilimDaliID = new SelectList(Management.cmbGetYetkiliAnabilimDallari(true), "Value", "Caption", kModel.AnabilimDaliID);
             ViewBag.AlesTipID = new SelectList(Management.cmbGetAktifAlesTipleri(true), "Value", "Caption", kModel.AlesTipID);
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.Diller2 = new SelectList(Management.GetDiller(true), "Value", "Caption");
-            var KullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
-            ViewBag.KullaniciTipID = new SelectList(KullaniciTipList, "Value", "Caption", kModel.KullaniciTipID);
+            var kullaniciTipList = new List<CmbIntDto>() { new CmbIntDto { }, new CmbIntDto { Value = KullaniciTipBilgi.YerliOgrenci, Caption = "Yerli Öğrenci" }, new CmbIntDto { Value = KullaniciTipBilgi.YabanciOgrenci, Caption = "Yabancı Öğrenci" } };
+            ViewBag.KullaniciTipID = new SelectList(kullaniciTipList, "Value", "Caption", kModel.KullaniciTipID);
             ViewBag.KullaniciID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.OgrenciBolumID = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
             ViewBag.BasvuruAgnoAlimTipID = new SelectList(Management.cmbGetBasvuruAgnoAlimTipleri(true), "Value", "Caption", kModel.BasvuruAgnoAlimTipID);
             ViewBag.LYLHerhangiBirindeGecenAlanIci = new SelectList(Management.cmbAlanEslesmeData(false), "Value", "Caption", kModel.LYLHerhangiBirindeGecenAlanIci);
-            var AlesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
-            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(AlesTipNotSecimList, "Value", "Caption", kModel.AlesNotuYuksekOlanAlinsin);
+            var alesTipNotSecimList = new List<CmbBoolDto>() { new CmbBoolDto { Value = true, Caption = "Ales Tipleri Arasında Notu Yüksek Olan Sonuç Alınsın" }, new CmbBoolDto { Value = false, Caption = "Programa Ait Ales Tipi Notu Alınsın" } };
+            ViewBag.AlesNotuYuksekOlanAlinsin = new SelectList(alesTipNotSecimList, "Value", "Caption", kModel.AlesNotuYuksekOlanAlinsin);
 
-            ViewBag.KullaniciIDs = KullaniciID;
-            ViewBag.AOgrenciBolumID = OgrenciBolumID;
-            ViewBag.OgrenciBolumIDs = OgrenciBolumIDs;
-            ViewBag.SAlesTipIDs = AlesTipIDs;
+            ViewBag.KullaniciIDs = kullaniciId;
+            ViewBag.AOgrenciBolumID = ogrenciBolumId;
+            ViewBag.OgrenciBolumIDs = ogrenciBolumIDs;
+            ViewBag.SAlesTipIDs = alesTipIDs;
             ViewBag.AlesTipIDs = new SelectList(new List<CmbIntDto>(), "Value", "Caption");
 
             return View(kModel);
         }
-        public ActionResult ProgramKullanicilarYetki(int AnabilimDaliID, string ProgramKod)
+        public ActionResult ProgramKullanicilarYetki(int anabilimDaliId, string programKod)
         {
-            var abd = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == AnabilimDaliID).First();
-            var _roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
-            var kuls = UserBus.GetRoluOlanKullanicilar(_roleName, abd.EnstituKod);
-            var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, ProgramKod).Select(s => new { Value = s.Value.KullaniciID, Caption = (s.Value.Ad + " " + s.Value.Soyad + " [" + s.Value.KullaniciAdi + "]") }).ToList();
+            var abd = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == anabilimDaliId);
+            var roleName = new List<string>() { RoleNames.MulakatSureci, RoleNames.Kotalar, RoleNames.Programlar, RoleNames.BolumEslestir };
+            var kuls = UserBus.GetRoluOlanKullanicilar(roleName, abd.EnstituKod);
+            var rolls = KullanicilarBus.GetProgramYetkisiOlanKullanicilar(kuls, programKod).Select(s => new { Value = s.Value.KullaniciID, Caption = (s.Value.Ad + " " + s.Value.Soyad + " [" + s.Value.KullaniciAdi + "]") }).ToList();
             return Json(rolls, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult getBAT(int BasvuruAgnoAlimTipID)
+        public ActionResult GetBat(int basvuruAgnoAlimTipId)
         {
-            var abd = db.BasvuruAgnoAlimTipleris.Where(p => p.BasvuruAgnoAlimTipID == BasvuruAgnoAlimTipID).First();
+            var abd = _entities.BasvuruAgnoAlimTipleris.First(p => p.BasvuruAgnoAlimTipID == basvuruAgnoAlimTipId);
 
             return Json(new { Show = abd.YuzdeGir }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult OBolumYetki(int AnabilimDaliID, string ProgramKod)
+        public ActionResult OBolumYetki(int anabilimDaliId, string programKod)
         {
-            var abd = db.AnabilimDallaris.Where(p => p.AnabilimDaliID == AnabilimDaliID).FirstOrDefault();
-            var odb = db.BolumEslestirs.Where(p => p.ProgramKod == ProgramKod).Select(s => s.OgrenciBolumID).ToList();
-            var roles = db.OgrenciBolumleris.Where(p => p.EnstituKod == abd.EnstituKod).OrderBy(o => o.BolumAdi).ToList();
+            var abd = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == anabilimDaliId);
+            var odb = _entities.BolumEslestirs.Where(p => p.ProgramKod == programKod).Select(s => s.OgrenciBolumID).ToList();
+            var roles = _entities.OgrenciBolumleris.Where(p => p.EnstituKod == abd.EnstituKod).OrderBy(o => o.BolumAdi).ToList();
             var dataR = roles.Select(s => new CheckObject<OgrenciBolumleri>
             {
                 Value = s,
@@ -469,12 +470,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).OrderByDescending(o => o.Checked).ThenBy(t => t.Value.BolumAdi).Select(s2 => new { Value = s2.Value.OgrenciBolumID, Caption = s2.Value.BolumAdi });
             return Json(dataR, "application/json", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetAlesTipIDs(string ProgramKod)
+        public ActionResult GetAlesTipIDs(string programKod)
         {
             var roles = new List<int>();
-            var prg = db.Programlars.Where(p => p.ProgramKod == ProgramKod).FirstOrDefault();
+            var prg = _entities.Programlars.FirstOrDefault(p => p.ProgramKod == programKod);
             if (prg != null) roles = prg.ProgramlarAlesEslesmeleris.Select(s => s.AlesTipID).ToList();
-            var dataR = db.AlesTipleris.Select(s => new CheckObject<AlesTipleri>
+            var dataR = _entities.AlesTipleris.Select(s => new CheckObject<AlesTipleri>
             {
                 Value = s,
                 Checked = roles.Contains(s.AlesTipID)
@@ -484,8 +485,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Sil(string id)
         {
-            var kayit = db.Programlars.Where(p => p.ProgramKod == id).FirstOrDefault();
-            var PAdi = db.Programlars.Where(p => p.ProgramKod == id).First();
+            var kayit = _entities.Programlars.FirstOrDefault(p => p.ProgramKod == id);
+            var pAdi = _entities.Programlars.First(p => p.ProgramKod == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -493,15 +494,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 try
                 {
-                    message = "'" + PAdi.ProgramAdi + "' İsimli Program Silindi!";
-                    db.Programlars.Remove(kayit);
-                    db.SaveChanges();
+                    message = "'" + pAdi.ProgramAdi + "' İsimli Program Silindi!";
+                    _entities.Programlars.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
-                    message = "'" + PAdi.ProgramAdi + "' İsimli Program Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
-                    Management.SistemBilgisiKaydet(message, "Programlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    message = "'" + pAdi.ProgramAdi + "' İsimli Program Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage();
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Programlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
@@ -509,7 +510,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 success = false;
                 message = "Silmek istediğiniz Program sistemde bulunamadı!";
             }
-            return Json(new { success = success, message = message }, "application/json", JsonRequestBehavior.AllowGet);
+            return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
 
     }

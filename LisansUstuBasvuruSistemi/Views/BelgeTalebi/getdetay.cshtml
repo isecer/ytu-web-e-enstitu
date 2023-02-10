@@ -8,11 +8,11 @@
 @model BelgeTalepleriDetayDto
 @{
     Layout = null;
-    var _color = Model.Color; 
+    var color = Model.Color; 
     var kRole = RoleNames.BelgeTalebiDuzelt.InRoleCurrent(); 
 
 }
-<div class="panel panel-success" id="btDetay_@Model.BelgeTalepID" style="color:@_color">
+<div class="panel panel-success" id="btDetay_@Model.BelgeTalepID" style="color:@color">
 
     <div class="panel-heading  padding-0">
         <h3 class="panel-title"><i class="fa fa-file-text"></i> Talep Detayı</h3>
@@ -99,7 +99,7 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="widget widget-default" style="margin:0px; color:@_color">
+                    <div class="widget widget-default" style="margin:0px; color:@color">
                         <div class="panel-body form-group-separated">
                             <div class="col-md-6 col-xs-6">
                                 <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
@@ -314,7 +314,7 @@
                 return;
             }
             $.ajax({
-                url: '@Url.Action("miktarHesapla", "BelgeTalebi")',
+                url: '@Url.Action("MiktarHesapla", "BelgeTalebi")',
                 data: { 'id': id, miktar: mktr },
                 success: function (result) {
                     var msg = result + " TL";

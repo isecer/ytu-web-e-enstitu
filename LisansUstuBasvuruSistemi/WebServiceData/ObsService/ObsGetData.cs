@@ -72,13 +72,13 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                             if (ogrenciDersler[0].Sucess)
                             {
                                 var ogrenciDers = ogrenciDersler[0].ogrencidersnot[0];
-                                model.AktifDonemDers.ToplamKredi = ogrenciDers.TOP_KREDI.toIntObj().Value;
-                                model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.toDecimalObj().toIntObj().Value;
-                                model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.toDoubleObj().Value;
+                                model.AktifDonemDers.ToplamKredi = ogrenciDers.TOP_KREDI.ToIntObj().Value;
+                                model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.ToDecimalObj().ToIntObj().Value;
+                                model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.ToDoubleObj().Value;
                                 model.AktifDonemDers.EtikDersNotu = ogrenciDers.B_ETIK_DERS_NOTU;
                                 model.AktifDonemDers.SeminerDersNotu = ogrenciDers.SEMINER_DERS_NOTU;
-                                model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.toIntObj().Value;
-                                model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.toIntObj().Value;
+                                model.AktifDonemDers.ZorunluDersSayisi = ogrenciDers.ZORUN_DERS_SAYISI.ToIntObj().Value;
+                                model.AktifDonemDers.AbdDersSayisi = ogrenciDers.ANABILIMDALI_DERS_SAYISI.ToIntObj().Value;
                                 var dersler = ogrenciDers.AKTIF_DNM_DERS.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
                                 if (dersler.Any())
@@ -100,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                         model.OgrenciTez = tez;
 
                                         var sonTezIzlemeBilgiler = tez.tezizlemebilgileri
-                                            .OrderByDescending(o => o.TEZ_IZL_SIRA.toIntObj()).FirstOrDefault();
+                                            .OrderByDescending(o => o.TEZ_IZL_SIRA.ToIntObj()).FirstOrDefault();
                                         if (sonTezIzlemeBilgiler != null)
                                             model.SonTezIzlemeBilgileri = sonTezIzlemeBilgiler;
                                     }
@@ -142,7 +142,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                 model.HataMsj =
                     "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz! Hata:" +
                     ex.ToExceptionMessage();
-                Management.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
+                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
             if (model.OgrenciInfo == null) model.OgrenciInfo = new Ogrenci();

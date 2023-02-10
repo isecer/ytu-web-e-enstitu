@@ -7,13 +7,13 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMezuniyetYonetmelikler : PagerOption
+    public class FmMezuniyetYonetmelikler : PagerOption
     {
         public string EnstituKod { get; set; }
         public int? TarihKriterID { get; set; }
-        public IEnumerable<frMezuniyetYonetmelikler> Data { get; set; }
+        public IEnumerable<FrMezuniyetYonetmelikler> Data { get; set; }
     }
-    public class frMezuniyetYonetmelikler : MezuniyetYonetmelikleri
+    public class FrMezuniyetYonetmelikler : MezuniyetYonetmelikleri
     {
         public string EnstituAdi { get; set; }
         public string DilAdi { get; set; }
@@ -23,10 +23,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemAdi { get; set; }
         public string DonemAdiB { get; set; }
 
-        public List<krMezuniyetYonetmelikOT> MezuniyetYonetmelikData { get; set; }
-        public frMezuniyetYonetmelikler()
+        public List<KrMezuniyetYonetmelikOt> MezuniyetYonetmelikData { get; set; }
+        public FrMezuniyetYonetmelikler()
         {
-            MezuniyetYonetmelikData = new List<krMezuniyetYonetmelikOT>();
+            MezuniyetYonetmelikData = new List<KrMezuniyetYonetmelikOt>();
         }
     }
 }

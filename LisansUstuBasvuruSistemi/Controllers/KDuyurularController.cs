@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -14,21 +15,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
     public class KDuyurularController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        static readonly object lockObject = new object();
-        public ActionResult Index(string EKD)
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+
+        public ActionResult Index(string ekd)
         {
 
-            return Index(new FmDuyurularDto() { PageSize = 10 }, EKD);
+            return Index(new FmDuyurularDto() { PageSize = 10 }, ekd);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(FmDuyurularDto model, string EKD)
+        public ActionResult Index(FmDuyurularDto model, string ekd)
         {
-            var q = from s in db.Duyurulars
-                    join e in db.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where s.IsAktif && (s.YayinSonTarih.HasValue ? s.YayinSonTarih.Value >= DateTime.Now : 1 == 1) && e.EnstituKisaAd.Contains(EKD) 
+            var q = from s in _entities.Duyurulars
+                    join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    where s.IsAktif && (!s.YayinSonTarih.HasValue || s.YayinSonTarih.Value >= DateTime.Now) && e.EnstituKisaAd.Contains(ekd) 
                     select new
                     {
                         s.EnstituKod,  
@@ -50,14 +51,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (model.Tarih.HasValue)
             {
-                var t1 = model.Tarih.Value.TodateToShortDate();
+                var t1 = model.Tarih.Value.Date;
                 var t2 = Convert.ToDateTime(model.Tarih.Value.ToShortDateString() + " 23:59:59");
                 q = q.Where(p => p.Tarih >= t1 && p.Tarih <= t2);
 
             }
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.Tarih);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
             model.DuyurularDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
@@ -77,17 +77,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult getDuyuruJson(int PopupTipID, string EKD)
-        {
-
-            
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var fModel = new FmDuyurularDto(); 
-            fModel.EnstituKod = _EnstituKod;
-            var q = from s in db.Duyurulars
-                    join e in db.Enstitulers on new {  s.EnstituKod } equals new {  e.EnstituKod }
-                    join k in db.Kullanicilars on s.IslemYapanID equals k.KullaniciID
-                    where s.IsAktif && s.Tarih <= DateTime.Now && (s.YayinSonTarih.HasValue ? s.YayinSonTarih.Value >= DateTime.Now : 1 == 1) && e.EnstituKod == _EnstituKod  
+        public ActionResult GetDuyuruJson(int popupTipId, string ekd)
+        { 
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var fModel = new FmDuyurularDto
+            {
+                EnstituKod = enstituKod
+            };
+            var q = from s in _entities.Duyurulars
+                    join e in _entities.Enstitulers on new {  s.EnstituKod } equals new {  e.EnstituKod }
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+                    where s.IsAktif && s.Tarih <= DateTime.Now && (!s.YayinSonTarih.HasValue || s.YayinSonTarih.Value >= DateTime.Now) && e.EnstituKod == enstituKod  
                     select new
                     {
                         s.EnstituKod, 
@@ -111,11 +111,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YayinSonTarih,
                         s.IsAktif
                     };
-            if (PopupTipID == DuyuruPopupTipleri.AnaSayfa) q = q.Where(p => p.AnaSayfaPopupAc);
-            else if (PopupTipID == DuyuruPopupTipleri.LisansustuBasvuru) q = q.Where(p => p.BasvuruPopupAc);
-            else if (PopupTipID == DuyuruPopupTipleri.TalepYap) q = q.Where(p => p.TalepYaparkenPopupAc);
-            else if (PopupTipID == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
-            else if (PopupTipID == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
+            if (popupTipId == DuyuruPopupTipleri.AnaSayfa) q = q.Where(p => p.AnaSayfaPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.LisansustuBasvuru) q = q.Where(p => p.BasvuruPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.TalepYap) q = q.Where(p => p.TalepYaparkenPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
             else q = q.Where(p => p.MezuniyetBasvuruPopupAc);
             fModel.DuyurularDtos = q.Select(s => new FrDuyurularDto
             {
@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).OrderByDescending(o => o.Tarih).ToList();
 
             string htmlDuyuru = ViewRenderHelper.RenderPartialView("KDuyurular", "DuyuruHtml", fModel);
-            return Json(new { ShowMessage = fModel.DuyurularDtos.Count() > 0, HtmlMessage = htmlDuyuru });
+            return Json(new { ShowMessage = fModel.DuyurularDtos.Any(), HtmlMessage = htmlDuyuru });
         }
         public ActionResult DuyuruHtml(FmDuyurularDto model)
         {

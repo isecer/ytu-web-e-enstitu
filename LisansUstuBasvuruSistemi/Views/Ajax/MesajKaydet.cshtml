@@ -3,9 +3,9 @@
 @using BiskaUtil
 @model Mesajlar
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = null; 
-    var EnstituAdi = (string)ViewBag.EnstituAdi;
+    var enstituAdi = (string)ViewBag.EnstituAdi;
 
 
 }
@@ -30,7 +30,7 @@
                                     <label class="col-md-2 col-xs-2 control-label">Enstitü</label>
                                     <div class="col-md-10 col-xs-10">
                                         @Html.HiddenFor(p => p.EnstituKod)
-                                        @EnstituAdi
+                                        @enstituAdi
                                     </div>
                                 </div>
                             }
@@ -66,7 +66,7 @@
                                     <label class="col-md-2 col-xs-2 control-label">Enstitü</label>
                                     <div class="col-md-10 col-xs-10">
                                         @Html.HiddenFor(p => p.EnstituKod)
-                                        @EnstituAdi
+                                        @enstituAdi
                                     </div>
                                 </div>
                             }
@@ -188,10 +188,10 @@
 
 <script src="~/Content/ckeditor/ckeditor.js"></script>
 <script src="~/Content/ckeditor/showCk.js"></script>
-@if (MmMessage.IsCloseDialog)
+@if (mmMessage.IsCloseDialog)
 {
     <script>
-        setTimeout(function () { window.top.dialogKapat('@MmMessage.DialogID'); }, 2000);
+        setTimeout(function () { window.top.dialogKapat('@mmMessage.DialogID'); }, 2000);
 
     </script>
 }

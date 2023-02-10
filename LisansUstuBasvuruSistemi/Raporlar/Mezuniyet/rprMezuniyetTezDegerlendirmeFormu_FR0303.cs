@@ -1,61 +1,55 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System.Linq;
+﻿using System.Linq;
 using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
 
-namespace LisansUstuBasvuruSistemi.Raporlar
+namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    public partial class rprMezuniyetTezDegerlendirmeFormu_FR0303 : DevExpress.XtraReports.UI.XtraReport
+    public partial class RprMezuniyetTezDegerlendirmeFormu_FR0303 : DevExpress.XtraReports.UI.XtraReport
     {
-        public rprMezuniyetTezDegerlendirmeFormu_FR0303(int MezuniyetJuriOneriFormID, int? MezuniyetJuriOneriFormuJuriID)
+        public RprMezuniyetTezDegerlendirmeFormu_FR0303(int mezuniyetJuriOneriFormId, int? mezuniyetJuriOneriFormuJuriId)
         {
             InitializeComponent();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var JoForm = db.MezuniyetJuriOneriFormlaris.Where(p => p.MezuniyetJuriOneriFormID == MezuniyetJuriOneriFormID).First();
+                var joForm = db.MezuniyetJuriOneriFormlaris.First(p => p.MezuniyetJuriOneriFormID == mezuniyetJuriOneriFormId);
 
-                var MBasvuru = JoForm.MezuniyetBasvurulari;
+                var mBasvuru = joForm.MezuniyetBasvurulari;
 
 
 
-                xrCellEnstituAdi.Text = MBasvuru.MezuniyetSureci.Enstituler.EnstituAd.ToUpper();
-                xrCellAnabilimdaliAdi.Text = MBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.ToUpper();
-                xrCellProgramAdi.Text = MBasvuru.Programlar.ProgramAdi.ToUpper();
-                xrCellNumarasi.Text = MBasvuru.OgrenciNo;
+                xrCellEnstituAdi.Text = mBasvuru.MezuniyetSureci.Enstituler.EnstituAd.ToUpper();
+                xrCellAnabilimdaliAdi.Text = mBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi.ToUpper();
+                xrCellProgramAdi.Text = mBasvuru.Programlar.ProgramAdi.ToUpper();
+                xrCellNumarasi.Text = mBasvuru.OgrenciNo;
 
-                xrCellOgrenciAdSoyad.Text = MBasvuru.Ad + " " + MBasvuru.Soyad;
+                xrCellOgrenciAdSoyad.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
 
-                var DanismanBilgi = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi == "TezDanismani").First();
-                xrCellTezDanismanBilgi.Text = DanismanBilgi.UnvanAdi.ToUpper() + " " + DanismanBilgi.AdSoyad.ToUpper();
-                if (!MBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
+                var danismanBilgi = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
+                xrCellTezDanismanBilgi.Text = danismanBilgi.UnvanAdi.ToUpper() + " " + danismanBilgi.AdSoyad.ToUpper();
+                if (!mBasvuru.TezEsDanismanAdi.IsNullOrWhiteSpace())
                 {
-                    xrCellTezEsDanismanBilgi.Text = MBasvuru.TezEsDanismanUnvani.ToUpper() + " " + MBasvuru.TezEsDanismanAdi.ToUpper();
+                    xrCellTezEsDanismanBilgi.Text = mBasvuru.TezEsDanismanUnvani.ToUpper() + " " + mBasvuru.TezEsDanismanAdi.ToUpper();
                 }
                 var tezBasligi = "";
-                if (MBasvuru.IsTezDiliTr == true)
+                if (mBasvuru.IsTezDiliTr == true)
                 {
-                    tezBasligi = JoForm.IsTezBasligiDegisti == true
-                        ? JoForm.YeniTezBaslikTr
-                        : MBasvuru.TezBaslikTr;
+                    tezBasligi = joForm.IsTezBasligiDegisti == true
+                        ? joForm.YeniTezBaslikTr
+                        : mBasvuru.TezBaslikTr;
                 }
                 else
                 {
-                    tezBasligi = JoForm.IsTezBasligiDegisti == true
-                        ? JoForm.YeniTezBaslikEn
-                        : MBasvuru.TezBaslikEn;
+                    tezBasligi = joForm.IsTezBasligiDegisti == true
+                        ? joForm.YeniTezBaslikEn
+                        : mBasvuru.TezBaslikEn;
                 }
                 xrCellTezinBasligi.Text = tezBasligi;
 
 
-                if (MezuniyetJuriOneriFormuJuriID.HasValue)
+                if (mezuniyetJuriOneriFormuJuriId.HasValue)
                 {
-                    var secilenJuri = JoForm.MezuniyetJuriOneriFormuJurileris.Where(p => p.MezuniyetJuriOneriFormuJuriID == MezuniyetJuriOneriFormuJuriID).First();
+                    var secilenJuri = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == mezuniyetJuriOneriFormuJuriId);
                     xrCellJuriAdSoyad.Text = secilenJuri.UnvanAdi + " " + secilenJuri.AdSoyad;
                     xrCellJuriUniversiteAdi.Text = secilenJuri.UniversiteID.HasValue ? secilenJuri.Universiteler.Ad.ToUpper() : secilenJuri.UniversiteAdi.ToUpper();
                     xrCellJuriTelefon.Text = "";
@@ -70,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     xrCellJuriFaks.Text = "";
                     xrCellJuriEPosta.Text = "";
                 }
-                this.DisplayName = (MBasvuru.Ad + " " + MBasvuru.Soyad) + " FR-0303 Doktora Tez Değerlendirme Formu";
+                this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0303 Doktora Tez Değerlendirme Formu";
 
             }
         }

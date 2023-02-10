@@ -13,7 +13,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IEnumerable<FrBolumEslestirDto> BolumEslestirDtos { get; set; }
 
     }
-    public class FrBolumEslestirDto : frProgramlar
+    public class FrBolumEslestirDto : FrProgramlar
     {
         public List<string> OgrenciBolumAdlari { get; set; }
     }

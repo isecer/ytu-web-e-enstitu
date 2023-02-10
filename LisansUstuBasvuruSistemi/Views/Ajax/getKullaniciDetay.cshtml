@@ -8,9 +8,9 @@
     /**/
 
     Layout = null;
-    bool ResimVar = (bool)ViewBag.ResimVar;
+    bool resimVar = (bool)ViewBag.ResimVar;
     bool kYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    bool IYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    bool islemYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
     bool eYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
     bool pYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
     var enstitu = (Enstituler)ViewBag.Enstitu;
@@ -50,7 +50,7 @@
                         <span class="label label-info label-form" onclick="window.open('@Url.Action("YetkilendirmeEnstitu", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank')" style="cursor:pointer;" title="Enstitü Yetkileri Düzenle"><i class="fa fa-cog fa-lg"></i></span>
                     </li>
                 }
-                @if (IYetki)
+                @if (islemYetki)
                 {
                     <li>
                         <span class="label label-info label-form" onclick="window.open('@Url.Action("Yetkilendirme", "Kullanicilar", new { id = Model.KullaniciID })', target = '_blank');" style="cursor:pointer;" title="Erişim Yetkileri Düzenle"><i class="fa fa-cog fa-lg"></i></span>
@@ -168,7 +168,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr class="_EditImg @(ResimVar && (kYetki || Model.KullaniciID == UserIdentity.Current.Id)?"":"hide")">
+                                    <tr class="_EditImg @(resimVar && (kYetki || Model.KullaniciID == UserIdentity.Current.Id)?"":"hide")">
                                         <td height="30">
                                             <table style="width:100%;table-layout:fixed;">
                                                 <tr>
@@ -484,7 +484,7 @@
             _pRefresh(_panel, false);
             setTimeout(function () {
                 $.ajax({
-                    url: '@Url.Action("rotateImage", "Ajax")',
+                    url: '@Url.Action("RotateImage", "Ajax")',
                     data: { LeftOrRight: rotate, KullaniciID: @Model.KullaniciID },
                     success: function (result) {
                         var src = root + result.ResimAdi + "?time=" + new Date();

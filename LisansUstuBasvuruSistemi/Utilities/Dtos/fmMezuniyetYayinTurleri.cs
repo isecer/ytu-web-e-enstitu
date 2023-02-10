@@ -7,15 +7,15 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmMezuniyetYayinTurleri : PagerOption
+    public class FmMezuniyetYayinTurleri : PagerOption
     {
         public bool? IsAktif { get; set; }
         public bool Expand { get; set; }
         public string MezuniyetYayinTurAdi { get; set; }
-        public IEnumerable<frMezuniyetYayinTurleri> data { get; set; }
+        public IEnumerable<FrMezuniyetYayinTurleri> Data { get; set; }
 
     }
-    public class frMezuniyetYayinTurleri : MezuniyetYayinTurleri
+    public class FrMezuniyetYayinTurleri : MezuniyetYayinTurleri
     {
         public string EnstituKod { get; set; }
         public string EnstituAd { get; set; }

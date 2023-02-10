@@ -1,6 +1,6 @@
-﻿namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
-    partial class rprMezuniyetTezJuriOneriFormu_FR0300_FR0339
+    partial class RprMezuniyetTezJuriOneriFormu_FR0300_FR0339
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary2 = new DevExpress.XtraReports.UI.XRSummary();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rprMezuniyetTezJuriOneriFormu_FR0300_FR0339));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprMezuniyetTezJuriOneriFormu_FR0300_FR0339));
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.tableYtuDisiJuri = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow93 = new DevExpress.XtraReports.UI.XRTableRow();

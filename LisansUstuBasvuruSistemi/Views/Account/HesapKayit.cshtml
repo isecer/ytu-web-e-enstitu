@@ -7,12 +7,11 @@
 @model Kullanicilar
 @{
     Layout = null;
-    var IsKurumIci = (bool)ViewBag.IsKurumIci;
-    var IsYerli = (bool)ViewBag.IsYerli;
-    var KullaniciYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var ResimVar = (bool)ViewBag.ResimVar;
+    var isKurumIci = (bool)ViewBag.IsKurumIci;
+    var isYerli = (bool)ViewBag.IsYerli;
+    var kullaniciYetki = RoleNames.KullanicilarKayit.InRoleCurrent();
+    var resimVar = (bool)ViewBag.ResimVar;
     var kulTipAdi = (string)ViewBag.KullaniciTipAdi;
-    var Email2 = (string)ViewBag.EMail2;
 
 }
 <div class="row">
@@ -20,8 +19,8 @@
     {
         @Html.HiddenFor(h => h.KullaniciID)
         @Html.HiddenFor(h => h.ResimAdi)
-        @Html.Hidden("IsKurumIci", IsKurumIci)
-        @Html.Hidden("IsYerli", IsYerli)
+        @Html.Hidden("IsKurumIci", isKurumIci)
+        @Html.Hidden("IsYerli", isYerli)
 
         <div class="col-md-12" style="overflow-x:auto; max-height:600px;">
             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
@@ -45,7 +44,7 @@
                                             <td id="lbl_KullaniciTipID">Kullanıcı Tipi</td>
                                             <td>:</td>
                                             <td class="form-group">
-                                                @if (KullaniciYetki || Model.KullaniciID <= 0)
+                                                @if (kullaniciYetki || Model.KullaniciID <= 0)
                                                 {
                                                     @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", onChange = "pTipKontrol()" })
                                                 }
@@ -64,7 +63,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="widget widget-default cKayitGrup Ku Yer @(Model.KullaniciID>0 && IsKurumIci ?"":"hide")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <div class="widget widget-default cKayitGrup Ku Yer @(Model.KullaniciID>0 && isKurumIci ?"":"hide")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                 <table style="width:100%;">
                     <tbody>
                         <tr>
@@ -140,7 +139,7 @@
                                                             <input type="text" name="TcKimlikNo" id="TcKimlikNo" maxlength="11" value="@Model.TcKimlikNo" class="form-control">
                                                         </td>
                                                     </tr>
-                                                    <tr class="Yab @(IsYerli ? "hide" : "")">
+                                                    <tr class="Yab @(isYerli ? "hide" : "")">
                                                         <td id="lbl_PasaportNo">Psaport No</td>
                                                         <td>:</td>
                                                         <td class="form-group">
@@ -279,7 +278,7 @@
                                                 <input type="text" name="EMail" id="EMail" value="@Model.EMail" class="form-control">
                                             </td>
                                         </tr>
-                                        <tr class="Yab Yer Kd @(!IsKurumIci || !IsYerli ? "" : "hide")">
+                                        <tr class="Yab Yer Kd @(!isKurumIci || !isYerli ? "" : "hide")">
                                             <td id="lbl_Adres">Açık Adres</td>
                                             <td>:</td>
                                             <td class="form-group">
@@ -296,7 +295,7 @@
             </div>
 
 
-            @if (KullaniciYetki)
+            @if (kullaniciYetki)
             {
                 <div class="widget widget-default cKayitGrup" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                     <table style="width:100%;">
@@ -327,7 +326,7 @@
                                                     <input type="password" name="Sifre" id="Sifre" value="@Model.Sifre" class="form-control">
                                                 </td>
                                             </tr>
-                                            <tr class="Yer Ku @(!IsKurumIci ? "hide" : "")">
+                                            <tr class="Yer Ku @(!isKurumIci ? "hide" : "")">
                                                 <td id="lbl_IsActiveDirectoryUser">Active Directory İle Giriş</td>
                                                 <td>:</td>
                                                 <td class="form-group">
@@ -424,7 +423,7 @@
             return;
         }
         $.ajax({
-            url: '@Url.Action("pTipKontrol", "Ajax")',
+            url: '@Url.Action("PTipKontrol", "Ajax")',
             data: { id: ptipID },
             success: function (result) {
                 $('.cKayitGrup').removeClass("hide");
@@ -494,7 +493,7 @@
 
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getProgramlarEkod", "Ajax")',
+                url: '@Url.Action("GetProgramlarEkod", "Ajax")',
                 data: { 'EnstituKod': sndrVal },
                 success: function (result) {
 
@@ -524,7 +523,7 @@
 
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
-                url: '@Url.Action("getOts", "Ajax")',
+                url: '@Url.Action("GetOts", "Ajax")',
                 data: { 'EnstituKod': sndrVal },
                 success: function (result) {
                     var opt = "";

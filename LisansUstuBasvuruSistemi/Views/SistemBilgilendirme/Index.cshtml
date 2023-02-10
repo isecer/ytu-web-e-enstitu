@@ -1,8 +1,8 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
-@model  fmSistemBilgilendirme
+@model  FmSistemBilgilendirme
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var bilgiTipleri = new LogTypeData();
 
@@ -18,7 +18,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-envelope"></i>&nbsp; Bilgi Mesajları</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -52,7 +52,7 @@
                             @if (Model.RowCount > 0)
                             {
                                 int RowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.data.Select((s, Inx) => new { data = s, Index = Inx }))
+                                foreach (var item in Model.FrSistemBilgilendirmes.Select((s, Inx) => new { data = s, Index = Inx }))
                                 {
                                     RowIndex += 1;
                                     var BilgiTip = bilgiTipleri.LogTipiData.Where(p => p.BilgiTipID == item.data.BilgiTipi.Value).First();

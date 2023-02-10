@@ -16,22 +16,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     [Authorize(Roles = RoleNames.SrSalonlar)]
-    public class SRSalonlarController : Controller
+    public class SrSalonlarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmSalonlar { });
+            return Index(new FmSalonlar { });
         }
         [HttpPost]
-        public ActionResult Index(fmSalonlar model)
+        public ActionResult Index(FmSalonlar model)
         {
 
-            var q = from s in db.SRSalonlars 
-                    join e in db.Enstitulers on new { s.EnstituKod} equals new { e.EnstituKod}
+            var q = from s in _entities.SRSalonlars 
+                    join e in _entities.Enstitulers on new { s.EnstituKod} equals new { e.EnstituKod}
 
                     where UserIdentity.Current.EnstituKods.Contains(s.EnstituKod)
-                    select new frSalonlar
+                    select new FrSalonlar
                     {
                         EnstituKod = e.EnstituKod,
                         EnstituAdi = e.EnstituAd,
@@ -43,9 +43,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = s.IslemYapanIP,
                         SalonAdi = s.SalonAdi,
                        
-                        SRSalonTalepTipleri = s.SRSalonTalepTipleris.ToList(),
-                        Saatler = (from srs in db.SRSaatlers.Where(p => p.SRSalonID == s.SRSalonID)
-                                   join gn in db.HaftaGunleris on srs.HaftaGunID equals gn.HaftaGunID
+                        SrSalonTalepTipleris = s.SRSalonTalepTipleris.ToList(),
+                        Saatler = (from srs in _entities.SRSaatlers.Where(p => p.SRSalonID == s.SRSalonID)
+                                   join gn in _entities.HaftaGunleris on srs.HaftaGunID equals gn.HaftaGunID
                                    group new { srs.BasSaat, srs.BitSaat, srs.HaftaGunID, HaftaGunAdi = gn.HaftaGunAdi }
                                       by new
                                       {
@@ -65,36 +65,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             if (!model.SalonAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.SalonAdi.Contains(model.SalonAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace())  q = q.OrderBy(model.Sort); 
-            else q = q.OrderBy(o => o.SalonAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.data = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-            var IndexModel = new MIndexBilgi();
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.SalonAdi);
+            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
+            model.PageIndex = ps.PageIndex;
+            model.FrSalonlars = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            };
+            ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.TT = db.SRTalepTipleris.ToList();
+            ViewBag.TT = _entities.SRTalepTipleris.ToList();
             return View(model);
         }
-        public ActionResult Kayit(int? id, string EKD, string dlgid)
+        public ActionResult Kayit(int? id, string ekd, string dlgid)
         {
             
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
-            ViewBag.MmMessage = MmMessage;
-            var model = new kmSalonlar();
-            model.EnstituKod = _EnstituKod;
-            model.SRSalonTalepTipleris = new List<SRSalonTalepTipleri>();
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+            ViewBag.MmMessage = mmMessage;
+            var model = new kmSalonlar
+            {
+                EnstituKod = enstituKod,
+                SRSalonTalepTipleris = new List<SRSalonTalepTipleri>()
+            };
             if (id.HasValue)
             {
 
-                var data = db.SRSalonlars.Where(p => p.SRSalonID == id).FirstOrDefault();
+                var data = _entities.SRSalonlars.FirstOrDefault(p => p.SRSalonID == id);
                 if (data != null)
                 {
                     model.SRSalonID = data.SRSalonID;
@@ -103,8 +108,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = data.EnstituKod;
                    
 
-                    model.Saatler = (from s in db.SRSaatlers.Where(p => p.SRSalonID == model.SRSalonID)
-                                     join gn in db.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
+                    model.Saatler = (from s in _entities.SRSaatlers.Where(p => p.SRSalonID == model.SRSalonID)
+                                     join gn in _entities.HaftaGunleris on s.HaftaGunID equals gn.HaftaGunID
                                      group new { s.BasSaat, s.BitSaat, s.HaftaGunID, HaftaGunAdi = gn.HaftaGunAdi }
                                         by new
                                         {
@@ -131,15 +136,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.SrSalonlarKayıt)]
-        public ActionResult Kayit(kmSalonlar kModel, List<int> SRTalepTipIDs, string OldID, string EKD, string dlgid = "")
+        public ActionResult Kayit(kmSalonlar kModel, List<int> srTalepTipIDs, string oldId, string ekd, string dlgid = "")
         {
-            SRTalepTipIDs = SRTalepTipIDs ?? new List<int>();
+            srTalepTipIDs = srTalepTipIDs ?? new List<int>();
             
-            var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var MmMessage = new MmMessage();
-            MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            MmMessage.DialogID = dlgid;
-            kModel.EnstituKod = _EnstituKod;
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
+            kModel.EnstituKod = enstituKod;
 
             kModel.BasSaat = kModel.BasSaat ?? new List<TimeSpan>();
             kModel.BitSaat = kModel.BitSaat ?? new List<TimeSpan>();
@@ -155,42 +162,40 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 BasSaat = qTbs.s,
                                 BitSaat = qTbt.s,
-                                GunNos = db.HaftaGunleris.Where(p =>  qhg.s.Contains(p.HaftaGunID)).Select(s => new CmbIntDto { Value = s.HaftaGunID, Caption = s.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
+                                GunNos = _entities.HaftaGunleris.Where(p =>  qhg.s.Contains(p.HaftaGunID)).Select(s => new CmbIntDto { Value = s.HaftaGunID, Caption = s.HaftaGunAdi }).OrderByDescending(o => o.Value > 0).ThenBy(t => t.Value.Value).ToList()
                             }).OrderBy(t => t.GunNos.Min(m => m.Value)).ThenBy(t => t.BasSaat).ToList();
 
 
             #region Kontrol
             if (kModel.SalonAdi.IsNullOrWhiteSpace())
             { 
-                MmMessage.Messages.Add("Salon Adı Giriniz.");
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SalonAdi" });
+                mmMessage.Messages.Add("Salon Adı Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SalonAdi" });
             }
-            else  MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SalonAdi" });
-            if (SRTalepTipIDs.Count == 0)
-            {
-                string msg = "En az 1 talep tipi seçmeniz gerekmektedir!";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipIDs" });
+            else  mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SalonAdi" });
+            if (srTalepTipIDs.Count == 0)
+            { 
+                mmMessage.Messages.Add("En az 1 talep tipi seçmeniz gerekmektedir!");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SRTalepTipIDs" });
             }
            
             if (qSaatler.Count == 0)
-            {
-                string msg = "Kayıt işlemini yapabilmeniz saat kriterlerini tanımlayınız!";
-                MmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Kayıt işlemini yapabilmeniz saat kriterlerini tanımlayınız!");
             }
             #endregion
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
-                var SRSalonTalepTipleris = SRTalepTipIDs.Select(s => new SRSalonTalepTipleri
+                var srSalonTalepTipleris = srTalepTipIDs.Select(s => new SRSalonTalepTipleri
                 { 
                     SRTalepTipID = s
                 }).ToList();
-                var SRSaatlers = new List<SRSaatler>();
+                var srSaatlers = new List<SRSaatler>();
                 foreach (var item in qSaatler)
                 {
                     foreach (var item2 in item.GunNos)
                     {
-                        SRSaatlers.Add(new SRSaatler
+                        srSaatlers.Add(new SRSaatler
                         { 
                             HaftaGunID = item2.Value.Value,
                             BasSaat = item.BasSaat,
@@ -202,7 +207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.SRSalonID <= 0)
                 {
                     kModel.IsAktif = true;
-                    var ydst = db.SRSalonlars.Add(new SRSalonlar
+                    var ydst = _entities.SRSalonlars.Add(new SRSalonlar
                     {
                         SalonAdi=kModel.SalonAdi,
                         EnstituKod = kModel.EnstituKod,
@@ -210,66 +215,68 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanID = UserIdentity.Current.Id,
                         IslemYapanIP = UserIdentity.Ip,
                         IslemTarihi = DateTime.Now, 
-                        SRSalonTalepTipleris= SRSalonTalepTipleris,
-                        SRSaatlers= SRSaatlers
+                        SRSalonTalepTipleris= srSalonTalepTipleris,
+                        SRSaatlers= srSaatlers
                     });
-                    db.SaveChanges(); 
+                    _entities.SaveChanges(); 
                 }
                 else
                 {
-                    var data = db.SRSalonlars.Where(p => p.SRSalonID == kModel.SRSalonID).First();
+                    var data = _entities.SRSalonlars.First(p => p.SRSalonID == kModel.SRSalonID);
                     data.SalonAdi = kModel.SalonAdi;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now; 
 
-                    var _saatler = db.SRSaatlers.Where(p => p.SRSalonID == data.SRSalonID).ToList();
-                    db.SRSaatlers.RemoveRange(_saatler);
+                    var saatler = _entities.SRSaatlers.Where(p => p.SRSalonID == data.SRSalonID).ToList();
+                    _entities.SRSaatlers.RemoveRange(saatler);
 
-                    var srtt = db.SRSalonTalepTipleris.Where(p => p.SRSalonID == data.SRSalonID).ToList();
-                    db.SRSalonTalepTipleris.RemoveRange(srtt);
+                    var srtt = _entities.SRSalonTalepTipleris.Where(p => p.SRSalonID == data.SRSalonID).ToList();
+                    _entities.SRSalonTalepTipleris.RemoveRange(srtt);
 
-                    data.SRSalonTalepTipleris = SRSalonTalepTipleris;
-                    data.SRSaatlers = SRSaatlers;
+                    data.SRSalonTalepTipleris = srSalonTalepTipleris;
+                    data.SRSaatlers = srSaatlers;
                 }
                 
                  
                
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             kModel.Saatler = qSaatler;
             var haftaGunleri = SrTalepleriBus.GetCmbHaftaGunleri(false);
             ViewBag.HaftaGunleri = haftaGunleri;
             ViewBag.SRTalepTipID = SrTalepleriBus.GetCmbSrTalepTipleri();
             ViewBag.Diller = new SelectList(Management.GetDiller(true), "Value", "Caption");
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
-            ViewBag.SelectedTTID = SRTalepTipIDs;
+            ViewBag.SelectedTTID = srTalepTipIDs;
             return View(kModel);
         }
 
-        public ActionResult saatEkleKontrol(SRSaatKontrolModel model)
+        public ActionResult SaatEkleKontrol(SRSaatKontrolModel model)
         {
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = true;
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = true
+            };
             model.GHaftaGunleri = model.HaftaGunleri.IsNullOrWhiteSpace() ? new List<int>() : model.HaftaGunleri.Split(',').Select(s => s.ToInt().Value).ToList();
 
             model.HaftaGunleriList = model.HaftaGunleriList ?? new List<string>();
             model.BasSaatList = model.BasSaatList ?? new List<TimeSpan>();
             model.BitSaatList = model.BitSaatList ?? new List<TimeSpan>();
-            var _BaslangcSaati = model.BasSaatList.Select((s, inx) => new { s, inx }).ToList();
-            var _TalepBitisSaati = model.BitSaatList.Select((s, inx) => new { s, inx }).ToList();
-            var _GHaftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s = s.Split(',').Select(s2 => s2.ToInt().Value).ToList(), inx }).ToList();
-            var qSaatler = (from tbs in _BaslangcSaati
-                            join tbt in _TalepBitisSaati on tbs.inx equals tbt.inx
-                            join hgl in _GHaftaGunleriList on tbs.inx equals hgl.inx
+            var baslangcSaati = model.BasSaatList.Select((s, inx) => new { s, inx }).ToList();
+            var talepBitisSaati = model.BitSaatList.Select((s, inx) => new { s, inx }).ToList();
+            var gHaftaGunleriList = model.HaftaGunleriList.Select((s, inx) => new { s = s.Split(',').Select(s2 => s2.ToInt().Value).ToList(), inx }).ToList();
+            var qSaatler = (from tbs in baslangcSaati
+                            join tbt in talepBitisSaati on tbs.inx equals tbt.inx
+                            join hgl in gHaftaGunleriList on tbs.inx equals hgl.inx
 
                             select new
                             {
@@ -317,9 +324,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = false;
                     mmMessage.Messages.Add("Eklemeye çalıştığınız günlere ait saat aralıkları zaten bulunmaktadır!");
 
-                    var mtc = new MailTableContentDto();
-                    mtc.CaptTdWidth = 350;
-                    mtc.GrupBasligi = "Aşağıdaki saatlerle çakışma var!";
+                    var mtc = new MailTableContentDto
+                    {
+                        CaptTdWidth = 350,
+                        GrupBasligi = "Aşağıdaki saatlerle çakışma var!"
+                    };
                     var mRowModel = new List<MailTableRowDto>();
                     foreach (var item in varolanlar)
                     {
@@ -340,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.BelgeTipleriSil)]
         public ActionResult Sil(int? id)
         {
-            var data = db.SRSalonlars.Where(p => p.SRSalonID == id).FirstOrDefault(); 
+            var data = _entities.SRSalonlars.FirstOrDefault(p => p.SRSalonID == id); 
             string message = "";
             bool success = true;
             if (data != null)
@@ -349,16 +358,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + data.SalonAdi + "' İsimli Salon Silindi!";
-                    db.SRSaatlers.RemoveRange(data.SRSaatlers);
-                    db.SRSalonTalepTipleris.RemoveRange(data.SRSalonTalepTipleris);
-                    db.SRSalonlars.Remove(data);
-                    db.SaveChanges();
+                    _entities.SRSaatlers.RemoveRange(data.SRSaatlers);
+                    _entities.SRSalonTalepTipleris.RemoveRange(data.SRSalonTalepTipleris);
+                    _entities.SRSalonlars.Remove(data);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {
                     success = false;
                     message = "'" + data.SalonAdi + "' İsimli Salon Silinemedi! <br/> Bilgi:" + ex.ToExceptionMessage(); 
-                    Management.SistemBilgisiKaydet(message, "SRSalonlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "SRSalonlar/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
             }
             else
