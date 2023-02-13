@@ -8,27 +8,27 @@
 
     using (var db = new LisansustuBasvuruSistemiEntities())
     {
-        var ExceltionMessage = Model.ToExceptionMessage();
-        bool SaveError = true;
-        var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller" };
-        if (errMesgList.Any(a=> ExceltionMessage.Contains(a)))
+        var exceltionMessage = Model.ToExceptionMessage();
+        bool saveError = true;
+        var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller", "__RequestVerificationToken" };
+        if (errMesgList.Any(a=> exceltionMessage.Contains(a)))
         {
-            SaveError = false;
-            var SplitMesssages = ExceltionMessage.Split('\'');
-            if (SplitMesssages.Count() >= 3)
+            saveError = false;
+            var splitMesssages = exceltionMessage.Split('\'');
+            if (splitMesssages.Count() >= 3)
             {
-                var Path = SplitMesssages[1];
-                if (Path.Contains("/tr"))
+                var path = splitMesssages[1];
+                if (path.Contains("/tr"))
                 {
-                    Path = Path.Replace("/tr", "");
-                    SaveError = false;
+                    path = path.Replace("/tr", "");
+                    saveError = false;
                     <script>
-                        window.location.href = '@Path';
+                        window.location.href = '@path';
                     </script>
                 }
             }
         }
-        if (SaveError)
+        if (saveError)
         {
             db.SistemBilgilendirmes.Add(new SistemBilgilendirme
             {

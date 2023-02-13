@@ -95,7 +95,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var q = from s in _context.MezuniyetBasvurularis
                     join ms in _context.MezuniyetSurecis on s.MezuniyetSurecID equals ms.MezuniyetSurecID
                     join kul in _context.Kullanicilars on s.KullaniciID equals kul.KullaniciID
-                    join mOT in _context.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOT.MezuniyetSurecID, mOT.OgrenimTipKod }
+                    join mOt in _context.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOt.MezuniyetSurecID, mOt.OgrenimTipKod }
                     join o in _context.OgrenimTipleris on new { s.OgrenimTipKod, ms.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
                     join ot in _context.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
                     join pr in _context.Programlars on s.ProgramKod equals pr.ProgramKod
@@ -137,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         CepTel = kul.CepTel,
                         KayitTarihi = kul.KayitTarihi,
                         AdSoyad = kul.Ad + " " + kul.Soyad,
-                        TcPasaPortNo = kul.TcKimlikNo != null ? kul.TcKimlikNo : kul.PasaportNo,
+                        TcPasaPortNo = kul.TcKimlikNo ?? kul.PasaportNo,
                         OgrenciNo = s.OgrenciNo,
                         ResimAdi = kul.ResimAdi,
                         KullaniciTipID = kul.KullaniciTipID,
@@ -153,8 +153,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TeslimFormDurumu = srT != null && srT.SRTalepleriBezCiltFormus.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
-                        UzatmaSuresiGun = mOT.MBSinavUzatmaSuresiGun,
-                        MezuniyetSuresiGun = mOT.MBSinavUzatmaSuresiGun,
+                        UzatmaSuresiGun = mOt.MBSinavUzatmaSuresiGun,
+                        MezuniyetSuresiGun = mOt.MBSinavUzatmaSuresiGun,
                         EYKTarihi = s.EYKTarihi,
                         MBYayinTurIDs = s.MezuniyetBasvurulariYayins.Select(s2 => s2.MezuniyetYayinTurID).ToList(),
                         FormNo = jOf != null ? jOf.UniqueID : "",
@@ -2084,8 +2084,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              YeniTezBaslikEn = s.YeniTezBaslikEn,
                              IsYokDrBursiyeriVar = s.IsYokDrBursiyeriVar,
                              YokDrOncelikliAlan = s.YokDrOncelikliAlan,
-                             Aciklama = s.Aciklama,
-
+                             Aciklama = s.Aciklama, 
                              SRTaleplerJuris = s.SRTaleplerJuris.Where(p => p.UniqueID == uniqueId.Value).ToList(),
                              IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
                              SRTalepleriBezCiltFormus = s.SRTalepleriBezCiltFormus,
@@ -2147,8 +2146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 if (uniqueId.HasValue)
-                {
-
+                { 
                     if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
                     else
                     {
@@ -2157,8 +2155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             uye.Email = eMail;
                             _context.SaveChanges();
                         }
-                    }
-
+                    } 
                 }
                 var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, isYeniLink, eMail);
                 if (messages.IsSuccess)
@@ -2166,13 +2163,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     srTalep.JuriSonucMezuniyetSinavDurumID = null;
                     _context.SaveChanges();
                     mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi.");
-
+                    mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi."); 
                 }
                 else
                 {
-                    mMessage.Messages.AddRange(messages.Messages);
-
+                    mMessage.Messages.AddRange(messages.Messages); 
                 }
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
@@ -2190,8 +2185,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage
             {
                 Title = "Mezuniyet başvurusu danışman onay işlemi"
-            };
-
+            }; 
             var srTalep = _context.SRTalepleris.First(p => p.SRTalepID == srTalepId);
             var kayitYetki = RoleNames.GelenBasvurularKayit.InRole();
 
@@ -2200,8 +2194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (srTalep.MezuniyetBasvurulari.KullaniciID != UserIdentity.Current.Id)
                 {
                     mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz!");
-                }
-
+                } 
             }
             if (srTalep.IsDanismanUzatmaSonrasiOnay.HasValue)
             {
@@ -2210,11 +2203,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mmMessage.Messages.Any())
             {
                 if (mmMessage.Messages.Count == 0)
-                {
-
-                    if (isOgrenciUzatmaSonrasiOnay != srTalep.IsOgrenciUzatmaSonrasiOnay)
-                    {
-                    }
+                { 
                     srTalep.IsOgrenciUzatmaSonrasiOnay = isOgrenciUzatmaSonrasiOnay;
                     srTalep.OgrenciOnayTarihi = DateTime.Now;
 

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using DevExpress.XtraReports.UI;
-
-namespace LisansUstuBasvuruSistemi.Raporlar
+﻿namespace LisansUstuBasvuruSistemi.Raporlar.BelgeTalep
 {
-    public partial class RaporBT : DevExpress.XtraReports.UI.XtraReport
+    public partial class RaporBt : DevExpress.XtraReports.UI.XtraReport
     {
-        public RaporBT()
+        public RaporBt()
         {
             InitializeComponent();
         }

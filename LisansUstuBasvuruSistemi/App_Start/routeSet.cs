@@ -28,17 +28,17 @@ namespace LisansUstuBasvuruSistemi.App_Start
             this._values = values;
         }
 
-        private string[] _values;
+        private readonly string[] _values;
 
         public bool Match(HttpContextBase httpContext,
             Route route,
-            string EKD,
+            string ekd,
             RouteValueDictionary values,
             RouteDirection routeDirection)
         {
             // Get the value called "parameterName" from the 
             // RouteValueDictionary called "value"
-            string value = values[EKD].ToString().ToLower();
+            string value = values[ekd].ToString().ToLower();
 
             // Return true is the list of allowed values contains 
             // this value.

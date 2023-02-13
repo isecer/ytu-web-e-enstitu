@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool AktifOgrenimIcinBasvuruVar { get; set; }
         public string AktifDonemID { get; set; }
         public string DonemID { get; set; }
+        public int? TDODanismanTalepTipID { get; set; }
         public int? AktifDurumID { get; set; }
         public int? DurumID { get; set; }
         public int? AktifEsDurumID { get; set; }
@@ -48,6 +49,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? GsisKayitTarihi { get; set; }
         public string DurumClassName { get; set; }
         public string DurumColor { get; set; }
+        public int? TDODanismanTalepTipID { get; set; }
         public string AktifDonemID { get; set; }
         public string AktifDonemAdi { get; set; }
         public bool? DanismanOnayladi { get; set; }

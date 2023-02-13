@@ -217,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod, "");
 
-                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').ToList();
+                                var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
                                 var ogrenciBilgi = Management.StudentControl(kullanici.TcKimlikNo);
 
                                 var bkMsg = new List<string>();
@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return msg;
 
-        } 
+        }
         public static MmMessage SendMailTiBilgisi(int? tiBasvuruAraRaporId, int? srTalepId)
         {
             var mmMessage = new MmMessage();
@@ -389,7 +389,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DonemAdi", Value = donemBilgi.DonemAdiLong });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
-                        { 
+                        {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = oncekiMailTarihi?.ToString("dd-MM-yyyy HH:mm") });
                         }
                         #region SR Talebi
@@ -398,7 +398,10 @@ namespace LisansUstuBasvuruSistemi.Business
                             if (item.SablonParametreleri.Any(a => a == "@ToplantiTarihi"))
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ToplantiTarihi", Value = srTalebi.Tarih.ToLongDateString() });
                             if (item.SablonParametreleri.Any(a => a == "@ToplantiSaati"))
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ToplantiSaati", Value =
+                                paramereDegerleri.Add(new MailReplaceParameterDto
+                                {
+                                    Key = "ToplantiSaati",
+                                    Value =
                                     $"{srTalebi.BasSaat:hh\\:mm}"
                                 });
 
@@ -448,7 +451,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TikBilgi" + itemTik.inx, Value = itemTik.s.UnvanAdi + " " + itemTik.s.AdSoyad });
                             if (item.SablonParametreleri.Any(a => a == "@TikBilgiUni" + itemTik.inx))
                             {
-                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TikBilgiUni" + itemTik.inx, Value =itemTik.s.UniversiteAdi });
+                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TikBilgiUni" + itemTik.inx, Value = itemTik.s.UniversiteAdi });
                             }
                         }
                         #endregion
@@ -784,7 +787,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             return retVal;
         }
- 
+
         public static List<CmbStringDto> CmbTiAktifDonemListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
@@ -796,7 +799,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 dct.Add(new CmbStringDto { Value = i + "1", Caption = i + "/" + (i + 1) + " Güz" });
             }
             return dct;
-        } 
+        }
         public static List<CmbIntDto> CmbTiAraRaporDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

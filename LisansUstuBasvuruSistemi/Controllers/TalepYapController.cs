@@ -879,10 +879,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     :
                     "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";
             }
+
+            var isDoktora = kul.OgrenimTipKod.IsDoktora();
             var talepTip = _entities.TalepSureciTalepTipleris.Where(p => p.TalepSurecID == talepSurecId && p.TalepTipID == talepTipId).Select(s => new
             {
                 s.IsBelgeYuklemeVar,
-                IsDoktora = kul.OgrenimTipKod.IsDoktora(),
+                IsDoktora = isDoktora,
                 TalepTipID = talepTipId,
                 s.IsTaahhutIsteniyor,
                 s.TalepTipleri.TaahhutAciklamasi,
@@ -897,13 +899,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult Sil(int id)
         {
-            var mmMessage = new MmMessage();
-            mmMessage.IsSuccess = true;
+            var mmMessage = new MmMessage
+            {
+                IsSuccess = true
+            };
 
-            bool DuzenleYetki = RoleNames.GelenTalepSil.InRoleCurrent();
-            var talep = _entities.TalepGelenTaleplers.Where(p => p.TalepGelenTalepID == id && p.KullaniciID == (DuzenleYetki ? p.KullaniciID : UserIdentity.Current.Id)).FirstOrDefault();
+            bool duzenleYetki = RoleNames.GelenTalepSil.InRoleCurrent();
+            var talep = _entities.TalepGelenTaleplers.FirstOrDefault(p => p.TalepGelenTalepID == id && p.KullaniciID == (duzenleYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var kul = talep.Kullanicilar;
-            if (DuzenleYetki == false)
+            if (duzenleYetki == false)
             {
                 if (UserIdentity.Current.Id != kul.KullaniciID)
                 {

@@ -41,16 +41,14 @@ namespace LisansUstuBasvuruSistemi.Models
     {
 
         public static string Tuz = "@BİSKAmcumu";
-        public static int UniversiteYtuKod { get; } = 67; 
-        #region gsisData
-
+        public static int UniversiteYtuKod { get; } = 67;
+        #region gsisData 
 
         public static StudentControl StudentControl(string TcKimlikNo = null)
         {
             ObsGetData obsData = new ObsGetData();
             return obsData.GetObsStudentControl(TcKimlikNo);
-        }
-
+        } 
         public static string gsisKayitAktar(string kayit)
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };//SSL hatasını gidermek için 
@@ -236,8 +234,6 @@ namespace LisansUstuBasvuruSistemi.Models
             Msj = _msj;
             return returnValue;
         }
- 
-
 
         #endregion
 
@@ -266,7 +262,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     var BirimKods = GetBirimTurKods();
                     var UniKods = GetUniversiteTurKods();
-                    var OtKods = GetOgrenimTurKods();
+                    var OtKods = MailSablonTipleriBus.GetOgrenimTurKods();
                     var OStatuKods = new List<int> { 1, 10 }; // aktif ve pasif
 
                     var EgitimBilg = deger.EgitimBilgisiKayit.Where(p => p != null
@@ -303,18 +299,8 @@ namespace LisansUstuBasvuruSistemi.Models
             }
 
             return model;
-        }
-
-        public static List<int> GetOgrenimTurKods()
-        {
-            var oTurList = new List<int>();
-            oTurList.Add(1);// - NORMAL ÖĞRETİM
-            //oTurList.Add(2);// - İKİNCİ ÖĞRETİM
-            oTurList.Add(3);// - UZAKTAN ÖĞRETİM
-            oTurList.Add(4);// - AÇIK ÖĞRETİM 
-            return oTurList;
-        }
-
+        } 
+      
         public static List<int> GetUniversiteTurKods()
         {
             var uTurList = new List<int>();
@@ -677,10 +663,10 @@ namespace LisansUstuBasvuruSistemi.Models
         #endregion
 
         #region Yetki/Kimlik
-        
-     
-         
-     
+
+
+
+
         public static void AddMessage(SystemInformation sis)
         {
             int? currid = UserIdentity.Current == null ? null : (int?)UserIdentity.Current.Id;
@@ -707,10 +693,10 @@ namespace LisansUstuBasvuruSistemi.Models
             root = root.EndsWith("/") ? root : root + "/";
             return root;
         }
-      
 
 
-      
+
+
 
         #endregion
 
@@ -849,9 +835,9 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return lst;
         }
-    
 
-         public static List<CmbIntDto> getbasvuruSurecleriDekont(string EKD, bool bosSecimVar = false)
+
+        public static List<CmbIntDto> getbasvuruSurecleriDekont(string EKD, bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
             string EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
@@ -916,12 +902,12 @@ namespace LisansUstuBasvuruSistemi.Models
                 return lst;
             }
         }
-    
-      
-       
-      
-        
-   
+
+
+
+
+
+
         public static List<CmbIntDto> cmbYetkiGruplari(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -938,8 +924,8 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-      
-         
+
+
 
         public static List<CmbIntDto> cmbSehirler(bool bosSecimVar = false)
         {
@@ -971,9 +957,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-       
-      
-      
+
+
+
         public static List<CmbIntDto> cmbUnvanlar(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1060,11 +1046,11 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-     
-       
 
-    
-       
+
+
+
+
         public static List<BasvuruDurumlari> cmbBasvuruDurumListeDBilgi(List<int> SelectedBDurumID = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -1078,8 +1064,8 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-       
-         
+
+
         public static List<CmbIntDto> cmbMulakatSonucTip(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1096,17 +1082,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-      
-      
-      
 
-    
-
-        
-       
-       
-      
-      
         public static List<CmbBoolDto> cmbAlanEslesmeData(bool bosSecimVar = false)
         {
             var dct = new List<CmbBoolDto>();
@@ -1148,29 +1124,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-      
-       
-    
-       
-       
-     
-      
 
-        
-        
-
-      
-    
-       
-      
-   
-     
-
-      
-
-       
-     
-        
 
         public static List<CmbIntDto> cmbOTYedekCarpanData(bool bosSecimVar = false)
         {
@@ -1183,9 +1137,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-      
-       
-      
+
+
+
         public static List<CmbStringDto> GetDiller(bool bosSecimVar = false)
         {
             var dct = new List<CmbStringDto>();
@@ -1216,7 +1170,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-       
+
 
         public static List<CmbIntDto> cmbGetKontrolTipleri(bool bosSecimVar = false)
         {
@@ -1233,7 +1187,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
- 
+
         public static List<CmbIntDto> cmbGetWsSinavCekimTipleri(bool bosSecimVar = false, int? FilterCekimTip = null)
         {
             var dct = new List<CmbIntDto>();
@@ -1330,7 +1284,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-       
+
         public static NotSistemleri getNotSistemi(int NotSistemID)
         {
 
@@ -2067,7 +2021,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
         }
-        
+
         public static List<krMulakatSonuc> getMulakatSonucListMulakatsiz(int BasvuruSurecID, string ProgramKod, int OgrenimTipKod, List<int> BasvuruTercihleriIDs)
         {
             var mlktSonucModel = new List<krMulakatSonuc>();
@@ -2973,7 +2927,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-      
+
         public static DateTime EkSureBasTar { get { return new DateTime(2021, 2, 1, 13, 00, 0); } }
         public static DateTime EkSureBitTar { get { return new DateTime(2021, 2, 5, 16, 0, 0); } }
 
@@ -3079,9 +3033,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-    
-   
-     
+
+
+
         public static List<CmbIntDto> cmbGetAktifAnketler(string EnstituKod, bool bosSecimVar = false, int? DahilAnketID = null)
         {
             var dct = new List<CmbIntDto>();
@@ -3152,8 +3106,8 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-      
-    
+
+
         public static List<CmbIntDto> cmbGetBasvuruAgnoAlimTipleri(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -3172,12 +3126,12 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-    
-      
-     
-        
-    
- 
+
+
+
+
+
+
         public static PagerIndexDto setStartRowInx(int srIndex, int pgIndex, int pgCount, int rwCount, int pgSize)
         {
             int setStartRowInx = 0;
@@ -3188,7 +3142,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
             return new PagerIndexDto { StartRowIndex = setStartRowInx, PageIndex = setPageInx };
         }
-      
+
         #endregion
 
 
@@ -3402,7 +3356,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 return Model;
             }
         }
-      
+
 
 
         public static SinavBilgiModel getSinavBilgisi(int BasvuruSurecID, int SinavTipID, List<int> OgrenimTipKods, List<string> ProgramKods, List<bool> Ingilizces)
@@ -3577,7 +3531,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        
+
         public static int? toStrToSinavDilID(this string strDil)
         {
             strDil = strDil ?? "ingilizce";
@@ -4085,7 +4039,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dataPers;
         }
 
-        
+
         public static MmMessage obKontrol(kmBasvuru kModel)
         {
             var _MmMessage = new MmMessage();
@@ -4676,10 +4630,10 @@ namespace LisansUstuBasvuruSistemi.Models
             return _MmMessage;
         }
 
-       
 
 
-       
+
+
         public static bool ResimBilgisiLazimOlanKayitVarMi(int KullaniciID)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4688,12 +4642,12 @@ namespace LisansUstuBasvuruSistemi.Models
             }
 
         }
-      
 
-        
 
-         
-      
+
+
+
+
 
         public static int? getAktifBasvuruSurecID(string EnstituKod, int BasvuruSurecTipID, int? BasvuruSurecID = null, bool? IsMulakatDurum = null)
         {
@@ -4735,7 +4689,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 return rTalepSurecID > 0 ? rTalepSurecID : (int?)null;
             }
         }
-        
+
         public static int? getAktifBSMulakatDahilSurecID(string EnstituKod, int? BasvuruSurecID = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4762,7 +4716,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
         }
 
-       
+
 
         public static MmMessage getBasvuruSilKontrol(int BasvuruID, int BasvuruSurecTipID)
         {
@@ -5051,7 +5005,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return model;
 
         }
-         
+
 
         public static BasvuruDetaySecilenDto getSecilenBasvuruDetay(int BasvuruID)
         {
@@ -5273,22 +5227,22 @@ namespace LisansUstuBasvuruSistemi.Models
             return model;
 
         }
-       
-       
-   
-     
 
 
 
-     
 
-     
-       
-   
-       
-      
 
-    
+
+
+
+
+
+
+
+
+
+
+
 
         #endregion
 
@@ -5554,15 +5508,15 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return mdl;
         }
-         
+
         #endregion
 
         #region Extension 
-        public static int PageSize = 15; 
-     
+        public static int PageSize = 15;
 
-       
- 
+
+
+
 
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
@@ -5599,9 +5553,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return obj.toSinavSonucDilXmlModel().PUAN.ToDouble();
 
         }
-         
 
-      
+
+
 
 
         public static string DekontOdemeIsle(string SiparisNo, DateTime DekontTarih, string Ucret, string taksit, string CardNo)
@@ -5791,10 +5745,10 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-       
 
 
-        
+
+
         #endregion
     }
 

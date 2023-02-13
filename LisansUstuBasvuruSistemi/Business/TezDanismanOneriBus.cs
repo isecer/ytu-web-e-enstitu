@@ -429,6 +429,27 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return msg;
         }
+        public static List<CmbIntDto> CmbTdoDanismanTalepTip(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var data = (from s in db.TDODanismanTalepTipleris
+                    select new
+                    {
+                        s.TDODanismanTalepTipID,
+                        s.TalepTipAdi
+                    }).AsQueryable();
+                var qdata = data.ToList();
+                foreach (var item in qdata)
+                {
+                    dct.Add(new CmbIntDto { Value = item.TDODanismanTalepTipID, Caption = item.TalepTipAdi });
+                }
+            }
+            return dct;
+
+        }
         public static List<CmbIntDto> CmbTdoDanismanTalepTip(bool isDegisiklikTalebi, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

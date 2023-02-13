@@ -209,9 +209,9 @@
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="160">Başvuru Durumu</td>
+                                            <td width="160">Danışman Talep Tipi</td>
                                             <td>
-                                                @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                                @Html.DropDownList("TDODanismanTalepTipID", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -235,6 +235,24 @@
                             <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
+                                    <tr>
+                                        <td width="160">Başvuru Durumu</td>
+                                        <td>
+                                            @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                               
+                            </td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
                                         <tr>
                                             <td width="160">Aranacak Kelime</td>
                                             <td>
@@ -254,7 +272,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr> 
+                        </tr>
                     </table>
                 </div>
             </div>

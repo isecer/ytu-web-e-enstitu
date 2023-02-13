@@ -3,25 +3,19 @@ using CaptchaMvc.Infrastructure;
 using CaptchaMvc.Interface;
 using CaptchaMvc.Models;
 using DevExpress.XtraReports.Security;
-using LisansUstuBasvuruSistemi.Models; 
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
-using System.Web.WebPages;
-using System.Xml;
-using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi
 {
@@ -30,20 +24,20 @@ namespace LisansUstuBasvuruSistemi
         protected void Application_Start()
         {
 
-            AreaRegistration.RegisterAllAreas(); 
+            AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BiskaUtil.Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             BiskaUtil.SystemInformation.OnEvent += SystemInformation_OnEvent;
             //Management.Update();
-             
+
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
 
-            bool OtomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
-            if (OtomatikMailBilgilendirmeServisiniCalistir)
+            bool otomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
+            if (otomatikMailBilgilendirmeServisiniCalistir)
             {
                 ApplicationClock ap = new ApplicationClock();
                 ap.Start();
@@ -60,12 +54,12 @@ namespace LisansUstuBasvuruSistemi
 
 
 
-             
+
             try
             {
                 //DevExpress.XtraReports.Web.Native.ClientControls.Services.DefaultLoggingService.SetInstance(new MyLoggingService());
             }
-            catch 
+            catch
             {
 
             }
@@ -81,7 +75,7 @@ namespace LisansUstuBasvuruSistemi
             };
 
         }
-      
+
         //protected void Application_Error(object sender, EventArgs e)
         //{
         //    var err = Server.GetLastError();
@@ -101,7 +95,7 @@ namespace LisansUstuBasvuruSistemi
         {
 
             Exception exception = Server.GetLastError();
-          //  Management.SistemBilgisiKaydet("Application_Error: " + exception.ToExceptionMessage(), exception.ToExceptionStackTrace(), BilgiTipi.Hata);
+            //  Management.SistemBilgisiKaydet("Application_Error: " + exception.ToExceptionMessage(), exception.ToExceptionStackTrace(), BilgiTipi.Hata);
 
             RouteData routeData = new RouteData();
 
@@ -113,7 +107,7 @@ namespace LisansUstuBasvuruSistemi
             }
             else //It's an Http Exception, Let's handle it.
             {
-               
+
                 var errCode = HttpContext.Current.Response.StatusCode;
                 if (errCode == HttpDurumKod.NotFound || errCode == HttpDurumKod.Unauthorized)
                 {
@@ -249,38 +243,39 @@ namespace LisansUstuBasvuruSistemi
             Management.AddMessage(info);
         }
 
-        void Membership_OnRequireUserIdentity(string UserName, ref BiskaUtil.UserIdentity userIdentity)
+        void Membership_OnRequireUserIdentity(string userName, ref BiskaUtil.UserIdentity userIdentity)
         {
-            userIdentity = UserBus.GetUserIdentity(UserName);
+            userIdentity = UserBus.GetUserIdentity(userName);
         }
         protected void Application_AcquireRequestState(Object sender, EventArgs e)
         {
             BiskaUtil.UserIdentity.SetCurrent();
             if (true)
             {
-                var pathCorolu = Request.Url.LocalPath;
-
-
                 var session = HttpContext.Current.Session;
-                var Ouser = HttpContext.Current.User;
                 if (session != null)
                 {
                     string browser = "";
                     string platform = "";
                     string version = "";
                     if (HttpContext.Current.Request.Browser.IsMobileDevice)
-                    { platform = HttpContext.Current.Request.Browser.MobileDeviceManufacturer + " " + HttpContext.Current.Request.Browser.MobileDeviceModel; }
-                    else { platform = HttpContext.Current.Request.Browser.Platform; }
+                    {
+                        platform = HttpContext.Current.Request.Browser.MobileDeviceManufacturer + " " + HttpContext.Current.Request.Browser.MobileDeviceModel;
+                    }
+                    else
+                    {
+                        platform = HttpContext.Current.Request.Browser.Platform;
+                    }
                     browser = HttpContext.Current.Request.Browser.Browser;
                     version = HttpContext.Current.Request.Browser.Version;
                     //var q = HttpContext.Current.Request.UserAgent.ToString().toDeviceType();  
 
                     //var userAgent = HttpContext.Current.Request.UserAgent; 
-                    var UniqueId = Session["UserId"].ToStrObj();
+                    var uniqueId = Session["UserId"].ToStrObj();
 
-                    if (UniqueId != null)
+                    if (uniqueId != null)
                     {
-                        var usr = OnlineUsersHelper.GetUsers.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
+                        var usr = OnlineUsersHelper.GetUsers.FirstOrDefault(p => p.UniqueId == uniqueId);
                         if (usr != null)
                         {
                             if (User.Identity.IsAuthenticated)
@@ -314,12 +309,11 @@ namespace LisansUstuBasvuruSistemi
         }
         void Session_Start(object sender, EventArgs e)
         {
-            if (true)
-            {
-                var UniqueId = Guid.NewGuid().ToString();
-                Session["UserId"] = UniqueId;
-                OnlineUsersHelper.AddUser(UniqueId, null);
-            }
+
+            var uniqueId = Guid.NewGuid().ToString();
+            Session["UserId"] = uniqueId;
+            OnlineUsersHelper.AddUser(uniqueId, null);
+
 
             //StringBuilder strb = new StringBuilder();
             //strb.AppendFormat("User Agent: {0}{1}", Request.ServerVariables["http_user_agent"].ToString(), Environment.NewLine);
@@ -360,24 +354,23 @@ namespace LisansUstuBasvuruSistemi
         }
         void Session_End(object sender, EventArgs e)
         {
-            if (true && Session["UserId"] != null)
+            if (Session["UserId"] != null)
             {
-                var UniqueId = Session["UserId"].ToString();
-                var oUser = OnlineUsersHelper.GetById(UniqueId);//.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
-                if (oUser != null && oUser.KullaniciID.HasValue)
+                var uniqueId = Session["UserId"].ToString();
+                var oUser = OnlineUsersHelper.GetById(uniqueId);//.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
+                if (oUser?.KullaniciID != null)
                 {
                     using (var db = new LisansustuBasvuruSistemiEntities())
                     {
-                        var kul = db.Kullanicilars.Where(p => p.KullaniciID == oUser.KullaniciID).FirstOrDefault();
+                        var kul = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == oUser.KullaniciID);
                         if (kul != null)
                         {
                             kul.LastLogonDate = DateTime.Now;
                             db.SaveChanges();
                         }
-                    }
-
+                    } 
                 }
-                OnlineUsersHelper.RemoveUser(UniqueId);
+                OnlineUsersHelper.RemoveUser(uniqueId);
             }
         }
 

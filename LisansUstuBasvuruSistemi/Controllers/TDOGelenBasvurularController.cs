@@ -70,6 +70,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTDOBasvuruDanismanID = s.AktifTDOBasvuruDanismanID,
+                        TDODanismanTalepTipID = Ard != null ? Ard.TDODanismanTalepTipID : (int?)null,
                         AktifDonemID = Ard == null ? null : (Ard.DonemBaslangicYil + "" + Ard.DonemID),
                         AktifDonemAdi = Ard == null ? "Danışman Önerisi Yok" : (Ard.DonemBaslangicYil + " / " + (Ard.DonemBaslangicYil + 1) + " " + (Ard.DonemID == 1 ? "Güz" : "Bahar")),
                         EYKYaGonderildiIslemTarihi = Ard == null ? null : Ard.EYKYaGonderildiIslemTarihi,
@@ -112,6 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             q = q.Where(p => p.EnstituKod == enstituKod);
             if (!model.AktifDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AktifDonemID == model.AktifDonemID);
+            if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
             {
                 if (model.AktifDurumID == TDODansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
@@ -218,6 +220,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.AktifDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifDonemID);
             ViewBag.DonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.DonemID);
+            ViewBag.TDODanismanTalepTipID = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(true), "Value", "Caption", model.TDODanismanTalepTipID);
             ViewBag.AktifDurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
             ViewBag.DurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
             ViewBag.AktifEsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
@@ -328,7 +331,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var dataEsList = _entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.EnstituKod == enstituKod && p.EYKDaOnaylandi == true && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
                                                      p.EYKDaOnaylandiOnayTarihi <= bitisTarihi)).OrderByDescending(o => o.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod).ToList().Select(s => new
                                                      {
-                                                         TalepTuru = s.IsDegisiklikTalebi ? "Eş Danışman Değişiklik Talebi" : "Yeni Eş Danışman Talebi", 
+                                                         TalepTuru = s.IsDegisiklikTalebi ? "Eş Danışman Değişiklik Talebi" : "Yeni Eş Danışman Talebi",
                                                          s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
                                                          OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
                                                          OgrenciAnabilimdaliProgram = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +

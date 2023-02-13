@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Raporlar.BelgeTalep;
 using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
@@ -4454,7 +4455,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                   }
                                                         ).OrderBy(o => o.Yil).ThenBy(t => t.Ay).ThenBy(t => t.BelgeTipAdi).ToList();
                         }
-                        RaporBT rpr = new RaporBT();
+                        RaporBt rpr = new RaporBt();
                         rpr.DataSource = data;
                         rpr.DisplayName = "Belge Talepleri Sayısal Raporu";
                         rpr.PrintingSystem.ContinuousPageNumbering = true;

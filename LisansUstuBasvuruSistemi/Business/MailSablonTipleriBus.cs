@@ -1,13 +1,8 @@
-﻿using System;
+﻿using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -20,10 +15,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = db.MailSablonlaris.Where(p => p.EnstituKod == enstituKodu && p.IsAktif && p.MailSablonTipleri.SistemMaili == (sistemMailFiltre ?? p.MailSablonTipleri.SistemMaili)).OrderBy(o => o.SablonAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.MailSablonlariID, Caption = item.SablonAdi });
-                }
+                dct.AddRange(data.Select(item => new CmbIntDto { Value = item.MailSablonlariID, Caption = item.SablonAdi }));
             }
 
             return dct;
@@ -41,10 +33,21 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     dct.Add(new CmbIntDto { Value = item.MailSablonTipID, Caption = item.SablonTipAdi });
                 }
-            }
-
+            } 
             return dct;
 
+        }
+
+        public static List<int> GetOgrenimTurKods()
+        {
+            var oTurList = new List<int>
+            {
+                1, // - NORMAL ÖĞRETİM
+                //oTurList.Add(2);// - İKİNCİ ÖĞRETİM
+                3, // - UZAKTAN ÖĞRETİM
+                4 // - AÇIK ÖĞRETİM 
+            };
+            return oTurList;
         }
     }
 

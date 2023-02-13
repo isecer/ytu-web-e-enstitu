@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -45,20 +44,6 @@ namespace LisansUstuBasvuruSistemi
  
 
 
-        }
-        public class MyRouteHandler : IRouteHandler
-        {
-            public IHttpHandler GetHttpHandler(RequestContext requestContext)
-            {
-                var routeData = requestContext.RouteData;
-                var culture = routeData.Values["culture"].ToString();
-                var controller = routeData.Values["controller"].ToString();
-                routeData.Values["controller"] = culture;
-                var action = routeData.Values["action"].ToString();
-                routeData.Values["action"] = controller;
-                var handler = new MvcHandler(requestContext);
-                return handler;
-            }
         }
     }
 }

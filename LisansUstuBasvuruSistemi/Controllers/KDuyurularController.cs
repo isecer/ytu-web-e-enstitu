@@ -18,8 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
 
         public ActionResult Index(string ekd)
-        {
-
+        { 
             return Index(new FmDuyurularDto() { PageSize = 10 }, ekd);
         }
         [HttpPost]
@@ -142,8 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { ShowMessage = fModel.DuyurularDtos.Any(), HtmlMessage = htmlDuyuru });
         }
         public ActionResult DuyuruHtml(FmDuyurularDto model)
-        {
-
+        { 
             return View(model);
         }
 
