@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -16,19 +10,19 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static Roller[] GetAllRoles()
         {
-            if (RollerBus.Roles == null)
+            if (Roles == null)
             {
                 using (var db = new LisansustuBasvuruSistemiEntities())
                 {
-                    RollerBus.Roles = db.Rollers.Include("Menulers").ToArray();
+                    Roles = db.Rollers.Include("Menulers").ToArray();
                 }
             }
-            return RollerBus.Roles;
+            return Roles;
         }
 
-        public static void UpdateRoles2()
+        public static void UpdateRoles()
         {
-            var roleAttrs = Membership.Roles();
+            var roleAttrs = MenulerBus.Roles();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var dbRoller = db.Rollers.ToArray();

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -16,22 +11,19 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static Menuler[] GetAllMenu()
         {
-            if (MenulerBus.Menulers == null)
+            if (Menulers != null) return Menulers;
+            using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                using (var db = new LisansustuBasvuruSistemiEntities())
-                {
-                    MenulerBus.Menulers = db.Menulers.OrderBy(o => o.SiraNo).ToArray();
-                }
+                Menulers = db.Menulers.OrderBy(o => o.SiraNo).ToArray();
             }
-            return MenulerBus.Menulers;
+            return Menulers;
         }
 
-        public static void UpdateMenus2()
+        public static void UpdateMenus()
         {
             var menuAttrs = Membership.Menus();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var err = new List<string>();
                 var dbMenus = db.Menulers.ToArray();
                 foreach (var attr in menuAttrs)
                 {
