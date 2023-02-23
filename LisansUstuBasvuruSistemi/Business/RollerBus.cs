@@ -22,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         public static void UpdateRoles()
         {
-            var roleAttrs = MenulerBus.Roles();
+            var roleAttrs = Membership.Roles();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var dbRoller = db.Rollers.ToArray();

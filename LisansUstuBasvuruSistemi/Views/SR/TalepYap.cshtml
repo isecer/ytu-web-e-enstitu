@@ -270,7 +270,7 @@
         var _Email = $('#_Email').val();
        
         var _panel = $('#pnlJuri');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("getJuriEkleKontrol", "Ajax")',
             data: { 'JuriAdi': _JuriAdi,'Email': _Email },
@@ -297,15 +297,15 @@
                     $('#_Email').val("");
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     showMmMessage(result.Messages, 'Tamam');
                     validateControl(null, result.mmMessage);
                 }
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -325,17 +325,17 @@
         if (tarih != null && salon != null && tarih != "" && salon != "") {
             $('#saatLstContnt').css("display", "block");
             var _panel = $('.pnlRfrsh');
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("getSaatList", "Ajax")',
                 data: { 'SRSalonID': salon, 'IsPopupFrame': 'false', 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SRTalepID': '@(Model.SRTalepID<=0?"":Model.SRTalepID.ToString())' },
                 success: function (result) {
                     $('#saatLstContnt').html(result.Deger);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }

@@ -110,8 +110,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ResimAdi = basvuru.ResimAdi;
                 model.Ad = basvuru.Kullanicilar.Ad;
                 model.Soyad = basvuru.Kullanicilar.Soyad;
-                model.TcKimlikNo = basvuru.TcKimlikNo;
-                model.PasaportNo = basvuru.PasaportNo;
+                model.TcKimlikNo = basvuru.TcKimlikNo; 
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
@@ -196,16 +195,16 @@ namespace LisansUstuBasvuruSistemi.Business
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez İzleme Başvuru Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
-                    var kullanici = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
+                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
                     if (msg.IsSuccess == false)
                     {
                         msg.Messages.Add("Başvuru Süreci Kapalı");
                     }
                     else
                     {
-                        if (kullanici.YtuOgrencisi && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kullanici.OgrenimTipKod.IsDoktora())
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kul.OgrenimTipKod.IsDoktora())
                         {
-                            var aktifDevamEdenBasvuruVar = db.TIBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kullanici.OgrenciNo && p.TIBasvuruID != tiBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
+                            var aktifDevamEdenBasvuruVar = db.TIBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TIBasvuruID != tiBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
                             {
                                 msg.IsSuccess = false;
@@ -218,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod, "");
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
-                                var ogrenciBilgi = Management.StudentControl(kullanici.TcKimlikNo);
+                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
 
                                 var bkMsg = new List<string>();
                                 if (sondonemKayitOlmasiGerekenDersKodlariList.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => sondonemKayitOlmasiGerekenDersKodlariList.Any(a => a == p)) != sondonemKayitOlmasiGerekenDersKodlariList.Count)

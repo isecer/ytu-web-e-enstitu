@@ -67,7 +67,7 @@
                         <td></td>
                         <td>:</td>
                         <td>
-                            <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i> Yeni Talep Yap</button>
+                            <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus tooltips"></i> Yeni Talep Yap</button>
                         </td>
                     </tr>
                 }
@@ -142,7 +142,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TalepGelenTalepID')">
+                                                            <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TalepGelenTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -404,10 +404,10 @@
     }
 </div>
 <script type="text/javascript">
-    function newApp() {
-        showDuyuru(@DuyuruPopupTipleri.TalepYap, '@Url.Action("TalepYap")');
+    function YeniBasvuruDuyuruKontrol() {
+        ShowDuyuru(@DuyuruPopupTipleri.TalepYap, '@Url.Action("TalepYap")');
     }
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

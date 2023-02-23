@@ -11,6 +11,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -27,10 +28,10 @@ namespace LisansUstuBasvuruSistemi
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BiskaUtil.Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
-            BiskaUtil.SystemInformation.OnEvent += SystemInformation_OnEvent;
-            RollerBus.UpdateRoles();
-            MenulerBus.UpdateMenus();
+            Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
+            SystemInformation.OnEvent += SystemInformation_OnEvent;
+            //RollerBus.UpdateRoles();
+            //MenulerBus.UpdateMenus();
 
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
@@ -62,7 +63,7 @@ namespace LisansUstuBasvuruSistemi
             }
             catch
             {
-
+                // ignored
             }
 
 
@@ -71,8 +72,7 @@ namespace LisansUstuBasvuruSistemi
             captchaManager.PlainCaptchaPairFactory = length =>
             {
                 string randomText = RandomText.Generate(("1234567890").ToUpper(), length);
-                bool ignoreCase = true;
-                return new KeyValuePair<string, ICaptchaValue>(Guid.NewGuid().ToString("N"), new StringCaptchaValue(randomText, randomText, ignoreCase));
+                return new KeyValuePair<string, ICaptchaValue>(Guid.NewGuid().ToString("N"), new StringCaptchaValue(randomText, randomText, true));
             };
 
         }
@@ -100,7 +100,6 @@ namespace LisansUstuBasvuruSistemi
 
             RouteData routeData = new RouteData();
 
-            IController errorController = new LisansUstuBasvuruSistemi.Controllers.HomeController();
             if (exception == null)
             {
                 routeData.Values.Add("controller", "Home");
@@ -110,6 +109,7 @@ namespace LisansUstuBasvuruSistemi
             {
 
                 var errCode = HttpContext.Current.Response.StatusCode;
+                IController errorController;
                 if (errCode == HttpDurumKod.NotFound || errCode == HttpDurumKod.Unauthorized)
                 {
                     var url = HttpContext.Current.Request.Url;
@@ -138,48 +138,35 @@ namespace LisansUstuBasvuruSistemi
                     Server.ClearError();
                     errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
                 }
+            }
+        }
 
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+
+            string dosyaYolu = @"C:\inetpub\wwwroot\LUBS\blockIP.txt";
+            if (File.Exists(dosyaYolu))
+            {
+                List<string> satirlar = new List<string>();
+
+                using (StreamReader sr = new StreamReader(dosyaYolu))
+                {
+                    string satir;
+                    while ((satir = sr.ReadLine()) != null)
+                    {
+                        satirlar.Add(satir);
+                    }
+                }
+                satirlar = satirlar.Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                string ipAddress = Request.UserHostAddress;
+                if (satirlar.Any() && satirlar.Contains(ipAddress))
+                {
+                    Response.StatusCode = 403;
+                    Response.End();
+                }
             }
 
-
-
         }
-        //protected void Application_BeginRequest(object sender, EventArgs e)
-        //{
-        //    var ipAdd2 = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-        //    var ipAdd1 = Request.ServerVariables["REMOTE_ADDR"];
-
-
-
-        //    try
-        //    {
-
-        //        var FileName = DateTime.Now.ToString("yyyy-MM-dd") + "_Logs.txt";
-        //        var _path = Server.MapPath("/LogS/" + FileName);
-
-        //        if (!File.Exists(_path))
-        //        {
-
-        //            File.Create(_path).Dispose();
-        //        }
-        //        else
-        //        {
-        //            var ulr = Request.Url;
-        //            StreamWriter write = new StreamWriter(_path, true);
-        //            string UserName = "Guest";
-        //            if (false && UserIdentity.Current != null && UserIdentity.Current.IsAuthenticated)
-        //            {
-        //                UserName = UserIdentity.Current.Name;
-        //            }
-        //            write.WriteLine("B:\t" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\t" + ulr + "\t" + ipAdd1);
-        //            write.Close();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
 
         //protected void Application_EndRequest(Object sender, EventArgs e)
         //{
@@ -369,7 +356,7 @@ namespace LisansUstuBasvuruSistemi
                             kul.LastLogonDate = DateTime.Now;
                             db.SaveChanges();
                         }
-                    } 
+                    }
                 }
                 OnlineUsersHelper.RemoveUser(uniqueId);
             }

@@ -10,9 +10,8 @@
     //var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     //var IndexModel2 = (MIndexBilgi)ViewBag.IndexModel2;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
-    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
-    var EYKYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
+    var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole(); 
+    var eykYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
     var mKids = (List<int>)ViewBag.kIds;
 }
 
@@ -23,14 +22,13 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
-                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+            <div class="panel panel-info" id="pnlFltr"> 
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
-                        @if (EYKYetki)
+                        @if (eykYetki)
                         {
                             <li>
                                 <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
@@ -38,12 +36,12 @@
                                     function showDialogTutanakRpr() {
                                         var _panel = $('#pnlFltr');
 
-                                        _pRefresh(_panel, false);
+                                        PanelRefresh(_panel, false);
                                         $.ajax({
                                             url: '@Url.Action("GetTutanakRaporu", "MezuniyetGelenbasvurular")',
                                             data: {},
                                             success: function (result) {
-                                                _pRefresh(_panel, true);
+                                                PanelRefresh(_panel, true);
                                                 var btbxxFS = bootbox.dialog({
                                                     message: result,
                                                     title: "<i class='fa fa-bar-chart-o'></i> Tutanak Çıktısı Oluşturma İşlemi",
@@ -54,11 +52,11 @@
                                                             callback: function (event) {
                                                                 toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                                                _pRefresh(pnlx, false);
+                                                                PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
                                                                     success: function (result) {
 
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                             if (result.IsSuccess) {
 
                                                                                 var _RtipID = $('#RaporTipID').val();
@@ -82,10 +80,10 @@
 
                                                                     },
                                                                     complete: function (cmp) {
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                     },
                                                                     error: function (err) {
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                     }
 
                                                                 });
@@ -104,7 +102,7 @@
                                             },
                                             error: function (err) {
                                                 alert(err.responseText);
-                                                _pRefresh(_panel, true);
+                                                PanelRefresh(_panel, true);
                                             }
                                         });
 
@@ -285,7 +283,7 @@
                                                         <tr>
                                                             <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
                                                             <td width="110">
-                                                                <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'false' : 'true')); $('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -325,19 +323,18 @@
                             @if (Model.RowCount > 0)
                             {
                                  
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
-                                foreach (var item in Model.FrMezuniyetBasvurularis)
+                                int rowIndex = Model.StartRowIndex;  
+                                foreach (var item in Model.Data)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++; 
                                     <tr>
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.MezuniyetBasvurulariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.MezuniyetBasvurulariID')">
+                                                            <li id="iShow_@item.MezuniyetBasvurulariID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.MezuniyetBasvurulariID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -393,11 +390,11 @@
 </div>
 <div id="msgsB" style="display: none;">
 </div>
-@if (Model.RowCount > 0 && Model.FrMezuniyetBasvurularis.First().TezDanismanID == UserIdentity.Current.Id)
+@if (Model.RowCount > 0 && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
 {
     <script>
         $(function () {
-            showDetail('@Model.FrMezuniyetBasvurularis.First().MezuniyetBasvurulariID');
+            ShowDetail('@Model.Data.First().MezuniyetBasvurulariID');
         },200)
     </script>
 }
@@ -410,7 +407,7 @@
     }
 
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -423,19 +420,19 @@
         var tbName = "@TabAdlari.MezuniyetBasvurulariTN-" + id;
         var STabID = "@Model.STabID";
 
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if (STabID != "") tID = STabID;
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailMezuniyet", "Ajax")',
             data: { id: id, ShowDetayYayinID: mbyID, tbInx: tID, IsDelete: (Isdelete == true), 'GelenBasvuru': true },
             success: function (result) {
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>Seçilen Mezuniyet Başvurusunu Silmek İstiyor Musunuz?</td></tr></table>",
                         title: "Mezuniyet Başvurusu Silme İşlemi",
@@ -460,7 +457,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -486,7 +483,7 @@
             alert("kayıt işlemini yapabilmek için iptal açıklaması giriniz");
             return;
         }
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("DurumKayit", "MezuniyetGelenBasvurular")',
             data: { id: mID, MezuniyetYayinKontrolDurumID: durumID, MezuniyetYayinKontrolDurumAciklamasi: durumAck },
@@ -498,10 +495,10 @@
                     getDetailx(mID);
                 }
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -511,7 +508,7 @@
         var IsDanismanOnay = $('#DanismanBasvuruOnay_' + mID).val();
         var BasvuruDanismanOnayAciklama = $('#BasvuruDanismanOnayAciklama_' + mID).val();
 
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("DanismanOnayKayit", "MezuniyetGelenBasvurular")',
             data: { id: mID, IsDanismanOnay: IsDanismanOnay, BasvuruDanismanOnayAciklama: BasvuruDanismanOnayAciklama },
@@ -521,10 +518,10 @@
                     getDetailx(mID);
                 }
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -533,7 +530,7 @@
         var _panel = $('#bsvrDet_' + mID);
         var IsOgrenciUzatmaSonrasiOnay = $('#IsOgrenciUzatmaSonrasiOnay_' + SRTalepID).val();
 
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("OgrenciUzatmaOnayKayit", "Mezuniyet")',
             data: { SRTalepID: SRTalepID, IsOgrenciUzatmaSonrasiOnay: IsOgrenciUzatmaSonrasiOnay },
@@ -543,10 +540,10 @@
                     getDetailx(mID);
                 }
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -557,7 +554,7 @@
         var DanismanUzatmaSonrasiOnayAciklama = $('#DanismanUzatmaSonrasiOnayAciklama_' + SRTalepID).val();
 
 
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("DanismanUzatmaOnayKayit", "MezuniyetGelenBasvurular")',
             data: { SRTalepID: SRTalepID, IsDanismanUzatmaSonrasiOnay: IsDanismanUzatmaSonrasiOnay, DanismanUzatmaSonrasiOnayAciklama: DanismanUzatmaSonrasiOnayAciklama},
@@ -567,10 +564,10 @@
                     getDetailx(mID);
                 }
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -580,7 +577,7 @@
         var _DanismanIsmiVar = $('#DanismanIsmiVar_' + id + '_' + _MBYID).val();
         var _TezIcerikUyumuVar = $('#TezIcerikUyumuVar_' + id + '_' + _MBYID).val();
         var _Onaylandi = $('#Onaylandi_' + id + '_' + _MBYID).val();
-        _pRefresh(_yPopup, false);
+        PanelRefresh(_yPopup, false);
         $.ajax({
             url: '@Url.Action("YayinKontrolPost", "MezuniyetGelenBasvurular")',
             data: { id: _MBYID, DanismanIsmiVar: _DanismanIsmiVar, TezIcerikUyumuVar: _TezIcerikUyumuVar, Onaylandi: _Onaylandi },
@@ -589,7 +586,7 @@
                     getDetailx(id, false, _MBYID);
                 }
                 getMsg(result.Messages);
-                _pRefresh(_yPopup, true);
+                PanelRefresh(_yPopup, true);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -599,12 +596,12 @@
     function yayinKontrol(id, _MBYID) {
         var _panel = $('#yayinContent_' + id);
 
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("YayinKontrol", "MezuniyetGelenBasvurular")',
             data: { id: id, MezuniyetBasvurulariYayinID: _MBYID },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 var btbx = bootbox.dialog({
                     message: result,
                     title: "Yayın Kontrolü",
@@ -629,7 +626,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -686,12 +683,12 @@
     })
     function showSRDialog(MezuniyetBasvurulariID, SRTalepID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("RezervasyonAl", "Mezuniyet")',
             data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID, 'SRTalepID': SRTalepID },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 var btbxxFS = bootbox.dialog({
                     message: result,
                     title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Rezervasyon Talebi Yap' : 'Rezervasyon Talebi Düzenle'),
@@ -701,7 +698,7 @@
                             className: "btn-info",
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                _pRefresh(pnlx, false);
+                                PanelRefresh(pnlx, false);
                                 $('#MezuniyetSRForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
@@ -714,14 +711,14 @@
                                             getMsg(result);
                                             return false;
                                         }
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
 
                                     },
                                     complete: function (cmp) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     }
 
                                 });
@@ -742,7 +739,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -751,7 +748,7 @@
         var ibtID = $('#SRDurumID_' + SRTalepID).val();
         var ibTipAciklama = $('#SRDurumAciklamasi_' + SRTalepID).val();
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("SrDurumKaydet", "MezuniyetGelenBasvurular")',
             data: {
@@ -761,11 +758,11 @@
             },
             success: function (result) {
                 getDetailx(MezuniyetBasvurulariID);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             }
         })
@@ -777,7 +774,7 @@
         if ($_TTSTarih.length > 0) _TTSTarih = $_TTSTarih.val();
         var dt = null;
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         if (_TTSTarih != "" && _TTSTarih != null && _TTSTarih != undefined) {
             var _yil = _TTSTarih.split("-")[2];
             var _ay = _TTSTarih.split("-")[1];
@@ -792,7 +789,7 @@
                 'TezTeslimSonTarih': dt
             },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
                     getDetailx(MezuniyetBasvurulariID);
 
@@ -802,7 +799,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }
@@ -811,12 +808,12 @@
 
     function showSRBCiltDialog(MezuniyetBasvurulariID, SRTalepID, SRTalepleriBezCiltFormID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("BezCiltForm", "Mezuniyet")',
             data: { 'SRTalepID': SRTalepID, 'SRTalepleriBezCiltFormID': SRTalepleriBezCiltFormID },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 var btbxxFS = bootbox.dialog({
                     message: result,
                     title: "<i class='fa fa-file-text-o'></i> " + (SRTalepleriBezCiltFormID <= 0 ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzelt'),
@@ -826,7 +823,7 @@
                             className: "btn-info",
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                _pRefresh(pnlx, false);
+                                PanelRefresh(pnlx, false);
                                 $('#MezuniyetSRBezCiltForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
@@ -839,14 +836,14 @@
                                             getMsg(result);
                                             return false;
                                         }
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
 
                                     },
                                     complete: function (cmp) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     }
 
                                 });
@@ -867,26 +864,26 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
     }
     function BasvuruBelgeKaydet(frmID, bID) {
         var pnlx = $('#bsvrDet_' + bID);
-        _pRefresh(pnlx, false);
+        PanelRefresh(pnlx, false);
 
         $('#' + frmID).ajaxForm({
             success: function (result) {
-                _pRefresh(pnlx, true);
+                PanelRefresh(pnlx, true);
                 getDetailx(bID);
                 showMmMessage(result.Messages, 'Tamam');
             },
             complete: function (cmp) {
-                _pRefresh(pnlx, true);
+                PanelRefresh(pnlx, true);
             },
             error: function (err) {
-                _pRefresh(pnlx, true);
+                PanelRefresh(pnlx, true);
             }
 
         }).submit();
@@ -931,7 +928,7 @@
     }
     function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
             success: function (result) {
                  if (result.IsSuccess) {
@@ -941,14 +938,14 @@
                     showMmMessage(result.Messages, 'Tamam');
 
                 }
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             },
             complete: function (cmp) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
 
         }).submit();
@@ -958,7 +955,7 @@
         var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
         var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("MezuniyetDurumKaydet", "MezuniyetGelenBasvurular")',
             data: {
@@ -967,7 +964,7 @@
                 'Tarih': _MezuniyetTarihi
             },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
                     getDetailx(MezuniyetBasvurulariID);
 
@@ -978,7 +975,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }
@@ -996,7 +993,7 @@
     }
     function JoFormAsilYedekDurumKayit(sndr, MezuniyetBasvurulariID, JoFormID, JuriTipAdi) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var $sndr = $(sndr);
         var SenderVal = $sndr.val().toLowerCase();
         $.ajax({
@@ -1008,7 +1005,7 @@
                 'IsAsilOrYedek': SenderVal,
             },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (!result.IsSuccess) {
                     getDetailx(MezuniyetBasvurulariID);
                     showMmMessage(result.Messages, 'Tamam');
@@ -1016,7 +1013,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }
@@ -1024,7 +1021,7 @@
     }
     function JoFormDurumKayit(sndr, MezuniyetBasvurulariID, JoFormID, EYKDaOnayOrEYKYaGonderim) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var $sndr = EYKDaOnayOrEYKYaGonderim ? $('#EYKDaOnaylandi_' + JoFormID) : $(sndr);
         var SenderVal = $sndr.val().toLowerCase();
         EYKDaOnaylanmadiDurumAciklamasi = EYKDaOnayOrEYKYaGonderim == true && SenderVal == "false" ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + JoFormID).val() : "";
@@ -1038,7 +1035,7 @@
                 'EYKDaOnaylanmadiDurumAciklamasi': EYKDaOnaylanmadiDurumAciklamasi
             },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
                     getDetailx(MezuniyetBasvurulariID);
 
@@ -1047,7 +1044,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }
@@ -1055,14 +1052,14 @@
     }
     function GetJuriOneriFormu(MezuniyetBasvurulariID) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetJuriOneriFormu", "MezuniyetGelenBasvurular")',
             data: {
                 'MezuniyetBasvurulariID': MezuniyetBasvurulariID,
             },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
 
 
@@ -1077,7 +1074,7 @@
                                 className: "btn-primary btnKaydet",
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    _pRefresh(pnlx, false);
+                                    PanelRefresh(pnlx, false);
                                     $('#FrmJuriOneriFormu').ajaxForm({
                                         success: function (result) {
                                             if (result.mMessage.IsSuccess) {
@@ -1104,13 +1101,13 @@
                                                 if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
                                                 return false;
                                             }
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                         },
                                         complete: function (cmp) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                         },
                                         error: function (err) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                         }
 
                                     });
@@ -1128,7 +1125,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }
@@ -1164,7 +1161,7 @@
                         label: "Evet",
                         className: "btn-info",
                         callback: function (event) {
-                            _pRefresh(_panel, false);
+                            PanelRefresh(_panel, false);
                             $.ajax({
                                 url: '@Url.Action("SinavDegerlendir", "Mezuniyet")',
                                 data: {
@@ -1180,7 +1177,7 @@
 
                                 },
                                 success: function (result) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     if (result.IsSuccess || result.IsRefresh) {
                                         getDetailx(MBasvuruID);
 
@@ -1189,7 +1186,7 @@
 
                                 },
                                 error: function (err) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     alert(err.responseText);
 
                                 }
@@ -1208,14 +1205,14 @@
          function showDLinkGonder(MBID,SRTalepID,UniqueID) {
 
                var _panel = $('#bsvrDet_' + MBID);
-             _pRefresh(_panel, false);
+             PanelRefresh(_panel, false);
              $.ajax({
                  url: '@Url.Action("DegerlendirmeLinkView", "Mezuniyet")',
                  data: {
                      'UniqueID': UniqueID,
                  },
                  success: function (result) {
-                     _pRefresh(_panel, true);
+                     PanelRefresh(_panel, true);
                      var btbxxFS = bootbox.dialog({
                          message: result,
                          title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
@@ -1225,7 +1222,7 @@
                                  className: "btn-info",
                                  callback: function (event) {
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     _pRefresh(pnlx, false);
+                                     PanelRefresh(pnlx, false);
                                      var EMail = $('#EMail_' + UniqueID).val();
                                      var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val();
                                      var IsYeniLink = $('#IsYeniLink_' + UniqueID).val();
@@ -1239,7 +1236,7 @@
                                              'IsYeniLink': IsYeniLink
                                          },
                                          success: function (result) {
-                                             _pRefresh(pnlx, true);
+                                             PanelRefresh(pnlx, true);
                                              if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                              getDetailx(MBID);
                                              showMmMessage(result.MessageView, 'Tamam');
@@ -1248,7 +1245,7 @@
 
                                          },
                                          error: function (err) {
-                                             _pRefresh(pnlx, true);
+                                             PanelRefresh(pnlx, true);
                                              alert(err.responseText);
 
                                          }
@@ -1260,7 +1257,7 @@
                                  label: "Kapat",
                                  className: "btn-primary",
                                  callback: function () {
-                                     _pRefresh(_panel, true);
+                                     PanelRefresh(_panel, true);
                                  }
                              }
                          }
@@ -1268,7 +1265,7 @@
 
                  },
                  error: function (err) {
-                     _pRefresh(_panel, true);
+                     PanelRefresh(_panel, true);
                      alert(err.responseText);
 
                  }

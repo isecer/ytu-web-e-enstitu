@@ -6,7 +6,6 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model kmMezuniyetBasvuru
 @{
-    string KullaniciTipAdi = Model.KullaniciTipAdi;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var _MmMessage = (MmMessage)ViewBag._MmMessage;
@@ -139,8 +138,7 @@
                                                 <input type="text" style="display:none;" id="MezuniyetBasvurulariID" name="MezuniyetBasvurulariID" value="@Model.MezuniyetBasvurulariID" />
                                                 <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
                                                 <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
-                                                <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
-                                                <input type="text" style="display:none;" id="PasaportNo" name="PasaportNo" value="@Model.PasaportNo" />
+                                                <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" /> 
                                                 <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
                                                 <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
                                                 <div class="form-group">
@@ -281,7 +279,7 @@
                                                         function  yTurKontrol(sndr){
                                                             var _MezuniyetSurecID = @Model.MezuniyetSurecID;
                                                             var _panel = $('#yayinPanel');
-                                                            _pRefresh(_panel, false);
+                                                            PanelRefresh(_panel, false);
                                                             var _YayinTurID = $(sndr).val();
                                                             if (_YayinTurID != ""  &&_YayinTurID != null) {
 
@@ -293,16 +291,16 @@
                                                                     data: { 'MezuniyetSurecID': _MezuniyetSurecID, 'MezuniyetYayinTurID': _YayinTurID },
                                                                     success: function (result) {
                                                                         $('#yayinPanelDetay').html(result);
-                                                                        _pRefresh(_panel, true);
+                                                                        PanelRefresh(_panel, true);
                                                                     },
                                                                     error: function (err) {
                                                                         alert(err.responseText);
-                                                                        _pRefresh(_panel, true);
+                                                                        PanelRefresh(_panel, true);
                                                                     }
                                                                 });
                                                             }
                                                             else {
-                                                                _pRefresh(_panel, true);
+                                                                PanelRefresh(_panel, true);
                                                                 $('#yayinPanelDetay').html("");
                                                             }
                                                         }

@@ -28,15 +28,16 @@ namespace LisansUstuBasvuruSistemi.Business
             var kayitBilgi = new StudentControl();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kulls = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-                if (kulls.YtuOgrencisi)
+                var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                if (kul.YtuOgrencisi)
                 {
-                    kayitBilgi = Management.StudentControl(kulls.TcKimlikNo);
-                    if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kulls.OgrenimTipKod)
+                    var tcKimlikNo = kul.TcKimlikNo;
+                    kayitBilgi = Management.StudentControl(tcKimlikNo);
+                    if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
                     {
-                        kulls.KayitDonemID = kayitBilgi.DonemID;
-                        kulls.KayitYilBaslangic = kayitBilgi.BaslangicYil;
-                        kulls.KayitTarihi = kayitBilgi.KayitTarihi;
+                        kul.KayitDonemID = kayitBilgi.DonemID;
+                        kul.KayitYilBaslangic = kayitBilgi.BaslangicYil;
+                        kul.KayitTarihi = kayitBilgi.KayitTarihi;
                         if (kayitBilgi.OgrenciInfo != null)
                         {
                             int? danismanId = null;
@@ -45,21 +46,21 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var danisman = db.Kullanicilars.FirstOrDefault(p => p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
                                 if (danisman != null)
                                     danismanId = danisman.KullaniciID;
-                            }
+                            } 
 
-                            kulls.DanismanID = danismanId;
+                            kul.DanismanID = danismanId;
                         }
 
                     }
                     else
                     {
-                        kulls.YtuOgrencisi = false;
-                        kulls.OgrenimTipKod = null;
-                        kulls.ProgramKod = null;
-                        kulls.OgrenciNo = null;
-                        kulls.KayitDonemID = null;
-                        kulls.KayitYilBaslangic = null;
-                        kulls.KayitTarihi = null;
+                        kul.YtuOgrencisi = false;
+                        kul.OgrenimTipKod = null;
+                        kul.ProgramKod = null;
+                        kul.OgrenciNo = null;
+                        kul.KayitDonemID = null;
+                        kul.KayitYilBaslangic = null;
+                        kul.KayitTarihi = null;
                     }
                     db.SaveChanges();
                 }
@@ -94,15 +95,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     }
                     else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-                if (!isYerli)
-                    if (kModel.PasaportNo.IsNullOrWhiteSpace())
-                    {
-                        string msg = "Pasaport No Giriniz";
-                        mmMessage.Messages.Add(msg);
-
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "PasaportNo" });
+                 
                 if (!kModel.CinsiyetID.HasValue)
                 {
                     mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
@@ -500,8 +493,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     mRowModel.Add(new MailTableRowDto { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
                 }
                 if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
-                if (kModel.PasaportNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Pasaport No", Aciklama = kModel.PasaportNo });
+                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo }); 
                 if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
 
                 mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });

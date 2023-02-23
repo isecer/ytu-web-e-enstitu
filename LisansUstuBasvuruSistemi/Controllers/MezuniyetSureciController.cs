@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.SiraNo,
                         s.MezuniyetSurecID,
                         s.BaslangicTarihi,
-                        s.BitisTarihi,
+                        s.BitisTarihi, 
                         s.IsAktif,
                         s.IslemTarihi,
                         s.IslemYapanID,
@@ -97,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DialogID = dlgid
             };
             ViewBag.MmMessage = mmMessage;
-            var model = new kmMezuniyetSureci
+            var model = new KmMezuniyetSureci
             {
                 IsAktif = true
             };
@@ -121,8 +121,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         item.MezuniyetSurecOtoMailID = bsm.MezuniyetSurecOtoMailID;
                         item.Gonderildi = bsm.Gonderildi;
                         item.GonderilenCount = bsm.GonderilenCount;
-                    }
-
+                    } 
                 }
                 model.MezuniyetSurecID = id.Value;
                 model.EnstituKod = data.EnstituKod;
@@ -146,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]
-        public ActionResult Kayit(kmMezuniyetSureci kModel, bool? isYonetmelikKopyala, string dlgid = "")
+        public ActionResult Kayit(KmMezuniyetSureci kModel, bool? isYonetmelikKopyala, string dlgid = "")
         {
             var mmMessage = new MmMessage
             {
@@ -155,7 +154,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
 
-            var qgId = kModel.gID.Select((s, inx) => new { Key = s, Inx = inx }).ToList();
+            var qgId = kModel.GId.Select((s, inx) => new { Key = s, Inx = inx }).ToList();
             var qZamanTipId = kModel.ZamanTipID.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1].ToInt(), Inx = inx }).ToList();
             var qMailSablonTipId = kModel.MailSablonTipID.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1].ToInt(), Inx = inx }).ToList();
             var qZaman = kModel.Zaman.Select((s, inx) => new { gID = s.Split('_')[0].ToInt().Value, Key = s.Split('_')[1], Inx = inx }).ToList();
@@ -213,7 +212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
             {
-                mmMessage.Messages.Add("Duyurunun Yayınlanacağı Enstitüyü Seçiniz");
+                mmMessage.Messages.Add("Enstitü Seçiniz");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
@@ -476,7 +475,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                        join k in _context.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                        join e in _context.Enstitulers on s.EnstituKod equals e.EnstituKod
                        join d in _context.Donemlers on s.DonemID equals d.DonemID
-                       select new msUrecDetay
+                       select new MSurecDetay
                        {
                            MezuniyetSurecID = s.MezuniyetSurecID,
                            EnstituKod = s.EnstituKod,
@@ -518,7 +517,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                            join k in _context.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                            join e in _context.Enstitulers on s.EnstituKod equals e.EnstituKod
                            join d in _context.Donemlers on s.DonemID equals d.DonemID
-                           select new msUrecDetay
+                           select new MSurecDetay
                            {
                                MezuniyetSurecID = s.MezuniyetSurecID,
                                EnstituKod = s.EnstituKod,

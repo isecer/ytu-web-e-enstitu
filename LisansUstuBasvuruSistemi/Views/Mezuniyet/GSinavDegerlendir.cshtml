@@ -412,7 +412,7 @@
                         label: "Evet",
                         className: "btn-success",
                         callback: function (event) {
-                            _pRefresh(_panel, false);
+                            PanelRefresh(_panel, false);
                             $.ajax({
                                 url: '@Url.Action("SinavDegerlendir", "Mezuniyet")',
                                 data: {
@@ -427,7 +427,7 @@
                                     'IsYokDrBursiyeriVar': IsYokDrBursiyeriVar
                                 },
                                 success: function (result) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     showMmMessage(result.Messages, 'Tamam');
                                     if (result.IsSuccess || result.IsRefresh) {
                                         setTimeout(function () {
@@ -439,7 +439,7 @@
 
                                 },
                                 error: function (err) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     alert(err.responseText);
 
                                 }

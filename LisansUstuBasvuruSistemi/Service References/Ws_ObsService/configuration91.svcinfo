@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="x87i4BtMvOgBdflXf2yQ8/p6Loo=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="yXQuBdjGAyMygL1c+ER0uTSWkIgAie+M36tIA/IGfRs=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="proliz_ytu_enstitu_minerSoap">
       <properties>

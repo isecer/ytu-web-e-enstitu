@@ -133,7 +133,7 @@
                                                     {
                                                         <td>
                                                             <ul class="panel-controls">
-                                                                <li id="iShow_@(rowID)_@item.KayitID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@rowID','@item.KayitID','@item.EnstituKod')">
+                                                                <li id="iShow_@(rowID)_@item.KayitID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@rowID','@item.KayitID','@item.EnstituKod')">
                                                                     <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                                 </li>
                                                             </ul>
@@ -183,7 +183,7 @@
 
 <script type="text/javascript">
 
-    function showDetail(rwIDx, id, EKD) {
+    function ShowDetail(rwIDx, id, EKD) {
         var rwID = $('#iShow_' + rwID + "_" + id);
         var cls = 'cls-' + rwIDx + "_" + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -197,35 +197,35 @@
     }
     function getDetail(id, EKD) {
         var _panel = $('#SRDetay_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail", "Sr")',
             data: { id: id, 'IsDelete': true, 'EnstituKod': EKD},
             success: function (result) {
                 $('#cls-GT_' + id).html(result);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 onload();
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
     function getDetail2(id, rwnx) { 
         var _panel = $('#dvDetay_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail", "SrOzelTanimlar")',
             data: { id: id },
             success: function (result) {
                 $('#cls-' + rwnx + '_' + id).html(result);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 onload();
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

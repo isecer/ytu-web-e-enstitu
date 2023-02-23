@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -9,7 +9,7 @@
     string KullaniciTipAdi = Model.KullaniciTipAdi;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-   
+
     var ASinavTipleri = (SelectList)ViewBag.ASinavTipleri;
     var DSinavTipleri = (SelectList)ViewBag.DSinavTipleri;
     var TSinavTipleri = (SelectList)ViewBag.TSinavTipleri;
@@ -78,15 +78,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="font-size:11pt;">
-                                                        @if (Model.IsYerli)
-                                                        {
-                                                            <span>T.C. Kimlik No:@Model.TcKimlikNo</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>Pasaport No:@Model.PasaportNo</span>
-                                                        }
-
+                                                        <span>T.C. Kimlik No:@Model.TcKimlikNo</span> 
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -157,8 +149,7 @@
                                         <input type="text" style="display:none;" id="BasvuruID" name="BasvuruID" value="@Model.BasvuruID" />
                                         <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
                                         <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
-                                        <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
-                                        <input type="text" style="display:none;" id="PasaportNo" name="PasaportNo" value="@Model.PasaportNo" />
+                                        <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" /> 
                                         <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
                                         <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
                                         <input type="text" style="display:none;" id="Ad" name="Ad" value="@Model.Ad" />
@@ -531,7 +522,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                    </div> 
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -593,7 +584,7 @@
                                                                             var strW = Management.GetTercihRowHtml(new TercihRowModel
                                                                             {
                                                                                 UniqueID = item.UniqueID.ToString(),
-                                                                                SiraNo = item.SiraNo, 
+                                                                                SiraNo = item.SiraNo,
                                                                                 OgrenimTipKod = item.OgrenimTipKod,
                                                                                 OgrenimTipAdi = item.ProgramBilgileri.OgrenimTipAdi,
                                                                                 AnabilimDaliKod = item.ProgramBilgileri.AnabilimDaliKod,
@@ -644,7 +635,7 @@
                                                     @if (Model.BasvurularSinavBilgi_A != null && Model.BasvurularSinavBilgi_A.SinavTipID > 0)
                                                     {
 
-                                                        var sb_ = Management.getSinavBilgisi( Model.BasvuruSurecID, Model.BasvurularSinavBilgi_A.SinavTipID, otsIds, prks, IngsIds);
+                                                        var sb_ = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_A.SinavTipID, otsIds, prks, IngsIds);
                                                         sb_.BasvuruSinavData = Model.BasvurularSinavBilgi_A;
                                                         Html.RenderPartial("getSinavTip", sb_);
 
@@ -763,7 +754,7 @@
                                                 <div id="sinavTipBilgi_@SinavTipGrup.DilSinavlari">
                                                     @if (Model.DilIstensinmi && Model.BasvurularSinavBilgi_D != null && Model.BasvurularSinavBilgi_D.SinavTipID > 0)
                                                     {
-                                                        var sb = Management.getSinavBilgisi( Model.BasvuruSurecID, Model.BasvurularSinavBilgi_D.SinavTipID, otsIds, prks, IngsIds);
+                                                        var sb = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_D.SinavTipID, otsIds, prks, IngsIds);
                                                         sb.BasvuruSinavData = Model.BasvurularSinavBilgi_D;
                                                         Html.RenderPartial("getSinavTip", sb);
                                                     }
@@ -786,7 +777,7 @@
                                                 <div id="sinavTipBilgi_@SinavTipGrup.Tomer">
                                                     @if (Model.TomerIstensinmi && Model.BasvurularSinavBilgi_T != null && Model.BasvurularSinavBilgi_T.SinavTipID > 0)
                                                     {
-                                                        var sb = Management.getSinavBilgisi( Model.BasvuruSurecID, Model.BasvurularSinavBilgi_T.SinavTipID, otsIds, prks, IngsIds);
+                                                        var sb = Management.getSinavBilgisi(Model.BasvuruSurecID, Model.BasvurularSinavBilgi_T.SinavTipID, otsIds, prks, IngsIds);
                                                         sb.BasvuruSinavData = Model.BasvurularSinavBilgi_T;
                                                         Html.RenderPartial("getSinavTip", sb);
                                                     }
@@ -1052,7 +1043,7 @@
     });
     function getBolums(sndr) {
         var _panel = $('#pnlProgramSecim');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $('#otBilgi').html('');
         $('#SotBilgi').html('');
         var sndrVal = $(sndr).val();
@@ -1093,7 +1084,7 @@
                         }
                         opt += "<option value=" + _value + ">" + result.data[i].Caption + "</option>"
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (result.IsSubOT) {
                         $('#otBilgi').addClass('hide');
                         $('#SotBilgi').removeClass('hide');
@@ -1109,7 +1100,7 @@
                 error: function (err) {
                     $('#otBilgi').addClass('hide');
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
 
                 }
             });
@@ -1122,7 +1113,7 @@
             }
             if ($(sndr).attr("id") != "AnabilimdaliKod") $('#AnabilimdaliKod').empty();
             $('#ProgramKod').empty();
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             yLBilgisiIstendimi();
         }
     }
@@ -1148,7 +1139,7 @@
     }
     function getOgrenimSBilgi(otID, rwID, YlVal, subOt) {
         var _panel = $('#pnlProgramSecim');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var _BasvuruSurecID = @Model.BasvuruSurecID;
         var _KullaniciID = @Model.KullaniciID;
         var _BasvuruID = $('#BasvuruID').val();
@@ -1164,13 +1155,13 @@
             data: { 'BasvuruSurecID': _BasvuruSurecID, 'otID': otID, 'KullaniciID': _KullaniciID, 'BasvuruID': _BasvuruID, 'ArrOtipIds': _tercihler },
             success: function (result) {
                 $('#' + rwID).html(result);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 yLBilgisiIstendimi();
             },
             error: function (err) {
                 alert(err.responseText);
                 $('#' + rwID).addClass('hide');
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -1272,7 +1263,7 @@
 
     function tercihSiraNoDuzenle() {
         $('#Rw_tbody').find('input[name=_tSiraNo]').each(function (inx, inptx) {
-            var _sNo = inx + 1;  
+            var _sNo = inx + 1;
             $(inptx).val(_sNo);
             $(inptx).parents('li').find('.tSiraNo').html(_sNo + ")");
         })
@@ -1312,7 +1303,7 @@
 
         }
         if (odurumShow) $('.lOdurumBilgi').removeClass('hide');
-        else $('.lOdurumBilgi').addClass('hide'); 
+        else $('.lOdurumBilgi').addClass('hide');
         return odurumShow;
     }
     function tercihBDOTkontrol(_OtKod) {
@@ -1478,7 +1469,7 @@
         else if (tp == '@SinavTipGrup.Tomer') {
             _panel = $('#pnlSnv_T');
         }
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var _SinavTipID = $(sndr).val();
         if (_SinavTipID != "" && _SinavTipID != "null" && _SinavTipID != null) {
             var _OtIDs = "[";
@@ -1520,16 +1511,16 @@
                 data: { 'BasvuruSurecID': _BasvuruSurecID, "EgitimDiliTurkce": EgitimDiliTurkce, 'SinavTipID': _SinavTipID, 'SelectedVal': selectedV, 'OgrenimTipKods': nOtIDs, 'Ingilizces': nIngs, 'ProgramKods': nPrkds, 'BasvuruID': '@(Model.BasvuruID>0?Model.BasvuruID.ToString():"")' },
                 success: function (result) {
                     $('#sinavTipBilgi_' + tp).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             $('#sinavTipBilgi_' + tp).html("");
         }
     }
@@ -1540,8 +1531,7 @@
             frmD = {
                 "StepNo": step,
                 "KullaniciID": @Model.KullaniciID,
-                "TcKimlikNo": $('#TcKimlikNo').val(),
-                "PasaportNo": $('#PasaportNo').val(),
+                "TcKimlikNo": $('#TcKimlikNo').val(), 
                 "CinsiyetID": $('#CinsiyetID').val(),
                 "AnaAdi": $('#AnaAdi').val(),
                 "BabaAdi": $('#BabaAdi').val(),
@@ -1599,8 +1589,8 @@
             _Ings += "]";
             var ingB = eval(_Ings);
             var _LEgitimDiliTurkce = $("#LEgitimDiliTurkce").val();
-            var _YLEgitimDiliTurkce = $("#YLEgitimDiliTurkce").val(); 
-            var YLDurum = $('#ylBilgi').hasClass('hide') == false; 
+            var _YLEgitimDiliTurkce = $("#YLEgitimDiliTurkce").val();
+            var YLDurum = $('#ylBilgi').hasClass('hide') == false;
             frmD = {
                 "BasvuruSurecID": @Model.BasvuruSurecID,
                 "StepNo": step,
@@ -1621,7 +1611,7 @@
                 "YLOgrenciBolumID": $('#YLOgrenciBolumID').val(),
                 "YLNotSistemID": $('#YLNotSistemID').val(),
                 "YLMezuniyetNotu": $('#YLMezuniyetNotu').val(),
-                "YLEgitimDiliTurkce": _YLEgitimDiliTurkce, 
+                "YLEgitimDiliTurkce": _YLEgitimDiliTurkce,
                 "_OgrenimTipKod": nOtIDs,
                 "_ProgramKod": prKods,
                 "_Ingilizce": ingB
@@ -1757,7 +1747,7 @@
                                     className: "btn-primary",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmAnket').ajaxForm({
                                             success: function (result) {
                                                 if (result.IsSuccess) {
@@ -1769,13 +1759,13 @@
                                                     getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         });

@@ -60,7 +60,7 @@
                             <td></td>
                             <td>:</td>
                             <td>
-                                <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus"></i> Yeni Başvuru</button>
+                                <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i> Yeni Başvuru</button>
                             </td>
                         </tr>
                     }
@@ -130,7 +130,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TDOBasvuruID')">
+                                                            <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TDOBasvuruID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -272,7 +272,7 @@
 {
     <script>
         $(function () {
-            showDetail('@(Model.TDOBasvuruID ?? Model.TdoBasvuruDtos.First().TDOBasvuruID)');
+            ShowDetail('@(Model.TDOBasvuruID ?? Model.TdoBasvuruDtos.First().TDOBasvuruID)');
             if ('@(Model.TDOBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTDODanismanFormu(@Model.TDOBasvuruID); }, 250);
 
         },200)
@@ -306,12 +306,12 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function newApp() {
-        showDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
+    function YeniBasvuruDuyuruKontrol() {
+        ShowDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
     }
 
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -322,7 +322,7 @@
     function getDetailx(id, Isdelete, sndr) {
 
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
 
         $.ajax({
             url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
@@ -331,10 +331,10 @@
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
                     Resized(window.innerWidth);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
                         title: "Başvuru Silme İşlemi",
@@ -370,7 +370,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -394,7 +394,7 @@
     }
     function silDetay(sndr, id, TDOBasvuruDanismanID, tarih) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
             message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
             title: "Danışman Öneri Formu Silme İşlemi",
@@ -407,14 +407,14 @@
                             url: '@Url.Action("DetaySil", "TDOBasvuru")',
                             data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
                                     getDetailx(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });
@@ -424,7 +424,7 @@
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 }
             }
@@ -432,7 +432,7 @@
     }
     function silDetayEs(sndr, id, uniqueID, tarih) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
             message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli eş danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
             title: "Eş Danışman Öneri Formu Silme İşlemi",
@@ -445,14 +445,14 @@
                             url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
                             data: { id: id, uniqueID: uniqueID },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
                                     getDetailx(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });
@@ -462,7 +462,7 @@
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 }
             }
@@ -472,7 +472,7 @@
 
     function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID ) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetTdoDanismanFormu", "TDOBasvuru")',
                 data: {
@@ -482,7 +482,7 @@
                      TDODanismanTalepTipID
                 },
                 success: function (resultG) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
@@ -494,7 +494,7 @@
                                     className: "btn-info",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTDODanismanFormu').ajaxForm({
                                             success: function (result) { 
                                                 if (result.IsSuccess) {
@@ -508,13 +508,13 @@
                                                     if (result.Messages.length > 0) getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         }).submit();
@@ -541,7 +541,7 @@
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }
@@ -549,7 +549,7 @@
         }
     function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
                 data: {
@@ -558,7 +558,7 @@
                     'IsDegisiklikTalebi': IsDegisiklikTalebi
                 },
                 success: function (resultG) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
@@ -569,7 +569,7 @@
                                     className: "btn-info",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTDOEsDanismanFormu').ajaxForm({
                                             success: function (result) {
                                                 if (result.IsSuccess) {
@@ -582,13 +582,13 @@
                                                     if (result.Messages.length > 0) getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         }).submit();
@@ -615,7 +615,7 @@
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }

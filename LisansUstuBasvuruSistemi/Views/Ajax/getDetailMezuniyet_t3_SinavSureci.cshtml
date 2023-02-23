@@ -256,19 +256,19 @@
                                                                                                                             function SaveSinavTarihiTarihi(id) {
                                                                                                                                 var val = $('#SrSinavTarihiIInput_' + id).val();
                                                                                                                                 var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
-                                                                                                                                _pRefresh(_panel, false);
+                                                                                                                                PanelRefresh(_panel, false);
                                                                                                                                 $.ajax({
                                                                                                                                     url: '@Url.Action("SinavTarihiKaydet", "MezuniyetGelenBasvurular")',
                                                                                                                                     data: { 'id': id, 'SinavTarihi': val },
                                                                                                                                     success: function (result) {
-                                                                                                                                        _pRefresh(_panel, true);
+                                                                                                                                        PanelRefresh(_panel, true);
                                                                                                                                         getMsg(result.MmMessage);
                                                                                                                                         if (result.IsSuccess) {
                                                                                                                                             getDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                                         }
                                                                                                                                     },
                                                                                                                                     error: function (err) {
-                                                                                                                                        _pRefresh(_panel, true);
+                                                                                                                                        PanelRefresh(_panel, true);
                                                                                                                                         alert(err.responseText);
                                                                                                                                     }
                                                                                                                                 });
@@ -821,19 +821,19 @@
                                                                                                                                         function SaveTezTeslimSonTarihi(id) {
                                                                                                                                             var val = $('#SrTezTeslimTarihiIInput_' + id).val();
                                                                                                                                             var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
-                                                                                                                                            _pRefresh(_panel, false);
+                                                                                                                                            PanelRefresh(_panel, false);
                                                                                                                                             $.ajax({
                                                                                                                                                 url: '@Url.Action("TezTeslimSonTarihiKaydet", "MezuniyetGelenBasvurular")',
                                                                                                                                                 data: { 'id': id, 'tezTeslimSonTarih': val },
                                                                                                                                                 success: function (result) {
-                                                                                                                                                    _pRefresh(_panel, true);
+                                                                                                                                                    PanelRefresh(_panel, true);
                                                                                                                                                     getMsg(result.MmMessage);
                                                                                                                                                     if (result.IsSuccess) {
                                                                                                                                                         getDetailx(@Model.MezuniyetBasvurulariID);
                                                                                                                                                     }
                                                                                                                                                 },
                                                                                                                                                 error: function (err) {
-                                                                                                                                                    _pRefresh(_panel, true);
+                                                                                                                                                    PanelRefresh(_panel, true);
                                                                                                                                                     alert(err.responseText);
                                                                                                                                                 }
                                                                                                                                             });
@@ -1112,14 +1112,14 @@
         function SrJuriDegistir(MBID, UniqueID) {
 
             var _panel = $('#bsvrDet_' + MBID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("SrJuriDegistir", "MezuniyetGelenBasvurular")',
                 data: {
                     'UniqueID': UniqueID,
                 },
                 success: function (result) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbxxFS = bootbox.dialog({
                         message: result,
                         title: "<i class='fa fa-envelope fa-lg'></i> Tez Sınavı Jüri Değişikliği İşlemi",
@@ -1129,7 +1129,7 @@
                                 className: "btn-info",
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    _pRefresh(pnlx, false);
+                                    PanelRefresh(pnlx, false);
 
                                     var YtuIciMezuniyetJuriOneriFormuJuriID = $('#YtuIciJuri_' + UniqueID).val();
                                     var YtuDisiMezuniyetJuriOneriFormuJuriID = $('#YtuDisiJuri_' + UniqueID).val();
@@ -1141,7 +1141,7 @@
                                             'YtuDisiMezuniyetJuriOneriFormuJuriID': YtuDisiMezuniyetJuriOneriFormuJuriID,
                                         },
                                         success: function (result) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                             if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                             getDetailx(MBID);
                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
@@ -1149,7 +1149,7 @@
 
                                         },
                                         error: function (err) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                             alert(err.responseText);
 
                                         }
@@ -1163,7 +1163,7 @@
                                 label: "Kapat",
                                 className: "btn-primary",
                                 callback: function () {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                 }
                             }
                         }
@@ -1171,7 +1171,7 @@
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }

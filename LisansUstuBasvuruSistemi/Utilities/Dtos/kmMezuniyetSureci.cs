@@ -6,10 +6,10 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmMezuniyetSureci : MezuniyetSureci
+    public class KmMezuniyetSureci : MezuniyetSureci
     {
         public string OgretimYili { get; set; }
-        public List<int> gID { get; set; }
+        public List<int> GId { get; set; }
         public List<string> MezuniyetSurecOtoMailID { get; set; }
         public List<string> ZamanTipID { get; set; }
         public List<string> Zaman { get; set; }
@@ -30,9 +30,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
 
         public kmMezuniyetSureciOgrenimTipModel OgrenimTipModel { get; set; }
-        public kmMezuniyetSureci()
+        public KmMezuniyetSureci()
         {
-            gID = new List<int>();
+            GId = new List<int>();
             MezuniyetSurecOtoMailID = new List<string>();
             ZamanTipID = new List<string>();
             Zaman = new List<string>();

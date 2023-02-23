@@ -50,10 +50,6 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Biska.Util.v1, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Biska.Util.v1.dll</HintPath>
-    </Reference>
     <Reference Include="CaptchaMvc, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe46ad421dd3b0e6, processorArchitecture=MSIL">
       <HintPath>..\packages\CaptchaMvc.Mvc5.1.5.0\lib\net45-full\CaptchaMvc.dll</HintPath>
     </Reference>
@@ -229,6 +225,7 @@
     <Compile Include="Business\TezIzlemeBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
+    <Compile Include="Business\YeterlikBus.cs" />
     <Compile Include="Business\YetkiGrupBus.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
@@ -295,6 +292,8 @@
     <Compile Include="Controllers\UnvanlarController.cs" />
     <Compile Include="Controllers\UyruklarController.cs" />
     <Compile Include="Controllers\MezuniyetYayinTurleriController.cs" />
+    <Compile Include="Controllers\YeterlikController.cs" />
+    <Compile Include="Controllers\YeterlikSureciController.cs" />
     <Compile Include="Controllers\YetkiGruplariController.cs" />
     <Compile Include="Controllers\MezuniyetYonetmeliklerController.cs" />
     <Compile Include="Controllers\YYDBasvuruController.cs" />
@@ -852,6 +851,15 @@
     <Compile Include="Models\WsSinavCekipTipDetay.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\YeterlikBasvuru.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\YeterlikSureci.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\YeterlikSurecOgrenimTipleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\YetkiGruplari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -868,6 +876,9 @@
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
+    <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
+    <Compile Include="Utilities\Dtos\FmYeterlikSureciDto.cs" />
+    <Compile Include="Utilities\Dtos\KmYeterlikSureciDto.cs" />
     <Compile Include="Utilities\Dtos\LoginAjaxDto.cs" />
     <Compile Include="Utilities\Dtos\AnketCevapDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvuruDetayDto.cs" />
@@ -913,14 +924,16 @@
     <Compile Include="Utilities\Dtos\SinavSonucBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\SRSaatKontrolModel.cs" />
     <Compile Include="Utilities\Dtos\SRSalonSaatler.cs" />
-    <Compile Include="Utilities\Dtos\TDODanismanFiltreModel.cs" />
+    <Compile Include="Utilities\Dtos\TdoDanismanFiltreModel.cs" />
     <Compile Include="Utilities\Dtos\TercihRowModel.cs" />
-    <Compile Include="Utilities\Dtos\TIAraRaporFormuModel.cs" />
+    <Compile Include="Utilities\Dtos\TiAraRaporFormuModel.cs" />
     <Compile Include="Utilities\Dtos\UrlInfoModel.cs" />
     <Compile Include="Utilities\Dtos\UserRoleDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariYayinDto.cs" />
+    <Compile Include="Utilities\Dtos\KmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
+    <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
     <Compile Include="Utilities\Dtos\PagerIndexDto.cs" />
@@ -3432,6 +3445,10 @@
     <Content Include="Views\Mezuniyet\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\SRJuriDegistir.cshtml" />
     <Content Include="Views\Ajax\ObsOgrenciSorgula.cshtml" />
+    <Content Include="Views\YeterlikSureci\Index.cshtml" />
+    <Content Include="Views\YeterlikSureci\Kayit.cshtml" />
+    <Content Include="Views\Yeterlik\Index.cshtml" />
+    <Content Include="Views\Yeterlik\BasvuruYap.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3564,6 +3581,12 @@
     <WCFMetadataStorage Include="Service References\Ws_Osym_1\" />
     <WCFMetadataStorage Include="Service References\Ws_Persis\" />
     <WCFMetadataStorage Include="Service References\Ws_YokOgrenciSorgula\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BiskaUtil\BiskaUtil.csproj">
+      <Project>{4acf1c81-0800-46eb-9217-62cffd65b8f8}</Project>
+      <Name>BiskaUtil</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -183,7 +183,7 @@
                             className: "btn-success",
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                _pRefresh(pnlx, false);
+                                PanelRefresh(pnlx, false);
                                 $('#FrmAnket').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
@@ -195,13 +195,13 @@
                                             getMsg(result);
                                             return false;
                                         }
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     },
                                     complete: function (cmp) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     }
 
                                 });

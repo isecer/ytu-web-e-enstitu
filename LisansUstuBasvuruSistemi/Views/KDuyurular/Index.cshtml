@@ -54,7 +54,7 @@
                                                     <td style="width:30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.DuyuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.DuyuruID)">
+                                                            <li id="iShow_@item.DuyuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.DuyuruID)">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
                                                             </li>
                                                         </ul>
@@ -62,14 +62,14 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        @*<td ondblclick="showDetail(@item.DuyuruID)">@item.EnstituAdi</td>*@
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        @*<td ondblclick="ShowDetail(@item.DuyuruID)">@item.EnstituAdi</td>*@
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             @item.Tarih.ToFormatDateAndTime()
                                         </td>
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             @(item.Baslik.Length > 70 ? item.Baslik.Substring(0, 69) + "..." : item.Baslik)
                                         </td>
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             <img src="~/Images/Attachment.png" style="height: 16px;" />@item.EkSayisi
                                         </td>
                                     </tr>
@@ -162,7 +162,7 @@
 
 <script type="text/javascript">
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

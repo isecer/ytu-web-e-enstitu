@@ -228,7 +228,7 @@
             "BasSaatList": eval(_tBaslangicSaati),
             "BitSaatList": eval(_tBitisSaati)
         };
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("SaatEkleKontrol", "SrSalonlar")',
             type: 'POST',
@@ -260,11 +260,11 @@
                 else {
                     showMmMessage(result.Messages, 'Tamam');
                 }
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             }
         });

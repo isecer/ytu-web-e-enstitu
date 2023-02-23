@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
-@model kmMezuniyetSureci
+@model KmMezuniyetSureci
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -143,7 +143,7 @@
     });
     function getOtBilgi(sndr) {
         var _panel = $('#_otBilgi');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
@@ -151,17 +151,17 @@
                 data: { EnstituKod: sndrVal, MezuniyetSurecID: '@Model.MezuniyetSurecID' },
                 success: function (result) {
                     $("#_otBilgi").html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
             $("#_otBilgi").html('');
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
         }
     }
 </script>

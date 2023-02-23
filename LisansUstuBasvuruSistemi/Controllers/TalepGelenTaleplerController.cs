@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmTalep model, string ekd, bool export = false)
         {
-            
+
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var kulls = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
             if (kulls.KullaniciEnstituYetkileris.All(a => a.EnstituKod != enstituKod))
@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var bbModel = new IndexPageInfoDto();
 
 
-            
+
             ViewBag.bModel = bbModel;
 
             #region data
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         kul.EMail,
                         tt.IsBelgeYuklemeVar,
                         Tel = kul.CepTel,
-                        TcOrPasaportNo = kul.KullaniciTipleri.Yerli ? kul.TcKimlikNo : kul.PasaportNo,
+                        kul.TcKimlikNo,
                         s.TalepTipID,
                         tt.TalepTipAdi,
                         tt.TalepTipAciklama,
@@ -111,7 +111,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TalepTipID.HasValue) q = q.Where(p => p.TalepTipID == model.TalepTipID);
             if (model.IsDersYukuTamamlandi.HasValue) q = q.Where(p => p.IsDersYukuTamamlandi == model.IsDersYukuTamamlandi);
             if (model.IsTezOnerisiYapildi.HasValue) q = q.Where(p => p.IsTezOnerisiYapildi == model.IsTezOnerisiYapildi);
-            if (!model.AranacakKelime.IsNullOrWhiteSpace()) q = q.Where(p => p.OgrenciNo == model.AranacakKelime || p.TcOrPasaportNo == model.AranacakKelime || p.AdSoyad.Contains(model.AranacakKelime));
+            if (!model.AranacakKelime.IsNullOrWhiteSpace()) q = q.Where(p => p.OgrenciNo == model.AranacakKelime || p.TcKimlikNo == model.AranacakKelime || p.AdSoyad.Contains(model.AranacakKelime));
 
             if (qQ != q)
             {
@@ -223,10 +223,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TalepListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
-            ViewBag.TalepSurecID = new SelectList(TaleplerBus.GetCmbTalepSurecleri(enstituKod ,true), "Value", "Caption", model.TalepSurecID);
+            ViewBag.TalepSurecID = new SelectList(TaleplerBus.GetCmbTalepSurecleri(enstituKod, true), "Value", "Caption", model.TalepSurecID);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleri(true), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.TalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari( true), "Value", "Caption", model.TalepDurumID);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.TalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari(true), "Value", "Caption", model.TalepDurumID);
             ViewBag.TalepTipID = new SelectList(TaleplerBus.GetCmbTalepTipleri(true), "Value", "Caption", model.TalepTipID);
             ViewBag.KTalepDurumID = new SelectList(TaleplerBus.GetCmbTalepDurumlari(false), "Value", "Caption");
             ViewBag.IsDersYukuTamamlandi = new SelectList(ComboData.GetCmbEvetHayirData(true), "Value", "Caption", model.IsDersYukuTamamlandi);

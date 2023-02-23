@@ -7,7 +7,7 @@
 @model FmMezuniyetSureci
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     var kayit = RoleNames.BasvuruSureciKayit.InRoleCurrent();
     var silme = RoleNames.BasvuruSureciSil.InRoleCurrent();
 
@@ -24,7 +24,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Mezuniyet Süreçleri</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
+                        <li><span class="label label-success label-form">Toplam: @indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -34,7 +34,7 @@
                             <tr>
                                 <th width="125"></th>
                                 <th class="sirala" field="EnstituAd">Enstitu</th>
-                                <th width="190" class="sirala" field="OgretimYili">Öğretim Yılı</th>
+                                <th width="190" class="sirala" field="DonemAdi">Öğretim Yılı</th>
                                 <th width="105" class="sirala" field="BaslangicTarihi">Başlangıç Tar.</th>
                                 <th width="105" class="sirala" field="BitisTarihi">Bitiş Tar.</th>
 
@@ -56,16 +56,16 @@
                             </tr>
                             @if (Model.RowCount > 0)
                             {
-                                int RowIndex = Model.StartRowIndex;
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.Data)
                                 {
-                                    bool suanAktif = (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now);
-                                    RowIndex++;
+                                    bool suanAktif = item.IsAktif && (item.BaslangicTarihi <= DateTime.Now && item.BitisTarihi >= DateTime.Now);
+                                    rowIndex++;
                                     <tr class="delrw_@item.MezuniyetSurecID" style="@(suanAktif?"color:green;font-weight:bold;":"")">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td style="width: 50px;">
                                                         <div class="btn-group">
                                                             <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-cogs"></i></a>
@@ -93,7 +93,7 @@
                                                     </td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow-ana-@item.MezuniyetSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MezuniyetSurecID,'ana-')">
+                                                            <li id="iShow-ana-@item.MezuniyetSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetSurecID,'ana-')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -138,14 +138,14 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id, tip) {
+    function ShowDetail(id, tip) {
         var rwID = $('#iShow-' + tip + id);
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
         if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
     }
-    function showDetailX(id, tip) {
+    function ShowDetailX(id, tip) {
         var rwID = $('#iShow-' + tip + id);
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -154,7 +154,7 @@
     function getDetail(id, Isdelete, sndr) {
 
         var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if ($('#SelectedTb-' + tbName).length > 0) {
             subData(id, Isdelete, sndr);
         }
@@ -186,21 +186,21 @@
 
         var _panel = $('#pnglDB_' + id);
         var tbName = "@TabAdlari.MezuniyetSureciTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if (IsDelete == true) tID = 1;
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetMsSubData", "MezuniyetSureci")',
             data: { id: id, tbInx: tID  }, 
             success: function (result) {
 
                 $('#' + tbName + '-' + tID).html(result);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

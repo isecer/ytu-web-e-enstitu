@@ -304,7 +304,7 @@
     function yayiniEkle() {
         var _panel = $('#yayinPanel');
         var _panel2=$('#yayinListPanel') ;
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var rowNum=$('#yRows').find('tr').length+1;
         var yayinTurID = $('#MezuniyetYayinTurID').val();
         var yayinTurAdi = $("#MezuniyetYayinTurID :selected").text();
@@ -361,9 +361,9 @@
             cache: false,
             dataType: "json",
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.msg.IsSuccess == true) {
-                    _pRefresh(_panel2, false);
+                    PanelRefresh(_panel2, false);
                     $('#yRows').append(result._Row);
                     if ($('#MezuniyetYayinBelgeAdi').length > 0) {
                         $('#MezuniyetYayinBelgeAdi').attr('class', '').attr('title', '').attr('id', '_' + _gd).attr('name', '_MezuniyetYayinBelgesi').attr('style', 'display:none;').insertBefore($('#cls-' + result._guID).find(".fileYayinBelge").find('input').first());
@@ -386,14 +386,14 @@
                     }
                     yayinSiraNoDuzenle();
                     $('.tooltips').tooltip();
-                    _pRefresh(_panel2, true);
+                    PanelRefresh(_panel2, true);
                     yTurKontrol($('#MezuniyetYayinTurID'));
 
                 }
                 getMsg(result.msg);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 

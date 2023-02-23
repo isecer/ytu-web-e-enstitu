@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public bool TalepYaparkenPopupAc { get; set; }
         public bool TIBasvuruPopupAc { get; set; }
         public bool TDOBasvuruPopupAc { get; set; }
+        public bool YeterlikBasvuruPopupAc { get; set; }
         public System.DateTime Tarih { get; set; }
         public string Baslik { get; set; }
         public string Aciklama { get; set; }

@@ -1,2 +1,0 @@
-::1	Guest	2021-03-30 17:00:14		http://localhost:57190/fbe/tr/Account/generatecaptcha?captchaRequestCode=782045b441c544b58465256b40427d11
-::1	Guest	2021-03-30 17:00:15		http://localhost:57190/fbe/tr/KDuyurular/getDuyuruJson

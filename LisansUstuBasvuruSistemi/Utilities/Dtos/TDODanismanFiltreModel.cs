@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class TDODanismanFiltreModel
+    public class TdoDanismanFiltreModel
     {
         public string FormKodu { get; set; }
         public string RaporDonemID { get; set; }

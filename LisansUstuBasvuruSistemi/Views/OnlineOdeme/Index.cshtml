@@ -116,10 +116,10 @@
                         </tr>
 
                         <tr>
-                            <td style="border: none;  text-align:right;">@(Model.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci ? "Pasaport No" : "T.C. Kimlik No")</td>
+                            <td style="border: none;  text-align:right;">T.C. Kimlik No</td>
                             <td style="border: none; padding: 4px;">:</td>
                             <td style="border: none; padding: 4px;">
-                                @Model.TcPasaportNo
+                                @Model.TcKimlikNo
                             </td>
                         </tr>
 
@@ -155,18 +155,18 @@
         function getGetKullaniciKontrol(KullaniciID) {  
             var _panel = $('.pnlDekont');
             if (true) {
-                _pRefresh(_panel, false);
+                PanelRefresh(_panel, false);
                 $.ajax({
                     url: '@Url.Action("getOgrenciDetay", "OnlineOdeme")',
                     data: { 'KullaniciID': KullaniciID},
                     success: function (result) { 
                         $('#OgrDetay').html(result);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     },
                     error: function (err) {
                         alert(err.responseText);
                         $('#OgrDetay').html('');
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
 
                     }
                 });
@@ -181,7 +181,7 @@
             $('#odemeDetay').html('');
             if (sndrVal != null && sndrVal != "") {
                 var _KulID = $('#KullaniciID').val();
-                _pRefresh(_panel, false);
+                PanelRefresh(_panel, false);
                 $.ajax({
                     url: '@Url.Action("getProgramlar", "OnlineOdeme")',
                     data: { 'BasvuruSurecID': sndrVal, 'KullaniciID':_KulID},
@@ -197,11 +197,11 @@
                             opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
                         }
                         $('#UniqueID').append(opt);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     },
                     error: function (err) {
                         alert(err.responseText);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 });
             }
@@ -213,18 +213,18 @@
             var sndrVal = $('#UniqueID').val();
             var _panel = $('.pnlDekont');
             if (sndrVal != null && sndrVal != "") {
-                _pRefresh(_panel, false);
+                PanelRefresh(_panel, false);
                 $.ajax({
                     url: '@Url.Action("getPRdetay", "OnlineOdeme")',
                     data: { 'UniqueID': sndrVal},
                     success: function (result) {
                         $('#odemeDetay').html(result);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     },
                     error: function (err) {
                         alert(err.responseText);
                         $('#odemeDetay').html('');
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
 
                     }
                 });
@@ -233,7 +233,7 @@
                 $('#odemeDetay').html('');
             }
         }
-        function _pRefresh(panel, IsRemove) {
+        function PanelRefresh(panel, IsRemove) {
             if (IsRemove) {
                 panel.find(".panel-refresh-layer").remove();
                 panel.removeClass("panel-refreshing");

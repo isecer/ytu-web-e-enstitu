@@ -7,10 +7,11 @@ using System.Linq;
 using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Filters;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
-{
+{ 
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
 
     public class KDuyurularController : Controller
@@ -105,6 +106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.BasvuruPopupAc,
                         s.TDOBasvuruPopupAc,
                         s.TIBasvuruPopupAc,
+                        s.YeterlikBasvuruPopupAc,
                         s.MezuniyetBasvuruPopupAc,
                         s.TalepYaparkenPopupAc,
                         s.YayinSonTarih,
@@ -115,6 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (popupTipId == DuyuruPopupTipleri.TalepYap) q = q.Where(p => p.TalepYaparkenPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.YeterlikBasvuru) q = q.Where(p => p.YeterlikBasvuruPopupAc);
             else q = q.Where(p => p.MezuniyetBasvuruPopupAc);
             fModel.DuyurularDtos = q.Select(s => new FrDuyurularDto
             {
@@ -134,6 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 BasvuruPopupAc = s.BasvuruPopupAc,
                 MezuniyetBasvuruPopupAc = s.MezuniyetBasvuruPopupAc,
                 TalepYaparkenPopupAc = s.TalepYaparkenPopupAc,
+                YeterlikBasvuruPopupAc = s.YeterlikBasvuruPopupAc,
                 YayinSonTarih = s.YayinSonTarih
             }).OrderByDescending(o => o.Tarih).ToList();
 

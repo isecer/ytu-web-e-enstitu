@@ -23,8 +23,7 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
-                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+            <div class="panel panel-info" id="pnlFltr"> 
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -64,19 +63,19 @@
                                                         className: "btn-info",
                                                         callback: function () {
                                                             var _panel = $(btbx).find('.modal-content');
-                                                            _pRefresh(_panel, false);
+                                                            PanelRefresh(_panel, false);
                                                             toastr["info"]("Lütfen işlem tamamlanana kadar bekleyiniz.", "Toplu EYK'ya Gönderim İşlemi Başlatıldı");
                                                             $.ajax({
                                                                 url: '@Url.Action("EYKGonderimOnay","TDOGelenBasvurular")',
                                                                 cache: false,
                                                                 data: { 'AktifDonemID': '@Model.AktifDonemID' },
                                                                 success: function (result) {
-                                                                    _pRefresh(_panel, true);
+                                                                    PanelRefresh(_panel, true);
                                                                     toastr["info"](result.Count + " adet başvuru eyk'ya gönderildi olarak kayıt edildi.", "Toplu Onaylama İşlemi Tamamlandı");
                                                                     $(btbx).find('.close').first().click();
                                                                 },
                                                                 error: function (err) {
-                                                                    _pRefresh(_panel, true);
+                                                                    PanelRefresh(_panel, true);
                                                                     alert(err.responseText);
                                                                 }
                                                             });
@@ -102,12 +101,12 @@
                                     function showDialogTutanakRpr() {
                                         var _panel = $('#pnlFltr');
 
-                                        _pRefresh(_panel, false);
+                                        PanelRefresh(_panel, false);
                                         $.ajax({
                                             url: '@Url.Action("GetTutanakRaporu", "TDOGelenBasvurular")',
                                             data: {},
                                             success: function (result) {
-                                                _pRefresh(_panel, true);
+                                                PanelRefresh(_panel, true);
                                                 var btbxxFS = bootbox.dialog({
                                                     message: result,
                                                     title: "<i class='fa fa-bar-chart-o'></i> Tutanak Çıktısı Oluşturma İşlemi",
@@ -120,11 +119,11 @@
                                                                 toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
 
                                                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                                                _pRefresh(pnlx, false);
+                                                                PanelRefresh(pnlx, false);
                                                                 $('#TutanakRprForm').ajaxForm({
                                                                     success: function (result) {
 
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                             if (result.IsSuccess) {
 
                                                                                 var _Bastar = $('#BasTar').val();
@@ -143,10 +142,10 @@
 
                                                                     },
                                                                     complete: function (cmp) {
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                     },
                                                                     error: function (err) {
-                                                                        _pRefresh(pnlx, true);
+                                                                        PanelRefresh(pnlx, true);
                                                                     }
 
                                                                 });
@@ -165,7 +164,7 @@
                                             },
                                             error: function (err) {
                                                 alert(err.responseText);
-                                                _pRefresh(_panel, true);
+                                                PanelRefresh(_panel, true);
                                             }
                                         });
 
@@ -262,7 +261,7 @@
                                                         <tr>
                                                             <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
                                                             <td width="110">
-                                                                <a href="javascript:void(0);" onclick="$('#Expand').val(($('#pnlFltr').hasClass('panel-toggled') ? 'false' : 'true')); $('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -313,7 +312,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TDOBasvuruID')">
+                                                            <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TDOBasvuruID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -457,7 +456,7 @@
     if (!Model.TDOBasvuruID.HasValue && Model.RowCount > 0) { Model.TDOBasvuruID = Model.TdoBasvuruDtos.First().TDOBasvuruID; }
     <script>
         $(function () {
-        showDetail('@Model.TDOBasvuruID');
+        ShowDetail('@Model.TDOBasvuruID');
     },200)
     </script>
 }
@@ -489,7 +488,7 @@
     }
 
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -499,7 +498,7 @@
     }
     function getDetailx(id, Isdelete, sndr) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
             data: { id: id, IsDelete: (Isdelete == true) },
@@ -507,10 +506,10 @@
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
                     Resized(window.innerWidth);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'> Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
                         title: "Başvuru Silme İşlemi",
@@ -546,7 +545,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -569,7 +568,7 @@
     }
     function silDetay(sndr, id, TDOBasvuruDanismanID, tarih) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
             message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
             title: "Danışman Öneri Formu Silme İşlemi",
@@ -582,14 +581,14 @@
                             url: '@Url.Action("DetaySil", "TDOBasvuru")',
                             data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
                                     getDetailx(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });
@@ -599,7 +598,7 @@
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 }
             }
@@ -609,7 +608,7 @@
     }
     function silDetayEs(sndr, id, uniqueID, tarih) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
             message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli eş danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
             title: "Eş Danışman Öneri Formu Silme İşlemi",
@@ -622,14 +621,14 @@
                             url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
                             data: { id: id, uniqueID: uniqueID },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
                                     getDetailx(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });
@@ -639,7 +638,7 @@
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 }
             }
@@ -648,7 +647,7 @@
 
     function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetTdoDanismanFormu", "TDOBasvuru")',
                 data: {
@@ -658,7 +657,7 @@
                     'TDODanismanTalepTipID': TDODanismanTalepTipID
                 },
                 success: function (resultG) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
@@ -670,7 +669,7 @@
                                     className: "btn-info",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTDODanismanFormu').ajaxForm({
                                             success: function (result) {
                                                 if (result.IsSuccess) {
@@ -684,13 +683,13 @@
                                                     if (result.Messages.length > 0) getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         }).submit();
@@ -717,7 +716,7 @@
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }
@@ -725,7 +724,7 @@
         }
       function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
                 data: {
@@ -734,7 +733,7 @@
                     'IsDegisiklikTalebi': IsDegisiklikTalebi
                 },
                 success: function (resultG) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
@@ -745,7 +744,7 @@
                                     className: "btn-info",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTDOEsDanismanFormu').ajaxForm({
                                             success: function (result) {
                                                 if (result.IsSuccess) {
@@ -758,13 +757,13 @@
                                                     if (result.Messages.length > 0) getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         }).submit();
@@ -791,7 +790,7 @@
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }

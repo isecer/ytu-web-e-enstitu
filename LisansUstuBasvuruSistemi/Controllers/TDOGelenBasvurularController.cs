@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AdSoyad = k.Ad + " " + k.Soyad,
                         EMail = k.EMail,
                         CepTel = k.CepTel,
-                        TcPasaPortNo = ktip.Yerli ? k.TcKimlikNo : k.PasaportNo,
+                        TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
                         Kullanicilar = s.Kullanicilar,
                         ResimAdi = k.ResimAdi,
@@ -90,7 +90,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TDODanismanDetayModels = (from x in s.TDOBasvuruDanismen
                                                   join xd in _entities.TDOBasvuruEsDanismen on x.TDOBasvuruDanismanID equals xd.TDOBasvuruDanismanID into defX
                                                   from xD in defX.DefaultIfEmpty()
-                                                  select new TDODanismanFiltreModel
+                                                  select new TdoDanismanFiltreModel
                                                   {
                                                       FormKodu = x.FormKodu,
                                                       RaporDonemID = x.DonemBaslangicYil + "" + x.DonemID,
@@ -159,7 +159,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.EsDurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
             }
 
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcPasaPortNo == model.AdSoyad || p.TDODanismanDetayModels.Any(a => a.FormKodu == model.AdSoyad || a.Es_FormKodu == model.AdSoyad || a.DanismanAdSoyad.Contains(model.AdSoyad)));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcKimlikNo == model.AdSoyad || p.TDODanismanDetayModels.Any(a => a.FormKodu == model.AdSoyad || a.Es_FormKodu == model.AdSoyad || a.DanismanAdSoyad.Contains(model.AdSoyad)));
 
             var isFiltered = q != q2;
 
@@ -187,7 +187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.AnabilimdaliAdi,
                     s.ProgramAdi,
                     s.AdSoyad,
-                    s.TcPasaPortNo,
+                    s.TcKimlikNo,
                     s.OgrenciNo,
                     s.EMail,
                     s.CepTel,

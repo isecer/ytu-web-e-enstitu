@@ -1105,7 +1105,7 @@
 
     function DOnay(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
 
         var DanismanOnayladi = $('#DanismanOnayladi_' + id).val();
         var DanismanOnaylanmadiAciklama = $('#DanismanOnaylanmadiAciklama_' + id).val();
@@ -1133,7 +1133,7 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
                     getDetailx(id2);
                 }
@@ -1143,14 +1143,14 @@
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
     }
        function DVarolanOnay(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
 
         var DanismanOnayladi = $('#VarolanDanismanOnayladi_' + id).val();
            var DanismanOnaylanmadiAciklama = $('#VarolanDanismanOnaylanmadiAciklama_' + id).val();
@@ -1171,7 +1171,7 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
                     getDetailx(id2);
                 }
@@ -1181,14 +1181,14 @@
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
     }
     function EYKyaGonder(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
 
         var EYKYaGonderildi = $('#EYKYaGonderildi_' + id).val();
         var model = {
@@ -1204,14 +1204,14 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 getDetailx(id2);
                 if (result.Messages.length > 0) getMsg(result);
 
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -1219,7 +1219,7 @@
 
     function EYKdaOnay(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var EYKDaOnaylandi = $('#EYKDaOnaylandi_' + id).val();
         var EYKDaOnaylandiOnayTarihi = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
         var EYKDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + id).val();
@@ -1238,14 +1238,14 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.Messages.length > 0) getMsg(result);
                 else getDetailx(id2);
 
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -1268,7 +1268,7 @@
     }
      function EYKyaGonderES(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
-         _pRefresh(_panel, false);
+         PanelRefresh(_panel, false);
          var EYKYaGonderildi = $('#EYKYaGonderildiEs_' + id).val();
          var model = {
              TDOBasvuruEsDanismanID: id,
@@ -1283,14 +1283,14 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 getDetailx(id2);
                 if (result.Messages.length > 0) getMsg(result);
 
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -1298,7 +1298,7 @@
 
     function EYKdaOnayES(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
 
         var EYKDaOnaylandi = $('#EYKDaOnaylandiES_' + id).val();
         var EYKDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasiES_' + id).val();
@@ -1318,14 +1318,14 @@
             dataType: "json",
             data: model,
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (result.Messages.length > 0) getMsg(result);
                 else getDetailx(id2);
 
             },
             error: function (err) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });

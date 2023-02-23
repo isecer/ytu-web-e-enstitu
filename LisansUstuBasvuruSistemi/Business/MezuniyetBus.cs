@@ -188,6 +188,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p => p.MezuniyetSurecID == mezuniyetSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                                 
                                 var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
                                 var bkMsg = new List<string>();
                                 if (basvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) != basvuruSonDonemSecilecekDersKodlari.Count)
@@ -254,8 +255,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.ResimAdi = kul.ResimAdi;
                     model.Ad = kul.Ad;
                     model.Soyad = kul.Soyad;
-                    model.TcKimlikNo = kul.TcKimlikNo;
-                    model.PasaportNo = kul.PasaportNo;
+                    model.TcKimlikNo = kul.TcKimlikNo; 
 
 
                 }
@@ -265,8 +265,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.ResimAdi = basvuru.ResimAdi;
                     model.Ad = basvuru.Ad;
                     model.Soyad = basvuru.Soyad;
-                    model.TcKimlikNo = basvuru.TcKimlikNo;
-                    model.PasaportNo = basvuru.PasaportNo;
+                    model.TcKimlikNo = basvuru.TcKimlikNo; 
                     model.UyrukKod = basvuru.UyrukKod;
                 }
                 model.OgrenciNo = basvuru.OgrenciNo;
@@ -421,8 +420,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ResimAdi = basvuru.ResimAdi;
                 model.Ad = basvuru.Ad;
                 model.Soyad = basvuru.Soyad;
-                model.TcKimlikNo = basvuru.TcKimlikNo;
-                model.PasaportNo = basvuru.PasaportNo;
+                model.TcKimlikNo = basvuru.TcKimlikNo; 
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;

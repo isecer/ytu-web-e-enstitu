@@ -41,8 +41,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string MezuniyetSurecAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
-        public string ProgramAdi { get; set; }
-        public string TcPasaPortNo { get; set; }
+        public string ProgramAdi { get; set; } 
         public int SurecBaslangicYil { get; set; }
         public int DonemID { get; set; }
         public string DonemAdi { get; set; }

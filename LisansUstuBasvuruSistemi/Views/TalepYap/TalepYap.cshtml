@@ -263,7 +263,7 @@
 
     function Kontrol() {
         var _panel = $('#kPanel');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $('#FrmBasvuruSurec').ajaxForm({
             success: function (result) {
                 if (result.IsSuccess) {
@@ -273,7 +273,7 @@
 
             },
             complete: function (cmp) {
-                setTimeout(function () { _pRefresh(_panel, true); }, 200);
+                setTimeout(function () { PanelRefresh(_panel, true); }, 200);
             },
             error: function (err) {
                 alert(err);

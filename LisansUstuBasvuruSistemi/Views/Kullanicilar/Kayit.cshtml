@@ -115,13 +115,7 @@
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                             <input type="text" name="TcKimlikNo" id="TcKimlikNo" maxlength="11" value="@Model.TcKimlikNo" class="form-control">
                                         </div>
-                                    </div>
-                                    <div class="form-group Yab @(IsYerli?"hide":"")">
-                                        <label class="col-md-2 col-xs-4 control-label  padding-top-0 padding-bottom-0">Pasaport No</label>
-                                        <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                            <input type="text" name="PasaportNo" id="PasaportNo" value="@Model.PasaportNo" class="form-control">
-                                        </div>
-                                    </div>
+                                    </div> 
                                     <div class="form-group Yab Ye Ku Kd">
                                         <label class="col-md-2 col-xs-4 control-label padding-top-0 padding-bottom-0">Cinsiyet</label>
                                         <div class="col-md-10 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
@@ -396,13 +390,13 @@
     function rotateImage(rotate) {
         var KullaniciID = $('#KullaniciID').val();
         var _panel = $('#pImageD');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         setTimeout(function () {
             $.ajax({
                 url: '@Url.Action("RotateImage", "Ajax")',
                 data: { LeftOrRight: rotate, KullaniciID: KullaniciID },
                 success: function (result) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var src = root + result.ResimAdi + "?time=" + new Date();
                     $('.pImageD').first().attr('src', src);
                     $('#pImageD').find('.panel-refresh-layer').remove();
@@ -410,7 +404,7 @@
                 error: function (err) {
                     $('#pImageD').find('.panel-refresh-layer').remove();
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }, 1000);

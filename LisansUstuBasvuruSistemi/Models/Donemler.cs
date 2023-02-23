@@ -27,6 +27,8 @@ namespace LisansUstuBasvuruSistemi.Models
             this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TIBasvuruAraRapors = new HashSet<TIBasvuruAraRapor>();
+            this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
+            this.YeterlikSurecis = new HashSet<YeterlikSureci>();
         }
     
         public int DonemID { get; set; }
@@ -58,5 +60,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikSureci> YeterlikSurecis { get; set; }
     }
 }

@@ -136,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        TcPasaPortNo = s.Kullanicilar.TcKimlikNo ?? s.Kullanicilar.PasaportNo,
+                        TcKimlikNo = s.Kullanicilar.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
                         Kullanicilar = s.Kullanicilar,
                         ResimAdi = s.Kullanicilar.ResimAdi,
@@ -223,8 +223,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.Ad = basvuru.Ad;
                     model.Soyad = basvuru.Soyad;
                     model.OgrenciNo = basvuru.OgrenciNo;
-                    model.TcKimlikNo = basvuru.TcKimlikNo;
-                    model.PasaportNo = basvuru.PasaportNo;
+                    model.TcKimlikNo = basvuru.TcKimlikNo; 
                     model.UyrukKod = basvuru.UyrukKod;
                     model.OgrenimTipKod = basvuru.OgrenimTipKod;
 
@@ -241,8 +240,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.Ad = kul.Ad;
                     model.Soyad = kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
-                    model.TcKimlikNo = kul.TcKimlikNo;
-                    model.PasaportNo = kul.PasaportNo;
+                    model.TcKimlikNo = kul.TcKimlikNo; 
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
                 }
@@ -272,16 +270,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult BasvuruYap(KmTDOBasvuru kModel, string ekd)
         {
             if (RoleNames.TdoGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
-            var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.ToNullIntZero());
-
-
-            var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-            kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
-
-
-
+            var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TDOBasvuruID.ToNullIntZero()); 
+           
             if (mmMessage.Messages.Count == 0)
             {
+                var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID); 
+                kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
                 kModel.ResimAdi = kul.ResimAdi;
                 kModel.KullaniciTipID = kul.KullaniciTipID;
                 kModel.KayitOgretimYiliBaslangic = kul.KayitYilBaslangic;
@@ -295,8 +289,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.OgrenimDurumID = kul.OgrenimDurumID.Value;
                 kModel.ProgramKod = kul.ProgramKod;
                 kModel.Ad = kul.Ad;
-                kModel.Soyad = kul.Soyad;
-
+                kModel.Soyad = kul.Soyad; 
                 TDOBasvuru data;
                 var isNewRecord = false;
                 if (kModel.TDOBasvuruID <= 0)
@@ -315,8 +308,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Ad = kModel.Ad,
                         Soyad = kModel.Soyad,
                         UyrukKod = kModel.UyrukKod,
-                        TcKimlikNo = kModel.TcKimlikNo,
-                        PasaportNo = kModel.PasaportNo,
+                        TcKimlikNo = kModel.TcKimlikNo, 
                         OgrenciNo = kModel.OgrenciNo,
                         OgrenimDurumID = kModel.OgrenimDurumID,
                         OgrenimTipKod = kModel.OgrenimTipKod,
@@ -344,8 +336,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Ad = kModel.Ad;
                     data.Soyad = kModel.Soyad;
                     data.UyrukKod = kModel.UyrukKod;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.PasaportNo = kModel.PasaportNo;
+                    data.TcKimlikNo = kModel.TcKimlikNo; 
                     data.OgrenciNo = kModel.OgrenciNo;
                     data.OgrenimDurumID = kModel.OgrenimDurumID;
                     data.OgrenimTipKod = kModel.OgrenimTipKod;
@@ -379,12 +370,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetTdoDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
         {
+
             tdoBasvuruDanismanId = tdoBasvuruDanismanId ?? 0;
             var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TDODanismanTalepTip.TezDanismaniOnerisi };
             var mMessage = new MmMessage();
             string view = "";
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
-            var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
+            var tdoBas = _entities.TDOBasvurus.FirstOrDefault(p => p.TDOBasvuruID == tdoBasvuruId && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
+            if (tdoBas == null) return null;
             model.OgrenciAdSoyad = tdoBas.Ad + " " + tdoBas.Soyad + "-" + tdoBas.OgrenciNo;
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
             {
@@ -497,9 +490,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         }
         [ValidateInput(false)]
-        public ActionResult TdoDanismanFormuPost(TDOBasvuruDanisman kModel, bool? isCopy, bool? isTezDiliTr)
+        public ActionResult TdoDanismanFormuPost(TDOBasvuruDanisman kModel, bool? isTezDiliTr)
         {
-            isCopy = isCopy ?? false;
             var mMessage = new MmMessage
             {
                 MessageType = Msgtype.Success,
@@ -539,7 +531,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.Messages.Add("Obs sisteminde aktif olarak bir danışmanınız bulunmaktadır. Tekrar danışman başvurusu yapılamaz.");
                     mMessage.Messages.Add("Obs Sisteminde Gözüken Danışman: " + $"{kullKayitB.OgrenciInfo.DANISMAN_UNVAN1} {kullKayitB.OgrenciInfo.DANISMAN_AD_SOYAD1}");
                 }
-                if (tdoBas.TDOBasvuruDanismen.Any(a => !a.EYKDaOnaylandi.HasValue || !a.EYKYaGonderildi.HasValue))
+                if (tdoBas.TDOBasvuruDanisman != null && tdoBas.TDOBasvuruDanisman.DanismanOnayladi.HasValue)
                 {
                     mMessage.Messages.Add("Süreci devam eden bir Tez danışmanı öneri formunuz bulunmaktadır. Yeni bir Tez danışmanı öneri işlemi yapamazsınız.");
                 }

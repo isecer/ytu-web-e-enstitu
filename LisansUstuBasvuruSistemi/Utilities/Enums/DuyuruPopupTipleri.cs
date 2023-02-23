@@ -13,6 +13,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int TalepYap = 4;
         public static int TIBasvuru = 5;
         public static int TDOBasvuru = 6;
+        public static int YeterlikBasvuru = 7;
 
     }
 }

@@ -424,26 +424,26 @@ else
                 UniqueID = uID;
                 IsSecildi = null;
             }
-            _pRefresh(pldID, false);
+            PanelRefresh(pldID, false);
             $.ajax({
                 url: '@Url.Action("BasvuruKayitOlunacakTercihSet", "Ajax")',
                 data: { id: bID, 'UniqueID': UniqueID, 'IsSecildi': IsSecildi },
                 success: function (result) {
                     showMmMessage(result.Messages, 'Tamam');
-                    _pRefresh(pldID, true);
+                    PanelRefresh(pldID, true);
                     SubData('@Model.BasvuruID', false);
 
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(pldID, true);
+                    PanelRefresh(pldID, true);
                 }
             });
         }
 
         function KayitOlunacakTercihiKaydet2(bID) {
             var pldID = $('#bsvrDet_' + bID);
-           _pRefresh(pldID, false);
+           PanelRefresh(pldID, false);
             var $KsL = $('#tercihS_' + bID).first();
             var arrName = $KsL.find('.TRowPrName').map(function () { return $.trim($(this).text()); }).get();
             var arrUnID = $KsL.find('.TRowUnID').map(function () { return $.trim($(this).val()); }).get();
@@ -481,7 +481,7 @@ else
                 }
             }
             if (Msg != "") {
-                _pRefresh(pldID, false);
+                PanelRefresh(pldID, false);
                 showMmMessage(Msg, 'Tamam');
             }
             else {
@@ -493,13 +493,13 @@ else
                     data: { id: bID, 'UniqueIDs': arrUnID, 'IsSecildis': arrKs, 'Onceliks': arrKo },
                     success: function (result) {
                         showMmMessage(result.Messages, 'Tamam');
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                         SubData('@Model.BasvuruID', false);
 
                     },
                     error: function (err) {
                         alert(err.responseText);
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                     }
                 });
             }
@@ -556,19 +556,19 @@ else
         <script>
             function BasvuruBelgeOnayla(BasvuruID, BasvuruBelgeTipID, IsOnaylandi) {
                 var pldID = $('#bsvrDet_@Model.BasvuruID');
-                _pRefresh(pldID, false);
+                PanelRefresh(pldID, false);
                 $.ajax({
                     url: '@Url.Action("BasvuruDosyaOnayla", "Ajax")',
                     data: { 'BasvuruID': BasvuruID, 'BasvuruBelgeTipID': BasvuruBelgeTipID, 'IsOnaylandi': IsOnaylandi },
                     success: function (result) {
                         showMmMessage(result.Messages, 'Tamam');
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                         SubData('@Model.BasvuruID');
 
                     },
                     error: function (err) {
                         alert(err.responseText);
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                     }
                 });
             }
@@ -618,19 +618,19 @@ else
 
             function BasvuruBelgeKaydet(frmID) {
                 var pldID = $('#bsvrDet_@Model.BasvuruID');
-                _pRefresh(pldID, false);
+                PanelRefresh(pldID, false);
                 var aFrm = $('#' + frmID).ajaxForm({
                     success: function (result) {
                         showMmMessage(result.Messages, 'Tamam');
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                         SubData('@Model.BasvuruID');
 
                     },
                     complete: function (cmp) {
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                     },
                     error: function (err) {
-                        _pRefresh(pldID, true);
+                        PanelRefresh(pldID, true);
                     }
 
                 });

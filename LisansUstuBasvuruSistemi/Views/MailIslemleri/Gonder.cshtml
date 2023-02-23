@@ -294,7 +294,7 @@
     function getSablon(sndr){
         var sndrVal=$(sndr).val(); 
         var _panel = $('#pnlMailGonder');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         if(sndrVal!=""){
             $.ajax({
                 url: '@Url.Action("getSablonlar", "Ajax")',
@@ -311,19 +311,19 @@
                         var ekb_=  result.MailSablonlariEkleri[i];
                         yeniEkEkleG(ekb_.EkAdi,ekb_.EkDosyaYolu);
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
 
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
             ekleriSil();
             CKEDITOR.instances['AciklamaHtml'].setData(stAck);
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
         }
     }
 </script>

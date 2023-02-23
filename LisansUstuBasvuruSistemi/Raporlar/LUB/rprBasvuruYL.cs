@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models;
 using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
@@ -50,16 +50,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 else if (model.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) lblSinavGirisFormu.Text = "YATAY GEÇİŞ SINAVINA GİRİŞ FORMU";
                 else lblSinavGirisFormu.Text = "YTU YENİ MEZUN BAŞVURU FORMU";
 
-                if (model.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci)
-                {
-                    cell_TcKimlikNo.Text = model.TcKimlikNo;
-                    lngLbl_TCK.Text = "T.C. Kimlik No";
-                }
-                else
-                {
-                    cell_TcKimlikNo.Text = model.PasaportNo;
-                    lngLbl_TCK.Text = "Pasaport No";
-                }
+
+                cell_TcKimlikNo.Text = model.TcKimlikNo;
+                lngLbl_TCK.Text = "T.C. Kimlik No";
+
+
                 lngLbl_AdSoyad.Text = "Ad Soyad";
                 cell_AdiSoyadi.Text = model.Ad + " " + model.Soyad;
                 lngLbl_DogumTarihi.Text = "Doğum Tarihi";

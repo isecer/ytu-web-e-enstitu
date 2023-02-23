@@ -169,7 +169,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.BelgeTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.BelgeTalepID')">
+                                                            <li id="iShow_@item.BelgeTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BelgeTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -350,7 +350,7 @@
 <script type="text/javascript">
 
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -360,17 +360,17 @@
     function getDetail(id) {
 
         var _panel = $('#btDetay_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("Getdetay", "BelgeTalebi")',
             data: { id: id  },
             success: function (result) {
                     $('#cls-' + id).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 

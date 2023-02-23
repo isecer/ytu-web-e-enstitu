@@ -32,7 +32,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public string Soyad { get; set; }
         public Nullable<int> UyrukKod { get; set; }
         public string TcKimlikNo { get; set; }
-        public string PasaportNo { get; set; }
         public string OgrenciNo { get; set; }
         public int OgrenimDurumID { get; set; }
         public int OgrenimTipKod { get; set; }

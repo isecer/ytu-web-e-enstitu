@@ -238,7 +238,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.BasvuruID')">
+                                                            <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BasvuruID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -386,7 +386,7 @@
             }
         });
     }
- function showDetail(id, Isdelete, sndr, IsBelgeShow) {
+ function ShowDetail(id, Isdelete, sndr, IsBelgeShow) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -395,7 +395,7 @@
     }
     function GetDetail(id, IsBelgeShow) {
         var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if (IsBelgeShow == true) {
             tID="4";
         }
@@ -419,9 +419,9 @@
     function SubData(id,isDelete) {
         var _panel = $('#bsvrDet_' + id);
         var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if (isDelete) tID = 1;
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetBasvuruSubData", "Ajax")',
             data: { 'id': id, 'tbInx': tID },
@@ -435,11 +435,11 @@
                     var _nme = tbName + "-" + tID;
                     $('#' + _nme).html(result.page);
                 }
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -458,7 +458,7 @@
                         className: "btn-danger",
                         callback: function () {
                             var _panel = $(btbx).find('.panel').first();
-                            _pRefresh(_panel, true);
+                            PanelRefresh(_panel, true);
                             $.ajax({
                                 url: '@Url.Action("Sil", "Basvuru")',
                                 data: { id: id },
@@ -469,12 +469,12 @@
                                     }
                                     showMmMessage(result.Messages, 'Tamam');
 
-                                    _pRefresh(_panel, false);
+                                    PanelRefresh(_panel, false);
                                 },
                                 error: function (err) {
                                     alert(err.responseText);
 
-                                    _pRefresh(_panel, false);
+                                    PanelRefresh(_panel, false);
                                 }
                             });
                         }

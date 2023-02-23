@@ -531,7 +531,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                        join k in _context.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                        join e in _context.Enstitulers on s.EnstituKod equals e.EnstituKod
                        join d in _context.Donemlers on s.DonemID equals d.DonemID
-                       select new msUrecDetay
+                       select new MSurecDetay
                        {
                            MezuniyetSurecID = s.MezuniyetSurecID,
                            EnstituKod = s.EnstituKod,

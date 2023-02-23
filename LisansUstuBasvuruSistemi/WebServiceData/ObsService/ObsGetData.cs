@@ -21,9 +21,11 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             var model = new StudentControl();
             try
             {
+                if (tcKimlikNo.IsNullOrWhiteSpace()) throw new Exception("Tc Kimlik No boş geliyor!");
                 using (Ws_ObsService.proliz_ytu_enstitu_minerSoapClient service =
                        new Ws_ObsService.proliz_ytu_enstitu_minerSoapClient())
                 {
+                    
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
@@ -45,8 +47,10 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                 model.BaslangicYil = donem.BaslangicYil;
                                 model.BitisYil = donem.BitisYil;
                                 model.DonemID = donem.DonemID;
+                                
                             }
 
+                            model.OkuduguDonem = ogrenci.OKUDUGU_DNM_YENIKANUN;
                             model.OgrenciInfo = ogrenci;
 
                             switch (model.OgrenciInfo.OGRENIMSEVIYE_ID)
@@ -160,8 +164,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             var model = new ObsOgrenciSorgulaModel();
             try
             {
-                using (Ws_ObsService.proliz_ytu_enstitu_minerSoapClient service =
-                       new Ws_ObsService.proliz_ytu_enstitu_minerSoapClient())
+                using (var service = new proliz_ytu_enstitu_minerSoapClient())
                 {
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
@@ -171,32 +174,28 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
                         model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
-                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
+                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];
-                        }
-                        var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
+                        }  
+                        var ogrenciTez = service.OgrenciTezBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)
                         {
                             model.OgrenciTez = ogrenciTez[0].ogrencitez[0];
                         }
 
-                        var ogrenciTezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, model.Ogrenci.OGR_NO, null);
+                        var ogrenciTezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
                         if (ogrenciTezJuri.Any() && ogrenciTezJuri[0].Sucess)
                         {
                             model.OgrenciTezJuri = ogrenciTezJuri[0].tezIzljuribilgileri.ToList();
                         }
-                    }
-
-
-
-
+                    } 
                 }
             }
             catch (Exception ex)
             {
-
+                // ignored
             }
 
             return model;

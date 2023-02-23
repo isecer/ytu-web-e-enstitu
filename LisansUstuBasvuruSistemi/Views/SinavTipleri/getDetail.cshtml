@@ -365,7 +365,7 @@
                                                                             <td style="width: 30px;">@RowIndex</td>
                                                                             <td>
                                                                                 <ul class="panel-controls">
-                                                                                    <li id="iShow-@item.SinavTipleriOT_SNAID" onclick="showDetailx('@item.SinavTipleriOT_SNAID')">
+                                                                                    <li id="iShow-@item.SinavTipleriOT_SNAID" onclick="ShowDetailX('@item.SinavTipleriOT_SNAID')">
                                                                                         <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                                                     </li>
                                                                                 </ul>
@@ -501,7 +501,7 @@
     $(function () {
         jQuery('.popovers').popover();
     });
-    function showDetailx(id) {
+    function ShowDetailX(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

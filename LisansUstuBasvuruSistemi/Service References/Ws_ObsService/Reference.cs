@@ -182,6 +182,9 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string GSM2Field;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string OKUDUGU_DNM_YENIKANUNField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -552,6 +555,19 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
                 if ((object.ReferenceEquals(this.GSM2Field, value) != true)) {
                     this.GSM2Field = value;
                     this.RaisePropertyChanged("GSM2");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=28)]
+        public string OKUDUGU_DNM_YENIKANUN {
+            get {
+                return this.OKUDUGU_DNM_YENIKANUNField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OKUDUGU_DNM_YENIKANUNField, value) != true)) {
+                    this.OKUDUGU_DNM_YENIKANUNField = value;
+                    this.RaisePropertyChanged("OKUDUGU_DNM_YENIKANUN");
                 }
             }
         }

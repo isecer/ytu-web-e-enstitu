@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.EnstituKod = enstitu.EnstituKod;
             model.AdSoyad = kul.Ad + " " + kul.Soyad;
             model.KullaniciTipID = kul.KullaniciTipID;
-            model.TcPasaportNo = kul.KullaniciTipleri.Yerli ? kul.TcKimlikNo : kul.PasaportNo;
+            model.TcKimlikNo = kul.TcKimlikNo;
             model.KullaniciAktif = true;
             model.KullaniciID = kuLID;
             if (BTID.IsNullOrWhiteSpace() == false)
@@ -110,7 +110,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.EnstituKod = enstitu.EnstituKod;
             model.AdSoyad = kul.Ad + " " + kul.Soyad;
             model.KullaniciTipID = kul.KullaniciTipID;
-            model.TcPasaportNo = kul.KullaniciTipleri.Yerli ? kul.TcKimlikNo : kul.PasaportNo;
+            model.TcKimlikNo = kul.TcKimlikNo;
             model.KullaniciAktif = true;
             model.KullaniciID = kuLID;
 
@@ -125,7 +125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Post3DPayment(CreditCardModel model, string EKD, string UniqueID = "")
-        { 
+        {
             var _MmMessage = new MmMessage();
             var ngid = new Guid(UniqueID);
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
@@ -173,7 +173,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _MmMessage.Messages.Add("Kredi Kartı Numarası Sadece Sayıdan Oluşması Gerekmektedir.");
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CardNumber" });
                 }
-                 
+
                 if (model.Cv2.IsNullOrWhiteSpace())
                 {
                     _MmMessage.Messages.Add("Güvenlik Kodu Boş Bırakılamaz");
@@ -193,7 +193,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CV2" });
                 }
-                 
+
             }
             #endregion
 
@@ -310,7 +310,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     //paymentForm = ThreeDHelper.PrepareForm("https://entegrasyon.asseco-see.com.tr/fim/est3Dgate", paymentCollection);//test
                     _MmMessage.IsSuccess = true;
                 }
-                catch 
+                catch
                 {
                     _MmMessage.Title = "Ödeme İşlemi Yarıda Kesildi! Hata!";
                     _MmMessage.Messages.Add("Kredi kartı doğrulama işlemi yapılırken bir hata oluştu!");

@@ -287,17 +287,17 @@
                                                 
             $('#saatLstContnt').css("display", "block");
             var _panel = $('.pnlRfrsh');
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetSaatList", "SrOzelTanimlar")', 
                 data: { 'SRSalonID': salon, 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SROzelTanimID': '@(Model.SROzelTanimID<=0?"":Model.SROzelTanimID.ToString())' },
                 success: function (result) {
                     $('#saatLstContnt').html(result.Deger);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }

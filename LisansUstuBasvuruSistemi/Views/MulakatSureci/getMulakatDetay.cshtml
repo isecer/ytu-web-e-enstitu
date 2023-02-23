@@ -845,12 +845,12 @@
                     callback: function () {
                         var id = '@Model.BasvuruSurecID';
                         var _panel = $('#pndMD_' + '@nId');
-                        _pRefresh(_panel, false);
+                        PanelRefresh(_panel, false);
                         $.ajax({
                             url: '@Url.Action("AlanDegistirmeIslemi", "MulakatSureci")',
                             data: { UniqueID: UniqueID, IsAlanIciOrDisi: IsAlanIciOrDisi },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.Messages.length > 0)
                                     showMmMessage(result.Messages, 'Tamam');
 
@@ -859,7 +859,7 @@
                             },
                             error: function (err) {
                                 alert(err.responseText);
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                             }
                         });
                     }
@@ -1081,7 +1081,7 @@
             "BilimselHazirlikVar": eval(_BilimselHazirlik),
             "AlesNotuOrDosyaNotu": eval(_AlesNotuOrDosyaNotu)
         };
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GirisSinavNotuKaydet", "MulakatSureci")',
             type: 'POST',
@@ -1106,11 +1106,11 @@
                     $('#_'+_tAtip+'SonucRapor').html("");
                 }
                 showMmMessage(result.Messages, 'Tamam');
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             }
         });
@@ -1118,14 +1118,14 @@
     function getDetailOgr(id) {
         var _panel = $('#pndMD_' + '@nId');
          var tbName = "@TabAdlari.MulakatDetayTN-" + id;
-        var tID = getSelectedTabID(tbName);
-        _pRefresh(_panel, false);
+        var tID = GetSelectedTabID(tbName);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetBasvuruDetay", "Ajax")',
             data: { id: id, tbInx: tID},
             success: function (result) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 var btbx = bootbox.dialog({
                     message: result.page,
                     title: "Başvuru Detayı",
@@ -1146,7 +1146,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -1154,19 +1154,19 @@
     function SubData(id) {
             var _panel = $('#bsvrDet_' + id);
             var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
-            var tID = getSelectedTabID(tbName);
-            _pRefresh(_panel, false);
+            var tID = GetSelectedTabID(tbName);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetBasvuruSubData", "Ajax")',
                 data: { 'id': id, 'tbInx': tID},
                 success: function (result) {
                     var _nme = tbName + "-" + tID;
                     $('#' + _nme).html(result.page);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
@@ -1179,15 +1179,15 @@
 
             var _panel = $('#pndMD_' + '@nId');
             var tbName = "@tbName";
-            var tID = getSelectedTabID(tbName);
-            _pRefresh(_panel, false);
+            var tID = GetSelectedTabID(tbName);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("getMulakatDetay", "MulakatSureci")',
                 data: {  BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod,  tbInx: tID, IsDelete: (Isdelete == true),IsBootBox:'@isBootBox' },
                 success: function (result) {
                     if (Isdelete != true) {
                         $('#bb_MD_@nId').html(result);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                     else {
                         var btbx = bootbox.dialog({
@@ -1199,7 +1199,7 @@
                                     className: "btn-danger",
                                     callback: function () {
                                         sil(sndr, id);
-                                        _pRefresh(_panel, true);
+                                        PanelRefresh(_panel, true);
                                     }
 
                                 },
@@ -1216,7 +1216,7 @@
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
 

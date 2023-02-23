@@ -354,7 +354,7 @@
 
     function GetKullanicilar() {
         var _panel = $('#prgPbody');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sKuls = '@Html.Raw(Json.Encode(KulIds))';
         var nVal = JSON.parse(sKuls);
         var _AnabilimDaliID = $('#AnabilimDaliID').val();
@@ -379,21 +379,21 @@
                     $('#KullaniciID').append(opt);
                     $('#KullaniciID').selectpicker('val', nVal);
                     $('#KullaniciID').selectpicker("refresh");
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
         }
     }
     function GetOBolumler() {
         var _panel = $('#prgPbody');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sObs = '@Html.Raw(Json.Encode(OBIds))';
         var nVal = JSON.parse(sObs);
         var _AnabilimDaliID = $('#AnabilimDaliID').val();
@@ -418,21 +418,21 @@
                     $('#OgrenciBolumID').append(opt);
                     $('#OgrenciBolumID').selectpicker('val', nVal);
                     $('#OgrenciBolumID').selectpicker("refresh");
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
         }
     }
     function GetAtips() {
         var _panel = $('#prgPbody');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sObs = '@Html.Raw(Json.Encode(SAlesTipIDs))';
         var nVal = JSON.parse(sObs);
 
@@ -456,10 +456,10 @@
                 $('#AlesTipIDs').append(opt);
                 $('#AlesTipIDs').selectpicker('val', nVal);
                 $('#AlesTipIDs').selectpicker("refresh");
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });

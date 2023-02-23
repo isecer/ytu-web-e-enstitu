@@ -201,7 +201,7 @@
     function getMsjKategoris(sndr) { 
         var _EnstituKod =$(sndr).val();
         var _panel = $('#pnlMailGonder');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("getMsjKategoris", "Ajax")',
             data: { 'EnstituKod': _EnstituKod},
@@ -220,20 +220,20 @@
                     opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
                 }
                 $('#mkID').append(opt);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
     function getKtNot(sndr) {
         var _KategoriID = $(sndr).val();
         var _panel = $('#pnlMailGonder');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         if (_KategoriID == "" || _KategoriID == null) {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             $('#acklmT').html("");
             $('#mkAck').addClass("hide");
             return;
@@ -252,11 +252,11 @@
                     $('#acklmT').html("");
                     $('#mkAck').addClass("hide");
                 }
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

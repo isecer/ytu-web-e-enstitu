@@ -161,7 +161,7 @@
     });
     function getData(sndr) {
         var _panel = $('#pnglKT');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();
         var tip = $(sndr).attr('id') == "EnstituKod" ? "bolum" : "program";
         var EnstituKod = $('#EnstituKod').val();
@@ -193,17 +193,17 @@
                         $('#ProgramKod').empty();
                         $('#ProgramKod').append(opt);
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
 
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
 
         }
     }

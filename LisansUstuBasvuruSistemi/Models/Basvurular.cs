@@ -48,7 +48,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> AileNo { get; set; }
         public Nullable<int> SiraNo { get; set; }
         public string TcKimlikNo { get; set; }
-        public string PasaportNo { get; set; }
         public Nullable<int> UyrukKod { get; set; }
         public Nullable<int> SehirKod { get; set; }
         public string IsTel { get; set; }

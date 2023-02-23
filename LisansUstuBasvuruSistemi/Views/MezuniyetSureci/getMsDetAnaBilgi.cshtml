@@ -1,7 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model msUrecDetay
+@model MSurecDetay
 @{
     Layout = null;
     string color = "color=blue";
@@ -35,7 +35,7 @@
                         <td style="font-weight:bold;"><span style="color:@(basvuruyaAcik   ? colorMul : colorSg);">@Model.BaslangicYil / @Model.BitisYil @Model.DonemAdi</span></td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;">Başvuru Süreci</td>
+                        <td style="text-align:right;">Süreç Tarih Aralığı</td>
                         <td>:</td>
                         <td style="font-weight:bold;">
                             @if (basvuruyaAcik)

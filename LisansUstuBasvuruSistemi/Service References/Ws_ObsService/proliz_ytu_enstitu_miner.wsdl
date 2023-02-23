@@ -66,6 +66,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="E_POSTA2" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="GSM1" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="GSM2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OKUDUGU_DNM_YENIKANUN" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="AkademikPersonelBilgiGetir">

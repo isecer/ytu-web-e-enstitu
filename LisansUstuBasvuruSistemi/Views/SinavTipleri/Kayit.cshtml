@@ -1044,25 +1044,25 @@
         var enstituKod = $(sndr).val();
         var sinavTipID=@Model.SinavTipID;
         var _panel = $('#_OtBilgi');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         if (enstituKod != null && enstituKod != "") {
             $.ajax({
                 url: '@Url.Action("GetOtBilgi", "SinavTipleri")',
                 data: { 'EnstituKod': enstituKod, 'SinavTipID': sinavTipID },
                 success: function (result) {
                     $('#_OtBilgi').html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
 
                 }
             });
         }
         else {
             $('#_OtBilgi').html("");
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
         }
     }
 </script>

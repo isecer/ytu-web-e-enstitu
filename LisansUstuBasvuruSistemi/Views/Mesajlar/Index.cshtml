@@ -183,7 +183,7 @@
                                                     <td style="width:30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.MesajID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MesajID)">
+                                                            <li id="iShow_@item.MesajID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MesajID)">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
                                                             </li>
                                                         </ul>
@@ -302,7 +302,7 @@
         toastr["success"]("'" + _Konu + "' Konulu Mesaj durumu Kapalı olarak İşaretlendi", "Mesaj Durum Güncelleme İşlemi");
         GetMails(id);
     }
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -356,19 +356,19 @@
     }
     function GetMails(id) {
         var pnlx = $("#cls-" + id);
-        _pRefresh(pnlx, false);
+        PanelRefresh(pnlx, false);
         $.ajax({
             url: '@Url.Action("GetMesajDetay", "Mesajlar")',
             data: { 'MesajID': id},
             success: function (result) {
                 var _nme = 'cls-' + id;
                 $('#' + _nme).html(result);
-                _pRefresh(pnlx, true);
+                PanelRefresh(pnlx, true);
 
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(pnlx, true);
+                PanelRefresh(pnlx, true);
             }
         });
     }

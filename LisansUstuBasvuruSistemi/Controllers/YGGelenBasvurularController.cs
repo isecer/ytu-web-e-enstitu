@@ -41,13 +41,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ProgramKod = ProgramKod ?? new List<string>();
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
 
-           
+
             var q = from s in db.Basvurulars
-                    join en in db.Enstitulers on   s.BasvuruSurec.EnstituKod equals  en.EnstituKod 
+                    join en in db.Enstitulers on s.BasvuruSurec.EnstituKod equals en.EnstituKod
                     join bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) on s.BasvuruSurecID equals bs.BasvuruSurecID
-                    join d in db.Donemlers on   bs.DonemID equals   d.DonemID 
-                    join ktip in db.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals  ktip.KullaniciTipID 
-                    join dr in db.BasvuruDurumlaris on   s.BasvuruDurumID equals   dr.BasvuruDurumID  
+                    join d in db.Donemlers on bs.DonemID equals d.DonemID
+                    join ktip in db.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
+                    join dr in db.BasvuruDurumlaris on s.BasvuruDurumID equals dr.BasvuruDurumID
                     where en.EnstituKisaAd.Contains(EKD)
                     select new
                     {
@@ -63,7 +63,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasTar = bs.BaslangicTarihi,
                         BitTar = bs.BitisTarihi,
                         ResimAdi = s.Kullanicilar.ResimAdi,
-                        TcPasaPortNo = s.TcKimlikNo ?? s.PasaportNo,
+                        s.TcKimlikNo,
                         AdSoyad = s.Ad + " " + s.Soyad,
                         s.Ad,
                         s.Soyad,
@@ -106,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.BasvurularTercihleris.Any(a => a.OgrenimTipKod == model.OgrenimTipKod));
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID);
             if (model.CinsiyetID.HasValue) q = q.Where(p => p.CinsiyetID == model.CinsiyetID);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcPasaPortNo == model.AdSoyad);
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad);
             if (model.SinavTipKod.HasValue && model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod && a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
             else if (model.SinavTipKod.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod));
             else if (model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
@@ -117,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             model.RowCount = q.Count();
             var IndexModel = new MIndexBilgi();
-            var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Onaylandı ).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
+            var KayitCountDurum = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == BasvuruDurumu.Onaylandı).Select(s => new { s.BasvuruDurumID, s.BasvuruDurumAdi, s.ClassName, s.Color }).FirstOrDefault();
             if (KayitCountDurum != null)
             {
                 IndexModel.ListB.Add(new mxRowModel { Key = "Toplam", ClassName = "", Color = KayitCountDurum.Color, Toplam = model.RowCount });
@@ -176,7 +176,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Ad = s.Ad,
                 Soyad = s.Soyad,
                 ResimAdi = s.ResimAdi,
-                TcPasaPortNo = s.TcPasaPortNo,
+                TcKimlikNo = s.TcKimlikNo,
                 AdSoyad = s.AdSoyad,
                 EMail = s.EMail,
                 CepTel = s.Telefon,
@@ -213,7 +213,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     select new { sq.OgrenimTipKod, ogt.OgrenimTipAdi }).FirstOrDefault()
                           select new
                           {
-                              TcPasaPortNo = s.TcKimlikNo ?? s.PasaportNo,
+                              s.TcKimlikNo,
                               s.Ad,
                               s.Soyad,
                               s.EMail,
@@ -243,17 +243,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             ViewBag.IndexModel = IndexModel;
             ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(_EnstituKod, BasvuruSurecTipi.YatayGecisBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
-            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(_EnstituKod ,true, true), "Value", "Caption", model.OgrenimTipKod);
-            ViewBag.BasvuruDurumID = new SelectList(Management.cmbBasvuruDurumListe( true, true), "Value", "Caption", model.BasvuruDurumID);
-            ViewBag.MulakatSonucTipID = new SelectList(Management.cmbMulakatSonucTip( true), "Value", "Caption", model.MulakatSonucTipID);
-            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar( _EnstituKod, false), "Value", "Caption", model.ProgramKod);
-            ViewBag.LOgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu2( true, IsBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
+            ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(_EnstituKod, true, true), "Value", "Caption", model.OgrenimTipKod);
+            ViewBag.BasvuruDurumID = new SelectList(Management.cmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
+            ViewBag.MulakatSonucTipID = new SelectList(Management.cmbMulakatSonucTip(true), "Value", "Caption", model.MulakatSonucTipID);
+            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(_EnstituKod, false), "Value", "Caption", model.ProgramKod);
+            ViewBag.LOgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu2(true, IsBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
             ViewBag.SinavTipKod = new SelectList(Management.cmbGetBSAktifSinavlar(_EnstituKod, new List<int> { SinavTipGrup.DilSinavlari, SinavTipGrup.Tomer, SinavTipGrup.Ales_Gree }, true), "Value", "Caption", model.SinavTipKod);
             ViewBag.KullaniciTipID = new SelectList(KullanicilarBus.GetCmbKullaniciTipleriOgrenciler(true), "Value", "Caption", model.KullaniciTipID);
-            ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler( true), "Value", "Caption", model.CinsiyetID);
+            ViewBag.CinsiyetID = new SelectList(Management.cmbCinsiyetler(true), "Value", "Caption", model.CinsiyetID);
             ViewBag.IsTaahhutVar = new SelectList(Management.cmbSinavBelgeTaahhut(true), "Value", "Caption", model.IsTaahhutVar);
             ViewBag.UyrukKod = new SelectList(Management.cmbUyruk(true), "Value", "Caption", model.UyrukKod);
-           
+
             if (isFiltered)
             {
                 ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
@@ -276,7 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var tarih = kayit.BasvuruTarihi.ToString();
                 try
                 {
-                    mmMessage.Title ="Uyarı";
+                    mmMessage.Title = "Uyarı";
                     db.Basvurulars.Remove(kayit);
                     db.SaveChanges();
                     mmMessage.Messages.Add("Başvuru Silindi");

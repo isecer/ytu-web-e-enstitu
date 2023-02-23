@@ -361,7 +361,7 @@
                             }
                             function GetAcikMsjCount() {
                                 var panel = $('#_msgContent');
-                                _pRefresh(panel, false);
+                                PanelRefresh(panel, false);
                                 $.ajax({
                                     url: '@Url.Action("GetAcikMsjCount", "Mesajlar")',
                                     data: {EnstituKod:'@enstituKod'},
@@ -386,11 +386,11 @@
                                             MessageCntPulsate();
                                         }
 
-                                        _pRefresh(panel, true);
+                                        PanelRefresh(panel, true);
                                         trmlognFnc(2, 30000);
                                     },
                                     error: function (err) {
-                                        _pRefresh(panel, true);
+                                        PanelRefresh(panel, true);
                                         trmlognFnc(0);
                                     }
                                 });
@@ -440,16 +440,16 @@
                                 function getOnlineUsers() {
 
                                     var _panel = $('#oUserList');
-                                    _pRefresh(_panel, false);
+                                    PanelRefresh(_panel, false);
                                     $.ajax({
                                         url: '@Url.Action("getOnlineUserList", "Account")',
                                         data: {},
                                         success: function (result) {
                                             $('#oUserList').html(result);
-                                            _pRefresh(_panel, true);
+                                            PanelRefresh(_panel, true);
                                         },
                                         error: function (err) {
-                                            _pRefresh(_panel, true);
+                                            PanelRefresh(_panel, true);
                                         }
                                     });
 
@@ -940,7 +940,7 @@
                                 className: "btn-success",
                                 callback: function (event) {
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                    _pRefresh(pnlx, false);
+                                    PanelRefresh(pnlx, false);
                                     $('#frmHesapKayit').ajaxForm({
                                         success: function (result) {
                                             if (result.IsSuccess) {
@@ -959,14 +959,14 @@
                                                 var _clsBtn = $('.modal-header').find('button').first();
                                                 $(_clsBtn).click();
                                             }
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
 
                                         },
                                         complete: function (cmp) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                         },
                                         error: function (err) {
-                                            _pRefresh(pnlx, true);
+                                            PanelRefresh(pnlx, true);
                                         }
 
                                     }).submit();
@@ -1009,7 +1009,7 @@
             $('#' + tabName   + '-' + tSiraNo).addClass('active');
             $('#SelectedTb-' + tabName).val(tSiraNo);
         }
-        function getSelectedTabID(tabName) {
+        function GetSelectedTabID(tabName) {
             var tID = "1";
             if ($('#SelectedTb-' + tabName).length > 0) {
                 tID = $('#SelectedTb-' + tabName).val();
@@ -1078,10 +1078,10 @@
                             $('#AciklamaHtml').val(data);
                             var saveOk = sbmtDosyaKontrol();
                             if (saveOk){
-                                _pRefresh($(btbx).find('.modal-dialog').first(), false);
+                                PanelRefresh($(btbx).find('.modal-dialog').first(), false);
                                 $('#_Form').ajaxForm({
                                     success: function(result){
-                                        _pRefresh($(btbx).find('.modal-dialog').first(), true);
+                                        PanelRefresh($(btbx).find('.modal-dialog').first(), true);
                                         showMmMessage(result.responseText, 'Tamam');
                                         if (result.IsSuccess) {
                                             setTimeout(function(){ return true;},2400)
@@ -1091,15 +1091,15 @@
                                         }
                                     },
                                     complete:function(cmp){
-                                        _pRefresh($(btbx).find('.modal-dialog').first(), true);
+                                        PanelRefresh($(btbx).find('.modal-dialog').first(), true);
                                         setTimeout(function(){
                                             var _clsBtn=  $('.modal-header').find('button').first();
                                             $(_clsBtn).click();
                                         },300);
                                     },
                                     error:function(err){
-                                        _pRefresh($(btbx).find('.modal-dialog').first(), true);
-                                        _pRefresh($(btbx).find('.modal-dialog').first(), true);
+                                        PanelRefresh($(btbx).find('.modal-dialog').first(), true);
+                                        PanelRefresh($(btbx).find('.modal-dialog').first(), true);
                                     }
 
                                 });
@@ -1229,10 +1229,10 @@
                                 $('#AciklamaHtml').val(data);
                                 var saveOk = sbmtDosyaKontrol();
                                 if (saveOk) {
-                                    _pRefresh($(btbx2).find('.modal-dialog').first(), false);
+                                    PanelRefresh($(btbx2).find('.modal-dialog').first(), false);
                                     $('#mailForm').ajaxForm({
                                         success: function (result) {
-                                            _pRefresh($(btbx2).find('.modal-dialog').first(), true);
+                                            PanelRefresh($(btbx2).find('.modal-dialog').first(), true);
                                             showMmMessage(result.responseText, 'Tamam');
                                             if (result.success) {
                                                 if (msID != undefined && msID != null && msID != "") {
@@ -1249,14 +1249,14 @@
                                             }
                                         },
                                         complete: function (cmp) {
-                                            _pRefresh($(btbx2).find('.modal-dialog').first(), true);
+                                            PanelRefresh($(btbx2).find('.modal-dialog').first(), true);
                                             setTimeout(function () {
                                                 var _clsBtn = $(btbx2).find('.modal-header').first().find('button').first();
                                                 if (cmp.responseJSON.success) $(_clsBtn).click();
                                             }, 300);
                                         },
                                         error: function (err) {
-                                            _pRefresh($(btbx2).find('.modal-dialog').first(), true);
+                                            PanelRefresh($(btbx2).find('.modal-dialog').first(), true);
                                         }
 
                                     });
@@ -1284,7 +1284,7 @@
 
         $('.selectpicker').selectpicker();
 
-        function _pRefresh(panel,IsRemove){
+        function PanelRefresh(panel,IsRemove){
             if(IsRemove){
                 panel.find(".panel-refresh-layer").remove();
                 panel.removeClass("panel-refreshing");
@@ -1312,7 +1312,7 @@
                 newWindow.focus();
             }
         }
-        function showDuyuru(PopupTipID, redirectUrl) {
+        function ShowDuyuru(PopupTipID, redirectUrl) {
             $.ajax({
                 url: '@Url.Action("GetDuyuruJson", "KDuyurular")',
                 type: 'POST',
@@ -1342,7 +1342,7 @@
                             $(mdlx).find('.modal-body').addClass('padding-5');
                         }
                         else {
-                            var btnTitle = PopupTipID == '@DuyuruPopupTipleri.TalepYap' ? 'Yeni Talep Yap' : 'Yeni Başvuru';
+                            var btnTitle = PopupTipID == '@DuyuruPopupTipleri.TalepYap' ? 'Yeni Talep Yap' : 'Yeni Başvuru Yap';
                             var mdlx = bootbox.dialog({
                                 message: result.HtmlMessage,
                                 buttons: {
@@ -1776,7 +1776,7 @@
                 function detayGor(KullaniciID, elID) {
                 if(elID!=null && elID!="")       {
                     var el = $(elID);
-                    _pRefresh(el, false);
+                    PanelRefresh(el, false);
                 }
                 setTimeout(function () {
                     $.ajax({
@@ -1799,14 +1799,14 @@
                             $(_mdBd).addClass('padding-0');
                             if(elID!=null && elID!="")       {
                                 var el = $(elID);
-                                _pRefresh(el, true);
+                                PanelRefresh(el, true);
                             }
                         },
                         error: function (err) {
                             alert(err.responseText);
                             if(elID!=null && elID!="")       {
                                 var el = $(elID);
-                                _pRefresh(el, true);
+                                PanelRefresh(el, true);
                             }
 
                         }

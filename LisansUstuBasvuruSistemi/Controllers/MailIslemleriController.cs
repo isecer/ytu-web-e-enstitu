@@ -141,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage();
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            duyuruDosyaEkId = duyuruDosyaEkId != null ? new List<int?>() : duyuruDosyaEkId;
+            duyuruDosyaEkId = duyuruDosyaEkId ?? new List<int?>();
             dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
             dosyaEkiAdi = dosyaEkiAdi ?? new List<string>();
             kullaniciIDs = kullaniciIDs ?? new List<int>();
@@ -161,9 +161,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  DosyaYolu = "/MailDosyalari/" + ekGirilenAd.s.ToFileNameAddGuid(eklenenEk.s.FileName.GetFileExtension())
                              }).ToList();
 
-            var qVarolanlar = (from s in qDosyaEkAdi
-                               join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
-                               select new { s.inx, DosyaEkAdi = s.s, DuyuruDosyaEkID = sid.s });
             #region Kontrol
             kModel.Tarih = DateTime.Now;
 

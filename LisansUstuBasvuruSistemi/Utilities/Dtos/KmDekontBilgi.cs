@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituAdi { get; set; }
         public string AdSoyad { get; set; }
         public int KullaniciTipID { get; set; }
-        public string TcPasaportNo { get; set; }
+        public string TcKimlikNo { get; set; }
         public bool KullaniciAktif { get; set; }
         public bool GirisAktif { get; set; }
 

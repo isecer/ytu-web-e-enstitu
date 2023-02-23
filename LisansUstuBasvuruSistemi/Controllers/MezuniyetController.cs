@@ -137,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         CepTel = kul.CepTel,
                         KayitTarihi = kul.KayitTarihi,
                         AdSoyad = kul.Ad + " " + kul.Soyad,
-                        TcPasaPortNo = kul.TcKimlikNo ?? kul.PasaportNo,
+                        TcKimlikNo = kul.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
                         ResimAdi = kul.ResimAdi,
                         KullaniciTipID = kul.KullaniciTipID,
@@ -178,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.MezuniyetSurecID.HasValue) q = q.Where(p => p.MezuniyetSurecID == model.MezuniyetSurecID.Value);
             //if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcPasaPortNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad));
             if (model.MezuniyetYayinKontrolDurumID.HasValue) q = q.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID.Value);
             model.RowCount = q.Count();
             //IndexModel.Toplam = model.RowCount;
@@ -187,7 +187,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.PageIndex = ps.PageIndex;
             var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
 
-            model.FrMezuniyetBasvurularis = qdata;
+            model.Data = qdata;
             ViewBag.MezuniyetSurecID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecleri(enstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
 
@@ -276,8 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.Ad = kul.Ad;
                     model.Soyad = kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
-                    model.TcKimlikNo = kul.TcKimlikNo;
-                    model.PasaportNo = kul.PasaportNo;
+                    model.TcKimlikNo = kul.TcKimlikNo; 
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
                     model.OgrenimTipAdi = _context.OgrenimTipleris.First(p => p.EnstituKod == model.EnstituKod && p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
                     var progLng = kul.Programlar;
@@ -438,8 +437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Ad = kModel.Ad,
                         Soyad = kModel.Soyad,
                         UyrukKod = kModel.UyrukKod,
-                        TcKimlikNo = kModel.TcKimlikNo,
-                        PasaportNo = kModel.PasaportNo,
+                        TcKimlikNo = kModel.TcKimlikNo, 
                         OgrenciNo = kModel.OgrenciNo,
                         OgrenimDurumID = kModel.OgrenimDurumID,
                         OgrenimTipKod = kModel.OgrenimTipKod,
@@ -505,8 +503,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mBasvuru.Ad = kModel.Ad;
                     mBasvuru.Soyad = kModel.Soyad;
                     mBasvuru.UyrukKod = kModel.UyrukKod;
-                    mBasvuru.TcKimlikNo = kModel.TcKimlikNo;
-                    mBasvuru.PasaportNo = kModel.PasaportNo;
+                    mBasvuru.TcKimlikNo = kModel.TcKimlikNo; 
                     mBasvuru.OgrenciNo = kModel.OgrenciNo;
                     mBasvuru.OgrenimDurumID = kModel.OgrenimDurumID;
                     mBasvuru.OgrenimTipKod = kModel.OgrenimTipKod;
@@ -2084,7 +2081,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              YeniTezBaslikEn = s.YeniTezBaslikEn,
                              IsYokDrBursiyeriVar = s.IsYokDrBursiyeriVar,
                              YokDrOncelikliAlan = s.YokDrOncelikliAlan,
-                             Aciklama = s.Aciklama, 
+                             Aciklama = s.Aciklama,
                              SRTaleplerJuris = s.SRTaleplerJuris.Where(p => p.UniqueID == uniqueId.Value).ToList(),
                              IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
                              SRTalepleriBezCiltFormus = s.SRTalepleriBezCiltFormus,
@@ -2146,7 +2143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 if (uniqueId.HasValue)
-                { 
+                {
                     if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
                     else
                     {
@@ -2155,7 +2152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             uye.Email = eMail;
                             _context.SaveChanges();
                         }
-                    } 
+                    }
                 }
                 var messages = MezuniyetBus.SendMailMezuniyetDegerlendirmeLink(srTalep.SRTalepID, uniqueId, true, isYeniLink, eMail);
                 if (messages.IsSuccess)
@@ -2163,11 +2160,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     srTalep.JuriSonucMezuniyetSinavDurumID = null;
                     _context.SaveChanges();
                     mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi."); 
+                    mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi.");
                 }
                 else
                 {
-                    mMessage.Messages.AddRange(messages.Messages); 
+                    mMessage.Messages.AddRange(messages.Messages);
                 }
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
@@ -2185,7 +2182,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage
             {
                 Title = "Mezuniyet başvurusu danışman onay işlemi"
-            }; 
+            };
             var srTalep = _context.SRTalepleris.First(p => p.SRTalepID == srTalepId);
             var kayitYetki = RoleNames.GelenBasvurularKayit.InRole();
 
@@ -2194,7 +2191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (srTalep.MezuniyetBasvurulari.KullaniciID != UserIdentity.Current.Id)
                 {
                     mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz!");
-                } 
+                }
             }
             if (srTalep.IsDanismanUzatmaSonrasiOnay.HasValue)
             {
@@ -2203,7 +2200,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mmMessage.Messages.Any())
             {
                 if (mmMessage.Messages.Count == 0)
-                { 
+                {
                     srTalep.IsOgrenciUzatmaSonrasiOnay = isOgrenciUzatmaSonrasiOnay;
                     srTalep.OgrenciOnayTarihi = DateTime.Now;
 

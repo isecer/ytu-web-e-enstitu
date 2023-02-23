@@ -1,0 +1,211 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model  FmYeterlikBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var kyetki = RoleNames.YeterlikGelenBasvurular.InRoleCurrent();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+                </tr>
+                <tr>
+                    <td width="200" style="color:cadetblue">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @Model.EnstituAdi
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@Model.OgrenciNo @Model.AdSoyad</td>
+                </tr>
+                @if (!Model.IsYtuOgrencisi)
+                {
+                    <tr>
+                        <td>Not</td>
+                        <td>:</td>
+                        <td>
+                            Başvuru işlemini sadece Yüksek Lisans öğrencileri tarafından yapılabilir. Başvuru yapabilmek için profil bilgilerinizi düzeltip YTU öğrencisi olduğunuzu belirten bilgileri doldurunuz.
+                        </td>
+                    </tr>
+
+                }
+                else if (!Model.IsEnstituYetki)
+                {
+                    <tr>
+                        <td>Not</td>
+                        <td>:</td>
+                        <td>
+                            Bu enstitü için Yeterlik başvurusu yapamazsınız!
+                        </td>
+                    </tr>
+                }
+                else if (Model.AktifYeterlikSurecId.HasValue)
+                {
+
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru Yap</button>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>Başvuru Durumu</td>
+                        <td>:</td>
+                        <td>
+                            Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                            <br />
+                            <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th width="75">
+                                </th>
+                                <th width="40"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th>Yeterlik Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                var rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.YeterlikBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.YeterlikBasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail">
+                                        </td>
+                                        <td>
+                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                        </td>
+                                        <td>
+                                            @item.BasvuruTarihi
+                                        </td>
+
+                                        <td>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BasvuruYap", new { YeterlikBasvuruID = item.YeterlikBasvuruID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.YeterlikBasvuruID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.YeterlikBasvuruID" style="display:none">
+                                        <td id="cls-@item.YeterlikBasvuruID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+  function YeniBasvuruDuyuruKontrol() {
+        ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
+    }
+   function BasvuruSil(sndr, id, tarih) {  
+         bootbox.dialog({
+            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;color:maroon;'>" + tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
+            title: "Yeterlik Başvuru Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Yeterlik Başvurusunu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("Sil")',
+                            data: { id: id },
+                            success: function (result) { 
+                                if (result.IsSuccess) {
+                                    $(sndr).closest("tr").remove();
+                                    $(".cls-" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) { 
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                        PanelRefresh(_panel, true);
+                    }
+                }
+            }
+        });
+    }
+</script>

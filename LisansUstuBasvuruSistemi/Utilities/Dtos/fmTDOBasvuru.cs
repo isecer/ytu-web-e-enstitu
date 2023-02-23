@@ -40,8 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EnstituAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
-        public string ProgramAdi { get; set; }
-        public string TcPasaPortNo { get; set; }
+        public string ProgramAdi { get; set; } 
         public string KullaniciTipAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
@@ -61,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? Es_EYKYaGonderildi { get; set; }
         public bool? Es_EYKDaOnaylandi { get; set; }
         public int Sira { get; set; }
-        public List<TDODanismanFiltreModel> TDODanismanDetayModels { get; set; }
+        public List<TdoDanismanFiltreModel> TDODanismanDetayModels { get; set; }
         public DateTime RowDate { get; internal set; }
         public int? VarolanTezDanismanID { get; set; }
         public bool? VarolanDanismanOnayladi { get; internal set; }

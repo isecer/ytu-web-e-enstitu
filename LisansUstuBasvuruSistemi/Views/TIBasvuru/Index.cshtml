@@ -85,7 +85,7 @@
                                 <td></td>
                                 <td>:</td>
                                 <td>
-                                    <button type="button" class="btn btn-success" onclick="newApp()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
+                                    <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru</button>
                                 </td>
                             </tr>
                         }
@@ -146,8 +146,8 @@
                                 <tr>
                                     <th width="75"></th>
                                     <th>Ad Soyad</th>
-                                    <th>Aktif Rapor Dönemi</th>
-                                    <th width="180">Aktif Rapor Durumu</th>
+                                    <th>Son Rapor Dönemi</th>
+                                    <th width="180">Son Rapor Durumu</th>
                                     <th width="45"></th>
                                 </tr>
 
@@ -169,7 +169,7 @@
                                                         <td style="width: 30px;">@RowIndex</td>
                                                         <td>
                                                             <ul class="panel-controls">
-                                                                <li id="iShow_@item.TIBasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TIBasvuruID')">
+                                                                <li id="iShow_@item.TIBasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TIBasvuruID')">
                                                                     <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                                 </li>
                                                             </ul>
@@ -235,7 +235,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 {
     <script>
         $(function () {
-            showDetail('@(Model.TIBasvuruID ?? Model.Data.First().TIBasvuruID)');
+            ShowDetail('@(Model.TIBasvuruID ?? Model.Data.First().TIBasvuruID)');
             if ('@(Model.TIBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTIAraRaporFormu(@Model.TIBasvuruID); }, 250);
 
         },200)
@@ -269,12 +269,12 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function newApp() {
-        showDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
+    function YeniBasvuruDuyuruKontrol() {
+        ShowDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
     }
 
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -285,7 +285,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
     function getDetailx(id, Isdelete, sndr) {
 
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailTiBasvuru", "Ajax")',
             data: { id: id, UniqueID: '@Model.IsDegerlendirme', IsDelete: (Isdelete == true)  },
@@ -293,10 +293,10 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
                     Resized(window.innerWidth);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
                         title: "Başvuru Silme İşlemi",
@@ -332,7 +332,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
 
@@ -356,7 +356,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
     }
     function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
         var _panel = $('#bsvrDet_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
             message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + RaporNo + " bilgisini silmek istiyor musunuz?</td></tr></table><br/>",
             title: "Rapor Silme İşlemi",
@@ -374,7 +374,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             }, complete: function (httpObj, textStatus) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 ShowMessageAjaxRequest(httpObj.status, textStatus);
                             }
                         });
@@ -384,7 +384,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 }
             }
@@ -400,13 +400,13 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
     function showSRDialog(TIBasvuruID,TIBasvuruAraRaporID, SRTalepID) {
         var _panel = $('#bsvrDet_' + TIBasvuruID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("RezervasyonAl", "TIBasvuru")',
             data: { 'TIBasvuruAraRaporID': TIBasvuruAraRaporID, 'SRTalepID': SRTalepID },
             success: function (result) {
 
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 var btbxxFS = bootbox.dialog({
                     message: result,
                     title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez İzleme Toplantı Bilgi Girişi' : 'Tez İzleme Toplantı Bilgileri Düzenleme'),
@@ -416,7 +416,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                             className: "btn-primary",
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                _pRefresh(pnlx, false);
+                                PanelRefresh(pnlx, false);
                                 $('#TIAraRaporSrForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
@@ -429,14 +429,14 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                             getMsg(result);
                                             return false;
                                         }
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
 
                                     },
                                     complete: function (cmp) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
-                                        _pRefresh(pnlx, true);
+                                        PanelRefresh(pnlx, true);
                                     }
 
                                 });
@@ -455,14 +455,14 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                 });
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
     }
       function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
           var _panel = $('#bsvrDet_' + TIBasvuruID);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetTiAraRaporFormu", "TIBasvuru")',
                 data: {
@@ -470,7 +470,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     'TIBasvuruAraRaporID': TIBasvuruAraRaporID
                 },
                 success: function (resultG) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
@@ -482,7 +482,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                     className: "btn-info btnKaydet",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmTIAraRaporFormu').ajaxForm({
                                             success: function (result) { 
                                                 if (result.mMessage.IsSuccess && result.SaveData) {
@@ -511,13 +511,13 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                                     if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         });
@@ -538,7 +538,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
 
                 }
@@ -563,7 +563,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                         label: "Evet",
                         className: "btn-success",
                         callback: function (event) {
-                            _pRefresh(_panel, false);
+                            PanelRefresh(_panel, false);
                             $.ajax({
                                 url: '@Url.Action("AraRaporDegerlendi", "TIBasvuru")',
                                 data: {
@@ -576,7 +576,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
                                 },
                                 success: function (result) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     if (result.IsSuccess || result.IsRefresh) {
                                         getDetailx(TIBasvuruID);
 
@@ -585,7 +585,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
                                 },
                                 error: function (err) {
-                                    _pRefresh(_panel, true);
+                                    PanelRefresh(_panel, true);
                                     alert(err.responseText);
 
                                 }

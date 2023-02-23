@@ -79,17 +79,17 @@
                                 if (tarih != null && salon != null && tarih != "" && salon != "") {
                                     $('#saatLstContnt').css("display", "block");
                                     var _panel = $('.pnlRfrsh');
-                                    _pRefresh(_panel, false);
+                                    PanelRefresh(_panel, false);
                                     $.ajax({
                                         url: '@Url.Action("getSaatList", "Ajax")',
                                         data: { 'SRSalonID': salon,'IsPopupFrame':'true', 'SRTalepTipID': 1, 'Tarih': tarih, 'SRTalepID': '@(Model.SRTalepID <= 0 ? "" : Model.SRTalepID.ToString())','MzRowID':'@Model.MzRowID' },
                                         success: function (result) {
                                             $('#saatLstContnt').html(result.Deger);
-                                            _pRefresh(_panel, true);
+                                            PanelRefresh(_panel, true);
                                         },
                                         error: function (err) {
                                             alert(err.responseText);
-                                            _pRefresh(_panel, true);
+                                            PanelRefresh(_panel, true);
                                         }
                                     });
                                 }

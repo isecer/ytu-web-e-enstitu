@@ -3,7 +3,8 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using DevExpress.XtraReports.UI;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using System.Linq;
 using System.Collections.Generic;
@@ -42,16 +43,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 else if (model.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) lblSinavGirisFormu.Text = "YATAY GEÇİŞ SINAVINA GİRİŞ FORMU";
                 else lblSinavGirisFormu.Text = "YTU YENİ MEZUN BAŞVURU FORMU";
 
-                if (model.KullaniciTipID == KullaniciTipBilgi.YerliOgrenci)
-                {
-                    cell_TcKimlikNo.Text = model.TcKimlikNo;
-                    lngLbl_TCK.Text = "T.C. kimlik No";
-                }
-                else
-                {
-                    cell_TcKimlikNo.Text = model.PasaportNo;
-                    lngLbl_TCK.Text = "Pasaport No";
-                }
+
+                cell_TcKimlikNo.Text = model.TcKimlikNo;
+                lngLbl_TCK.Text = "T.C. kimlik No";
+
                 lngLbl_AdSoyad.Text = "Ad Soyad";
                 cell_AdiSoyadi.Text = model.Ad + " " + model.Soyad;
                 lngLbl_DogumTarihi.Text = "Doğum Tarihi";
@@ -61,7 +56,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 lngLbl_EnstituAdi.Text = "Enstitü Adı";
                 cell_EnstituAdi.Text = model.EnstituAdi;
                 lngLbl_AkademikTarih.Text = "Eğitim Öğretim Yılı";
-                cell_AkademikYil.Text = model.BasvuruSurec.BaslangicYil + "-" + model.BasvuruSurec.BitisYil + " " + db.Donemlers.Where(p=>p.DonemID == model.BasvuruSurec.DonemID).First().DonemAdi;
+                cell_AkademikYil.Text = model.BasvuruSurec.BaslangicYil + "-" + model.BasvuruSurec.BitisYil + " " + db.Donemlers.Where(p => p.DonemID == model.BasvuruSurec.DonemID).First().DonemAdi;
                 lngLbl_BasvurulanBolum.Text = "Anabilim Dalı";
                 cell_BolumAdi.Text = btercih.ProgramBilgileri.AnabilimDaliAdi;
                 lngLbl_BasvurulanProgram.Text = "Program";
@@ -159,7 +154,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     cell_SinavTuruYD.Text = model.BasvurularSinavBilgi_D.SinavDetay.SinavAdi + (sdil != null ? " (" + sdil.DilAdi + ")" : "");
                     if (model.BasvurularSinavBilgi_D.Sinav.IsTaahhutVar == true && model.BasvurularSinavBilgi_D.Sinav.SinavNotu == 0)
                     {
-                        cell_SinavPuanYD.Text = "En düşük "+ model.BasvurularSinavBilgi_D.SinavDetay.MinNotAdi + " sınav notlu belge taahhüt edildi."; 
+                        cell_SinavPuanYD.Text = "En düşük " + model.BasvurularSinavBilgi_D.SinavDetay.MinNotAdi + " sınav notlu belge taahhüt edildi.";
                     }
                     else
                     {

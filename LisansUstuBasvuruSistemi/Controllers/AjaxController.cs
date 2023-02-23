@@ -28,10 +28,12 @@ using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Filters;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
+    
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AjaxController : Controller
     {
@@ -463,8 +465,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (tbInx == 1)
             {
-                #region KimlikBilgisi
-                mdl.PasaportNo = basvuru.PasaportNo;
+                #region KimlikBilgisi 
                 mdl.TcKimlikNo = basvuru.TcKimlikNo;
                 mdl.CinsiyetAdi = basvuru.Cinsiyetler.CinsiyetAdi;
                 mdl.AnaAdi = basvuru.AnaAdi;
@@ -1870,8 +1871,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return pt.ToJsonResult();
         }
         public ActionResult GetOts(string enstituKod, bool bosSecimVar = true, int? haricOgreniTipKod = null)
-        { 
-           var  cmbmld = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, bosSecimVar, true, haricOgreniTipKod);
+        {
+            var cmbmld = OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, bosSecimVar, true, haricOgreniTipKod);
 
             return cmbmld.ToJsonResult();
         }
@@ -1882,7 +1883,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bool ylShow = false;
             if (!isSubOt)
             {
-                var bs = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId); 
+                var bs = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
                 ylShow = _entities.OgrenimTipleris.First(p => p.EnstituKod == bs.EnstituKod && p.OgrenimTipKod == otKod.ToInt().Value).YLEgitimBilgisiIste;
             }
             return new { IsSubOT = isSubOt, data = cmbmld.Select(s => new { s.Value, s.Caption }), YLShow = ylShow.ToString().ToLower() }.ToJsonResult();
@@ -3457,25 +3458,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             id = k.KullaniciID + "",
                             AdSoyad = k.Ad + " " + k.Soyad,
                             text = k.Ad + " " + k.Soyad,
-                            KullaniciTipAdi = kt.KullaniciTipAdi,
-                            TcKimlikNo = kt.Yerli ? k.TcKimlikNo : k.PasaportNo,
-                            OgrenciNo = k.OgrenciNo,
+                            kt.KullaniciTipAdi,
+                            k.TcKimlikNo,
+                            k.OgrenciNo,
                             Images = k.ResimAdi
 
-                        }).Take(15).ToList();
-
-            var kul2 = kuls.Select(s => new
-            {
-                id = s.id + "",
-                AdSoyad = s.AdSoyad,
-                text = s.AdSoyad,
-                KullaniciTipAdi = s.KullaniciTipAdi,
-                TcKimlikNo = s.TcKimlikNo,
-                OgrenciNo = s.OgrenciNo,
-                Images = s.Images.ToKullaniciResim()
-            }).ToList();
-
-            return kul2.ToJsonResult();
+                        }).Take(15).ToList(); 
+            return kuls.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetYTUOgretimEleman(string term)

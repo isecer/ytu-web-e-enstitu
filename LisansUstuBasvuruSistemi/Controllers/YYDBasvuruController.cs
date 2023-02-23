@@ -64,8 +64,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasvuruSurecAdi = bs.BaslangicYil + "/" + bs.BitisYil + " " + d.DonemAdi,
                         BasTar = bs.BaslangicTarihi,
                         BitTar = bs.BitisTarihi,
-                        ResimAdi = s.Kullanicilar.ResimAdi,
-                        TcPasaPortNo = s.Kullanicilar.TcKimlikNo != null ? s.Kullanicilar.TcKimlikNo : s.Kullanicilar.PasaportNo,
+                        ResimAdi = s.Kullanicilar.ResimAdi, 
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                         KullaniciTipID = s.Kullanicilar.KullaniciTipID,
                         KullaniciTipAdi = ktip.KullaniciTipAdi,
@@ -81,7 +80,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (model.BasvuruSurecID.HasValue) q = q.Where(p => p.BasvuruSurecID == model.BasvuruSurecID.Value);
             //if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcPasaPortNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue) q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID.Value);
             model.RowCount = q.Count();
             var IndexModel = new MIndexBilgi();
@@ -190,8 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.Ad = kul.Ad;
                         model.Soyad = kul.Soyad;
                         model.CinsiyetID = kul.CinsiyetID; 
-                        model.TcKimlikNo = kul.TcKimlikNo;
-                        model.PasaportNo = kul.PasaportNo; 
+                        model.TcKimlikNo = kul.TcKimlikNo; 
                         model.EvTel = "";
                         model.CepTel = kul.CepTel;
                         model.EMail = kul.EMail;
@@ -516,24 +514,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var sbilgi = db.BasvuruSurecSinavTipleris.Where(p => p.SinavTipID == kModel.BasvurularSinavBilgi_A.SinavTipID && p.BasvuruSurecID == kModel.BasvuruSurecID).First();
                         var aStip = db.SinavTipleris.Where(p => p.SinavTipID == kModel.BasvurularSinavBilgi_A.SinavTipID).First();
                         kModel.BasvurularSinavBilgi_A.SinavTipKod = aStip.SinavTipKod;
-                        if (sbilgi.WebService)
-                        {
-                            var _yil = kModel.BasvurularSinavBilgi_A.WsSinavDonem.Split('~')[0].ToInt().Value;
-                            // var _Donem = kModel.BasvurularSinavBilgi_A.WsSinavDonem.Split('~')[1];
-                            var SonucID = kModel.BasvurularSinavBilgi_A.WsSonucID;
-                            // kModel.BasvurularSinavBilgi_A.WsSinavDonem = _Donem;
-                            kModel.BasvurularSinavBilgi_A.WsSinavYil = _yil;
-                            string tck = kul.KullaniciTipleri.Yerli ? kModel.TcKimlikNo : kModel.PasaportNo;
-                            var snvSonuc = Management.getSinavTipSonucModel(kModel.BasvurularSinavBilgi_A.SinavTipID, kModel.BasvuruSurecID, _yil.ToString(), SonucID, tck);
-                            if (kModel.BasvurularSinavBilgi_A.SinavNotu != snvSonuc.Puan)
-                            {
-                                string msg = "Giriş yapılan sınav notu ile ÖSYM den çekilen not birbiri ile uyuşmuyor!";
-                                _MmMessage.Messages.Add(msg);
-                                _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_A.SinavTipID" });
-                                stpSon = true;
-                            }
-                            kModel.BasvurularSinavBilgi_A.SinavTipGrupID = SinavTipGrup.Ales_Gree;
-                        }
+                        //if (sbilgi.WebService)
+                        //{
+                        //    var _yil = kModel.BasvurularSinavBilgi_A.WsSinavDonem.Split('~')[0].ToInt().Value;
+                        //    // var _Donem = kModel.BasvurularSinavBilgi_A.WsSinavDonem.Split('~')[1];
+                        //    var SonucID = kModel.BasvurularSinavBilgi_A.WsSonucID;
+                        //    // kModel.BasvurularSinavBilgi_A.WsSinavDonem = _Donem;
+                        //    kModel.BasvurularSinavBilgi_A.WsSinavYil = _yil;
+                        //    string tck = kul.KullaniciTipleri.Yerli ? kModel.TcKimlikNo : kModel.PasaportNo;
+                        //    var snvSonuc = Management.getSinavTipSonucModel(kModel.BasvurularSinavBilgi_A.SinavTipID, kModel.BasvuruSurecID, _yil.ToString(), SonucID, tck);
+                        //    if (kModel.BasvurularSinavBilgi_A.SinavNotu != snvSonuc.Puan)
+                        //    {
+                        //        string msg = "Giriş yapılan sınav notu ile ÖSYM den çekilen not birbiri ile uyuşmuyor!";
+                        //        _MmMessage.Messages.Add(msg);
+                        //        _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_A.SinavTipID" });
+                        //        stpSon = true;
+                        //    }
+                        //    kModel.BasvurularSinavBilgi_A.SinavTipGrupID = SinavTipGrup.Ales_Gree;
+                        //}
 
                         kModel.BasvurularSinavBilgi_A.SinavTipGrupID = SinavTipGrup.Ales_Gree;
                         BasvurularSinavBilgiList.Add(kModel.BasvurularSinavBilgi_A);
@@ -581,37 +579,37 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         var dStip = db.SinavTipleris.Where(p => p.SinavTipID == kModel.BasvurularSinavBilgi_D.SinavTipID).First();
                         kModel.BasvurularSinavBilgi_D.SinavTipKod = dStip.SinavTipKod;
-                        if (sbilgi.WebService)
-                        {
-                            var _yil = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~')[0].ToInt().Value;
-                            // var _Donem = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~')[1];
-                            var SonucID = kModel.BasvurularSinavBilgi_D.WsSonucID;
-                            string tck = kul.KullaniciTipleri.Yerli ? kModel.TcKimlikNo : kModel.PasaportNo;
+                        //if (sbilgi.WebService)
+                        //{
+                        //    var _yil = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~')[0].ToInt().Value;
+                        //    // var _Donem = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~')[1];
+                        //    var SonucID = kModel.BasvurularSinavBilgi_D.WsSonucID;
+                        //    string tck = kul.KullaniciTipleri.Yerli ? kModel.TcKimlikNo : kModel.PasaportNo;
 
-                            var snvBW = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~');
-                            if (dStip.WsSinavCekimTipID.HasValue && dStip.WsSinavCekimTipID.Value == WsCekimTipi.Tarih)
-                            {
+                        //    var snvBW = kModel.BasvurularSinavBilgi_D.WsSinavDonem.Split('~');
+                        //    if (dStip.WsSinavCekimTipID.HasValue && dStip.WsSinavCekimTipID.Value == WsCekimTipi.Tarih)
+                        //    {
 
-                                kModel.BasvurularSinavBilgi_D.WsSinavDonem = snvBW[1];
-                                kModel.BasvurularSinavBilgi_D.WsSinavYil = snvBW[1].ToDate().Value.Year;
+                        //        kModel.BasvurularSinavBilgi_D.WsSinavDonem = snvBW[1];
+                        //        kModel.BasvurularSinavBilgi_D.WsSinavYil = snvBW[1].ToDate().Value.Year;
 
-                            }
-                            else
-                            {
-                                kModel.BasvurularSinavBilgi_D.WsSinavDonem = "";
-                                kModel.BasvurularSinavBilgi_D.WsSinavYil = snvBW[0].ToInt().Value;
-                            }
-                            var snvSonuc = Management.getSinavTipSonucModel(kModel.BasvurularSinavBilgi_D.SinavTipID, kModel.BasvuruSurecID, _yil.ToString(), SonucID, tck);
+                        //    }
+                        //    else
+                        //    {
+                        //        kModel.BasvurularSinavBilgi_D.WsSinavDonem = "";
+                        //        kModel.BasvurularSinavBilgi_D.WsSinavYil = snvBW[0].ToInt().Value;
+                        //    }
+                        //    var snvSonuc = Management.getSinavTipSonucModel(kModel.BasvurularSinavBilgi_D.SinavTipID, kModel.BasvuruSurecID, _yil.ToString(), SonucID, tck);
 
-                            if (!(kModel.BasvurularSinavBilgi_D.IsTaahhutVar == true && snvSonuc.ShowIsTaahhutVar)) //eğer sınav sonucu yok ise seçilen dönem taahhütlü ise ve taahhüt işaretlenmiş ise puan kontrolü yapılmaz.
-                                if (kModel.BasvurularSinavBilgi_D.SinavNotu != snvSonuc.Puan)
-                                {
-                                    string msg = "Giriş yapılan Dil sınavı notu ile ÖSYM den çekilen not birbiri ile uyuşmuyor!";
-                                    _MmMessage.Messages.Add(msg);
-                                    _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_D.SinavTipID" });
-                                    stpSon = true;
-                                }
-                        }
+                        //    if (!(kModel.BasvurularSinavBilgi_D.IsTaahhutVar == true && snvSonuc.ShowIsTaahhutVar)) //eğer sınav sonucu yok ise seçilen dönem taahhütlü ise ve taahhüt işaretlenmiş ise puan kontrolü yapılmaz.
+                        //        if (kModel.BasvurularSinavBilgi_D.SinavNotu != snvSonuc.Puan)
+                        //        {
+                        //            string msg = "Giriş yapılan Dil sınavı notu ile ÖSYM den çekilen not birbiri ile uyuşmuyor!";
+                        //            _MmMessage.Messages.Add(msg);
+                        //            _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_D.SinavTipID" });
+                        //            stpSon = true;
+                        //        }
+                        //}
                         kModel.BasvurularSinavBilgi_D.SinavTipGrupID = SinavTipGrup.DilSinavlari;
                         BasvurularSinavBilgiList.Add(kModel.BasvurularSinavBilgi_D);
                     }
@@ -790,8 +788,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         CiltNo = kModel.CiltNo,
                         AileNo = kModel.AileNo,
                         SiraNo = kModel.SiraNo,
-                        TcKimlikNo = kModel.TcKimlikNo,
-                        PasaportNo = kModel.PasaportNo,
+                        TcKimlikNo = kModel.TcKimlikNo, 
                         UyrukKod = kModel.UyrukKod,
                         SehirKod = kModel.SehirKod,
                         IsTel = kModel.IsTel,
@@ -854,8 +851,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.CiltNo = kModel.CiltNo;
                     data.AileNo = kModel.AileNo;
                     data.SiraNo = kModel.SiraNo;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.PasaportNo = kModel.PasaportNo;
+                    data.TcKimlikNo = kModel.TcKimlikNo; 
                     data.UyrukKod = kModel.UyrukKod;
                     data.SehirKod = kModel.SehirKod;
                     data.IsTel = kModel.IsTel;

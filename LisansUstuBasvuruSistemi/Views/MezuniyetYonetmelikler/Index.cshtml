@@ -82,7 +82,7 @@
                                                     </td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow-ana-@item.MezuniyetYonetmelikID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MezuniyetYonetmelikID,'ana-')">
+                                                            <li id="iShow-ana-@item.MezuniyetYonetmelikID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MezuniyetYonetmelikID,'ana-')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -124,7 +124,7 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id, tip) {
+    function ShowDetail(id, tip) {
         var rwID = $('#iShow-' + tip + id);
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");

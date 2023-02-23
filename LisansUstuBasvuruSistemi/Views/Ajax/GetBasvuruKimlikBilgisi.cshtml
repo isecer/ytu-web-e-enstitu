@@ -14,10 +14,10 @@
         <table class="table" style="font-size:9pt;margin:0px;color:@color;">
 
             <tr>
-                <td width="170" style="text-align:right;">@(Model.IsYerli ? "T.C. kimlik No" : "Pasaport No")</td>
+                <td width="170" style="text-align:right;">T.C. kimlik No</td>
                 <td width="10">:</td>
                 <td>
-                    @(Model.IsYerli ? Model.TcKimlikNo : Model.PasaportNo)
+                    @Model.TcKimlikNo
                 </td>
             </tr>
             <tr>

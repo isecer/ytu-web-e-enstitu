@@ -48,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             ObsGetData obsData = new ObsGetData();
             return obsData.GetObsStudentControl(TcKimlikNo);
-        } 
+        }
         public static string gsisKayitAktar(string kayit)
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };//SSL hatasını gidermek için 
@@ -299,8 +299,8 @@ namespace LisansUstuBasvuruSistemi.Models
             }
 
             return model;
-        } 
-      
+        }
+
         public static List<int> GetUniversiteTurKods()
         {
             var uTurList = new List<int>();
@@ -381,7 +381,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                AlanKota = bsKot.OrtakKota ? (bsKot.OrtakKotaSayisi.Value + (bsKot.AlanDisiEkKota ?? 0)) : (s.AlanTipID == AlanTipi.AlanIci ? (bsKot.AlanIciKota + (bsKot.AlanIciEkKota ?? 0)) : (bsKot.AlanDisiKota + (bsKot.AlanDisiEkKota ?? 0))),
                                KullaniciID = b.KullaniciID,
                                IsYerliOgrenci = kt.Yerli,
-                               TcKimlikNo = kt.Yerli ? b.TcKimlikNo : b.PasaportNo,
+                               TcKimlikNo = b.TcKimlikNo,
                                OgrenciNo = k.OgrenciNo,
                                AdSoyad = k.Ad + " " + k.Soyad,
                                YtuOgrencisi = k.YtuOgrencisi,
@@ -4910,7 +4910,6 @@ namespace LisansUstuBasvuruSistemi.Models
                     model.Soyad = kul.Soyad;
                     model.CinsiyetID = kul.CinsiyetID;
                     model.TcKimlikNo = kul.TcKimlikNo;
-                    model.PasaportNo = kul.PasaportNo;
                     model.CepTel = kul.CepTel;
                     model.EMail = kul.EMail;
                     model.Adres = kul.Adres;
@@ -5076,8 +5075,7 @@ namespace LisansUstuBasvuruSistemi.Models
                              CiltNo = s.CiltNo,
                              AileNo = s.AileNo,
                              SiraNo = s.SiraNo,
-                             TcKimlikNo = s.TcKimlikNo,
-                             PasaportNo = s.PasaportNo,
+                             TcKimlikNo = s.TcKimlikNo, 
                              UyrukKod = s.UyrukKod,
                              SehirKod = s.SehirKod,
                              IsTel = s.IsTel,

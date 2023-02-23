@@ -74,7 +74,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.SinavTipID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SinavTipID')">
+                                                            <li id="iShow_@item.SinavTipID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SinavTipID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -137,7 +137,7 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id) {
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -146,19 +146,19 @@
     }
     function getDetail(id, Isdelete, sndr) {
         var _panel = $('#STDetay_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var tbName = "@TabAdlari.SinavTipTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         $.ajax({
             url: '@Url.Action("GetDetail", "SinavTipleri")',
             data: { id: id, tbInx: tID },
             success: function (result) {
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçili olan sınav tipi silinsin mi?</td></tr></table>",
                         title: "Sınav tipi silme işlemi",
@@ -185,7 +185,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

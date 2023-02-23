@@ -84,7 +84,7 @@
                                                     </td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.GonderilenMailID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.GonderilenMailID)">
+                                                            <li id="iShow_@item.GonderilenMailID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.GonderilenMailID)">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -156,7 +156,7 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id) {
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -166,17 +166,17 @@
 
     function getDetail(GonderilenMailID) {
         var _panel = $('#panel-body-' + GonderilenMailID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         setTimeout(function () {
             $.ajax({
                 url: '@Url.Action("MailDetay")',
                 data: { 'GonderilenMailID': GonderilenMailID },
                 success: function (result) {
                     $(_panel).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     alert(err.responseText);
                 }
             });

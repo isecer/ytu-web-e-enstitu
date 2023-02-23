@@ -139,7 +139,7 @@
                                                     </td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow-ana-@item.BasvuruSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.BasvuruSurecID,'ana-')">
+                                                            <li id="iShow-ana-@item.BasvuruSurecID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.BasvuruSurecID,'ana-')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -184,7 +184,7 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id, tip) {
+    function ShowDetail(id, tip) {
         var rwID = $('#iShow-' + tip + id);
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -194,7 +194,7 @@
 
     function getDetail(id, Isdelete, sndr) {
        var tbName = "@TabAdlari.BasvuruSureciTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if ($('#SelectedTb-' + tbName).length > 0) {
             subData(id, Isdelete, sndr);
         }
@@ -226,9 +226,9 @@
         var _panel = $('#pnglDB_' + id);
 
         var tbName = "@TabAdlari.BasvuruSureciTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         if (Isdelete == true) tID = 1;
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("getBsSubData", "BasvuruSureci")',
             data: { id: id, tbInx: tID, IsDelete: (Isdelete == true) },
@@ -236,7 +236,7 @@
             success: function (result) {
                 if (Isdelete != true) {
                     $('#' + tbName + '-' + tID).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
 
@@ -262,12 +262,12 @@
                         }
                     });
                     $(btbx).find('.modal-dialog').addClass('modal-lg');
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -276,8 +276,8 @@
         var cID = (bsrID + "_" + otID + "_" + prKod);
         var _panel = $('#pnglDB_' + bsrID);
         var tbName = "@TabAdlari.MulakatDetayTN-" + cID;
-        var tID = getSelectedTabID(tbName);
-        _pRefresh(_panel, false);
+        var tID = GetSelectedTabID(tbName);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("getMulakatDetay", "MulakatSureci")',
             data: { BasvuruSurecID: bsrID, OgrenimTipKod: otID, ProgramKod: prKod, tbInx: tID, IsDelete: false, IsBootBox: true },
@@ -295,20 +295,20 @@
                     }
                 });
                 $(btbx).find('.modal-dialog').addClass('modal-lg');
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
     function getBsncPrDetay(id, prKod, otID) {
         var _panel = $('#pnglDB_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var tbName = "@TabAdlari.BasvuruSonucDetayTN-" + id;
-        var tID = getSelectedTabID(tbName);
+        var tID = GetSelectedTabID(tbName);
         $.ajax({
             url: '@Url.Action("getBasvuruSonucDetay", "BasvuruSureci")',
             data: { id: id, ProgramKod: prKod, OgrenimTipKod: otID, tbInx: tID, IsDelete: false, IsBootBox: true },
@@ -322,7 +322,7 @@
                         //    className: "btn-danger",
                         //    callback: function () {
                         //        sil(sndr, id);
-                        //        _pRefresh(_panel, true);
+                        //        PanelRefresh(_panel, true);
                         //    }
 
                         //},
@@ -335,13 +335,13 @@
                     }
                 });
                 $(btbx).find('.modal-dialog').addClass('modal-lg');
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
 
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -357,12 +357,12 @@
                     label: "Başvuruları Hesapla",
                     className: "btn-danger",
                     callback: function () {
-                        _pRefresh(_panel, false);
+                        PanelRefresh(_panel, false);
                         $.ajax({
                             url: '@Url.Action("BasvuruSonucHesap", "BasvuruSureci")',
                             data: { id: id },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
                                     getDetail(id);
                                 }
@@ -370,7 +370,7 @@
                             },
                             error: function (err) {
                                 alert(err.responseText);
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                             }
                         });
                     }
@@ -568,12 +568,12 @@
 
     function getMJSendMail(id, JuriBGonderilsin) {
         var _panel = $('#pnglDB_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("mailGonderJuriYer", "BasvuruSureci")',
             data: { 'id': id, 'JuriBilgisiGonderilsin': JuriBGonderilsin },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 showMmMessage(result.Messages, 'Tamam');
                 if (result.IsSuccess) {
                     getDetail(id);
@@ -582,7 +582,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -622,12 +622,12 @@
     }
     function getMJNBolumSendMail(id, isSinavYerOrSinavNotGiris) {
         var _panel = $('#pnglDB_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("mailGonderBolumSinavYerBilgiGiris", "BasvuruSureci")',
             data: { 'id': id, 'isSinavYerOrSinavNotGiris': isSinavYerOrSinavNotGiris },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 showMmMessage(result.Messages, 'Tamam');
                 if (result.IsSuccess) {
                     getDetail(id);
@@ -635,7 +635,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -711,12 +711,12 @@
 
                         });
                          var _panel = $('#pnglDB_' + id);
-                        _pRefresh(_panel, false);
+                        PanelRefresh(_panel, false);
                         $.ajax({
                             url: '@Url.Action("basvuruSonucMailGonderim", "BasvuruSureci")',
                             data: { 'id': id, 'IsSonucOrAnket': IsSonucOrAnket, 'OgrenimTipKods': OtipVal.join(',') },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 showMmMessage(result.Messages, 'Tamam');
                                 if (result.IsSuccess) {
                                     getDetail(id);
@@ -725,7 +725,7 @@
                             },
                             error: function (err) {
                                 alert(err.responseText);
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                             }
                         });
                     }
@@ -771,7 +771,7 @@
                     className: "btn-danger",
                     callback: function() {
                         var _panel = $('#pnglDB_' + id);
-                        _pRefresh(_panel, false);
+                        PanelRefresh(_panel, false);
                         var OtipVal = [];
                         $('.ChkTKKOtip').each(function (inx, chk) {
                             if ($(chk).prop('checked')) OtipVal.push(parseInt($(chk).val()));
@@ -783,11 +783,11 @@
                             success: function(result) {
                                 if (result.Messages.length > 0)
                                     showMmMessage(result.Messages, 'Tamam');
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                             },
                             error: function(err) {
                                 alert(err.responseText);
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                             }
                         });
                     }
@@ -853,16 +853,16 @@
                     className: "btn-danger",
                     callback: function () {
                         var _panel = $('#pnglDB_' + id);
-                        _pRefresh(_panel, false);
+                        PanelRefresh(_panel, false);
                         $.ajax({
                             url: '@Url.Action("Kopyala")',
                             data: { basvuruSurecID: id, EnstituKod: eKod, IsSinavOrKota: IsSinavOrKota },
                             success: function (result) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                _pRefresh(_panel, true);
+                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });

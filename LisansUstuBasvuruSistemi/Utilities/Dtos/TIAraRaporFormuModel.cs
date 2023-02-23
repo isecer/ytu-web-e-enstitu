@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class TIAraRaporFormuModel : TIBasvuruAraRapor
+    public class TiAraRaporFormuModel : TIBasvuruAraRapor
     {
         public string DilKodu { get; set; }
         public string OgrenciAnabilimdaliProgramAdi { get; set; }
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public HttpPostedFileBase Dosya { get; set; }
 
-        public TIAraRaporFormuModel()
+        public TiAraRaporFormuModel()
         {
             AnaTabAdi = new List<string>();
             JuriTipAdi = new List<string>();

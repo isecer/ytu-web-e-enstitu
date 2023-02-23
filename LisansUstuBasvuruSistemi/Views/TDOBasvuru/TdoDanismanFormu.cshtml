@@ -202,7 +202,7 @@
             $('.TdSinavUni').addClass('hide');
         }
         var _panel = $('#bbTdoForm');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "" && sndrVal != "-1") {
             $.ajax({
@@ -226,16 +226,16 @@
                     else {
                         $('.' + cls).html('<input type="text" name="' + inp + '" id="' + inp + '" maxlength="64" autocomplete="off" class="form-control" style="color:black;">');
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             $('#' + inp +'').val();
             $('#' + inp +'').empty();
         }
@@ -297,7 +297,7 @@
     });
     function getPrograms(sndr) {
         var _panel = $('#bbTdoForm');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var sndrVal = $(sndr).val();
         if (sndrVal != null && sndrVal != "") {
             $.ajax({
@@ -316,16 +316,16 @@
                     }
                     $('#TDProgramKod').append(opt);
 
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             $('#TDProgramKod').empty();
         }
     }

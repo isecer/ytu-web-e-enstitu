@@ -121,16 +121,21 @@
                                         <td>:</td>
                                         <td>@Model.IsAdmin.ToEvetHayir()</td>
                                     </tr>
+                                    <tr>
+                                        <td>Son Oturum Ip</td>
+                                        <td>:</td>
+                                        <td>@Model.LastLogonIP</td>
+                                    </tr>
                                 }
-                                <tr>
-                                    <td>Oluşturma Tarihi</td>
-                                    <td>:</td>
-                                    <td>@Model.OlusturmaTarihi.ToDatetTimeString()</td>
-                                </tr>
                                 <tr>
                                     <td>Son Giriş Tarihi</td>
                                     <td>:</td>
                                     <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToDatetTimeString() : "Henüz Giriş Yapmamış")</td>
+                                </tr>
+                                <tr>
+                                    <td>Oluşturma Tarihi</td>
+                                    <td>:</td>
+                                    <td>@Model.OlusturmaTarihi.ToDatetTimeString()</td>
                                 </tr>
 
                                 @if (Model.Aciklama.IsNullOrWhiteSpace() == false)
@@ -208,16 +213,7 @@
                             <td width="5">:</td>
                             <td>@Model.TcKimlikNo</td>
                         </tr>
-                    }
-                    @if (!Model.PasaportNo.IsNullOrWhiteSpace())
-                    {
-                        <tr>
-                            <td width="140">Pasaport No</td>
-                            <td width="5">:</td>
-                            <td>@Model.PasaportNo</td>
-                        </tr>
-                    }
-
+                    } 
                     @if (Model.CinsiyetID.HasValue)
                     {
                         <tr>
@@ -481,7 +477,7 @@
 <script>
         function rotateImage(rotate) {
             var _panel = $('#pImageD');
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             setTimeout(function () {
                 $.ajax({
                     url: '@Url.Action("RotateImage", "Ajax")',
@@ -490,12 +486,12 @@
                         var src = root + result.ResimAdi + "?time=" + new Date();
                         $('.pImageD').first().attr('src', src);
                         $('#pImageD').find('.panel-refresh-layer').remove();
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     },
                     error: function (err) {
                         $('#pImageD').find('.panel-refresh-layer').remove();
                         alert(err.responseText);
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                     }
                 });
             }, 1000);
@@ -504,12 +500,12 @@
     function getImageUpload() {
 
         var _panelM = $('#pImageD');
-        _pRefresh(_panelM, false);
+        PanelRefresh(_panelM, false);
         $.ajax({
             url: '@Url.Action("GetImageUpload", "Ajax")',
             data: {  'KullaniciID': @Model.KullaniciID },
             success: function (resultPG) {
-                _pRefresh(_panelM, true);
+                PanelRefresh(_panelM, true);
                 var btbxxFSx = bootbox.dialog({
                     message: resultPG,
                     title: "<i class='fa fa-user fa-lg'></i> Profil Resmi Yükleme İşlemi",
@@ -521,7 +517,7 @@
                                 var kbuton = $(btbxxFSx).find('.modal-footer').find('.btn-primary').first();
                                 $(kbuton).attr('disabled', 'disabled');
                                 var _panel = $('#_ImageUploadPnl');
-                                _pRefresh(_panel, false);
+                                PanelRefresh(_panel, false);
                                 $('#GetImageUploadForm').ajaxForm({
                                     success: function (result) {
                                         if (result.mMessage.IsSuccess) {
@@ -535,7 +531,7 @@
                                                 $(_userMainImg).attr('src', src);
                                             }
 
-                                            _pRefresh(_panel, true);
+                                            PanelRefresh(_panel, true);
                                             setTimeout(function () {
                                                 var _clsBtn = $(btbxxFSx).find('.modal-header').find('button').first();
                                                 $(_clsBtn).click();
@@ -546,15 +542,15 @@
                                             getMsg(result.mMessage);
                                             return false;
                                         }
-                                        _pRefresh(_panel, true);
+                                        PanelRefresh(_panel, true);
                                     },
                                     complete: function (cmp) {
                                         $(kbuton).removeAttr('disabled');
-                                        _pRefresh(_panel, true);
+                                        PanelRefresh(_panel, true);
                                     },
                                     error: function (err) {
                                         $(kbuton).removeAttr('disabled');
-                                        _pRefresh(_panel, true);
+                                        PanelRefresh(_panel, true);
                                     }
 
                                 });
@@ -573,7 +569,7 @@
 
             },
             error: function (err) {
-                _pRefresh(_panelM, true);
+                PanelRefresh(_panelM, true);
                 alert(err.responseText);
             }
         });

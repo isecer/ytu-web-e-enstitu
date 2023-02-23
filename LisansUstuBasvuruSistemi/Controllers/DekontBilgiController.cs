@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using BiskaUtil;
 using Newtonsoft.Json.Linq;
 using System.Xml;
@@ -22,9 +23,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         // GET: DekontBilgi
 
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
-        public ActionResult Index(string BTID, string EKD,   bool IsPopup = false)
+        public ActionResult Index(string BTID, string EKD, bool IsPopup = false)
         {
-            var model = new KmDekontBilgi(); 
+            var model = new KmDekontBilgi();
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             int? BasvuruSurecID = null;
             bool yetkili = RoleNames.BasvuruSureci.InRoleCurrent() || RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
@@ -38,11 +39,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else kuLID = UserIdentity.Current.Id;
             var kul = db.Kullanicilars.Where(p => p.KullaniciID == kuLID).First();
-            var enstitu = db.Enstitulers.Where(p =>   p.EnstituKod == _EnstituKod).First();
+            var enstitu = db.Enstitulers.Where(p => p.EnstituKod == _EnstituKod).First();
             model.EnstituAdi = enstitu.EnstituAd;
             model.AdSoyad = kul.Ad + " " + kul.Soyad;
-            model.KullaniciTipID = kul.KullaniciTipID;
-            model.TcPasaportNo = kul.KullaniciTipleri.Yerli ? kul.TcKimlikNo : kul.PasaportNo;
+            model.KullaniciTipID = kul.KullaniciTipID; 
             model.KullaniciAktif = true;
             model.KullaniciID = kuLID;
             if (BTID.IsNullOrWhiteSpace() == false)
@@ -55,7 +55,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.ProgramBilgi = Management.getKontenjanProgramBilgi(tercih.ProgramKod, tercih.OgrenimTipKod, BasvuruSurecID.Value, tercih.Basvurular.KullaniciTipID.Value);
                 }
             }
-            ViewBag.IsPopup = IsPopup; 
+            ViewBag.IsPopup = IsPopup;
             ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(kuLID, _EnstituKod, BasvuruSurecTipi.LisansustuBasvuru, true), "Value", "Caption", BasvuruSurecID);
             ViewBag.UniqueID = new SelectList(Management.getbasvuruSurecleriTercihlerOdeme(BasvuruSurecID, kuLID, true, false), "Value", "Caption", BTID);
             return View(model);
@@ -63,7 +63,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Kayit(string UniqueID, DateTime? DekontTarihi, string DekontNo)
         {
-            var gd = new Guid(UniqueID); 
+            var gd = new Guid(UniqueID);
             var tercih = db.BasvurularTercihleris.Where(p => p.UniqueID == gd).FirstOrDefault();
 
             var prgOdemeBilig = Management.GetOnlineOdemeProgramDetay(UniqueID, true, true, true);
@@ -158,16 +158,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 KullaniciID = UserIdentity.Current.Id;
             }
-           
+
             var bolm = Management.getbasvuruSurecleriTercihlerOdeme(BasvuruSurecID, KullaniciID.Value, true, false);
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult getPRdetay(string UniqueID)
         {
-             
+
             var ngid = new Guid(UniqueID);
-            var mdl = Management.GetOnlineOdemeProgramDetay(UniqueID, true, true,true);
-         
+            var mdl = Management.GetOnlineOdemeProgramDetay(UniqueID, true, true, true);
+
             return View(mdl);
         }
 

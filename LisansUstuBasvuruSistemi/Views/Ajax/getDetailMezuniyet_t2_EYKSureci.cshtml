@@ -6,7 +6,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model MezuniyetBasvuruDetayDto
-@{ 
+@{
     Layout = null;
     bool juriOneriFormuKyetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent();
     bool juriOneriFormuOnayYetki = RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent() && Model.MezuniyetSRModel.SalonRezervasyonlari.All(a => a.SRDurumID != SRTalepDurum.Onaylandı);
@@ -146,13 +146,12 @@
                                             <th width="35" height="30"></th>
                                             <th width="100">Unvan</th>
                                             <th width="240">Ad Soyad</th>
-                                            <th>Dil Yeterliliği</th>
                                             <th width="120" style="text-align:center;">Jüri Seçim Durumu</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="5" style="padding:0px;">
+                                            <td colspan="4" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
                                                     {
@@ -172,24 +171,6 @@
                                                             <td width="240">
                                                                 @itemJr.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
-                                                            </td>
-                                                            <td>
-                                                                @if (!itemJr.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <table>
-
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Adı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.DilSinavAdi</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.DilPuani</td>
-                                                                        </tr>
-                                                                    </table>
-                                                                }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
@@ -211,7 +192,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="MainRow2 cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                            <td id="cls-Jo_@itemJr.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
                                                                 <div class="panel panel-primary">
                                                                     <div class="panel-body">
                                                                         <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
@@ -251,7 +232,21 @@
                                                                                     <td style="font-weight:bold;">:</td>
                                                                                     <td>@itemJr.BilimselCalismalarAnahtarSozcukler</td>
                                                                                 </tr>
+                                                                                @if (!itemJr.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.DilPuani.IsNullOrWhiteSpace())
+                                                                                {
 
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
+                                                                                        <td width="10" style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.DilSinavAdi</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
+                                                                                        <td width="10" style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.DilPuani</td>
+                                                                                    </tr>
+
+                                                                                }
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -264,12 +259,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
+                                            <td colspan="4" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
                                                 Yıldız Teknik Üniversitesi İçinden Juri Adayı Önerisi
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" style="padding:0px;">
+                                            <td colspan="4" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
@@ -288,24 +283,6 @@
                                                             <td width="240">
                                                                 @itemJr.s.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.s.AnabilimdaliProgramAdi</span>
-                                                            </td>
-                                                            <td>
-                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <table>
-
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Adı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.s.DilSinavAdi</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.s.DilPuani</td>
-                                                                        </tr>
-                                                                    </table>
-                                                                }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
@@ -327,7 +304,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
                                                                 <div class="panel panel-primary">
                                                                     <div class="panel-body">
                                                                         <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
@@ -367,7 +344,20 @@
                                                                                     <td style="font-weight:bold;">:</td>
                                                                                     <td>@itemJr.s.BilimselCalismalarAnahtarSozcukler</td>
                                                                                 </tr>
+                                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
+                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.s.DilSinavAdi</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
+                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.s.DilPuani</td>
+                                                                                    </tr>
 
+                                                                                }
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -380,12 +370,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
+                                            <td colspan="4" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
                                                 Yıldız Teknik Üniversitesi Dışından Juri Adayı Önerisi
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" style="padding:0px;">
+                                            <td colspan="4" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
@@ -405,24 +395,7 @@
                                                                 @itemJr.s.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.s.UniversiteAdi</span>
                                                             </td>
-                                                            <td>
-                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <table>
 
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Adı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.s.DilSinavAdi</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="font-weight:bold;">Sınav Puanı</td>
-                                                                            <td width="10" style="font-weight:bold;text-align:center;">:</td>
-                                                                            <td>@itemJr.s.DilPuani</td>
-                                                                        </tr>
-                                                                    </table>
-                                                                }
-                                                            </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                 {
@@ -443,7 +416,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="MainRow2 cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" style="display:none;">
-                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                            <td id="cls-Jo_@itemJr.s.MezuniyetJuriOneriFormuJuriID" colspan="4" style="padding: 1px 1px 2px 50px;">
                                                                 <div class="panel panel-primary">
                                                                     <div class="panel-body">
                                                                         <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;">
@@ -483,6 +456,20 @@
                                                                                     <td style="font-weight:bold;">:</td>
                                                                                     <td>@itemJr.s.BilimselCalismalarAnahtarSozcukler</td>
                                                                                 </tr>
+                                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Adı</td>
+                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.s.DilSinavAdi</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="font-weight:bold;">Sınav Puanı</td>
+                                                                                        <td style="font-weight:bold;text-align:center;">:</td>
+                                                                                        <td>@itemJr.s.DilPuani</td>
+                                                                                    </tr>
+
+                                                                                }
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

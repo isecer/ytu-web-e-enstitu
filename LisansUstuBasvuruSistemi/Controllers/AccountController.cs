@@ -15,6 +15,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Filters;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -22,6 +23,7 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
+     
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AccountController : Controller
     {
@@ -58,24 +60,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.UserName = userName;
             ViewBag.Password = password;
-            string Hata = null;
+            string hata = null;
             try
             {
                 if (userName.IsNullOrWhiteSpace())
                 {
-                    Hata = "Kullanıcı Adı Boş Bırakılamaz.";
+                    hata = "Kullanıcı Adı Boş Bırakılamaz.";
                 }
                 else if (password.IsNullOrWhiteSpace())
                 {
-                    Hata = "Şifre Giriniz.";
+                    hata = "Şifre Giriniz.";
                 }
                 else if (captchaInputText.IsNullOrWhiteSpace())
                 {
-                    Hata = "Resimdeki Karakterleri Giriniz.";
+                    hata = "Resimdeki Karakterleri Giriniz.";
                 }
                 else if (!this.IsCaptchaValid(""))
                 {
-                    Hata = "Resimdeki Karakterleri Hatalı Girdiniz";
+                    hata = "Resimdeki Karakterleri Hatalı Girdiniz";
                 }
                 else
                 {
@@ -114,7 +116,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             catch (Exception ex)
                             {
+                                // ignored
                             }
+
                             rememberMe = rememberMe ?? false;
                             FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", rememberMe.Value);
                             UserBus.SetLastLogon();
@@ -138,14 +142,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             //    Management.CreateAdmin();
                             //}
                             #endregion
-                            if (loginUser != null && !loginUser.IsAktif) Hata = "Kullanıcı Hesabı Pasif Durumda!";
-                            else Hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
+                            if (loginUser != null && !loginUser.IsAktif) hata = "Kullanıcı Hesabı Pasif Durumda!";
+                            else hata = "Kullanıcı Adı veya Şifre Hatalı. " + msg;
                         }
                     }
                     else
                     {
                         //  Management.SistemBilgisiKaydet("Kullanıcı Sistemde Bulunamadı! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
-                        Hata = "Kullanıcı sistemde bulunamadı.";
+                        hata = "Kullanıcı sistemde bulunamadı.";
                     }
                 }
 
@@ -154,9 +158,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.IsSuccess = false;
                 mmMessage.Messages.Add("Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage());
-                Hata = "Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage();
+                hata = "Sisteme Giriş Yapılırken Bir Hata Oluştu! Hata: " + ex.ToExceptionMessage();
             }
-            ViewBag.Hata = Hata;
+            ViewBag.Hata = hata;
             ViewBag.MmMessage = mmMessage;
             return PartialView();
 
@@ -438,7 +442,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi"
             };
             var kKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-             
+
             var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
             #region Kontrol
@@ -511,14 +515,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-                if (!isYerli)
-                    if (kModel.PasaportNo.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("Pasaport No Giriniz.");
 
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "PasaportNo" });
                 if (!kModel.CinsiyetID.HasValue)
                 {
                     mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
@@ -668,7 +665,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 isKurumIci = ktip.KurumIci;
                 isYerli = ktip.Yerli;
                 var qPersonel = _entities.Kullanicilars.AsQueryable();
-                var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kModel.KullaniciID); 
+                var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kModel.KullaniciID);
                 if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.KullaniciAdi == kModel.KullaniciAdi))
                 {
 
@@ -676,7 +673,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "KullaniciAdi" });
                 }
                 if (kul == null || kul.EMail.ToLower() != kModel.EMail.Trim().ToLower())
-                { 
+                {
                     if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.EMail == kModel.EMail))
                     {
 
@@ -686,7 +683,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 if (kul == null || kul.TcKimlikNo != kModel.TcKimlikNo.Trim())
-                { 
+                {
                     if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.TcKimlikNo == kModel.TcKimlikNo))
                     {
                         mmMessage.Messages.Add("Tanımlamak istediğiniz Kimlik No sistemde zaten mevcut!");
@@ -695,21 +692,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                 }
 
-                if (kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
-                {
-                    if (kul == null || kul.PasaportNo != kModel.PasaportNo.Trim())
-                    { 
-                        if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.PasaportNo == kModel.PasaportNo))
-                        {
-                            mmMessage.Messages.Add("Tanımlamak istediğiniz Pasaport No sistemde zaten mevcut!");
-                            mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
-                        }
-                    }
-                }
                 if (isKurumIci)
                 {
                     if (kul == null || kul.SicilNo != kModel.SicilNo.Trim())
-                    { 
+                    {
                         if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo))
                         {
                             mmMessage.Messages.Add("Tanımlamak istediğiniz Sicil No sistemde zaten mevcut!");
@@ -720,7 +706,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.YtuOgrencisi)
                 {
                     if (kul == null || kul.OgrenciNo != kModel.OgrenciNo.Trim())
-                    { 
+                    {
                         if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.OgrenciNo == kModel.OgrenciNo))
                         {
                             mmMessage.Messages.Add("Girmiş olduğunuz öğrenci numarası ile daha önceden sisteme kayıt yapılmıştır. Tekrar kayıt yapamazsınız!");
@@ -729,6 +715,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
+
                         var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
@@ -737,7 +724,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
-                            { 
+                            {
                                 kModel.ProgramKod = kModel.ProgramKod;
                                 kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
                                 kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
@@ -784,7 +771,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            
+
             #endregion
             if (kModel.KullaniciID <= 0 && mmMessage.Messages.Count == 0)
             {
@@ -841,7 +828,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var sifreUnCrypet = kModel.Sifre;
                 var yeniKullanici = kModel.KullaniciID <= 0;
                 if (yeniKullanici)
-                { 
+                {
                     kModel.YetkiGrupID = erisimYetki ? kModel.YetkiGrupID : (kModel.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && KullanicilarBus.GetDanismanUnvanIds().Contains(kModel.UnvanID ?? 0) ? 6 : 1);//danışman yetkisi vermek için
                     kModel.OlusturmaTarihi = DateTime.Now;
                     kModel.IsAktif = true;
@@ -888,7 +875,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Ad = kModel.Ad;
                     data.Soyad = kModel.Soyad;
                     data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.PasaportNo = kModel.PasaportNo;
                     data.CinsiyetID = kModel.CinsiyetID;
                     data.CepTel = kModel.CepTel;
                     data.EMail = kModel.EMail;

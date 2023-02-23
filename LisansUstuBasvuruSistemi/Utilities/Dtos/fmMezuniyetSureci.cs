@@ -13,13 +13,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IEnumerable<FrMezuniyetSureci> Data { get; set; }
     }
     public class FrMezuniyetSureci : MezuniyetSureci
-    {
-        public bool Hesaplandi { get; set; }
-        public string EnstituAdi { get; set; }
-        public string DilAdi { get; set; }
-        public string DilFlagClass { get; set; }
+    { 
+        public string EnstituAdi { get; set; } 
         public string IslemYapan { get; set; }
         public string DonemAdi { get; set; }
-        public int OTCount { get; set; }
     }
 }

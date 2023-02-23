@@ -744,7 +744,7 @@
                                 adK = $(btbxX).find('#AlanDisiKota').val();
                             }
 
-                            _pRefresh(_panel, false);
+                            PanelRefresh(_panel, false);
                             $.ajax({
                                 url: '@Url.Action("BasvuruSonucHesap", "YYDBasvuruSureci")',
                                 data: { 'id': id, 'ProgramKod': prk, 'OgrenimTipKod': otKod, 'OrtakKotaSayisi': ort, 'AlanIciKota': aiK, 'AlanDisiKota': adK, 'AlanIciEkKota': aiEK, 'AlanDisiEkKota':adEK},
@@ -809,7 +809,7 @@
         function KaydetTops(AlanTipID){
             var id='@Model.BasvuruSurecID';
             var _panel = $('#pndMDcPnl_' + id);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("TopluKayit", "YYDBasvuruSureci")',
                 data: { BasvuruSurecID: '@Model.BasvuruSurecID', ProgramKod: '@Model.ProgramKod',OgrenimTipKod:'@Model.OgrenimTipKod',AlanTipID:AlanTipID },
@@ -818,11 +818,11 @@
                     if(result.Messages.length>0)
                         showMmMessage(result.Messages, 'Tamam');
                     getMDDetail();
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
@@ -851,7 +851,7 @@
             var id='@Model.BasvuruSurecID';
 
             var _panel = $('#pndMDcPnl_' + id);
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("TopluKayitY", "YYDBasvuruSureci")',
                 data: { BasvuruSurecID: '@Model.BasvuruSurecID', ProgramKod: '@Model.ProgramKod',OgrenimTipKod:'@Model.OgrenimTipKod',AlanTipID:AlanTipID },
@@ -860,11 +860,11 @@
                     if(result.Messages.length>0)
                         showMmMessage(result.Messages, 'Tamam');
                     getMDDetail();
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
@@ -905,14 +905,14 @@
         function Kaydet(msID, UniqueID, YokODKontrolYap, BasvuruID, IsSave) {
             var id = '@Model.BasvuruSurecID';
             var _panel = $('#pndMDcPnl_' + id);
-            var tID = getSelectedTabID('@tbName');
+            var tID = GetSelectedTabID('@tbName');
             var KayitDurumID = $('#KayitDurumID_' + msID).val();
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("KazananKayit", "YYDBasvuruSureci")',
                 data: { 'MulakatSonucID': msID, 'KayitDurumID': KayitDurumID, 'YokODKontrolYap': YokODKontrolYap, 'IsSave': IsSave },
                 success: function (result) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (result.DekontIste) {
                         dekontKontrol(UniqueID);
                     }
@@ -932,7 +932,7 @@
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
@@ -962,16 +962,16 @@
 
             var tID = "1";
             if (tbID == undefined) {
-                tID = getSelectedTabID('@tbName');
+                tID = GetSelectedTabID('@tbName');
             }
             else tID = tbID;
             IsSave = IsSave == true || IsSave == 'true';
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetBasvuruDetay", "Ajax")',
                 data: { id: id, tbInx: tID, 'IsSave': IsSave },
                 success: function (result) {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var bbButtons = "";
                     if (IsSave) {
                         bbButtons = {
@@ -1020,26 +1020,26 @@
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         function SubData(id) {
             var _panel = $('#bsvrDet_' + id);
             var tbName = "@TabAdlari.BasvuruDetayTN-" + id;
-            var tID = getSelectedTabID(tbName);
-            _pRefresh(_panel, false);
+            var tID = GetSelectedTabID(tbName);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("GetBasvuruSubData", "Ajax")',
                 data: { 'id': id, 'tbInx': tID},
                 success: function (result) {
                     var _nme = tbName + "-" + tID;
                     $('#' + _nme).html(result.page);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
@@ -1054,7 +1054,7 @@
             var prKod = '@Model.ProgramKod';
             var otID = '@Model.OgrenimTipKod';
             var _panel = $('#pndMDcPnl_' + id);
-            var tID = getSelectedTabID('@tbName');
+            var tID = GetSelectedTabID('@tbName');
 
             var filterVal = null;
             var filterInp = null;
@@ -1067,7 +1067,7 @@
                 scrlName = "#scrl_@(Model.MulakatID)_" + atips;
                 scrlT = $(scrlName).scrollTop();
             }
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("getBasvuruSonucDetay", "YYDBasvuruSureci")',
                 data: { id: id, ProgramKod: prKod, OgrenimTipKod: otID, tbInx: tID, IsDelete: false, IsBootBox: '@IsBootBox' },
@@ -1088,11 +1088,11 @@
                     if (UniqueID != undefined && UniqueID != null && UniqueID != null) {
                         RowAddSelectedClass(UniqueID);
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }

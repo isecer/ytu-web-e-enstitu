@@ -1,5 +1,5 @@
 ﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (Kul.OgrenimTipKod.IsDoktora()  && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                        if (Kul.OgrenimTipKod.IsDoktora() && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                         {
                             bbModel.KullaniciTipYetki = true;
                             var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == Kul.KayitDonemID.Value);
@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        TcPasaPortNo = s.Kullanicilar.TcKimlikNo ?? s.Kullanicilar.PasaportNo,
+                        TcKimlikNo = s.Kullanicilar.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
                         Kullanicilar = s.Kullanicilar,
                         ResimAdi = s.Kullanicilar.ResimAdi,
@@ -145,9 +145,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsBasariliOrBasarisiz = Ard != null ? Ard.IsBasariliOrBasarisiz : (bool?)null
 
                     };
-             
+
             model.RowCount = q.Count();
-            var indexModel = new MIndexBilgi(); 
+            var indexModel = new MIndexBilgi();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = ps.PageIndex;
@@ -163,10 +163,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize]
-        public ActionResult BasvuruYap(int? tiBasvuruId, int? kullaniciId = null, string enstituKod = "", string ekd = "")
+        public ActionResult BasvuruYap(int? tiBasvuruId, int? kullaniciId, string ekd)
         {
             var model = new KmTIBasvuru();
-            enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
 
             if (tiBasvuruId.HasValue || kullaniciId.HasValue)
@@ -202,7 +202,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mmMessage.Messages.Add("Tez danışmanınıza ait lisansutu.yildiz.edu.tr sisteminde kullanıcı hesabı bulunamadı. Başvurunuzu gerçekleştirebilmeniz için danışmanınızın lisansustu.yildiz.edu.tr sisteminde hesap oluşturarak üye olması gerekmektedir.");
                     mmMessage.IsSuccess = false;
-                } 
+                }
             }
             if (mmMessage.IsSuccess)
             {
@@ -220,7 +220,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.Soyad = basvuru.Soyad;
                     model.OgrenciNo = basvuru.OgrenciNo;
                     model.TcKimlikNo = basvuru.TcKimlikNo;
-                    model.PasaportNo = basvuru.PasaportNo;
                     model.UyrukKod = basvuru.UyrukKod;
                     model.OgrenimTipKod = basvuru.OgrenimTipKod;
 
@@ -238,7 +237,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.Soyad = kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
                     model.TcKimlikNo = kul.TcKimlikNo;
-                    model.PasaportNo = kul.PasaportNo;
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
                 }
@@ -319,7 +317,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Soyad = kModel.Soyad,
                         UyrukKod = kModel.UyrukKod,
                         TcKimlikNo = kModel.TcKimlikNo,
-                        PasaportNo = kModel.PasaportNo,
                         OgrenciNo = kModel.OgrenciNo,
                         OgrenimDurumID = kModel.OgrenimDurumID,
                         OgrenimTipKod = kModel.OgrenimTipKod,
@@ -348,7 +345,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Soyad = kModel.Soyad;
                     data.UyrukKod = kModel.UyrukKod;
                     data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.PasaportNo = kModel.PasaportNo;
                     data.OgrenciNo = kModel.OgrenciNo;
                     data.OgrenimDurumID = kModel.OgrenimDurumID;
                     data.OgrenimTipKod = kModel.OgrenimTipKod;
@@ -379,7 +375,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetTiAraRaporFormu(int tiBasvuruId, int? tiBasvuruAraRaporId)
         {
-            var model = new TIAraRaporFormuModel
+            var model = new TiAraRaporFormuModel
             {
                 TIBasvuruID = tiBasvuruId
             };
@@ -470,7 +466,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                         studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().Trim();
                         studentInfo.OgrenciInfo.DANISMAN_UNVAN1 = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper().Trim().ToMezuniyetJuriUnvanAdi();
-                       
+
                         model.OgrenciAdSoyad = tiBasvuru.Ad + " " + tiBasvuru.Soyad + " - " + tiBasvuru.OgrenciNo;
                         model.OgrenciAnabilimdaliProgramAdi = tiBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " - " + tiBasvuru.Programlar.ProgramAdi;
                         if (tiBasvuruAraRapor != null)
@@ -510,7 +506,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 UniversiteAdi = s.UniversiteAdi,
                                 AnabilimdaliProgramAdi = s.AnabilimdaliProgramAdi
                             }).ToList();
-                             var tD = model.KomiteList.First(p => p.JuriTipAdi == "TezDanismani");
+                            var tD = model.KomiteList.First(p => p.JuriTipAdi == "TezDanismani");
                             if (tD.AdSoyad != studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 || tD.UnvanAdi != studentInfo.OgrenciInfo.DANISMAN_UNVAN1)
                                 mMessage.Messages.Add("Tez danışmanı bilgileri değişmiştir.<br /> Önceki Veri: " + tD.UnvanAdi + " " + tD.AdSoyad + " Yeni Veri: " + studentInfo.OgrenciInfo.DANISMAN_UNVAN1 + " " + studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1);
                             tD.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tD.UniversiteID);
@@ -539,7 +535,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             var tik2 = model.KomiteList.First(p => p.JuriTipAdi == "TikUyesi2");
                             if (tik2.AdSoyad != obsTik2.TEZ_IZLEME_JURI_ADSOY || tik2.UnvanAdi != obsTik2.TEZ_IZLEME_JURI_UNVAN)
-                                mMessage.Messages.Add("Tik2 Üyesi bilgileri değişmiştir.<br /> Önceki Veri: " + tik2.UnvanAdi  + " " + tik2.AdSoyad + " Yeni Veri: " + obsTik2.TEZ_IZLEME_JURI_UNVAN + " " + obsTik2.TEZ_IZLEME_JURI_ADSOY);
+                                mMessage.Messages.Add("Tik2 Üyesi bilgileri değişmiştir.<br /> Önceki Veri: " + tik2.UnvanAdi + " " + tik2.AdSoyad + " Yeni Veri: " + obsTik2.TEZ_IZLEME_JURI_UNVAN + " " + obsTik2.TEZ_IZLEME_JURI_ADSOY);
 
                             tik2.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption", tik2.UniversiteID);
                             if (tik2.AdSoyad != obsTik2.TEZ_IZLEME_JURI_ADSOY || tik2.UnvanAdi != obsTik2.TEZ_IZLEME_JURI_UNVAN)
@@ -631,7 +627,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [ValidateInput(false)]
-        public ActionResult TiAraRaporFormuPost(TIAraRaporFormuModel kModel, bool saveData = false)
+        public ActionResult TiAraRaporFormuPost(TiAraRaporFormuModel kModel, bool saveData = false)
         {
             var mMessage = new MmMessage
             {

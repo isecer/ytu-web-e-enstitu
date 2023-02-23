@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public DateTime? MBaslangicTarihi { get; set; }
         public DateTime? MBitisTarihi { get; set; }
 
-        public IEnumerable<FrMezuniyetBasvurulari> FrMezuniyetBasvurularis { get; set; }
+        public IEnumerable<FrMezuniyetBasvurulari> Data { get; set; }
     }
     public class FrMezuniyetBasvurulari : MezuniyetBasvurulari
     {
@@ -45,8 +45,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string MezuniyetSurecAdi { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
-        public string ProgramAdi { get; set; }
-        public string TcPasaPortNo { get; set; }
+        public string ProgramAdi { get; set; } 
         public int SurecBaslangicYil { get; set; }
         public int DonemID { get; set; }
         public DateTime BasTar { get; set; }

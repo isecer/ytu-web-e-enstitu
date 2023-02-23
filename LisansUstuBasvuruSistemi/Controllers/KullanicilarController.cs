@@ -60,8 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.OgrenimTipKod,
                         s.OgrenimDurumID,
                         s.ProgramKod,
-                        s.TcKimlikNo,
-                        s.PasaportNo,
+                        s.TcKimlikNo, 
                         s.OgrenciNo,
                         s.CepTel,
                         s.EMail,
@@ -75,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YtuOgrencisi
                     };
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.PasaportNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad);
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
             if (model.BirimID.HasValue) q = q.Where(p => p.BirimID == model.BirimID.Value);
@@ -127,8 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 OgrenimTipKod = s.OgrenimTipKod,
                 OgrenimDurumID = s.OgrenimDurumID,
                 ProgramKod = s.ProgramKod,
-                TcKimlikNo = s.TcKimlikNo,
-                PasaportNo = s.PasaportNo,
+                TcKimlikNo = s.TcKimlikNo, 
                 CepTel = s.CepTel,
                 EMail = s.EMail,
                 IsAktif = s.IsAktif,
@@ -290,13 +288,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-            if (!isYerli)
-                if (kModel.PasaportNo.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Pasaport No Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "PasaportNo" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "PasaportNo" });
+           
             if (!kModel.CinsiyetID.HasValue)
             {
                 mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
@@ -454,18 +446,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz Kimlik No sistemde zaten mevcut!");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                }
-
-                if (kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci)
-                {
-                    var pass = qPersonel.Count(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.PasaportNo == kModel.PasaportNo);
-                    if (pass > 0)
-                    {
-
-                        mmMessage.Messages.Add("Tanımlamak istediğiniz Pasaport No sistemde zaten mevcut!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                    }
-                }
+                } 
                 if (isKurumIci)
                 {
                     var cSicil = qPersonel.Count(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo);
@@ -491,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
-                    {
+                    { 
                         var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
@@ -521,7 +502,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.Messages.Count == 0 && isKurumIci)
             {
                 if (kModel.IsActiveDirectoryUser && kModel.EMail.Contains("@yildiz.edu.tr") == false)
-                { 
+                {
                     mmMessage.Messages.Add("Active Directory Girişi Yapmasını İstediğiniz Kullanıcının yildiz.edu.tr e mailini tanımlamanız gerekir!");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsActiveDirectoryUser" });
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
@@ -538,12 +519,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     kModel.BirimID = null;
                     kModel.UnvanID = null;
-                    kModel.SicilNo = "";
-                    if (!isYerli)
-                    {
-                        kModel.TcKimlikNo = null;
-                    }
-                    else { kModel.PasaportNo = null; }
+                    kModel.SicilNo = ""; 
                     kModel.ABDKoordinatoru = false;
                 }
                 else
@@ -620,8 +596,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
                     data.Soyad = kModel.Soyad;
-                    data.TcKimlikNo = kModel.TcKimlikNo;
-                    data.PasaportNo = kModel.PasaportNo;
+                    data.TcKimlikNo = kModel.TcKimlikNo; 
                     data.CinsiyetID = kModel.CinsiyetID;
                     data.CepTel = kModel.CepTel;
                     data.EMail = kModel.EMail;
@@ -801,7 +776,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.KullanicilarProgramYetkileri)]
         public ActionResult KullaniciProgramYetkileri(int? id, string ekd)
         {
-            if (id.HasValue == false) return RedirectToAction("Index"); 
+            if (id.HasValue == false) return RedirectToAction("Index");
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var data = KullanicilarBus.GetKullaniciProgramlari(id.Value, enstituKod);
             var kullanici = UserBus.GetUser(id.Value);

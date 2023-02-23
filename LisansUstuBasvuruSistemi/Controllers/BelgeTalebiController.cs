@@ -146,13 +146,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
 
             model.RowCount = q.Count();
             var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = ps.PageIndex;
 
-            var indexModel = new MIndexBilgi(); 
+            var indexModel = new MIndexBilgi();
 
             indexModel.Toplam = model.RowCount;
             model.BelgeTalepleriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
@@ -541,7 +541,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var belCont = GetContent((kModel.BelgeTalepID == 0 ? (int?)null : kModel.BelgeTalepID), kModel.BelgeTipID, enstituKod, kModel.OgrenciNo, kModel.IstenenBelgeSayisi, kModel.OgrenimDurumID);
                 if (belCont.Success == false)
-                { 
+                {
                     var btip = BelgeTalepBus.GetBelgeTipDetay(kModel.BelgeTipID, kModel.OgrenimDurumID, enstituKod);
                     if (kModel.BelgeTalepID <= 0)
                     {
@@ -821,7 +821,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             belgeTalepId = belgeTalepId <= 0 ? null : belgeTalepId;
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             int ogrenimDurumId;
-            string ogrenciNo = ""; 
+            string ogrenciNo = "";
             if (belgeTalepId > 0)
             {
                 var talep = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == belgeTalepId.Value);
@@ -958,9 +958,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var btip = (from s in _entities.BelgeTipleris
                         where s.BelgeTipID == kModel.BelgeTipID
-                        select new { s.BelgeTipID, s.BelgeTipAdi }).First(); 
+                        select new { s.BelgeTipID, s.BelgeTipAdi }).First();
             string aciklamaDetayi = "";
-            bool kotaVar = true; 
+            bool kotaVar = true;
             if (kModel.DonemlikKota.HasValue)
             {
                 if (ayniDonemAlinanBelge + ayniDonemTalepEdilenBelge + miktar > kModel.DonemlikKota.Value)
@@ -1041,7 +1041,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemTipListeAdi = belge.BelgeDurumlari.DurumAdi,
                 belge.BelgeDurumlari.ClassName,
                 belge.BelgeDurumlari.Color,
-                verilmeBilgi =BelgeTalepBus.GetBelgeVerilmeBilgisi(belge.BelgeTalepID,belge.BelgeDurumlari.DurumAdi)
+                verilmeBilgi = BelgeTalepBus.GetBelgeVerilmeBilgisi(belge.BelgeTalepID, belge.BelgeDurumlari.DurumAdi)
             }.ToJsonResult();
         }
 

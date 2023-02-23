@@ -171,18 +171,18 @@
     }
     function GetDetail(AnID) {
         var _panel = $('#pnglAnk_' + AnID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail", "Anketler")',
             data: { 'AnketID': AnID },
             async: false,
             success: function (result) {
                 $('#pnglAnkC_' + AnID).html(result.page);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -190,18 +190,18 @@
     }
     function GetDetail2(AnsID) {
         var _panel = $('#pnglAnks_' + AnsID);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail2", "Anketler")',
             data: { 'AnketSoruID': AnsID },
             async: false,
             success: function (result) {
                 $('#pnglAnks_' + AnsID).html(result.page);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
             }
         });
@@ -209,7 +209,7 @@
     }
     function SoruEkleDialog(AnID, AsID) {
         var _pnl = $('#pnglAnk_' + AnID);
-        _pRefresh(_pnl, false);
+        PanelRefresh(_pnl, false);
         $.ajax({
             url: '@Url.Action("GetSoruEkle", "Anketler")',
             type: 'POST',
@@ -218,11 +218,11 @@
             success: function (result) {
                 ShowSoruEkle(result.page, AnID, AsID);
 
-                _pRefresh(_pnl, true);
+                PanelRefresh(_pnl, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_pnl, true);
+                PanelRefresh(_pnl, true);
             }
         });
 
@@ -237,7 +237,7 @@
                     className: "btn-success",
                     callback: function (event) {
                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                        _pRefresh(pnlx, false);
+                        PanelRefresh(pnlx, false);
                         $('#FrmSoruEkle').ajaxForm({
                             success: function (result) {
                                 if (result.IsSuccess) {
@@ -257,13 +257,13 @@
                                     getMsg(result);
                                     return false;
                                 }
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             },
                             complete: function (cmp) {
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             },
                             error: function (err) {
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             }
 
                         });
@@ -284,7 +284,7 @@
 
     function SecenekEkleDialog(AsID, AssID) {
         var _pnl = $('#pnglAnkS_' + AsID);
-        _pRefresh(_pnl, false);
+        PanelRefresh(_pnl, false);
         $.ajax({
             url: '@Url.Action("GetSoruSecenekEkle", "Anketler")',
             type: 'POST',
@@ -292,11 +292,11 @@
             data: { 'AnketSoruID': AsID, 'AnketSoruSecenekID': AssID, },
             success: function (result) {
                 SecenekEkle(result.page, AsID, AssID);
-                _pRefresh(_pnl, true);
+                PanelRefresh(_pnl, true);
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_pnl, true);
+                PanelRefresh(_pnl, true);
             }
         });
 
@@ -311,7 +311,7 @@
                     className: "btn-success",
                     callback: function (event) {
                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                        _pRefresh(pnlx, false);
+                        PanelRefresh(pnlx, false);
                         $('#FrmSoruSecenekEkle').ajaxForm({
                             success: function (result) {
                                 if (result.IsSuccess) {
@@ -331,13 +331,13 @@
                                     getMsg(result);
                                     return false;
                                 }
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             },
                             complete: function (cmp) {
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             },
                             error: function (err) {
-                                _pRefresh(pnlx, true);
+                                PanelRefresh(pnlx, true);
                             }
 
                         });

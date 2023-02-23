@@ -229,7 +229,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.MulakatID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.MulakatID,'ana-')">
+                                                            <li id="iShow_@item.MulakatID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.MulakatID,'ana-')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -278,7 +278,7 @@
     }
 </div>
 <script type="text/javascript">
-    function showDetail(id, tip) {
+    function ShowDetail(id, tip) {
         var rwID = $('#iShow-' + tip + id);
         var cls = 'cls-' + tip + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -288,13 +288,13 @@
     function getMDDetail(id, Isdelete, sndr) {
         var _panel = $('#pndMD_' + id);
         var tbName = "@TabAdlari.MulakatDetayTN-" + id;
-        var tID = getSelectedTabID(tbName);
-        _pRefresh(_panel, false);
+        var tID = GetSelectedTabID(tbName);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("getMulakatDetay", "MulakatSureci")',
             data: { BasvuruSurecID: 0, OgrenimTipKod: 0, ProgramKod: 0, tbInx: tID, IsDelete: (Isdelete == true), MulakatID: id },
             success: function (result) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 if (Isdelete != true) {
                     $('#cls-ana-' + id).html(result); 
                 }
@@ -324,7 +324,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

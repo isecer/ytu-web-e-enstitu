@@ -284,7 +284,7 @@
     }
     function EkleDetay() {
         var _panel = $('#mDetayG');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var _MulakatSinavTurID = $('#_MulakatSinavTurID').val();
         var _MulakatSinavTurAdi = $('#_MulakatSinavTurID option:selected').text();
         var _YuzdeOran = $('#_YuzdeOran').val();
@@ -365,18 +365,18 @@
                     $('#_SinavSaati').val("")
                     $('#_KampusID').val("");
                     $('#_YerAdi').val("");
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
 
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     showMmMessage(result.Messages, 'Tamam');
                     validateControl(null, result.mmMessage);
                 }
 
             },
             error: function (err) {
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 alert(err.responseText);
 
             }

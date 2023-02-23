@@ -69,7 +69,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasTar = bs.BaslangicTarihi,
                         BitTar = bs.BitisTarihi,
                         ResimAdi = s.Kullanicilar.ResimAdi,
-                        TcPasaPortNo = s.TcKimlikNo ?? s.PasaportNo,
+                        s.TcKimlikNo,
                         AdSoyad = s.Ad + " " + s.Soyad,
                         s.Ad,
                         s.Soyad,
@@ -112,7 +112,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.BasvurularTercihleris.Any(a => a.OgrenimTipKod == model.OgrenimTipKod));
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID);
             if (model.CinsiyetID.HasValue) q = q.Where(p => p.CinsiyetID == model.CinsiyetID);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcPasaPortNo == model.AdSoyad);
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad);
             if (model.SinavTipKod.HasValue && model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod && a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
             else if (model.SinavTipKod.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.SinavTipKod == model.SinavTipKod));
             else if (model.IsTaahhutVar.HasValue) q = q.Where(p => p.BasvurularSinavBilgis.Any(a => a.IsTaahhutVar == (model.IsTaahhutVar == false ? null : model.IsTaahhutVar)));
@@ -182,7 +182,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Ad = s.Ad,
                 Soyad = s.Soyad,
                 ResimAdi = s.ResimAdi,
-                TcPasaPortNo = s.TcPasaPortNo,
+                TcKimlikNo = s.TcKimlikNo,
                 AdSoyad = s.AdSoyad,
                 EMail = s.EMail,
                 CepTel = s.Telefon,
@@ -218,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       select new { sq.OgrenimTipKod, ot.OgrenimTipAdi }).FirstOrDefault()
                           select new
                           {
-                              TcPasaPortNo = s.TcKimlikNo ?? s.PasaportNo,
+                              s.TcKimlikNo,
                               s.Ad,
                               s.Soyad,
                               s.EMail,

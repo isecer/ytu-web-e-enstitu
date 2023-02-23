@@ -138,14 +138,7 @@
                                                         <td class="form-group">
                                                             <input type="text" name="TcKimlikNo" id="TcKimlikNo" maxlength="11" value="@Model.TcKimlikNo" class="form-control">
                                                         </td>
-                                                    </tr>
-                                                    <tr class="Yab @(isYerli ? "hide" : "")">
-                                                        <td id="lbl_PasaportNo">Psaport No</td>
-                                                        <td>:</td>
-                                                        <td class="form-group">
-                                                            <input type="text" name="PasaportNo" id="PasaportNo" value="@Model.PasaportNo" class="form-control">
-                                                        </td>
-                                                    </tr>
+                                                    </tr> 
                                                     <tr class="Yab Ye Ku Kd">
                                                         <td id="lbl_CinsiyetID">Cinsiyet</td>
                                                         <td>:</td>
@@ -548,7 +541,7 @@
     }
     function RotateImage(rotate) { 
         var _panel = $('#pImageD');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var ResimAdi = $('#ResimAdi').val();
         setTimeout(function () {
             $.ajax({
@@ -556,14 +549,14 @@
                 data: { LeftOrRight: rotate, ResimAdi: ResimAdi },
                 type: "POST",
                 success: function (result) { 
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var src = result.YeniResimYolu + "?time=" + new Date();
                     $('#userMainImage').attr('src', src);
                     $('.pImageD').first().attr('src', src); 
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }, 1000);
@@ -577,7 +570,7 @@
             let files = Array.from(input.files);
             console.log(files);
             if (files.length > 0) {
-                _pRefresh(_panel, false);
+                PanelRefresh(_panel, false);
                 var EskiResimAdi = $('#ResimAdi').val();
                 var formdata = new FormData(); //FormData object
                 formdata.append("KullaniciID", @Model.KullaniciID);
@@ -591,7 +584,7 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                         if (result.mMessage.IsSuccess) {
                             var src = result.YeniResimYolu + "?time=" + new Date();
                             $('.pImageD').first().attr('src', src); 
@@ -606,7 +599,7 @@
                         }
                     },
                     error: function (err) {
-                        _pRefresh(_panel, true);
+                        PanelRefresh(_panel, true);
                         alert(err.responseText);
                     }
                 });

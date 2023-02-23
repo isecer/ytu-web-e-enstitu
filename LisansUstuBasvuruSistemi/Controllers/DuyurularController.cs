@@ -49,6 +49,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IsAktif,
                         s.AnaSayfadaGozuksun,
                         s.AnaSayfaPopupAc,
+                        s.YeterlikBasvuruPopupAc,
                         s.MezuniyetBasvuruPopupAc,
                         s.BasvuruPopupAc,
                         s.TIBasvuruPopupAc,
@@ -92,6 +93,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 BasvuruPopupAc = s.BasvuruPopupAc,
                 TIBasvuruPopupAc = s.TIBasvuruPopupAc,
                 TDOBasvuruPopupAc = s.TDOBasvuruPopupAc,
+                YeterlikBasvuruPopupAc = s.YeterlikBasvuruPopupAc,
                 MezuniyetBasvuruPopupAc = s.MezuniyetBasvuruPopupAc,
                 TalepYaparkenPopupAc = s.TalepYaparkenPopupAc,
                 YayinSonTarih = s.YayinSonTarih
@@ -216,6 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.AnaSayfadaGozuksun = kModel.AnaSayfadaGozuksun;
                     data.AnaSayfaPopupAc = kModel.AnaSayfaPopupAc;
                     data.BasvuruPopupAc = kModel.BasvuruPopupAc;
+                    data.YeterlikBasvuruPopupAc = kModel.YeterlikBasvuruPopupAc;
                     data.MezuniyetBasvuruPopupAc = kModel.MezuniyetBasvuruPopupAc;
                     data.TalepYaparkenPopupAc = kModel.TalepYaparkenPopupAc;
                     data.TDOBasvuruPopupAc = kModel.TDOBasvuruPopupAc;

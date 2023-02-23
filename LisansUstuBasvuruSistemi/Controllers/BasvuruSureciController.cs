@@ -3588,7 +3588,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var bs = db.BasvuruSurecs.First(p => p.BasvuruSurecID == id);
-                var kayitOlanlar = db.MulakatSonuclaris.Where(p => p.BasvuruSurecID == id && p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu == true).Select(s => new { s.Basvurular.Kullanicilar.TcKimlikNo, s.Basvurular.Kullanicilar.PasaportNo, s.BasvurularTercihleri.Basvurular.ResimAdi }).Distinct().ToList();
+                var kayitOlanlar = db.MulakatSonuclaris.Where(p => p.BasvuruSurecID == id && p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu == true).Select(s => new { s.Basvurular.Kullanicilar.TcKimlikNo, s.BasvurularTercihleri.Basvurular.ResimAdi }).Distinct().ToList();
 
                 using (ZipFile zipFile = new ZipFile())
                 {
@@ -3608,7 +3608,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tempstream.Seek(0, SeekOrigin.Begin);
                                 byte[] imageData = new byte[tempstream.Length];
                                 tempstream.Read(imageData, 0, imageData.Length);
-                                var fileName = (item.TcKimlikNo.IsNullOrWhiteSpace() ? item.PasaportNo : item.TcKimlikNo) + ".jpeg";
+                                var fileName =  item.TcKimlikNo + ".jpeg";
                                 if (!Eklenenler.Contains(fileName)) zipFile.AddEntry(fileName, imageData);
                                 Eklenenler.Add(fileName);
                             }

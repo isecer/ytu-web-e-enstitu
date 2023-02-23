@@ -27,7 +27,7 @@
                         <thead>
                             <tr>
                                 <th width="75"></th>
-                                <th width="140" class="sirala" field="EnstituAd">Enstitu</th> 
+                                <th width="140" class="sirala" field="EnstituAd">Enstitu</th>
                                 <th width="110" class="sirala" field="Tarih">Tarih</th>
                                 <th class="sirala" field="Baslik">Başlık</th>
                                 <th width="40" class="sirala" field="EkSayisi"><i class="fa fa-download"></i></th>
@@ -42,7 +42,7 @@
                                 <th></th>
                                 <th>
                                     @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
-                                </th> 
+                                </th>
                                 <th>
                                     <input type="text" name="Tarih" value="@Model.Tarih" class="form-control" />
                                 </th>
@@ -72,7 +72,7 @@
                                                     <td style="width:30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.DuyuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail(@item.DuyuruID)">
+                                                            <li id="iShow_@item.DuyuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail(@item.DuyuruID)">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
                                                             </li>
                                                         </ul>
@@ -80,14 +80,14 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td ondblclick="showDetail(@item.DuyuruID)">@item.EnstituAdi</td> 
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">@item.EnstituAdi</td>
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             @item.Tarih.ToFormatDateAndTime()
                                         </td>
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             @(item.Baslik.Length > 70 ? item.Baslik.Substring(0, 69) + "..." : item.Baslik)
                                         </td>
-                                        <td ondblclick="showDetail(@item.DuyuruID)">
+                                        <td ondblclick="ShowDetail(@item.DuyuruID)">
                                             <img src="~/Images/Attachment.png" style="height: 16px;" />@item.EkSayisi
                                         </td>
                                         <td><span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span></td>
@@ -115,7 +115,7 @@
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-4 control-label">Enstitü</label>
                                                                         <div class="col-md-9 col-xs-8">@item.EnstituAdi</div>
-                                                                    </div> 
+                                                                    </div>
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-4 control-label">Ana Sayfada Gözüksün</label>
                                                                         <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
@@ -134,6 +134,7 @@
                                                                             <span class="label label-@(item.BasvuruPopupAc ? "success" : "danger")">@item.BasvuruPopupAc.ToEvetHayir()</span>
                                                                         </div>
                                                                     </div>
+
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-4 control-label">Tez Danışmanı Önerisi Yaparken Popup Aç</label>
                                                                         <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
@@ -144,6 +145,12 @@
                                                                         <label class="col-md-3 col-xs-4 control-label">Tez İzleme Başvuru Yaparken Popup Aç</label>
                                                                         <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
                                                                             <span class="label label-@(item.TIBasvuruPopupAc ? "success" : "danger")">@item.TIBasvuruPopupAc.ToEvetHayir()</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-3 col-xs-4 control-label">Yeterlik Başvurusu Yaparken Popup Aç</label>
+                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                            <span class="label label-@(item.YeterlikBasvuruPopupAc ? "success" : "danger")">@item.YeterlikBasvuruPopupAc.ToEvetHayir()</span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -238,7 +245,7 @@
                                                                         <label class="col-md-3 col-xs-4 control-label">Duyuru Yapan</label>
                                                                         <div class="col-md-9 col-xs-8">@item.DuyuruYapan [@item.IslemTarihi.ToFormatDateAndTime()]</div>
                                                                     </div>
-                                                                     
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -274,7 +281,7 @@
 
 <script type="text/javascript">
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

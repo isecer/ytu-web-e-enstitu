@@ -91,7 +91,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     CepTel = kul.CepTel,
                     KayitTarihi = kul.KayitTarihi,
                     AdSoyad = kul.Ad + " " + kul.Soyad,
-                    TcPasaPortNo = kul.TcKimlikNo != null ? kul.TcKimlikNo : kul.PasaportNo,
+                    TcKimlikNo = kul.TcKimlikNo,
                     OgrenciNo = s.OgrenciNo,
                     ResimAdi = kul.ResimAdi,
                     KullaniciTipID = kul.KullaniciTipID,
@@ -204,7 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace())
             {
                 model.AdSoyad = model.AdSoyad.Trim();
-                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcPasaPortNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
+                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
             }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
             bool isFiltered = q != q2;
@@ -218,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
             model.PageIndex = ps.PageIndex;
             var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
-            model.FrMezuniyetBasvurularis = qdata;
+            model.Data = qdata;
             #region export
             if (export && model.RowCount > 0)
             {
@@ -237,7 +237,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.ProgramAdi,
                         GsisKayitTarihi = s.KayitTarihi != null ? s.KayitTarihi.ToString("dd.MM.yyyy") : "",
                         s.AdSoyad,
-                        s.TcPasaPortNo,
+                        s.TcKimlikNo,
                         s.OgrenciNo,
                         s.EMail,
                         s.CepTel,
@@ -1095,7 +1095,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsSuccess = true
             };
             string view = "";
-            var mbjo = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault();
+            var mbjo = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault(); 
             var ogrenciInfo = Management.StudentControl(mb.TcKimlikNo);
 
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())

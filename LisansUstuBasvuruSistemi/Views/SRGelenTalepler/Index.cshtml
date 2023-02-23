@@ -71,7 +71,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.SRTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.SRTalepID')">
+                                                            <li id="iShow_@item.SRTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.SRTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -233,7 +233,7 @@
 }
     <script type="text/javascript">
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
@@ -243,17 +243,17 @@
     function getDetail(id, Isdelete, sndr) {
 
         var _panel = $('#SRDetay_' + id);
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail", "Sr")',
             data: { id: id, IsDelete: (Isdelete == true)  },
             success: function (result) {
                 if (Isdelete != true) {
                     $('#cls-' + id).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
                 else {
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     var btbx = bootbox.dialog({
                         message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Salon Rezervasyon Talebini Silmek İstiyor Musunuz?</td></tr></table>",
                         title: "Salon Rezervasyonu Silme İşlemi",
@@ -280,7 +280,7 @@
             },
             error: function (err) {
                 alert(err.responseText);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }

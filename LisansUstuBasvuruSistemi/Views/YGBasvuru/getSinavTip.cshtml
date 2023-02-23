@@ -17,9 +17,7 @@
         var _BasvuruSurecID = $('#BasvuruSurecID').val();
         var ktip=$('#KullaniciTipID').val();
         var _Tck = $('#TcKimlikNo').val();
-        if(ktip=='@KullaniciTipBilgi.YabanciOgrenci'){
-            _Tck = $('#PasaportNo').val();
-        }
+         
         if(_Donem!=""){
 
             $('#'+_tp+'WsSinavSonucDiv').removeClass('hide');
@@ -32,7 +30,7 @@
         if(IsSonuc)_WsSonucID=$(sndr).val();
         var _panel = $('#pnlSnv_'+_tp);
         if (_Donem != "" && _SinavTipID != "" && _BasvuruSurecID != "" && _Tck != "") {
-            _pRefresh(_panel, false);
+            PanelRefresh(_panel, false);
             $.ajax({
                 url: '@Url.Action("getSinavTipSonuc", "Basvuru")',
                 data: { 'SinavTipID': _SinavTipID, 'BasvuruSurecID': _BasvuruSurecID, 'Donem': _Donem,'WsSonucID':_WsSonucID, 'Tck': _Tck,'MinNotAdi':'@Model.MinNotAdi' },
@@ -57,11 +55,11 @@
                         $('#sinavSonucBilgi_' + _tp).html(result.view);
 
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }

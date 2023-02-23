@@ -34,8 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string EnstituKod { get; set; }
         public string EnstituAdi { get; set; }
-        public string BasvuruSurecAdi { get; set; }
-        public string TcPasaPortNo { get; set; }
+        public string BasvuruSurecAdi { get; set; } 
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
         public string KullaniciTipAdi { get; set; }

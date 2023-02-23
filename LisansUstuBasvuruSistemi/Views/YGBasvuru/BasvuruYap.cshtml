@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -8,7 +8,7 @@
 @{
     string KullaniciTipAdi = Model.KullaniciTipAdi;
     Layout = "~/Views/Shared/_Layout.cshtml";
-     
+
     var ASinavTipleri = (SelectList)ViewBag.ASinavTipleri;
     var DSinavTipleri = (SelectList)ViewBag.DSinavTipleri;
     var TSinavTipleri = (SelectList)ViewBag.TSinavTipleri;
@@ -77,15 +77,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="font-size:11pt;">
-                                                        @if (Model.IsYerli)
-                                                        {
-                                                            <span>T.C. Kimlik No:@Model.TcKimlikNo</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>Pasaport No:@Model.PasaportNo</span>
-                                                        }
-
+                                                        <span>T.C. Kimlik No:@Model.TcKimlikNo</span> 
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -156,8 +148,7 @@
                                         <input type="text" style="display:none;" id="BasvuruID" name="BasvuruID" value="@Model.BasvuruID" />
                                         <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
                                         <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
-                                        <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
-                                        <input type="text" style="display:none;" id="PasaportNo" name="PasaportNo" value="@Model.PasaportNo" />
+                                        <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" /> 
                                         <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
                                         <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
                                         <input type="text" style="display:none;" id="Ad" name="Ad" value="@Model.Ad" />
@@ -654,7 +645,7 @@
                                                                             var strW = Management.GetTercihRowHtml(new TercihRowModel
                                                                             {
                                                                                 UniqueID = item.UniqueID.ToString(),
-                                                                                SiraNo = item.SiraNo, 
+                                                                                SiraNo = item.SiraNo,
                                                                                 OgrenimTipKod = item.OgrenimTipKod,
                                                                                 OgrenimTipAdi = item.ProgramBilgileri.OgrenimTipAdi,
                                                                                 AnabilimDaliKod = item.ProgramBilgileri.AnabilimDaliKod,
@@ -1113,7 +1104,7 @@
     });
     function getBolums(sndr) {
         var _panel = $('#pnlProgramSecim');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         $('#otBilgi').html('');
         $('#SotBilgi').html('');
         var sndrVal = $(sndr).val();
@@ -1154,7 +1145,7 @@
                         }
                         opt += "<option value=" + _value + ">" + result.data[i].Caption + "</option>"
                     }
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                     if (result.IsSubOT) {
                         $('#otBilgi').addClass('hide');
                         $('#SotBilgi').removeClass('hide');
@@ -1170,7 +1161,7 @@
                 error: function (err) {
                     $('#otBilgi').addClass('hide');
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
 
                 }
             });
@@ -1183,7 +1174,7 @@
             }
             if ($(sndr).attr("id") != "AnabilimdaliKod") $('#AnabilimdaliKod').empty();
             $('#ProgramKod').empty();
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             yLBilgisiIstendimi();
         }
     }
@@ -1209,7 +1200,7 @@
     }
     function getOgrenimSBilgi(otID, rwID, YlVal, subOt) {
         var _panel = $('#pnlProgramSecim');
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var _BasvuruSurecID = @Model.BasvuruSurecID;
         var _KullaniciID = @Model.KullaniciID;
         var _BasvuruID = $('#BasvuruID').val();
@@ -1225,13 +1216,13 @@
             data: { 'BasvuruSurecID': _BasvuruSurecID, 'otID': otID, 'KullaniciID': _KullaniciID, 'BasvuruID': _BasvuruID, 'ArrOtipIds': _tercihler },
             success: function (result) {
                 $('#' + rwID).html(result);
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
                 yLBilgisiIstendimi();
             },
             error: function (err) {
                 alert(err.responseText);
                 $('#' + rwID).addClass('hide');
-                _pRefresh(_panel, true);
+                PanelRefresh(_panel, true);
             }
         });
     }
@@ -1333,7 +1324,7 @@
 
     function tercihSiraNoDuzenle() {
         $('#Rw_tbody').find('input[name=_tSiraNo]').each(function (inx, inptx) {
-            var _sNo = inx + 1; 
+            var _sNo = inx + 1;
             $(inptx).val(_sNo);
             $(inptx).parents('li').find('.tSiraNo').html(_sNo + ")");
         })
@@ -1373,7 +1364,7 @@
 
         }
         if (odurumShow) $('.lOdurumBilgi').removeClass('hide');
-        else $('.lOdurumBilgi').addClass('hide'); 
+        else $('.lOdurumBilgi').addClass('hide');
         return odurumShow;
     }
     function tercihBDOTkontrol(_OtKod) {
@@ -1498,7 +1489,7 @@
         else {
             BolumIDs.push(parseInt($('#LOgrenciBolumID').val()));
             BolumIDs.push(parseInt($('#YLOgrenciBolumID').val()));
-        } 
+        }
         var _KullaniciID = @Model.KullaniciID;
         var bSurecID =@Model.BasvuruSurecID;
         $('#Rw_tbody').find('li').each(function (inx, trx) {
@@ -1549,7 +1540,7 @@
         else if (tp == '@SinavTipGrup.Tomer') {
             _panel = $('#pnlSnv_T');
         }
-        _pRefresh(_panel, false);
+        PanelRefresh(_panel, false);
         var _SinavTipID = $(sndr).val();
         if (_SinavTipID != "" && _SinavTipID != "null" && _SinavTipID != null) {
             var _OtIDs = "[";
@@ -1591,16 +1582,16 @@
                 data: { 'BasvuruSurecID': _BasvuruSurecID, "EgitimDiliTurkce": EgitimDiliTurkce, 'SinavTipID': _SinavTipID, 'SelectedVal': selectedV, 'OgrenimTipKods': nOtIDs, 'Ingilizces': nIngs, 'ProgramKods': nPrkds, 'BasvuruID': '@(Model.BasvuruID>0?Model.BasvuruID.ToString():"")' },
                 success: function (result) {
                     $('#sinavTipBilgi_' + tp).html(result);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 },
                 error: function (err) {
                     alert(err.responseText);
-                    _pRefresh(_panel, true);
+                    PanelRefresh(_panel, true);
                 }
             });
         }
         else {
-            _pRefresh(_panel, true);
+            PanelRefresh(_panel, true);
             $('#sinavTipBilgi_' + tp).html("");
         }
     }
@@ -1611,8 +1602,7 @@
             frmD = {
                 "StepNo": step,
                 "KullaniciID": @Model.KullaniciID,
-                "TcKimlikNo": $('#TcKimlikNo').val(),
-                "PasaportNo": $('#PasaportNo').val(),
+                "TcKimlikNo": $('#TcKimlikNo').val(), 
                 "CinsiyetID": $('#CinsiyetID').val(),
                 "AnaAdi": $('#AnaAdi').val(),
                 "BabaAdi": $('#BabaAdi').val(),
@@ -1672,7 +1662,7 @@
             var _LEgitimDiliTurkce = $("#LEgitimDiliTurkce").val();
             var _YLEgitimDiliTurkce = $("#YLEgitimDiliTurkce").val();
             var _DREgitimDiliTurkce = $("#DREgitimDiliTurkce").val();
-            var YLDurum = $('#DrBilgi').hasClass('hide') == false; 
+            var YLDurum = $('#DrBilgi').hasClass('hide') == false;
             frmD = {
                 "BasvuruSurecID": @Model.BasvuruSurecID,
                 "StepNo": step,
@@ -1769,8 +1759,8 @@
                 "BasvurularSinavBilgi_D.SinavTipID": $('#DSinavTipID').length > 0 ? $('#DSinavTipID').val() : "",
                 "BasvurularSinavBilgi_D.SinavTipGrupID": $('#DSinavTipGrupID').length > 0 ? $('#DSinavTipGrupID').val() : "",
                 "BasvurularSinavBilgi_D.WsSinavYil": $('#DWsSinavYil').length > 0 ? $('#DWsSinavYil').val() : "",
-                "BasvurularSinavBilgi_D.WsSinavDonem": $('#DWsSinavDonem').length > 0 ? $('#DWsSinavDonem').val() : "", 
-                "BasvurularSinavBilgi_D.WsSinavDili": $('#DsSinavDili').length > 0 ? $('#DsSinavDili').val() : "", 
+                "BasvurularSinavBilgi_D.WsSinavDonem": $('#DWsSinavDonem').length > 0 ? $('#DWsSinavDonem').val() : "",
+                "BasvurularSinavBilgi_D.WsSinavDili": $('#DsSinavDili').length > 0 ? $('#DsSinavDili').val() : "",
                 "BasvurularSinavBilgi_D.WsXmlData": $('#DWsXmlData').length > 0 ? $('#DWsXmlData').val() : "",
                 "BasvurularSinavBilgi_D.SinavTarihi": $('#DSinavTarihi').length > 0 ? $('#DSinavTarihi').val() : "",
                 "BasvurularSinavBilgi_D.SinavDilID": $('#DSinavDilID').length > 0 ? $('#DSinavDilID').val() : "",
@@ -1832,7 +1822,7 @@
                                     className: "btn-primary",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        _pRefresh(pnlx, false);
+                                        PanelRefresh(pnlx, false);
                                         $('#FrmAnket').ajaxForm({
                                             success: function (result) {
                                                 if (result.IsSuccess) {
@@ -1844,13 +1834,13 @@
                                                     getMsg(result);
                                                     return false;
                                                 }
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
-                                                _pRefresh(pnlx, true);
+                                                PanelRefresh(pnlx, true);
                                             }
 
                                         });
@@ -1951,7 +1941,7 @@
 }
 <script>
 
-    
+
     function NotConvert(IdN, BasvuruSurecSinavTipID) {
         var tip = $('#' + IdN + 'SubSinavAralikID').val();
         var Stip = BasvuruSurecSinavTipID;

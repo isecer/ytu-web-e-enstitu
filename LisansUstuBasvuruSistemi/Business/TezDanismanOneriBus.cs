@@ -139,8 +139,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ResimAdi = basvuru.ResimAdi;
                 model.Ad = basvuru.Ad;
                 model.Soyad = basvuru.Soyad;
-                model.TcKimlikNo = basvuru.TcKimlikNo;
-                model.PasaportNo = basvuru.PasaportNo;
+                model.TcKimlikNo = basvuru.TcKimlikNo; 
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
@@ -162,7 +161,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IslemYapanIP = basvuru.IslemYapanIP;
                 model.DegerlendirenUniqueID = uniqueId;
 
-                if (model.TDOBasvuruDanismanList.All(a => a.TezDanismanID != basvuru.Kullanicilar.DanismanID))
+                if (basvuru.Kullanicilar.DanismanID.HasValue && model.TDOBasvuruDanismanList.All(a => a.TezDanismanID != basvuru.Kullanicilar.DanismanID))
                 {
                     var eslestirildi = ObsDanismanBasvurBilgiEslestir(model.KullaniciID, model.TDOBasvuruID);
                     if (eslestirildi)
@@ -227,16 +226,17 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var ogr = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-                var ogrenciInfo = Management.StudentControl(ogr.TcKimlikNo);
-                if (ogr.DanismanID.HasValue)
+                var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId); 
+                var ogrenciInfo = Management.StudentControl(kul.TcKimlikNo);
+
+                if (ogrenciInfo.DanismanInfo != null)
                 {
 
                     var sonBasvuru = db.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.KullaniciID == kullaniciId).OrderByDescending(o => o.TDOBasvuruDanismanID).FirstOrDefault();
 
-                    if (sonBasvuru == null || sonBasvuru.TezDanismanID != ogr.DanismanID)
+                    if (sonBasvuru == null)
                     {
-                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == ogr.DanismanID);
+                        var danisman = db.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
                         var kModel = new TDOBasvuruDanisman
                         {
                             IsObsData = true,
@@ -261,6 +261,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.TezDanismanID = danisman.KullaniciID;
                         kModel.TDAdSoyad = danisman.Ad + " " + danisman.Soyad;
                         kModel.TDUnvanAdi = danisman.Unvanlar.UnvanAdi;
+
                         kModel.TDProgramAdi = ogrenciInfo.DanismanInfo.PROGRAM_AD;
                         kModel.TDAnabilimDaliAdi = ogrenciInfo.DanismanInfo.ANABILIMDALI_AD;
 
@@ -269,9 +270,11 @@ namespace LisansUstuBasvuruSistemi.Business
                         kModel.TDTezSayisiYL = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_YL_SAYI1.ToIntObj();
                         kModel.TDTezSayisiDR = ogrenciInfo.DanismanInfo.DANISMAN_MEZUN_DR_SAYI1.ToIntObj();
 
+
                         kModel.DanismanOnayladi = true;
                         kModel.EYKYaGonderildi = true;
                         kModel.EYKDaOnaylandi = true;
+
                         kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezDanismaniOnerisi;
 
                         kModel.IslemTarihi = DateTime.Now;
@@ -436,11 +439,11 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var data = (from s in db.TDODanismanTalepTipleris
-                    select new
-                    {
-                        s.TDODanismanTalepTipID,
-                        s.TalepTipAdi
-                    }).AsQueryable();
+                            select new
+                            {
+                                s.TDODanismanTalepTipID,
+                                s.TalepTipAdi
+                            }).AsQueryable();
                 var qdata = data.ToList();
                 foreach (var item in qdata)
                 {

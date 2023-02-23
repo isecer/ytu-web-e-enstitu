@@ -100,7 +100,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.KotaID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.KotaID')">
+                                                            <li id="iShow_@item.KotaID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.KotaID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -297,7 +297,7 @@
             alert("Enstitü Seçiniz!");
         }
     }
-    function showDetail(id) {
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

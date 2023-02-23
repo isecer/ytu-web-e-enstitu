@@ -64,7 +64,7 @@
                                                     callback: function () {
 
                                                         var _panel = $(btbx).find('.modal-content');
-                                                        _pRefresh(_panel, false);
+                                                        PanelRefresh(_panel, false);
                                                         toastr["info"]("Toplu Onaylama İşlemi Başlatıldı", "Lütfen işlem tamamlanana kadar bekleyiniz.")
                                                         var OnayAciklamasi = $(btbx).find('#OAciklama').val();
                                                         $.ajax({
@@ -73,12 +73,12 @@
                                                             cache: false,
                                                             data: { 'KTalepGelenTalepIDs': KTalepGelenTalepIDs, 'OnayAciklamasi': OnayAciklamasi},
                                                             success: function (result) {
-                                                                _pRefresh(_panel, true);
+                                                                PanelRefresh(_panel, true);
                                                                 showMmMessage(result.Messages, 'Tamam');
                                                                 $(btbx).find('.close').first().click();
                                                             },
                                                             error: function (err) {
-                                                                _pRefresh(_panel, true);
+                                                                PanelRefresh(_panel, true);
                                                                 alert(err.responseText);
                                                             }
                                                         });
@@ -238,7 +238,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="showDetail('@item.TalepGelenTalepID')">
+                                                            <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TalepGelenTalepID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -564,7 +564,7 @@
 </div>
 <script type="text/javascript">
 
-    function showDetail(id) {
+    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
