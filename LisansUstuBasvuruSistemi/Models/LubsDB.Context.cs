@@ -202,6 +202,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<WsSinavCekipTipDetay> WsSinavCekipTipDetays { get; set; }
         public virtual DbSet<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         public virtual DbSet<YeterlikSureci> YeterlikSurecis { get; set; }
+        public virtual DbSet<YeterlikSureciKriterMuafOgrenciler> YeterlikSureciKriterMuafOgrencilers { get; set; }
         public virtual DbSet<YeterlikSurecOgrenimTipleri> YeterlikSurecOgrenimTipleris { get; set; }
         public virtual DbSet<YetkiGruplari> YetkiGruplaris { get; set; }
         public virtual DbSet<YetkiGrupRolleri> YetkiGrupRolleris { get; set; }

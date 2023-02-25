@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         public int? BaslangicYil { get; set; }
         public int? BitisYil { get; set; }
         public int? DonemID { get; set; }
-        public string OkuduguDonem { get; set; }
+        public int OkuduguDonemNo { get; set; }
         public DateTime? KayitTarihi { get; set; }
 
 

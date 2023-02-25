@@ -1,0 +1,303 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model  FmYeterlikBasvuruDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var kontrolEdilmeyenBasvuruIds = (List<int>)ViewBag.kontrolEdilmeyenBasvuruIds;
+}
+
+
+<div class="row">
+    @using (Html.BeginForm("Index", "YeterlikGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+
+                        @if (Model.RowCount > 0)
+                        {
+                            if (UserIdentity.Current.IsAdmin && kontrolEdilmeyenBasvuruIds.Any())
+                            {
+
+                                <li>
+                                    <a href="javascript:void(0);" onclick="IslemGormeyenlerOnay()" title="Kontrol Aşamasında Olan Başvuruları Onayla"><i class="fa fa-thumbs-o-up fa-lg"></i></a>
+                                    <div id="BbOnayContent" class="hide">
+                                        <table class="table" style="width:100%;table-layout:fixed;">
+                                            <tr>
+                                                <td width="120">Gönderilecek Açıklama</td>
+                                                <td>
+                                                    <textarea style="max-width:462px; min-height:100px; width:100%;" id="OAciklama"> </textarea>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <script>
+                                    function IslemGormeyenlerOnay() { 
+                                        var kontrolEdilmeyenTalepIds = JSON.parse(@Json.Encode(kontrolEdilmeyenBasvuruIds));
+                                        Swal.fire({
+                                            title: 'Toplu Yeterlik Başvuru Onay İşlemi',
+                                            text: "Kontrol aşamasında olan '@kontrolEdilmeyenBasvuruIds.Count' adet başvuruyu onaylamak istiyor musunuz?",
+                                            type: 'warning',
+                                            icon: "question",
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Onayla',
+                                            confirmButtonColor: "gren",
+                                            cancelButtonText: 'Vazgeç',
+                                            padding: '2em',
+                                            backdrop: true,
+                                            allowOutsideClick: false,
+                                            preConfirm: function () {
+                                                $('.swal2-confirm').first().text("Onaylanıyor...");
+                                                return new Promise(function (resolve) {
+                                                    $.ajax({
+                                                        url: '@Url.Action("EnstituTopluOnay", "YeterlikGelenBasvurular")',
+                                                        type: 'POST',
+                                                        cache: false,
+                                                        data: { kontrolEdilmeyenTalepIds },
+                                                        success: function (result) {
+                                                            swal.fire({
+                                                                text: result.message,
+                                                                icon: (result.success ? "success" : "error"),
+                                                                type: (result.success ? "success" : "error"),
+                                                                confirmButtonText: 'tamam',
+                                                                padding: '2em'
+                                                            })
+
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        });
+                                    }
+                                    </script>
+                                </li>
+                            }
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+
+                        }
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td>
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Akademik Dönem</td>
+                                            <td>
+                                                @Html.DropDownList("YeterlikSurecID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Öğrenim Seviyesi</td>
+                                            <td>
+                                                @Html.DropDownList("OgrenimTipID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                            </td>
+                            <td style="padding-left:10px; vertical-align:top;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width:100%;table-layout:fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Gelen Başvurular</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th width="40"></th>
+                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                <th width="80" class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th>Başvuru Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                var rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail">
+                                        </td>
+                                        <td>
+                                            @item.AdSoyad <br /> @item.OgrenciNo
+                                        </td>
+                                        <td>
+                                            @item.BasvuruTarihi
+                                        </td> 
+                                        <td>
+                                            @item.ToYeterlikDurum()
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BasvuruYap","Yeterlik", new { id=item.UniqueID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.UniqueID" style="display:none">
+                                        <td id="cls-@item.UniqueID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+
+   function BasvuruSil(sndr, uniqueId, tarih) {
+       bootbox.dialog({
+           message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;color:maroon;'>" + tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
+           title: "Yeterlik Başvuru Silme İşlemi",
+           buttons: {
+               success: {
+                   label: 'Yeterlik Başvurusunu Sil',
+                   className: "btn-danger",
+                   callback: function () {
+                       $.ajax({
+                           url: '@Url.Action("Sil","Yeterlik")',
+                           data: { uniqueId },
+                           success: function (result) {
+                               if (result.IsSuccess) {
+                                   $(sndr).closest("tr").remove();
+                                   $(".cls-" + uniqueId).remove();
+                               }
+                               showMmMessage(result.Messages, 'Tamam');
+                           },
+                           error: function (err) {
+                               alert(err.responseText);
+                           }
+                       });
+                   }
+               },
+               danger: {
+                   label: 'Vazgeç',
+                   className: "btn-primary",
+                   callback: function () {
+                   }
+               }
+           }
+       });
+    }
+        function ShowDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(id);
+
+    }
+    function GetDetail(id) {
+        var panel = $('#bsvrDet_' + id);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetail","Yeterlik")',
+            data: { id: id },
+            success: function (result) {
+                $('#cls-' + id).html(result);
+                PanelRefresh(panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(panel, true);
+            }
+        });
+
+    }
+</script>

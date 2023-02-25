@@ -32,7 +32,6 @@ namespace LisansUstuBasvuruSistemi
             SystemInformation.OnEvent += SystemInformation_OnEvent;
             //RollerBus.UpdateRoles();
             //MenulerBus.UpdateMenus();
-
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();

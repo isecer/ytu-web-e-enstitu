@@ -8,7 +8,6 @@
 @model  FmYeterlikBasvuruDto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kyetki = RoleNames.YeterlikGelenBasvurular.InRoleCurrent();
 }
 
 <div class="row">
@@ -19,53 +18,22 @@
                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
                 </tr>
                 <tr>
-                    <td width="200" style="color:cadetblue">Enstitü</td>
+                    <td width="120" style="color:cadetblue">Enstitü</td>
                     <td width="10">:</td>
                     <td>
                         @Model.EnstituAdi
                     </td>
                 </tr>
                 <tr>
-                    <td>Ad Soyad</td>
+                    <td style="color:cadetblue">Ad Soyad</td>
                     <td>:</td>
                     <td>@Model.OgrenciNo @Model.AdSoyad</td>
                 </tr>
-                @if (!Model.IsYtuOgrencisi)
-                {
-                    <tr>
-                        <td>Not</td>
-                        <td>:</td>
-                        <td>
-                            Başvuru işlemini sadece Yüksek Lisans öğrencileri tarafından yapılabilir. Başvuru yapabilmek için profil bilgilerinizi düzeltip YTU öğrencisi olduğunuzu belirten bilgileri doldurunuz.
-                        </td>
-                    </tr>
 
-                }
-                else if (!Model.IsEnstituYetki)
+                @if (!Model.AktifYeterlikSurecId.HasValue)
                 {
                     <tr>
-                        <td>Not</td>
-                        <td>:</td>
-                        <td>
-                            Bu enstitü için Yeterlik başvurusu yapamazsınız!
-                        </td>
-                    </tr>
-                }
-                else if (Model.AktifYeterlikSurecId.HasValue)
-                {
-
-                    <tr>
-                        <td></td>
-                        <td>:</td>
-                        <td>
-                            <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus tooltips"></i>Yeni Başvuru Yap</button>
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td>Başvuru Durumu</td>
+                        <td style="color:cadetblue">Başvuru Durumu</td>
                         <td>:</td>
                         <td>
                             Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
@@ -73,6 +41,41 @@
                             <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
                         </td>
                     </tr>
+
+                }
+                else
+                {
+                    if (!Model.IsYtuOgrencisi || !Model.IsOgrenimSeviyeYetki)
+                    {
+                        <tr>
+                            <td style="color:cadetblue">Not</td>
+                            <td>:</td>
+                            <td>
+                                Yeterlik başvuru işlemleri sadece <b>@Model.OgrenimTipAdis</b> Öğrenim seviyelerinde aktif olarak okuyan öğrenciler tarafından yapılabilir.
+                            </td>
+                        </tr>
+
+                    }
+                    else if (!Model.IsEnstituYetki)
+                    {
+                        <tr>
+                            <td style="color:cadetblue">Not</td>
+                            <td>:</td>
+                            <td>
+                                Bu enstitü için Yeterlik başvurusu yapamazsınız!
+                            </td>
+                        </tr>
+                    } 
+                    else
+                    {
+                        <tr>
+                            <td></td>
+                            <td>:</td>
+                            <td>
+                                <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
+                            </td>
+                        </tr>
+                    }
                 }
             </table>
 
@@ -93,12 +96,11 @@
                     <table class="table table-hover" style="width:100%;">
                         <thead>
                             <tr>
-                                <th width="75">
-                                </th>
+                                <th width="75"></th>
                                 <th width="40"></th>
                                 <th class="sirala" field="AdSoyad">Ad Soyad</th>
-                                <th class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
-                                <th>Yeterlik Durumu</th>
+                                <th width="80" class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                <th>Başvuru Durumu</th>
                                 <th width="45"></th>
                             </tr>
                         </thead>
@@ -118,7 +120,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.YeterlikBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.YeterlikBasvuruID')">
+                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -135,16 +137,16 @@
                                         <td>
                                             @item.BasvuruTarihi
                                         </td>
-
                                         <td>
+                                            @item.ToYeterlikDurum()
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("BasvuruYap", new { YeterlikBasvuruID = item.YeterlikBasvuruID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.YeterlikBasvuruID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            <a href="@Url.Action("BasvuruYap", new { id=item.UniqueID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                         </td>
                                     </tr>
-                                    <tr class="cls-@item.YeterlikBasvuruID" style="display:none">
-                                        <td id="cls-@item.YeterlikBasvuruID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                    <tr class="cls-@item.UniqueID" style="display:none">
+                                        <td id="cls-@item.UniqueID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
                                     </tr>
 
                                 }
@@ -168,44 +170,76 @@
         </div>
     }
 </div>
+@if (Model.Data.Any())
+{
+<script>
+    $(function () { 
+        ShowDetail('@Model.Data.First().UniqueID');
+    }, 200);
+</script>
 
+}
 <script>
   function YeniBasvuruDuyuruKontrol() {
         ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
     }
-   function BasvuruSil(sndr, id, tarih) {  
-         bootbox.dialog({
-            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;color:maroon;'>" + tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
-            title: "Yeterlik Başvuru Silme İşlemi",
-            buttons: {
-                success: {
-                    label: 'Yeterlik Başvurusunu Sil',
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("Sil")',
-                            data: { id: id },
-                            success: function (result) { 
-                                if (result.IsSuccess) {
-                                    $(sndr).closest("tr").remove();
-                                    $(".cls-" + id).remove();
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) { 
-                                alert(err.responseText);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: 'Vazgeç',
-                    className: "btn-primary",
-                    callback: function () {
-                        PanelRefresh(_panel, true);
-                    }
-                }
+   function BasvuruSil(sndr, uniqueId, tarih) {
+       bootbox.dialog({
+           message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;color:maroon;'>" + tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
+           title: "Yeterlik Başvuru Silme İşlemi",
+           buttons: {
+               success: {
+                   label: 'Yeterlik Başvurusunu Sil',
+                   className: "btn-danger",
+                   callback: function () {
+                       $.ajax({
+                           url: '@Url.Action("Sil")',
+                           data: { uniqueId },
+                           success: function (result) {
+                               if (result.IsSuccess) {
+                                   $(sndr).closest("tr").remove();
+                                   $(".cls-" + uniqueId).remove();
+                               }
+                               showMmMessage(result.Messages, 'Tamam');
+                           },
+                           error: function (err) {
+                               alert(err.responseText);
+                           }
+                       });
+                   }
+               },
+               danger: {
+                   label: 'Vazgeç',
+                   className: "btn-primary",
+                   callback: function () {
+                   }
+               }
+           }
+       });
+    }
+   function ShowDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(id);
+
+    }
+   function GetDetail(id) {
+        var panel = $('#bsvrDet_' + id);
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetail")',
+            data: { id: id },
+            success: function (result) {
+                $('#cls-' + id).html(result);
+                PanelRefresh(panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(panel, true);
             }
         });
+
     }
 </script>

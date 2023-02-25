@@ -293,6 +293,7 @@
     <Compile Include="Controllers\UyruklarController.cs" />
     <Compile Include="Controllers\MezuniyetYayinTurleriController.cs" />
     <Compile Include="Controllers\YeterlikController.cs" />
+    <Compile Include="Controllers\YeterlikGelenBasvurularController.cs" />
     <Compile Include="Controllers\YeterlikSureciController.cs" />
     <Compile Include="Controllers\YetkiGruplariController.cs" />
     <Compile Include="Controllers\MezuniyetYonetmeliklerController.cs" />
@@ -857,6 +858,9 @@
     <Compile Include="Models\YeterlikSureci.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\YeterlikSureciKriterMuafOgrenciler.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\YeterlikSurecOgrenimTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -876,6 +880,7 @@
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
+    <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikSureciDto.cs" />
     <Compile Include="Utilities\Dtos\KmYeterlikSureciDto.cs" />
@@ -1510,6 +1515,8 @@
     <Content Include="Content\assets\plugins\select2\select2_locale_vi.js" />
     <Content Include="Content\assets\plugins\select2\select2_locale_zh-CN.js" />
     <Content Include="Content\assets\plugins\select2\select2_locale_zh-TW.js" />
+    <Content Include="Content\assets\plugins\sweetalert\sweetalert2.all.min.js" />
+    <Content Include="Content\assets\plugins\sweetalert\sweetalert2.min.css" />
     <Content Include="Content\assets\plugins\ui-nestable.js" />
     <Content Include="Content\assets\upload.php" />
     <Content Include="Content\assets\uploads\Images\Animal 48.jpg" />
@@ -3449,6 +3456,10 @@
     <Content Include="Views\YeterlikSureci\Kayit.cshtml" />
     <Content Include="Views\Yeterlik\Index.cshtml" />
     <Content Include="Views\Yeterlik\BasvuruYap.cshtml" />
+    <Content Include="Views\YeterlikGelenBasvurular\Index.cshtml" />
+    <Content Include="Views\Yeterlik\GetDetail.cshtml" />
+    <Content Include="Views\YeterlikSureci\KriterMuafOgrenciler.cshtml" />
+    <Content Include="Views\Yeterlik\BasvuruDurumView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

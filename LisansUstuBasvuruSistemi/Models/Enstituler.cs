@@ -41,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.TalepSurecleris = new HashSet<TalepSurecleri>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
+            this.YeterlikSurecis = new HashSet<YeterlikSureci>();
         }
     
         public string EnstituKod { get; set; }
@@ -111,5 +112,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TDOBasvuru> TDOBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikSureci> YeterlikSurecis { get; set; }
     }
 }

@@ -222,7 +222,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 talep.TalepSurecID = Management.getAktifTalepSurecID(enstituKod) ?? 0;
                 var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
-
                 talep.KullaniciID = kul.KullaniciID;
                 talep.AdSoyad = kul.Ad + " " + kul.Soyad;
                 if (kul.YtuOgrencisi)
@@ -280,7 +279,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Talep Tipi seçiniz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TalepTipID" });
                 }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
+                else
+                {
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TalepTipID" });
+                    var talepTipi = _entities.TalepTipleris.First(p => p.TalepTipID == kModel.TalepTipID);
+                    if (talepTipi.IsAktifOgrenciKontroluYapilsin)
+                    {
+                        if (!kul.YtuOgrencisi)
+                        {
+                            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kul.KullaniciID);
+                            mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTU öğrencisi olunması gerekmektedir.");
+                        }
+                    }
+
+                }
 
 
             if (kul.YtuOgrencisi)
@@ -336,7 +348,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
-                                        { 
+                                        {
                                             mmMessage.Messages.Add("Yükleyeceğiniz te öneri belgesi pdf türünde olmalıdır.");
                                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
@@ -366,7 +378,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
-                                        { 
+                                        {
                                             mmMessage.Messages.Add("Yükleyeceğiniz te öneri belgesi pdf türünde olmalıdır.");
                                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
@@ -400,7 +412,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
-                                        { 
+                                        {
                                             mmMessage.Messages.Add("Yükleyeceğiniz ders yükü belgesi pdf türünde olmalıdır.");
                                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
@@ -420,7 +432,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     else if (dosyaDanismanOnay != null)
                                     {
                                         if (dosyaDanismanOnay.FileName.Split('.').Last().ToLower() != "pdf")
-                                        { 
+                                        {
                                             mmMessage.Messages.Add("Yükleyeceğiniz ders yükü belgesi pdf türünde olmalıdır.");
                                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DosyaDanismanOnay" });
                                         }
@@ -465,12 +477,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else if (dosya != null)
                     {
                         if (dosya.FileName.Split('.').Last().ToLower() != "pdf")
-                        { 
+                        {
                             mmMessage.Messages.Add("Yükleyeceğiniz belge pdf türünde olmalıdır.");
                             mmMessage.MessagesDialog.Add(new MrMessage
                             {
                                 MessageType = Msgtype.Warning,
-                                PropertyName = "Dosya" 
+                                PropertyName = "Dosya"
                             });
                         }
                         else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Dosya" });
@@ -711,7 +723,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (talep.TalepTipID == TalepTipi.Covid19KayitDondurmaTalebi)
                 {
-                    talepTipAciklama = talep.OgrenimTipKod.IsDoktora()?
+                    talepTipAciklama = talep.OgrenimTipKod.IsDoktora() ?
                         "Bu talep tipini seçecek olan öğrencilerimizden: doktora tez önerisinden başarılı olunmuş ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir. Aksi takdirde talebiniz kabul edilmeyecektir."
                         :
                         "Bu talep tipini seçecek olan öğrencilerimizden: YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği Senato Esaslarında belirtilen ders yükü tamamlama kurallarına göre ders aşaması tamamlanmış ise; COVID-19 sebebi ile kayıt dondurma işleminizin uygun olduğuna dair danışmanınıza ait imzalı dilekçenin yüklenmesi gerekmektedir Aksi takdirde talebiniz kabul edilmeyecektir.";

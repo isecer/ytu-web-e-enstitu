@@ -1,10 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @model KmYeterlikBasvuruDto
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var mmMessage = (MmMessage)ViewBag.mmMessage;
-
-
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
 }
 
 <div class="row">
@@ -17,8 +14,7 @@
                 <div class="panel-body">
                     <div class="panel panel-default form-horizontal">
                         <div class="panel-body form-group-separated"> 
-                            <input type="text" style="display:none;" id="YeterlikBasvuruID" name="YeterlikBasvuruID" value="@Model.YeterlikBasvuruID" />
-                            <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
+                            <input type="text" style="display:none;" id="UniqueID" name="UniqueID" value="@Model.UniqueID" /> 
                             <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />  
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-2 control-label">Öğrenim Seviyesi</label>
@@ -67,11 +63,5 @@
             </div>
         </div>
     </form>
-</div>
-<script>
-      $(function () {
-        var model = '@Html.Raw(Json.Encode(mmMessage))';
-        validateControl(model);
-    });
-</script>
+</div> 
 

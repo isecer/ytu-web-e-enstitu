@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public YeterlikSureci()
         {
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
+            this.YeterlikSureciKriterMuafOgrencilers = new HashSet<YeterlikSureciKriterMuafOgrenciler>();
             this.YeterlikSurecOgrenimTipleris = new HashSet<YeterlikSurecOgrenimTipleri>();
         }
     
@@ -28,15 +29,17 @@ namespace LisansUstuBasvuruSistemi.Models
         public int DonemID { get; set; }
         public System.DateTime BaslangicTarihi { get; set; }
         public System.DateTime BitisTarihi { get; set; }
-        public int SiraNo { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
         public virtual Donemler Donemler { get; set; }
+        public virtual Enstituler Enstituler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikSureciKriterMuafOgrenciler> YeterlikSureciKriterMuafOgrencilers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikSurecOgrenimTipleri> YeterlikSurecOgrenimTipleris { get; set; }
     }

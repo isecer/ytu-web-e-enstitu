@@ -57,7 +57,24 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbIntDto> CmbAktifOgrenimTipIdDoktora(string enstituKod, bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+             
 
+                var data = db.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod  && p.IsAktif).OrderBy(o => o.OgrenimTipAdi).ToList();
+                data = data.Where(p => IsDoktora(p.OgrenimTipKod)).ToList();
+                foreach (var item in data)
+                {
+                    dct.Add(new CmbIntDto { Value = item.OgrenimTipID, Caption = item.OgrenimTipAdi });
+                }
+            }
+            return dct;
+
+        }
         public static bool IsDoktora(this int ogrenimTipKod)
         {
             return new List<int> { OgrenimTipi.ButunlesikDoktora, OgrenimTipi.SanattaYeterlilik, OgrenimTipi.Doktra }

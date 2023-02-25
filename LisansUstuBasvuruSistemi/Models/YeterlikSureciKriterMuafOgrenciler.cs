@@ -12,21 +12,15 @@ namespace LisansUstuBasvuruSistemi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class YeterlikSurecOgrenimTipleri
+    public partial class YeterlikSureciKriterMuafOgrenciler
     {
-        public int YeterlikSurecOgrenimTipID { get; set; }
+        public int YeterlikSurecKriterMuafOgrenciID { get; set; }
         public int YeterlikSurecID { get; set; }
-        public int OgrenimTipID { get; set; }
-        public int OgrenimTipKod { get; set; }
-        public Nullable<int> YsMaxBasvuruDonemNo { get; set; }
-        public Nullable<int> YsBasToplamKrediKriteri { get; set; }
-        public string YsBasEtikNotKriteri { get; set; }
-        public string YsBasSeminerNotKriteri { get; set; }
-        public System.DateTime IslemTarihi { get; set; }
+        public int KullaniciID { get; set; }
         public int IslemYapanID { get; set; }
-        public string IslemYapanIP { get; set; }
+        public System.DateTime IslemTarihi { get; set; }
     
-        public virtual OgrenimTipleri OgrenimTipleri { get; set; }
+        public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual YeterlikSureci YeterlikSureci { get; set; }
     }
 }

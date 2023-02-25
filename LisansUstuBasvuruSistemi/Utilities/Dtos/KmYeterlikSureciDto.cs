@@ -12,6 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int> YeterlikSurecOgrenimTipID { get; set; }
         public List<int> OgrenimTipID { get; set; }
         public List<int> OgrenimTipKod { get; set; }
+        public List<int?> YsMaxBasvuruDonemNo { get; set; }
         public List<string> YsBasEtikNotKriteri { get; set; }
         public List<string> YsBasSeminerNotKriteri { get; set; }
         public List<int?> YsBasToplamKrediKriteri { get; set; }

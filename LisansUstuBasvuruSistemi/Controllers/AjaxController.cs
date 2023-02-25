@@ -3112,7 +3112,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize(Roles = RoleNames.MailGonder)]
-        public ActionResult getTumMailListesi(string term)
+        public ActionResult GetTumMailListesi(string term)
         {
             var qKullanicilar = (from k in _entities.Kullanicilars
                                  orderby k.Ad, k.Soyad
@@ -3147,7 +3147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize]
-        public ActionResult getProgramListesi(string term)
+        public ActionResult GetProgramListesi(string term)
         {
             var programlars = (from p in _entities.Programlars
                                join prl in _entities.Programlars on p.ProgramKod equals prl.ProgramKod

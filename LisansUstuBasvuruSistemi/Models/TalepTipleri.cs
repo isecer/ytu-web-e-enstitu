@@ -28,6 +28,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string TalepTipAdi { get; set; }
         public string TalepTipAciklama { get; set; }
         public string TaahhutAciklamasi { get; set; }
+        public bool IsAktifOgrenciKontroluYapilsin { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public OgrenimTipleri()
         {
             this.MezuniyetSureciOgrenimTipKriterleris = new HashSet<MezuniyetSureciOgrenimTipKriterleri>();
+            this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
             this.YeterlikSurecOgrenimTipleris = new HashSet<YeterlikSurecOgrenimTipleri>();
         }
     
@@ -61,6 +62,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikSurecOgrenimTipleri> YeterlikSurecOgrenimTipleris { get; set; }
     }

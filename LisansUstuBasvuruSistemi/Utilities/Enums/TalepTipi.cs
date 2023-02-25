@@ -11,6 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int YDSSinavSonucuBelgesiYukleme = 2;
         public static int KayitSildirmeBelgesiYukleme = 3;
         public static int Covid19KayitDondurmaTalebi = 4;
+        public static int KayitDondurma = 5;
 
     }
 }

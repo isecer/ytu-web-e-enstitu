@@ -43,7 +43,7 @@
 
                         </thead>
                         <tbody>
-                             
+
                             @if (Model.RowCount > 0)
                             {
                                 int rowIndex = Model.StartRowIndex;
@@ -71,6 +71,9 @@
                                                                     <li>
                                                                         <a href="@Url.Action("Kayit", new { id = item.YeterlikSurecID })"><i class="fa fa-edit"></i>Düzenle</a>
                                                                     </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" onclick="GetKriterMuafOgrenciler(@item.YeterlikSurecID)"><i class="fa fa-group"></i>Kriterden Muaf Tutulanlar</a>
+                                                                    </li>
                                                                 }
                                                                 @if (silme)
                                                                 {
@@ -78,14 +81,16 @@
                                                                         <a href="javascript:void(0)" onclick="SilmeOnay(@item.YeterlikSurecID)"><i class="fa fa-trash-o"></i>Sil</a>
                                                                     </li>
                                                                 }
+                                                               
+                                                                
                                                             </ul>
                                                         </div>
-                                                    </td> 
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td>@item.EnstituAdi</td>
-                                        <td>@item.DonemAdi @item.SiraNo</td>
+                                        <td>@item.DonemAdi</td>
                                         <td>
                                             @item.BaslangicTarihi.ToFormatDateAndTime()
                                         </td>
@@ -94,7 +99,9 @@
                                         </td>
 
 
-                                    </tr> 
+                                    </tr>
+
+
 
                                 }
                             }
@@ -118,62 +125,29 @@
     }
 </div>
 <script type="text/javascript">
-    function ShowDetail(id, tip) {
-        var rwID = $('#iShow-' + tip + id);
-        var cls = 'cls-' + tip + id;
-        var unTogled = ($('.' + cls).css("display") == "none");
-        toggleByClass(rwID, cls, unTogled);
-        if (unTogled && tip == "ana-") setTimeout(getDetail(id), 400);
-    } 
-    function GetDetail(id) {
 
-        $.ajax({
-            url: '@Url.Action("GetMsDetail")',
-            data: { id: id, tbInx: tID, isdelete: (isdelete == true) },
-            async: false,
-            success: function (result) {
-                if (isdelete != true) {
-                    $('#cls-ana-' + id).html(result);
-                    subData(id, isdelete);
-                }
-                else {
-                    subData(id, isdelete, result);
-                }
-            },
-            error: function (err) {
-                alert(err.responseText);
-            }
-        });
-
-    } 
-    function subData(id) { 
-        var _panel = $('#pnglDB_' + id);
-        PanelRefresh(_panel, false);
-        $.ajax({
-            url: '@Url.Action("GetMsSubData")',
-            data: { id: id  },
-            success: function (result) {
-
-                $('#' + tbName + '-' + tID).html(result);
-                PanelRefresh(_panel, true);
-
-            },
-            error: function (err) {
-                alert(err.responseText);
-                PanelRefresh(_panel, true);
-            }
-        });
-    } 
     function SilmeOnay(id) {
-        var btbx = bootbox.dialog({
+        bootbox.dialog({
             message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Yeterlik Sürecini Silmek İstiyor Musunuz?</td></tr></table>",
-            title: "Mezuninet Süreci Silme İşlemi",
+            title: "Yeterlik Süreci Silme İşlemi",
             buttons: {
                 success: {
                     label: "Yeterlik Sürecini Sil",
                     className: "btn-danger",
                     callback: function () {
-                        sil(id);
+                        $.ajax({
+                            url: '@Url.Action("Sil")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) {
+                                    $(".delrw_" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
                     }
                 },
                 danger: {
@@ -185,19 +159,32 @@
             }
         });
     }
-    function sil(id) {
+    function GetKriterMuafOgrencilerView(id) {
+        var view = "";
         $.ajax({
-            url: '@Url.Action("Sil")',
+            url: '@Url.Action("KriterMuafOgrenciler")',
             data: { id: id },
+            async: false,
             success: function (result) {
-                if (result.IsSuccess) {
-                    $(".delrw_" + id).remove();
-                }
-                showMmMessage(result.Messages, 'Tamam');
-            },
-            error: function (err) {
-                alert(err.responseText);
+                view = result;
             }
         });
-    } 
+        return view;
+    }
+    function GetKriterMuafOgrenciler(id) {
+        var view  = GetKriterMuafOgrencilerView(id);
+        bootbox.dialog({
+            message: "<div id='muafOgrenciContent'>" +  view + "</div>",
+            title: "Yeterlik Süreci Balvuru Kriterinden Muaf Öğrenciler",
+            buttons: {
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+    }
 </script>

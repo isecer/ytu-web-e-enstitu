@@ -5,9 +5,9 @@
 @using LisansUstuBasvuruSistemi.Business
 @model TalepGelenTalepler
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
-    var Dosya = Model.TalepGelenTalepBelgeleris.Where(p => !p.IsDanismanOnayDosyasi).FirstOrDefault(); 
-    var DosyaDanismanOnay = Model.TalepGelenTalepBelgeleris.Where(p => p.IsDanismanOnayDosyasi).FirstOrDefault();
+    var mmMessage = ViewBag.MmMessage as MmMessage;
+    var dosya = Model.TalepGelenTalepBelgeleris.FirstOrDefault(p => !p.IsDanismanOnayDosyasi); 
+    var dosyaDanismanOnay = Model.TalepGelenTalepBelgeleris.FirstOrDefault(p => p.IsDanismanOnayDosyasi);
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
@@ -51,8 +51,9 @@
                                                         'KullaniciID':@Model.KullaniciID
                                                     },
                                                     success: function (result) {
+                                                        debugger
                                                         var classEk = result.IsDoktora ? "Dr" : "YL";
-                                                        $('.AllGroup').addClass('hide');
+                                                         $('.AllGroup').addClass('hide');
                                                         if (result.TalepTipID == '@TalepTipi.LisansustuSureUzatmaTalebi') {
                                                             $('.EkSure' + classEk).removeClass('hide');
                                                         }
@@ -65,6 +66,9 @@
                                                         }
                                                         else if (result.TalepTipID == '@TalepTipi.Covid19KayitDondurmaTalebi') {
                                                             $('.Dondurma' + classEk).removeClass('hide');
+                                                        }
+                                                        else if (result.TalepTipID == '@TalepTipi.KayitDondurma') {
+                                                            $('.KDondurma' + classEk).removeClass('hide');
                                                         }
                                                         if (result.IsBelgeYuklemeVar) {
                                                             $('.TTB').removeClass('hide');
@@ -141,10 +145,10 @@
                                                     <td width="30" style="text-align: center;"><i class="fa fa-file-pdf-o" style="color: green; font-size: 17pt;"></i></td>
                                                     <td>
                                                         <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaDanismanOnay" title="Belge Seç (Belge PDF türünde olmalıdır)" />
-                                                        @if (DosyaDanismanOnay != null)
+                                                        @if (dosyaDanismanOnay != null)
                                                         {
-                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(DosyaDanismanOnay != null ? DosyaDanismanOnay.DosyaAdi : "")" />
-                                                            <a href="@Url.Content(DosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@DosyaDanismanOnay.DosyaAdi</a>
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(dosyaDanismanOnay != null ? dosyaDanismanOnay.DosyaAdi : "")" />
+                                                            <a href="@Url.Content(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
                                                         }
 
                                                     </td>
@@ -180,10 +184,10 @@
                                                     <td width="30" style="text-align: center;"><i class="fa fa-file-pdf-o" style="color: green; font-size: 17pt;"></i></td>
                                                     <td>
                                                         <input type="file" class="fileinput btn-info" accept="application/pdf" name="DosyaDanismanOnay" id="DosyaTezOneri" title="Belge Seç (Belge PDF türünde olmalıdır)" />
-                                                        @if (DosyaDanismanOnay != null)
+                                                        @if (dosyaDanismanOnay != null)
                                                         {
-                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(DosyaDanismanOnay != null ? DosyaDanismanOnay.DosyaAdi : "")" />
-                                                            <a href="@Url.Content(DosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@DosyaDanismanOnay.DosyaAdi</a>
+                                                            <input type="text" class="hide" name="DosyaAdiDanismanOnay" id="DosyaAdiDanismanOnay" value="@(dosyaDanismanOnay != null ? dosyaDanismanOnay.DosyaAdi : "")" />
+                                                            <a href="@Url.Content(dosyaDanismanOnay.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosyaDanismanOnay.DosyaAdi</a>
                                                         }
 
                                                     </td>
@@ -205,10 +209,10 @@
                                             <td>
                                                 <input type="file" class="fileinput btn-info" accept="application/pdf" name="Dosya" id="Dosya" title="Belge Seç (Belge PDF türünde olmalıdır)" />
 
-                                                @if (Dosya != null)
+                                                @if (dosya != null)
                                                 {
-                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="@(Dosya != null ? Dosya.DosyaAdi : "")" />
-                                                    <a href="@Url.Content(Dosya.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Dosya.DosyaAdi</a>
+                                                    <input type="text" class="hide" name="DosyaAdi" id="DosyaAdi" value="@(dosya != null ? dosya.DosyaAdi : "")" />
+                                                    <a href="@Url.Content(dosya.DosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@dosya.DosyaAdi</a>
                                                 }
                                                 else
                                                 {
@@ -219,7 +223,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="form-group AllGroup SilmeDr SilmeYL">
+                            <div class="form-group AllGroup SilmeDr SilmeYL KDondurmaYL KDondurmaDr">
                                 <label class="col-md-3 col-xs-5 control-label">Taahhüt</label>
                                 <div class="col-md-9 col-xs-7">
                                     <div class="checkbox">
@@ -257,7 +261,7 @@
             timepicker: false,
             format: 'd-m-Y'
         });
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
 

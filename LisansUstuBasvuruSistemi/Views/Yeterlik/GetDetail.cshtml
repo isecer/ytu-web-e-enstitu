@@ -1,0 +1,173 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@model DmYeterlikDetayDto
+@{
+    Layout = null;
+    var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
+}
+<style>
+
+    .CaptionTd {
+        font-weight: bold;
+        font-size: 9pt;
+        margin: 0px;
+    }
+
+    .ValueTd {
+        font-size: 9pt;
+        margin: 0px;
+        text-align: left;
+    }
+</style>
+<div class="panel" style="border: none;" id="bsvrDet_@Model.UniqueID">
+    <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Bilgileri</td>
+                <td width="100" style="font-weight: bold; font-size: 15pt; border-bottom: 1px solid; text-align: right;">
+                    <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                </td>
+
+            </tr>
+            <tr>
+                <td style="padding-left: 10px; text-align: left;">
+
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="CaptionTd" width="150">Ad Soyad</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @Model.AdSoyad (@Model.OgrenciNo)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Öğrenim Seviyesi</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@Model.OgrenimTipAdi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Anabilimdalı / Program</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Kayıt Dönem</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@Model.KayitDonemi</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Okuduğu Dönem</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">@(Model.OkuduguDonemNo).Dönem</td>
+                        </tr>
+                        <tr>
+                            <td class="CaptionTd">Danışman</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                @if (RoleNames.Kullanicilar.InRoleCurrent())
+                                {
+                                    <a href="javascript:void(0);" onclick="detayGor(@Model.TezDanismanID)">@Model.DanismanAdi</a>
+                                }
+                                else
+                                {
+                                    @Model.DanismanAdi
+                                }
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="100" style="text-align: center;">
+                    <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width: 90px; height: 90px;" class="img-circle img-thumbnail">
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+    <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
+        <table style="width: 100%;">
+            <tr>
+                <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-check fa-lg"></i> Enstitü Başvuru Onayı</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px; text-align: left;">
+
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="CaptionTd" width="150">Onay Durumu</td>
+                            <td class="CaptionTd" width="10">:</td>
+                            <td class="ValueTd">
+                                @if (kayitYetki)
+                                {
+                                    <select class="form-control" id="enstituOnay_@Model.UniqueID" onchange="if ($(this).val() == 'false') { $('#enstituIptalRow_@Model.UniqueID').removeClass('hide');}else {$('#enstituIptalRow_@Model.UniqueID').addClass('hide');}">
+                                        <option></option>
+                                        <option value="true" @(Model.IsOnaylandi == true ? "selected" : "")>Onaylandı</option>
+                                        <option value="false" @(Model.IsOnaylandi == false ? "selected" : "")>İptal Edildi</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    @(Model.IsOnaylandi.HasValue ? (Model.IsOnaylandi == true ? "Başvuru Onaylandı" : "Başvuru İptal") : "Onay işlemi bekleniyor")
+                                }
+                            </td>
+                        </tr>
+                        <tr id="enstituIptalRow_@Model.UniqueID" class="@(Model.IsOnaylandi == false ? "" : "hide")">
+                            <td class="CaptionTd">İptal Açıklaması</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                @if (kayitYetki)
+                                {
+                                    <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" maxlength="1024" id="enstituOnayAciklama_@Model.UniqueID">@Model.OnayAciklama</textarea>
+                                }
+                                else
+                                {
+                                    @(Model.OnayAciklama)
+                                }
+                            </td>
+                        </tr>
+                        @if (kayitYetki)
+                        {
+                            <tr>
+                                <td class="CaptionTd"></td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="EnstituOnayKayit('@Model.UniqueID')"><i class="fa fa-save"></i>Kaydet</button>
+
+                                    <script>
+                                        function EnstituOnayKayit(uniqueID) {
+                                            var enstituOnay = $('#enstituOnay_' + uniqueID).val();
+                                            var enstituOnayAciklama = $('#enstituOnayAciklama_' + uniqueID).val();
+                                            var panel = $('#enstituOnayPanel_' + uniqueID);
+                                            PanelRefresh(panel, false);
+                                            $.ajax({
+                                                url: '@Url.Action("EnstituOnay","YeterlikGelenBasvurular")',
+                                                data: { uniqueID, enstituOnay, enstituOnayAciklama },
+                                                success: function (result) {
+                                                    if (result.IsSuccess) {
+                                                        GetDetail(uniqueID);
+                                                    }
+                                                    else {
+                                                        showMmMessage(result.Messages, 'Tamam');
+                                                    }
+                                                    PanelRefresh(panel, false);
+                                                },
+                                                error: function (err) {
+                                                    PanelRefresh(panel, false);
+                                                    alert(err.responseText);
+                                                }
+                                            });
+                                         }
+                                    </script>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+

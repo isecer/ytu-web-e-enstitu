@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public System.DateTime BasvuruTarihi { get; set; }
         public int KullaniciID { get; set; }
         public string OgrenciNo { get; set; }
-        public int OgrenimTipKod { get; set; }
+        public int OgrenimTipID { get; set; }
         public string ProgramKod { get; set; }
         public int OkuduguDonemNo { get; set; }
         public int YsBasToplamKrediKriteri { get; set; }
@@ -28,10 +28,11 @@ namespace LisansUstuBasvuruSistemi.Models
         public string YsBasSeminerNotKriteri { get; set; }
         public int KayitYil { get; set; }
         public int KayitDonemID { get; set; }
+        public System.DateTime KayitTarihi { get; set; }
         public int TezDanismanID { get; set; }
-        public Nullable<bool> IsMuaf { get; set; }
-        public Nullable<System.DateTime> MuafTarihi { get; set; }
-        public string MuafAciklama { get; set; }
+        public Nullable<bool> IsOnaylandi { get; set; }
+        public Nullable<System.DateTime> OnayTarihi { get; set; }
+        public string OnayAciklama { get; set; }
         public Nullable<bool> IsBasarili { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
@@ -39,6 +40,8 @@ namespace LisansUstuBasvuruSistemi.Models
     
         public virtual Donemler Donemler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
+        public virtual OgrenimTipleri OgrenimTipleri { get; set; }
+        public virtual Programlar Programlar { get; set; }
         public virtual YeterlikSureci YeterlikSureci { get; set; }
     }
 }

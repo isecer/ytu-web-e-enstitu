@@ -10,6 +10,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -22,7 +23,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         // GET: YeterlikSureci
         public ActionResult Index(string ekd)
         {
-            var aaa = Request["ekd"];
             return Index(new FmYeterlikSureciDto
             {
                 PageSize = 15
@@ -47,7 +47,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BitisYil = s.BitisYil,
                         DonemID = s.DonemID,
                         DonemAdi = s.BaslangicYil + "/" + s.BitisYil + " " + d.DonemAdi,
-                        SiraNo = s.SiraNo,
                         BaslangicTarihi = s.BaslangicTarihi,
                         BitisTarihi = s.BitisTarihi,
                         IsAktif = s.IsAktif,
@@ -86,7 +85,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.DonemID = data.DonemID;
                 model.BaslangicTarihi = data.BaslangicTarihi;
                 model.BitisTarihi = data.BitisTarihi;
-                model.SiraNo = data.SiraNo;
                 model.IsAktif = data.IsAktif;
                 model.OgretimYili = data.BaslangicYil + "/" + data.BitisYil + "/" + data.DonemID;
             }
@@ -107,17 +105,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage();
             kModel.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
-            var yeterlikSurecOgrenimTipID = kModel.YeterlikSurecOgrenimTipID.Select((s, inx) => new { Inx = inx, YeterlikSurecOgrenimTipID = s }).ToList();
+            var yeterlikSurecOgrenimTipId = kModel.YeterlikSurecOgrenimTipID.Select((s, inx) => new { Inx = inx, YeterlikSurecOgrenimTipID = s }).ToList();
             var ogrenimTipId = kModel.OgrenimTipID.Select((s, inx) => new { Inx = inx, OgrenimTipID = s }).ToList();
             var ogrenimTipKod = kModel.OgrenimTipKod.Select((s, inx) => new { Inx = inx, OgrenimTipKod = s }).ToList();
+            var ysMaxBasvuruDonemNo = kModel.YsMaxBasvuruDonemNo.Select((s, inx) => new { Inx = inx, YsMaxBasvuruDonemNo = s }).ToList();
             var ysBasToplamKrediKriteri = kModel.YsBasToplamKrediKriteri.Select((s, inx) => new { Inx = inx, YsBasToplamKrediKriteri = s }).ToList();
             var ysBasEtikNotKriteri = kModel.YsBasEtikNotKriteri.Select((s, inx) => new { Inx = inx, YsBasEtikNotKriteri = s }).ToList();
             var ysBasSeminerNotKriteri = kModel.YsBasSeminerNotKriteri.Select((s, inx) => new { Inx = inx, YsBasSeminerNotKriteri = s }).ToList();
 
             var ogrenimTipleri = _context.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
-            var yeterlikSureciOgrenimTipKriterleri = (from kr in yeterlikSurecOgrenimTipID
+            var yeterlikSureciOgrenimTipKriterleri = (from kr in yeterlikSurecOgrenimTipId
                                                       join ot in ogrenimTipId on kr.Inx equals ot.Inx
                                                       join otk in ogrenimTipKod on kr.Inx equals otk.Inx
+                                                      join dn in ysMaxBasvuruDonemNo on kr.Inx equals dn.Inx
                                                       join dk in ysBasToplamKrediKriteri on kr.Inx equals dk.Inx
                                                       join kk in ysBasEtikNotKriteri on kr.Inx equals kk.Inx
                                                       join agk in ysBasSeminerNotKriteri on kr.Inx equals agk.Inx
@@ -128,6 +128,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                           kr.YeterlikSurecOgrenimTipID,
                                                           ot.OgrenimTipID,
                                                           otk.OgrenimTipKod,
+                                                          dn.YsMaxBasvuruDonemNo,
                                                           dk.YsBasToplamKrediKriteri,
                                                           kk.YsBasEtikNotKriteri,
                                                           agk.YsBasSeminerNotKriteri,
@@ -139,6 +140,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 OgrenimTipAdi = s.OgrenimTipAdi,
                 OgrenimTipKod = s.OgrenimTipKod,
                 OgrenimTipID = s.OgrenimTipID,
+                YsMaxBasvuruDonemNo = s.YsMaxBasvuruDonemNo,
                 YsBasToplamKrediKriteri = s.YsBasToplamKrediKriteri,
                 YsBasEtikNotKriteri = s.YsBasEtikNotKriteri,
                 YsBasSeminerNotKriteri = s.YsBasSeminerNotKriteri
@@ -206,24 +208,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            if (mmMessage.Messages.Count == 0)
-            {
-                foreach (var item in yeterlikSureciOgrenimTipKriterleri)
-                {
-                    if (!item.YsBasToplamKrediKriteri.HasValue || item.YsBasToplamKrediKriteri <= 0)
-                    {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Min Kredi bilgisi 0 dan büyük olmalı.");
-                    }
-                    if (item.YsBasEtikNotKriteri.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Etik dersi not kriteri bilgisi giriniz.");
-                    }
-                    if (item.YsBasSeminerNotKriteri.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Seminer dersi not kriteri bilgisi giriniz.");
-                    }
-                }
-            }
+            //if (mmMessage.Messages.Count == 0)
+            //{
+            //    foreach (var item in yeterlikSureciOgrenimTipKriterleri)
+            //    {
+            //        if (!item.YsBasToplamKrediKriteri.HasValue || item.YsBasToplamKrediKriteri <= 0)
+            //        {
+            //            mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Min Kredi bilgisi 0 dan büyük olmalı.");
+            //        }
+            //        if (item.YsBasEtikNotKriteri.IsNullOrWhiteSpace())
+            //        {
+            //            mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Etik dersi not kriteri bilgisi giriniz.");
+            //        }
+            //        if (item.YsBasSeminerNotKriteri.IsNullOrWhiteSpace())
+            //        {
+            //            mmMessage.Messages.Add(item.OgrenimTipAdi + " Öğrenim tipi için Seminer dersi not kriteri bilgisi giriniz.");
+            //        }
+            //    }
+            //}
 
             if (mmMessage.Messages.Count == 0)
             {
@@ -252,6 +254,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _context.SaveChanges();
                     kModel.YeterlikSurecID = eklenen.YeterlikSurecID;
 
+
                 }
                 else
                 {
@@ -267,6 +270,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     _context.YeterlikSurecOgrenimTipleris.RemoveRange(data.YeterlikSurecOgrenimTipleris);
+
+                    LogIslemleri.LogEkle("YeterlikSureci", IslemTipi.Update, data.ToJson());
+
                 }
 
 
@@ -275,6 +281,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     YeterlikSurecID = kModel.YeterlikSurecID,
                     OgrenimTipID = s.OgrenimTipID,
                     OgrenimTipKod = s.OgrenimTipKod,
+                    YsMaxBasvuruDonemNo = s.YsMaxBasvuruDonemNo,
                     YsBasEtikNotKriteri = s.YsBasEtikNotKriteri,
                     YsBasSeminerNotKriteri = s.YsBasSeminerNotKriteri,
                     YsBasToplamKrediKriteri = s.YsBasToplamKrediKriteri,
@@ -287,28 +294,80 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            else
-            {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-            }
-
-            YeterlikBus.SiraNoVer();
-
-
+            MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(), "Value", "Caption", kModel.OgretimYili);
             ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
 
-        public ActionResult GetMsDetail()
+        public ActionResult KriterMuafOgrenciler(int id)
         {
-            throw new NotImplementedException();
+            var surec = _context.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
+            return View(surec);
+        }
+        public ActionResult KriterMuafOgrenciEkle(int yeterlikSurecId, int? ogrenciId)
+        {
+            var success = false;
+            var message = "";
+            if (!ogrenciId.HasValue)
+            {
+                message = "Öğrenci seçiniz.";
+            }
+            else if (_context.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId.Value))
+            {
+                message = "Bu öğrenci daha önce eklendi.";
+            }
+            else
+            {
+                _context.YeterlikSureciKriterMuafOgrencilers.Add(new YeterlikSureciKriterMuafOgrenciler
+                {
+                    YeterlikSurecID = yeterlikSurecId,
+                    KullaniciID = ogrenciId.Value,
+                    IslemTarihi = DateTime.Now,
+                    IslemYapanID = UserIdentity.Current.Id
+                });
+                _context.SaveChanges();
+                success = true;
+            } 
+            return new { success, message }.ToJsonResult();
+
+        }
+        public ActionResult KriterMuafOgrenciSil(int yeterlikSurecId, int ogrenciId)
+        {
+           
+            if (_context.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId))
+            {
+                var ogrenci = _context.YeterlikSureciKriterMuafOgrencilers.First(p =>
+                    p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId);
+                _context.YeterlikSureciKriterMuafOgrencilers.Remove(ogrenci);
+                _context.SaveChanges();
+            }
+
+            return true.ToJsonResult();
+        }
+        public ActionResult GetFilterKullanici(string term)
+        {
+
+            var ogrenciList = _context.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+            {
+                s.KullaniciID,
+                s.Ad,
+                s.Soyad,
+                s.OgrenciNo,
+                s.ResimAdi,
+                s.Programlar.ProgramAdi
+            }).Take(15).ToList()
+                .Select(s => new
+                {
+                    id = s.KullaniciID,
+                    s.ProgramAdi,
+                    text = s.OgrenciNo + " " + s.Ad + " " + s.Soyad,
+                    Images = s.ResimAdi.ToKullaniciResim()
+                }).ToList();
+            return ogrenciList.ToJsonResult();
         }
 
-        public ActionResult GetMsSubData()
-        {
-            throw new NotImplementedException();
-        }
+
         [Authorize(Roles = RoleNames.YeterlikSureciSil)]
         public ActionResult Sil(int id)
         {
@@ -349,9 +408,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new { mmMessage.IsSuccess, Messages = strView }.ToJsonResult();
         }
 
-        public ActionResult GetOtBilgiM()
-        {
-            throw new NotImplementedException();
-        }
+
+       
     }
 }
