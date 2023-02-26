@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
@@ -10,7 +10,7 @@
     //var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
     //var IndexModel2 = (MIndexBilgi)ViewBag.IndexModel2;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole(); 
+    var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
     var eykYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
     var mKids = (List<int>)ViewBag.kIds;
 }
@@ -22,7 +22,7 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info" id="pnlFltr"> 
+            <div class="panel panel-info" id="pnlFltr">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -322,11 +322,11 @@
 
                             @if (Model.RowCount > 0)
                             {
-                                 
-                                int rowIndex = Model.StartRowIndex;  
+
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.Data)
                                 {
-                                    rowIndex++; 
+                                    rowIndex++;
                                     <tr>
                                         <td>
                                             <table>
@@ -1153,52 +1153,55 @@
                 IsYokDrBursiyeriVar = null;
                 YokDrOncelikliAlan = null;
             }
-            bootbox.dialog({
-                message: "Tez sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
-                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Sınavı Değerlendirmesi",
-                buttons: {
-                    success: {
-                        label: "Evet",
-                        className: "btn-info",
-                        callback: function (event) {
-                            PanelRefresh(_panel, false);
-                            $.ajax({
-                                url: '@Url.Action("SinavDegerlendir", "Mezuniyet")',
-                                data: {
-                                    'UniqueID': UniqueID,
-                                    'IsTezBasligiDegisti': IsTezBasligiDegisti,
-                                    'YeniTezBaslikTr': YeniTezBaslikTr,
-                                    'YeniTezBaslikEn': YeniTezBaslikEn,
-                                    'IsTezSanayiVeIsBirligiKapsamindaGerceklesti': IsTezSanayiVeIsBirligiKapsamindaGerceklesti,
-                                    'MezuniyetSinavDurumID': MezuniyetSinavDurumID,
-                                    'Aciklama': Aciklama,
-                                    'YokDrOncelikliAlan': YokDrOncelikliAlan,
-                                    'IsYokDrBursiyeriVar': IsYokDrBursiyeriVar
+            Swal.fire({
+                title: "Tez Sınavı Değerlendirme İşlemi",
+                text: "Tez sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                type: 'warning',
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: 'Kaydet',
+                confirmButtonColor: "gren",
+                cancelButtonText: 'Vazgeç',
+                showLoaderOnConfirm: true,
+                backdrop: true,
+                padding: '2em',
+                backdrop: true,
+                allowOutsideClick: false,
+                preConfirm: function () {
+                    $('.swal2-cancel').first().text("Kaydediliyor...");
+                    return new Promise(function (resolve) {
+                        $.ajax({
+                            url: '@Url.Action("SinavDegerlendir", "Mezuniyet")',
+                            data: {
+                                'UniqueID': UniqueID,
+                                'IsTezBasligiDegisti': IsTezBasligiDegisti,
+                                'YeniTezBaslikTr': YeniTezBaslikTr,
+                                'YeniTezBaslikEn': YeniTezBaslikEn,
+                                'IsTezSanayiVeIsBirligiKapsamindaGerceklesti': IsTezSanayiVeIsBirligiKapsamindaGerceklesti,
+                                'MezuniyetSinavDurumID': MezuniyetSinavDurumID,
+                                'Aciklama': Aciklama,
+                                'YokDrOncelikliAlan': YokDrOncelikliAlan,
+                                'IsYokDrBursiyeriVar': IsYokDrBursiyeriVar
 
-                                },
-                                success: function (result) {
-                                    PanelRefresh(_panel, true);
-                                    if (result.IsSuccess || result.IsRefresh) {
-                                        getDetailx(MBasvuruID);
+                            },
+                            success: function (result) {
+                                $('.swal2-cancel').first().text("Vazgeç");
+                                swal.fire({
+                                    html: result.Messages,
+                                    icon: (result.IsSuccess ? "success" : "error"),
+                                    type: (result.IsSuccess ? "success" : "error"),
+                                    confirmButtonText: 'tamam',
+                                    padding: '2em'
+                                });
 
-                                    }
-                                    showMmMessage(result.Messages, 'Tamam');
-
-                                },
-                                error: function (err) {
-                                    PanelRefresh(_panel, true);
-                                    alert(err.responseText);
+                                if (result.IsSuccess || result.IsRefresh) {
+                                    getDetailx(MBasvuruID);
 
                                 }
-                            });
-                        }
-                    },
-                    danger: {
-                        label: "Hayır",
-                        className: "btn-primary",
-                        callback: function () {
-                        }
-                    }
+                                //showMmMessage(result.Messages, 'Tamam'); 
+                            }
+                        });
+                    });
                 }
             });
         }

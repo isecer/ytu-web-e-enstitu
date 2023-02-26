@@ -34,11 +34,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.AktifYeterlikSurecId = YeterlikBus.GetYeterlikAktifSurecId(enstituKod);
 
             var kullanici = _context.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
+
             model.AdSoyad = kullanici.Ad + " " + kullanici.Soyad;
             model.EnstituAdi = _context.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
             if (model.AktifYeterlikSurecId.HasValue)
             {
                 var surec = _context.YeterlikSurecis.First(p => p.YeterlikSurecID == model.AktifYeterlikSurecId);
+                model.IsAktifSurecBasvuruVar = surec.YeterlikBasvurus.Any(a => a.KullaniciID == kullanici.KullaniciID);
                 model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;
 
                 model.IsYtuOgrencisi = kullanici.YtuOgrencisi && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci;
@@ -238,9 +240,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(Guid uniqueId)
         {
             var kayit = _context.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
-
-            var mmMessage = YeterlikBus.YeterlikBasvurusuSilKontrol(kayit.YeterlikBasvuruID);
-            mmMessage.Title = "Yeterlik Başvurusu Silme İşlemi";
+            var adSoyad = kayit.Kullanicilar.Ad + " " + kayit.Kullanicilar.Soyad;
+            var mmMessage = YeterlikBus.YeterlikBasvurusuSilKontrol(kayit.YeterlikBasvuruID); 
             if (mmMessage.IsSuccess)
             {
                 try
@@ -248,14 +249,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _context.YeterlikBasvurus.Remove(kayit);
                     _context.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Delete, kayit.ToJson());
-                    mmMessage.Messages.Add(kayit.BasvuruTarihi.ToFormatDateAndTime() + " Tarihli başvuru silindi.");
+                    mmMessage.Messages.Add(adSoyad + " Öğrencisine ait Yeterlik başvurusu silindi.");
                     mmMessage.IsSuccess = true;
 
                 }
                 catch (Exception ex)
                 {
                     mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add(kayit.BasvuruTarihi.ToFormatDateAndTime() + " Tarihli başvuru silinemedi.");
+                    mmMessage.Messages.Add(adSoyad + " Öğrencisine ait Yeterlik başvurusu silinemedi.");
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "Yeterlik/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
 

@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var aktifSurecId = YeterlikBus.GetYeterlikAktifSurecId(enstituKod);
-            return Index(new FmYeterlikBasvuruDto { PageSize = 40 ,YeterlikSurecID = aktifSurecId }, ekd, false);
+            return Index(new FmYeterlikBasvuruDto { PageSize = 40, YeterlikSurecID = aktifSurecId }, ekd, false);
         }
         [HttpPost]
         public ActionResult Index(FmYeterlikBasvuruDto model, string ekd, bool export)
@@ -69,7 +69,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.YeterlikSurecID.HasValue) q = q.Where(p => p.YeterlikSurecID == model.YeterlikSurecID);
             if (model.OgrenimTipID.HasValue) q = q.Where(p => p.OgrenimTipID == model.OgrenimTipID);
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimDaliAdi.Contains(model.AdSoyad));
-
+            if (model.BasvuruDurumID.HasValue)
+            {
+                if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsOnaylandi.HasValue);
+                else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsOnaylandi == true);
+                else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsOnaylandi == false);
+            }
             var isFiltered = q.Expression.ToString().Contains("Where");
             ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
 
@@ -80,6 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.YeterlikSurecID = new SelectList(YeterlikBus.GetCmbYeterlikSurecleri(enstituKod, true), "Value", "Caption", model.YeterlikSurecID);
+            ViewBag.BasvuruDurumID = new SelectList(YeterlikBus.GetCmbBasvuruDurumu(true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.OgrenimTipID = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipIdDoktora(enstituKod, true), "Value", "Caption", model.OgrenimTipID);
             #region export
             if (export && model.RowCount > 0)
@@ -124,7 +130,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var mmMessage = new MmMessage
             {
-                Title = "Enstitu Başvuru Onay İşlemi"
+                Title = "Enstitu Başvuru Onay İşlemi",
+                IsSuccess = false
             };
             if (enstituOnay == false && enstituOnayAciklama.IsNullOrWhiteSpace())
             {
@@ -139,6 +146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 basvuru.OnayAciklama = enstituOnayAciklama;
                 basvuru.OnayTarihi = DateTime.Now;
                 _context.SaveChanges();
+                mmMessage.IsSuccess = true;
                 LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                 if (sendMail)
                     YeterlikBus.SendMailYeterlikOnay(new List<int> { basvuru.YeterlikBasvuruID }, enstituOnay.Value);
@@ -170,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     _context.SaveChanges();
                     YeterlikBus.SendMailYeterlikOnay(kontrolEdilmeyenTalepIds, true);
-                    message = basvurus.Count + " Yeterlik başvurusu onaylandı"; 
+                    message = basvurus.Count + " Yeterlik başvurusu onaylandı";
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvurus.ToJson());
 
                 }

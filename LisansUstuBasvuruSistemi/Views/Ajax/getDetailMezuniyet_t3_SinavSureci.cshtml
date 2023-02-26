@@ -933,13 +933,13 @@
                                                                                 </table>
                                                                                 @if (item.IsOgrenciUzatmaSonrasiOnay == true)
                                                                                 {
-                                                                                    var ShowKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSRTalebi;
+                                                                                    var showKayitDanisman = (isDanismani || kayitYetki) && item.IsSonSRTalebi;
                                                                                     <br />
                                                                                     <table style="width:100%;">
                                                                                         <tr>
                                                                                             <td colspan="3" style="font-weight:bold;font-size:9pt; border-bottom:1px solid;"><i class="fa fa-check-square fa-lg" aria-hidden="true"></i> Danışman Tez Kontrol Taahhütü</td>
                                                                                         </tr>
-                                                                                        @if (ShowKayitDanisman)
+                                                                                        @if (showKayitDanisman)
                                                                                         {
                                                                                             <tr>
                                                                                                 <td class="CaptionTd" width="140">Onay Durumu</td>

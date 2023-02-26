@@ -173,7 +173,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
         [Authorize(Roles = RoleNames.KullanicilarOnlineKullanicilar)]
-        public ActionResult getOnlineUserList()
+        public ActionResult GetOnlineUserList()
         {
             var users = OnlineUsersHelper.GetUsers.ToList();
             return View(users);

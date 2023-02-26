@@ -1955,7 +1955,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 }
                             }
                         }
-                        else mMessage.Messages.Add("Değerlendirme işlemi tamamlandı.");
+                        else mMessage.Messages.Add("Değerlendirme kaydedildi.");
 
 
                         var isDegerlendirmeTamam = !komite.SRTalepleri.SRTaleplerJuris.Any(a => !a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID == MezuniyetSinavDurum.SonucGirilmedi);
@@ -2016,7 +2016,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
                 }
-            }
+            } 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);

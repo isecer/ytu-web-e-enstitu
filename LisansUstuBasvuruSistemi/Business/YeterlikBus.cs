@@ -255,6 +255,15 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
+        public static List<CmbIntDto> GetCmbBasvuruDurumu(bool bosSecimVar = false)
+        {
+            var lst = new List<CmbIntDto>();
+            if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
+            lst.Add(new CmbIntDto { Value = 0, Caption = "İşlem Görmeyenler" });
+            lst.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
+            lst.Add(new CmbIntDto { Value = 2, Caption = "İptal Edilenler" });
+            return lst;
+        }
         public static void SendMailYeterlikOnay(List<int> yeterlikBasvuruIds, bool enstituOnay)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())

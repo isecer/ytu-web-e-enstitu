@@ -371,18 +371,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.YeterlikSureciSil)]
         public ActionResult Sil(int id)
         {
-            var mmMessage = new MmMessage();
-
-            var kayit = _context.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id);
-
+            var mmMessage = new MmMessage(); 
+            var kayit = _context.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id); 
             if (kayit != null)
             {
                 var donemAdi = kayit.BaslangicYil + "/" + kayit.BitisYil + " " + kayit.Donemler.DonemAdi;
                 try
                 {
                     _context.YeterlikSurecis.Remove(kayit);
-                    _context.SaveChanges();
-                    mmMessage.Title = "Uyarı";
+                    _context.SaveChanges(); 
                     mmMessage.Messages.Add(donemAdi + " Dönemine ait Yeterlik süreci silindi!");
                     mmMessage.MessageType = Msgtype.Success;
                     mmMessage.IsSuccess = true;
@@ -390,16 +387,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     var errMessage = "'" + donemAdi + "' Dönemine ait Yeterlik süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
-                    mmMessage.Title = "Hata";
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata); 
                     mmMessage.Messages.Add(errMessage);
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                 }
             }
             else
-            {
-                mmMessage.Title = "Hata";
+            { 
                 mmMessage.Messages.Add("Silmek istediğiniz Yeterlik süreci sistemde bulunamadı!");
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;

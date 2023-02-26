@@ -10,6 +10,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FmYeterlikBasvuruDto : PagerOption
     {
         public int? AktifYeterlikSurecId { get; set; }
+        public bool IsAktifSurecBasvuruVar { get; set; }
+        public int? BasvuruDurumID { get; set; }
         public string EnstituAdi { get; set; }
         public string DonemAdi { get; set; }
         public string AdSoyad { get; set; }

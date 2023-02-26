@@ -90,7 +90,7 @@
     <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
         <table style="width: 100%;">
             <tr>
-                <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-check fa-lg"></i> Enstitü Başvuru Onayı</td>
+                <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;">@Model.IsOnaylandi.ToOnayDurumIconLgHtml() Enstitü Başvuru Onayı</td>
             </tr>
             <tr>
                 <td style="padding-left: 10px; text-align: left;">
@@ -145,7 +145,7 @@
                                             $.ajax({
                                                 url: '@Url.Action("EnstituOnay","YeterlikGelenBasvurular")',
                                                 data: { uniqueID, enstituOnay, enstituOnayAciklama },
-                                                success: function (result) {
+                                                success: function (result) { 
                                                     if (result.IsSuccess) {
                                                         GetDetail(uniqueID);
                                                     }

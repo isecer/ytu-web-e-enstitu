@@ -65,17 +65,23 @@
                                 Bu enstitü için Yeterlik başvurusu yapamazsınız!
                             </td>
                         </tr>
-                    } 
-                    else
-                    {
-                        <tr>
-                            <td></td>
-                            <td>:</td>
-                            <td>
-                                <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
-                            </td>
-                        </tr>
                     }
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            @if (Model.IsAktifSurecBasvuruVar)
+                            {
+                                @(Model.DonemAdi+" için başvurunuz bulunmaktadır.")
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
+                            }
+
+                        </td>
+                    </tr>
+
                 }
             </table>
 
@@ -141,8 +147,11 @@
                                             @item.ToYeterlikDurum()
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("BasvuruYap", new { id=item.UniqueID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            @if (!item.IsOnaylandi.HasValue)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            }
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.UniqueID" style="display:none">
@@ -172,50 +181,55 @@
 </div>
 @if (Model.Data.Any())
 {
-<script>
-    $(function () { 
+    <script>
+    $(function () {
         ShowDetail('@Model.Data.First().UniqueID');
     }, 200);
-</script>
+    </script>
 
 }
 <script>
   function YeniBasvuruDuyuruKontrol() {
         ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
     }
-   function BasvuruSil(sndr, uniqueId, tarih) {
-       bootbox.dialog({
-           message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;color:maroon;'>" + tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
-           title: "Yeterlik Başvuru Silme İşlemi",
-           buttons: {
-               success: {
-                   label: 'Yeterlik Başvurusunu Sil',
-                   className: "btn-danger",
-                   callback: function () {
-                       $.ajax({
-                           url: '@Url.Action("Sil")',
-                           data: { uniqueId },
-                           success: function (result) {
-                               if (result.IsSuccess) {
-                                   $(sndr).closest("tr").remove();
-                                   $(".cls-" + uniqueId).remove();
-                               }
-                               showMmMessage(result.Messages, 'Tamam');
-                           },
-                           error: function (err) {
-                               alert(err.responseText);
-                           }
-                       });
-                   }
-               },
-               danger: {
-                   label: 'Vazgeç',
-                   className: "btn-primary",
-                   callback: function () {
-                   }
-               }
-           }
-       });
+    function BasvuruSil(sndr, uniqueId, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli Yeterlik başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Yeterlik Başvurusunu Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("Sil", "Yeterlik")',
+                        data: {  uniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                $(sndr).parents('tr').first().remove();
+                                $(".cls-" + uniqueId).remove();
+                            }
+                            swal.fire({
+                                html: result.Messages,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
+            }
+        });
     }
    function ShowDetail(id) {
         var rwID = $('#iShow_' + id);

@@ -81,8 +81,8 @@
                                                                         <a href="javascript:void(0)" onclick="SilmeOnay(@item.YeterlikSurecID)"><i class="fa fa-trash-o"></i>Sil</a>
                                                                     </li>
                                                                 }
-                                                               
-                                                                
+
+
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -127,35 +127,40 @@
 <script type="text/javascript">
 
     function SilmeOnay(id) {
-        bootbox.dialog({
-            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Yeterlik Sürecini Silmek İstiyor Musunuz?</td></tr></table>",
-            title: "Yeterlik Süreci Silme İşlemi",
-            buttons: {
-                success: {
-                    label: "Yeterlik Sürecini Sil",
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("Sil")',
-                            data: { id: id },
-                            success: function (result) {
-                                if (result.IsSuccess) {
-                                    $(".delrw_" + id).remove();
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) {
-                                alert(err.responseText);
+        Swal.fire({ 
+            text: "Seçilen Yeterlik Sürecini Silmek İstiyor Musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Yeterlik Sürecini Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("Sil")',
+                        data: { id: id },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                $(".delrw_" + id).remove();
                             }
-                        });
-                    }
-                },
-                danger: {
-                    label: "Kapat",
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
+                            swal.fire({
+                                html: result.Messages,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        }
+                    });
+
+                });
             }
         });
     }

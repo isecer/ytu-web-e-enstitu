@@ -938,6 +938,7 @@
     <Compile Include="Utilities\Dtos\KmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
+    <Compile Include="Utilities\Extensions\IconExtension.cs" />
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
