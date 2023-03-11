@@ -9,6 +9,8 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kontrolEdilmeyenBasvuruIds = (List<int>)ViewBag.kontrolEdilmeyenBasvuruIds;
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
 }
 
 
@@ -47,8 +49,8 @@
                                         </table>
                                     </div>
                                     <script>
-                                    function IslemGormeyenlerOnay() { 
-                                        var kontrolEdilmeyenTalepIds = JSON.parse(@Json.Encode(kontrolEdilmeyenBasvuruIds));
+                                    function IslemGormeyenlerOnay() {
+                                        var kontrolEdilmeyenTalepIds = @Json.Encode(kontrolEdilmeyenBasvuruIds);
                                         Swal.fire({
                                             title: 'Toplu Yeterlik Başvuru Onay İşlemi',
                                             text: "Kontrol aşamasında olan '@kontrolEdilmeyenBasvuruIds.Count' adet başvuruyu onaylamak istiyor musunuz?",
@@ -59,12 +61,12 @@
                                             confirmButtonColor: "gren",
                                             cancelButtonText: 'Vazgeç',
                                             showLoaderOnConfirm: true,
-                                            backdrop: true, 
+                                            backdrop: true,
                                             padding: '2em',
                                             backdrop: true,
                                             allowOutsideClick: false,
                                             preConfirm: function () {
-                                                $('.swal2-cancel').first().text("Onaylanıyor..."); 
+                                                $('.swal2-cancel').first().text("Onaylanıyor...");
                                                 return new Promise(function (resolve) {
                                                     $.ajax({
                                                         url: '@Url.Action("EnstituTopluOnay", "YeterlikGelenBasvurular")',
@@ -89,6 +91,23 @@
                                     }
                                     </script>
                                 </li>
+                            }
+                            if (RoleNames.YeterlikBasvuruOnayYetkisi.InRole())
+                            {
+                                if (filteredOgrenciIds.Any())
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                    </li>
+                                }
+                                if (filteredDanismanIds.Any())
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                    </li>
+                                }
+
+
                             }
                             <li>
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
@@ -132,12 +151,12 @@
                             <td>
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
-                                    <tr>
-                                        <td width="150">Başvuru Durumu</td>
-                                        <td>
-                                            @Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td width="150">Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("BasvuruDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </td>
@@ -217,13 +236,16 @@
                                         </td>
                                         <td>
                                             @item.BasvuruTarihi
-                                        </td> 
+                                        </td>
                                         <td>
                                             @item.ToYeterlikDurum()
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("BasvuruYap","Yeterlik", new { id=item.UniqueID })"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.AdSoyad')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            @if (!item.IsOnaylandi.HasValue)
+                                            {
+                                                <a href="@Url.Action("BasvuruYap", "Yeterlik", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.AdSoyad')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                            }
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.UniqueID" style="display:none">
@@ -298,7 +320,7 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) GetDetail(id); 
+        if (unTogled) GetDetail(id);
     }
     function GetDetail(id) {
         var panel = $('#bsvrDet_' + id);

@@ -11,6 +11,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
     {
         public bool KayitVar { get; set; }
         public bool Hata { get; set; }
+        public bool IsDanismanHesabiBulunamadi { get; set; }
         public string HataMsj { get; set; }
         public int? BaslangicYil { get; set; }
         public int? BitisYil { get; set; }
@@ -25,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         public OgrenciTez OgrenciTez { get; set; }
 
         public int AraRaporMaxNo => this.SonTezIzlemeBilgileri.TEZ_IZL_SIRA.ToEmptyStringToZero() + 1;
-
+        public int? AktifDanismanID { get; set; }
         public TezIzlemeBilgileri SonTezIzlemeBilgileri { get; set; }
         public List<TezIzlJuriBilgileri> TezIzlJuriBilgileri { get; set; }
         public Personel DanismanInfo { get; set; }

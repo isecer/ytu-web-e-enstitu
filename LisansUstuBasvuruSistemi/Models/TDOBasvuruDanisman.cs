@@ -33,6 +33,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public bool IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
+        public Nullable<bool> IsYeniTezDiliTr { get; set; }
         public string YeniTezBaslikTr { get; set; }
         public string YeniTezBaslikEn { get; set; }
         public Nullable<int> SinavTipID { get; set; }

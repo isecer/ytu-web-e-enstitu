@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.YeterlikSureci)]
     public class YeterlikSureciController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _context = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         // GET: YeterlikSureci
         public ActionResult Index(string ekd)
         {
@@ -33,10 +33,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var enstituKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var q = from s in _context.YeterlikSurecis
-                    join e in _context.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
-                    join d in _context.Donemlers on new { s.DonemID } equals new { d.DonemID }
-                    join k in _context.Kullanicilars on s.IslemYapanID equals k.KullaniciID
+            var q = from s in _entities.YeterlikSurecis
+                    join e in _entities.Enstitulers on new { s.EnstituKod } equals new { e.EnstituKod }
+                    join d in _entities.Donemlers on new { s.DonemID } equals new { d.DonemID }
+                    join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
                     where enstituKods.Contains(e.EnstituKod)
                     select new FrYeterlikSureci
                     {
@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             id = id ?? 0;
             if (id > 0)
             {
-                var data = _context.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
+                var data = _entities.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
                 model.YeterlikSurecID = data.YeterlikSurecID;
                 model.EnstituKod = data.EnstituKod;
                 model.BaslangicYil = data.BaslangicYil;
@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ysBasEtikNotKriteri = kModel.YsBasEtikNotKriteri.Select((s, inx) => new { Inx = inx, YsBasEtikNotKriteri = s }).ToList();
             var ysBasSeminerNotKriteri = kModel.YsBasSeminerNotKriteri.Select((s, inx) => new { Inx = inx, YsBasSeminerNotKriteri = s }).ToList();
 
-            var ogrenimTipleri = _context.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
+            var ogrenimTipleri = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
             var yeterlikSureciOgrenimTipKriterleri = (from kr in yeterlikSurecOgrenimTipId
                                                       join ot in ogrenimTipId on kr.Inx equals ot.Inx
                                                       join otk in ogrenimTipKod on kr.Inx equals otk.Inx
@@ -190,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.Messages.Count == 0)
             {
 
-                var surecCount = _context.YeterlikSurecis.Count(p => p.EnstituKod == kModel.EnstituKod && p.YeterlikSurecID != kModel.YeterlikSurecID &&
+                var surecCount = _entities.YeterlikSurecis.Count(p => p.EnstituKod == kModel.EnstituKod && p.YeterlikSurecID != kModel.YeterlikSurecID &&
                                                                  (
                                                                      (p.BaslangicTarihi <= kModel.BaslangicTarihi && p.BitisTarihi >= kModel.BaslangicTarihi)
                                                                      ||
@@ -238,7 +238,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (kModel.YeterlikSurecID <= 0)
                 {
-                    var eklenen = _context.YeterlikSurecis.Add(new YeterlikSureci
+                    var eklenen = _entities.YeterlikSurecis.Add(new YeterlikSureci
                     {
                         EnstituKod = kModel.EnstituKod,
                         BaslangicYil = kModel.BaslangicYil,
@@ -251,14 +251,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanID = kModel.IslemYapanID,
                         IslemYapanIP = kModel.IslemYapanIP
                     });
-                    _context.SaveChanges();
+                    _entities.SaveChanges();
                     kModel.YeterlikSurecID = eklenen.YeterlikSurecID;
 
 
                 }
                 else
                 {
-                    var data = _context.YeterlikSurecis.First(p => p.YeterlikSurecID == kModel.YeterlikSurecID);
+                    var data = _entities.YeterlikSurecis.First(p => p.YeterlikSurecID == kModel.YeterlikSurecID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.BaslangicYil = kModel.BaslangicYil;
                     data.BitisYil = kModel.BitisYil;
@@ -269,14 +269,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
-                    _context.YeterlikSurecOgrenimTipleris.RemoveRange(data.YeterlikSurecOgrenimTipleris);
+                    _entities.YeterlikSurecOgrenimTipleris.RemoveRange(data.YeterlikSurecOgrenimTipleris);
 
                     LogIslemleri.LogEkle("YeterlikSureci", IslemTipi.Update, data.ToJson());
 
                 }
 
 
-                _context.YeterlikSurecOgrenimTipleris.AddRange(kModel.KmYeterlikSureciOgrenimTipKriterleris.Select(s => new YeterlikSurecOgrenimTipleri
+                _entities.YeterlikSurecOgrenimTipleris.AddRange(kModel.KmYeterlikSureciOgrenimTipKriterleris.Select(s => new YeterlikSurecOgrenimTipleri
                 {
                     YeterlikSurecID = kModel.YeterlikSurecID,
                     OgrenimTipID = s.OgrenimTipID,
@@ -291,7 +291,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }));
-                _context.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
@@ -302,7 +302,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult KriterMuafOgrenciler(int id)
         {
-            var surec = _context.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
+            var surec = _entities.YeterlikSurecis.First(p => p.YeterlikSurecID == id);
             return View(surec);
         }
         public ActionResult KriterMuafOgrenciEkle(int yeterlikSurecId, int? ogrenciId)
@@ -313,20 +313,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 message = "Öğrenci seçiniz.";
             }
-            else if (_context.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId.Value))
+            else if (_entities.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId.Value))
             {
                 message = "Bu öğrenci daha önce eklendi.";
             }
             else
             {
-                _context.YeterlikSureciKriterMuafOgrencilers.Add(new YeterlikSureciKriterMuafOgrenciler
+                _entities.YeterlikSureciKriterMuafOgrencilers.Add(new YeterlikSureciKriterMuafOgrenciler
                 {
                     YeterlikSurecID = yeterlikSurecId,
                     KullaniciID = ogrenciId.Value,
                     IslemTarihi = DateTime.Now,
                     IslemYapanID = UserIdentity.Current.Id
                 });
-                _context.SaveChanges();
+                _entities.SaveChanges();
                 success = true;
             } 
             return new { success, message }.ToJsonResult();
@@ -335,12 +335,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult KriterMuafOgrenciSil(int yeterlikSurecId, int ogrenciId)
         {
            
-            if (_context.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId))
+            if (_entities.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId))
             {
-                var ogrenci = _context.YeterlikSureciKriterMuafOgrencilers.First(p =>
+                var ogrenci = _entities.YeterlikSureciKriterMuafOgrencilers.First(p =>
                     p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId);
-                _context.YeterlikSureciKriterMuafOgrencilers.Remove(ogrenci);
-                _context.SaveChanges();
+                _entities.YeterlikSureciKriterMuafOgrencilers.Remove(ogrenci);
+                _entities.SaveChanges();
             }
 
             return true.ToJsonResult();
@@ -348,7 +348,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetFilterKullanici(string term)
         {
 
-            var ogrenciList = _context.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+            var ogrenciList = _entities.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
             {
                 s.KullaniciID,
                 s.Ad,
@@ -372,14 +372,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int id)
         {
             var mmMessage = new MmMessage(); 
-            var kayit = _context.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id); 
+            var kayit = _entities.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id); 
             if (kayit != null)
             {
                 var donemAdi = kayit.BaslangicYil + "/" + kayit.BitisYil + " " + kayit.Donemler.DonemAdi;
                 try
                 {
-                    _context.YeterlikSurecis.Remove(kayit);
-                    _context.SaveChanges(); 
+                    _entities.YeterlikSurecis.Remove(kayit);
+                    _entities.SaveChanges(); 
                     mmMessage.Messages.Add(donemAdi + " Dönemine ait Yeterlik süreci silindi!");
                     mmMessage.MessageType = Msgtype.Success;
                     mmMessage.IsSuccess = true;

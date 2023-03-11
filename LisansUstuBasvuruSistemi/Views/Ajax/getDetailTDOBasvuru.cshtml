@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -8,13 +8,13 @@
 @model TdoBasvuruDetayDto
 @{
     Layout = null;
-
-    var isDelete = (bool)ViewBag.IsDelete;
     var isKullaniciGormeYetki = RoleNames.Kullanicilar.InRoleCurrent();
     var tdoDanismanOnayYetkisi = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
     var tdoEykyaGonderimYetkisi = RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent();
     var tdoEykdaOnayYetkisi = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
     var tdoFormOlusturmaYetkisi = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
+
+
 
 }
 <style>
@@ -39,7 +39,7 @@
             <tr>
                 <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Bilgileri</td>
                 <td class="clsHide" width="100" style="font-weight:bold;font-size:15pt; border-bottom:1px solid; text-align:right;">
-                    <a href="javascript:void(0);" onclick="getDetailx('@Model.TDOBasvuruID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                    <a href="javascript:void(0);" onclick="GetDetail('@Model.TDOBasvuruID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                 </td>
 
             </tr>
@@ -85,7 +85,7 @@
 
         </table>
     </div>
-    <div class="widget widget-default @(isDelete?"hide":"")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
+    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
         <table style="width:100%;">
             <tr>
                 <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Tez danışmanı öneri formları</td>
@@ -94,7 +94,7 @@
                     {
                         if (Model.IsYeniDanismanOneriOrDegisiklik)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="GetTDODanismanFormu(@Model.TDOBasvuruID,null,false,@TDODanismanTalepTip.TezDanismaniOnerisi);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
+                            <span class="label label-info" id="YeniRaporBtn_@Model.TDOBasvuruID" style="cursor: pointer;" onclick="GetTdoYeniDanismanFormu(@Model.TDOBasvuruID);"><i class="fa fa-plus"></i> Yeni Tez Danışmanı Öneri Formu Oluştur</span>
                         }
                         else
                         {
@@ -102,14 +102,14 @@
                                 <a href="javascript:void(0);" data-toggle="dropdown" class="btn btn-danger dropdown-toggle"><i class="fa fa-cogs"></i> Değişiklik Talebi İşlemi İçin Tıklayınız</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTDODanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,true,@TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)"><i class="fa fa-edit"></i>Tez Danışmanı ve Tez Başlığı Değişikliği</a>
+                                        <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Tez Danışman/Dil/Başlık Değişikliği</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTDODanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,true,@TDODanismanTalepTip.TezDanismaniDegisikligi)"><i class="fa fa-edit"></i>Sadece Tez Danışmanı Değişikliği</a>
+                                        <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Sadece Tez Danışmanı Değişikliği</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)" onclick="GetTDODanismanFormu(@Model.TDOBasvuruID,@Model.AktifTDOBasvuruDanismanID,true,@TDODanismanTalepTip.TezBasligiDegisikligi)"><i class="fa fa-edit"></i>Sadece Tez Başlığı Değişikliği</a>
-                                    </li>
+                                        <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Sadece Tez Dil/Başlığı Değişikliği</a>
+                                    </li> 
                                 </ul>
                             </div>
                         }
@@ -142,8 +142,8 @@
                             @foreach (var item in Model.TDOBasvuruDanismanList)
                             {
                                 inxRw++;
-                                bool ShowRow = !isDelete && (inxRw == 1);
-                                var tbName = TabAdlari.TDOFormTN + "-" + item.TDOBasvuruDanismanID;
+                                bool showRow = inxRw == 1;
+                                var isTezDiliTr = item.IsYeniTezDiliTr.HasValue ? item.IsYeniTezDiliTr == true : item.IsTezDiliTr;
 
                                 <tr>
                                     <td>
@@ -151,7 +151,7 @@
                                         {
                                             <ul class="panel-controls">
                                                 <li id="iShow_Rpr_@item.TDOBasvuruDanismanID" onclick="showDetailY('Rpr_@item.TDOBasvuruDanismanID')">
-                                                    <a href="javascript:void(0)"><span class="fa fa-angle-@(ShowRow ? "down" : "up")"></span> </a>
+                                                    <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "down" : "up")"></span> </a>
                                                 </li>
                                             </ul>
                                         }
@@ -264,13 +264,27 @@
                                     <td>
                                         @if (item.IsDuzeltSilYapabilir && (tdoFormOlusturmaYetkisi || Model.KullaniciID == UserIdentity.Current.Id) && !item.IsObsData)
                                         {
-                                            <a href="javascript:void(0)" onclick="GetTDODanismanFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID,null,@item.TDODanismanTalepTipID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Danışman Öneri Formunu Düzelt"></i></a>
-
-                                            <a href="javascript:void(0)" onclick="silDetay(this,'@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
+                                            if (item.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi)
+                                            {
+                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman Değişikliği Formunu Düzelt"></i></a>
+                                            }
+                                            else if (item.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi)
+                                            {
+                                                <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Tez Dili/Başlığı Değişikliği Formunu Düzelt"></i></a>
+                                            }
+                                            else if (item.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                                            {
+                                                <a href="javascript:void(0)" onclick="GetTdoDanismanDilBaslikDegisiklikFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman/Tez Dili/Tez Başlığı Öneri Formunu Düzelt"></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0)" onclick="GetTdoYeniDanismanFormu(@item.TDOBasvuruID,@item.TDOBasvuruDanismanID)"><i style="font-size:11pt;" class="fa fa-edit" data-style="blue" data-original-title="Danışman Öneri Formunu Düzelt"></i></a>
+                                            }
+                                            <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
                                         }
                                     </td>
                                 </tr>
-                                <tr class="MainRow2 cls-Rpr_@item.TDOBasvuruDanismanID" style="@(ShowRow ? "" : "display:none;")">
+                                <tr class="MainRow2 cls-Rpr_@item.TDOBasvuruDanismanID" style="@(showRow ? "" : "display:none;")">
                                     <td></td>
                                     <td colspan="5">
 
@@ -279,7 +293,7 @@
                                                 <tr>
                                                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book"></i> Öğrenci & Tez Bilgileri</td>
                                                 </tr>
-                                                @if (!item.IsTezDiliTr)
+                                                @if (!isTezDiliTr)
                                                 {
                                                     <tr>
                                                         <td class="CaptionTd" width="200">Dil Sınavı Adı / Yılı / Puanı</td>
@@ -312,6 +326,14 @@
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd">@item.TezBaslikEn</td>
                                                 </tr>
+                                                @if (item.IsYeniTezDiliTr.HasValue)
+                                                {
+                                                    <tr>
+                                                        <td class="CaptionTd" width="200">Yeni Tez Dili</td>
+                                                        <td class="CaptionTd" width="10">:</td>
+                                                        <td class="ValueTd">@(item.IsYeniTezDiliTr==true ? "Türkçe" : "İngilizce")</td>
+                                                    </tr>
+                                                }
                                                 @if (item.IsYeniTezBasligiGozuksun)
                                                 {
 
@@ -453,17 +475,16 @@
                                                             { @item.TDUnvanAdi @item.TDAdSoyad}
                                                         </td>
                                                     </tr>
-                                                    @if (item.YeniDanismanOnayIslemiAcik)
+                                                    @if (!item.YeniDanismanOnayIslemiAcik)
                                                     {
-
-
                                                         <tr>
                                                             <td class="CaptionTd">Anabilim Dalı / Program</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">@item.TDAnabilimDaliAdi / @item.TDProgramAdi</td>
                                                         </tr>
-
-
+                                                    }
+                                                    @if (item.YeniDanismanOnayIslemiAcik)
+                                                    {
                                                         <tr class="form-group">
                                                             <td class="CaptionTd" width="200">Onay Durumu</td>
                                                             <td class="CaptionTd" width="10">:</td>
@@ -482,6 +503,14 @@
                                                                         </td>
                                                                     </tr>
                                                                 </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="form-group TDProgramKod_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi==true?"":"hide")">
+                                                            <td class="CaptionTd" width="200">Anabilim Dalı / Program</td>
+                                                            <td class="CaptionTd" width="10">:</td>
+                                                            <td class="ValueTd">
+                                                                @Html.DropDownList("ProgramKod", null, new { @class = "form-control", id = "TDProgramKod_" + item.TDOBasvuruDanismanID })
+
                                                             </td>
                                                         </tr>
                                                         <tr class="form-group TDOgrenciSayisiYL_@item.TDOBasvuruDanismanID @(item.DanismanOnayladi==true?"":"hide")">
@@ -522,39 +551,38 @@
                                                     }
                                                     else
                                                     {
+                                                        if (!isTezDiliTr)
+                                                        {
+                                                            <tr>
+                                                                <td class="CaptionTd">Dil Sınavı Adı / @(item.TDSinavTipID == -1 ? "Üniversite Adı" : "Yılı / Puanı") </td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    @if (item.IsObsData)
+                                                                    {
+                                                                        @("OBS'de doğrulandı")
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @($"{item.TDSinavAdi} / {(item.TDSinavTipID == -1 ? item.TDUniversiteAdi : item.TDSinavYili.ToStrObj())} / {item.TDSinavPuani}")
+                                                                    }
+
+                                                                </td>
+                                                            </tr>
+                                                        }
                                                         if (item.DanismanOnayladi == true)
                                                         {
-                                                            if (item.DanismanOnayladi == true)
-                                                            {
-                                                                <tr>
-                                                                    <td class="CaptionTd">YL Kayıtlı / Mezun Öğrenci Sayısı</td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd">Kayıtlı: @item.TDOgrenciSayisiYL Öğrenci / Mezun: @item.TDTezSayisiYL Öğrenci</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="CaptionTd">DR Kayıtlı / Mezun Öğrenci Sayısı</td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd">Kayıtlı: @item.TDOgrenciSayisiDR Öğrenci / Mezun: @item.TDTezSayisiDR Öğrenci</td>
-                                                                </tr>
-                                                            }
-                                                            if (!item.IsTezDiliTr)
-                                                            {
-                                                                <tr>
-                                                                    <td class="CaptionTd">Dil Sınavı Adı / @(item.TDSinavTipID == -1 ? "Üniversite Adı" : "Yılı / Puanı") </td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd">
-                                                                        @if (item.IsObsData)
-                                                                        {
-                                                                            @("OBS'de doğrulandı")
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            @($"{item.TDSinavAdi} / {(item.TDSinavTipID == -1 ? item.TDUniversiteAdi : item.TDSinavYili.ToStrObj())} / {item.TDSinavPuani}");
-                                                                        }
 
-                                                                    </td>
-                                                                </tr>
-                                                            }
+                                                            <tr>
+                                                                <td class="CaptionTd">YL Kayıtlı / Mezun Öğrenci Sayısı</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">Kayıtlı: @item.TDOgrenciSayisiYL Öğrenci / Mezun: @item.TDTezSayisiYL Öğrenci</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="CaptionTd">DR Kayıtlı / Mezun Öğrenci Sayısı</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">Kayıtlı: @item.TDOgrenciSayisiDR Öğrenci / Mezun: @item.TDTezSayisiDR Öğrenci</td>
+                                                            </tr>
+
                                                         }
                                                         <tr class="form-group">
                                                             <td class="CaptionTd">Onay Durumu</td>
@@ -743,7 +771,7 @@
                                                                             }
                                                                             else
                                                                             {
-                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@item.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@item.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
                                                                             }
                                                                         }
                                                                         else
@@ -808,7 +836,7 @@
                                                                     @foreach (var itemE in item.TDOBasvuruEsDanismen)
                                                                     {
                                                                         inxRwE++;
-                                                                        bool showRowE = !isDelete && (inxRwE == 1);
+                                                                        bool showRowE = inxRwE == 1;
                                                                         <tr>
                                                                             <td>
                                                                                 <ul class="panel-controls">
@@ -824,7 +852,7 @@
                                                                                 @if ((tdoEykdaOnayYetkisi || tdoEykyaGonderimYetkisi) && (!itemE.EYKYaGonderildi.HasValue))
                                                                                 {
                                                                                     <span class="label label-info" style="cursor: pointer;" onclick="GetTDOEsDanismanFormu(@Model.TDOBasvuruID,@itemE.TDOBasvuruDanismanID,@itemE.TDOBasvuruEsDanismanID);"><i class="fa fa-edit"></i> Düzelt</span>
-                                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="silDetayEs(this,'@item.TDOBasvuruID','@itemE.UniqueID','@itemE.BasvuruTarihi.ToFormatDateAndTime()')"><i class="fa fa-trash-o"></i> Sil</span>
+                                                                                    <span class="label label-danger" style="cursor: pointer;" onclick="DetayEsDanismanSil(@item.TDOBasvuruID,'@itemE.UniqueID','@itemE.BasvuruTarihi.ToFormatDateAndTime()')"><i class="fa fa-trash-o"></i> Sil</span>
                                                                                 }
                                                                             </td>
                                                                         </tr>
@@ -973,7 +1001,7 @@
                                                                                                                         else if (itemE.EYKDaOnaylandi == true)
                                                                                                                         {
 
-                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTime())</span>
+                                                                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDate())</span>
                                                                                                                         }
                                                                                                                         else
                                                                                                                         {
@@ -1059,12 +1087,14 @@
 
         }
         if (val == 'true') {
+            $('.TDProgramKod_' + id).removeClass('hide');
             $('.TDOgrenciSayisiYL_' + id).removeClass('hide');
             $('.TDTezSayisiYL_' + id).removeClass('hide');
             $('.TDOgrenciSayisiDR_' + id).removeClass('hide');
             $('.TDTezSayisiDR_' + id).removeClass('hide');
         }
         else {
+            $('.TDProgramKod_' + id).addClass('hide');
             $('.TDOgrenciSayisiYL_' + id).addClass('hide');
             $('.TDTezSayisiYL_' + id).addClass('hide');
             $('.TDOgrenciSayisiDR_' + id).addClass('hide');
@@ -1104,7 +1134,7 @@
     function DOnay(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
-
+        var TDProgramKod = $('#TDProgramKod_' + id).val();
         var DanismanOnayladi = $('#DanismanOnayladi_' + id).val();
         var DanismanOnaylanmadiAciklama = $('#DanismanOnaylanmadiAciklama_' + id).val();
         var TDOgrenciSayisiYL = $('#TDOgrenciSayisiYL_' + id).val();
@@ -1115,12 +1145,13 @@
 
         var model = {
             TDOBasvuruDanismanID: id,
-            DanismanOnayladi: DanismanOnayladi,
-            DanismanOnaylanmadiAciklama: DanismanOnaylanmadiAciklama,
-            TDOgrenciSayisiYL: TDOgrenciSayisiYL,
-            TDTezSayisiYL: TDTezSayisiYL,
-            TDOgrenciSayisiDR: TDOgrenciSayisiDR,
-            TDTezSayisiDR: TDTezSayisiDR
+            DanismanOnayladi,
+            TDProgramKod,
+            DanismanOnaylanmadiAciklama,
+            TDOgrenciSayisiYL,
+            TDTezSayisiYL,
+            TDOgrenciSayisiDR,
+            TDTezSayisiDR
 
         };
         $.ajax({
@@ -1133,7 +1164,7 @@
             success: function (result) {
                 PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
-                    getDetailx(id2);
+                    GetDetail(id2);
                 }
 
                 if (result.Messages.length > 0) getMsg(result);
@@ -1171,7 +1202,7 @@
             success: function (result) {
                 PanelRefresh(_panel, true);
                 if (result.IsSuccess) {
-                    getDetailx(id2);
+                    GetDetail(id2);
                 }
 
                 if (result.Messages.length > 0) getMsg(result);
@@ -1203,7 +1234,7 @@
             data: model,
             success: function (result) {
                 PanelRefresh(_panel, true);
-                getDetailx(id2);
+                GetDetail(id2);
                 if (result.Messages.length > 0) getMsg(result);
 
             },
@@ -1238,7 +1269,7 @@
             success: function (result) {
                 PanelRefresh(_panel, true);
                 if (result.Messages.length > 0) getMsg(result);
-                else getDetailx(id2);
+                else GetDetail(id2);
 
             },
             error: function (err) {
@@ -1282,7 +1313,7 @@
             data: model,
             success: function (result) {
                 PanelRefresh(_panel, true);
-                getDetailx(id2);
+                GetDetail(id2);
                 if (result.Messages.length > 0) getMsg(result);
 
             },
@@ -1294,6 +1325,78 @@
         });
     }
 
+    function DetayDanismanSil(id, TDOBasvuruDanismanID, tarih,talepTipAdi) {
+        Swal.fire({
+            text: tarih + " tarihli " + talepTipAdi+" başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("DetaySil", "TDOBasvuru")',
+                        data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
+                        success: function (result) {
+                            swal.fire({
+                                html: result.Messages,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                            if (result.IsSuccess) GetDetail(id);
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    function DetayEsDanismanSil(id, uniqueID, tarih) {
+        Swal.fire({
+            text: tarih + " tarihli Eş Danışmanı öneri başvurusunu silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
+                        data: { id: id, uniqueID: uniqueID },
+                        success: function (result) {
+                            swal.fire({
+                                html: result.Messages,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                            if (result.IsSuccess) GetDetail(id);
+                        }
+                    });
+
+                });
+            }
+        });
+    }
     function EYKdaOnayES(id, id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
@@ -1318,7 +1421,7 @@
             success: function (result) {
                 PanelRefresh(_panel, true);
                 if (result.Messages.length > 0) getMsg(result);
-                else getDetailx(id2);
+                else GetDetail(id2);
 
             },
             error: function (err) {
@@ -1328,4 +1431,356 @@
             }
         });
     }
+
+        function GetTdoDanismanDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
+
+         var _panel = $('#bsvrDet_' + TDOBasvuruID);
+         PanelRefresh(_panel, false);
+         $.ajax({
+             url: '@Url.Action("GetTdoDanismanDegisiklikFormu", "TDOBasvuru")',
+             data: {
+                 TDOBasvuruID,
+                 TDOBasvuruDanismanID
+             },
+             success: function (resultG) {
+                 PanelRefresh(_panel, true);
+                 if (resultG.IsSuccess) {
+                     var btbxxFS = bootbox.dialog({
+                         message: resultG.Content,
+                         title: "<i class='fa fa-book'></i> Tez Danışmanı Değişiklik İşlemi",
+                         buttons: {
+                             success: {
+                                 label: 'Kaydet',
+                                 className: "btn-info",
+                                 callback: function (event) {
+                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                     PanelRefresh(pnlx, false);
+                                     $('#FrmTdoFormu').ajaxForm({
+                                         success: function (result) {
+                                             if (result.IsSuccess) {
+                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                 var _clsBtn = $('.bootbox-close-button').first();
+                                                 $(_clsBtn).click();
+                                                 GetDetail(TDOBasvuruID);
+
+                                             }
+                                             else {
+                                                 if (result.Messages.length > 0) getMsg(result);
+                                                 return false;
+                                             }
+                                             PanelRefresh(pnlx, true);
+                                         },
+                                         complete: function (cmp) {
+                                             PanelRefresh(pnlx, true);
+                                         }
+
+                                     }).submit();
+                                     return false;
+                                 }
+                             },
+                             danger: {
+                                 label: 'Kapat',
+                                 className: "btn-primary",
+                                 callback: function () {
+                                 }
+                             }
+
+                         }
+                     });
+                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+
+                 }
+                 else {
+                     showMmMessage(resultG.Messages, 'Tamam');
+                 }
+
+             },
+             error: function (err) {
+                 PanelRefresh(_panel, true);
+             }
+         });
+    }
+    function GetTdoDilBaslikDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
+
+         var _panel = $('#bsvrDet_' + TDOBasvuruID);
+         PanelRefresh(_panel, false);
+         $.ajax({
+             url: '@Url.Action("GetTdoDilBaslikDegisiklikFormu", "TDOBasvuru")',
+             data: {
+                 TDOBasvuruID,
+                 TDOBasvuruDanismanID
+             },
+             success: function (resultG) {
+                 PanelRefresh(_panel, true);
+                 if (resultG.IsSuccess) {
+                     var btbxxFS = bootbox.dialog({
+                         message: resultG.Content,
+                         title: "<i class='fa fa-book'></i> Tez Dili,Başlığı Değişiklik İşlemi",
+                         buttons: {
+                             success: {
+                                 label: 'Kaydet',
+                                 className: "btn-info",
+                                 callback: function (event) {
+                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                     PanelRefresh(pnlx, false);
+                                     $('#FrmTdoFormu').ajaxForm({
+                                         success: function (result) {
+                                             if (result.IsSuccess) {
+                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                 var _clsBtn = $('.bootbox-close-button').first();
+                                                 $(_clsBtn).click();
+                                                 GetDetail(TDOBasvuruID);
+
+                                             }
+                                             else {
+                                                 if (result.Messages.length > 0) getMsg(result);
+                                                 return false;
+                                             }
+                                             PanelRefresh(pnlx, true);
+                                         },
+                                         complete: function (cmp) {
+                                             PanelRefresh(pnlx, true);
+                                         }
+
+                                     }).submit();
+                                     return false;
+                                 }
+                             },
+                             danger: {
+                                 label: 'Kapat',
+                                 className: "btn-primary",
+                                 callback: function () {
+                                 }
+                             }
+
+                         }
+                     });
+                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+
+                 }
+                 else {
+                     showMmMessage(resultG.Messages, 'Tamam');
+                 }
+
+             },
+             error: function (err) {
+                 PanelRefresh(_panel, true);
+             }
+         });
+    }
+    function GetTdoDanismanDilBaslikDegisiklikFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
+
+         var _panel = $('#bsvrDet_' + TDOBasvuruID);
+         PanelRefresh(_panel, false);
+         $.ajax({
+             url: '@Url.Action("GetTdoDanismanBaslikDilDegisiklikFormu", "TDOBasvuru")',
+             data: {
+                 TDOBasvuruID,
+                 TDOBasvuruDanismanID
+             },
+             success: function (resultG) {
+                 PanelRefresh(_panel, true);
+                 if (resultG.IsSuccess) {
+                     var btbxxFS = bootbox.dialog({
+                         message: resultG.Content,
+                         title: "<i class='fa fa-book'></i> Tez Danışmanı,Dili,Başlığı Değişiklik İşlemi",
+                         buttons: {
+                             success: {
+                                 label: 'Kaydet',
+                                 className: "btn-info",
+                                 callback: function (event) {
+                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                     PanelRefresh(pnlx, false);
+                                     $('#FrmTdoFormu').ajaxForm({
+                                         success: function (result) {
+                                             if (result.IsSuccess) {
+                                                 if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                 var _clsBtn = $('.bootbox-close-button').first();
+                                                 $(_clsBtn).click();
+                                                 GetDetail(TDOBasvuruID);
+
+                                             }
+                                             else {
+                                                 if (result.Messages.length > 0) getMsg(result);
+                                                 return false;
+                                             }
+                                             PanelRefresh(pnlx, true);
+                                         },
+                                         complete: function (cmp) {
+                                             PanelRefresh(pnlx, true);
+                                         }
+
+                                     }).submit();
+                                     return false;
+                                 }
+                             },
+                             danger: {
+                                 label: 'Kapat',
+                                 className: "btn-primary",
+                                 callback: function () {
+                                 }
+                             }
+
+                         }
+                     });
+                     if (resultG.Messages.trim() != "") showMmMessage(resultG.Messages, 'Tamam');
+
+                 }
+                 else {
+                     showMmMessage(resultG.Messages, 'Tamam');
+                 }
+
+             },
+             error: function (err) {
+                 PanelRefresh(_panel, true);
+             }
+         });
+    }
+    function GetTdoYeniDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID) {
+          var _panel = $('#bsvrDet_' + TDOBasvuruID);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTdoYeniDanismanFormu", "TDOBasvuru")',
+                data: {
+                    'TDOBasvuruID': TDOBasvuruID,
+                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID
+                },
+                success: function (resultG) {
+                    PanelRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            title: "<i class='fa fa-pencil'></i> Tez danışmanı öneri formu",
+                            buttons: {
+
+                                success: {
+                                    label: 'Kaydet',
+                                    className: "btn-info",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        PanelRefresh(pnlx, false);
+                                        $('#FrmTdoFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    GetDetail(TDOBasvuruID);
+
+                                                }
+                                                else {
+                                                    if (result.Messages.length > 0) getMsg(result);
+                                                    return false;
+                                                }
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                PanelRefresh(pnlx, true);
+                                            }
+
+                                        }).submit();
+                                        return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Kapat',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                            }
+
+                        }
+                        });
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+    function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
+          var _panel = $('#bsvrDet_' + TDOBasvuruID);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
+                data: {
+                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
+                    'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,
+                    'IsDegisiklikTalebi': IsDegisiklikTalebi
+                },
+                success: function (resultG) {
+                    PanelRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            buttons: {
+
+                                success: {
+                                    label: 'Kaydet',
+                                    className: "btn-info",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        PanelRefresh(pnlx, false);
+                                        $('#FrmTDOEsDanismanFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.IsSuccess) {
+                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    GetDetail(TDOBasvuruID);
+                                                }
+                                                else {
+                                                    if (result.Messages.length > 0) getMsg(result);
+                                                    return false;
+                                                }
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                PanelRefresh(pnlx, true);
+                                            }
+
+                                        }).submit();
+                                        return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Kapat',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                            }
+
+                        }
+                        });
+
+                       // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
 </script>

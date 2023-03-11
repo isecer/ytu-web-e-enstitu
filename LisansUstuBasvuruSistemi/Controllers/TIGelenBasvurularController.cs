@@ -112,24 +112,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
             //IndexModel.Toplam = model.RowCount;
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
-            if (isFiltered)
-            {
-                ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
-            }
-            else ViewBag.kIds = new List<int>();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
+            ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifTIAraRaporDonemID);
             ViewBag.TIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.TIAraRaporDonemID);
             ViewBag.AktifTIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.AktifTIAraRaporRaporDurumID);
             ViewBag.TIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.TIAraRaporRaporDurumID);
             ViewBag.AktifAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AktifAraRaporSayisi);
-            ViewBag.TIAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi);
-
-
-            model.Data = qdata;
+            ViewBag.TIAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi); 
             ViewBag.IndexModel = indexModel;
             return View(model);
         }

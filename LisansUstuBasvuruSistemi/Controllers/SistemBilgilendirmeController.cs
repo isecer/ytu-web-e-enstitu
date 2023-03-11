@@ -48,18 +48,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.IslemYapanIP.Contains(model.AdSoyad));
             if (model.BilgiTipi.HasValue) q = q.Where(p => p.BilgiTipi == model.BilgiTipi);
 
-            model.RowCount = q.Count();
-
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.IslemTarihi);
-
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
+            model.RowCount = q.Count(); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.IslemTarihi); 
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount
-            };
-
-            model.FrSistemBilgilendirmes = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(s => new FrSistemBilgilendirme
+            }; 
+            model.FrSistemBilgilendirmes = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrSistemBilgilendirme
             {
                 SistemBilgiID = s.SistemBilgiID,
                 BilgiTipi = s.BilgiTipi,

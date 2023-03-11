@@ -410,7 +410,7 @@
     $("#IsTel").mask("(9999) 999-9999");
 
     function pTipKontrol() {
-        var ptipID = $('#KullaniciTipID').val();
+        var ptipID = $('#frmHesapKayit').find('#KullaniciTipID').val();
         if (ptipID == null || ptipID == "") {
             $('.cKayitGrup').addClass("hide");
             return;

@@ -153,15 +153,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //    IndexModel.ListB.Add(new mxRowModel { Key = KayitCountDurum.BasvuruDurumAdi, ClassName = KayitCountDurum.ClassName, Color = KayitCountDurum.Color, Toplam = IndexModel.ListB.Sum(s => s.KayitOlan) });
             //}
             IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.BasvuruTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-
-
-
-
-            var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s =>
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s =>
             new FrBasvurularDto
             {
                 KullaniciID = s.KullaniciID,

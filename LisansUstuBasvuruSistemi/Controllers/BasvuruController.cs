@@ -80,13 +80,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad)  || p.KullaniciTipAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue) q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID.Value);
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
-            //IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.BasvuruTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToList();
+            var IndexModel = new MIndexBilgi(); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             model.Data = qdata;
             model.KullaniciID = qdata.Count > 0 ? qdata.First().KullaniciID : (int?)null;
             ViewBag.IndexModel = IndexModel;
@@ -403,7 +399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (succes)
                 {
-                    if (bsurec.AGNOGirisBaslangicTarihi.HasValue) //agno giriş süreci belirlenmişse ve lisans öğrenimini ytu de yapmışsa ve TYL başvurusu yapıyorsa öğrenim durumu seçimini kontrol et
+                    if (bsurec.AGNOGirisBaslangicTarihi.HasValue) //agno giriş süreci belirlenmişse ve lisans öğrenimini YTÜ de yapmışsa ve TYL başvurusu yapıyorsa öğrenim durumu seçimini kontrol et
                     {
                         if (kModel.LUniversiteID == Management.UniversiteYtuKod && qtercih.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {

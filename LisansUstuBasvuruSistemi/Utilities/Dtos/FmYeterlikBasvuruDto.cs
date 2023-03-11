@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
 
     public class FrYeterlikBasvuruDto : YeterlikBasvuru
-    {
+    { 
         public string AdSoyad { get; set; }
         public string TcKimlikNo { get; set; }
         public string EMail { get; set; }

@@ -82,10 +82,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            else q = q.OrderBy(o => o.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit ? 0 : o.SROzelTanimTipID);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.FrOzelTanimlars = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();  
+            else q = q.OrderBy(o => o.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit ? 0 : o.SROzelTanimTipID); 
+            model.FrOzelTanimlars = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();  
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.TT = _entities.SRTalepTipleris.ToList();

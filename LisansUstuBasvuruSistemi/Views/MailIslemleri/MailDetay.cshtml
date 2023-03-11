@@ -76,18 +76,18 @@
 
                                     <table style="width: 100%; table-layout: fixed;">
                                         <tr>
-                                            <td style="width: 40px;"></td>
+                                            <td style="width: 20px;"></td>
                                             <td></td>
                                         </tr>
                                         @foreach (var item2 in dataK.OrderBy(o => Guid.NewGuid()).Take(100).Select((s, inx) => new { inx, s }))
                                         {
                                             <tr class="fltrRow_@Model.GonderilenMailID">
-                                                <td style="width: 40px;">@(item2.inx + 1)</td>
+                                                <td>@(item2.inx + 1).</td>
                                                 <td class="name">
                                                     <table>
                                                         <tr style="line-height:10px;">
                                                             <td style="font-size:8pt;color: #085614;" class="fltrTd_@Model.GonderilenMailID">
-                                                                <img src="@Url.Content("/Images/User-green.png")" style="height:16px;" /> @item2.s.AdSoyad   <span style="font-size:7pt;color: #0279f9;"><img src="@Url.Content("/Images/Email.png")" style="height:16px;" /> @item2.s.Email</span>
+                                                                <i class="fa fa-user-o fa-lg"></i> @item2.s.AdSoyad  @item2.s.Email
                                                             </td>
                                                         </tr>
                                                     </table>

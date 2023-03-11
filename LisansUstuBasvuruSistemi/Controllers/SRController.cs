@@ -134,10 +134,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var tipCount = q.Count(p => p.SRDurumID == item.SRDurumID);
                 indexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
-            indexModel.Toplam = model.RowCount;
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            indexModel.Toplam = model.RowCount; 
+            model.data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             ViewBag.bModel = bbModel;
             ViewBag.IndexModel = indexModel;
             ViewBag.SRSalonID = new SelectList(SrTalepleriBus.GetCmbSalonlar(enstituKod, true), "Value", "Caption", model.SRSalonID);

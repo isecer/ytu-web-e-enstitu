@@ -170,11 +170,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (model.AktifEsDurumID == 5 || model.EsDurumID == 5)
                 q = q.OrderBy(o => o.EYKYaGonderildiIslemTarihiES);
             else q = q.OrderBy(o => o.Sira).ThenByDescending(o => o.RowDate);
-
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
-
+            model.TdoBasvuruDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             #region export
             if (export && model.RowCount > 0)
             {
@@ -211,13 +207,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_DanışmanÖneriListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
-            #endregion
-
-
+            #endregion 
             ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-
-
-
             ViewBag.AktifDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifDonemID);
             ViewBag.DonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.DonemID);
             ViewBag.TDODanismanTalepTipID = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(true), "Value", "Caption", model.TDODanismanTalepTipID);
@@ -225,9 +216,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.DurumID = new SelectList(TezDanismanOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.DurumID);
             ViewBag.AktifEsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.AktifEsDurumID);
             ViewBag.EsDurumID = new SelectList(TezDanismanOneriBus.CmbTdoEsOneriDurumListe(true), "Value", "Caption", model.EsDurumID);
-
-
-            model.TdoBasvuruDtos = qdata;
             return View(model);
         }
 
@@ -235,15 +223,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return View();
         }
-        public ActionResult GetTutanakRaporuKontrolu(List<int> ogrenimTipKods, DateTime? basTar, DateTime? bitTar)
+        public ActionResult GetTutanakRaporuKontrolu(List<int> ogrenimTipKods, DateTime? basTar, DateTime? bitTar, string raporTarihi, int? sayi)
         {
             var mMessage = new MmMessage
             {
                 MessageType = Msgtype.Success,
                 IsSuccess = true
             };
-
-
             if (!basTar.HasValue)
             {
                 mMessage.IsSuccess = false;
@@ -274,6 +260,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
+            if (raporTarihi.IsNullOrWhiteSpace())
+            {
+                mMessage.IsSuccess = false;
+                mMessage.Messages.Add("Rapor tarihi giriniz.");
+            }
+            mMessage.MessagesDialog.Add(new MrMessage { MessageType = raporTarihi.IsNullOrWhiteSpace() ? Msgtype.Warning : Msgtype.Success, PropertyName = "RaporTarihi" });
+            if (!sayi.HasValue)
+            {
+                mMessage.IsSuccess = false;
+                mMessage.Messages.Add("Rapor sayısı giriniz.");
+            }
+            mMessage.MessagesDialog.Add(new MrMessage { MessageType = !sayi.HasValue ? Msgtype.Warning : Msgtype.Success, PropertyName = "Sayi" });
 
             if (!mMessage.IsSuccess)
             {

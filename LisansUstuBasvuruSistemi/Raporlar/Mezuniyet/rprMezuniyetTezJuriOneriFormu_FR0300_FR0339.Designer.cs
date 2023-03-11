@@ -885,7 +885,7 @@
             this.txtYUDisiAciklamaEn.Name = "txtYUDisiAciklamaEn";
             this.txtYUDisiAciklamaEn.StylePriority.UseFont = false;
             this.txtYUDisiAciklamaEn.StylePriority.UseTextAlignment = false;
-            this.txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals (Obligatorily from the Department)";
+            this.txtYUDisiAciklamaEn.Text = "non-YTÜ Faculty - Committee Member Propospals (Obligatorily from the Department)";
             this.txtYUDisiAciklamaEn.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.txtYUDisiAciklamaEn.Weight = 1D;
             // 
@@ -4074,7 +4074,7 @@
             this.txtYUiciAciklamaEn.Name = "txtYUiciAciklamaEn";
             this.txtYUiciAciklamaEn.StylePriority.UseFont = false;
             this.txtYUiciAciklamaEn.StylePriority.UseTextAlignment = false;
-            this.txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Obligatorily from the Department)";
+            this.txtYUiciAciklamaEn.Text = "YTÜ Faculty - Committee Member Propospals (Obligatorily from the Department)";
             this.txtYUiciAciklamaEn.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.txtYUiciAciklamaEn.Weight = 1D;
             // 

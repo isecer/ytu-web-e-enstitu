@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
 
     public class MailMainContentDto
-    { 
+    {
         public string LogoPath { get; set; }
         public string UniversiteAdi { get; set; }
         public string EnstituAdi { get; set; }
@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public class MailTableContentDto
     {
-        public bool IsJuriBilgi { get; set; } 
+        public bool IsJuriBilgi { get; set; }
         public string AciklamaBasligi { get; set; }
         public string AciklamaDetayi { get; set; }
         public bool AciklamaTextAlingCenter { get; set; }
@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public MailTableContentDto()
         {
             CaptTdWidth = 200;
-            Detaylar = new List<MailTableRowDto>(); 
+            Detaylar = new List<MailTableRowDto>();
             AciklamaTextAlingCenter = false;
         }
 
@@ -57,6 +57,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public static class MailManager
     {
+         public static string TestMailAddress = "irfansecer@gmail.com";
+         //public static string TestMailAddress = "";
         public static Exception SendMailRetVal(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attach, bool toOrBcc = true)
         {
             Exception exRet = null;
@@ -126,47 +128,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         }
         public static bool SendMail(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attachs, bool toOrBcc = true)
         {
-            var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
-            var emailAdresi = mailBilgi.SmtpMailAdresi;
-            var name = mailBilgi.SmtpKullaniciAdi;
-            var sifre = mailBilgi.SmtpSifre;
-            var port = mailBilgi.SmtpPortAdresi;
-            var host = mailBilgi.SmtpHost;
-            var ssl = mailBilgi.SmtpSSL;
-
-            using (var ePosta = new MailMessage())
-            {
-                ePosta.From = new MailAddress(emailAdresi, name, System.Text.Encoding.UTF8);
-                ePosta.IsBodyHtml = true;
-                ePosta.To.Add(eMail);
-
-                ePosta.Subject = konu;
-                ePosta.Body = icerik;
-                ePosta.BodyEncoding = System.Text.Encoding.UTF8;
-                ePosta.Priority = MailPriority.High;
-
-
-                if (attachs != null)
-                    foreach (var item in attachs)
-                        ePosta.Attachments.Add(item);
-                using (var smtp = new SmtpClient())
-                {
-                    smtp.Credentials = new System.Net.NetworkCredential(emailAdresi, sifre);
-                    smtp.Port = port.ToInt().Value;
-                    smtp.Host = host;
-                    smtp.EnableSsl = ssl;
-                    smtp.Timeout = 5 * 60 * 1000;
-                    smtp.Send(ePosta);
-                }
-            }
-            return true;
-
-
+            return SendMail(enstituKod, konu, icerik,
+                new List<MailSendList> { new MailSendList { EMail = eMail, ToOrBcc = toOrBcc } }, attachs);
 
         }
         public static bool SendMail(string enstituKod, string konu, string icerik, List<MailSendList> eMails, List<Attachment> attachs)
         {
-             
+
             var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(enstituKod);
             var emailAdresi = mailBilgi.SmtpMailAdresi;
             var name = mailBilgi.SmtpKullaniciAdi;
@@ -182,11 +150,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 foreach (var item in eMails)
                 {
                     //item.Value == true ? TO: CC;
+                    if (!TestMailAddress.IsNullOrWhiteSpace()) item.EMail = TestMailAddress;
                     if (item.ToOrBcc) ePosta.To.Add(item.EMail);
                     else ePosta.Bcc.Add(item.EMail);
                 }
                 ePosta.Subject = konu;
-                ePosta.Body = icerik;  
+                ePosta.Body = icerik;
                 ePosta.BodyEncoding = System.Text.Encoding.UTF8;
                 ePosta.Priority = MailPriority.High;
                 if (attachs != null)
@@ -195,7 +164,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 using (var smtp = new SmtpClient())
                 {
                     smtp.Credentials = new System.Net.NetworkCredential(emailAdresi, sifre);
-                    smtp.Port = port.ToInt().Value;
+                    smtp.Port = port.ToInt(587);
                     smtp.Host = host;
                     smtp.EnableSsl = ssl;
                     smtp.Timeout = 5 * 60 * 1000;
@@ -231,7 +200,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     }
     public static class SystemMails
     {
-        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi,  List<MailReplaceParameterDto> rpModel)
+        public static MailContentDetailDto GetSystemMailContent(string enstituAdi, string sablonHtml, string sablonAdi, List<MailReplaceParameterDto> rpModel)
         {
             rpModel = rpModel ?? new List<MailReplaceParameterDto>();
             var model = new MailContentDetailDto
@@ -241,7 +210,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             };
             foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
             {
-                model.Title=model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+                model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
                 model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
             }
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
@@ -254,7 +223,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             model.Title = string.Join("", titleStrList);
 
 
-            model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_"); 
+            model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_");
 
             var contentStrList = model.HtmlContent.Split(new string[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
@@ -264,7 +233,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
             model.HtmlContent = string.Join("", contentStrList);
 
-            var mmmC = new MailMainContentDto(); 
+            var mmmC = new MailMainContentDto();
             mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
             mmmC.EnstituAdi = enstituAdi;
             mmmC.LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png";

@@ -19,9 +19,10 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize(Roles = RoleNames.YeterlikGelenBasvurular)]
+    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class YeterlikGelenBasvurularController : Controller
     {
-        private readonly LisansustuBasvuruSistemiEntities _context = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -32,12 +33,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmYeterlikBasvuruDto model, string ekd, bool export)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-            var q = from yeterlikBasvuru in _context.YeterlikBasvurus
-                    join yeterlikSureci in _context.YeterlikSurecis on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
-                    join kullanicilar in _context.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
-                    join programlar in _context.Programlars on yeterlikBasvuru.ProgramKod equals programlar.ProgramKod
-                    join ogrenimTipleri in _context.OgrenimTipleris on yeterlikBasvuru.OgrenimTipID equals ogrenimTipleri.OgrenimTipID
-                    join tezDanismani in _context.Kullanicilars on yeterlikBasvuru.TezDanismanID equals tezDanismani.KullaniciID
+            var q = from yeterlikBasvuru in _entities.YeterlikBasvurus
+                    join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
+                    join kullanicilar in _entities.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
+                    join programlar in _entities.Programlars on yeterlikBasvuru.ProgramKod equals programlar.ProgramKod
+                    join ogrenimTipleri in _entities.OgrenimTipleris on yeterlikBasvuru.OgrenimTipID equals ogrenimTipleri.OgrenimTipID
+                    join tezDanismani in _entities.Kullanicilars on yeterlikBasvuru.TezDanismanID equals tezDanismani.KullaniciID
                     select new FrYeterlikBasvuruDto
                     {
                         YeterlikSurecID = yeterlikBasvuru.YeterlikSurecID,
@@ -58,6 +59,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnabilimDaliAdi = programlar.AnabilimDallari.AnabilimDaliAdi,
                         KayitTarihi = yeterlikBasvuru.KayitTarihi,
                         OkuduguDonemNo = yeterlikBasvuru.OkuduguDonemNo,
+                        TezDanismanID = yeterlikBasvuru.TezDanismanID,
                         TezDanismanAdi = tezDanismani.Unvanlar.UnvanAdi + " " + tezDanismani.Ad + " " + tezDanismani.Soyad,
                         TezDanismanEmail = tezDanismani.EMail,
                         TezDanismanCepTel = tezDanismani.CepTel,
@@ -66,6 +68,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsBasarili = yeterlikBasvuru.IsBasarili,
 
                     };
+            var q2 = q;
             if (model.YeterlikSurecID.HasValue) q = q.Where(p => p.YeterlikSurecID == model.YeterlikSurecID);
             if (model.OgrenimTipID.HasValue) q = q.Where(p => p.OgrenimTipID == model.OgrenimTipID);
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimDaliAdi.Contains(model.AdSoyad));
@@ -75,14 +78,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsOnaylandi == true);
                 else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsOnaylandi == false);
             }
-            var isFiltered = q.Expression.ToString().Contains("Where");
+            var isFiltered = q2 != q;
             ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
+            ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).ToList() : new List<int>();
 
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.YeterlikSurecID = new SelectList(YeterlikBus.GetCmbYeterlikSurecleri(enstituKod, true), "Value", "Caption", model.YeterlikSurecID);
             ViewBag.BasvuruDurumID = new SelectList(YeterlikBus.GetCmbBasvuruDurumu(true), "Value", "Caption", model.BasvuruDurumID);
@@ -140,12 +143,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mmMessage.Messages.Any())
             {
-                var basvuru = _context.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
+                var basvuru = _entities.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
                 var sendMail = enstituOnay.HasValue && basvuru.IsOnaylandi != enstituOnay;
                 basvuru.IsOnaylandi = enstituOnay;
                 basvuru.OnayAciklama = enstituOnayAciklama;
                 basvuru.OnayTarihi = DateTime.Now;
-                _context.SaveChanges();
+                _entities.SaveChanges();
                 mmMessage.IsSuccess = true;
                 LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                 if (sendMail)
@@ -166,7 +169,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    var basvurus = _context.YeterlikBasvurus.Where(p => !p.IsOnaylandi.HasValue && kontrolEdilmeyenTalepIds.Contains(p.YeterlikBasvuruID)).ToList();
+                    var basvurus = _entities.YeterlikBasvurus.Where(p => !p.IsOnaylandi.HasValue && kontrolEdilmeyenTalepIds.Contains(p.YeterlikBasvuruID)).ToList();
 
                     foreach (var item in basvurus)
                     {
@@ -176,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         item.IslemYapanID = UserIdentity.Current.Id;
                         item.IslemYapanIP = UserIdentity.Ip;
                     }
-                    _context.SaveChanges();
+                    _entities.SaveChanges();
                     YeterlikBus.SendMailYeterlikOnay(kontrolEdilmeyenTalepIds, true);
                     message = basvurus.Count + " Yeterlik başvurusu onaylandı";
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvurus.ToJson());

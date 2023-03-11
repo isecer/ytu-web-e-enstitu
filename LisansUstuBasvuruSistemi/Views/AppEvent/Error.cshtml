@@ -10,7 +10,7 @@
     {
         var exceltionMessage = Model.ToExceptionMessage();
         bool saveError = true;
-        var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller", "__RequestVerificationToken" };
+        @*var errMesgList = new List<string> { "1- The controller for path", "The provided anti-forgery token was meant for user ", "was not found on controller", "__RequestVerificationToken" };
         if (errMesgList.Any(a=> exceltionMessage.Contains(a)))
         {
             saveError = false;
@@ -27,7 +27,7 @@
                     </script>
                 }
             }
-        }
+        }*@
         if (saveError)
         {
             db.SistemBilgilendirmes.Add(new SistemBilgilendirme

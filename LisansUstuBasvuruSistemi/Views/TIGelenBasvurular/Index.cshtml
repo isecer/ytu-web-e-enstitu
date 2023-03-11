@@ -1,20 +1,18 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  fmTIBasvuru
-@{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var kyetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
-    var DegerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
-    var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
-    var ToplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
-    var mKids = (List<int>)ViewBag.kIds;
-    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
+    var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
+    var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+    var toplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
+    var mKids = (List<int>)ViewBag.kIds; 
 }
 
 <div class="row">
@@ -23,7 +21,7 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info" id="pnlFltr"> 
+            <div class="panel panel-info" id="pnlFltr">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -73,7 +71,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr> 
+                        </tr>
                         <tr>
 
                             <td style="padding-left:10px;">
@@ -110,7 +108,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr> 
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -139,18 +137,18 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex;  
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.Data)
                                 {
-                                    RowIndex++; 
+                                    rowIndex++;
                                     <tr style="color:@item.DurumColor;">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.TIBasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TIBasvuruID')">
+                                                            <li id="iShow_@item.TIBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TIBasvuruID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -177,7 +175,7 @@
                                             @if (kyetki)
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { TIBasvuruID = item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetailx('@item.TIBasvuruID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TIBasvuruID','@item.AdSoyad')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
                                             }
                                         </td>
 
@@ -216,7 +214,7 @@
         },200)
     </script>
 }
-    <script type="text/javascript">
+<script type="text/javascript">
     $(function () {
         Resized(window.innerWidth);
     })
@@ -242,53 +240,27 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-  
+
 
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetailx(id);
+        if (unTogled) GetDetail(id);
 
     }
-    function getDetailx(id, Isdelete, sndr) {
+    function GetDetail(id) {
 
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailTiBasvuru", "Ajax")',
-            data: { id: id, UniqueID: '@Model.IsDegerlendirme',  IsDelete: (Isdelete == true) },
+            data: { id: id, UniqueID: '@Model.IsDegerlendirme'},
             success: function (result) {
-                if (Isdelete != true) {
-                    $('#cls-' + id).html(result);
-                    Resized(window.innerWidth);
-                    PanelRefresh(_panel, true);
-                }
-                else {
-                    PanelRefresh(_panel, true);
-                    var btbx = bootbox.dialog({
-                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
-                        title: "Başvuru Silme İşlemi",
-                        buttons: {
-                            success: {
-                                label: 'Başvuruyu Sil',
-                                className: "btn-danger",
-                                callback: function () {
-                                    sil(sndr, id);
-                                }
-                            },
-                            danger: {
-                                label: 'Vazgeç',
-                                className: "btn-primary",
-                                callback: function () {
-                                }
-                            }
-                        }
-                    });
-                    $(btbx).find('.modal-dialog').addClass('modal-lg');
-
-                }
+                $('#cls-' + id).html(result);
+                Resized(window.innerWidth);
+                PanelRefresh(_panel, true);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -297,19 +269,8 @@
         });
 
     }
-
-
-
-
-
-    $(function () {
-        $('.tooltips').tooltip();
-    });
-
-
-
-    </script>
-@if (ToplantiTalepYetki || TITezDegerlendirmeDuzeltme)
+</script>
+@if (toplantiTalepYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
         function showSRDialog(TIBasvuruID, TIBasvuruAraRaporID, SRTalepID) {
@@ -334,7 +295,7 @@
                                         success: function (result) {
                                             if (result.IsSuccess) {
                                                 toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                getDetailx(result.DialogID);
+                                                GetDetail(result.DialogID);
                                                 var _clsBtn = $('.modal-header').find('button').first();
                                                 $(_clsBtn).click();
                                             }
@@ -378,7 +339,7 @@
         }
     </script>
 }
-@if (DegerlendirmeYetki || TITezDegerlendirmeDuzeltme)
+@if (degerlendirmeYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
         function AraRaporDegerlendir(UniqueID, IsDrBurs,TIBasvuruID) {
@@ -410,13 +371,13 @@
                                 success: function (result) {
                                     PanelRefresh(_panel, true);
                                     if (result.IsSuccess || result.IsRefresh) {
-                                        getDetailx(TIBasvuruID);
+                                        GetDetail(TIBasvuruID);
 
                                     }
                                     showMmMessage(result.Messages, 'Tamam');
 
                                 },
-                                error: function (err) { 
+                                error: function (err) {
                                     PanelRefresh(_panel, true);
                                     alert(err.responseText);
 
@@ -456,7 +417,7 @@
                                 success: function (result) {
                                     PanelRefresh(_panel, true);
                                     if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                    getDetailx(TIBasvuruID);
+                                    GetDetail(TIBasvuruID);
 
                                     showMmMessage(result.Messages, 'Tamam');
 
@@ -493,15 +454,15 @@
                         $.ajax({
                             url: '@Url.Action("DetaySil", "TIBasvuru")',
                             data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
-                            success: function (result) { 
+                            success: function (result) {
                                 if (result.IsSuccess) {
-                                    getDetailx(id);
+                                    GetDetail(id);
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
-                            }, complete: function (httpObj, textStatus) { 
+                            }, complete: function (httpObj, textStatus) {
                                 PanelRefresh(_panel, true);
                                 ShowMessageAjaxRequest(httpObj.status, textStatus);
-                            } 
+                            }
                         });
                     }
                 },
@@ -521,27 +482,47 @@
 }
 @if (kyetki)
 {
-    <script> 
-        function sil(sndr, id) {
-            $.ajax({
-                url: '@Url.Action("Sil", "TIBasvuru")',
-                data: { id: id  },
-                success: function (result) {
-                    if (result.IsSuccess) {
-                        $(sndr).closest("tr").remove();
-                        $(".cls-" + id).remove();
+<script>
+
+        function BasvuruSil(sndr, id, adSoyad) {
+            bootbox.dialog({
+                message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait başvuruyu silmek istiyor musunuz?</td></tr></table>",
+                title: "Başvuru Silme İşlemi",
+                buttons: {
+                    success: {
+                        label: 'Başvuruyu Sil',
+                        className: "btn-danger",
+                        callback: function () {
+                            $.ajax({
+                                url: '@Url.Action("Sil", "TIBasvuru")',
+                                data: { id: id },
+                                success: function (result) {
+                                    if (result.IsSuccess) {
+                                        $(sndr).closest("tr").remove();
+                                        $(".cls-" + id).remove();
+                                    }
+                                    showMmMessage(result.Messages, 'Tamam');
+                                },
+                                error: function (err) {
+                                    alert(err.responseText);
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: 'Vazgeç',
+                        className: "btn-primary",
+                        callback: function () {
+                        }
                     }
-                    showMmMessage(result.Messages, 'Tamam');
-                },
-                error: function (err) {
-                    alert(err.responseText);
                 }
             });
+
         }
 
-    </script>
+</script>
 }
-@if (DegerlendirmeYetki || TITezDegerlendirmeDuzeltme)
+@if (degerlendirmeYetki || tiTezDegerlendirmeDuzeltme)
 {
     <script>
          function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
@@ -573,7 +554,7 @@
                                                     if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    getDetailx(TIBasvuruID);
+                                                    GetDetail(TIBasvuruID);
 
                                                 }
                                                 else {
@@ -611,11 +592,11 @@
                                 }
                             }
                         });
-                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg'); 
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
                         if (resultG.Messages.length > 0) showMmMessage(resultG.Messages, 'Tamam');
 
                     }
-                    else { 
+                    else {
                         showMmMessage(resultG.Messages, 'Tamam');
                     }
 

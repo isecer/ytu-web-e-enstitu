@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 lblBasvuruTip.Text = "DOKTORA PROGRAMLARINA BAŞVURU";
                 if (model.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) lblSinavGirisFormu.Text = "SINAV GİRİŞ FORMU";
                 else if (model.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) lblSinavGirisFormu.Text = "YATAY GEÇİŞ SINAVINA GİRİŞ FORMU";
-                else lblSinavGirisFormu.Text = "YTU YENİ MEZUN BAŞVURU FORMU";
+                else lblSinavGirisFormu.Text = "YTÜ YENİ MEZUN BAŞVURU FORMU";
 
 
                 cell_TcKimlikNo.Text = model.TcKimlikNo;

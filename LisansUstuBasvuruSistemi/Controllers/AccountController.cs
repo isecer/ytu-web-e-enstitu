@@ -20,10 +20,11 @@ using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Ws_YokOgrenciSorgula;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-     
+
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AccountController : Controller
     {
@@ -107,15 +108,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                         }
 
-                        if (loginUser != null && loginUser.IsAktif == true)
+                        if (loginUser != null && loginUser.IsAktif)
                         {
                             try
                             {
-                                var lastTdo = _entities.TDOBasvurus.OrderByDescending(p => p.KullaniciID == loginUser.KullaniciID).FirstOrDefault();
-                                if (lastTdo != null) TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(lastTdo.TDOBasvuruID, null);
+                                if (loginUser.YtuOgrencisi && loginUser.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                                {
+                                    var tdoBasvuruId = _entities.TDOBasvurus
+                                        .Where(p => p.KullaniciID == loginUser.KullaniciID)
+                                        .OrderByDescending(o => o.TDOBasvuruID).Select(s => s.TDOBasvuruID)
+                                        .FirstOrDefault();
+                                    if (tdoBasvuruId > 0)
+                                    {
+                                        string hataMesaji = "";
+                                        TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(
+                                           loginUser.KullaniciID, tdoBasvuruId, out hataMesaji);
+                                    }
+                                }
                             }
                             catch (Exception ex)
                             {
+                                SistemBilgilendirmeBus.SistemBilgisiKaydet(ex, LogType.Hata);
                                 // ignored
                             }
 
@@ -663,7 +676,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var ktip = _entities.KullaniciTipleris.First(p => p.KullaniciTipID == kModel.KullaniciTipID);
                 isKurumIci = ktip.KurumIci;
-                isYerli = ktip.Yerli;
                 var qPersonel = _entities.Kullanicilars.AsQueryable();
                 var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kModel.KullaniciID);
                 if (qPersonel.Any(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.KullaniciAdi == kModel.KullaniciAdi))
@@ -716,20 +728,36 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
 
-                        var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
+                        var ogrenciBilgi = KullanicilarBus.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
                         }
                         else
                         {
-                            if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                            if (ogrenciBilgi.KayitVar)
                             {
-                                kModel.ProgramKod = kModel.ProgramKod;
-                                kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
-                                kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                                kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                                kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                                if (kModel.OgrenciNo != ogrenciBilgi.OgrenciInfo.OGR_NO)
+                                {
+                                    mmMessage.Messages.Add(
+                                        "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                                }
+                                if (kModel.OgrenimTipKod != ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                                {
+                                    mmMessage.Messages.Add(
+                                        "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                                }
+                                if (!mmMessage.Messages.Any())
+                                {
+                                    kModel.ProgramKod = kModel.ProgramKod;
+                                    kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
+                                    kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
+                                    kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
+                                    kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                                }
+
                             }
                             else
                             {

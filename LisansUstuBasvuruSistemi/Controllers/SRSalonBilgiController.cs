@@ -113,25 +113,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (model.IsDolu.HasValue)
                 {
                     qGT = qGT.Where(p => (p.GTID > 0 || p.OTID > 0) == model.IsDolu.Value);
-                }
-
-
-
-                data.AddRange(qGT.Where(p => p.RemoveRow == false));
-               
-
-
-            }
-
-            model.RowCount = data.Count();
-
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.data = data.Skip(ps.StartRowIndex).Take(model.PageSize).OrderBy(o => o.Tarih).ThenBy(t => t.BasSaat).ToList();
-
-
-
-
+                } 
+                data.AddRange(qGT.Where(p => p.RemoveRow == false)); 
+            } 
+            model.RowCount = data.Count(); 
+            model.data = data.Skip(model.StartRowIndex).Take(model.PageSize).OrderBy(o => o.Tarih).ThenBy(t => t.BasSaat).ToList(); 
             var gunler = SrTalepleriBus.GetCmbHaftaGunleri(false, false);
             ViewBag.HaftaGunleri = gunler;
 

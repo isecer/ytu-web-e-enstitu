@@ -49,10 +49,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.KategoriAciklamasi.IsNullOrWhiteSpace()) q = q.Where(p => p.KategoriAciklamasi.Contains(model.KategoriAciklamasi));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort); q = q.OrderBy(o => o.KategoriAdi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.MesajKategorileriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort); q = q.OrderBy(o => o.KategoriAdi); 
+            model.MesajKategorileriDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,

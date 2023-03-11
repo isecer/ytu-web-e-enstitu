@@ -120,15 +120,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.Expand = true;
                 ViewBag.KTalepGelenTalepIDs = q.Where(p => p.TalepDurumID == TalepDurumu.TalepYapildi).Select(s => s.TalepGelenTalepID).ToList();
             }
-            else ViewBag.KTalepGelenTalepIDs = new List<int>();
-
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
-
-
-            model.RowCount = q.Count();
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
+            else ViewBag.KTalepGelenTalepIDs = new List<int>(); 
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
+            model.RowCount = q.Count(); 
             var indexModel = new MIndexBilgi();
             var btDurulari = TaleplerBus.GetTalepDurumList();
             foreach (var item in btDurulari)
@@ -137,7 +131,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 indexModel.ListB.Add(new mxRowModel { Key = item.TalepDurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
             indexModel.Toplam = model.RowCount;
-            model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
             {
                 TalepGelenTalepID = item.TalepGelenTalepID,
                 IsbelgeYuklemesiVar = item.IsBelgeYuklemeVar,
@@ -212,7 +206,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.KayitTarihi,
                     TezOnerisiYapildiMi = s.IsTezOnerisiYapildi.HasValue ? (s.IsTezOnerisiYapildi.Value ? "Tez Önerisi Yapıldı" : "Tez Önerisi Yapılmadı") : "",
                     TezOneriTarihi = s.DoktoraTezOneriTarihi,
-                    ArGorYTU = s.IsYtuArGor == true ? "YTU'de Ar. Gör." : "-",
+                    ArGorYTU = s.IsYtuArGor == true ? "YTÜ'de Ar. Gör." : "-",
                     ArGorStatuAdi = s.TalepArGorStatuID.HasValue ? s.StatuAdi : "",
                     DersYukuTamamlandiMi = (!s.OgrenimTipKod.HasValue || s.OgrenimTipKod.IsDoktora() ? "" : (s.IsDersYukuTamamlandi == true ? "Evet" : "Hayır")),
                     HarcBorcuVarMi = s.IsHarcBorcuVar.HasValue ? (s.IsHarcBorcuVar == true ? "Var" : "Yok") : "",

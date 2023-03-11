@@ -133,24 +133,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IslemYapanID,
                         s.IslemYapanIP,
                         s.TalepGelenTalepBelgeleris
-                    };
-
-
-
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
-
-
-
-
-            model.RowCount = q.Count();
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
+                    }; 
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
+            model.RowCount = q.Count(); 
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount
             };
-            model.Data = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList().Select(item => new FrTalep()
             {
                 TalepGelenTalepID = item.TalepGelenTalepID,
                 IsbelgeYuklemesiVar = item.IsBelgeYuklemeVar,
@@ -288,7 +278,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (!kul.YtuOgrencisi)
                         {
                             KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kul.KullaniciID);
-                            mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTU öğrencisi olunması gerekmektedir.");
+                            mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTÜ öğrencisi olunması gerekmektedir.");
                         }
                     }
 

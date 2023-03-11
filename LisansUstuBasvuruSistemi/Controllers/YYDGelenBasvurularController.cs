@@ -159,15 +159,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             //    IndexModel.ListB.Add(new mxRowModel { Key = KayitCountDurum.BasvuruDurumAdi, ClassName = KayitCountDurum.ClassName, Color = KayitCountDurum.Color, Toplam = IndexModel.ListB.Sum(s => s.KayitOlan) });
             //}
             IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.BasvuruTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-
-
-
-
-            var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s =>
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s =>
             new FrBasvurularDto
             {
                 KullaniciID = s.KullaniciID,
@@ -205,8 +198,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 db.Database.CommandTimeout = 240;
                 GridView gv = new GridView();
-                var BasvuruIDs = q.Select(s => s.BasvuruID).ToList();
-                var qx = (from s in db.Basvurulars.Where(p => BasvuruIDs.Contains(p.BasvuruID))
+                var basvuruIDs = q.Select(s => s.BasvuruID).ToList();
+                var qx = (from s in db.Basvurulars.Where(p => basvuruIDs.Contains(p.BasvuruID))
                           join un in db.Universitelers on s.LUniversiteID equals un.UniversiteID into def
                           from defUn in def.DefaultIfEmpty()
                           join lb in db.OgrenciBolumleris on s.LOgrenciBolumID equals lb.OgrenciBolumID into deflb

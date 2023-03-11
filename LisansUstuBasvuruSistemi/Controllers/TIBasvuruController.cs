@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                        bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
                     }
                     else
                     {
@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "Profil bilgilerinizde YTU Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                    bbModel.KullaniciTipYetkiYokMsj = "Profil bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
                 }
                 if (bbModel.KullaniciTipYetki)
                 {
@@ -149,13 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
-            var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToList();
-
-            model.Data = qdata;
-
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.IndexModel = indexModel;
 
             ViewBag.bModel = bbModel;
@@ -414,12 +408,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToAraRaporDonemBilgi();
 
-                var ogrenciBilgi = Management.StudentControl(tiBasvuru.TcKimlikNo);
+                var ogrenciBilgi = KullanicilarBus.StudentControl(tiBasvuru.TcKimlikNo);
 
                 var sondonemKayitolmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "");
 
                 var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').ToList() : new List<string>();
-                if (kayitYapilacakDersKodlaris.Any() && kayitYapilacakDersKodlaris.Where(p => ogrenciBilgi.AktifDonemDers.DersKodNums.Any(a => a == p)).Count() != kayitYapilacakDersKodlaris.Count)
+                if (kayitYapilacakDersKodlaris.Any() && kayitYapilacakDersKodlaris.Count(p => ogrenciBilgi.AktifDonemDers.DersKodNums.Any(a => a == p)) != kayitYapilacakDersKodlaris.Count)
                 {
                     mMessage.Messages.Add("Tez izleme raporunu başlatabilmeniz için " + donemBilgi.DonemAdiLong + " döneminde " + sondonemKayitolmasiGerekenDersKodlari + " kodlu derslere kayıt olmanız gerekmektedir.");
                 }
@@ -453,19 +447,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         foreach (var item in tiks)
                         {
                             item.TEZ_IZLEME_JURI_ADSOY = item.TEZ_IZLEME_JURI_ADSOY.ToUpper().Trim();
-                            item.TEZ_IZLEME_JURI_UNVAN = item.TEZ_IZLEME_JURI_UNVAN.ToUpper().Trim().ToMezuniyetJuriUnvanAdi();
+                            item.TEZ_IZLEME_JURI_UNVAN = item.TEZ_IZLEME_JURI_UNVAN.ToUpper().Trim().ToJuriUnvanAdi();
                         }
                         var obsTik1 = tiks[0];
                         var obsTik2 = tiks[1];
 
-                        var cmbUnvanList = MezuniyetBus.GetCmbMezuniyetJofUnvanlar(true);
+                        var cmbUnvanList = UnvanlarBus.GetCmbJuriUnvanlar(true);
                         var cmbUniversiteList = Management.cmbGetAktifUniversiteler(true);
 
                         model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
                         model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
                         model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                         studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1 = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1.ToUpper().Trim();
-                        studentInfo.OgrenciInfo.DANISMAN_UNVAN1 = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper().Trim().ToMezuniyetJuriUnvanAdi();
+                        studentInfo.OgrenciInfo.DANISMAN_UNVAN1 = studentInfo.OgrenciInfo.DANISMAN_UNVAN1.ToUpper().Trim().ToJuriUnvanAdi();
 
                         model.OgrenciAdSoyad = tiBasvuru.Ad + " " + tiBasvuru.Soyad + " - " + tiBasvuru.OgrenciNo;
                         model.OgrenciAnabilimdaliProgramAdi = tiBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " - " + tiBasvuru.Programlar.ProgramAdi;
@@ -659,7 +653,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
-                var donemdeVerilenDersBilgileri = isYeniJo ? Management.StudentControl(tiBasvuru.TcKimlikNo) : new StudentControl();
+                var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.StudentControl(tiBasvuru.TcKimlikNo) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "").Split(',').ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))

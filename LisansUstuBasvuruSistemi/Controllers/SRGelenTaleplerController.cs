@@ -96,12 +96,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var tipCount = q.Count(p => p.SRDurumID == item.SRDurumID);
                 indexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
-            indexModel.Toplam = model.RowCount;
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
+            indexModel.Toplam = model.RowCount; 
             model.data = q.Select(s => new FrTalepler
-            {
-
+            { 
                 SRTalepID = s.SRTalepID,
                 EnstituKod = s.EnstituKod,
                 EnstituAdi = s.EnstituAdi,
@@ -135,7 +132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemTarihi = s.IslemTarihi,
                 IslemYapanID = s.IslemYapanID,
                 IslemYapanIP = s.IslemYapanIP
-            }).Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            }).Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
            
             ViewBag.IndexModel = indexModel;
             ViewBag.SRTalepTipID = new SelectList(SrTalepleriBus.GetCmbSrTalepTipleri( true), "Value", "Caption", model.SRTalepTipID);

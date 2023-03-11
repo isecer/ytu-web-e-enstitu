@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Business
             "BA",
             "AA"
         };
+
         public static bool IsHarfNotuBuyukEsit(string not1, string not2)
         {
             var not1Inx = NotDegerleri.IndexOf(not1);
@@ -122,29 +123,29 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     var basvuru = db.YeterlikBasvurus.FirstOrDefault(p => p.UniqueID == uniqueId.Value);
                     if (basvuru == null)
-                    { 
+                    {
                         errorMessage.Add("Aranan başvuru sistemde bulunamadı.");
                     }
                     else
                     {
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.YeterlikSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
-                        { 
+                        {
                             errorMessage.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
                             var message = "Bu enstitüye ait Yeterlik başvurusu güncellemeye yetkili değilsiniz!\r\n Yeterlik Başvuru ID: " + basvuru.YeterlikBasvuruID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
                             SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!GetYeterlikAktifSurecId(enstituKod, basvuru.YeterlikSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
-                        { 
+                        {
                             errorMessage.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
 
                         }
                         if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
-                        { 
+                        {
                             errorMessage.Add("Bu İşlem için Yetkili Değilsiniz.");
                             SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Yeterlik başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Yeterlik Başvuru ID:" + basvuru.YeterlikBasvuruID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Yeterlik Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (basvuru.IsOnaylandi.HasValue)
-                        { 
+                        {
                             errorMessage.Add("Başvuru enstitü tarafından işlem gördüğü düzenlenemez!");
                         }
 
@@ -152,15 +153,20 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    var yeterlikSurecId = GetYeterlikAktifSurecId(enstituKod); 
+                    var yeterlikSurecId = GetYeterlikAktifSurecId(enstituKod);
                     var kul = db.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
                     if (!yeterlikSurecId.HasValue)
                     {
                         errorMessage.Add("Başvuru Süreci Kapalı");
                     }
                     else if (!(kul.KullaniciTipleri.BasvuruYapabilir))
-                    { 
+                    {
                         errorMessage.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
+                    }
+                    else if (enstituKod != kul.EnstituKod)
+                    {
+                        var enstitu = db.Enstitulers.First(p => p.EnstituKod == kul.EnstituKod);
+                        errorMessage.Add("Kullanıcı hesbınızın kayıtlı olduğu enstitü ile başvuru yaptığınız entistü uyuşmamaktadır. Enstitünüz: " + enstitu.EnstituAd + " olarak gözükmektedir.");
                     }
                     else
                     {
@@ -169,22 +175,17 @@ namespace LisansUstuBasvuruSistemi.Business
                             var ogrenimTipAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
 
                             if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
-                            { 
+                            {
                                 errorMessage.Add("Yeterlik Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
-                            else if (kul.KayitDonemID.HasValue == false)
-                            { 
-                                errorMessage.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
-                            }
-
                             var basvuruVar = db.YeterlikBasvurus.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                             if (basvuruVar)
-                            { 
+                            {
                                 errorMessage.Add("Bu Yeterlik süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
 
                             }
                             else if (db.YeterlikSurecOgrenimTipleris.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.OgrenimTipKod != kul.OgrenimTipKod) == false)
-                            { 
+                            {
                                 errorMessage.Add(ogrenimTipAdi + " Öğrenim seviyesinde okuyan öğrenciler Yeterlik başvurusu yapamazlar");
                             }
                             else if (!db.YeterlikSureciKriterMuafOgrencilers.Any(a => a.YeterlikSurecID == yeterlikSurecId.Value && a.KullaniciID == kul.KullaniciID))
@@ -194,7 +195,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 {
                                     errorMessage.Add("Okuduğunuz öğrenim seviyesi yeterlik başvuru yapmak için uygun değildir.");
                                 }
-                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
+                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
                                 var controlMessage = new List<string>();
                                 if (basvuruKriterleri.YsMaxBasvuruDonemNo.HasValue && basvuruKriterleri.YsMaxBasvuruDonemNo < ogrenciBilgi.OkuduguDonemNo)
                                 {
@@ -215,13 +216,13 @@ namespace LisansUstuBasvuruSistemi.Business
                                 if (controlMessage.Count > 0)
                                 {
                                     errorMessage.Add(ogrenimTipAdi + " Yeterlik başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
-                                    errorMessage.AddRange(controlMessage); 
+                                    errorMessage.AddRange(controlMessage);
                                 }
                             }
                         }
                         else
-                        { 
-                            errorMessage.Add("Yeterlik başvurusu yapabilmeniz için Profil bilginizi düzelterek YTU öğrencisi olduğunuzu belirtiniz.");
+                        {
+                            errorMessage.Add("Yeterlik başvurusu yapabilmeniz için Profil bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
                 }

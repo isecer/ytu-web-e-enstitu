@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.OgrenimTipKod,
                         s.OgrenimDurumID,
                         s.ProgramKod,
-                        s.TcKimlikNo, 
+                        s.TcKimlikNo,
                         s.OgrenciNo,
                         s.CepTel,
                         s.EMail,
@@ -103,8 +103,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.Sort.Contains("KullaniciTipAdi") && model.Sort.Contains("DESC")) q = q.OrderByDescending(o => o.KullaniciTipAdi);
                 else q = q.OrderBy(model.Sort);
             else q = q.OrderByDescending(o => o.OlusturmaTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
             model.KullanicilarDtos = q.Select(s => new FrKullanicilarDto
             {
                 KullaniciID = s.KullaniciID,
@@ -126,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 OgrenimTipKod = s.OgrenimTipKod,
                 OgrenimDurumID = s.OgrenimDurumID,
                 ProgramKod = s.ProgramKod,
-                TcKimlikNo = s.TcKimlikNo, 
+                TcKimlikNo = s.TcKimlikNo,
                 CepTel = s.CepTel,
                 EMail = s.EMail,
                 IsAktif = s.IsAktif,
@@ -137,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 LastLogonIP = s.LastLogonIP,
                 IslemTarihi = s.IslemTarihi,
                 IslemYapanIP = s.IslemYapanIP
-            }).Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            }).Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.BirimID = new SelectList(Management.getBirimler().ToOrderedList("BirimID", "UstBirimID", "BirimAdi"), "BirimID", "BirimAdi", model.BirimID);
@@ -288,7 +286,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-           
+
             if (!kModel.CinsiyetID.HasValue)
             {
                 mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
@@ -446,7 +444,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz Kimlik No sistemde zaten mevcut!");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                } 
+                }
                 if (isKurumIci)
                 {
                     var cSicil = qPersonel.Count(p => p.IsAktif && p.KullaniciID != kModel.KullaniciID && p.SicilNo == kModel.SicilNo);
@@ -472,27 +470,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
-                    { 
-                        var ogrenciBilgi = Management.StudentControl(kModel.TcKimlikNo);
+                    {
+                        var ogrenciBilgi = KullanicilarBus.StudentControl(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
                         }
                         else
                         {
-                            if (ogrenciBilgi.KayitVar && kModel.OgrenimTipKod == ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                            if (ogrenciBilgi.KayitVar)
                             {
-                                kModel.ProgramKod = kModel.ProgramKod;
-                                kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
-                                kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
-                                kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
-                                kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                                if (kModel.OgrenciNo != ogrenciBilgi.OgrenciInfo.OGR_NO)
+                                {
+                                    mmMessage.Messages.Add(
+                                        "Girdiğiniz Öğrenci Numarası bilgisi OBS sisteminde doğrulanamadı.");
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenciNo" });
+                                }
+                                if (kModel.OgrenimTipKod != ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj())
+                                {
+                                    mmMessage.Messages.Add(
+                                        "Girdiğiniz Öğrenim Seviyesi bilgisi OBS sisteminde doğrulanamadı.");
+                                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
+                                }
+                                if (!mmMessage.Messages.Any())
+                                {
+                                    kModel.ProgramKod = kModel.ProgramKod;
+                                    kModel.OgrenimTipKod = ogrenciBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj().Value;
+                                    kModel.KayitTarihi = ogrenciBilgi.KayitTarihi;
+                                    kModel.KayitYilBaslangic = ogrenciBilgi.BaslangicYil;
+                                    kModel.KayitDonemID = ogrenciBilgi.DonemID;
+                                }
+
                             }
                             else
                             {
-                                mmMessage.Messages.Add("Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
+                                mmMessage.Messages.Add(
+                                    "Girdiğiniz Kimlik bilgisi OBS sisteminde doğrulanamadı.");
                                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
                             }
+
                         }
                     }
 
@@ -519,7 +535,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     kModel.BirimID = null;
                     kModel.UnvanID = null;
-                    kModel.SicilNo = ""; 
+                    kModel.SicilNo = "";
                     kModel.ABDKoordinatoru = false;
                 }
                 else
@@ -596,7 +612,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     }
                     data.Soyad = kModel.Soyad;
-                    data.TcKimlikNo = kModel.TcKimlikNo; 
+                    data.TcKimlikNo = kModel.TcKimlikNo;
                     data.CinsiyetID = kModel.CinsiyetID;
                     data.CepTel = kModel.CepTel;
                     data.EMail = kModel.EMail;

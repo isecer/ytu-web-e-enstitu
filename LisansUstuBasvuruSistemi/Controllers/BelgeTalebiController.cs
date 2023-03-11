@@ -53,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         bbModel.KullaniciTipYetki = true;
 
                     }
-                    else bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTU Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                    else bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
 
                 }
                 else bbModel.KullaniciTipYetki = true;
@@ -146,16 +146,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
-
-            model.RowCount = q.Count();
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
-            var indexModel = new MIndexBilgi();
-
-            indexModel.Toplam = model.RowCount;
-            model.BelgeTalepleriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
+            model.RowCount = q.Count(); 
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount
+            };
+            model.BelgeTalepleriDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
             {
                 BelgeTalepID = item.BelgeTalepID,
                 BelgeDurumID = item.BelgeDurumID,
@@ -370,7 +367,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (kul.YtuOgrencisi == false)
                 {
-                    mmMessage.Messages.Add("Belge talebi yapabilmek için profil bilginizi düzeltip ytu öğrencisi olduğunuzu belirtiniz");
+                    mmMessage.Messages.Add("Belge talebi yapabilmek için profil bilginizi düzeltip YTÜ öğrencisi olduğunuzu belirtiniz");
                     MessageBox.Show("Uyarı", MessageBox.MessageType.Information, mmMessage.Messages.ToArray());
                     return RedirectToAction("Index");
                 }
@@ -385,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
-                        var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
+                        var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");

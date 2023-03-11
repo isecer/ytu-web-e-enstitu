@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                this.DisplayName = "FR-0308 TEZ DANIŞMANI KONU DİL DEĞİŞİKLİK FORMU";
+                DisplayName = "FR-0308 TEZ DANIŞMANI KONU DİL DEĞİŞİKLİK FORMU";
 
                 var basvuru = db.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == id);
 
@@ -44,6 +44,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.IsTezDiliTr,
                              s.TezBaslikTr,
                              s.TezBaslikEn,
+                             s.IsYeniTezDiliTr,
                              s.YeniTezBaslikTr,
                              s.YeniTezBaslikEn,
                              s.TDUnvanAdi,
@@ -71,56 +72,66 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
 
 
-                this.cellFormKodu.Text = "Form Kodu: " + q.FormKodu;
-                this.xrQRCode.ImageUrl = q.urlAdd;
-                this.xrQRCode.Image = q.urlAdd.CreateQrCode(360, 360);
-                this.cellOgrenciNo.Text = q.OgrenciNo;
-                this.cellOgrenciAdSoyad.Text = q.AdSoyad;
-                this.cellOgrenciEnstituAdi.Text = q.EnstituAd;
-                this.cellOgrenciAnabilimDaliAdi.Text = q.AnabilimDaliAdi;
-                this.cellOgrenciProgramAdi.Text = q.ProgramAdi;
-                this.cellOgrenciOgrenimSeviyesi.Text = q.OgrenimTipAdi;
+                cellFormKodu.Text = "Form Kodu: " + q.FormKodu;
+                xrQRCode.ImageUrl = q.urlAdd;
+                xrQRCode.Image = q.urlAdd.CreateQrCode(360, 360);
+                cellOgrenciNo.Text = q.OgrenciNo;
+                cellOgrenciAdSoyad.Text = q.AdSoyad;
+                cellOgrenciEnstituAdi.Text = q.EnstituAd;
+                cellOgrenciAnabilimDaliAdi.Text = q.AnabilimDaliAdi;
+                cellOgrenciProgramAdi.Text = q.ProgramAdi;
+                cellOgrenciOgrenimSeviyesi.Text = q.OgrenimTipAdi;
 
-                this.cellOgrenciKayitDonemi.Text = q.OgrenciKayitDonemi;
-                this.cellTezDili.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
-                this.cellTezBaslikTr.Text = q.TezBaslikTr;
-                this.cellTezBaslikEn.Text = q.TezBaslikEn;
+                cellOgrenciKayitDonemi.Text = q.OgrenciKayitDonemi;
+                cellTezDili.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
+                cellTezBaslikTr.Text = q.TezBaslikTr;
+                cellTezBaslikEn.Text = q.TezBaslikEn;
 
-                this.chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
-                this.chkDanismanDegisecekHayir.Checked = !this.chkDanismanDegisecekEvet.Checked;
-                if (this.chkDanismanDegisecekEvet.Checked)
-                { 
-                    this.cellDanismanUnvan.Text = q.TDUnvanAdi;
-                    this.cellDanismanAdSoyad.Text = q.TDAdSoyad;
-                    this.cellDanismanAnabilimDaliAdi.Text = q.TDAnabilimDaliAdi;
-                    this.cellDanismanProgramAdi.Text = q.TDProgramAdi;
-                    this.cellBasariIleTamamlanmisTezSayisiDR.Text = q.TDTezSayisiDR.ToString();
-                    this.cellBasariIleTamamlanmisTezSayisiYL.Text = q.TDTezSayisiYL.ToString();
-                    this.cellUzerineKayitliOgrenciSayisiDR.Text = q.TDOgrenciSayisiDR.ToString();
-                    this.cellUzerineKayitliOgrenciSayisiYL.Text = q.TDOgrenciSayisiYL.ToString();
+                chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                chkDanismanDegisecekHayir.Checked = !chkDanismanDegisecekEvet.Checked;
+                if (chkDanismanDegisecekEvet.Checked)
+                {
+                    cellDanismanUnvan.Text = q.TDUnvanAdi;
+                    cellDanismanAdSoyad.Text = q.TDAdSoyad;
+                    cellDanismanAnabilimDaliAdi.Text = q.TDAnabilimDaliAdi;
+                    cellDanismanProgramAdi.Text = q.TDProgramAdi;
+                    cellBasariIleTamamlanmisTezSayisiDR.Text = q.TDTezSayisiDR.ToString();
+                    cellBasariIleTamamlanmisTezSayisiYL.Text = q.TDTezSayisiYL.ToString();
+                    cellUzerineKayitliOgrenciSayisiDR.Text = q.TDOgrenciSayisiDR.ToString();
+                    cellUzerineKayitliOgrenciSayisiYL.Text = q.TDOgrenciSayisiYL.ToString();
                 }
                 chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 chkTezBasligiDegisecekHayir.Checked = !chkTezBasligiDegisecekEvet.Checked;
                 if (chkTezBasligiDegisecekEvet.Checked)
                 {
-                    cellTezdili2.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
                     cellYeniTezBaslikTr.Text = q.YeniTezBaslikTr;
                     cellYeniTezBaslikEn.Text = q.YeniTezBaslikEn;
                 }
-                this.detGrupTezDiliDr.Visible = q.OgrenimTipKod.IsDoktora();
-                this.rwTezOneriTarihDr.Visible = q.OgrenimTipKod.IsDoktora();
-                this.rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
-                this.rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();
+                chkTezDiliDegisecekEvet.Checked = q.IsYeniTezDiliTr.HasValue;
+                chkTezDiliDegisecekHayir.Checked = !chkTezDiliDegisecekEvet.Checked;
+                if (chkTezDiliDegisecekEvet.Checked)
+                {
+                    cellYeniTezDili.Text = q.IsYeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)";
+                }
+                else
+                {
+                    rwYeniTezDili.Visible = false;
+                }
 
-                this.CellMevcutDanismanAd.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
-                this.cellMevcutDanismanAnabilimDali.Text = q.VarolanTDAnabilimDaliAdi;
-                this.cellMevcutDanismanProgram.Text = q.VarolanTDProgramAdi;
+                detGrupTezDiliDr.Visible = q.OgrenimTipKod.IsDoktora();
+                rwTezOneriTarihDr.Visible = q.OgrenimTipKod.IsDoktora();
+                rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
+                rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();
 
-                this.cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
+                CellMevcutDanismanAd.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
+                cellMevcutDanismanAnabilimDali.Text = q.VarolanTDAnabilimDaliAdi;
+                cellMevcutDanismanProgram.Text = q.VarolanTDProgramAdi;
 
-                this.cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
-                this.cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
-                this.cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+                cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
+
+                cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
+                cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
+                cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
 
             }
         }

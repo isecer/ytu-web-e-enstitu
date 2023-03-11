@@ -8,8 +8,7 @@ using LisansUstuBasvuruSistemi.Models;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class TiAraRaporFormuModel : TIBasvuruAraRapor
-    {
-        public string DilKodu { get; set; }
+    { 
         public string OgrenciAnabilimdaliProgramAdi { get; set; }
         public string OgrenciAdSoyad { get; set; }
         public bool? IsYokDrBursiyeriVar { get; set; }

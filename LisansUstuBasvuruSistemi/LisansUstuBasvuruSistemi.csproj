@@ -224,6 +224,7 @@
     <Compile Include="Business\TezDanismanOneriBus.cs" />
     <Compile Include="Business\TezIzlemeBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
+    <Compile Include="Business\UnvanlarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
     <Compile Include="Business\YeterlikBus.cs" />
     <Compile Include="Business\YetkiGrupBus.cs" />
@@ -313,6 +314,9 @@
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AlesTipleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AnabilimDaliYeterlikKomiteUyeleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AnabilimDallari.cs">
@@ -855,6 +859,12 @@
     <Compile Include="Models\YeterlikBasvuru.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\YeterlikBasvuruJuriUyeleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\YeterlikBasvuruKomiteler.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\YeterlikSureci.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -939,10 +949,10 @@
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
     <Compile Include="Utilities\Extensions\IconExtension.cs" />
+    <Compile Include="Utilities\Logs\RequestLogger.cs" />
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
-    <Compile Include="Utilities\Dtos\PagerIndexDto.cs" />
     <Compile Include="Utilities\Dtos\kmKotalar.cs" />
     <Compile Include="Utilities\Dtos\kmBolumEslestir.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleri.cs" />
@@ -3436,8 +3446,8 @@
     <Content Include="Views\TDOAyarlar\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\TDOBasvuru\TdoDanismanFormu.cshtml" />
-    <Content Include="Views\Ajax\GetDetailTDOBasvuru.cshtml" />
+    <Content Include="Views\TDOBasvuru\TdoYeniDanismanFormu.cshtml" />
+    <Content Include="Views\Ajax\GetDetailTdoBasvuru.cshtml" />
     <Content Include="Views\TDOGelenBasvurular\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\TdoEsDanismanFormu.cshtml" />
     <Content Include="Views\TDOGelenBasvurular\GetTutanakRaporu.cshtml" />
@@ -3461,6 +3471,11 @@
     <Content Include="Views\Yeterlik\GetDetail.cshtml" />
     <Content Include="Views\YeterlikSureci\KriterMuafOgrenciler.cshtml" />
     <Content Include="Views\Yeterlik\BasvuruDurumView.cshtml" />
+    <Content Include="Views\TDOBasvuru\TdoDanismanDegisiklikFormu.cshtml" />
+    <Content Include="Views\TDOBasvuru\TdoDilBaslikDegisiklikFormu.cshtml" />
+    <Content Include="Views\TDOBasvuru\TdoDanismanBaslikDilDegisiklikFormu.cshtml" />
+    <Content Include="Views\AnabilimDallari\YeterlikKomiteUyeleri.cshtml" />
+    <Content Include="Views\Yeterlik\YeterlikJuriFormu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -194,6 +194,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
+                if (loginUser.YtuOgrencisi && loginUser.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                {
+                    var tdoBasvuruId = _entities.TDOBasvurus
+                        .Where(p => p.KullaniciID == loginUser.KullaniciID)
+                        .OrderByDescending(o => o.TDOBasvuruID).Select(s => s.TDOBasvuruID)
+                        .FirstOrDefault();
+                    if (tdoBasvuruId > 0)
+                    {
+                        string hataMesaji = "";
+                        var sonuc = TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(
+                            loginUser.KullaniciID, tdoBasvuruId, out hataMesaji);
+                    }
+                }
                 FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, "", rememberMe.Value);
                 UserBus.SetLastLogon();
             }
@@ -1395,7 +1408,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             contentBilgi.GrupBasligi = "Lisansüstü yatay geçiş programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
                         }
-                        else contentBilgi.GrupBasligi = "YTu Yeni mezun Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
+                        else contentBilgi.GrupBasligi = "YTÜ Yeni mezun Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
                         contentBilgi.Detaylar = htmlBigliRow;
 
                         var mmmC = new MailMainContentDto();
@@ -1652,26 +1665,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpGet]
-        public ActionResult GetDetailTiBasvuru(int id, Guid? uniqueId, bool isDelete, bool gelenBasvuru = false)
-        {
-
-            var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, uniqueId);
-            model.GelenBasvuru = gelenBasvuru;
-
-            ViewBag.IsDelete = isDelete;
-
+        public ActionResult GetDetailTiBasvuru(int id, Guid? uniqueId)
+        { 
+            var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, uniqueId); 
             return View(model);
         }
         [Authorize]
         [HttpGet]
-        public ActionResult GetDetailTdoBasvuru(int id, Guid? uniqueId, bool isDelete, bool gelenBasvuru = false)
-        {
-
-            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
-            model.GelenBasvuru = gelenBasvuru;
-
-            ViewBag.IsDelete = isDelete;
-
+        public ActionResult GetDetailTdoBasvuru(int id, Guid? uniqueId)
+        { 
+            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId); 
+            ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
 
@@ -1800,7 +1804,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kul.IsActiveDirectoryUser)
                     {
                         mmMessage.IsSuccess = false;
-                        mmMessage.Title = "Girmiş olduğunuz mail adresi 'Active directory' sistemine entegre çalıştığı için ve bilgi işlem tarafından belirlenen ve bazı sistemlere  (YTU Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb)  erişimini sağlayan ortak bir şifresi bulunmaktadır. Bu mail adresi için tanımlanmış şifre sadece bilgi işlem tarafından belirlenip değiştirilebilmektedir. '" + kul.KullaniciAdi + "' kullanıcı adı ile YTU Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb. programlara giriş yaptığınız şifrenizi hatırlamıyorsanız şifre değişikliği işlemi için lütfen Bilgi İşlem ile görüşünüz.";
+                        mmMessage.Title = "Girmiş olduğunuz mail adresi 'Active directory' sistemine entegre çalıştığı için ve bilgi işlem tarafından belirlenen ve bazı sistemlere  (YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb)  erişimini sağlayan ortak bir şifresi bulunmaktadır. Bu mail adresi için tanımlanmış şifre sadece bilgi işlem tarafından belirlenip değiştirilebilmektedir. '" + kul.KullaniciAdi + "' kullanıcı adı ile YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb. programlara giriş yaptığınız şifrenizi hatırlamıyorsanız şifre değişikliği işlemi için lütfen Bilgi İşlem ile görüşünüz.";
                     }
                     else
                     {
@@ -3477,7 +3481,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AdSoyad = s.ADSOYAD,
                 text = s.ADSOYAD,
                 BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
-                UnvanAdi = s.AKADEMIKUNVAN.ToMezuniyetJuriUnvanAdi(),
+                UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
                 UniversiteID = YtuUni != null ? YtuUni.UniversiteID : 67,
                 UniversiteAdi = (YtuUni != null ? YtuUni.Ad : "Yıldız Teknik Üniversitesi (İstanbul)").ToUpper(),
                 EMail = s.KURUMMAIL
@@ -4208,7 +4212,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         rpr.DataSource = kayitOlanlar;
                         if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rpr.DisplayName = "Lisansüstü Programlarına Kayıt Olan Öğrenci Listesi";
                         else if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) rpr.DisplayName = "Lisansüstü Yatay Geçiş Programlarına Kayıt Olan Öğrenci Listesi";
-                        else rpr.DisplayName = "YTU Yeni mezun Lisansüstü Programlarına Kayıt Olan Öğrenci Listesi";
+                        else rpr.DisplayName = "YTÜ Yeni mezun Lisansüstü Programlarına Kayıt Olan Öğrenci Listesi";
                         rpr.PrintingSystem.ContinuousPageNumbering = true;
                         rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
 
@@ -4368,7 +4372,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         rpr.DataSource = data;
                         if (bsurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rpr.DisplayName = "Lisansüstü Başvuru Süreci Sayısal Bilgisi";
                         else if (bsurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) rpr.DisplayName = "Lisansüstü Yatay Geçiş Başvuru Süreci Sayısal Bilgisi";
-                        else rpr.DisplayName = "YTU Yeni Mezun DR Başvuru Süreci Sayısal Bilgi";
+                        else rpr.DisplayName = "YTÜ Yeni Mezun DR Başvuru Süreci Sayısal Bilgi";
 
                         rpr.PrintingSystem.ContinuousPageNumbering = true;
                         rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
@@ -4666,7 +4670,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
-                    var rapor = _entities.TDOBasvuruDanismen.Where(p => p.UniqueID == uniqueId).FirstOrDefault();
+                    var rapor = _entities.TDOBasvuruDanismen.First(p => p.UniqueID == uniqueId);
 
                     var rpr = new RprTezDanismaniOneriFormu_FR0347(rapor.TDOBasvuruDanismanID);
                     rpr.CreateDocument();
@@ -4678,7 +4682,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
-                    var rapor = _entities.TDOBasvuruDanismen.Where(p => p.UniqueID == uniqueId).FirstOrDefault();
+                    var rapor = _entities.TDOBasvuruDanismen.First(p => p.UniqueID == uniqueId);
 
                     var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(rapor.TDOBasvuruDanismanID);
                     rpr.CreateDocument();
@@ -4689,7 +4693,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
-                    var rapor = _entities.TDOBasvuruEsDanismen.Where(p => p.UniqueID == uniqueId).FirstOrDefault();
+                    var rapor = _entities.TDOBasvuruEsDanismen.First(p => p.UniqueID == uniqueId);
                     var rpr = new RprTezEsDanismaniOneriFormu_FR0320(rapor.TDOBasvuruEsDanismanID);
                     rpr.CreateDocument();
                     rpr.DisplayName = rapor.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + rapor.TDOBasvuruDanisman.TDOBasvuru.Soyad + " " + rpr.DisplayName;

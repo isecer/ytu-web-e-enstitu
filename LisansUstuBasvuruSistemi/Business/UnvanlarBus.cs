@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+
+namespace LisansUstuBasvuruSistemi.Business
+{
+    public static class UnvanlarBus
+    {
+        public static List<string> JuriUnvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
+
+        public static string ToJuriUnvanAdi(this string unvanAdi)
+        {
+            unvanAdi = unvanAdi.Trim().ToLower().Replace("  ", ".").Replace(". ", ".").Replace(" .", ".").Replace(" ", ".");
+            var profUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
+            var docUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
+            var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
+            if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF.DR.";
+            if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ.DR.";
+            if (ogUyeUnvan.Any(a => a.Contains(unvanAdi))) return "DR.ÖĞR.ÜYE.";
+            return unvanAdi.ToUpper();
+        }
+
+        public static List<CmbStringDto> GetCmbJuriUnvanlar(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbStringDto>();
+            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
+            var unvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
+            foreach (var item in unvanList)
+            {
+                dct.Add(new CmbStringDto { Value = item, Caption = item });
+            }
+            return dct;
+
+        }
+    }
+}

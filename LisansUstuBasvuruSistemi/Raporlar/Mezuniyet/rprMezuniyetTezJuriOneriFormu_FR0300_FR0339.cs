@@ -77,9 +77,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     txtFormAdiEn.Text = "DOCTORAL DISSERTATION COMMITTEE PROPOSPAL FORM";
                     txtFormAdiTr.Text = "DOKTORA TEZ JÜRİ ÖNERİ FORMU";
                     txtYUiciAciklama.Text = "Yıldız Teknik Üniversitesi İçinden Jüri Adayı Önerileri (Tik Haricinde)";
-                    txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Different than TMC)";
+                    txtYUiciAciklamaEn.Text = "YTÜ Faculty - Committee Member Propospals (Different than TMC)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri (Tik Haricinde)";
-                    txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals (Different than TMC)";
+                    txtYUDisiAciklamaEn.Text = "non-YTÜ Faculty - Committee Member Propospals (Different than TMC)";
 
                     cellAcklama1.Text = "Yukarıda adı yazılı doktora öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir.\r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above mentioned doctoral student is stated below. \r\nI respectfully submit for your consideration.";
@@ -95,9 +95,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     txtFormAdiEn.Text = "MASTER'S THESIS COMMITTEE PROPOSPAL FORM";
                     txtFormAdiTr.Text = "YÜKSEK LİSANS TEZ JÜRİ ÖNERİ FORMU";
                     txtYUiciAciklama.Text = "Yıldız Teknik Üniversitesi İçinden Jüri Adayı Önerileri (Anabilim Dalı İçerisinden Olmalı)";
-                    txtYUiciAciklamaEn.Text = "YTU Faculty - Committee Member Propospals (Obligatorily from the Department)";
+                    txtYUiciAciklamaEn.Text = "YTÜ Faculty - Committee Member Propospals (Obligatorily from the Department)";
                     txtYUDisiAciklama.Text = "Yıldız Teknik Üniversitesi Dışından Jüri Adayı Önerileri";
-                    txtYUDisiAciklamaEn.Text = "non-YTU Faculty - Committee Member Propospals";
+                    txtYUDisiAciklamaEn.Text = "non-YTÜ Faculty - Committee Member Propospals";
 
                     cellAcklama1.Text = "Yukarıda adı yazılı yüksek lisans öğrencisinin, sınavını yapmak üzere oluşturulacak jüri önerimiz aşağıda belirtilmektedir. \r\nGereği için bilgilerinize arz ederim. Saygılarımla.";
                     CellAcklama1En.Text = "The proposal of the committee that will be formed to test the above-mentioned master’s student is stated below. \r\nI respectfully submit for your consideration.";

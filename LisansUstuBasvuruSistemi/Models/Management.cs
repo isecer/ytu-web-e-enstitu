@@ -44,11 +44,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public static int UniversiteYtuKod { get; } = 67;
         #region gsisData 
 
-        public static StudentControl StudentControl(string TcKimlikNo = null)
-        {
-            ObsGetData obsData = new ObsGetData();
-            return obsData.GetObsStudentControl(TcKimlikNo);
-        }
+
         public static string gsisKayitAktar(string kayit)
         {
             System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };//SSL hatasını gidermek için 
@@ -517,7 +513,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             {
 
                                 mdl.IsOdemeIslemiAcik = false;
-                                mdl.AciklamaSelectedLng = "Ödeme işlemini yapabilmeniz için Profil bilginizi düzeltip YTU öğrencisi olduğunuzu belirtiniz!";
+                                mdl.AciklamaSelectedLng = "Ödeme işlemini yapabilmeniz için Profil bilginizi düzeltip YTÜ öğrencisi olduğunuzu belirtiniz!";
                             }
                             else
                             {
@@ -1800,9 +1796,8 @@ namespace LisansUstuBasvuruSistemi.Models
                         dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
                     }
                 }
-                data = data.OrderBy(o => o.ProgramAdi).ToList();
             }
-            return dct;
+            return dct.OrderBy(o => o.Caption).ToList();
         }
         public static List<CmbStringDto> cmbGetAktifProgramlarEnstituYetki(bool bosSecimVar = false)
         {
@@ -3131,17 +3126,6 @@ namespace LisansUstuBasvuruSistemi.Models
 
 
 
-
-        public static PagerIndexDto setStartRowInx(int srIndex, int pgIndex, int pgCount, int rwCount, int pgSize)
-        {
-            int setStartRowInx = 0;
-            if (rwCount <= srIndex) setStartRowInx = rwCount / pgSize;
-            else setStartRowInx = srIndex;
-            int setPageInx = pgIndex;
-            if ((decimal)rwCount / (decimal)pgSize == 0 || pgCount < pgIndex) setPageInx = 1;
-
-            return new PagerIndexDto { StartRowIndex = setStartRowInx, PageIndex = setPageInx };
-        }
 
         #endregion
 
@@ -5075,7 +5059,7 @@ namespace LisansUstuBasvuruSistemi.Models
                              CiltNo = s.CiltNo,
                              AileNo = s.AileNo,
                              SiraNo = s.SiraNo,
-                             TcKimlikNo = s.TcKimlikNo, 
+                             TcKimlikNo = s.TcKimlikNo,
                              UyrukKod = s.UyrukKod,
                              SehirKod = s.SehirKod,
                              IsTel = s.IsTel,

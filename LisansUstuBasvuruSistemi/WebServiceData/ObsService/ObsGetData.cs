@@ -22,8 +22,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             try
             {
                 if (tcKimlikNo.IsNullOrWhiteSpace()) throw new Exception("Tc Kimlik No boş geliyor!");
-                using (Ws_ObsService.proliz_ytu_enstitu_minerSoapClient service =
-                       new Ws_ObsService.proliz_ytu_enstitu_minerSoapClient())
+                using (var service =
+                       new proliz_ytu_enstitu_minerSoapClient())
                 {
 
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
@@ -57,6 +57,9 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                             {
                                 case "2":
                                     model.OgrenciInfo.OGRENIMSEVIYE_ID = "1";
+                                    break;
+                                case "3":
+                                    model.OgrenciInfo.OGRENIMSEVIYE_ID = "3";
                                     break;
                                 case "4":
                                     model.OgrenciInfo.OGRENIMSEVIYE_ID = "2";

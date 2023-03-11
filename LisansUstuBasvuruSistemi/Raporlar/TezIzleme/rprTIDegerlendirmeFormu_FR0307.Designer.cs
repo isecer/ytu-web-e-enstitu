@@ -3037,7 +3037,7 @@
             this.xrTableCell89.Name = "xrTableCell89";
             this.xrTableCell89.StylePriority.UseFont = false;
             this.xrTableCell89.StylePriority.UseTextAlignment = false;
-            this.xrTableCell89.Text = "YTU TMC Member’s Foreign Language Proficiency";
+            this.xrTableCell89.Text = "YTÜ TMC Member’s Foreign Language Proficiency";
             this.xrTableCell89.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell89.Weight = 1D;
             // 
@@ -3143,7 +3143,7 @@
             this.xrTableCell91.Name = "xrTableCell91";
             this.xrTableCell91.StylePriority.UseFont = false;
             this.xrTableCell91.StylePriority.UseTextAlignment = false;
-            this.xrTableCell91.Text = "Non-YTU TMC Member’s Language Proficiency";
+            this.xrTableCell91.Text = "Non-YTÜ TMC Member’s Language Proficiency";
             this.xrTableCell91.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell91.Weight = 1D;
             // 

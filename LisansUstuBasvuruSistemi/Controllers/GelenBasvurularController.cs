@@ -121,11 +121,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             indexModel.Toplam = model.RowCount;
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
-            var qdata = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(s =>
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s =>
                 new FrBasvurularDto
                 {
                     KullaniciID = s.KullaniciID,

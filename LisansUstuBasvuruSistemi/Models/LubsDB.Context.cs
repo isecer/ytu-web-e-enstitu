@@ -27,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Models
     
         public virtual DbSet<AlanTipleri> AlanTipleris { get; set; }
         public virtual DbSet<AlesTipleri> AlesTipleris { get; set; }
+        public virtual DbSet<AnabilimDaliYeterlikKomiteUyeleri> AnabilimDaliYeterlikKomiteUyeleris { get; set; }
         public virtual DbSet<AnabilimDallari> AnabilimDallaris { get; set; }
         public virtual DbSet<Anket> Ankets { get; set; }
         public virtual DbSet<AnketCevaplari> AnketCevaplaris { get; set; }
@@ -201,6 +202,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<WsSinavCekimTipleri> WsSinavCekimTipleris { get; set; }
         public virtual DbSet<WsSinavCekipTipDetay> WsSinavCekipTipDetays { get; set; }
         public virtual DbSet<YeterlikBasvuru> YeterlikBasvurus { get; set; }
+        public virtual DbSet<YeterlikBasvuruJuriUyeleri> YeterlikBasvuruJuriUyeleris { get; set; }
+        public virtual DbSet<YeterlikBasvuruKomiteler> YeterlikBasvuruKomitelers { get; set; }
         public virtual DbSet<YeterlikSureci> YeterlikSurecis { get; set; }
         public virtual DbSet<YeterlikSureciKriterMuafOgrenciler> YeterlikSureciKriterMuafOgrencilers { get; set; }
         public virtual DbSet<YeterlikSurecOgrenimTipleri> YeterlikSurecOgrenimTipleris { get; set; }

@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                 string surec = bsurec.BaslangicYil + " / " + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
                 if (bsurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) surec += " Lisansüstü Başvuruları Öğrenci Listesi";
                 else if (bsurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) surec += " Lisansüstü Yatay Geçiş Başvuruları Öğrenci Listesi";
-                else surec += " YTU Yeni Mezun Doktora Başvuruları Öğrenci Listesi";
+                else surec += " YTÜ Yeni Mezun Doktora Başvuruları Öğrenci Listesi";
                 lbllblDonemBilgi.Text = surec;
                 string logoPath = "/Content/assets/images/ytu_logo_tr.png";
                 rprLogo.ImageUrl = logoPath;

@@ -73,10 +73,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.KusuratVar.HasValue) q = q.Where(p => p.KusuratVar == model.KusuratVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.SinavAdi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.FrSinavTipleris = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd).ThenBy(o => o.SinavAdi); 
+            model.FrSinavTipleris = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,

@@ -1,0 +1,175 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Models.AnabilimDallari
+@{
+    Layout = null;
+    var komiteData = Model.AnabilimDaliYeterlikKomiteUyeleris.OrderBy(o => o.Kullanicilar.Ad + " " + o.Kullanicilar.Soyad).ToList();
+}
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">@Model.AnabilimDaliAdi Anabilim Dalı için Komite Üyesi Ekle</td>
+        </tr> 
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td><input type="text" id="KullaniciID" value="" style="width: 100%;" /></td>
+                        <td width="50">
+                            <button class="btn btn-info" style="cursor: pointer;" onclick="YeterlikKomiteUyesiEkle()"><i class="fa fa-plus" aria-hidden="true"></i> Ekle</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="panel" style="border-top: 1px solid; border-top-color: lightgray; background-color: white; margin-bottom: 8px; padding: 6px 10px; min-height: 20px; max-height: 350px; overflow: auto;">
+    <table class="table" style="width: 100%;">
+        @if (komiteData.Any())
+        {
+            var rowIndex = 0;
+            foreach (var komite in komiteData)
+            {
+                rowIndex++;
+                <tr>
+                    <td width="30">@rowIndex)</td>
+                    <td width="41"><img src="@komite.Kullanicilar.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;" class="img-circle img-thumbnail"></td>
+                    <td>
+                        @komite.Kullanicilar.Unvanlar.UnvanAdi <br />@komite.Kullanicilar.Ad @komite.Kullanicilar.Soyad
+                    </td>
+                    <td width="20">
+                        <i class="fa fa-trash-o fa-lg" style="cursor: pointer;" onclick="YeterlikKomiteUyesiSil(@komite.KullaniciID, '@(komite.Kullanicilar.Unvanlar.UnvanAdi+" "+komite.Kullanicilar.Ad+" "+komite.Kullanicilar.Soyad)');"></i>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" style="text-align: center;">Eklenen Komite Üyesi Yok</td>
+            </tr>
+        }
+
+    </table>
+</div>
+<script>
+    $(function () {
+          $('#yeterlikUyeRowContent_@Model.AnabilimDaliID').html('<i class="fa fa-group fa-lg"></i> @Model.AnabilimDaliYeterlikKomiteUyeleris.Count Üye');
+        if (@Model.AnabilimDaliYeterlikKomiteUyeleris.Count > 0) {
+            $('#yeterlikUyeRowContent_@Model.AnabilimDaliID').removeClass('label-default').addClass('label-success');
+        }
+        else {
+            $('#yeterlikUyeRowContent_@Model.AnabilimDaliID').removeClass('label-success').addClass('label-default');
+        }
+        $("#KullaniciID").select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            ajax: {
+                url: '@Url.Action("GetFilterKullanici")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        term: term
+                    };
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var src = result.Images.toString();
+                var cont2 = "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;' width='40'>" +
+                    "<span class='user' style='width: 40px;height:40px;margin-right:5px;'> " +
+                    "<img style='width:40px;height:40px;' src='" + src + "' class='pull-left'>" +
+                    "</span> " +
+                    "</td>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr> " +
+                    "<td>" + result.UnvanAdi + "</td> " +
+                    "</tr>  " +
+                    "<tr> " +
+                    "<td>" + result.AdSoyad + "</td> " +
+                    "</tr>  " +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        });
+    });
+    function YeterlikKomiteUyesiEkle() {
+        var kullaniciId = $("#KullaniciID").val();
+        var panel = $('#komiteUyeContent');
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("YeterlikKomiteUyesiEkle")',
+            data: { anabilimDaliId:@Model.AnabilimDaliID, kullaniciId },
+            success: function (result) {
+                if (!result.success) {
+                    swal.fire({
+                        text: result.message,
+                        icon: (result.success ? "success" : "error"),
+                        type: (result.success ? "success" : "error"),
+                        confirmButtonText: 'tamam',
+                        padding: '2em'
+                    });
+                }
+                else {
+                    var view = GetYeterlikKomiteUyeleriView(@Model.AnabilimDaliID);
+                    $('#komiteUyeContent').html(view);
+                }
+                PanelRefresh(panel, false);
+            },
+            error: function (err) {
+                PanelRefresh(panel, false);
+                alert(err.responseText);
+            }
+        });
+    }
+    function YeterlikKomiteUyesiSil(kullaniciId, adSoyad) {
+        Swal.fire({
+            text: adSoyad + " komite üyesini silmek istiyor musunuz?",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Komite üyesini Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) { 
+                    $.ajax({
+                        url: '@Url.Action("YeterlikKomiteUyesiSil")',
+                        data: { anabilimDaliID:@Model.AnabilimDaliID, kullaniciId },
+                        success: function (result) { 
+                            var view = GetYeterlikKomiteUyeleriView(@Model.AnabilimDaliID);
+                            $('#komiteUyeContent').html(view);
+                            Swal.close()
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+</script>
+
+
+

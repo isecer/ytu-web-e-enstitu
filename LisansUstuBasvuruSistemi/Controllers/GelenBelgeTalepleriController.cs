@@ -126,12 +126,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi);
-
-            model.RowCount = q.Count();
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-
+            q = model.Sort.IsNullOrWhiteSpace() == false ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.TalepTarihi); 
+            model.RowCount = q.Count(); 
             var indexModel = new MIndexBilgi();
             var btDurulari = BelgeTalepBus.GetBelgeTalepDurumList();
             foreach (var item in btDurulari)
@@ -140,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 indexModel.ListB.Add(new mxRowModel { Key = item.DurumAdi, ClassName = item.ClassName, Color = item.Color, Toplam = tipCount });
             }
             indexModel.Toplam = model.RowCount;
-            model.BelgeTalepleriDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
+            model.BelgeTalepleriDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(item => new FrBelgeTalepleriDto
             {
                 BelgeTalepID = item.BelgeTalepID,
                 BelgeDurumID = item.BelgeDurumID,

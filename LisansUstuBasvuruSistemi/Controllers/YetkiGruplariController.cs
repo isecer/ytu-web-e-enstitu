@@ -35,11 +35,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     };
             if (!model.YetkiGrupAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.YetkiGrupAdi.Contains(model.YetkiGrupAdi));
             model.RowCount = q.Count();
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderBy(t => t.YetkiGrupAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.Data = q.Skip(PS.StartRowIndex).Take(model.PageSize).Select(s => new frYetkiGruplari
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(t => t.YetkiGrupAdi);  
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frYetkiGruplari
             {
                 YetkiGrupID = s.YetkiGrupID,
                 YetkiGrupAdi = s.YetkiGrupAdi,

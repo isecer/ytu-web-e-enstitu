@@ -2925,7 +2925,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                           p.BasvuruSurecID == ProgramBilgi.BasvuruSurecID &&
                                                           p.KayitDurumID.HasValue &&
                                                           p.KayitDurumlari.IsKayitOldu).Count();
-            var ogrenciKayitBilgi = Management.StudentControl(ProgramBilgi.TcKimlikNo);
+            var ogrenciKayitBilgi = KullanicilarBus.StudentControl(ProgramBilgi.TcKimlikNo);
             string OgrenciBilgi = ProgramBilgi.AdSoyad + " Adlı ve " + ProgramBilgi.TcKimlikNo.ToString() + (ProgramBilgi.IsYerliOgrenci ? " Kimlik Nolu öğrenci" : " Pasaport Nolu öğrenci");
             var TumKayitIDs = new List<int> { KayitDurumu.KayitOldu, KayitDurumu.OnKayit };
             //if (btercih.KayitDurumID.HasValue && btercih.KayitDurumlari.IsKayitOldu && KayitDurumID.HasValue && KayitDurumID == KayitDurumu.KayitOldu)

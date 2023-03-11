@@ -10,8 +10,7 @@
 
     //Model.DegerlendirenUniqueID = new Guid("60b7a378-df50-4bb3-aa3d-0b164a795c9e");
     Layout = null;
-
-    var isDelete = (bool)ViewBag.IsDelete;
+     
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
     bool toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
@@ -50,7 +49,7 @@
                         <tr>
                             <td style="font-weight:bold;font-size:11pt;"><i class="fa fa-check fa-lg"></i> Tez İzleme Komite Üyesi Rapor Değerlendirme</td>
                             <td class="clsHide" width="100" style="font-weight:bold;font-size:15pt; text-align:right;">
-                                <a href="javascript:void(0);" onclick="getDetailx('@Model.TIBasvuruID')" title="Ekranı Yenile" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                                <a href="javascript:void(0);" onclick="GetDetail('@Model.TIBasvuruID')" title="Ekranı Yenile" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                             </td>
                         </tr>
                         <tr>
@@ -326,7 +325,7 @@
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Bilgileri</td>
                         <td class="clsHide" width="100" style="font-weight:bold;font-size:15pt; border-bottom:1px solid; text-align:right;">
-                            <a href="javascript:void(0);" onclick="getDetailx('@Model.TIBasvuruID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                            <a href="javascript:void(0);" onclick="GetDetail('@Model.TIBasvuruID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                         </td>
 
                     </tr>
@@ -372,7 +371,7 @@
 
                 </table>
             </div>
-            <div class="widget widget-default @(isDelete?"hide":"")" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
+            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
                 <table style="width:100%;">
                     <tr>
                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Tez İzleme Raporları</td>
@@ -409,7 +408,7 @@
                                     @foreach (var item in Model.TIBasvuruAraRaporList)
                                     {
                                         inxRw++;
-                                        bool showRow = !isDelete && (inxRw == 1) || Model.DegerlendirenUniqueID.HasValue && item.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID);
+                                        bool showRow =  inxRw == 1 || Model.DegerlendirenUniqueID.HasValue && item.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID);
                                         var srTalebiYapildi = item.SRModel != null;
                                         <tr>
                                             <td>

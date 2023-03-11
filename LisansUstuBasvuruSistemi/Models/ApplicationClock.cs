@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     using (var db = new LisansustuBasvuruSistemiEntities())
                     {
                         var tarih = DateTime.Now.Date;
-                        var enstituler = db.Enstitulers.Where(p => p.IsAktif).ToList();
+                        var enstituler = EnstituBus.GetEnstituler();
                         foreach (var itemE in enstituler)
                         {
                             var qAktifMzsId = MezuniyetBus.GetMezuniyetAktifSurecId(itemE.EnstituKod);
@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                                 foreach (var item in qMezuniyetOtoMails)
                                 {
-                                    var sblTr = mailSablonlari.Where(p => p.MailSablonTipID == item.MailSablonTipID).FirstOrDefault();
+                                    var sblTr = mailSablonlari.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipID);
                                     var sblKey = sblTr.SablonAdi + "_" + sblTr.MailSablonTipID;
                                     if (mbControlCount.All(a => a.Key != sblKey))
                                     {

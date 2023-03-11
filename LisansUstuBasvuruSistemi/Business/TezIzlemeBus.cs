@@ -217,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod, "");
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
-                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
+                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
 
                                 var bkMsg = new List<string>();
                                 if (sondonemKayitOlmasiGerekenDersKodlariList.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => sondonemKayitOlmasiGerekenDersKodlariList.Any(a => a == p)) != sondonemKayitOlmasiGerekenDersKodlariList.Count)

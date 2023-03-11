@@ -75,10 +75,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.OgrenimDurumAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.OgrenimDurumAdi.Contains(model.OgrenimDurumAdi));
             if (!model.BelgeTipAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.BelgeTipAdi.Contains(model.BelgeTipAdi));
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.IslemTarihi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.BelgeTipDetayDtos = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.IslemTarihi); 
+            model.BelgeTipDetayDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,

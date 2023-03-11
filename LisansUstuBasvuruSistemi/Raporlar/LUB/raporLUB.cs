@@ -15,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
             InitializeComponent();
             if (BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) lblRaporAdi.Text = "LİSANSÜSTÜ BAŞVURU SONUÇLARI SAYISAL BİLGİSİ";
             else if (BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) lblRaporAdi.Text = "LİSANSÜSTÜ YATAY GEÇİŞ BAŞVURU SONUÇLARI SAYISAL BİLGİSİ";
-            else if (BasvuruSurecTipID == BasvuruSurecTipi.YTUYeniMezunDRBasvuru) lblRaporAdi.Text = "YTU YENİ MEZUN ÖĞRENCİ DOKTORA BAŞVURU SONUÇLARI SAYISAL BİLGİSİ";
+            else if (BasvuruSurecTipID == BasvuruSurecTipi.YTUYeniMezunDRBasvuru) lblRaporAdi.Text = "YTÜ YENİ MEZUN ÖĞRENCİ DOKTORA BAŞVURU SONUÇLARI SAYISAL BİLGİSİ";
         }
 
     }

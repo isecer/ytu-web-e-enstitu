@@ -17,6 +17,7 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AnabilimDallari()
         {
+            this.AnabilimDaliYeterlikKomiteUyeleris = new HashSet<AnabilimDaliYeterlikKomiteUyeleri>();
             this.Programlars = new HashSet<Programlar>();
             this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
         }
@@ -30,6 +31,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnabilimDaliYeterlikKomiteUyeleri> AnabilimDaliYeterlikKomiteUyeleris { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Programlar> Programlars { get; set; }

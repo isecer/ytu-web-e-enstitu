@@ -24,7 +24,6 @@ namespace LisansUstuBasvuruSistemi
     {
         protected void Application_Start()
         {
-
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -75,7 +74,49 @@ namespace LisansUstuBasvuruSistemi
             };
 
         }
+        void Application_BeginRequest(object sender, EventArgs e)
+        {
+            //try
+            //{
+            //    var request = HttpContext.Current.Request;
+            //    var url = request.Url.AbsoluteUri;
+            //    var method = request.HttpMethod;
+            //    var ip = request.UserHostAddress;
+            //    var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+            //    var logMessage = string.Format("{0} {1} from {2}", method, url, ip);
+            //    var logFilePath = @"C:\inetpub\wwwroot\lisansustu.yildiz.edu.tr\Log.txt";
+            //    using (StreamWriter writer = File.AppendText(logFilePath))
+            //    {
+            //        writer.WriteLine(string.Format("{0} | {1} ", timestamp, logMessage));
+            //    }
+            //}
+            //catch (Exception exception)
+            //{
+            //}
+
+            //string dosyaYolu = @"C:\inetpub\wwwroot\LUBS\blockIP.txt";
+            //if (File.Exists(dosyaYolu))
+            //{
+            //    List<string> satirlar = new List<string>();
+
+            //    using (StreamReader sr = new StreamReader(dosyaYolu))
+            //    {
+            //        string satir;
+            //        while ((satir = sr.ReadLine()) != null)
+            //        {
+            //            satirlar.Add(satir);
+            //        }
+            //    }
+            //    satirlar = satirlar.Where(p => !p.IsNullOrWhiteSpace()).ToList();
+            //    string ipAddress = Request.UserHostAddress;
+            //    if (satirlar.Any() && satirlar.Contains(ipAddress))
+            //    {
+            //        Response.StatusCode = 403;
+            //        Response.End();
+            //    }
+            //}
+        }
         //protected void Application_Error(object sender, EventArgs e)
         //{
         //    var err = Server.GetLastError();
@@ -140,32 +181,7 @@ namespace LisansUstuBasvuruSistemi
             }
         }
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
 
-            string dosyaYolu = @"C:\inetpub\wwwroot\LUBS\blockIP.txt";
-            if (File.Exists(dosyaYolu))
-            {
-                List<string> satirlar = new List<string>();
-
-                using (StreamReader sr = new StreamReader(dosyaYolu))
-                {
-                    string satir;
-                    while ((satir = sr.ReadLine()) != null)
-                    {
-                        satirlar.Add(satir);
-                    }
-                }
-                satirlar = satirlar.Where(p => !p.IsNullOrWhiteSpace()).ToList();
-                string ipAddress = Request.UserHostAddress;
-                if (satirlar.Any() && satirlar.Contains(ipAddress))
-                {
-                    Response.StatusCode = 403;
-                    Response.End();
-                }
-            }
-
-        }
 
         //protected void Application_EndRequest(Object sender, EventArgs e)
         //{

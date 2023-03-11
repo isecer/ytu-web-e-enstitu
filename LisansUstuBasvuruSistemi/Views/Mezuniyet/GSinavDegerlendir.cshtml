@@ -9,11 +9,11 @@
 
     var item = Model;
     var itemJuri = item.SRTaleplerJuris.First();
-    var IsDanismani = itemJuri.JuriTipAdi == "TezDanismani";
-    var JuriOneriFormu = (MezuniyetJuriOneriFormlari)ViewBag.JuriOneriFormu;
-    var MezuniyetBasvurusu = (MezuniyetBasvurulari)ViewBag.MezuniyetBasvurulari;
-    var BOgtrenimTipi = (OgrenimTipleri)ViewBag.OgtrenimTipi;
-    var UniqueID = (Guid)ViewBag.UniqueID;
+    var isDanismani = itemJuri.JuriTipAdi == "TezDanismani";
+    var juriOneriFormu = (MezuniyetJuriOneriFormlari)ViewBag.JuriOneriFormu;
+    var mezuniyetBasvurusu = (MezuniyetBasvurulari)ViewBag.MezuniyetBasvurulari;
+    var bOgtrenimTipi = (OgrenimTipleri)ViewBag.OgtrenimTipi;
+    var uniqueId = (Guid)ViewBag.UniqueID;
 
 }
 
@@ -43,18 +43,18 @@
                                                     <td class="CaptionTd" width="140">Ad Soyad</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">
-                                                        @MezuniyetBasvurusu.Ad @MezuniyetBasvurusu.Soyad (@MezuniyetBasvurusu.OgrenciNo)
+                                                        @mezuniyetBasvurusu.Ad @mezuniyetBasvurusu.Soyad (@mezuniyetBasvurusu.OgrenciNo)
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="CaptionTd">Öğrenim Seviyesi</td>
                                                     <td class="CaptionTd">:</td>
-                                                    <td class="ValueTd">@BOgtrenimTipi.OgrenimTipAdi</td>
+                                                    <td class="ValueTd">@bOgtrenimTipi.OgrenimTipAdi</td>
                                                 </tr>
                                                 <tr>
                                                     <td class="CaptionTd">Program</td>
                                                     <td class="CaptionTd">:</td>
-                                                    <td class="ValueTd">@MezuniyetBasvurusu.Programlar.AnabilimDallari.AnabilimDaliAdi / @MezuniyetBasvurusu.Programlar.ProgramAdi</td>
+                                                    <td class="ValueTd">@mezuniyetBasvurusu.Programlar.AnabilimDallari.AnabilimDaliAdi / @mezuniyetBasvurusu.Programlar.ProgramAdi</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -191,13 +191,13 @@
                                                 <td class="CaptionTd">:</td>
                                                 <td class="ValueTd">
                                                     <select class="form-control" style="width:100%;" id="IsTezSanayiVeIsBirligiKapsamindaGerceklesti_@itemJuri.UniqueID">
-                                                        <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null).ToSelected()) value=""></option>
-                                                        <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true).ToSelected()) value="true">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</option>
-                                                        <option @((JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false).ToSelected()) value="false">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</option>
+                                                        <option @((juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null).ToSelected()) value=""></option>
+                                                        <option @((juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true).ToSelected()) value="true">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</option>
+                                                        <option @((juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false).ToSelected()) value="false">Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</option>
                                                     </select>
                                                 </td>
                                             </tr>
-                                            if (MezuniyetBasvurusu.OgrenimTipKod.IsDoktora())
+                                            if (mezuniyetBasvurusu.OgrenimTipKod.IsDoktora())
                                             {
 
                                                 <tr>
@@ -299,25 +299,25 @@
                                                 <td class="CaptionTd ctWidth" width="300">Tez Sanayi İş Birliği Kapsamında Mı Gerçekleşti?</td>
                                                 <td class="CaptionTd">:</td>
                                                 <td class="ValueTd">
-                                                    @if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
+                                                    @if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == null)
                                                     {
                                                         <span>
                                                             <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
                                                         </span>
                                                     }
-                                                    else if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
+                                                    else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == true)
                                                     {
                                                         <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşti</span>
 
                                                     }
-                                                    else if (JuriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
+                                                    else if (juriOneriFormu.IsTezSanayiVeIsBirligiKapsamindaGerceklesti == false)
                                                     {
                                                         <span>Tez Sanayi ile İş Birliği Kapsamında Gerçekleşmedi</span>
                                                     }
 
                                                 </td>
                                             </tr>
-                                            if (BOgtrenimTipi.OgrenimTipKod.IsDoktora() && item.IsYokDrBursiyeriVar.HasValue)
+                                            if (bOgtrenimTipi.OgrenimTipKod.IsDoktora() && item.IsYokDrBursiyeriVar.HasValue)
                                             {
                                                 <tr>
                                                     <td class="CaptionTd" width="140">100/2000 YÖK Bursiyeri</td>
@@ -431,7 +431,7 @@
                                     showMmMessage(result.Messages, 'Tamam');
                                     if (result.IsSuccess || result.IsRefresh) {
                                         setTimeout(function () {
-                                             window.location.href = '@Url.Action("GSinavDegerlendir", "Mezuniyet")?UniqueID=@UniqueID';
+                                             window.location.href = '@Url.Action("GSinavDegerlendir", "Mezuniyet")?UniqueID=@uniqueId';
                                         }, 4000)
 
 

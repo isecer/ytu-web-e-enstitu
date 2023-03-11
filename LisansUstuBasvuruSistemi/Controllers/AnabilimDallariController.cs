@@ -36,6 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituAd = e.EnstituAd,
                         AnabilimDaliKod = s.AnabilimDaliKod,
                         AnabilimDaliAdi = s.AnabilimDaliAdi,
+                        YeterlikKomiteUyeCount = s.AnabilimDaliYeterlikKomiteUyeleris.Count,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
                         IslemYapanID = s.IslemYapanID,
@@ -49,9 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
-            var ps = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = ps.PageIndex;
-            model.FrAnabilimDallaris = q.Skip(ps.StartRowIndex).Take(model.PageSize).ToArray();
+            model.FrAnabilimDallaris = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
                 Toplam = model.RowCount,
@@ -60,6 +59,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
+            ViewBag.IsKomiteUyesiVar = new SelectList(ComboData.GetCmbKomiteUyeKayitDurumData(true), "Value", "Caption", model.IsKomiteUyesiVar);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -84,25 +84,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Kayit(AnabilimDallari kModel)
         {
-            var mmMessage = new MmMessage(); 
+            var mmMessage = new MmMessage();
             #region Kontrol
-            
+
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Enstitü seçiniz");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod"});
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.AnabilimDaliKod.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Anabilim Dalı Kodunu Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliKod" });
             if (kModel.AnabilimDaliAdi.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Anabilim Dalı Adını Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi"});
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliAdi" });
 
@@ -110,9 +110,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var cnt = _entities.AnabilimDallaris.Count(p => p.AnabilimDaliKod == kModel.AnabilimDaliKod && p.EnstituKod == kModel.EnstituKod && p.AnabilimDaliID != kModel.AnabilimDaliID);
                 if (cnt > 0)
-                { 
+                {
                     mmMessage.Messages.Add("Tanımlamak istediğiniz Anabilim Dalı kodu daha önceden sisteme tanımlanmıştır.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod"});
+                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod" });
                 }
 
             }
@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now; ;
 
-                } 
+                }
                 _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -147,15 +147,86 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            
+
             ViewBag.MmMessage = mmMessage;
-            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod); 
+            ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
             return View(kModel);
         }
+
+        public ActionResult YeterlikKomiteUyeleri(int id)
+        {
+            var surec = _entities.AnabilimDallaris.First(p => p.AnabilimDaliID == id);
+            return View(surec);
+        }
+        public ActionResult YeterlikKomiteUyesiEkle(int anabilimDaliId, int? kullaniciId)
+        {
+            var success = false;
+            var message = "";
+            if (!kullaniciId.HasValue)
+            {
+                message = "Komite üyesi seçiniz.";
+            }
+            else if (_entities.AnabilimDaliYeterlikKomiteUyeleris.Any(p => p.AnabilimDaliID == anabilimDaliId && p.KullaniciID == kullaniciId.Value))
+            {
+                message = "Bu komisyon üyesi daha önce eklendi.";
+            }
+            else if (_entities.AnabilimDaliYeterlikKomiteUyeleris.Count(p => p.AnabilimDaliID == anabilimDaliId) >= 5)
+            {
+                message = "5 komison üyesinden daha fazla üye eklenemez.";
+            }
+            else
+            {
+                _entities.AnabilimDaliYeterlikKomiteUyeleris.Add(new AnabilimDaliYeterlikKomiteUyeleri
+                {
+                    AnabilimDaliID = anabilimDaliId,
+                    KullaniciID = kullaniciId.Value,
+                    IslemTarihi = DateTime.Now,
+                    IslemYapanID = UserIdentity.Current.Id
+                });
+                _entities.SaveChanges();
+                success = true;
+            }
+            return new { success, message }.ToJsonResult();
+
+        }
+        public ActionResult YeterlikKomiteUyesiSil(int anabilimDaliId, int kullaniciId)
+        {
+
+            if (_entities.AnabilimDaliYeterlikKomiteUyeleris.Any(p => p.AnabilimDaliID == anabilimDaliId && p.KullaniciID == kullaniciId))
+            {
+                var uye = _entities.AnabilimDaliYeterlikKomiteUyeleris.First(p =>
+                    p.AnabilimDaliID == anabilimDaliId && p.KullaniciID == kullaniciId);
+                _entities.AnabilimDaliYeterlikKomiteUyeleris.Remove(uye);
+                _entities.SaveChanges();
+            }
+
+            return true.ToJsonResult();
+        }
+        public ActionResult GetFilterKullanici(string term)
+        {
+
+            var ogrenciList = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && (p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+            {
+                s.KullaniciID,
+                s.Ad,
+                s.Soyad,
+                s.Unvanlar.UnvanAdi,
+                s.ResimAdi
+            }).Take(15).ToList()
+                .Select(s => new
+                {
+                    id = s.KullaniciID,
+                    s.UnvanAdi,
+                    AdSoyad = s.Ad + " " + s.Soyad,
+                    text = s.UnvanAdi + " " + s.Ad + " " + s.Soyad,
+                    Images = s.ResimAdi.ToKullaniciResim()
+                }).ToList();
+            return ogrenciList.ToJsonResult();
+        }
         public ActionResult Sil(int id)
         {
-            var kayit = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == id); 
+            var kayit = _entities.AnabilimDallaris.FirstOrDefault(p => p.AnabilimDaliID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -181,5 +252,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
         }
+
+
     }
 }

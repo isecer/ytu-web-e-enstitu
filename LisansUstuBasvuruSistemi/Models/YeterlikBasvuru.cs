@@ -14,6 +14,13 @@ namespace LisansUstuBasvuruSistemi.Models
     
     public partial class YeterlikBasvuru
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public YeterlikBasvuru()
+        {
+            this.YeterlikBasvuruJuriUyeleris = new HashSet<YeterlikBasvuruJuriUyeleri>();
+            this.YeterlikBasvuruKomitelers = new HashSet<YeterlikBasvuruKomiteler>();
+        }
+    
         public int YeterlikBasvuruID { get; set; }
         public System.Guid UniqueID { get; set; }
         public int YeterlikSurecID { get; set; }
@@ -43,5 +50,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual OgrenimTipleri OgrenimTipleri { get; set; }
         public virtual Programlar Programlar { get; set; }
         public virtual YeterlikSureci YeterlikSureci { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikBasvuruJuriUyeleri> YeterlikBasvuruJuriUyeleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikBasvuruKomiteler> YeterlikBasvuruKomitelers { get; set; }
     }
 }

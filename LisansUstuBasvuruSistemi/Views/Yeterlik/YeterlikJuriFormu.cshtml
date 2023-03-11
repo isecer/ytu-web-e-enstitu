@@ -1,0 +1,429 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model KmYeterlikJuriModel
+@{
+    Layout = null;
+    var tezDanismaniBilgi = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani");
+    var ytuIciJuri1 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri1");
+    var ytuIciJuri2 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri2");
+    var ytuDisiJuri1 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri1");
+    var ytuDisiJuri2 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri2");
+    var ytuDisiJuri3 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri3");
+}
+
+@using (Ajax.BeginForm("YeterlikJuriFormuPost", "Yeterlik", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmYeterlikJuri" }))
+{
+    @Html.HiddenFor(p => p.UniqueID)
+
+    <div class="panel panel-primary" style="margin:0px;margin-top:0px;">
+        <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
+            <ul class="nav nav-tabs">
+                <li class="@(Model.SelectedTabId==1?"active":"")">
+
+                    <a href="#tab-1" data-toggle="tab" aria-expanded="false">
+                        <i class="fa fa-group"></i> <span style="font-size: 9pt;">YTÜ İçi Jüri Önerisi için Tıklayınız</span>
+                    </a>
+                </li>
+                <li class="@(Model.SelectedTabId==2?"active":"")">
+                    <a href="#tab-2" data-toggle="tab" aria-expanded="false">
+                        <i class="fa fa-group"></i> <span style="font-size: 9pt;">YTÜ Dışı Jüri Önerisi için Tıklayınız</span>
+                    </a>
+                </li>
+
+            </ul>
+            <div class="panel-body tab-content" style="padding:0px;">
+                <div class="tab-pane @(Model.SelectedTabId==1?"active":"")" id="tab-1">
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">1) Danışman Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="JuriTipAdis" value="TezDanismani" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="true" />
+                                                        <input type="hidden" name="TabIds" value="1" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(tezDanismaniBilgi?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control" name="AdSoyads" readonly="readonly" value="@(tezDanismaniBilgi?.AdSoyad.ToUpper())" style="width: 100%; color: black;" id="TezDanismaniAdSoyad" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="UnvanAdis" readonly="readonly" value="@(tezDanismaniBilgi?.UnvanAdi)" style="width: 100%; color: black;" id="TezDanismaniUnvanAdi" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="EMails" readonly="readonly" value="@(tezDanismaniBilgi?.EMail)" style="width: 100%; color: black;" id="TezDanismaniEMail" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">2) Asil Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuIciJuri1" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="true" />
+                                                        <input type="hidden" name="TabIds" value="1" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuIciJuri1?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase egitmens" name="AdSoyads" maxlength="128" value="@(ytuIciJuri1?.AdSoyad)" style="width: 100%; color: black;" id="YtuIciJuri1AdSoyad" />
+                                                        @if (ytuIciJuri1 != null)
+                                                        {
+                                                            <script>
+                                                                setTimeout(function () {
+                                                                    var secilen = @Html.Raw(Json.Encode(new { id = ytuIciJuri1.AdSoyad, text = ytuIciJuri1.AdSoyad }));
+                                                                    $("#YtuIciJuri1AdSoyad").select2('data', secilen);
+                                                                }, 1200);
+                                                            </script>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="UnvanAdis" readonly="readonly" value="@(ytuIciJuri1?.UnvanAdi)" style="width: 100%; color: black;" id="YtuIciJuri1UnvanAdi" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri1?.EMail)" style="width: 100%;" id="YtuIciJuri1EMail" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">3) Yedek Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuIciJuri2" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="false" />
+                                                        <input type="hidden" name="TabIds" value="1" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuIciJuri2?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase egitmens" name="AdSoyads" maxlength="128" value="@(ytuIciJuri2?.AdSoyad)" style="width: 100%; color: black;" id="YtuIciJuri2AdSoyad" />
+                                                        @if (ytuIciJuri2 != null)
+                                                        {
+                                                            <script>
+                                                                setTimeout(function () {
+                                                                    var secilen = @Html.Raw(Json.Encode(new { id = ytuIciJuri2.AdSoyad, text = ytuIciJuri2.AdSoyad }));
+                                                                    $("#YtuIciJuri2AdSoyad").select2('data', secilen);
+                                                                }, 1200);
+                                                            </script>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="UnvanAdis" readonly="readonly" value="@(ytuIciJuri2?.UnvanAdi)" style="width: 100%; color: black;" id="YtuIciJuri2UnvanAdi" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri2?.EMail)" style="width: 100%;" id="YtuIciJuri2EMail" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane @(Model.SelectedTabId==2?"active":"")" id="tab-2">
+                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">1) Asil Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd">Üniversitesi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UniversiteIDs", Model.SelectListUniversite, new { @class = "form-control", id = "YtuDisiJuri1Universite" })
+                                                        <script>
+                                                            $('#YtuDisiJuri1Universite').val('@Html.Raw(ytuDisiJuri1?.UniversiteID)');
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuDisiJuri1" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="true" />
+                                                        <input type="hidden" name="TabIds" value="2" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuDisiJuri1?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase" name="AdSoyads" maxlength="128" value="@(ytuDisiJuri1?.AdSoyad)" style="width: 100%; color: black;" id="YtuDisiJuri1AdSoyad" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UnvanAdis", Model.SelectListUndan, new { @class = "form-control", id = "YtuDisiJuri1UnvanAdi" })
+                                                        <script>
+                                                            $('#YtuDisiJuri1UnvanAdi').val('@Html.Raw(ytuDisiJuri1?.UnvanAdi)')
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuDisiJuri1?.EMail)" style="width: 100%;" id="YtuDisiJuri1EMail" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">2) Asil Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd">Üniversitesi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UniversiteIDs", Model.SelectListUniversite, new { @class = "form-control", id = "YtuDisiJuri2Universite" })
+                                                        <script>
+                                                            $('#YtuDisiJuri2Universite').val('@Html.Raw(ytuDisiJuri2?.UniversiteID)');
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuDisiJuri2" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="true" />
+                                                        <input type="hidden" name="TabIds" value="2" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuDisiJuri2?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase" name="AdSoyads" maxlength="128" value="@(ytuDisiJuri2?.AdSoyad)" style="width: 100%; color: black;" id="YtuDisiJuri2AdSoyad" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UnvanAdis", Model.SelectListUndan, new { @class = "form-control", id = "YtuDisiJuri2UnvanAdi" })
+                                                        <script>
+                                                            $('#YtuDisiJuri2UnvanAdi').val('@Html.Raw(ytuDisiJuri2?.UnvanAdi)');
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuDisiJuri2?.EMail)" style="width: 100%;" id="YtuDisiJuri2EMail" />
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">3) Yedek Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd">Üniversitesi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UniversiteIDs", Model.SelectListUniversite, new { @class = "form-control", id = "YtuDisiJuri3Universite" })
+                                                        <script>
+                                                            $('#YtuDisiJuri3Universite').val('@Html.Raw(ytuDisiJuri3?.UniversiteID)')
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuDisiJuri3" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="false" />
+                                                        <input type="hidden" name="TabIds" value="2" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuDisiJuri3?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase" name="AdSoyads" maxlength="128" value="@(ytuDisiJuri3?.AdSoyad)" style="width: 100%; color: black;" id="YtuDisiJuri3AdSoyad" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("UnvanAdis", Model.SelectListUndan, new { @class = "form-control", id = "YtuDisiJuri3UnvanAdi" })
+                                                        <script>
+                                                            $('#YtuDisiJuri3UnvanAdi').val('@Html.Raw(ytuDisiJuri3?.UnvanAdi)')
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuDisiJuri3?.EMail)" style="width: 100%;" id="YtuDisiJuri3EMail" />
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<script>
+
+    $(function () {
+        $('.upperCase').each(function (ix, inx) {
+            $(inx).attr('autocomplete', 'off');
+            $(inx).bind('keyup', function (e) {
+                var vl = $(inx).val();
+                $(inx).val(vl.replaceAll("i", "İ").toUpperCase());
+            });
+        })
+        $('.egitmens').select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 2,
+            maximumSelectionSize: 1,
+            multiple: false,
+            ajax: {
+                url: '@Url.Action("GetJuriData", "Yeterlik")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        'term': term
+                    }
+
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var cont2 =
+                    "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr><td>" + result.AdSoyad + "</td></tr>" +
+                    "<tr><td>Bölüm:" + result.BolumAdi + "</td></tr>" +
+                    "<tr><td>Ünvan: " + result.UnvanAdi + "</td></tr>" +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        }).on('change', function (e) {
+            var Inpid = $(this).prop("id");
+            var mID = Inpid.replace("AdSoyad", "");
+            $('#' + mID + 'AdSoyad').val(e.added == undefined ? "" : e.added.AdSoyad);
+            $('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
+            $('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
+        });
+    });
+
+</script>

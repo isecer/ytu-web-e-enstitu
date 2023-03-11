@@ -5,41 +5,33 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var err = Model.Exception;
-    if (err == null)
-    {
-        err = Server.GetLastError();
-    }
-    if (err == null)
-    {
-        err = new Exception(Request.Url.ToString());
-    }
+    var err = (Model.Exception ?? Server.GetLastError()) ?? new Exception(Request.Url.ToString());
     using (var db = new LisansustuBasvuruSistemiEntities())
     {
-        bool SaveError = true;
-        var ExceltionMessage = err.ToExceptionMessage();
-        if (ExceltionMessage.Contains("1- The controller for path"))
+        bool saveError = true;
+        var exceltionMessage = err.ToExceptionMessage();
+        if (exceltionMessage.Contains("1- The controller for path"))
         { 
-              var SplitMesssages = ExceltionMessage.Split('\'');
-            if (SplitMesssages.Count() >= 3)
+              var splitMesssages = exceltionMessage.Split('\'');
+            if (splitMesssages.Count() >= 3)
             {
-                var Path = SplitMesssages[1];
-                if (Path.Contains("/tr"))
+                var path = splitMesssages[1];
+                if (path.Contains("/tr"))
                 {
-                    Path = Path.Replace("/tr", "");
-                    SaveError = false;
+                    path = path.Replace("/tr", "");
+                    saveError = false;
                     <script>
-                        window.location.href = '@Path';
+                        window.location.href = '@path';
                     </script>
                 }
             }
         }
-        if (SaveError)
+        if (saveError)
         {
             db.SistemBilgilendirmes.Add(new SistemBilgilendirme
             {
                 BilgiTipi = LogType.Hata,
-                Message = ExceltionMessage,
+                Message = exceltionMessage,
                 IslemYapanID = (UserIdentity.Current.IsAuthenticated ? UserIdentity.Current.Id : (int?)null),
                 IslemYapanIP = UserIdentity.Ip,
                 IslemTarihi = DateTime.Now,

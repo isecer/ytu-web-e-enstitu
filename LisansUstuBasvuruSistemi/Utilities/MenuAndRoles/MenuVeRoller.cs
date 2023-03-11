@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(MenuID = 80000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 7)]
         public const string BasvuruIslemleri = "Başvuru İşlemleri";
 
-        [Menu(MenuID = 80500, MenuAdi = "YTU Yeni Mezun Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 8)]
+        [Menu(MenuID = 80500, MenuAdi = "YTÜ Yeni Mezun Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 8)]
         public const string YydBasvuruIslemleri = "YYD Başvuru İşlemleri";
 
         [Menu(MenuID = 81000, MenuAdi = "Yatay Geçiş Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 9)]
@@ -178,23 +178,23 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 80500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YYDBasvuru/Index", YetkiliEnstituler = "33", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]
         public const string YydBasvuru = "YYDBasvuru";
         [Menu(BagliMenuID = 80500, MenuAdi = "Gelen Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YYDGelenBasvurular/Index", SiraNo = 3)]
-        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Gelen Başvurular", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydGelenBasvurular = "YYD Gelen Başvurular";
-        [Role(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Gelen Başvurular Kayıt", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydGelenBasvurularKayit = "YYDGelen Başvurular Kayıt";
-        [Role(GorunurAdi = "Gelen Başvurular Sil", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Gelen Başvurular Sil", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydGelenBasvurularSil = "YYD Gelen Başvurular Sil";
         [Menu(BagliMenuID = 80500, MenuAdi = "Başvuru Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YYDBasvuruSureci/Index", SiraNo = 4)]
-        [Role(GorunurAdi = "Başvuru Süreci", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Başvuru Süreci", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydBasvuruSureci = "YYD Başvuru Süreci Listesi";
-        [Role(GorunurAdi = "Başvuru Süreci Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Başvuru Süreci Kayıt", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydBasvuruSureciKayit = "YYD Başvuru Süreci Kayıt";
-        [Role(GorunurAdi = "Başvuru Süreci Öğrenci Kayıt", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Başvuru Süreci Öğrenci Kayıt", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydBasvuruSureciOgrenciKayit = "YYD Başvuru Süreci Öğrenci Kayıt";
-        [Role(GorunurAdi = "Başvuru Süreci Sil", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Başvuru Süreci Sil", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydBasvuruSureciSil = "YYD Başvuru Süreci Sil";
         [Menu(BagliMenuID = 80500, MenuAdi = "Kotalar", MenuCssClass = "fa fa-gear", MenuUrl = "YYDKotalar/Index", SiraNo = 5)]
-        [Role(GorunurAdi = "Kotalar", Kategori = "YTU Yeni Mezun Başvuru", Aciklama = "")]
+        [Role(GorunurAdi = "Kotalar", Kategori = "YTÜ Yeni Mezun Başvuru", Aciklama = "")]
         public const string YydKotalar = "YYD Kotalar";
 
         [Menu(BagliMenuID = 81000, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YGBasvuru/Index", YetkiliEnstituler = "33", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]

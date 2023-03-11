@@ -109,24 +109,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 gv.RenderControl(htw);
 
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_KotaListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
-            }
-
-
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.KotalarDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
-
-
-
-
-
-            var IndexModel = new MIndexBilgi();
-
-
-            IndexModel.Toplam = model.RowCount;
-            IndexModel.Aktif = q.Where(p => p.IsAktif).Count();
-            IndexModel.Pasif = q.Where(p => !p.IsAktif).Count();
-            ViewBag.IndexModel = IndexModel;
+            } 
+            model.KotalarDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray(); 
+            var indexModel = new MIndexBilgi
+            {
+                Toplam = model.RowCount,
+                Aktif = q.Count(p => p.IsAktif),
+                Pasif = q.Count(p => !p.IsAktif)
+            }; 
+            ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             //ViewBag.EnstituKod2 = new SelectList(Management.cmbGetYetkiliEnstituler( true), "Value", "Caption", model.EnstituKod);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(true), "Value", "Caption", model.OgrenimTipKod);

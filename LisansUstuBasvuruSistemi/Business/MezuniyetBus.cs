@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p => p.MezuniyetSurecID == mezuniyetSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
                                  
-                                var ogrenciBilgi = Management.StudentControl(kul.TcKimlikNo);
+                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
                                 var bkMsg = new List<string>();
                                 if (basvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) != basvuruSonDonemSecilecekDersKodlari.Count)
                                 {
@@ -222,7 +222,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         else
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Profil bilginizi düzelterek YTU öğrencisi olduğunuzu belirtiniz.");
+                            msg.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Profil bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
                 }
@@ -1141,17 +1141,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t5_MezuniyetSureci");
             return pagerString;
         }
-        public static string ToMezuniyetJuriUnvanAdi(this string unvanAdi)
-        {
-            unvanAdi = unvanAdi.Trim().ToLower().Replace("  ", ".").Replace(". ", ".").Replace(" .", ".").Replace(" ", ".");
-            var profUnvan = new List<string> { "PROFESÖR".ToLower(), "PROFESÖR.DR".ToLower(), "PROF.DR.".ToLower(), "Prof.".ToLower() };
-            var docUnvan = new List<string> { "DOÇENT".ToLower(), "DOÇENT.DR".ToLower(), "Doç.".ToLower() };
-            var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
-            if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF.DR.";
-            else if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ.DR.";
-            else if (ogUyeUnvan.Any(a => a.Contains(unvanAdi))) return "DR.ÖĞR.ÜYE.";
-            else return unvanAdi.ToUpper();
-        }
+     
         public static bool ToJoFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteIdSuccess, bool uzmanlikAlaniSuccess, bool bilimselCalismalarAnahtarSozcuklerSuccess, bool dilSinavAdiSuccess, bool dilPuaniSuccess)
         {
             var retVal = false;
@@ -1338,18 +1328,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return kdonems;
         }
-        public static List<CmbStringDto> GetCmbMezuniyetJofUnvanlar(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            var unvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
-            foreach (var item in unvanList)
-            {
-                dct.Add(new CmbStringDto { Value = item, Caption = item });
-            }
-            return dct;
-
-        }
+       
         public static List<CmbIntDto> GetCmbMezuniyetYayinDurum(bool bosSecimVar = false, bool tumu = false)
         {
             var dct = new List<CmbIntDto>();

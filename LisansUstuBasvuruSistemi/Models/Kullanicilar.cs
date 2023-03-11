@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public Kullanicilar()
         {
             this.AlesTipleris = new HashSet<AlesTipleri>();
+            this.AnabilimDaliYeterlikKomiteUyeleris = new HashSet<AnabilimDaliYeterlikKomiteUyeleri>();
             this.AnabilimDallaris = new HashSet<AnabilimDallari>();
             this.Ankets = new HashSet<Anket>();
             this.Ayarlars = new HashSet<Ayarlar>();
@@ -65,6 +66,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TIBasvuruAraRapors = new HashSet<TIBasvuruAraRapor>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
+            this.YeterlikBasvuruKomitelers = new HashSet<YeterlikBasvuruKomiteler>();
             this.YeterlikSureciKriterMuafOgrencilers = new HashSet<YeterlikSureciKriterMuafOgrenciler>();
             this.Rollers = new HashSet<Roller>();
         }
@@ -132,6 +134,8 @@ namespace LisansUstuBasvuruSistemi.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AlesTipleri> AlesTipleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnabilimDaliYeterlikKomiteUyeleri> AnabilimDaliYeterlikKomiteUyeleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnabilimDallari> AnabilimDallaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -238,6 +242,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YeterlikBasvuruKomiteler> YeterlikBasvuruKomitelers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikSureciKriterMuafOgrenciler> YeterlikSureciKriterMuafOgrencilers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

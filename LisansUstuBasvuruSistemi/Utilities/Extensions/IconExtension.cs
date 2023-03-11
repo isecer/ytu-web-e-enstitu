@@ -23,7 +23,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             else if (isOnaylandi.Value) iconString = "<i class='fa fa-thumbs-o-up fa-lg' style='color:green;'></i>";
             else iconString = "<i class='fa fa-thumbs-o-down fa-lg' style='color:maroon;'></i>";
             return new HtmlString(iconString);
-        }
-
+        } 
     }
 }

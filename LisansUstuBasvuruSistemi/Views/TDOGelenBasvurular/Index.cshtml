@@ -1,6 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -10,7 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var danismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
     var mKids = (List<int>)ViewBag.kIds;
-    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
     var kayitYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
     var silmeYetki = RoleNames.TdoGelenBasvuruSil.InRoleCurrent();
     var eykOnayYetki = kayitYetki || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
@@ -23,7 +21,7 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info" id="pnlFltr"> 
+            <div class="panel panel-info" id="pnlFltr">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -116,7 +114,6 @@
                                                             className: "btn btn-info",
                                                             callback: function (event) {
 
-                                                                toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
 
                                                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                                                 PanelRefresh(pnlx, false);
@@ -124,16 +121,16 @@
                                                                     success: function (result) {
 
                                                                         PanelRefresh(pnlx, true);
-                                                                            if (result.IsSuccess) {
-
+                                                                            if (result.IsSuccess) { 
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
-                                                                                var _RaporTarihi = $('#BitTar').val();
+                                                                                var _RaporTarihi = $('#RaporTarihi').val();
                                                                                 var _Sayi = $('#Sayi').val();
                                                                                 var _isDanismanOrEsDanisman = $('#isDanismanOrEsDanisman').val();
 
                                                                                 window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' + _Sayi + '&isDanismanOrEsDanisman=' + _isDanismanOrEsDanisman;
 
+                                                                                toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                             }
                                                                             else {
                                                                                 getMsg(result);
@@ -234,12 +231,12 @@
                             <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
-                                    <tr>
-                                        <td width="160">Başvuru Durumu</td>
-                                        <td>
-                                            @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td width="160">Başvuru Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </td>
@@ -247,7 +244,6 @@
                         <tr>
 
                             <td style="padding-left:10px;">
-                               
                             </td>
                             <td style="padding-left:10px; vertical-align:top;">
                                 <table style="width:100%;table-layout:fixed;">
@@ -300,16 +296,15 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                int rowIndex = Model.StartRowIndex;  
                                 foreach (var item in Model.TdoBasvuruDtos)
                                 {
-                                    RowIndex++;
-                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    rowIndex++; 
                                     <tr style="color:@item.DurumColor;">
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.TDOBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TDOBasvuruID')">
@@ -418,10 +413,10 @@
                                         </td>
 
                                         <td>
-                                            @if ((kayitYetki || silmeYetki) || item.KullaniciID == UserIdentity.Current.Id)
+                                            @if (!item.AktifTDOBasvuruDanismanID.HasValue && ((kayitYetki || silmeYetki) || item.KullaniciID == UserIdentity.Current.Id))
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="getDetailx('@item.TDOBasvuruID',true,this)"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Sil"></i></a>
+                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TDOBasvuruID','@item.AdSoyad')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Sil"></i></a>
                                             }
                                         </td>
                                     </tr>
@@ -493,45 +488,20 @@
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
-        if (unTogled) getDetailx(id);
+        if (unTogled) GetDetail(id);
 
     }
-    function getDetailx(id, Isdelete, sndr) {
+    function GetDetail(id) {
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
-            data: { id: id, IsDelete: (Isdelete == true) },
+            data: { id: id},
             success: function (result) {
-                if (Isdelete != true) {
-                    $('#cls-' + id).html(result);
-                    Resized(window.innerWidth);
-                    PanelRefresh(_panel, true);
-                }
-                else {
-                    PanelRefresh(_panel, true);
-                    var btbx = bootbox.dialog({
-                        message: result + " <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'> Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
-                        title: "Başvuru Silme İşlemi",
-                        buttons: {
-                            success: {
-                                label: 'Başvuruyu Sil',
-                                className: "btn-danger",
-                                callback: function () {
-                                    sil(sndr, id);
-                                }
-                            },
-                            danger: {
-                                label: 'Vazgeç',
-                                className: "btn-primary",
-                                callback: function () {
-                                }
-                            }
-                        }
-                    });
-                    //$(btbx).find('.modal-dialog').addClass('modal-lg');
+                $('#cls-' + id).html(result);
+                Resized(window.innerWidth);
+                PanelRefresh(_panel, true);
 
-                }
                 var $YnBtn = $('#YeniRaporBtn_' + id);
                 if ($YnBtn.length > 0) {
                     $YnBtn.pulsate({
@@ -550,45 +520,26 @@
         });
 
     }
-     function sil(sndr, id) {
-        $.ajax({
-            url: '@Url.Action("Sil", "TDOBasvuru")',
-            data: { id: id },
-            success: function (result) {
-                if (result.IsSuccess) {
-                    $(sndr).closest("tr").remove();
-                    $(".cls-" + id).remove();
-                }
-                showMmMessage(result.Messages, 'Tamam');
-            },
-            error: function (err) {
-                alert(err.responseText);
-            }
-        });
-    }
-    function silDetay(sndr, id, TDOBasvuruDanismanID, tarih) {
-        var _panel = $('#bsvrDet_' + id);
-        PanelRefresh(_panel, false);
-        var btbx = bootbox.dialog({
-            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
-            title: "Danışman Öneri Formu Silme İşlemi",
+    function BasvuruSil(sndr, id,adSoyad) {
+        bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>"+adSoyad+" öğrencisine ait başvuruyu silmek istiyor musunuz?</td></tr></table>",
+            title: "Başvuru Silme İşlemi",
             buttons: {
                 success: {
-                    label: 'Danışman Öneri Formunu Sil',
+                    label: 'Başvuruyu Sil',
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("DetaySil", "TDOBasvuru")',
-                            data: { id: id, TDOBasvuruDanismanID: TDOBasvuruDanismanID },
+                            url: '@Url.Action("Sil", "TDOBasvuru")',
+                            data: { id: id },
                             success: function (result) {
-                                PanelRefresh(_panel, true);
                                 if (result.IsSuccess) {
-                                    getDetailx(id);
+                                    $(sndr).closest("tr").remove();
+                                    $(".cls-" + id).remove();
                                 }
                                 showMmMessage(result.Messages, 'Tamam');
                             },
                             error: function (err) {
-                                PanelRefresh(_panel, true);
                                 alert(err.responseText);
                             }
                         });
@@ -598,202 +549,10 @@
                     label: 'Vazgeç',
                     className: "btn-primary",
                     callback: function () {
-                        PanelRefresh(_panel, true);
                     }
                 }
             }
-        });
+        }); 
+    } 
 
-
-    }
-    function silDetayEs(sndr, id, uniqueID, tarih) {
-        var _panel = $('#bsvrDet_' + id);
-        PanelRefresh(_panel, false);
-        var btbx = bootbox.dialog({
-            message: "<br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;color:maroon;'>" + tarih + " tarihli eş danışman öneri formu başvurusunu silmek istiyor musunuz?</td></tr></table><br/>",
-            title: "Eş Danışman Öneri Formu Silme İşlemi",
-            buttons: {
-                success: {
-                    label: 'Eş Danışman Öneri Formunu Sil',
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("DetaySilEs", "TDOBasvuru")',
-                            data: { id: id, uniqueID: uniqueID },
-                            success: function (result) {
-                                PanelRefresh(_panel, true);
-                                if (result.IsSuccess) {
-                                    getDetailx(id);
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) {
-                                PanelRefresh(_panel, true);
-                                alert(err.responseText);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: 'Vazgeç',
-                    className: "btn-primary",
-                    callback: function () {
-                        PanelRefresh(_panel, true);
-                    }
-                }
-            }
-        });
-    }
-
-    function GetTDODanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID) {
-          var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            PanelRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("GetTdoDanismanFormu", "TDOBasvuru")',
-                data: {
-                    'TDOBasvuruID': TDOBasvuruID,
-                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
-                    'isCopy': isCopy,
-                    'TDODanismanTalepTipID': TDODanismanTalepTipID
-                },
-                success: function (resultG) {
-                    PanelRefresh(_panel, true);
-                    if (resultG.IsSuccess) {
-                        var btbxxFS = bootbox.dialog({
-                            message: resultG.Content,
-                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
-                            buttons: {
-
-                                success: {
-                                    label: 'Kaydet',
-                                    className: "btn-info",
-                                    callback: function (event) {
-                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
-                                        $('#FrmTDODanismanFormu').ajaxForm({
-                                            success: function (result) {
-                                                if (result.IsSuccess) {
-                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                    var _clsBtn = $('.bootbox-close-button').first();
-                                                    $(_clsBtn).click();
-                                                    getDetailx(TDOBasvuruID);
-
-                                                }
-                                                else {
-                                                    if (result.Messages.length > 0) getMsg(result);
-                                                    return false;
-                                                }
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            complete: function (cmp) {
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            error: function (err) {
-                                                PanelRefresh(pnlx, true);
-                                            }
-
-                                        }).submit();
-                                        return false;
-                                    }
-                                },
-                                danger: {
-                                    label: 'Kapat',
-                                    className: "btn-primary",
-                                    callback: function () {
-                                    }
-                            }
-
-                        }
-                        });
-
-                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
-
-                    }
-                    else {
-                        showMmMessage(resultG.Messages, 'Tamam');
-                    }
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
-
-                }
-            })
-        }
-      function GetTDOEsDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, TDOBasvuruEsDanismanID, IsDegisiklikTalebi ) {
-          var _panel = $('#bsvrDet_' + TDOBasvuruID);
-            PanelRefresh(_panel, false);
-            $.ajax({
-                url: '@Url.Action("GetTDOEsDanismanFormu", "TDOBasvuru")',
-                data: {
-                    'TDOBasvuruDanismanID': TDOBasvuruDanismanID,
-                    'TDOBasvuruEsDanismanID': TDOBasvuruEsDanismanID,
-                    'IsDegisiklikTalebi': IsDegisiklikTalebi
-                },
-                success: function (resultG) {
-                    PanelRefresh(_panel, true);
-                    if (resultG.IsSuccess) {
-                        var btbxxFS = bootbox.dialog({
-                            message: resultG.Content,
-                            buttons: {
-
-                                success: {
-                                    label: 'Kaydet',
-                                    className: "btn-info",
-                                    callback: function (event) {
-                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                        PanelRefresh(pnlx, false);
-                                        $('#FrmTDOEsDanismanFormu').ajaxForm({
-                                            success: function (result) {
-                                                if (result.IsSuccess) {
-                                                    if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                    var _clsBtn = $('.bootbox-close-button').first();
-                                                    $(_clsBtn).click();
-                                                    getDetailx(TDOBasvuruID);
-                                                }
-                                                else {
-                                                    if (result.Messages.length > 0) getMsg(result);
-                                                    return false;
-                                                }
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            complete: function (cmp) {
-                                                PanelRefresh(pnlx, true);
-                                            },
-                                            error: function (err) {
-                                                PanelRefresh(pnlx, true);
-                                            }
-
-                                        }).submit();
-                                        return false;
-                                    }
-                                },
-                                danger: {
-                                    label: 'Kapat',
-                                    className: "btn-primary",
-                                    callback: function () {
-                                    }
-                            }
-
-                        }
-                        });
-
-                       // $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
-                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
-
-                    }
-                    else {
-                        showMmMessage(resultG.Messages, 'Tamam');
-                    }
-
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
-
-                }
-            })
-        }
 </script>

@@ -62,15 +62,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (model.Sort.Contains("EslestirmeSayisi"))
                 {
-                    if (model.Sort.Contains(" DESC")) q = q.OrderByDescending(o => o.OgrenciBolumAdlari.Count);
-                    else q = q.OrderBy(o => o.OgrenciBolumAdlari.Count);
+                    q = model.Sort.Contains(" DESC") ? q.OrderByDescending(o => o.OgrenciBolumAdlari.Count) : q.OrderBy(o => o.OgrenciBolumAdlari.Count);
                 }
                 else q = q.OrderBy(model.Sort);
             }
-            else q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(o => o.ProgramAdi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            model.BolumEslestirDtos = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToArray();
+            else q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(o => o.ProgramAdi); 
+            model.BolumEslestirDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
 
 
             if (export && model.RowCount > 0)

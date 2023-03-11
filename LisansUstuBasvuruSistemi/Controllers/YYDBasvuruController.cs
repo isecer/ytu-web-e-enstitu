@@ -83,16 +83,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue) q = q.Where(p => p.BasvuruDurumID == model.BasvuruDurumID.Value);
             model.RowCount = q.Count();
-            var IndexModel = new MIndexBilgi();
+            var indexModel = new MIndexBilgi();
             //IndexModel.Toplam = model.RowCount;
-            if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);
-            else q = q.OrderByDescending(o => o.BasvuruTarihi);
-            var PS = Management.setStartRowInx(model.StartRowIndex, model.PageIndex, model.PageCount, model.RowCount, model.PageSize);
-            model.PageIndex = PS.PageIndex;
-            var qdata = q.Skip(PS.StartRowIndex).Take(model.PageSize).ToList();
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+            var qdata = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             model.Data = qdata;
             model.KullaniciID = qdata.Count > 0 ? qdata.First().KullaniciID : (int?)null;
-            ViewBag.IndexModel = IndexModel;
+            ViewBag.IndexModel = indexModel;
             //ViewBag.KullaniciTipID = new SelectList(Management.cmbKullaniciTipleri(true, false), "Value", "Caption", model.KullaniciTipID);
             ViewBag.BasvuruSurecID = new SelectList(Management.getbasvuruSurecleri(EnstituKod, BasvuruSurecTipi.YTUYeniMezunDRBasvuru, true), "Value", "Caption", model.BasvuruSurecID);
             ViewBag.BasvuruDurumID = new SelectList(Management.cmbBasvuruDurumListe(true, true), "Value", "Caption", model.BasvuruDurumID);
@@ -433,7 +430,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (succes)
                 {
-                    if (bsurec.AGNOGirisBaslangicTarihi.HasValue) //agno giriş süreci belirlenmişse ve lisans öğrenimini ytu de yapmışsa ve TYL başvurusu yapıyorsa öğrenim durumu seçimini kontrol et
+                    if (bsurec.AGNOGirisBaslangicTarihi.HasValue) //agno giriş süreci belirlenmişse ve lisans öğrenimini YTÜ de yapmışsa ve TYL başvurusu yapıyorsa öğrenim durumu seçimini kontrol et
                     {
                         if (kModel.LUniversiteID == Management.UniversiteYtuKod && qtercih.Any(a => a.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
@@ -925,7 +922,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var drm = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == kModel.BasvuruDurumID).First();
                     mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Enstitü Adı", Aciklama = bsurec.Enstituler.EnstituAd });
                     mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Dönem Bilgisi", Aciklama = kModel.DonemAdi });
-                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Türü", Aciklama = "YTU Yeni Mezun Doktora Başvurusu" });
+                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Türü", Aciklama = "YTÜ Yeni Mezun Doktora Başvurusu" });
                     mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Durumu", Aciklama = drm.BasvuruDurumAdi });
                     if (kModel.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
                     {

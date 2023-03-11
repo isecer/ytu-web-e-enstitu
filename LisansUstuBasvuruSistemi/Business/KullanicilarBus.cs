@@ -23,6 +23,11 @@ namespace LisansUstuBasvuruSistemi.Business
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye
             return new List<int> { 17, 42, 73 };
         }
+        public static StudentControl StudentControl(string tcKimlikNo = null)
+        {
+            var obsData = new ObsGetData();
+            return obsData.GetObsStudentControl(tcKimlikNo);
+        }
         public static StudentControl KullaniciObsOgrenciBilgisiGuncelle(int kullaniciId)
         {
             var kayitBilgi = new StudentControl();
@@ -32,7 +37,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;
-                    kayitBilgi = Management.StudentControl(tcKimlikNo);
+                    kayitBilgi = StudentControl(tcKimlikNo);
                     if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
                     {
                         kul.KayitDonemID = kayitBilgi.DonemID;
@@ -46,9 +51,12 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var danisman = db.Kullanicilars.FirstOrDefault(p => p.TcKimlikNo == kayitBilgi.OgrenciInfo.DANISMAN_TC1);
                                 if (danisman != null)
                                     danismanId = danisman.KullaniciID;
-                            } 
+                                kayitBilgi.IsDanismanHesabiBulunamadi = !kul.DanismanID.HasValue;
+
+                            }
 
                             kul.DanismanID = danismanId;
+                            kayitBilgi.AktifDanismanID = danismanId;
                         }
 
                     }
@@ -95,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     }
                     else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-                 
+
                 if (!kModel.CinsiyetID.HasValue)
                 {
                     mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
@@ -493,7 +501,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     mRowModel.Add(new MailTableRowDto { Baslik = "Unvan", Aciklama = unvan.UnvanAdi });
                 }
                 if (kModel.SicilNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Sicil No", Aciklama = kModel.SicilNo });
-                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo }); 
+                if (kModel.TcKimlikNo.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Tc kimlik No", Aciklama = kModel.TcKimlikNo });
                 if (kModel.CepTel.IsNullOrWhiteSpace() == false) mRowModel.Add(new MailTableRowDto { Baslik = "Cep Tel", Aciklama = kModel.CepTel });
 
                 mRowModel.Add(new MailTableRowDto { Baslik = "Kullanıcı Adı", Aciklama = kModel.KullaniciAdi });
