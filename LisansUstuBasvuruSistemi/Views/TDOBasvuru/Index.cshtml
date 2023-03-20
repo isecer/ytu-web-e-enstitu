@@ -233,7 +233,7 @@
                                         </td>
 
                                         <td>
-                                            @if (item.DanismanOnayladi != true)
+                                            @if (!item.AktifTDOBasvuruDanismanID.HasValue)
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { TDOBasvuruID = item.TDOBasvuruID })"><i style="font-size: 11pt; color: @item.DurumColor;" class="fa fa-edit " data-style="blue" data-original-title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,@item.TDOBasvuruID,'@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt; color: @item.DurumColor;" class="glyphicon glyphicon-trash " data-style="blue" data-original-title="Sil"></i></a>

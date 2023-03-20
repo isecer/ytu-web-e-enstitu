@@ -4,6 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model DmYeterlikDetayDto
 @{
     Layout = null;
@@ -29,7 +30,14 @@
             <tr>
                 <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Bilgileri</td>
                 <td width="100" style="font-weight: bold; font-size: 15pt; border-bottom: 1px solid; text-align: right;">
-                    <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                    @if (!Model.IsDegerlendirme.HasValue)
+                    {
+                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.IsDegerlendirme');" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                    }
                 </td>
 
             </tr>
@@ -87,326 +95,102 @@
             </tr>
 
         </table>
-
+        @if (!Model.IsDegerlendirme.HasValue)
+        {
+            @Model.ToEnstituBasvuruOnayView()
+        }
     </div>
-    <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
-        <table style="width: 100%;">
-            <tr>
-                <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;">@Model.IsOnaylandi.ToOnayDurumIconLgHtml() Enstitü Başvuru Onayı</td>
-            </tr>
-            <tr>
-                <td style="padding-left: 10px; text-align: left;">
 
-                    <table style="width: 100%;">
-                        <tr>
-                            <td class="CaptionTd" width="150">Onay Durumu</td>
-                            <td class="CaptionTd" width="10">:</td>
-                            <td class="ValueTd">
-                                @if (basvuruOnayYetki)
-                                {
-                                    <select class="form-control" id="enstituOnay_@Model.UniqueID" onchange="if ($(this).val() == 'false') { $('#enstituIptalRow_@Model.UniqueID').removeClass('hide');}else {$('#enstituIptalRow_@Model.UniqueID').addClass('hide');}">
-                                        <option></option>
-                                        <option value="true" @(Model.IsOnaylandi == true ? "selected" : "")>Onaylandı</option>
-                                        <option value="false" @(Model.IsOnaylandi == false ? "selected" : "")>İptal Edildi</option>
-                                    </select>
-                                }
-                                else
-                                {
-                                    @(Model.IsOnaylandi.HasValue ? (Model.IsOnaylandi == true ? "Başvuru Onaylandı" : "Başvuru İptal") : "Onay işlemi bekleniyor")
-                                }
-                            </td>
-                        </tr>
-                        <tr id="enstituIptalRow_@Model.UniqueID" class="@(Model.IsOnaylandi == false ? "" : "hide")">
-                            <td class="CaptionTd">İptal Açıklaması</td>
-                            <td class="CaptionTd">:</td>
-                            <td class="ValueTd">
-                                @if (basvuruOnayYetki)
-                                {
-                                    <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" maxlength="1024" id="enstituOnayAciklama_@Model.UniqueID">@Model.OnayAciklama</textarea>
-                                }
-                                else
-                                {
-                                    @(Model.OnayAciklama)
-                                }
-                            </td>
-                        </tr>
-                        @if (basvuruOnayYetki)
-                        {
-                            <tr>
-                                <td class="CaptionTd"></td>
-                                <td class="CaptionTd">:</td>
-                                <td class="ValueTd">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="EnstituOnayKayit('@Model.UniqueID')"><i class="fa fa-save"></i>Kaydet</button>
 
-                                    <script>
-                                        function EnstituOnayKayit(uniqueID) {
-                                            var enstituOnay = $('#enstituOnay_' + uniqueID).val();
-                                            var enstituOnayAciklama = $('#enstituOnayAciklama_' + uniqueID).val();
-                                            var panel = $('#enstituOnayPanel_' + uniqueID);
-                                            PanelRefresh(panel, false);
-                                            $.ajax({
-                                                url: '@Url.Action("EnstituOnay","YeterlikGelenBasvurular")',
-                                                data: { uniqueID, enstituOnay, enstituOnayAciklama },
-                                                success: function (result) {
-                                                    if (result.IsSuccess) {
-                                                        GetDetail(uniqueID);
-                                                    }
-                                                    else {
-                                                        showMmMessage(result.Messages, 'Tamam');
-                                                    }
-                                                    PanelRefresh(panel, false);
-                                                },
-                                                error: function (err) {
-                                                    PanelRefresh(panel, false);
-                                                    alert(err.responseText);
-                                                }
-                                            });
-                                         }
-                                    </script>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
-    @if (Model.IsOnaylandi == true)
+    @if (Model.IsEnstituOnaylandi == true)
     {
+
         if (Model.DmYeterlikKomites.Any())
         {
-            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
-                <table style="width: 100%;">
-                    <tr>
-                        <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> ABD Komite Üyesi Bilgileri</td>
-                        <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
-                            <span class="label label-warning" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-edit"></i> Jüri Üyelerini Düzelt</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="padding-left: 10px;">
-                            @if (Model.DmYeterlikKomites.Any())
-                            {
-                                <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
-                                    <table class="table" style="width: 100%; margin: 0px;">
-                                        <tr class="info">
-                                            <th width="35"></th>
-                                            <th>Ad Soyad</th>
-                                            <th>Komite Jüri Onay Durumu</th>
-                                            <th width="25"></th>
+            if (Model.IsKomiteOrJuri == true)
+            {
+                @Model.ToJuriUyeleriListView()
+                var itemKom = Model.DmYeterlikKomites.First(p => p.UniqueID == Model.IsDegerlendirme);
+                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Yeterlik ABD Komite Üyesi Önerilen Jüri Değerlendirmesi</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left:10px;text-align:left;">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td class="CaptionTd" width="140">Adı Soyadı</td>
+                                            <td class="CaptionTd" width="10">:</td>
+                                            <td class="ValueTd">@itemKom.UnvanAdi @itemKom.AdSoyad</td>
                                         </tr>
-                                        <tbody>
-
-                                            @foreach (var itemKom in Model.DmYeterlikKomites.OrderBy(o => o.AdSoyad))
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <ul class="panel-controls">
-                                                            <li id="iShow_Km_@itemKom.UniqueID" onclick="showDetailY('Km_@itemKom.UniqueID')">
-                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
-                                                            </li>
-                                                        </ul>
-                                                    </td>
-                                                    <td>
-                                                        @itemKom.UnvanAdi @itemKom.AdSoyad <br /> @itemKom.EMail
-                                                    </td>
-                                                    <td>
-                                                        @itemKom.IsJuriOnaylandi.ToOnayDurumIconLgHtml() @(itemKom.IsJuriOnaylandi.HasValue?itemKom.IsJuriOnaylandi.Value?"Onaylandı":"Ret Edildi":"Değerlendirme Yapması Bekleniyor")
-                                                    </td>
-                                                    <td>
-                                                        <span class="fa fa-envelope" style="cursor: pointer; font-size: 16pt;" title="Değerlendirme Linkini Tekrar Gönder" onclick="showDLinkGonder('@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"></span>
-                                                    </td>
-                                                </tr>
-
-                                            }
-
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            }
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        }
-
-
-        var isDanismani = UserIdentity.Current.Id == Model.TezDanismanID;
-        var isKomiteOnayladi = true;
-
-
-        <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
-            <table style="width: 100%;">
-                <tr>
-                    <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i>Yeterlik Jüri Üyesi Bilgileri</td>
-                    <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
-                        @if (Model.YeterlikBasvuruJuriUyeleris.Any())
-                        {
-                            <span class="label label-warning" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-edit"></i> Jüri Üyelerini Düzelt</span>
-                        }
-                        else
-                        {
-                            <span class="label label-info" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-plus"></i> Jüri Üyelerini Oluştur</span>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="padding-left: 10px;">
-                        @if (Model.YeterlikBasvuruJuriUyeleris.Any())
-                        {
-                            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
-                                <table class="table" style="width: 100%; margin: 0px;">
-                                    <tr class="info">
-                                        <th width="35"></th>
-                                        <th width="90">Jüri Tipi</th>
-                                        <th width="280">Ad Soyad</th>
-                                        <th>Sınav Sonucu Onay Durumu</th>
-                                        <th width="25"></th>
-                                    </tr>
-                                    <tbody>
-
-                                        @foreach (var itemJr in Model.YeterlikBasvuruJuriUyeleris)
+                                        <tr>
+                                            <td class="CaptionTd">Onay Durumu</td>
+                                            <td class="CaptionTd">:</td>
+                                            <td class="ValueTd">
+                                                @if (!itemKom.IsJuriOnaylandi.HasValue)
+                                                {
+                                                    <select onchange="if($(this).val()=='false'){ $('.RwKAck_@itemKom.UniqueID').removeClass('hide'); }else{$('.RwKAck_@itemKom.UniqueID').addClass('hide');}" id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                        <option></option>
+                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Önerilen Yeterlik Jüri Üyelerini Onaylıyorum</option>
+                                                        <option value="false" @((itemKom.IsJuriOnaylandi == false).ToSelected())>Önerilen Yeterlik Jüri Üyelerini Onaylamıyorum</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    @itemKom.ToKomiteOnayDurumView()
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr class="RwKAck_@itemKom.UniqueID @(itemKom.IsJuriOnaylandi==false?"":"hide")">
+                                            <td></td>
+                                            <td>:</td>
+                                            <td>
+                                                @if (!itemKom.IsJuriOnaylandi.HasValue)
+                                                {
+                                                    <textarea placeholder="Açıklama Giriniz" id="KomiteOnayAciklama_@itemKom.UniqueID" maxlength="2048" rows="4" style="resize: vertical; border: 1px solid;" class="form-control"></textarea>
+                                                }
+                                            </td>
+                                        </tr>
+                                        @if (!itemKom.IsJuriOnaylandi.HasValue)
                                         {
-                                            var isKomiteTezDanismani = itemJr.JuriTipAdi == "TezDanismani";
-                                            var openRow = (isDanismani && isKomiteTezDanismani);
-                                            var openDegerlendirme = isKomiteOnayladi && ((openRow && !itemJr.IsBasarili.HasValue));
-                                            var sendLink = isKomiteOnayladi && (isDanismani && !isKomiteTezDanismani && Model.YeterlikBasvuruJuriUyeleris.Count != Model.YeterlikBasvuruJuriUyeleris.Count(c => c.IsBasarili.HasValue));
-
-                                            <tr>
-                                                <td>
-
-                                                    <ul class="panel-controls">
-                                                        <li id="iShow_Jo_@itemJr.UniqueID" onclick="showDetailY('Jo_@itemJr.UniqueID')">
-                                                            <a href="javascript:void(0)"><span class="fa fa-angle-@(openRow ? "down" : "up")"></span> </a>
-                                                        </li>
-                                                    </ul>
-                                                </td>
-                                                <td>
-                                                    @itemJr.JuriTipAdi
-                                                    <br />
-                                                    @itemJr.IsAsilOrYedek.ToAsilYedek()
-                                                </td>
-                                                <td>
-                                                    @itemJr.UnvanAdi @itemJr.AdSoyad
-                                                    <br /><span style="font-size: 7pt;">@itemJr.UniversiteAdi</span>
-                                                </td>
-                                                <td>
-                                                    @if (isKomiteOnayladi)
-                                                    {
-                                                        if (itemJr.IsBasarili.HasValue)
-                                                        {
-                                                            if (itemJr.IsBasarili.Value)
-                                                            {
-                                                                <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;"></i> Başarılı</span>
-                                                                <br />
-                                                                <span style="font-size: 8pt; color: green;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString() @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span style="font-size: 10pt; color: maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;"></i> Başarısız</span>
-                                                                <br />
-                                                                <span style="font-size: 8pt; color: maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString() @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
-                                                            }
-
-                                                        }
-                                                        else
-                                                        {
-                                                            if (isDanismani && isKomiteTezDanismani)
-                                                            {
-                                                                <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapmanız Bekleniyor.</span>
-
-                                                            }
-                                                            else
-                                                            {
-                                                                <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
-                                                                if (!isKomiteTezDanismani && itemJr.IsLinkGonderildi == true)
-                                                                {
-                                                                    <br />
-                                                                    <span style="color: green; font-size: 8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString() @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm") Saatinde Değerlendirme Linki Gönderildi.</span>
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (sendLink)
-                                                    {
-                                                        <span class="fa fa-envelope" style="cursor: pointer; font-size: 16pt;" title="Değerlendirme Linkini Tekrar Gönder" onclick="showDLinkGonder('@itemJr.UniqueID','@itemJr.UnvanAdi @itemJr.AdSoyad');"></span>
-                                                    }
-
-                                                </td>
-                                            </tr>
-                                            <tr class="MainRow2 cls-Jo_@itemJr.UniqueID" style="@(openRow ? "" : "display:none;")">
-                                                <td id="cls-Jo_@itemJr.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
-                                                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
-                                                        <table style="width:100%;">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Sınav Sonucu Değerlendirme İşlemi</td>
-                                                                </tr> 
-                                                                <tr>
-                                                                    <td class="CaptionTd ctWidth" width="280">Değerlendirme Sonucu</td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd">
-                                                                        <select style="width:90px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="IsBasarili_@itemJr.UniqueID">
-                                                                            <option></option>
-                                                                            <option value="true" selected="">Başarılı</option>
-                                                                            <option value="false">Başarısız</option>
-                                                                        </select>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr class="RwJAck_@itemJr.UniqueID">
-
-                                                                    <td colspan="3">
-                                                                        <table style="width:100%;margin-top:5px;">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="CaptionTd ctWidth" width="280"></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="ValueTd">
-                                                                                        <textarea placeholder="Değerlendirme Sonucu Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control"></textarea>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-
-                                                                <tr class="RwKBtn_@itemJr.UniqueID" style="border-top:1px solid;">
-                                                                    <td class="CaptionTd ctWidth" width="280"></td>
-                                                                    <td class="CaptionTd">:</td>
-                                                                    <td class="ValueTd" style="padding-top:5px;font-size:11pt;">
-                                                                        <span class="label label-primary" style="cursor:pointer;" onclick="AraRaporDegerlendir('@itemJr.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Değerlendirmeyi Kaydet</span>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                            <tr class="RwKBtn_@itemKom.UniqueID">
+                                                <td></td>
+                                                <td>:</td>
+                                                <td style="padding-top: 5px; font-size: 11pt;">
+                                                    <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
                                                 </td>
                                             </tr>
 
                                         }
+                                    </table>
+                                </td>
+                            </tr>
 
-                                    </tbody>
-                                </table>
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else if (Model.IsKomiteOrJuri == false)
+            {
+             
+                @Model.ToSinavView()
+              
+            }
+            else
+            {
+                @Model.ToJuriUyeleriListView()
+                @Model.ToKomiteDegerlendirmeListView()
 
-                            </div>
-                        }
-                        else
-                        {
-                            <br />
-                            <table class="table">
-                                <tr class="info" style="text-align: center;">
-                                    <td>Yeterlik jüri üyeleri henüz oluşturulmadı. Üyeleri oluşturmak için Jüri üyelerini oluştur butonuna tıklayınız.</td>
-                                </tr>
-                            </table>
-                        }
-                    </td>
-                </tr>
-            </table>
-        </div>
+                if (Model.DmYeterlikKomites.All(a => a.IsJuriOnaylandi == true))
+                {
+                    @Model.ToSinavView()
+                }
+            }
+
+        }
+
 
 
 
@@ -473,11 +257,32 @@
             }
         });
     }
-    function showDetailY(id) {
+    function ShowDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
+    $(function () {
+        var _times = [];
+        for (var i = 8; i <= 23; i++) {
+            var _saat = i;
+            if (i < 10) _saat = "0" + i;
+            for (var i2 = 0; i2 <= 30; i2 += 30) {
+                var _dkk = i2;
+                if (i2 == 0) _dkk = "00";
+                _times.push(_saat + ":" + _dkk);
+            }
+        }
+        $('.SinavTarihi').datetimepicker({
+            inline: false,
+            allowTimes: _times,
+            step: 30,
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $.datetimepicker.setLocale('tr');
+    });
+
 </script>
 

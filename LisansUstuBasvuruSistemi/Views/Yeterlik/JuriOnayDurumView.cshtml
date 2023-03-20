@@ -1,0 +1,36 @@
+﻿@model LisansUstuBasvuruSistemi.Models.YeterlikBasvuruJuriUyeleri
+@{
+    Layout = null;
+   
+}
+ 
+
+@if (Model.IsSonucOnaylandi.HasValue)
+{
+    if (Model.SozluNotu.HasValue)
+    {
+        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i style="font-size: 12pt;"></i> Sözlü Notu: @Model.SozluNotu</span>
+    }
+    else
+    {
+        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;"></i> Sınav Sonucu Onaylandı</span>
+    }
+
+    <br />
+    if (Model.DegerlendirmeTarihi.HasValue)
+    {
+        <span style="font-size: 8pt; color: green;">@Model.DegerlendirmeTarihi.Value.ToLongDateString() @Model.DegerlendirmeTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+    }
+}
+else
+{
+
+    <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+    if (Model.IsLinkGonderildi == true)
+    {
+        <br />
+        <span style="color: green; font-size: 8pt;">@Model.LinkGonderimTarihi.Value.ToLongDateString() @Model.LinkGonderimTarihi.Value.ToString("HH:mm") Saatinde Değerlendirme Linki Gönderildi.</span>
+    }
+
+}
+

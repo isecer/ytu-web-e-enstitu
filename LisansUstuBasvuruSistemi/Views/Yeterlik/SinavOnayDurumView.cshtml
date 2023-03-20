@@ -1,0 +1,41 @@
+﻿@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikBasvuruSinav
+@{
+    Layout = null;
+}
+@if (Model.IsYaziliOrSozlu)
+{
+    if (Model.YeterlikSinavOnayDurumID.HasValue)
+    {
+        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;"></i>Sınav Sonucu Onaylandı</span>
+    }
+    else
+    {
+        <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapılması Bekleniyor.</span> 
+    }
+}
+else
+{
+    if (Model.YeterlikSinavOnayDurumID == 1)
+    {
+        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;"></i>@(Model.IsOyBirligiOrCoklugu==true?"Oy Birliği İle" : "Oy Çokluğu İle") @Model.YeterlikSinavOnayDurumAdi</span>
+
+    }
+    else if (Model.YeterlikSinavOnayDurumID == 2)
+    {
+        <span style="font-size: 10pt; color: maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;"></i> @(Model.IsOyBirligiOrCoklugu==true?"Oy Birliği İle" : "Oy Çokluğu İle") @Model.YeterlikSinavOnayDurumAdi</span>
+
+    }
+    else if (Model.YeterlikSinavOnayDurumID == 3)
+    {
+
+        <span style="color: maroon; font-size: 10pt;" aria-hidden="true"><i class="fa fa-calendar" style="font-size: 12pt;"></i>@(Model.IsOyBirligiOrCoklugu==true?"Oy Birliği İle":"Oy Çokluğu İle") @Model.YeterlikSinavOnayDurumAdi</span>
+
+    }
+    else
+    {
+        <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapılması Bekleniyor.</span>
+
+    }
+}
+
+

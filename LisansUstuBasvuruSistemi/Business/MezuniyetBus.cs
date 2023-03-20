@@ -618,7 +618,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    Color = d.Color,
                                                                    SRDurumAciklamasi = s.SRDurumAciklamasi,
                                                                    JuriSonucMezuniyetSinavDurumID = s.JuriSonucMezuniyetSinavDurumID,
-                                                                   IsOyBirligiOrCouklugu = s.IsOyBirligiOrCouklugu,
+                                                                   IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu,
                                                                    RSBaslatildiMailGonderimTarihi = s.RSBaslatildiMailGonderimTarihi,
                                                                    JuriSonucMezuniyetSinavDurumAdi = defsdj.MezuniyetSinavDurumAdi,
                                                                    IslemTarihi = s.IslemTarihi,

@@ -112,6 +112,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ysBasToplamKrediKriteri = kModel.YsBasToplamKrediKriteri.Select((s, inx) => new { Inx = inx, YsBasToplamKrediKriteri = s }).ToList();
             var ysBasEtikNotKriteri = kModel.YsBasEtikNotKriteri.Select((s, inx) => new { Inx = inx, YsBasEtikNotKriteri = s }).ToList();
             var ysBasSeminerNotKriteri = kModel.YsBasSeminerNotKriteri.Select((s, inx) => new { Inx = inx, YsBasSeminerNotKriteri = s }).ToList();
+            var yaziliYuzde = kModel.YaziliYuzde.Select((s, inx) => new { Inx = inx, YaziliYuzde = s }).ToList();
+            var sozluYuzde = kModel.SozluYuzde.Select((s, inx) => new { Inx = inx, SozluYuzde = s }).ToList();
+            var yaziliGecerNot = kModel.YaziliGecerNot.Select((s, inx) => new { Inx = inx, YaziliGecerNot = s }).ToList();
+            var ortalamaGecerNot = kModel.OrtalamaGecerNot.Select((s, inx) => new { Inx = inx, OrtalamaGecerNot = s }).ToList();
 
             var ogrenimTipleri = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
             var yeterlikSureciOgrenimTipKriterleri = (from kr in yeterlikSurecOgrenimTipId
@@ -121,6 +125,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                       join dk in ysBasToplamKrediKriteri on kr.Inx equals dk.Inx
                                                       join kk in ysBasEtikNotKriteri on kr.Inx equals kk.Inx
                                                       join agk in ysBasSeminerNotKriteri on kr.Inx equals agk.Inx
+                                                      join yzy in yaziliYuzde on ot.Inx equals yzy.Inx
+                                                      join szy in sozluYuzde on ot.Inx equals szy.Inx
+                                                      join ygn in yaziliGecerNot on ot.Inx equals ygn.Inx
+                                                      join ogn in ortalamaGecerNot on ot.Inx equals ogn.Inx
                                                       join otl in ogrenimTipleri on ot.OgrenimTipID equals otl.OgrenimTipID
                                                       select new
                                                       {
@@ -132,7 +140,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                           dk.YsBasToplamKrediKriteri,
                                                           kk.YsBasEtikNotKriteri,
                                                           agk.YsBasSeminerNotKriteri,
-                                                          otl.OgrenimTipAdi,
+                                                          yzy.YaziliYuzde,
+                                                          szy.SozluYuzde,
+                                                          ygn.YaziliGecerNot,
+                                                          ogn.OrtalamaGecerNot,
+                                                          otl.OgrenimTipAdi
                                                       }).ToList();
             kModel.KmYeterlikSureciOgrenimTipKriterleris = yeterlikSureciOgrenimTipKriterleri.Select(s => new KmYeterlikSureciOgrenimTipKriterleri
             {
@@ -143,7 +155,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 YsMaxBasvuruDonemNo = s.YsMaxBasvuruDonemNo,
                 YsBasToplamKrediKriteri = s.YsBasToplamKrediKriteri,
                 YsBasEtikNotKriteri = s.YsBasEtikNotKriteri,
-                YsBasSeminerNotKriteri = s.YsBasSeminerNotKriteri
+                YsBasSeminerNotKriteri = s.YsBasSeminerNotKriteri,
+                YaziliYuzde = s.YaziliYuzde,
+                SozluYuzde = s.SozluYuzde,
+                YaziliGecerNot = s.YaziliGecerNot,
+                OrtalamaGecerNot = s.OrtalamaGecerNot
 
             }).ToList();
 
@@ -186,6 +202,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Öğretim yılı seçiniz");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgretimYili" });
+            }
+
+            if (!mmMessage.Messages.Any())
+            {
+
+
+                if (yeterlikSureciOgrenimTipKriterleri.Any(a => a.YaziliYuzde + a.SozluYuzde != 100))
+                {
+                    mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı ve sözlü yüzde toplamları 100 e eşit olmalıdır.");
+                }
+                if (yeterlikSureciOgrenimTipKriterleri.Any(a => !a.YaziliGecerNot.HasValue || !a.OrtalamaGecerNot.HasValue))
+                {
+                    mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı sınav geçer not kriteri ve ortalama geçer not kriteri boş olmamalıdır.");
+                }
             }
             if (mmMessage.Messages.Count == 0)
             {
@@ -285,6 +315,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     YsBasEtikNotKriteri = s.YsBasEtikNotKriteri,
                     YsBasSeminerNotKriteri = s.YsBasSeminerNotKriteri,
                     YsBasToplamKrediKriteri = s.YsBasToplamKrediKriteri,
+                    YaziliYuzde = s.YaziliYuzde,
+                    SozluYuzde = s.SozluYuzde,
+                    YaziliGecerNot = s.YaziliGecerNot,
+                    OrtalamaGecerNot = s.OrtalamaGecerNot,
                     IslemTarihi = DateTime.Now,
                     IslemYapanID = UserIdentity.Current.Id,
                     IslemYapanIP = UserIdentity.Ip
@@ -328,13 +362,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 });
                 _entities.SaveChanges();
                 success = true;
-            } 
+            }
             return new { success, message }.ToJsonResult();
 
         }
         public ActionResult KriterMuafOgrenciSil(int yeterlikSurecId, int ogrenciId)
         {
-           
+
             if (_entities.YeterlikSureciKriterMuafOgrencilers.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == ogrenciId))
             {
                 var ogrenci = _entities.YeterlikSureciKriterMuafOgrencilers.First(p =>
@@ -371,15 +405,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.YeterlikSureciSil)]
         public ActionResult Sil(int id)
         {
-            var mmMessage = new MmMessage(); 
-            var kayit = _entities.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id); 
+            var mmMessage = new MmMessage();
+            var kayit = _entities.YeterlikSurecis.FirstOrDefault(p => p.YeterlikSurecID == id);
             if (kayit != null)
             {
                 var donemAdi = kayit.BaslangicYil + "/" + kayit.BitisYil + " " + kayit.Donemler.DonemAdi;
                 try
                 {
                     _entities.YeterlikSurecis.Remove(kayit);
-                    _entities.SaveChanges(); 
+                    _entities.SaveChanges();
                     mmMessage.Messages.Add(donemAdi + " Dönemine ait Yeterlik süreci silindi!");
                     mmMessage.MessageType = Msgtype.Success;
                     mmMessage.IsSuccess = true;
@@ -387,14 +421,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 catch (Exception ex)
                 {
                     var errMessage = "'" + donemAdi + "' Dönemine ait Yeterlik süreci silinirken bir hata oluştu! </br> Hata:" + ex.ToExceptionMessage();
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata); 
+                    SistemBilgilendirmeBus.SistemBilgisiKaydet(errMessage, "YeterlikSureci/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                     mmMessage.Messages.Add(errMessage);
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
                 }
             }
             else
-            { 
+            {
                 mmMessage.Messages.Add("Silmek istediğiniz Yeterlik süreci sistemde bulunamadı!");
                 mmMessage.MessageType = Msgtype.Error;
                 mmMessage.IsSuccess = true;
@@ -404,6 +438,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-       
+
     }
 }

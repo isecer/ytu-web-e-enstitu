@@ -21,7 +21,7 @@
 
                 <div class="panel-body">
                     <div class="panel panel-default form-horizontal">
-                        <div class="panel-body form-group-separated"> 
+                        <div class="panel-body form-group-separated">
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-5 control-label">Öğretim Yılı</label>
                                 <div class="col-md-9 col-xs-7">
@@ -49,49 +49,73 @@
                                         <div class="panel-heading padding-0">
                                             <h4 class="panel-title"><i class="fa fa-pencil"></i> Başvuru için gerekli kriterler</h4>
                                         </div>
-                                        <div class="panel-body padding-0"> 
+                                        <div class="panel-body padding-0">
                                             <table class="table" style="width:100%;table-layout:fixed;">
                                                 <thead>
                                                     <tr>
                                                         <th>Öğrenim Tipleri</th>
-                                                        <th width="140">Max Dönem Kabul</th>
-                                                        <th width="140">Etik Not Kriteri</th>
-                                                        <th width="140">Seminer Not Kriteri</th>
-                                                        <th width="140">Toplam Kredi Kriteri</th>
+                                                        <th width="80" title="Maks Kabul Edilecek Dönem Numarası (Okuduğu dönem numarası seçilen dönemden büyükse başvuru yapamayacak)">Dnm Krtr</th>
+                                                        <th width="80" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
+                                                        <th width="80" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
+                                                        <th width="80" title="Toplam kredisi belirlenen krediden az ise başvuru yapamayacak. (Kredi kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">T. Kredi</th>
+                                                        <th width="80" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Yazılı %</th>
+                                                        <th width="80" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Sözlü %</th>
+                                                        <th width="80" title="Öğrencinin yazılı sınavı için mininmum başarı kriterini belirler">Yazılı Not Kr</th>
+                                                        <th width="80" title="Öğrencinin ortalamasında mininmum başarı kriterini belirler">Ort. Not Kr</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="Rw_tbody">
                                                     @foreach (var item in Model.KmYeterlikSureciOgrenimTipKriterleris.OrderBy(t => t.OgrenimTipAdi))
                                                     {
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" name="YeterlikSurecOgrenimTipID" value="@item.YeterlikSurecOgrenimTipID" class="hide">
-                                                                <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
-                                                                <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
-                                                                @item.OgrenimTipAdi
-                                                            </div>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsMaxBasvuruDonemNo" value="@item.YsMaxBasvuruDonemNo" />
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsBasEtikNotKriteri" value="@item.YsBasEtikNotKriteri" />
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsBasSeminerNotKriteri" value="@item.YsBasSeminerNotKriteri">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsBasToplamKrediKriteri" value="@item.YsBasToplamKrediKriteri">
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" name="YeterlikSurecOgrenimTipID" value="@item.YeterlikSurecOgrenimTipID" class="hide">
+                                                                    <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
+                                                                    <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
+                                                                    @item.OgrenimTipAdi
+                                                                </div>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YsMaxBasvuruDonemNo" value="@item.YsMaxBasvuruDonemNo" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YsBasEtikNotKriteri" value="@item.YsBasEtikNotKriteri" />
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YsBasSeminerNotKriteri" value="@item.YsBasSeminerNotKriteri">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YsBasToplamKrediKriteri" value="@item.YsBasToplamKrediKriteri">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YaziliYuzde" value="@item.YaziliYuzde">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="SozluYuzde" value="@item.SozluYuzde">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="YaziliGecerNot" value="@item.YaziliGecerNot">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control" name="OrtalamaGecerNot" value="@item.OrtalamaGecerNot">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     }
                                                 </tbody>
                                             </table>
@@ -141,5 +165,5 @@
 
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
-    }); 
+    });
 </script>

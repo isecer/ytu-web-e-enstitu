@@ -16,6 +16,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> YsBasEtikNotKriteri { get; set; }
         public List<string> YsBasSeminerNotKriteri { get; set; }
         public List<int?> YsBasToplamKrediKriteri { get; set; }
+        public List<int?> YaziliYuzde { get; set; }
+        public List<int?> SozluYuzde { get; set; }
+        public List<decimal?> YaziliGecerNot { get; set; }
+        public List<decimal?> OrtalamaGecerNot { get; set; }
         public List<KmYeterlikSureciOgrenimTipKriterleri> KmYeterlikSureciOgrenimTipKriterleris { get; set; }
     }
     public class KmYeterlikSureciOgrenimTipKriterleri : YeterlikSurecOgrenimTipleri

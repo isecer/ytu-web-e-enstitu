@@ -89,10 +89,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<Kotalar> Kotalars { get; set; }
         public virtual DbSet<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         public virtual DbSet<Kullanicilar> Kullanicilars { get; set; }
-        public virtual DbSet<KullaniciLisansBilgileri> KullaniciLisansBilgileris { get; set; }
         public virtual DbSet<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
         public virtual DbSet<KullaniciTipleri> KullaniciTipleris { get; set; }
-        public virtual DbSet<LisansTipleri> LisansTipleris { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<MailSablonlari> MailSablonlaris { get; set; }
         public virtual DbSet<MailSablonlariEkleri> MailSablonlariEkleris { get; set; }
@@ -111,7 +109,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<MezuniyetSinavDurumlari> MezuniyetSinavDurumlaris { get; set; }
         public virtual DbSet<MezuniyetSureci> MezuniyetSurecis { get; set; }
         public virtual DbSet<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
-        public virtual DbSet<MezuniyetSureciOtoMailTezTeslim> MezuniyetSureciOtoMailTezTeslims { get; set; }
         public virtual DbSet<MezuniyetSureciYayinTurleri> MezuniyetSureciYayinTurleris { get; set; }
         public virtual DbSet<MezuniyetSureciYonetmelikleri> MezuniyetSureciYonetmelikleris { get; set; }
         public virtual DbSet<MezuniyetSureciYonetmelikleriOT> MezuniyetSureciYonetmelikleriOTs { get; set; }
@@ -148,7 +145,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<SikcaSorulanSorular> SikcaSorulanSorulars { get; set; }
         public virtual DbSet<SinavDilleri> SinavDilleris { get; set; }
         public virtual DbSet<SinavNotlari> SinavNotlaris { get; set; }
-        public virtual DbSet<SinavSonuclari> SinavSonuclaris { get; set; }
         public virtual DbSet<SinavTarihleri> SinavTarihleris { get; set; }
         public virtual DbSet<SinavTipGruplari> SinavTipGruplaris { get; set; }
         public virtual DbSet<SinavTipleri> SinavTipleris { get; set; }

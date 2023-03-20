@@ -49,8 +49,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 if (srTalebi.IsTezBasligiDegisti == true)
                 {
                     cellTezBasligiDegisecek.Text = "Evet (Yes)";
-                    cellYeniTezBaslikTr.Text = mBasvuru.IsTezDiliTr == true ? srTalebi.YeniTezBaslikTr : srTalebi.YeniTezBaslikEn;
-                    cellYeniTezBaslikEn.Text = mBasvuru.IsTezDiliTr == false ? srTalebi.YeniTezBaslikTr : srTalebi.YeniTezBaslikEn; ;
+                    cellYeniTezBaslikTr.Text = srTalebi.YeniTezBaslikTr;
+                    cellYeniTezBaslikEn.Text = srTalebi.YeniTezBaslikEn; ;
                 }
                 else
                 {
@@ -128,8 +128,8 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 
                     this.DisplayName = (mBasvuru.Ad + " " + mBasvuru.Soyad) + " FR-0377 Yüksek Lisans Tez Sınavı Sonuç Tutanaği";
                 }
-                chkOyBirligi.Checked = srTalebi.IsOyBirligiOrCouklugu == true;
-                chkOyCoklugu.Checked = srTalebi.IsOyBirligiOrCouklugu == false;
+                chkOyBirligi.Checked = srTalebi.IsOyBirligiOrCoklugu == true;
+                chkOyCoklugu.Checked = srTalebi.IsOyBirligiOrCoklugu == false;
                 chkBasarili.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili;
                 chkBasarisiz.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz;
                 chkUzatma.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma;

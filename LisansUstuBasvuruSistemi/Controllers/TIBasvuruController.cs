@@ -141,7 +141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AraRaporSayisi = Ard == null ? (int?)null : Ard.AraRaporSayisi,
                         TIAraRaporAktifDonemID = Ard == null ? null : (Ard.DonemBaslangicYil + "" + Ard.DonemID),
                         TIAraRaporRaporDurumID = Ard == null ? 0 : Ard.TIBasvuruAraRaporDurumID,
-                        IsOyBirligiOrCouklugu = Ard != null ? Ard.IsOyBirligiOrCouklugu : (bool?)null,
+                        IsOyBirligiOrCoklugu = Ard != null ? Ard.IsOyBirligiOrCoklugu : (bool?)null,
                         IsBasariliOrBasarisiz = Ard != null ? Ard.IsBasariliOrBasarisiz : (bool?)null
 
                     };
@@ -1525,7 +1525,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                             tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciTamamlandi;
                             tiBasvuruAraRapor.IsBasariliOrBasarisiz = tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == true) > tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == false);
-                            tiBasvuruAraRapor.IsOyBirligiOrCouklugu = tiBasvuruAraRaporKomites.Count == tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == tiBasvuruAraRapor.IsBasariliOrBasarisiz);
+                            tiBasvuruAraRapor.IsOyBirligiOrCoklugu = tiBasvuruAraRaporKomites.Count == tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == tiBasvuruAraRapor.IsBasariliOrBasarisiz);
 
                             var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(komite.TIBasvuruAraRaporID, null, false);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
@@ -1549,7 +1549,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             tiBasvuruAraRapor.IsBasariliOrBasarisiz = null;
-                            tiBasvuruAraRapor.IsOyBirligiOrCouklugu = null;
+                            tiBasvuruAraRapor.IsOyBirligiOrCoklugu = null;
                             if (tiBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
                             {
                                 tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciBaslatildi;
@@ -1602,7 +1602,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
 
                     araRapor.IsBasariliOrBasarisiz = null;
-                    araRapor.IsOyBirligiOrCouklugu = null;
+                    araRapor.IsOyBirligiOrCoklugu = null;
                     if (araRapor.TIBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
                     {
                         araRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciBaslatildi;

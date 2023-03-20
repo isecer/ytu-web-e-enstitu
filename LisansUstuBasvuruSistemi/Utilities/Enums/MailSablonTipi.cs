@@ -127,5 +127,62 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int TDO_EsDanismanDegisikligiEYKDaOnaylandiDanisman = 137;
         public static int TDO_EsDanismanDegisikligiEYKDaRetEdildiOgrenciDanisman = 138;
         public static int TDO_EsDanismanDegisikligiEYKDaOnaylandiEsDanisman = 139;
+
+        public static int Yeterlik_BasvuruOnaylandiOgrenciye = 250;
+        public static int Yeterlik_BasvuruOnaylandiDanismana = 251;
+        public static int Yeterlik_BasvuruRetEdildiOgrenciye = 252;
+        public static int Yeterlik_JuriUyeleriTanimlandiKomiteyeLink = 253;
+        public static int Yeterlik_KomiteDegerlendimreyiTamamladiDanismana = 254;
+
+        public static int Yeterlik_YaziliSinavTalebiYapildiDanismana = 255;
+        public static int Yeterlik_YaziliSinavTalebiYapildiOgrenciye = 256;
+        public static int Yeterlik_YaziliSinavTalebiYapildiJurilere = 257;
+
+        public static int Yeterlik_YaziliSinavBasariliGirisiYapidliDanismana = 258;
+        public static int Yeterlik_YaziliSinavBasariliGirisiYapidliOgrenciye = 259;
+        public static int Yeterlik_YaziliSinavBasariliGirisiYapidliJurilereLink = 260;
+
+        public static int Yeterlik_YaziliSinavBasarisizOnayYapildiDanismana = 261;
+        public static int Yeterlik_YaziliSinavBasarisizOnayYapildiOgrenciye = 262;
+        public static int Yeterlik_YaziliSinavBasarisizGirisiYapildiJurilereLink = 263;
+
+        public static int Yeterlik_YaziliSinavKatilmadiGirisiYapildiDanismana = 264;
+        public static int Yeterlik_YaziliSinavKatilmadiGirisiYapildiOgrenciye = 265;
+        public static int Yeterlik_YaziliSinavKatilmadiGirisiYapildiJurilereLink = 266;
+
+        public static int Yeterlik_SozluSinavTalebiYapildiDanismana = 277;
+        public static int Yeterlik_SozluSinavTalebiYapildiOgrenciye = 278;
+        public static int Yeterlik_SozluSinavTalebiYapildiJurilere = 279;
+        public static int Yeterlik_SozluNotGirisJurilereLink = 280;
+
+        public static int Yeterlik_GenelSinavSonucuBasariliDanismana = 281;
+        public static int Yeterlik_GenelSinavSonucuBasariliOgrenciye = 282;
+        public static int Yeterlik_GenelSinavSonucuBasariliJurilere = 283;
+
+        public static int Yeterlik_GenelSinavSonucuBasarisizDanismana = 284;
+        public static int Yeterlik_GenelSinavSonucuBasarisizOgrenciye = 285;
+        public static int Yeterlik_GenelSinavSonucuBasarisizJurilere = 286;
+
+        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiDanismana = 287;
+        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiOgrenciye = 288;
+        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink = 289;
+
+
+
+
+        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiOgrenciye = 290;
+        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiDanismana = 291;
+        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiJurilere = 292;
+
+
+        public static List<int> YeterlikJurilerineGidenDegerlendirmeSablonlari = new List<int>
+        {
+            Yeterlik_YaziliSinavBasariliGirisiYapidliJurilereLink,
+            Yeterlik_YaziliSinavBasarisizGirisiYapildiJurilereLink,
+            Yeterlik_YaziliSinavKatilmadiGirisiYapildiJurilereLink,
+            Yeterlik_SozluNotGirisJurilereLink,
+            Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink
+
+        };
     }
 }

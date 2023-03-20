@@ -1014,21 +1014,6 @@
           <Property Name="IslemTarihi" Type="smalldatetime" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <EntityType Name="KullaniciLisansBilgileri">
-          <Key>
-            <PropertyRef Name="KullaniciLisansID" />
-          </Key>
-          <Property Name="KullaniciLisansID" Type="int" Nullable="false" />
-          <Property Name="KullaniciID" Type="int" Nullable="false" />
-          <Property Name="LisansTipID" Type="int" Nullable="false" />
-          <Property Name="UniversiteID" Type="int" Nullable="false" />
-          <Property Name="FakulteAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="OgrenciBolumID" Type="int" Nullable="false" />
-          <Property Name="BaslamaTarihi" Type="datetime" Nullable="false" />
-          <Property Name="MezuniyetTarihi" Type="datetime" />
-          <Property Name="NotSistemID" Type="int" Nullable="false" />
-          <Property Name="MezuniyetNotu" Type="float" Nullable="false" />
-        </EntityType>
         <EntityType Name="KullaniciProgramlari">
           <Key>
             <PropertyRef Name="KullaniciProgramID" />
@@ -1056,17 +1041,6 @@
           <Property Name="BasvuruYapabilir" Type="bit" Nullable="false" />
           <Property Name="KullaniciTipAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="LisansTipleri">
-          <Key>
-            <PropertyRef Name="LisansTipID" />
-          </Key>
-          <Property Name="LisansTipID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="LisansTipAdi" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="IsAktif" Type="bit" Nullable="false" />
-          <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
-          <Property Name="IslemYapanID" Type="int" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <EntityType Name="Logs">
           <Key>
@@ -1420,15 +1394,6 @@
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MezuniyetSureciOtoMailTezTeslim">
-          <Key>
-            <PropertyRef Name="MezuniyetSurecOtoMailTezTeslimID" />
-          </Key>
-          <Property Name="MezuniyetSurecOtoMailTezTeslimID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MezuniyetSurecOtoMailID" Type="int" Nullable="false" />
-          <Property Name="MezuniyetBasvurulariID" Type="int" Nullable="false" />
-          <Property Name="Tarih" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="MezuniyetSureciYayinTurleri">
           <Key>
@@ -1934,22 +1899,6 @@
           <Property Name="SinavNotAdi" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="SinavNotDeger" Type="float" Nullable="false" />
         </EntityType>
-        <EntityType Name="SinavSonuclari">
-          <Key>
-            <PropertyRef Name="SinavSonuclariID" />
-          </Key>
-          <Property Name="SinavSonuclariID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SinavTipKod" Type="int" Nullable="false" />
-          <Property Name="TcKimlikNo" Type="nvarchar" MaxLength="11" Nullable="false" />
-          <Property Name="Ad" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="Soyad" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="SinavTarihi" Type="datetime" Nullable="false" />
-          <Property Name="SinavDilID" Type="int" Nullable="false" />
-          <Property Name="SinavPuan" Type="float" Nullable="false" />
-          <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
-          <Property Name="IslemYapanID" Type="int" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
-        </EntityType>
         <EntityType Name="SinavTarihleri">
           <Key>
             <PropertyRef Name="SinavTarihleriID" />
@@ -2253,7 +2202,7 @@
           <Property Name="SRDurumID" Type="int" Nullable="false" />
           <Property Name="SRDurumAciklamasi" Type="nvarchar" MaxLength="1024" />
           <Property Name="RSBaslatildiMailGonderimTarihi" Type="datetime" />
-          <Property Name="IsOyBirligiOrCouklugu" Type="bit" />
+          <Property Name="IsOyBirligiOrCoklugu" Type="bit" />
           <Property Name="JuriSonucMezuniyetSinavDurumID" Type="int" />
           <Property Name="DegerlendirmeSonucMailTarihi" Type="datetime" />
           <Property Name="MezuniyetSinavDurumID" Type="int" />
@@ -2671,7 +2620,7 @@
           <Property Name="YokDrOncelikliAlan" Type="nvarchar" MaxLength="128" />
           <Property Name="ToplantiBilgiGonderimTarihi" Type="datetime" />
           <Property Name="RSBaslatildiMailGonderimTarihi" Type="datetime" />
-          <Property Name="IsOyBirligiOrCouklugu" Type="bit" />
+          <Property Name="IsOyBirligiOrCoklugu" Type="bit" />
           <Property Name="IsBasariliOrBasarisiz" Type="bit" />
           <Property Name="DegerlendirmeSonucMailTarihi" Type="datetime" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -2790,10 +2739,22 @@
           <Property Name="KayitDonemID" Type="int" Nullable="false" />
           <Property Name="KayitTarihi" Type="datetime" Nullable="false" />
           <Property Name="TezDanismanID" Type="int" Nullable="false" />
-          <Property Name="IsOnaylandi" Type="bit" />
-          <Property Name="OnayTarihi" Type="datetime" />
-          <Property Name="OnayAciklama" Type="nvarchar" MaxLength="1024" />
-          <Property Name="IsBasarili" Type="bit" />
+          <Property Name="IsEnstituOnaylandi" Type="bit" />
+          <Property Name="EnstituOnayTarihi" Type="datetime" />
+          <Property Name="EnstituOnayAciklama" Type="nvarchar" MaxLength="1024" />
+          <Property Name="IsAbdKomitesiJuriyiOnayladi" Type="bit" />
+          <Property Name="YaziliSinavTarihi" Type="datetime" />
+          <Property Name="YaziliSinavYeri" Type="nvarchar" MaxLength="512" />
+          <Property Name="IsYaziliSinavinaKatildi" Type="bit" />
+          <Property Name="YaziliSinaviNotu" Type="int" />
+          <Property Name="IsYaziliSinavBasarili" Type="bit" />
+          <Property Name="IsSozluSinavOnline" Type="bit" />
+          <Property Name="SozluSinavTarihi" Type="datetime" />
+          <Property Name="SozluSinavYeri" Type="nvarchar" MaxLength="512" />
+          <Property Name="IsSozluSinavinaKatildi" Type="bit" />
+          <Property Name="SozluSinaviOrtalamaNotu" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="GenelBasariNotu" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="IsGenelSonucBasarili" Type="bit" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -2804,6 +2765,8 @@
           </Key>
           <Property Name="YeterlikBasvuruJuriUyeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="YeterlikBasvuruID" Type="int" Nullable="false" />
+          <Property Name="IsSecilenJuri" Type="bit" Nullable="false" />
+          <Property Name="IsAsilOrYedek" Type="bit" />
           <Property Name="UniqueID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="JuriTipAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UnvanAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
@@ -2811,15 +2774,14 @@
           <Property Name="EMail" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UniversiteID" Type="int" />
           <Property Name="UniversiteAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="IsAsilOrYedek" Type="bit" />
+          <Property Name="AnabilimDaliID" Type="int" />
+          <Property Name="AnabilimDaliAdi" Type="nvarchar" MaxLength="256" />
           <Property Name="IsLinkGonderildi" Type="bit" />
           <Property Name="LinkGonderimTarihi" Type="datetime" />
           <Property Name="LinkGonderenID" Type="int" />
-          <Property Name="IsBasarili" Type="bit" />
-          <Property Name="Aciklama" Type="nvarchar" MaxLength="2048" />
-          <Property Name="DegerlendirmeYapanID" Type="int" />
-          <Property Name="DegerlendirmeIslemTarihi" Type="datetime" />
-          <Property Name="DegerlendirmeIslemYapanIP" Type="nvarchar" MaxLength="16" />
+          <Property Name="IsSonucOnaylandi" Type="bit" />
+          <Property Name="SozluNotu" Type="int" />
+          <Property Name="DegerlendirmeTarihi" Type="datetime" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="16" Nullable="false" />
@@ -2882,6 +2844,10 @@
           <Property Name="YsBasToplamKrediKriteri" Type="int" />
           <Property Name="YsBasEtikNotKriteri" Type="nvarchar" MaxLength="64" />
           <Property Name="YsBasSeminerNotKriteri" Type="nvarchar" MaxLength="64" />
+          <Property Name="YaziliYuzde" Type="int" />
+          <Property Name="SozluYuzde" Type="int" />
+          <Property Name="YaziliGecerNot" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="OrtalamaGecerNot" Type="decimal" Precision="18" Scale="2" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -4635,18 +4601,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="KullaniciRolleri">
               <PropertyRef Name="RolID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LisansTipleri_Kullanicilar">
-          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
-          <End Role="LisansTipleri" Type="Self.LisansTipleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Kullanicilar">
-              <PropertyRef Name="KullaniciID" />
-            </Principal>
-            <Dependent Role="LisansTipleri">
-              <PropertyRef Name="IslemYapanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6800,18 +6754,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_YeterlikBasvuruJuriUyeleri_Universiteler">
-          <End Role="Universiteler" Type="Self.Universiteler" Multiplicity="0..1" />
-          <End Role="YeterlikBasvuruJuriUyeleri" Type="Self.YeterlikBasvuruJuriUyeleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Universiteler">
-              <PropertyRef Name="UniversiteID" />
-            </Principal>
-            <Dependent Role="YeterlikBasvuruJuriUyeleri">
-              <PropertyRef Name="UniversiteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru">
           <End Role="YeterlikBasvuru" Type="Self.YeterlikBasvuru" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -7019,11 +6961,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Kotalar" EntityType="Self.Kotalar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KullaniciEnstituYetkileri" EntityType="Self.KullaniciEnstituYetkileri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="KullaniciLisansBilgileri" EntityType="Self.KullaniciLisansBilgileri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KullaniciProgramlari" EntityType="Self.KullaniciProgramlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KullaniciRolleri" EntityType="Self.KullaniciRolleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KullaniciTipleri" EntityType="Self.KullaniciTipleri" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="LisansTipleri" EntityType="Self.LisansTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MailSablonlari" EntityType="Self.MailSablonlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MailSablonlariEkleri" EntityType="Self.MailSablonlariEkleri" Schema="dbo" store:Type="Tables" />
@@ -7043,7 +6983,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetSinavDurumlari" EntityType="Self.MezuniyetSinavDurumlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureci" EntityType="Self.MezuniyetSureci" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciOgrenimTipKriterleri" EntityType="Self.MezuniyetSureciOgrenimTipKriterleri" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MezuniyetSureciOtoMailTezTeslim" EntityType="Self.MezuniyetSureciOtoMailTezTeslim" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYayinTurleri" EntityType="Self.MezuniyetSureciYayinTurleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYonetmelikleri" EntityType="Self.MezuniyetSureciYonetmelikleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetSureciYonetmelikleriOT" EntityType="Self.MezuniyetSureciYonetmelikleriOT" Schema="dbo" store:Type="Tables" />
@@ -7080,7 +7019,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SikcaSorulanSorular" EntityType="Self.SikcaSorulanSorular" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavDilleri" EntityType="Self.SinavDilleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavNotlari" EntityType="Self.SinavNotlari" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SinavSonuclari" EntityType="Self.SinavSonuclari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavTarihleri" EntityType="Self.SinavTarihleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavTipGruplari" EntityType="Self.SinavTipGruplari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavTipleri" EntityType="Self.SinavTipleri" Schema="dbo" store:Type="Tables" />
@@ -7708,10 +7646,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_KullaniciRolleri_Roller" Association="Self.FK_KullaniciRolleri_Roller">
             <End Role="Roller" EntitySet="Roller" />
             <End Role="KullaniciRolleri" EntitySet="KullaniciRolleri" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LisansTipleri_Kullanicilar" Association="Self.FK_LisansTipleri_Kullanicilar">
-            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
-            <End Role="LisansTipleri" EntitySet="LisansTipleri" />
           </AssociationSet>
           <AssociationSet Name="FK_MailSablonlari_Enstituler" Association="Self.FK_MailSablonlari_Enstituler">
             <End Role="Enstituler" EntitySet="Enstituler" />
@@ -8405,10 +8339,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="YeterlikSureci" EntitySet="YeterlikSureci" />
             <End Role="YeterlikBasvuru" EntitySet="YeterlikBasvuru" />
           </AssociationSet>
-          <AssociationSet Name="FK_YeterlikBasvuruJuriUyeleri_Universiteler" Association="Self.FK_YeterlikBasvuruJuriUyeleri_Universiteler">
-            <End Role="Universiteler" EntitySet="Universiteler" />
-            <End Role="YeterlikBasvuruJuriUyeleri" EntitySet="YeterlikBasvuruJuriUyeleri" />
-          </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru" Association="Self.FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru">
             <End Role="YeterlikBasvuru" EntitySet="YeterlikBasvuru" />
             <End Role="YeterlikBasvuruJuriUyeleri" EntitySet="YeterlikBasvuruJuriUyeleri" />
@@ -8523,10 +8453,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Kotalars" EntityType="LisansustuBasvuruSistemiModel.Kotalar" />
           <EntitySet Name="KullaniciEnstituYetkileris" EntityType="LisansustuBasvuruSistemiModel.KullaniciEnstituYetkileri" />
           <EntitySet Name="Kullanicilars" EntityType="LisansustuBasvuruSistemiModel.Kullanicilar" />
-          <EntitySet Name="KullaniciLisansBilgileris" EntityType="LisansustuBasvuruSistemiModel.KullaniciLisansBilgileri" />
           <EntitySet Name="KullaniciProgramlaris" EntityType="LisansustuBasvuruSistemiModel.KullaniciProgramlari" />
           <EntitySet Name="KullaniciTipleris" EntityType="LisansustuBasvuruSistemiModel.KullaniciTipleri" />
-          <EntitySet Name="LisansTipleris" EntityType="LisansustuBasvuruSistemiModel.LisansTipleri" />
           <EntitySet Name="Logs" EntityType="LisansustuBasvuruSistemiModel.Log" />
           <EntitySet Name="MailSablonlaris" EntityType="LisansustuBasvuruSistemiModel.MailSablonlari" />
           <EntitySet Name="MailSablonlariEkleris" EntityType="LisansustuBasvuruSistemiModel.MailSablonlariEkleri" />
@@ -8545,7 +8473,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetSinavDurumlaris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSinavDurumlari" />
           <EntitySet Name="MezuniyetSurecis" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureci" />
           <EntitySet Name="MezuniyetSureciOgrenimTipKriterleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOgrenimTipKriterleri" />
-          <EntitySet Name="MezuniyetSureciOtoMailTezTeslims" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailTezTeslim" />
           <EntitySet Name="MezuniyetSureciYayinTurleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri" />
           <EntitySet Name="MezuniyetSureciYonetmelikleris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleri" />
           <EntitySet Name="MezuniyetSureciYonetmelikleriOTs" EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT" />
@@ -8582,7 +8509,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SikcaSorulanSorulars" EntityType="LisansustuBasvuruSistemiModel.SikcaSorulanSorular" />
           <EntitySet Name="SinavDilleris" EntityType="LisansustuBasvuruSistemiModel.SinavDilleri" />
           <EntitySet Name="SinavNotlaris" EntityType="LisansustuBasvuruSistemiModel.SinavNotlari" />
-          <EntitySet Name="SinavSonuclaris" EntityType="LisansustuBasvuruSistemiModel.SinavSonuclari" />
           <EntitySet Name="SinavTarihleris" EntityType="LisansustuBasvuruSistemiModel.SinavTarihleri" />
           <EntitySet Name="SinavTipGruplaris" EntityType="LisansustuBasvuruSistemiModel.SinavTipGruplari" />
           <EntitySet Name="SinavTipleris" EntityType="LisansustuBasvuruSistemiModel.SinavTipleri" />
@@ -9345,10 +9271,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="KullaniciProgramlari" EntitySet="KullaniciProgramlaris" />
           </AssociationSet>
-          <AssociationSet Name="FK_LisansTipleri_Kullanicilar" Association="LisansustuBasvuruSistemiModel.FK_LisansTipleri_Kullanicilar">
-            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
-            <End Role="LisansTipleri" EntitySet="LisansTipleris" />
-          </AssociationSet>
           <AssociationSet Name="FK_MailSablonlari_Kullanicilar" Association="LisansustuBasvuruSistemiModel.FK_MailSablonlari_Kullanicilar">
             <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="MailSablonlari" EntitySet="MailSablonlaris" />
@@ -9884,10 +9806,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_TIBasvuruAraRaporKomite_Universiteler" Association="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRaporKomite_Universiteler">
             <End Role="Universiteler" EntitySet="Universitelers" />
             <End Role="TIBasvuruAraRaporKomite" EntitySet="TIBasvuruAraRaporKomites" />
-          </AssociationSet>
-          <AssociationSet Name="FK_YeterlikBasvuruJuriUyeleri_Universiteler" Association="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuruJuriUyeleri_Universiteler">
-            <End Role="Universiteler" EntitySet="Universitelers" />
-            <End Role="YeterlikBasvuruJuriUyeleri" EntitySet="YeterlikBasvuruJuriUyeleris" />
           </AssociationSet>
           <AssociationSet Name="FK_YeterlikBasvuru_YeterlikSureci" Association="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuru_YeterlikSureci">
             <End Role="YeterlikSureci" EntitySet="YeterlikSurecis" />
@@ -11197,7 +11115,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Uyruklar" Relationship="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Uyruklar" FromRole="Kullanicilar" ToRole="Uyruklar" />
           <NavigationProperty Name="YetkiGruplari" Relationship="LisansustuBasvuruSistemiModel.FK_Kullanicilar_YetkiGruplari" FromRole="Kullanicilar" ToRole="YetkiGruplari" />
           <NavigationProperty Name="KullaniciProgramlaris" Relationship="LisansustuBasvuruSistemiModel.FK_KullaniciProgramlari_Kullanicilar" FromRole="Kullanicilar" ToRole="KullaniciProgramlari" />
-          <NavigationProperty Name="LisansTipleris" Relationship="LisansustuBasvuruSistemiModel.FK_LisansTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="LisansTipleri" />
           <NavigationProperty Name="MailSablonlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MailSablonlari_Kullanicilar" FromRole="Kullanicilar" ToRole="MailSablonlari" />
           <NavigationProperty Name="MesajKategorileris" Relationship="LisansustuBasvuruSistemiModel.FK_MesajKategorileri_Kullanicilar" FromRole="Kullanicilar" ToRole="MesajKategorileri" />
           <NavigationProperty Name="Mesajlars" Relationship="LisansustuBasvuruSistemiModel.FK_Mesajlar_Kullanicilar" FromRole="Kullanicilar" ToRole="Mesajlar" />
@@ -11223,21 +11140,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="YeterlikBasvuruKomitelers" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuruKomiteler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikBasvuruKomiteler" />
           <NavigationProperty Name="YeterlikSureciKriterMuafOgrencilers" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikSureciKriterMuafOgrenciler_Kullanicilar" FromRole="Kullanicilar" ToRole="YeterlikSureciKriterMuafOgrenciler" />
           <NavigationProperty Name="Rollers" Relationship="LisansustuBasvuruSistemiModel.KullaniciRolleri" FromRole="Kullanicilar" ToRole="Roller" />
-        </EntityType>
-        <EntityType Name="KullaniciLisansBilgileri">
-          <Key>
-            <PropertyRef Name="KullaniciLisansID" />
-          </Key>
-          <Property Name="KullaniciLisansID" Type="Int32" Nullable="false" />
-          <Property Name="KullaniciID" Type="Int32" Nullable="false" />
-          <Property Name="LisansTipID" Type="Int32" Nullable="false" />
-          <Property Name="UniversiteID" Type="Int32" Nullable="false" />
-          <Property Name="FakulteAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="OgrenciBolumID" Type="Int32" Nullable="false" />
-          <Property Name="BaslamaTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="MezuniyetTarihi" Type="DateTime" Precision="3" />
-          <Property Name="NotSistemID" Type="Int32" Nullable="false" />
-          <Property Name="MezuniyetNotu" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="KullaniciProgramlari">
           <Key>
@@ -11268,18 +11170,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="SRTalepTipKullanicilars" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepTipKullanicilar_KullaniciTipleri" FromRole="KullaniciTipleri" ToRole="SRTalepTipKullanicilar" />
           <NavigationProperty Name="TDOBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_TDOBasvuru_KullaniciTipleri" FromRole="KullaniciTipleri" ToRole="TDOBasvuru" />
           <NavigationProperty Name="TIBasvurus" Relationship="LisansustuBasvuruSistemiModel.FK_TIBasvuru_KullaniciTipleri" FromRole="KullaniciTipleri" ToRole="TIBasvuru" />
-        </EntityType>
-        <EntityType Name="LisansTipleri">
-          <Key>
-            <PropertyRef Name="LisansTipID" />
-          </Key>
-          <Property Name="LisansTipID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LisansTipAdi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="IsAktif" Type="Boolean" Nullable="false" />
-          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Kullanicilar" Relationship="LisansustuBasvuruSistemiModel.FK_LisansTipleri_Kullanicilar" FromRole="LisansTipleri" ToRole="Kullanicilar" />
         </EntityType>
         <EntityType Name="Log">
           <Key>
@@ -11680,15 +11570,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetSureci" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_MezuniyetSureci" FromRole="MezuniyetSureciOgrenimTipKriterleri" ToRole="MezuniyetSureci" />
           <NavigationProperty Name="OgrenimTipleri" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetSureciOgrenimTipKriterleri_OgrenimTipleri" FromRole="MezuniyetSureciOgrenimTipKriterleri" ToRole="OgrenimTipleri" />
-        </EntityType>
-        <EntityType Name="MezuniyetSureciOtoMailTezTeslim">
-          <Key>
-            <PropertyRef Name="MezuniyetSurecOtoMailTezTeslimID" />
-          </Key>
-          <Property Name="MezuniyetSurecOtoMailTezTeslimID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MezuniyetSurecOtoMailID" Type="Int32" Nullable="false" />
-          <Property Name="MezuniyetBasvurulariID" Type="Int32" Nullable="false" />
-          <Property Name="Tarih" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="MezuniyetSureciYayinTurleri">
           <Key>
@@ -12308,22 +12189,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SinavNotDeger" Type="Double" Nullable="false" />
           <NavigationProperty Name="SinavTipleri" Relationship="LisansustuBasvuruSistemiModel.FK_SinavNotlari_SinavTipleri" FromRole="SinavNotlari" ToRole="SinavTipleri" />
         </EntityType>
-        <EntityType Name="SinavSonuclari">
-          <Key>
-            <PropertyRef Name="SinavSonuclariID" />
-          </Key>
-          <Property Name="SinavSonuclariID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SinavTipKod" Type="Int32" Nullable="false" />
-          <Property Name="TcKimlikNo" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
-          <Property Name="Ad" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="Soyad" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="SinavTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SinavDilID" Type="Int32" Nullable="false" />
-          <Property Name="SinavPuan" Type="Double" Nullable="false" />
-          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="SinavTarihleri">
           <Key>
             <PropertyRef Name="SinavTarihleriID" />
@@ -12685,7 +12550,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SRDurumID" Type="Int32" Nullable="false" />
           <Property Name="SRDurumAciklamasi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="RSBaslatildiMailGonderimTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IsOyBirligiOrCouklugu" Type="Boolean" />
+          <Property Name="IsOyBirligiOrCoklugu" Type="Boolean" />
           <Property Name="JuriSonucMezuniyetSinavDurumID" Type="Int32" />
           <Property Name="DegerlendirmeSonucMailTarihi" Type="DateTime" Precision="3" />
           <Property Name="MezuniyetSinavDurumID" Type="Int32" />
@@ -13168,7 +13033,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="YokDrOncelikliAlan" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="ToplantiBilgiGonderimTarihi" Type="DateTime" Precision="3" />
           <Property Name="RSBaslatildiMailGonderimTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IsOyBirligiOrCouklugu" Type="Boolean" />
+          <Property Name="IsOyBirligiOrCoklugu" Type="Boolean" />
           <Property Name="IsBasariliOrBasarisiz" Type="Boolean" />
           <Property Name="DegerlendirmeSonucMailTarihi" Type="DateTime" Precision="3" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -13237,7 +13102,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetJuriOneriFormuJurileris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormuJurileri_Universiteler" FromRole="Universiteler" ToRole="MezuniyetJuriOneriFormuJurileri" />
           <NavigationProperty Name="TIBasvuruAraRaporKomites" Relationship="LisansustuBasvuruSistemiModel.FK_TIBasvuruAraRaporKomite_Universiteler" FromRole="Universiteler" ToRole="TIBasvuruAraRaporKomite" />
-          <NavigationProperty Name="YeterlikBasvuruJuriUyeleris" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuruJuriUyeleri_Universiteler" FromRole="Universiteler" ToRole="YeterlikBasvuruJuriUyeleri" />
         </EntityType>
         <EntityType Name="Unvanlar">
           <Key>
@@ -13304,10 +13168,22 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitDonemID" Type="Int32" Nullable="false" />
           <Property Name="KayitTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="TezDanismanID" Type="Int32" Nullable="false" />
-          <Property Name="IsOnaylandi" Type="Boolean" />
-          <Property Name="OnayTarihi" Type="DateTime" Precision="3" />
-          <Property Name="OnayAciklama" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="IsBasarili" Type="Boolean" />
+          <Property Name="IsEnstituOnaylandi" Type="Boolean" />
+          <Property Name="EnstituOnayTarihi" Type="DateTime" Precision="3" />
+          <Property Name="EnstituOnayAciklama" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="IsAbdKomitesiJuriyiOnayladi" Type="Boolean" />
+          <Property Name="YaziliSinavTarihi" Type="DateTime" Precision="3" />
+          <Property Name="YaziliSinavYeri" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="IsYaziliSinavinaKatildi" Type="Boolean" />
+          <Property Name="YaziliSinaviNotu" Type="Int32" />
+          <Property Name="IsYaziliSinavBasarili" Type="Boolean" />
+          <Property Name="IsSozluSinavOnline" Type="Boolean" />
+          <Property Name="SozluSinavTarihi" Type="DateTime" Precision="3" />
+          <Property Name="SozluSinavYeri" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="IsSozluSinavinaKatildi" Type="Boolean" />
+          <Property Name="SozluSinaviOrtalamaNotu" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="GenelBasariNotu" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="IsGenelSonucBasarili" Type="Boolean" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -13325,6 +13201,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="YeterlikBasvuruJuriUyeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="YeterlikBasvuruID" Type="Int32" Nullable="false" />
+          <Property Name="IsSecilenJuri" Type="Boolean" Nullable="false" />
+          <Property Name="IsAsilOrYedek" Type="Boolean" />
           <Property Name="UniqueID" Type="Guid" Nullable="false" />
           <Property Name="JuriTipAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UnvanAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
@@ -13332,19 +13210,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="EMail" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UniversiteID" Type="Int32" />
           <Property Name="UniversiteAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="IsAsilOrYedek" Type="Boolean" />
+          <Property Name="AnabilimDaliID" Type="Int32" />
+          <Property Name="AnabilimDaliAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="IsLinkGonderildi" Type="Boolean" />
           <Property Name="LinkGonderimTarihi" Type="DateTime" Precision="3" />
           <Property Name="LinkGonderenID" Type="Int32" />
-          <Property Name="IsBasarili" Type="Boolean" />
-          <Property Name="Aciklama" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
-          <Property Name="DegerlendirmeYapanID" Type="Int32" />
-          <Property Name="DegerlendirmeIslemTarihi" Type="DateTime" Precision="3" />
-          <Property Name="DegerlendirmeIslemYapanIP" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="IsSonucOnaylandi" Type="Boolean" />
+          <Property Name="SozluNotu" Type="Int32" />
+          <Property Name="DegerlendirmeTarihi" Type="DateTime" Precision="3" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Universiteler" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuruJuriUyeleri_Universiteler" FromRole="YeterlikBasvuruJuriUyeleri" ToRole="Universiteler" />
           <NavigationProperty Name="YeterlikBasvuru" Relationship="LisansustuBasvuruSistemiModel.FK_YeterlikBasvuruJuriUyeleri_YeterlikBasvuru" FromRole="YeterlikBasvuruJuriUyeleri" ToRole="YeterlikBasvuru" />
         </EntityType>
         <EntityType Name="YeterlikBasvuruKomiteler">
@@ -13414,6 +13290,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="YsBasToplamKrediKriteri" Type="Int32" />
           <Property Name="YsBasEtikNotKriteri" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="YsBasSeminerNotKriteri" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="YaziliYuzde" Type="Int32" />
+          <Property Name="SozluYuzde" Type="Int32" />
+          <Property Name="YaziliGecerNot" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="OrtalamaGecerNot" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -15655,18 +15535,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_LisansTipleri_Kullanicilar">
-          <End Type="LisansustuBasvuruSistemiModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
-          <End Type="LisansustuBasvuruSistemiModel.LisansTipleri" Role="LisansTipleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Kullanicilar">
-              <PropertyRef Name="KullaniciID" />
-            </Principal>
-            <Dependent Role="LisansTipleri">
-              <PropertyRef Name="IslemYapanID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MailSablonlari_Kullanicilar">
           <End Type="LisansustuBasvuruSistemiModel.Kullanicilar" Role="Kullanicilar" Multiplicity="1" />
           <End Type="LisansustuBasvuruSistemiModel.MailSablonlari" Role="MailSablonlari" Multiplicity="*" />
@@ -17343,18 +17211,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_YeterlikBasvuruJuriUyeleri_Universiteler">
-          <End Type="LisansustuBasvuruSistemiModel.Universiteler" Role="Universiteler" Multiplicity="0..1" />
-          <End Type="LisansustuBasvuruSistemiModel.YeterlikBasvuruJuriUyeleri" Role="YeterlikBasvuruJuriUyeleri" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Universiteler">
-              <PropertyRef Name="UniversiteID" />
-            </Principal>
-            <Dependent Role="YeterlikBasvuruJuriUyeleri">
-              <PropertyRef Name="UniversiteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_YeterlikBasvuru_YeterlikSureci">
           <End Type="LisansustuBasvuruSistemiModel.YeterlikSureci" Role="YeterlikSureci" Multiplicity="1" />
           <End Type="LisansustuBasvuruSistemiModel.YeterlikBasvuru" Role="YeterlikBasvuru" Multiplicity="*" />
@@ -18523,22 +18379,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="KullaniciLisansBilgileris">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.KullaniciLisansBilgileri">
-              <MappingFragment StoreEntitySet="KullaniciLisansBilgileri">
-                <ScalarProperty Name="MezuniyetNotu" ColumnName="MezuniyetNotu" />
-                <ScalarProperty Name="NotSistemID" ColumnName="NotSistemID" />
-                <ScalarProperty Name="MezuniyetTarihi" ColumnName="MezuniyetTarihi" />
-                <ScalarProperty Name="BaslamaTarihi" ColumnName="BaslamaTarihi" />
-                <ScalarProperty Name="OgrenciBolumID" ColumnName="OgrenciBolumID" />
-                <ScalarProperty Name="FakulteAdi" ColumnName="FakulteAdi" />
-                <ScalarProperty Name="UniversiteID" ColumnName="UniversiteID" />
-                <ScalarProperty Name="LisansTipID" ColumnName="LisansTipID" />
-                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
-                <ScalarProperty Name="KullaniciLisansID" ColumnName="KullaniciLisansID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="KullaniciProgramlaris">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.KullaniciProgramlari">
               <MappingFragment StoreEntitySet="KullaniciProgramlari">
@@ -18558,18 +18398,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="Yerli" ColumnName="Yerli" />
                 <ScalarProperty Name="KurumIci" ColumnName="KurumIci" />
                 <ScalarProperty Name="KullaniciTipID" ColumnName="KullaniciTipID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LisansTipleris">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.LisansTipleri">
-              <MappingFragment StoreEntitySet="LisansTipleri">
-                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
-                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
-                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
-                <ScalarProperty Name="LisansTipAdi" ColumnName="LisansTipAdi" />
-                <ScalarProperty Name="LisansTipID" ColumnName="LisansTipID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -18932,16 +18760,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="OgrenimTipID" ColumnName="OgrenimTipID" />
                 <ScalarProperty Name="MezuniyetSurecID" ColumnName="MezuniyetSurecID" />
                 <ScalarProperty Name="MezuniyetSureciOgrenimTipKriterID" ColumnName="MezuniyetSureciOgrenimTipKriterID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MezuniyetSureciOtoMailTezTeslims">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetSureciOtoMailTezTeslim">
-              <MappingFragment StoreEntitySet="MezuniyetSureciOtoMailTezTeslim">
-                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
-                <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
-                <ScalarProperty Name="MezuniyetSurecOtoMailID" ColumnName="MezuniyetSurecOtoMailID" />
-                <ScalarProperty Name="MezuniyetSurecOtoMailTezTeslimID" ColumnName="MezuniyetSurecOtoMailTezTeslimID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -19485,23 +19303,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SinavSonuclaris">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.SinavSonuclari">
-              <MappingFragment StoreEntitySet="SinavSonuclari">
-                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
-                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
-                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="SinavPuan" ColumnName="SinavPuan" />
-                <ScalarProperty Name="SinavDilID" ColumnName="SinavDilID" />
-                <ScalarProperty Name="SinavTarihi" ColumnName="SinavTarihi" />
-                <ScalarProperty Name="Soyad" ColumnName="Soyad" />
-                <ScalarProperty Name="Ad" ColumnName="Ad" />
-                <ScalarProperty Name="TcKimlikNo" ColumnName="TcKimlikNo" />
-                <ScalarProperty Name="SinavTipKod" ColumnName="SinavTipKod" />
-                <ScalarProperty Name="SinavSonuclariID" ColumnName="SinavSonuclariID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SinavTarihleris">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.SinavTarihleri">
               <MappingFragment StoreEntitySet="SinavTarihleri">
@@ -19812,7 +19613,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="MezuniyetSinavDurumID" ColumnName="MezuniyetSinavDurumID" />
                 <ScalarProperty Name="DegerlendirmeSonucMailTarihi" ColumnName="DegerlendirmeSonucMailTarihi" />
                 <ScalarProperty Name="JuriSonucMezuniyetSinavDurumID" ColumnName="JuriSonucMezuniyetSinavDurumID" />
-                <ScalarProperty Name="IsOyBirligiOrCouklugu" ColumnName="IsOyBirligiOrCouklugu" />
+                <ScalarProperty Name="IsOyBirligiOrCoklugu" ColumnName="IsOyBirligiOrCoklugu" />
                 <ScalarProperty Name="RSBaslatildiMailGonderimTarihi" ColumnName="RSBaslatildiMailGonderimTarihi" />
                 <ScalarProperty Name="SRDurumAciklamasi" ColumnName="SRDurumAciklamasi" />
                 <ScalarProperty Name="SRDurumID" ColumnName="SRDurumID" />
@@ -20239,7 +20040,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="DegerlendirmeSonucMailTarihi" ColumnName="DegerlendirmeSonucMailTarihi" />
                 <ScalarProperty Name="IsBasariliOrBasarisiz" ColumnName="IsBasariliOrBasarisiz" />
-                <ScalarProperty Name="IsOyBirligiOrCouklugu" ColumnName="IsOyBirligiOrCouklugu" />
+                <ScalarProperty Name="IsOyBirligiOrCoklugu" ColumnName="IsOyBirligiOrCoklugu" />
                 <ScalarProperty Name="RSBaslatildiMailGonderimTarihi" ColumnName="RSBaslatildiMailGonderimTarihi" />
                 <ScalarProperty Name="ToplantiBilgiGonderimTarihi" ColumnName="ToplantiBilgiGonderimTarihi" />
                 <ScalarProperty Name="YokDrOncelikliAlan" ColumnName="YokDrOncelikliAlan" />
@@ -20377,10 +20178,22 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="IsBasarili" ColumnName="IsBasarili" />
-                <ScalarProperty Name="OnayAciklama" ColumnName="OnayAciklama" />
-                <ScalarProperty Name="OnayTarihi" ColumnName="OnayTarihi" />
-                <ScalarProperty Name="IsOnaylandi" ColumnName="IsOnaylandi" />
+                <ScalarProperty Name="IsGenelSonucBasarili" ColumnName="IsGenelSonucBasarili" />
+                <ScalarProperty Name="GenelBasariNotu" ColumnName="GenelBasariNotu" />
+                <ScalarProperty Name="SozluSinaviOrtalamaNotu" ColumnName="SozluSinaviOrtalamaNotu" />
+                <ScalarProperty Name="IsSozluSinavinaKatildi" ColumnName="IsSozluSinavinaKatildi" />
+                <ScalarProperty Name="SozluSinavYeri" ColumnName="SozluSinavYeri" />
+                <ScalarProperty Name="SozluSinavTarihi" ColumnName="SozluSinavTarihi" />
+                <ScalarProperty Name="IsSozluSinavOnline" ColumnName="IsSozluSinavOnline" />
+                <ScalarProperty Name="IsYaziliSinavBasarili" ColumnName="IsYaziliSinavBasarili" />
+                <ScalarProperty Name="YaziliSinaviNotu" ColumnName="YaziliSinaviNotu" />
+                <ScalarProperty Name="IsYaziliSinavinaKatildi" ColumnName="IsYaziliSinavinaKatildi" />
+                <ScalarProperty Name="YaziliSinavYeri" ColumnName="YaziliSinavYeri" />
+                <ScalarProperty Name="YaziliSinavTarihi" ColumnName="YaziliSinavTarihi" />
+                <ScalarProperty Name="IsAbdKomitesiJuriyiOnayladi" ColumnName="IsAbdKomitesiJuriyiOnayladi" />
+                <ScalarProperty Name="EnstituOnayAciklama" ColumnName="EnstituOnayAciklama" />
+                <ScalarProperty Name="EnstituOnayTarihi" ColumnName="EnstituOnayTarihi" />
+                <ScalarProperty Name="IsEnstituOnaylandi" ColumnName="IsEnstituOnaylandi" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
                 <ScalarProperty Name="KayitDonemID" ColumnName="KayitDonemID" />
@@ -20406,15 +20219,14 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="DegerlendirmeIslemYapanIP" ColumnName="DegerlendirmeIslemYapanIP" />
-                <ScalarProperty Name="DegerlendirmeIslemTarihi" ColumnName="DegerlendirmeIslemTarihi" />
-                <ScalarProperty Name="DegerlendirmeYapanID" ColumnName="DegerlendirmeYapanID" />
-                <ScalarProperty Name="Aciklama" ColumnName="Aciklama" />
-                <ScalarProperty Name="IsBasarili" ColumnName="IsBasarili" />
+                <ScalarProperty Name="DegerlendirmeTarihi" ColumnName="DegerlendirmeTarihi" />
+                <ScalarProperty Name="SozluNotu" ColumnName="SozluNotu" />
+                <ScalarProperty Name="IsSonucOnaylandi" ColumnName="IsSonucOnaylandi" />
                 <ScalarProperty Name="LinkGonderenID" ColumnName="LinkGonderenID" />
                 <ScalarProperty Name="LinkGonderimTarihi" ColumnName="LinkGonderimTarihi" />
                 <ScalarProperty Name="IsLinkGonderildi" ColumnName="IsLinkGonderildi" />
-                <ScalarProperty Name="IsAsilOrYedek" ColumnName="IsAsilOrYedek" />
+                <ScalarProperty Name="AnabilimDaliAdi" ColumnName="AnabilimDaliAdi" />
+                <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
                 <ScalarProperty Name="UniversiteAdi" ColumnName="UniversiteAdi" />
                 <ScalarProperty Name="UniversiteID" ColumnName="UniversiteID" />
                 <ScalarProperty Name="EMail" ColumnName="EMail" />
@@ -20422,6 +20234,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
                 <ScalarProperty Name="JuriTipAdi" ColumnName="JuriTipAdi" />
                 <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
+                <ScalarProperty Name="IsAsilOrYedek" ColumnName="IsAsilOrYedek" />
+                <ScalarProperty Name="IsSecilenJuri" ColumnName="IsSecilenJuri" />
                 <ScalarProperty Name="YeterlikBasvuruID" ColumnName="YeterlikBasvuruID" />
                 <ScalarProperty Name="YeterlikBasvuruJuriUyeID" ColumnName="YeterlikBasvuruJuriUyeID" />
               </MappingFragment>
@@ -20482,6 +20296,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="OrtalamaGecerNot" ColumnName="OrtalamaGecerNot" />
+                <ScalarProperty Name="YaziliGecerNot" ColumnName="YaziliGecerNot" />
+                <ScalarProperty Name="SozluYuzde" ColumnName="SozluYuzde" />
+                <ScalarProperty Name="YaziliYuzde" ColumnName="YaziliYuzde" />
                 <ScalarProperty Name="YsBasSeminerNotKriteri" ColumnName="YsBasSeminerNotKriteri" />
                 <ScalarProperty Name="YsBasEtikNotKriteri" ColumnName="YsBasEtikNotKriteri" />
                 <ScalarProperty Name="YsBasToplamKrediKriteri" ColumnName="YsBasToplamKrediKriteri" />

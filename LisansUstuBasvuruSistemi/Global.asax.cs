@@ -29,8 +29,8 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            //RollerBus.UpdateRoles();
-            //MenulerBus.UpdateMenus();
+            RollerBus.UpdateRoles();
+            MenulerBus.UpdateMenus();
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
@@ -116,21 +116,7 @@ namespace LisansUstuBasvuruSistemi
             //        Response.End();
             //    }
             //}
-        }
-        //protected void Application_Error(object sender, EventArgs e)
-        //{
-        //    var err = Server.GetLastError();
-        //    if (HttpContext.Current.Response != null)
-        //    {
-        //        var sCode = HttpContext.Current.Response.StatusCode;
-        //        if (sCode == 404 || sCode == 200)
-        //        {
-        //           // Response.Redirect("/PageNotFound/Index");
-        //        }
-
-        //    } 
-
-        //}
+        } 
 
         protected void Application_Error(object sender, EventArgs e)
         {

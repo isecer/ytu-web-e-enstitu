@@ -1,0 +1,71 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
+@{
+    Layout = null;
+}
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+
+    <table style="width: 100%; margin: 0px;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Önerilen Yeterlik Jüri Üyeleri</td>
+            <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
+                @if (!Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
+                {
+                    if (Model.YeterlikBasvuruJuriUyeleris.Any())
+                    {
+                        <span class="label label-warning" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-edit"></i> Jüri Üyelerini Düzelt</span>
+                    }
+                    else
+                    {
+                        <span class="label label-info" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-plus"></i> Jüri Üyelerini Oluştur</span>
+                    }
+                } 
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @if (Model.YeterlikBasvuruJuriUyeleris.Any())
+                {
+                    <table class="table table-hover">
+                        <tr class="info">
+                            <th>Ad Soyad</th>
+                            <th>Üniversite</th>
+                            <th>Anabilim Dalı</th>
+                        </tr>
+                        <tbody>
+
+                            @foreach (var itemJr in Model.YeterlikBasvuruJuriUyeleris.Select((sj, inx) => new { sj, inx = inx + 1 }))
+                            {
+
+                                <tr>
+                                    <td>
+                                        @itemJr.inx)   @itemJr.sj.UnvanAdi @itemJr.sj.AdSoyad (@itemJr.sj.IsAsilOrYedek.ToAsilYedek())
+                                    </td>
+                                    <td>
+                                        @itemJr.sj.UniversiteAdi
+                                    </td>
+
+                                    <td>
+                                        @itemJr.sj.AnabilimDaliAdi
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <br />
+                    <table class="table">
+                        <tr class="info" style="text-align: center;">
+                            <td>Yeterlik jüri üyeleri henüz oluşturulmadı. Üyeleri oluşturmak için Jüri üyelerini oluştur butonuna tıklayınız.</td>
+                        </tr>
+                    </table>
+                }
+            </td>
+        </tr>
+
+    </table>
+
+</div>

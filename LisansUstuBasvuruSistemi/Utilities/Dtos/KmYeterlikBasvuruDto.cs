@@ -14,4 +14,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
     }
+
+   
 }

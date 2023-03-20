@@ -132,6 +132,9 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                     }
                                 }
                             }
+                            var ogrenciYeterResult = service.OgrenciDrYeterBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+                            model.OgrenciYeters = ogrenciYeterResult[0].Sucess ? ogrenciYeterResult[0].ogrenciyeter.ToList() : new List<OgrenciYeter>();
+
                         }
 
                     }
@@ -193,6 +196,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                         {
                             model.OgrenciTezJuri = ogrenciTezJuri[0].tezIzljuribilgileri.ToList();
                         }
+                        var ogrenciYeterResult = service.OgrenciDrYeterBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
+                        model.OgrenciYeters = ogrenciYeterResult[0].Sucess ? ogrenciYeterResult[0].ogrenciyeter.ToList() : new List<OgrenciYeter>();
                     }
                 }
             }

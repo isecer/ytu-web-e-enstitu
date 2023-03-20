@@ -1173,8 +1173,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             var cekimTip = _entities.WsSinavCekimTipleris.First(p => p.WsSinavCekimTipID == wsSinavCekimTipId);
-            var list = cekimTip.GetLocalData == false ? Management.cmbGetWsSinavCekimTipDetay(wsSinavCekimTipId, false)
-                : Management.cmbGetWsSinavCekimTipDetayGetLocalData(wsSinavCekimTipId, sinavTipKod, false);
+            var list = Management.cmbGetWsSinavCekimTipDetay(wsSinavCekimTipId, false);
             return list.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult Sil(int id, string enstituKod)

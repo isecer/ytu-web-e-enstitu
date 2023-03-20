@@ -63,9 +63,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         TezDanismanAdi = tezDanismani.Unvanlar.UnvanAdi + " " + tezDanismani.Ad + " " + tezDanismani.Soyad,
                         TezDanismanEmail = tezDanismani.EMail,
                         TezDanismanCepTel = tezDanismani.CepTel,
-                        IsOnaylandi = yeterlikBasvuru.IsOnaylandi,
-                        OnayAciklama = yeterlikBasvuru.OnayAciklama,
-                        IsBasarili = yeterlikBasvuru.IsBasarili,
+                        IsEnstituOnaylandi = yeterlikBasvuru.IsEnstituOnaylandi,
+                        EnstituOnayAciklama = yeterlikBasvuru.EnstituOnayAciklama,
+                        IsJuriOlusturuldu = yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any(),
+                        YaziliSinavTarihi = yeterlikBasvuru.YaziliSinavTarihi,
+                        YaziliSinavYeri = yeterlikBasvuru.YaziliSinavYeri,
+                        IsYaziliSinavinaKatildi = yeterlikBasvuru.IsYaziliSinavinaKatildi,
+                        YaziliSinaviNotu = yeterlikBasvuru.YaziliSinaviNotu,
+                        IsYaziliSinavBasarili = yeterlikBasvuru.IsYaziliSinavBasarili,
+                        IsSozluSinavOnline = yeterlikBasvuru.IsSozluSinavOnline,
+                        SozluSinavTarihi = yeterlikBasvuru.SozluSinavTarihi,
+                        SozluSinavYeri = yeterlikBasvuru.SozluSinavYeri,
+                        IsSozluSinavinaKatildi = yeterlikBasvuru.IsSozluSinavinaKatildi,
+                        SozluSinaviOrtalamaNotu = yeterlikBasvuru.SozluSinaviOrtalamaNotu,
+                        GenelBasariNotu = yeterlikBasvuru.GenelBasariNotu,
+                        IsGenelSonucBasarili = yeterlikBasvuru.IsGenelSonucBasarili
 
                     };
             var q2 = q;
@@ -74,12 +86,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimDaliAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue)
             {
-                if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsOnaylandi.HasValue);
-                else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsOnaylandi == true);
-                else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsOnaylandi == false);
+                if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsEnstituOnaylandi.HasValue);
+                else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsEnstituOnaylandi == true);
+                else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsEnstituOnaylandi == false);
+            }
+            var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
+            var juriOlusturmaYetkisi = RoleNames.YeterlikJuriOlusturma.InRoleCurrent();
+            if (!yeterlikGbKayitYetki && juriOlusturmaYetkisi)
+            {
+                q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             }
             var isFiltered = q2 != q;
-            ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
+            ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsEnstituOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
             ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).ToList() : new List<int>();
 
@@ -111,7 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      s.TezDanismanAdi,
                                      s.TezDanismanCepTel,
                                      s.TezDanismanEmail,
-                                     EnstituOnayDurum = s.IsOnaylandi.HasValue ? (s.IsOnaylandi == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor"
+                                     EnstituOnayDurum = s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor"
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";
@@ -128,13 +146,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.YeterlikGelenBasvurularKayit)]
+        [Authorize(Roles = RoleNames.YeterlikBasvuruOnayYetkisi)]
         public ActionResult EnstituOnay(Guid uniqueId, bool? enstituOnay, string enstituOnayAciklama)
         {
             var mmMessage = new MmMessage
             {
                 Title = "Enstitu Başvuru Onay İşlemi",
-                IsSuccess = false
+                MessageType = Msgtype.Warning
+
             };
             if (enstituOnay == false && enstituOnayAciklama.IsNullOrWhiteSpace())
             {
@@ -144,22 +163,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mmMessage.Messages.Any())
             {
                 var basvuru = _entities.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
-                var sendMail = enstituOnay.HasValue && basvuru.IsOnaylandi != enstituOnay;
-                basvuru.IsOnaylandi = enstituOnay;
-                basvuru.OnayAciklama = enstituOnayAciklama;
-                basvuru.OnayTarihi = DateTime.Now;
+                var sendMail = enstituOnay.HasValue && basvuru.IsEnstituOnaylandi != enstituOnay;
+                basvuru.IsEnstituOnaylandi = enstituOnay;
+                basvuru.EnstituOnayAciklama = enstituOnayAciklama;
+                basvuru.EnstituOnayTarihi = DateTime.Now;
                 _entities.SaveChanges();
-                mmMessage.IsSuccess = true;
+                if (sendMail)
+
+                    mmMessage.IsSuccess = true;
+                mmMessage.MessageType = Msgtype.Success;
                 LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                 if (sendMail)
-                    YeterlikBus.SendMailYeterlikOnay(new List<int> { basvuru.YeterlikBasvuruID }, enstituOnay.Value);
+                    YeterlikBus.SendMailBasvuruOnayi(basvuru.UniqueID);
             }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return Json(new { mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
 
         }
 
-        [Authorize(Roles = RoleNames.YeterlikGelenBasvurularKayit)]
+        [Authorize(Roles = RoleNames.YeterlikBasvuruOnayYetkisi)]
         public ActionResult EnstituTopluOnay(List<int> kontrolEdilmeyenTalepIds)
         {
             var success = true;
@@ -169,18 +191,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 try
                 {
-                    var basvurus = _entities.YeterlikBasvurus.Where(p => !p.IsOnaylandi.HasValue && kontrolEdilmeyenTalepIds.Contains(p.YeterlikBasvuruID)).ToList();
+                    var basvurus = _entities.YeterlikBasvurus.Where(p => !p.IsEnstituOnaylandi.HasValue && kontrolEdilmeyenTalepIds.Contains(p.YeterlikBasvuruID)).ToList();
 
+                    var uniqueIds = new List<Guid>();
                     foreach (var item in basvurus)
-                    {
-                        item.IsOnaylandi = true;
-                        item.OnayTarihi = DateTime.Now;
+                    { 
+                        uniqueIds.Add(item.UniqueID);
+                        item.IsEnstituOnaylandi = true;
+                        item.EnstituOnayTarihi = DateTime.Now;
                         item.IslemTarihi = DateTime.Now;
                         item.IslemYapanID = UserIdentity.Current.Id;
                         item.IslemYapanIP = UserIdentity.Ip;
                     }
                     _entities.SaveChanges();
-                    YeterlikBus.SendMailYeterlikOnay(kontrolEdilmeyenTalepIds, true);
+                    foreach (var uniqueId in uniqueIds)
+                    {
+                        YeterlikBus.SendMailBasvuruOnayi(uniqueId); 
+                    } 
                     message = basvurus.Count + " Yeterlik başvurusu onaylandı";
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvurus.ToJson());
 

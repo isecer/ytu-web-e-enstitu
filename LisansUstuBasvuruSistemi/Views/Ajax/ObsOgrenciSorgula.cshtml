@@ -35,12 +35,12 @@ else
 {
     <div class="panel panel-danger" style="padding-bottom: 0px;">
         <div class="panel-heading padding-0">
-            <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Bilgisi</h3>
+            <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Bilgisi</h3>
         </div>
         <div class="panel-body" style="padding: 0px;">
 
             <div class="panel-body form-group-separated">
-                <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.Ogrenci, Newtonsoft.Json.Formatting.Indented)</textarea>
+                <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height: 200px; overflow: auto;">@JsonConvert.SerializeObject(Model.Ogrenci, Newtonsoft.Json.Formatting.Indented)</textarea>
             </div>
         </div>
     </div>
@@ -48,12 +48,20 @@ else
     {
         <div class="panel panel-danger" style="padding-bottom: 0px;">
             <div class="panel-heading padding-0">
-                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Ders Bilgisi</h3>
+                <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Ders Bilgisi</h3>
             </div>
             <div class="panel-body" style="padding: 0px;">
-
                 <div class="panel-body form-group-separated">
-                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciDersNot, Newtonsoft.Json.Formatting.Indented)</textarea>
+                    <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height: 200px; overflow: auto;">
+                     @if (Model.OgrenciDersNot != null)
+                     {
+                         @JsonConvert.SerializeObject(Model.OgrenciDersNot, Newtonsoft.Json.Formatting.Indented)
+                     }
+                     else
+                     {
+                         @("Öğrenci Ders Bilgisi Yok")
+                     }
+                     </textarea>
                 </div>
             </div>
         </div>
@@ -62,30 +70,65 @@ else
     {
         <div class="panel panel-danger" style="padding-bottom: 0px;">
             <div class="panel-heading padding-0">
-                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Tez Bilgisi</h3>
+                <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Tez Bilgisi</h3>
             </div>
             <div class="panel-body" style="padding: 0px;">
-
                 <div class="panel-body form-group-separated">
-                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciTez, Newtonsoft.Json.Formatting.Indented)</textarea>
+                    <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height: 200px; overflow: auto;">
+                     @if (Model.OgrenciTez != null)
+                     {
+                         @JsonConvert.SerializeObject(Model.OgrenciTez, Newtonsoft.Json.Formatting.Indented)
+                     }
+                     else
+                     {
+                         @("Öğrenci Tez Bilgisi Yok")
+                     }
+                     </textarea>
                 </div>
             </div>
         </div>
     }
-    if (Model.OgrenciTezJuri != null)
-    {
-        <div class="panel panel-danger" style="padding-bottom: 0px;">
-            <div class="panel-heading padding-0">
-                <h3 class="panel-title" style="font-size:9pt;color:#3fbae4;">Öğrenci Tez Jüri Şablonu</h3>
-            </div>
-            <div class="panel-body" style="padding: 0px;">
-
-                <div class="panel-body form-group-separated">
-                    <textarea readonly="readonly" style="width:100%;max-width:560px; min-height:200px;overflow:auto;">@JsonConvert.SerializeObject(Model.OgrenciTezJuri, Newtonsoft.Json.Formatting.Indented)</textarea>
-                </div>
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Tez Jüri Şablonu</h3>
+        </div>
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel-body form-group-separated">
+                <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height: 200px; overflow: auto;">
+                     @if (Model.OgrenciTezJuri != null && Model.OgrenciTezJuri.Any())
+                     {
+                         @JsonConvert.SerializeObject(Model.OgrenciYeters, Newtonsoft.Json.Formatting.Indented)
+                     }
+                     else
+                     {
+                         @("Öğrenci Tez Jüri Kaydı Yok")
+                     }
+                </textarea>
             </div>
         </div>
-    }
+    </div>
+
+    <div class="panel panel-danger" style="padding-bottom: 0px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title" style="font-size: 9pt; color: #3fbae4;">Öğrenci Yeterlik Bilgileri</h3>
+        </div>
+        <div class="panel-body" style="padding: 0px;">
+            <div class="panel-body form-group-separated">
+                <textarea readonly="readonly" style="width: 100%; max-width: 560px; min-height: 200px; overflow: auto;">
+                     @if (Model.OgrenciYeters != null && Model.OgrenciYeters.Any())
+                     {
+                         @JsonConvert.SerializeObject(Model.OgrenciYeters, Newtonsoft.Json.Formatting.Indented)
+                     }
+                     else
+                     {
+                         @("Öğrenci Yeterlik Kaydı Yok")
+                     }
+                </textarea>
+            </div>
+        </div>
+    </div>
+
+
 
 }
 

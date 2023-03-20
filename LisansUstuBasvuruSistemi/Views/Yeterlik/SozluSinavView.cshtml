@@ -1,0 +1,170 @@
+﻿@using BiskaUtil
+@using DevExpress.Office.Utils
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model DmYeterlikDetayDto
+@{
+    Layout = null;
+    var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
+
+}
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 10px;">
+
+    <table style="width: 100%; margin: 0px;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"> Sözlü Sınavı</td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="CaptionTd" width="150">Sınav Durumu</td>
+                        <td class="CaptionTd" width="10">:</td>
+                        <td class="ValueTd">
+                            <select class="form-control" style="color: black;" id="IsSozluSinavinaKatildi_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "")>
+                                <option value="">Henüz Sınav Yapılmadı</option>
+                                <option value="true" @Model.IsSozluSinavinaKatildi.ToSelected()>Öğrenci Sınava Katıldı</option>
+                                <option value="false" @((Model.IsSozluSinavinaKatildi == false).ToSelected())>Öğrenci Sınava Katılmadı</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Sınav Şekli</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <select class="form-control" style="color: black;" id="IsSozluSinavOnline_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "")>
+                                <option value=""></option>
+                                <option value="true" @Model.IsSozluSinavOnline.ToSelected()>Online</option>
+                                <option value="false" @((Model.IsSozluSinavOnline == false).ToSelected())>Yüz Yüze</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Sınav Tarihi/Saati</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="color: black; width: 120px;" @(isOnaylayanVar ? "disabled" : "") value="@Model.SozluSinavTarihi.ToFormatDateAndTime()" id="SozluSinavTarihi_@Model.UniqueID">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Sınav Yeri / Sınav Linki</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <input type="text" maxlength="512" class="form-control" style="color: black;" id="SozluSinavYeri_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "") value="@Model.SozluSinavYeri" />
+                        </td>
+                    </tr>
+                    @if (!isOnaylayanVar && !Model.IsDegerlendirme.HasValue)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span class="btn btn-info" style="cursor: pointer;" onclick="SozluSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+@if (!Model.IsDegerlendirme.HasValue)
+{
+    <script>
+    //function kDownEvent(event, sndr) {
+    //    myMask(event, sndr, false, 5, 3, 2);
+    //}
+    function SozluSinavKayitKontrol(uniqueId) {
+        var isSozluSinavOnline = $('#IsSozluSinavOnline_' + uniqueId).val();
+        var sozluSinavTarihi = $('#SozluSinavTarihi_' + uniqueId).val();
+        var sozluSinavYeri = $('#SozluSinavYeri_' + uniqueId).val();
+
+        var msgArr = [];
+        if (isSozluSinavOnline == "") msgArr.push("* Sınav Şekli Seçiniz");
+        if (sozluSinavTarihi == "") msgArr.push("* Sınav Tarihi Giriniz");
+        if (sozluSinavYeri == "") msgArr.push("* Sınav Yeri Giriniz");
+        if (msgArr.length > 0) {
+            swal.fire({
+                html: msgArr.join("<br/>"),
+                icon: "warning",
+                type: "warning",
+                confirmButtonText: 'tamam',
+                padding: '2em'
+            });
+            return false;
+        }
+        return true;
+
+    }
+    function SozluSinavKaydet(uniqueId) {
+        if (!SozluSinavKayitKontrol(uniqueId)) return;
+        var isSozluSinavinaKatildi = $('#IsSozluSinavinaKatildi_' + uniqueId).val();
+        var sozluSinaviNotu = $('#SozluSinaviNotu_' + uniqueId).val();
+        var msg = "";
+        if (isSozluSinavinaKatildi == "") {
+            msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri komite üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+        }
+        else if (isSozluSinavinaKatildi == "true") {
+            msg = "Süreç devamında jüri üyelerine sözlü sınavı not girişi için linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
+        }
+        else if (isSozluSinavinaKatildi == "false") {
+            msg = "Öğrenci sözlü sınavına katılmadığı için <b>başarısız</b> olarak değerledirilecek ve jüri üyelerine sınav sonucu değerlendirme linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
+        }
+        Swal.fire({
+            html: msg,
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Kaydet',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Kaydediliyor...");
+                return new Promise(function (resolve) {
+                    var isSozluSinavOnline = $('#IsSozluSinavOnline_' + uniqueId).val();
+                    var sozluSinavTarihi = $('#SozluSinavTarihi_' + uniqueId).val();
+                    var sozluSinavYeri = $('#SozluSinavYeri_' + uniqueId).val();
+                    var model = {
+                        uniqueId,
+                        isSozluSinavinaKatildi,
+                        isSozluSinavOnline,
+                        sozluSinavTarihi,
+                        sozluSinavYeri,
+                        sozluSinaviNotu,
+                    };
+                    $.ajax({
+                        url: '@Url.Action("SozluSinavKaydet", "Yeterlik")',
+                        type: 'POST',
+                        enctype: "multipart/form-data",
+                        cache: false,
+                        dataType: "json",
+                        data: model,
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                GetDetail(uniqueId);
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        },
+                        complete: function (result) {
+                        }
+                    });
+
+                });
+            }
+        });
+  }
+
+
+
+    </script>
+}

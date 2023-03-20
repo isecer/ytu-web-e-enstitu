@@ -16,6 +16,8 @@ namespace LisansUstuBasvuruSistemi.Models
     {
         public int YeterlikBasvuruJuriUyeID { get; set; }
         public int YeterlikBasvuruID { get; set; }
+        public bool IsSecilenJuri { get; set; }
+        public Nullable<bool> IsAsilOrYedek { get; set; }
         public System.Guid UniqueID { get; set; }
         public string JuriTipAdi { get; set; }
         public string UnvanAdi { get; set; }
@@ -23,20 +25,18 @@ namespace LisansUstuBasvuruSistemi.Models
         public string EMail { get; set; }
         public Nullable<int> UniversiteID { get; set; }
         public string UniversiteAdi { get; set; }
-        public Nullable<bool> IsAsilOrYedek { get; set; }
+        public Nullable<int> AnabilimDaliID { get; set; }
+        public string AnabilimDaliAdi { get; set; }
         public Nullable<bool> IsLinkGonderildi { get; set; }
         public Nullable<System.DateTime> LinkGonderimTarihi { get; set; }
         public Nullable<int> LinkGonderenID { get; set; }
-        public Nullable<bool> IsBasarili { get; set; }
-        public string Aciklama { get; set; }
-        public Nullable<int> DegerlendirmeYapanID { get; set; }
-        public Nullable<System.DateTime> DegerlendirmeIslemTarihi { get; set; }
-        public string DegerlendirmeIslemYapanIP { get; set; }
+        public Nullable<bool> IsSonucOnaylandi { get; set; }
+        public Nullable<int> SozluNotu { get; set; }
+        public Nullable<System.DateTime> DegerlendirmeTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public Nullable<int> IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual Universiteler Universiteler { get; set; }
         public virtual YeterlikBasvuru YeterlikBasvuru { get; set; }
     }
 }

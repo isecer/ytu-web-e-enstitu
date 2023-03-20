@@ -1,0 +1,32 @@
+﻿@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikKomite
+@{
+    Layout = null;
+}
+@if (Model.IsJuriOnaylandi.HasValue)
+{
+    if (Model.IsJuriOnaylandi.Value)
+    {
+        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;"></i> Onaylandı</span>
+        <br />
+        <span style="font-size: 8pt; color: green;">@Model.DegerlendirmeIslemTarihi.Value.ToLongDateString() @Model.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+    }
+    else
+    {
+        <span style="font-size: 10pt; color: maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;"></i> Onaylanmadı</span>
+        <br />
+        <span style="font-size: 8pt; color: maroon;">@Model.DegerlendirmeIslemTarihi.Value.ToLongDateString() @Model.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Saatinde Değerlendirildi.</span>
+    }
+
+}
+else
+{
+
+    <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+    if (Model.IsLinkGonderildi == true)
+    {
+        <br />
+        <span style="color: green; font-size: 8pt;">@Model.LinkGonderimTarihi.Value.ToLongDateString() @Model.LinkGonderimTarihi.Value.ToString("HH:mm") Saatinde Değerlendirme Linki Gönderildi.</span>
+    }
+
+}
+

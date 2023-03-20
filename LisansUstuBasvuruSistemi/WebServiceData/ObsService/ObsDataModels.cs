@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         public int? AktifDanismanID { get; set; }
         public TezIzlemeBilgileri SonTezIzlemeBilgileri { get; set; }
         public List<TezIzlJuriBilgileri> TezIzlJuriBilgileri { get; set; }
+        public List<OgrenciYeter> OgrenciYeters { get; set; }
         public Personel DanismanInfo { get; set; }
     }
 
@@ -58,6 +59,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         public OgrenciDersNot OgrenciDersNot { get; set; }
         public OgrenciTez OgrenciTez { get; set; }
         public List<TezIzlJuriBilgileri> OgrenciTezJuri { get; set; }
+        public List<OgrenciYeter> OgrenciYeters { get; set; }
     }
 
 

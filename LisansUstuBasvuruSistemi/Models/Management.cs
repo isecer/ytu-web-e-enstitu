@@ -1216,25 +1216,7 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<CmbStringDto> cmbGetWsSinavCekimTipDetayGetLocalData(int WsSinavCekimTipID, int SinavTipKod, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = (from s in db.SinavSonuclaris.Where(p => p.SinavTipKod == SinavTipKod)
-                            join d in db.SinavDilleris on s.SinavDilID equals d.SinavDilID
-                            orderby s.SinavTarihi, d.DilAdi
-                            select new { s.SinavDilID, d.DilAdi, s.SinavTarihi }).ToList();
-
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbStringDto { Value = item.SinavDilID + "~" + item.DilAdi + "~" + item.SinavTarihi.ToString("dd-MM-yyyy"), Caption = item.SinavTarihi.ToString("dd-MM-yyyy") + "~" + item.DilAdi });
-                }
-            }
-            return dct.Distinct().ToList();
-
-        }
+      
         public static List<CmbIntDto> cmbGetAktifUniversiteler(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1641,32 +1623,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        }
-        public static List<CmbIntDto> cmbGetSinavSonucSinavTips(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var kods = db.SinavSonuclaris.Select(s => s.SinavTipKod).Distinct();
-                var data = (
-
-                            from s in db.SinavTipleris.Where(s2 => kods.Contains(s2.SinavTipKod))
-                            join stl in db.SinavTipleris on new { s.SinavTipID } equals new { stl.SinavTipID }
-                            orderby stl.SinavAdi
-                            select new
-                            {
-                                s.SinavTipKod,
-                                s.SinavTipGrupID,
-                                stl.SinavAdi
-                            }).Distinct().ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.SinavTipKod, Caption = item.SinavAdi });
-                }
-            }
-            return dct;
-        }
+        } 
         public static List<CmbIntDto> cmbGetAktifSinavTips(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

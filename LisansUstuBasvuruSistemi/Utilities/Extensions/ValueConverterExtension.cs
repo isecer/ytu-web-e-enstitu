@@ -178,13 +178,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             else cins = "Yedek";
             return cins;
         }
-        public static string ToTiDegerlendirmeSonucu(bool? isOyBirligiOrCouklugu, bool? isBasariliOrBasarisiz)
+        public static string ToTiDegerlendirmeSonucu(bool? IsOyBirligiOrCoklugu, bool? isBasariliOrBasarisiz)
         {
             var returnSonuc = "";
 
-            if (isOyBirligiOrCouklugu.HasValue && isBasariliOrBasarisiz.HasValue)
+            if (IsOyBirligiOrCoklugu.HasValue && isBasariliOrBasarisiz.HasValue)
             {
-                returnSonuc += isOyBirligiOrCouklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
+                returnSonuc += IsOyBirligiOrCoklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
                 returnSonuc += isBasariliOrBasarisiz.Value ? " Başarılı" : " Başarısız";
 
             }

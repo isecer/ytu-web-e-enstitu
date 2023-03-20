@@ -24,8 +24,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string YydBasvuruIslemleri = "YYD Başvuru İşlemleri";
 
         [Menu(MenuID = 81000, MenuAdi = "Yatay Geçiş Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 9)]
-        public const string YgBasvuruIslemleri = "YG Başvuru İşlemleri"; 
-    
+        public const string YgBasvuruIslemleri = "YG Başvuru İşlemleri";
+
         [Menu(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 12)]
         public const string TdoIslemleri = "Tez danışmanı öneri İşlemleri";
 
@@ -138,7 +138,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Talep Süreci", Kategori = "Talep İşlemleri", Aciklama = "")]
         public const string TalepSureci = "Talep Süreci";
 
-        [Menu(BagliMenuID = 80000, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Basvuru/Index", YetkisizErisim = true, YetkiliEnstituler ="33", AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]
+        [Menu(BagliMenuID = 80000, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Basvuru/Index", YetkisizErisim = true, YetkiliEnstituler = "33", AuthenticationControl = "authenticatedControl(this)", SiraNo = 0)]
         //[RoleAttribute(GorunurAdi = "Başvuru", Kategori = "Başvuru İşlemleri", Aciklama = "")]
         public const string Basvuru = "Basvuru";
         [Menu(BagliMenuID = 80000, MenuAdi = "Dekont Giriş", MenuCssClass = "fa fa-file-text-o", MenuUrl = "DekontBilgi/Index", YetkiliEnstituler = "33", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
@@ -234,8 +234,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string YeterlikGelenBasvurular = "Yeterlik Gelen Başvurular";
         [Role(GorunurAdi = "Gelen Başvurular Kayıt Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
         public const string YeterlikGelenBasvurularKayit = "Yeterlik Gelen Başvurular Kayit";
-        [Role(GorunurAdi = "Yeterlik Başburu Onay Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
-        public const string YeterlikBasvuruOnayYetkisi = "Yeterlik Başburu Onay Yetkisi";
+        [Role(GorunurAdi = "Jüri Olusturma Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
+        public const string YeterlikJuriOlusturma = "Yeterlik Gelen Başvurular Juri Olusturma";
+        [Role(GorunurAdi = "Başvuru Onay Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
+        public const string YeterlikBasvuruOnayYetkisi = "Yeterlik Başvuru Onay Yetkisi";
+        [Role(GorunurAdi = "Abd/Jüri Onayı Düzeltme Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
+        public const string YeterlikAbdJuriOnayDuzeltme = "Yeterlik Abd/Jüri Onay Düzeltme";
 
 
         [Menu(BagliMenuID = 82500, MenuAdi = "Yeterlik Süreci", MenuCssClass = "fa fa-clock-o", MenuUrl = "YeterlikSureci/Index", SiraNo = 7)]

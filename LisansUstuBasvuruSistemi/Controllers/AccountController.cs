@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     public class AccountController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+
         public ActionResult Login(bool? logout, string dlgId, string returnUrl)
         {
             var mmMessage = new MmMessage
@@ -120,9 +121,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         .FirstOrDefault();
                                     if (tdoBasvuruId > 0)
                                     {
-                                        string hataMesaji = "";
-                                        TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(
-                                           loginUser.KullaniciID, tdoBasvuruId, out hataMesaji);
+                                        TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(loginUser.KullaniciID, tdoBasvuruId);
                                     }
                                 }
                             }
@@ -455,7 +454,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = kModel.KullaniciID > 0 ? "Kullanıcı Hesabı Güncelleme İşlemi" : "Yeni Kullanıcı Hesabı Oluşturma İşlemi"
             };
             var kKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-
+            if (!kKayit && kModel.KullaniciID > 0 && kModel.KullaniciID != UserIdentity.Current.Id)
+            {
+                mmMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
+                return mmMessage.ToJsonResult();
+            }
             var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
             kModel.KullaniciAdi = kModel.KullaniciAdi != null ? kModel.KullaniciAdi.Trim() : "";
             #region Kontrol

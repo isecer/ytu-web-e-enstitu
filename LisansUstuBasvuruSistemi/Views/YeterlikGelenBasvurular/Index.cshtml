@@ -237,11 +237,11 @@
                                         <td>
                                             @item.BasvuruTarihi
                                         </td>
-                                        <td>
+                                        <td class="yeterlikBasDurum_@item.UniqueID">
                                             @item.ToYeterlikDurum()
                                         </td>
                                         <td>
-                                            @if (!item.IsOnaylandi.HasValue)
+                                            @if (!item.IsEnstituOnaylandi.HasValue)
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "Yeterlik", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.AdSoyad')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
@@ -330,6 +330,7 @@
             data: { id: id },
             success: function (result) {
                 $('#cls-' + id).html(result);
+                GetBasvuruDurum(id);
                 PanelRefresh(panel, true);
             },
             error: function (err) {
@@ -339,4 +340,17 @@
         });
 
     }
-</script>
+    function GetBasvuruDurum(id) {
+        $.ajax({
+            url: '@Url.Action("GetBasvuruDurum", "Yeterlik")',
+            data: { id },
+            success: function (result) {
+                debugger
+                $('.yeterlikBasDurum_' + id).html(result);
+            },
+            complete: function (err) {
+            }
+        }); 
+    }
+
+</script> 

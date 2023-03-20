@@ -7,6 +7,7 @@
     var tezDanismaniBilgi = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani");
     var ytuIciJuri1 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri1");
     var ytuIciJuri2 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri2");
+    var ytuIciJuri3 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri3");
     var ytuDisiJuri1 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri1");
     var ytuDisiJuri2 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri2");
     var ytuDisiJuri3 = Model.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.JuriTipAdi == "YtuDisiJuri3");
@@ -138,7 +139,7 @@
                         <table style="width: 100%;">
                             <tbody>
                                 <tr>
-                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">3) Yedek Üye Bilgileri</td>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">3) Asil Üye Bilgileri</td>
                                 </tr>
                                 <tr>
                                     <td style="padding-left: 10px; text-align: left;">
@@ -151,7 +152,7 @@
                                                     <td class="ValueTd form-group">
                                                         <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
                                                         <input type="hidden" name="JuriTipAdis" value="YtuIciJuri2" />
-                                                        <input type="hidden" name="IsAsilOrYedeks" value="false" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="true" />
                                                         <input type="hidden" name="TabIds" value="1" />
                                                         <input type="hidden" name="UniqueIDs" value="@(ytuIciJuri2?.UniqueID??Guid.NewGuid())" />
                                                         <input type="text" class="form-control upperCase egitmens" name="AdSoyads" maxlength="128" value="@(ytuIciJuri2?.AdSoyad)" style="width: 100%; color: black;" id="YtuIciJuri2AdSoyad" />
@@ -180,6 +181,61 @@
                                                         <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri2?.EMail)" style="width: 100%;" id="YtuIciJuri2EMail" />
                                                     </td>
                                                 </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="widget widget-default" style="padding: 3px; margin: 0px;">
+                        <table style="width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 9pt; border-bottom: 1px solid;">4) Yedek Üye Bilgileri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 10px; text-align: left;">
+
+                                        <table style="width: 100%;">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="CaptionTd" width="150">Ad Soyadı</td>
+                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="hidden" name="UniversiteIDs" value="@Management.UniversiteYtuKod" />
+                                                        <input type="hidden" name="JuriTipAdis" value="YtuIciJuri3" />
+                                                        <input type="hidden" name="TabIds" value="1" />
+                                                        <input type="hidden" name="IsAsilOrYedeks" value="false" />
+                                                        <input type="hidden" name="UniqueIDs" value="@(ytuIciJuri3?.UniqueID??Guid.NewGuid())" />
+                                                        <input type="text" class="form-control upperCase egitmens" name="AdSoyads" maxlength="128" value="@(ytuIciJuri3?.AdSoyad)" style="width: 100%; color: black;" id="YtuIciJuri3AdSoyad" />
+                                                        @if (ytuIciJuri3 != null)
+                                                        {
+                                                            <script>
+                                                                setTimeout(function () {
+                                                                    var secilen = @Html.Raw(Json.Encode(new { id = ytuIciJuri3.AdSoyad, text = ytuIciJuri3.AdSoyad }));
+                                                                    $("#YtuIciJuri3AdSoyad").select2('data', secilen);
+                                                                }, 1200);
+                                                            </script>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Unvanı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="UnvanAdis" readonly="readonly" value="@(ytuIciJuri3?.UnvanAdi)" style="width: 100%; color: black;" id="YtuIciJuri3UnvanAdi" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">E-Posta Adresi (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri3?.EMail)" style="width: 100%;" id="YtuIciJuri3EMail" />
+                                                    </td>
+                                                </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </td>

@@ -203,11 +203,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (mmMessage.IsSuccess && !(tdoBasvuruId > 0))
             {
-                var hataMesaji = "";
-                TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(kul.KullaniciID, null, out hataMesaji);
-                if (!hataMesaji.IsNullOrWhiteSpace())
+                var result = TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(kul.KullaniciID, null);
+                if (!result.Item2.IsNullOrWhiteSpace())
                 {
-                    mmMessage.Messages.Add(hataMesaji);
+                    mmMessage.Messages.Add(result.Item2);
                     mmMessage.IsSuccess = false;
                 }
             }
@@ -325,8 +324,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     });
                     _entities.SaveChanges();
-                    var hataMesaji = "";
-                    TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(data.KullaniciID, data.TDOBasvuruID, out  hataMesaji);
+                    TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(data.KullaniciID, data.TDOBasvuruID);
 
                 }
                 else
@@ -2002,7 +2000,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Tez Danışmanı Öneri Formu Danışman Onay İşlemi"
             };
             var formYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.First(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+            var tdoBasvuruDanis = _entities.TDOBasvuruDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == kModel.TDOBasvuruDanismanID);
+            if (tdoBasvuruDanis == null)
+            {
+                mMessage.Messages.Add("Onaylanmak istenen başvuru bulunamadı. Başvurunun öğrenci tarafından silinme/vazgeçilme ihtimaline karşı ekranı yenileyip tekrar deneyiniz.");
+                return mMessage.ToJsonResult();
+            }
             if (!RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent() && (!formYetki || tdoBasvuruDanis.TezDanismanID != UserIdentity.Current.Id))
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");

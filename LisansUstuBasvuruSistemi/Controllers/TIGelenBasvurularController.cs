@@ -84,7 +84,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID
                         }).ToList(),
 
-                        IsOyBirligiOrCouklugu = ard != null ? ard.IsOyBirligiOrCouklugu : (bool?)null,
+                        IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
 
                     };

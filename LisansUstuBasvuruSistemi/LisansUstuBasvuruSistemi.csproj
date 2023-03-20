@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LisansUstuBasvuruSistemi</RootNamespace>
     <AssemblyName>LisansUstuBasvuruSistemi</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -502,16 +502,10 @@
     <Compile Include="Models\Kullanicilar.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\KullaniciLisansBilgileri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\KullaniciProgramlari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KullaniciTipleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\LisansTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Log.cs">
@@ -581,9 +575,6 @@
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MezuniyetSureciOgrenimTipKriterleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MezuniyetSureciOtoMailTezTeslim.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MezuniyetSureciYayinTurleri.cs">
@@ -692,9 +683,6 @@
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SinavNotlari.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SinavSonuclari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SinavTarihleri.cs">
@@ -1027,7 +1015,6 @@
     <Compile Include="Utilities\Dtos\FmBelgeTipleriDto.cs" />
     <Compile Include="Utilities\Dtos\FmSrTalepTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTipDetayDto.cs" />
-    <Compile Include="Utilities\Dtos\fmSinavSonuclari.cs" />
     <Compile Include="Utilities\Dtos\FmMulakatSureci.cs" />
     <Compile Include="Utilities\Dtos\FmMsonucOranModel.cs" />
     <Compile Include="Utilities\Dtos\FmMulakatSonuc.cs" />
@@ -3476,6 +3463,16 @@
     <Content Include="Views\TDOBasvuru\TdoDanismanBaslikDilDegisiklikFormu.cshtml" />
     <Content Include="Views\AnabilimDallari\YeterlikKomiteUyeleri.cshtml" />
     <Content Include="Views\Yeterlik\YeterlikJuriFormu.cshtml" />
+    <Content Include="Views\Yeterlik\KomiteOnayDurumView.cshtml" />
+    <Content Include="Views\Yeterlik\JuriOnayDurumView.cshtml" />
+    <Content Include="Views\Yeterlik\EnstituBasvuruOnayView.cshtml" />
+    <Content Include="Views\Yeterlik\JuriUyeleriListView.cshtml" />
+    <Content Include="Views\Yeterlik\KomiteDegerlendirmeListView.cshtml" />
+    <Content Include="Views\Yeterlik\SinavView.cshtml" />
+    <Content Include="Views\Yeterlik\JuriDegerlendirmeListView.cshtml" />
+    <Content Include="Views\Yeterlik\YaziliSinavView.cshtml" />
+    <Content Include="Views\Yeterlik\SinavOnayDurumView.cshtml" />
+    <Content Include="Views\Yeterlik\SozluSinavView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3502,6 +3499,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>

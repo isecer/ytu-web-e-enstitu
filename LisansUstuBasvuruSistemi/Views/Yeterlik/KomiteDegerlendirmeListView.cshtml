@@ -1,0 +1,196 @@
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
+@{
+    Layout = null;
+}
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> ABD Komite Üyesi Yeterlik Jüri Değerlendirmeleri</td>
+            <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-left: 10px;">
+                @if (Model.DmYeterlikKomites.Any())
+                {
+                    <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
+                        <table class="table" style="width: 100%; margin: 0px;">
+                            <tr class="warning">
+                                <th width="35"></th>
+                                <th>Ad Soyad</th>
+                                <th>Komite Jüri Onay Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+                            <tbody>
+
+                                @foreach (var itemKom in Model.DmYeterlikKomites.OrderBy(o => o.AdSoyad))
+                                {
+                                    var openRow = false;
+                                    var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.SozluSinavTarihi.HasValue;
+                                    <tr>
+                                        <td>
+                                            <ul class="panel-controls">
+                                                <li id="iShow_Km_@itemKom.UniqueID" onclick="ShowDetailY('Km_@itemKom.UniqueID')">
+                                                    <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)" onclick="detayGor(@itemKom.KullaniciID)">@itemKom.UnvanAdi @itemKom.AdSoyad</a> <br /> @itemKom.EMail
+                                        </td>
+                                        <td>
+                                            @itemKom.ToKomiteOnayDurumView()
+                                        </td>
+                                        <td>
+                                            @if (onayDuzeltmeYetki)
+                                            {
+                                                <a href="javascript:void(0)" title="Komtie üyesi bilgisini düzelt" onclick="HesapKayit(@itemKom.KullaniciID)"><i class="fa fa-edit fa-lg"></i></a>
+                                                <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="MainRow2 cls-Km_@itemKom.UniqueID" style="@(openRow ? "" : "display:none;")">
+                                        <td id="cls-Km_@itemKom.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                                                <table style="width: 100%;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="CaptionTd" width="180">Onay Durumu</td>
+                                                            <td class="CaptionTd" width="10">:</td>
+                                                            <td class="ValueTd">
+                                                                @if (onayDuzeltmeYetki)
+                                                                {
+                                                                    <select onchange="if($(this).val()=='false'){ $('.RwKAck_@itemKom.UniqueID').removeClass('hide'); }else{$('.RwKAck_@itemKom.UniqueID').addClass('hide');}" id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                                        <option></option>
+                                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Belirlenen Yeterlik Jürilerini Onaylıyorum</option>
+                                                                        <option value="false" @((itemKom.IsJuriOnaylandi == false).ToSelected())>Belirlenen Yeterlik Jürilerini Onaylamıyorum</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @itemKom.ToKomiteOnayDurumView()
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="RwKAck_@itemKom.UniqueID @(itemKom.IsJuriOnaylandi == false ? "" : "hide")">
+                                                            <td colspan="3">
+                                                                <table style="width: 100%; margin-top: 5px;">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="CaptionTd" width="180"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="ValueTd">
+                                                                                @if (onayDuzeltmeYetki)
+                                                                                {
+                                                                                    <textarea placeholder="Açıklama Giriniz" id="KomiteOnayAciklama_@itemKom.UniqueID" maxlength="2048" rows="4" style="resize: vertical; border: 1px solid;" class="form-control"></textarea>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        @if (onayDuzeltmeYetki)
+                                                        {
+                                                            <tr class="RwKBtn_@itemKom.UniqueID">
+                                                                <td class="CaptionTd"></td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd" style="padding-top: 5px; font-size: 11pt;">
+                                                                    <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+function KomiteJuriOnayKayit(id, uniqueID) {
+    var _panel = $('#bsvrDet_' + id);
+    PanelRefresh(_panel, false);
+    var isGenelSonucBasarili = $('#KomiteIsOnaylandi_' + uniqueID).val();
+    var aciklama = $('#KomiteOnayAciklama_' + uniqueID).val();
+    $.ajax({
+        url: '@Url.Action("KomiteJuriOnay", "Yeterlik")',
+        data: { uniqueID, isGenelSonucBasarili, aciklama },
+        success: function (result) {
+            GetDetail(id);
+            swal.fire({
+                html: result.Messages,
+                icon: (result.IsSuccess ? "success" : "error"),
+                type: (result.IsSuccess ? "success" : "error"),
+                confirmButtonText: 'tamam',
+                padding: '2em'
+            });
+        },
+        complete: function (err) {
+            PanelRefresh(_panel, true);
+        }
+    });
+}
+function KomiteLinkGonder(id, UniqueID, AdSoyad) {
+        var _panel = $('#bsvrDet_' + id);
+            PanelRefresh(_panel, false);
+            bootbox.dialog({
+                message: AdSoyad +" isimli komite üyesine yeni yeterlik jüri değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
+                title: "<i class='fa fa-envelope fa-lg'></i> ABD Komite Üyesine Yeni Değerlendirme Linki Gönderme İşlemi",
+                buttons: {
+                    success: {
+                        label: "Gönder",
+                        className: "btn-primary",
+                        callback: function (event) {
+                            $.ajax({
+                                url: '@Url.Action("KomiteDegerlendirmeLinkiGonder", "Yeterlik")',
+                                data: {
+                                    'id': id,
+                                    'UniqueID': UniqueID,
+
+                                },
+                                success: function (result) {
+                                    PanelRefresh(_panel, true);
+                                    if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                    GetDetail(id);
+                                    showMmMessage(result.Messages, 'Tamam');
+                                },
+                                error: function (err) {
+                                    PanelRefresh(_panel, true);
+                                    alert(err.responseText);
+
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: "Kapat",
+                        className: "btn-primary",
+                        callback: function () {
+                            PanelRefresh(_panel, true);
+                        }
+                    }
+                }
+            });
+        }
+
+</script>
+
+

@@ -168,9 +168,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 if (basvuru.Kullanicilar.DanismanID.HasValue && model.TDOBasvuruDanismanList.All(a => a.TezDanismanID != basvuru.Kullanicilar.DanismanID))
                 {
-                    var hataMesaji = "";
-                    var eslestirildi = ObsDanismanBasvuruBilgiEslestir(model.KullaniciID, model.TDOBasvuruID, out hataMesaji);
-                    if (eslestirildi)
+                    var eslestirildi = ObsDanismanBasvuruBilgiEslestir(model.KullaniciID, model.TDOBasvuruID);
+                    if (eslestirildi.Item1)
                     {
                         basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                         goto tekrarYukle;
@@ -227,7 +226,9 @@ namespace LisansUstuBasvuruSistemi.Business
             return model;
 
         }
-        public static bool  ObsDanismanBasvuruBilgiEslestir(int kullaniciId, int? tDoBasvuruId, out string hataMesaji)
+
+
+        public static Tuple<bool, string> ObsDanismanBasvuruBilgiEslestir(int kullaniciId, int? tDoBasvuruId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
@@ -239,16 +240,16 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     if (ogrenciInfo.IsDanismanHesabiBulunamadi)
                     {
-                        hataMesaji = "Başvuru işlemini yapabilmeniz için varolan danışmanınız '" +
-                                     ogrenciInfo.DanismanInfo.UNVAN_AD + " " + ogrenciInfo.DanismanInfo.AD + " " +
-                                     ogrenciInfo.DanismanInfo.SOYAD +
-                                     "' lisansüstü.yildiz.edu.tr sistemine üye olması gerekmektedir.";
-                        return false;
+                        var hataMesaji = "Başvuru işlemini yapabilmeniz için varolan danışmanınız '" +
+                                      ogrenciInfo.DanismanInfo.UNVAN_AD + " " + ogrenciInfo.DanismanInfo.AD + " " +
+                                      ogrenciInfo.DanismanInfo.SOYAD +
+                                      "' lisansüstü.yildiz.edu.tr sistemine üye olması gerekmektedir.";
+                        return Tuple.Create(false, hataMesaji);
                     }
                     var danismanBasvurusuVar = db.TDOBasvuruDanismen.Any(p => p.TDOBasvuru.KullaniciID == kullaniciId);
 
                     if (!danismanBasvurusuVar)
-                    { 
+                    {
                         var kModel = new TDOBasvuruDanisman
                         {
                             IsObsData = true,
@@ -302,17 +303,15 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
 
                         db.SaveChanges();
-                        hataMesaji = "";
-                        return true;
+                        return Tuple.Create(false, "");
                     }
 
                 }
-
-                hataMesaji = "";
-                return false;
+                return Tuple.Create(false, "");
 
             }
         }
+
         public static MmMessage GetAktifTezDanismanOneriSurecKontrol(string enstituKod, int? kullaniciId, int? tdoBasvuruId = null)
         {
             var msg = new MmMessage

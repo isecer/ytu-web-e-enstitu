@@ -17,7 +17,7 @@
     var durumDetayIconClass = "";
     var aciklamaDetay = "";
 
-    if (!item.IsOnaylandi.HasValue)
+    if (!item.IsEnstituOnaylandi.HasValue)
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
@@ -26,29 +26,69 @@
         durumColor = "gray";
         durumDetay = "Başvuru Enstitü tarafından kabül edilmesi bekleniyor";
         durumDetayIconClass = "fa fa-comments-o";
-        aciklamaDetay = "test2";
     }
-    else if (!item.IsOnaylandi.Value)
+    else if (!item.IsEnstituOnaylandi.Value)
     {
         tabAdi = "Yeni Başvuru";
         tabIconClass = "fa fa-list-alt fa-lg";
         durumAdi = "Enstütü Tarafından İptal Edildi";
         durumIconClass = "fa fa-thumbs-o-down";
         durumColor = "maroon";
-        durumDetay = Model.OnayAciklama.Substring(0, Model.OnayAciklama.Length > 45 ? 45 : Model.OnayAciklama.Length) + "...";
+        durumDetay = Model.EnstituOnayAciklama.Substring(0, Model.EnstituOnayAciklama.Length > 45 ? 45 : Model.EnstituOnayAciklama.Length) + "...";
         durumDetayIconClass = "fa fa-comments-o";
-        aciklamaDetay = Model.OnayAciklama;
+        aciklamaDetay = Model.EnstituOnayAciklama;
     }
-    else if (item.IsOnaylandi.Value)
+    else if (item.IsEnstituOnaylandi.Value)
     {
-        tabAdi = "Yeni Başvuru";
-        tabIconClass = "fa fa-list-alt fa-lg";
-        durumAdi = "Enstütü Tarafından Onaylandı";
-        durumIconClass = "fa fa-thumbs-o-up";
-        durumColor = "green";
-        durumDetay = "Başvuru kabulü Enstitü tarafından gerçekleştirildi";
-        durumDetayIconClass = "fa fa-comments-o";
-        aciklamaDetay = "test2";
+
+        if (item.IsGenelSonucBasarili.HasValue)
+        {
+            if (item.IsGenelSonucBasarili.Value)
+            {
+                tabAdi = "Sınav Süreci";
+                tabIconClass = "fa fa-list-alt fa-lg";
+                durumAdi = "Sınav Sonucu Başarılı";
+                durumIconClass = "fa fa-thumbs-o-up fa-lg";
+                durumColor = "green";
+                durumDetay = "Jüri üyeleri tarafından sınav sonucu başarılı olarak değerlendirilmiştir.";
+                durumDetayIconClass = "fa fa-comments-o";
+            }
+            else
+            {
+                tabAdi = "Sınav Süreci";
+                tabIconClass = "fa fa-list-alt fa-lg";
+                durumAdi = "Sınav Sonucu Başarısızz";
+                durumIconClass = "fa fa-thumbs-o-down fa-lg";
+                durumColor = "maroon";
+                durumDetay = "Jüri üyeleri tarafından sınav sonucu başarısız olarak değerlendirilmiştir.";
+                durumDetayIconClass = "fa fa-comments-o";
+            }
+
+        }
+        else if (item.SozluSinavTarihi.HasValue)
+        {
+             
+                tabAdi = "Sözlü Sınav Süreci";
+                tabIconClass = "fa fa-list-alt fa-lg";
+                durumAdi = "Değerlendirme Süreci Devam Ediyor";
+                durumIconClass = "fa fa-clock-o fa-lg";
+                durumColor = "green";
+                durumDetay = "Jüri üyeleri tarafından sınav sonucu değerlendirme işlemi devam ediyor.";
+                durumDetayIconClass = "fa fa-comments-o";
+            
+        }
+        else if (item.YaziliSinavTarihi.HasValue)
+        {
+            tabAdi = "Yazılı Sınav Süreci";
+            tabIconClass = "fa fa-list-alt fa-lg";
+            durumAdi = "Değerlendirme Süreci Devam Ediyor";
+            durumIconClass = "fa fa-clock-o fa-lg";
+            durumColor = "green";
+            durumDetay = "Jüri üyeleri tarafından sınav sonucu değerlendirme işlemi devam ediyor.";
+            durumDetayIconClass = "fa fa-comments-o";
+        }
+
+
     }
 }
 

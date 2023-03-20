@@ -201,10 +201,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         .OrderByDescending(o => o.TDOBasvuruID).Select(s => s.TDOBasvuruID)
                         .FirstOrDefault();
                     if (tdoBasvuruId > 0)
-                    {
-                        string hataMesaji = "";
+                    { 
                         var sonuc = TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(
-                            loginUser.KullaniciID, tdoBasvuruId, out hataMesaji);
+                            loginUser.KullaniciID, tdoBasvuruId);
                     }
                 }
                 FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, "", rememberMe.Value);

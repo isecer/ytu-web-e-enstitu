@@ -48,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int SRDurumID { get; set; }
         public string SRDurumAciklamasi { get; set; }
         public Nullable<System.DateTime> RSBaslatildiMailGonderimTarihi { get; set; }
-        public Nullable<bool> IsOyBirligiOrCouklugu { get; set; }
+        public Nullable<bool> IsOyBirligiOrCoklugu { get; set; }
         public Nullable<int> JuriSonucMezuniyetSinavDurumID { get; set; }
         public Nullable<System.DateTime> DegerlendirmeSonucMailTarihi { get; set; }
         public Nullable<int> MezuniyetSinavDurumID { get; set; }

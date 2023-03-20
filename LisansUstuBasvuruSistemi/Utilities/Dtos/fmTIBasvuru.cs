@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? TIAraRaporRaporDurumID { get; set; }
         public string TIAraRaporRaporDurumAdi { get; set; }
         public int? AraRaporSayisi { get; set; }
-        public bool? IsOyBirligiOrCouklugu { get; set; }
+        public bool? IsOyBirligiOrCoklugu { get; set; }
         public bool? IsBasariliOrBasarisiz { get; set; }
         public List<TIAraraporFiltreModel> tIAraraporFiltreModels { get; set; }
         public string TIAraRaporAktifDonemID { get; set; }

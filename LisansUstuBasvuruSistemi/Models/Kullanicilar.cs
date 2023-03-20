@@ -43,7 +43,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.KullaniciEnstituYetkileris = new HashSet<KullaniciEnstituYetkileri>();
             this.Kullanicilar1 = new HashSet<Kullanicilar>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
-            this.LisansTipleris = new HashSet<LisansTipleri>();
             this.MailSablonlaris = new HashSet<MailSablonlari>();
             this.MesajKategorileris = new HashSet<MesajKategorileri>();
             this.Mesajlars = new HashSet<Mesajlar>();
@@ -196,8 +195,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual YetkiGruplari YetkiGruplari { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LisansTipleri> LisansTipleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MailSablonlari> MailSablonlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

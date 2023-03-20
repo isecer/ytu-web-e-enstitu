@@ -22,6 +22,10 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> YsBasToplamKrediKriteri { get; set; }
         public string YsBasEtikNotKriteri { get; set; }
         public string YsBasSeminerNotKriteri { get; set; }
+        public Nullable<int> YaziliYuzde { get; set; }
+        public Nullable<int> SozluYuzde { get; set; }
+        public Nullable<decimal> YaziliGecerNot { get; set; }
+        public Nullable<decimal> OrtalamaGecerNot { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

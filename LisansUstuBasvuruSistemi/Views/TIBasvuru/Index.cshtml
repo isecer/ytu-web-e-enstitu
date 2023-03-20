@@ -184,7 +184,7 @@
                                                 @item.TIAraRaporAktifDonemAdi<br />@(item.AraRaporSayisi.HasValue ? item.AraRaporSayisi + ". Rapor" : "")
                                             </td>
                                             <td>
-                                                @item.TIAraRaporRaporDurumAdi <br />@ValueConverterExtension.ToTiDegerlendirmeSonucu(item.IsOyBirligiOrCouklugu, item.IsBasariliOrBasarisiz)
+                                                @item.TIAraRaporRaporDurumAdi <br />@ValueConverterExtension.ToTiDegerlendirmeSonucu(item.IsOyBirligiOrCoklugu, item.IsBasariliOrBasarisiz)
                                             </td>
                                             <td>
                                                 <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { TIBasvuruID = item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>

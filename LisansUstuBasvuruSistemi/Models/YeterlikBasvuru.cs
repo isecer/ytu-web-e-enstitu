@@ -37,10 +37,22 @@ namespace LisansUstuBasvuruSistemi.Models
         public int KayitDonemID { get; set; }
         public System.DateTime KayitTarihi { get; set; }
         public int TezDanismanID { get; set; }
-        public Nullable<bool> IsOnaylandi { get; set; }
-        public Nullable<System.DateTime> OnayTarihi { get; set; }
-        public string OnayAciklama { get; set; }
-        public Nullable<bool> IsBasarili { get; set; }
+        public Nullable<bool> IsEnstituOnaylandi { get; set; }
+        public Nullable<System.DateTime> EnstituOnayTarihi { get; set; }
+        public string EnstituOnayAciklama { get; set; }
+        public Nullable<bool> IsAbdKomitesiJuriyiOnayladi { get; set; }
+        public Nullable<System.DateTime> YaziliSinavTarihi { get; set; }
+        public string YaziliSinavYeri { get; set; }
+        public Nullable<bool> IsYaziliSinavinaKatildi { get; set; }
+        public Nullable<int> YaziliSinaviNotu { get; set; }
+        public Nullable<bool> IsYaziliSinavBasarili { get; set; }
+        public Nullable<bool> IsSozluSinavOnline { get; set; }
+        public Nullable<System.DateTime> SozluSinavTarihi { get; set; }
+        public string SozluSinavYeri { get; set; }
+        public Nullable<bool> IsSozluSinavinaKatildi { get; set; }
+        public Nullable<decimal> SozluSinaviOrtalamaNotu { get; set; }
+        public Nullable<decimal> GenelBasariNotu { get; set; }
+        public Nullable<bool> IsGenelSonucBasarili { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

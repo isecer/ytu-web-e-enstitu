@@ -1,0 +1,229 @@
+﻿@using BiskaUtil
+@using DevExpress.Office.Utils
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
+@{
+    Layout = null;
+    var isDanismani = UserIdentity.Current.Id == Model.TezDanismanID;
+    var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+    var isSozluNotuIstensin = Model.IsYaziliSinavBasarili == true && Model.IsSozluSinavinaKatildi == true;
+    var juriler = Model.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).ToList();
+    var tumJuriOnayladi = juriler.All(a => a.IsSonucOnaylandi.HasValue);
+}
+
+
+
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i>Yeterlik Jüri Üyeleri Sınav Sonucu Değerlendirmesi</td>
+
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-left: 10px;">
+                <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
+                    <table class="table" style="width: 100%; margin: 0px;">
+                        <tr class="warning">
+                            <th width="35"></th>
+                            <th>Ad Soyad</th>
+                            <th>Sonuç Onayı / Not Giriş Durumu</th>
+                            <th width="45"></th>
+                        </tr>
+                        <tbody>
+
+                            @foreach (var itemJr in juriler)
+                            {
+                                var isTezDanismani = isDanismani && itemJr.JuriTipAdi == "TezDanismani";
+                                var openRow = isTezDanismani;
+                                var editdata = onayDuzeltmeYetki || (isTezDanismani && isDanismani && !itemJr.IsSonucOnaylandi.HasValue);
+                                <tr>
+                                    <td>
+                                        <ul class="panel-controls">
+                                            <li id="iShow_Jr_@itemJr.UniqueID" onclick="ShowDetailY('Jr_@itemJr.UniqueID')">
+                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @itemJr.UnvanAdi @itemJr.AdSoyad<br /> @itemJr.EMail
+                                    </td>
+                                    <td>
+                                        @itemJr.ToJuriOnayDurumView()
+                                    </td>
+                                    <td>
+                                        @if (onayDuzeltmeYetki)
+                                        {
+                                            <a href="javascript:void(0)" title="Jüri üyesi bilgisini düzelt"><i class="fa fa-edit fa-lg"></i></a>
+                                            <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="JuriLinkGonder('@Model.UniqueID','@itemJr.UniqueID','@itemJr.UnvanAdi @itemJr.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class="MainRow2 cls-Jr_@itemJr.UniqueID" style="@(openRow ? "" : "display:none;")">
+                                    <td id="cls-Jr_@itemJr.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                        <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                                            <table style="width: 100%;">
+                                                <tbody>
+                                                    @if (isSozluNotuIstensin)
+                                                    {
+                                                        <tr>
+                                                            @if (editdata)
+                                                            {
+                                                                <td class="CaptionTd" width="180">Sözlü Notu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+
+                                                                    <input maxlength="3" @(!onayDuzeltmeYetki ? "disabled" : "") onkeydown="kDownEvent(window.event,this)" style="color: black;" class="form-control" id="SozluNotu_@itemJr.UniqueID" value="@itemJr.SozluNotu" />
+
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td colspan="3">
+                                                                    @itemJr.ToJuriOnayDurumView()
+                                                                </td>
+
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd" width="180">Sınav Sonuç Onayı</td>
+                                                            <td class="CaptionTd" width="10">:</td>
+                                                            <td class="ValueTd">
+                                                                @if (editdata)
+                                                                {
+                                                                    <select id="IsSonucOnaylandi_@itemJr.UniqueID">
+                                                                        <option></option>
+                                                                        <option value="true" @itemJr.IsSonucOnaylandi.ToSelected()>Sınav Sonucunu Onaylıyorum</option>
+                                                                    </select>
+                                                                }
+                                                                else
+                                                                {
+                                                                    @itemJr.ToJuriOnayDurumView()
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                    @if (editdata)
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd"></td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd" style="padding-top: 5px; font-size: 11pt;">
+                                                                <span class="label label-primary" style="cursor: pointer;" onclick="SinavDegerlendir('@Model.UniqueID','@itemJr.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> @(isSozluNotuIstensin?"Sözlü Notunu Kaydet": "Onaylama İşlemini Kaydet")</span>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                @if (tumJuriOnayladi)
+                {
+
+
+                    <div class="widget widget-default" style="border-top: 1px solid;border-top-color: color:@(Model.IsGenelSonucBasarili==true?"green":"maroon"); margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                        <table style="width: 100%;color:@(Model.IsGenelSonucBasarili==true?"green":"maroon")">
+                            <tbody>
+                                @if (Model.IsYaziliSinavinaKatildi.HasValue)
+                                {
+                                    <tr>
+                                        <td class="CaptionTd" width="180">Yazılı Sınavı Notu</td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd" style="font-size: 11pt; ">@(Model.IsYaziliSinavinaKatildi==true?Model.YaziliSinaviNotu.ToString():"Sınava katılmadı")</td>
+                                    </tr>
+                                }
+                                @if (Model.IsSozluSinavinaKatildi.HasValue)
+                                {
+                                    <tr>
+                                        <td class="CaptionTd">Sözlü Sınavı Notu</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd" style="font-size: 11pt;">
+                                            @(Model.IsSozluSinavinaKatildi == true ? Model.SozluSinaviOrtalamaNotu.ToString() : "Sınava Katılmadı")
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.IsYaziliSinavinaKatildi == true && Model.IsSozluSinavinaKatildi == true)
+                                {
+                                    <tr>
+                                        <td class="CaptionTd">Genel Başarı Notu</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd" style="font-size: 11pt;">
+                                            @Model.GenelBasariNotu
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="CaptionTd">Başarı Durumu</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd" style="font-size: 11pt;">
+                                        @Model.IsGenelSonucBasarili.ToOnayDurumIconHtml() @(Model.IsGenelSonucBasarili==true?"Başarılı":"Başarısız")
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    function kDownEvent(event, sndr) {
+        myMask(event, sndr, true, 3, 3, 0);
+    }
+   
+    function JuriLinkGonder(id, uniqueId, adSoyad) {
+        Swal.fire({
+            html: adSoyad + " isimli jüri üyesine sınav değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Gönder',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Gönderiliyor...");
+                return new Promise(function (resolve) { 
+                    $.ajax({
+                        url: '@Url.Action("JuriDegerlendirmeLinkiGonder", "Yeterlik")',
+                        data: { uniqueId},
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                GetDetail(id);
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        },
+                        complete: function (result) {
+                        }
+                    });
+
+                });
+            }
+        }); 
+    }
+
+</script>

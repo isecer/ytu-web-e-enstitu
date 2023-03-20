@@ -1,0 +1,91 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
+@{
+    Layout = null;
+    var basvuruOnayYetki = RoleNames.YeterlikBasvuruOnayYetkisi.InRoleCurrent();
+}
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;">@Model.IsEnstituOnaylandi.ToOnayDurumIconLgHtml() Enstitü Başvuru Onayı</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="CaptionTd" width="150">Onay Durumu</td>
+                        <td class="CaptionTd" width="10">:</td>
+                        <td class="ValueTd">
+                            @if (basvuruOnayYetki)
+                            {
+                                <select class="form-control" id="enstituOnay_@Model.UniqueID" onchange="if ($(this).val() == 'false') { $('#enstituIptalRow_@Model.UniqueID').removeClass('hide');}else {$('#enstituIptalRow_@Model.UniqueID').addClass('hide');}">
+                                    <option></option>
+                                    <option value="true" @(Model.IsEnstituOnaylandi == true ? "selected" : "")>Onaylandı</option>
+                                    <option value="false" @(Model.IsEnstituOnaylandi == false ? "selected" : "")>İptal Edildi</option>
+                                </select>
+                            }
+                            else
+                            {
+                                @(Model.IsEnstituOnaylandi.HasValue ? (Model.IsEnstituOnaylandi == true ? "Başvuru Onaylandı" : "Başvuru İptal") : "Onay işlemi bekleniyor")
+                            }
+                        </td>
+                    </tr>
+                    <tr id="enstituIptalRow_@Model.UniqueID" class="@(Model.IsEnstituOnaylandi == false ? "" : "hide")">
+                        <td class="CaptionTd">İptal Açıklaması</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            @if (basvuruOnayYetki)
+                            {
+                                <textarea class="form-control" style="width: 100%; resize: vertical;" rows="2" maxlength="1024" id="enstituOnayAciklama_@Model.UniqueID">@Model.EnstituOnayAciklama</textarea>
+                            }
+                            else
+                            {
+                                @(Model.EnstituOnayAciklama)
+                            }
+                        </td>
+                    </tr>
+                    @if (basvuruOnayYetki)
+                    {
+                        <tr>
+                            <td class="CaptionTd"></td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="EnstituOnayKayit('@Model.UniqueID')"><i class="fa fa-save"></i>Kaydet</button>
+
+                                <script>
+                                        function EnstituOnayKayit(uniqueID) {
+                                            var enstituOnay = $('#enstituOnay_' + uniqueID).val();
+                                            var enstituOnayAciklama = $('#enstituOnayAciklama_' + uniqueID).val();
+                                            var panel = $('#enstituOnayPanel_' + uniqueID);
+                                            PanelRefresh(panel, false);
+                                            $.ajax({
+                                                url: '@Url.Action("EnstituOnay", "YeterlikGelenBasvurular")',
+                                                data: { uniqueID, enstituOnay, enstituOnayAciklama },
+                                                success: function (result) {
+                                                    if (result.IsSuccess) {
+                                                        GetDetail(uniqueID);
+                                                    }
+                                                    else {
+                                                        showMmMessage(result.Messages, 'Tamam');
+                                                    }
+                                                    PanelRefresh(panel, false);
+                                                },
+                                                error: function (err) {
+                                                    PanelRefresh(panel, false);
+                                                    alert(err.responseText);
+                                                }
+                                            });
+                                         }
+                                </script>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

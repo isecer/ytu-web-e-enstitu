@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string YokDrOncelikliAlan { get; set; }
         public Nullable<System.DateTime> ToplantiBilgiGonderimTarihi { get; set; }
         public Nullable<System.DateTime> RSBaslatildiMailGonderimTarihi { get; set; }
-        public Nullable<bool> IsOyBirligiOrCouklugu { get; set; }
+        public Nullable<bool> IsOyBirligiOrCoklugu { get; set; }
         public Nullable<bool> IsBasariliOrBasarisiz { get; set; }
         public Nullable<System.DateTime> DegerlendirmeSonucMailTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }

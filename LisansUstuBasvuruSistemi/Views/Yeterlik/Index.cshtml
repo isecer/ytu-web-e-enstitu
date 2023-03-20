@@ -9,187 +9,209 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
-            <table style="width:100%;">
-                <tr>
-                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
-                </tr>
-                <tr>
-                    <td width="120" style="color:cadetblue">Enstitü</td>
-                    <td width="10">:</td>
-                    <td>
-                        @Model.EnstituAdi
-                    </td>
-                </tr>
-                <tr>
-                    <td style="color:cadetblue">Ad Soyad</td>
-                    <td>:</td>
-                    <td>@Model.OgrenciNo @Model.AdSoyad</td>
-                </tr>
-
-                @if (!Model.AktifYeterlikSurecId.HasValue)
-                {
+@if (!Model.isDegerlendirme.HasValue)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+                <table style="width: 100%;">
                     <tr>
-                        <td style="color:cadetblue">Başvuru Durumu</td>
-                        <td>:</td>
+                        <td colspan="3" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Bilgisi</td>
+                    </tr>
+                    <tr>
+                        <td width="120" style="color: cadetblue">Enstitü</td>
+                        <td width="10">:</td>
                         <td>
-                            Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
-                            <br />
-                            <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
+                            @Model.EnstituAdi
                         </td>
                     </tr>
+                    <tr>
+                        <td style="color: cadetblue">Ad Soyad</td>
+                        <td>:</td>
+                        <td>@Model.OgrenciNo @Model.AdSoyad</td>
+                    </tr>
 
-                }
-                else
-                {
-                    if (!Model.IsYtuOgrencisi || !Model.IsOgrenimSeviyeYetki)
+                    @if (!Model.AktifYeterlikSurecId.HasValue)
                     {
                         <tr>
-                            <td style="color:cadetblue">Not</td>
+                            <td style="color: cadetblue">Başvuru Durumu</td>
                             <td>:</td>
                             <td>
-                                Yeterlik başvuru işlemleri sadece <b>@Model.OgrenimTipAdis</b> Öğrenim seviyelerinde aktif olarak okuyan öğrenciler tarafından yapılabilir.
+                                Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
+                                <br />
+                                <a href="@Url.Action("Index", "KDuyurular")">Duyurular Sayfaya Gitmek İçin Tıklayınız</a>
                             </td>
                         </tr>
 
                     }
-                    else if (!Model.IsEnstituYetki)
+                    else
                     {
+                        if (!Model.IsYtuOgrencisi || !Model.IsOgrenimSeviyeYetki)
+                        {
+                            <tr>
+                                <td style="color: cadetblue">Not</td>
+                                <td>:</td>
+                                <td>
+                                    Yeterlik başvuru işlemleri sadece <b>@Model.OgrenimTipAdis</b> Öğrenim seviyelerinde aktif olarak okuyan öğrenciler tarafından yapılabilir.
+                                </td>
+                            </tr>
+
+                        }
+                        else if (!Model.IsEnstituYetki)
+                        {
+                            <tr>
+                                <td style="color: cadetblue">Not</td>
+                                <td>:</td>
+                                <td>
+                                    Bu enstitü için Yeterlik başvurusu yapamazsınız!
+                                </td>
+                            </tr>
+                        }
                         <tr>
-                            <td style="color:cadetblue">Not</td>
+                            <td></td>
                             <td>:</td>
                             <td>
-                                Bu enstitü için Yeterlik başvurusu yapamazsınız!
+                                @if (Model.IsAktifSurecBasvuruVar)
+                                {
+                                    @(Model.DonemAdi + " için başvurunuz bulunmaktadır.")
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
+                                }
+
                             </td>
                         </tr>
+
                     }
-                    <tr>
-                        <td></td>
-                        <td>:</td>
-                        <td>
-                            @if (Model.IsAktifSurecBasvuruVar)
-                            {
-                                @(Model.DonemAdi+" için başvurunuz bulunmaktadır.")
-                            }
-                            else
-                            {
-                                <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Başvuru Yap</button>
-                            }
+                </table>
 
-                        </td>
-                    </tr>
-
-                }
-            </table>
+            </div>
 
         </div>
-
     </div>
-</div>
-
+}
 <div class="row">
     @using (Html.BeginForm())
     {
         <div class="col-md-12">
-            <div class="panel panel-danger">
-                <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-hover" style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th width="75"></th>
-                                <th width="40"></th>
-                                <th class="sirala" field="AdSoyad">Ad Soyad</th>
-                                <th width="80" class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
-                                <th>Başvuru Durumu</th>
-                                <th width="45"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            @Html.Hidden("IsKomiteOrJuri", Model.IsKomiteOrJuri)
+            @if (Model.IsKomiteOrJuri.HasValue)
+            {
+                if (Model.RowCount > 0)
+                {
+                    <div id="cls-@Model.Data.First().UniqueID"></div>
+                }
+                else
+                {
+                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;font-size:12pt;color:maroon;"> Değerlendirme yapılabilecek herhangi yeterlik başvurusu bulunamadı!</div>
+                }
 
-                            @if (Model.RowCount > 0)
-                            {
-
-                                var rowIndex = Model.StartRowIndex;
-                                foreach (var item in Model.Data)
-                                {
-                                    rowIndex++;
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width: 30px;">@rowIndex</td>
-                                                    <td>
-                                                        <ul class="panel-controls">
-                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
-                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
-                                                            </li>
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td>
-                                            <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail">
-                                        </td>
-                                        <td>
-                                            @item.AdSoyad <br /> @item.OgrenciNo
-                                        </td>
-                                        <td>
-                                            @item.BasvuruTarihi
-                                        </td>
-                                        <td>
-                                            @item.ToYeterlikDurum()
-                                        </td>
-                                        <td>
-                                            @if (!item.IsOnaylandi.HasValue)
-                                            {
-                                                <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
-                                            }
-                                        </td>
-                                    </tr>
-                                    <tr class="cls-@item.UniqueID" style="display:none">
-                                        <td id="cls-@item.UniqueID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
-                                    </tr>
-
-                                }
-                            }
-                            else
-                            {
+            }
+            else
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading padding-0">
+                        <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover" style="width: 100%;">
+                            <thead>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">
-                                        Listelenen Kayıt Yok
-                                    </td>
+                                    <th width="75"></th>
+                                    <th width="40"></th>
+                                    <th class="sirala" field="AdSoyad">Ad Soyad</th>
+                                    <th width="80" class="sirala" field="BasvuruTarihi" width="80">B.Tarihi</th>
+                                    <th>Başvuru Durumu</th>
+                                    <th width="45"></th>
                                 </tr>
-                            }
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                                @if (Model.RowCount > 0)
+                                {
+
+                                    var rowIndex = Model.StartRowIndex;
+                                    foreach (var item in Model.Data)
+                                    {
+                                        rowIndex++;
+                                        <tr>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 30px;">@rowIndex</td>
+                                                        <td>
+                                                            <ul class="panel-controls">
+                                                                <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                    <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <img src="@item.ResimAdi.ToKullaniciResim()" style="width: 40px; height: 40px; cursor: pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail">
+                                            </td>
+                                            <td>
+                                                @item.AdSoyad <br /> @item.OgrenciNo
+                                            </td>
+                                            <td>
+                                                @item.BasvuruTarihi
+                                            </td>
+                                            <td class="yeterlikBasDurum_@item.UniqueID">
+                                                @item.ToYeterlikDurum()
+                                            </td>
+                                            <td>
+                                                @if (!item.IsEnstituOnaylandi.HasValue)
+                                                {
+                                                    <a href="@Url.Action("BasvuruYap", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
+                                                    <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr class="cls-@item.UniqueID" style="display: none">
+                                            <td id="cls-@item.UniqueID" colspan="6" style="padding: 1px 1px 2px 75px;"></td>
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">
+                                            Listelenen Kayıt Yok
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        @Model.ToPagerString()
+                    </div>
                 </div>
-                <div class="panel-footer">
-                    @Model.ToPagerString()
-                </div>
-            </div>
+            }
         </div>
     }
 </div>
-@if (Model.Data.Any())
+@if (Model.IsKomiteOrJuri.HasValue && Model.RowCount > 0)
+{
+    <script>
+        $(function () { 
+            GetDetail('@Model.Data.First().UniqueID','@Model.IsKomiteOrJuri.ToString().ToLower()','@Model.isDegerlendirme');
+        },200)
+    </script>
+}
+else if (Model.Data.Any())
 {
     <script>
     $(function () {
         ShowDetail('@Model.Data.First().UniqueID');
     }, 200);
-    </script>
-
-}
-<script>
-  function YeniBasvuruDuyuruKontrol() {
+    function YeniBasvuruDuyuruKontrol()
+    {
         ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
     }
     function BasvuruSil(sndr, uniqueId, tarih) {
@@ -211,7 +233,7 @@
                 return new Promise(function (resolve) {
                     $.ajax({
                         url: '@Url.Action("Sil", "Yeterlik")',
-                        data: {  uniqueId },
+                        data: { uniqueId },
                         success: function (result) {
                             if (result.IsSuccess) {
                                 $(sndr).parents('tr').first().remove();
@@ -239,14 +261,21 @@
         if (unTogled) GetDetail(id);
 
     }
-   function GetDetail(id) {
+    </script>
+
+}
+<script>
+    var isDegerlendirme = '@(Model.isDegerlendirme.HasValue?Model.isDegerlendirme.ToString().ToLower():"")';
+    var isKomiteOrJuri='@(Model.IsKomiteOrJuri.HasValue?Model.IsKomiteOrJuri.ToString().ToLower():"")';
+    function GetDetail(id) {
         var panel = $('#bsvrDet_' + id);
         PanelRefresh(panel, false);
         $.ajax({
             url: '@Url.Action("GetDetail")',
-            data: { id: id },
+            data: { id: id, isKomiteOrJuri,isDegerlendirme },
             success: function (result) {
                 $('#cls-' + id).html(result);
+                GetBasvuruDurum(id);
                 PanelRefresh(panel, true);
             },
             error: function (err) {
@@ -255,5 +284,17 @@
             }
         });
 
+    }
+    function GetBasvuruDurum(id) {
+        $.ajax({
+            url: '@Url.Action("GetBasvuruDurum", "Yeterlik")',
+            data: { id },
+            success: function (result) {
+                debugger
+                $('.yeterlikBasDurum_' + id).html(result);
+            },
+            complete: function (err) {
+            }
+        });
     }
 </script>

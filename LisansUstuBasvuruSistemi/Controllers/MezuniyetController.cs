@@ -1581,8 +1581,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-            var basv = _entities.MezuniyetBasvurularis.Where(p => p.RowID == rowId).First();
-            var tezDosyasi = basv.MezuniyetBasvurulariTezDosyalaris.Where(p => p.MezuniyetBasvurulariTezDosyaID == mezuniyetBasvurulariTezDosyaId).FirstOrDefault();
+            var basv = _entities.MezuniyetBasvurularis.First(p => p.RowID == rowId);
+            var tezDosyasi = basv.MezuniyetBasvurulariTezDosyalaris.FirstOrDefault(p => p.MezuniyetBasvurulariTezDosyaID == mezuniyetBasvurulariTezDosyaId);
 
             if (basv.MezuniyetSinavDurumID != MezuniyetSinavDurum.Basarili)
             {
@@ -1967,7 +1967,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }).OrderByDescending(o => o.Count).ToList();
 
                             srTalebi.JuriSonucMezuniyetSinavDurumID = qGroup.First().MezuniyetSinavDurumID;
-                            srTalebi.IsOyBirligiOrCouklugu = qGroup.Count == 1;
+                            srTalebi.IsOyBirligiOrCoklugu = qGroup.Count == 1;
                             _entities.SaveChanges();
                             if (sendSonuc)
                             {
@@ -1996,7 +1996,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         else
                         {
-                            srTalebi.IsOyBirligiOrCouklugu = null;
+                            srTalebi.IsOyBirligiOrCoklugu = null;
                             srTalebi.JuriSonucMezuniyetSinavDurumID = MezuniyetSinavDurum.SonucGirilmedi;
                             if (srTalepJuris.Any(a => a.MezuniyetSinavDurumID.HasValue && a.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi))
                             {
@@ -2063,7 +2063,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              Color = d.Color,
                              SRDurumAciklamasi = s.SRDurumAciklamasi,
                              JuriSonucMezuniyetSinavDurumID = s.JuriSonucMezuniyetSinavDurumID,
-                             IsOyBirligiOrCouklugu = s.IsOyBirligiOrCouklugu,
+                             IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu,
                              RSBaslatildiMailGonderimTarihi = s.RSBaslatildiMailGonderimTarihi,
                              JuriSonucMezuniyetSinavDurumAdi = defsdj.MezuniyetSinavDurumAdi,
                              IslemTarihi = s.IslemTarihi,

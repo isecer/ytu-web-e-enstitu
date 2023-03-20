@@ -19,7 +19,6 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             this.MezuniyetJuriOneriFormuJurileris = new HashSet<MezuniyetJuriOneriFormuJurileri>();
             this.TIBasvuruAraRaporKomites = new HashSet<TIBasvuruAraRaporKomite>();
-            this.YeterlikBasvuruJuriUyeleris = new HashSet<YeterlikBasvuruJuriUyeleri>();
         }
     
         public int UniversiteID { get; set; }
@@ -34,7 +33,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<MezuniyetJuriOneriFormuJurileri> MezuniyetJuriOneriFormuJurileris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<YeterlikBasvuruJuriUyeleri> YeterlikBasvuruJuriUyeleris { get; set; }
     }
 }

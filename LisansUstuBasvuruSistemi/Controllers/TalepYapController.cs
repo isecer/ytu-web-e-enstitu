@@ -278,7 +278,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (!kul.YtuOgrencisi)
                         {
                             KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kul.KullaniciID);
-                            mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTÜ öğrencisi olunması gerekmektedir.");
+                            mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTÜ öğrencisi olunması gerekmektedir. Kullanıcı hesap bilgilerinizi düzeltip YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
 
@@ -907,11 +907,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             bool duzenleYetki = RoleNames.GelenTalepSil.InRoleCurrent();
-            var talep = _entities.TalepGelenTaleplers.FirstOrDefault(p => p.TalepGelenTalepID == id && p.KullaniciID == (duzenleYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            var kul = talep.Kullanicilar;
+            var talep = _entities.TalepGelenTaleplers.First(p => p.TalepGelenTalepID == id && p.KullaniciID == (duzenleYetki ? p.KullaniciID : UserIdentity.Current.Id));
+           
             if (duzenleYetki == false)
             {
-                if (UserIdentity.Current.Id != kul.KullaniciID)
+                if (UserIdentity.Current.Id != talep.KullaniciID)
                 {
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
@@ -927,14 +927,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var bDurumAdi = talep.TalepDurumlari.TalepDurumAdi;
                     mmMessage.Messages.Add("Talep durumu '" + bDurumAdi + "' olan talebi silemezsiniz.");
                 }
-
+              
             }
             if (mmMessage.IsSuccess)
             {
                 try
                 {
+                    var talepDosyalar = talep.TalepGelenTalepBelgeleris.ToList();
                     _entities.TalepGelenTaleplers.Remove(talep);
+                    _entities.TalepGelenTalepBelgeleris.RemoveRange(talepDosyalar);
                     _entities.SaveChanges();
+                    foreach (var dosya in talepDosyalar)
+                    {
+                        if (System.IO.File.Exists(dosya.DosyaYolu))
+                        {
+                            try
+                            { 
+                                System.IO.File.Delete(dosya.DosyaYolu);
+                            }
+                            catch (Exception e)
+                            {
+                                // ignored
+                            }
+                        }
+                    }
                     LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Delete, talep.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = Msgtype.Success;

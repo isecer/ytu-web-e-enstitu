@@ -148,16 +148,16 @@
                                                                     }
                                                                     else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
                                                                     {
-                                                                        <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarılı</span>
+                                                                        <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarılı</span>
                                                                     }
                                                                     else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
                                                                     {
-                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarısız</span>
+                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Başarısız</span>
 
                                                                     }
                                                                     else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
                                                                     {
-                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Uzatma</span>
+                                                                        <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") Uzatma</span>
 
                                                                     }
                                                                     else
@@ -717,16 +717,16 @@
                                                                                         <td>
                                                                                             @if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili)
                                                                                             {
-                                                                                                <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarılı</span>
+                                                                                                <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarılı</span>
                                                                                             }
                                                                                             else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarisiz)
                                                                                             {
-                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarısız</span>
+                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Başarısız</span>
 
                                                                                             }
                                                                                             else if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || item.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
                                                                                             {
-                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCouklugu.HasValue ? (item.IsOyBirligiOrCouklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Uzatma</span>
+                                                                                                <span style="color:maroon;" aria-hidden="true"><i class="fa fa-calendar"></i> @(item.IsOyBirligiOrCoklugu.HasValue ? (item.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle") : "") Uzatma</span>
 
                                                                                             }
                                                                                         </td>
