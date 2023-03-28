@@ -240,7 +240,7 @@ else if (Model.Data.Any())
                                 $(".cls-" + uniqueId).remove();
                             }
                             swal.fire({
-                                html: result.Messages,
+                                html: result.messageView,
                                 icon: (result.IsSuccess ? "success" : "error"),
                                 type: (result.IsSuccess ? "success" : "error"),
                                 confirmButtonText: 'tamam',
@@ -289,8 +289,7 @@ else if (Model.Data.Any())
         $.ajax({
             url: '@Url.Action("GetBasvuruDurum", "Yeterlik")',
             data: { id },
-            success: function (result) {
-                debugger
+            success: function (result) { 
                 $('.yeterlikBasDurum_' + id).html(result);
             },
             complete: function (err) {

@@ -5277,10 +5277,10 @@
             this.lblFormNo.SizeF = new System.Drawing.SizeF(1029.563F, 23F);
             this.lblFormNo.StylePriority.UsePadding = false;
             this.lblFormNo.StylePriority.UseTextAlignment = false;
-            this.lblFormNo.Text = "(Form No: FR-0300; Revizyon Tarihi: 29.03.2017  ; Revizyon No: 07)";
+            this.lblFormNo.Text = "(Form No: FR-0300)";
             this.lblFormNo.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // rprMezuniyetTezJuriOneriFormu_FR0300_FR0339
+            // RprMezuniyetTezJuriOneriFormu_FR0300_FR0339
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,

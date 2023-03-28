@@ -17,7 +17,7 @@
                         <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit", "AnabilimDallari")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Anabilim Dalı Oluştur</span></li>
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li> 
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -35,10 +35,10 @@
                         <tbody>
                             <tr class="filtrele">
                                 <th>
-                                    <input name="AnabilimDaliKod" type="text" value="@Model.AnabilimDaliKod" class="form-control" />
+                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
                                 <th>
-                                    @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
+                                    <input name="AnabilimDaliKod" type="text" value="@Model.AnabilimDaliKod" class="form-control" />
                                 </th>
                                 <th>
                                     <input name="AnabilimDaliAdi" type="text" value="@Model.AnabilimDaliAdi" class="form-control" />

@@ -2491,8 +2491,8 @@
             // xrPictureBox1
             // 
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrPictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("xrPictureBox1.Image")));
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
+            this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(3.790275F, 32.00002F);
             this.xrPictureBox1.Name = "xrPictureBox1";
             this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.9011F, 62.99999F);
@@ -2559,9 +2559,9 @@
             this.lblFormNo.SizeF = new System.Drawing.SizeF(650.7846F, 18.83341F);
             this.lblFormNo.StylePriority.UseBorders = false;
             this.lblFormNo.StylePriority.UseFont = false;
-            this.lblFormNo.Text = "Form No: FR-0307; Revizyon Tarihi: 27.10.2021; Revizyon No:07) \r\n";
+            this.lblFormNo.Text = "Form No: FR-0307; Ek-1) \r\n";
             // 
-            // rprTIDegerlendirmeFormuDetay_FR0307
+            // RprTiDegerlendirmeFormuDetay_FR0307
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -2574,7 +2574,7 @@
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;
-            this.Version = "17.1";
+            this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable22)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable42)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable23)).EndInit();

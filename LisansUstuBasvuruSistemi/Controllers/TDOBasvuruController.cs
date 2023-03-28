@@ -74,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
 
-                    if ((kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                    if ((kul.OgrenimTipKod.IsDoktora()) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         bbModel.KullaniciTipYetki = true;
                         var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
@@ -88,7 +88,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "Tez danışmanı öneri başvurusu yapılabilmesi için Doktora,Bütünleşik Doktora veya Tezli YL öğrencisi olunması gerekmektedir.";
+                        bbModel.KullaniciTipYetkiYokMsj = "Tez danışmanı öneri başvurusu yapılabilmesi için Doktora seviyesinde öğrenim görmeniz gerekmektedir.";
 
                     }
                 }

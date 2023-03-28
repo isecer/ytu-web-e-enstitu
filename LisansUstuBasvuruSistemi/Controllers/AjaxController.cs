@@ -33,7 +33,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    
+
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AjaxController : Controller
     {
@@ -201,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         .OrderByDescending(o => o.TDOBasvuruID).Select(s => s.TDOBasvuruID)
                         .FirstOrDefault();
                     if (tdoBasvuruId > 0)
-                    { 
+                    {
                         var sonuc = TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(
                             loginUser.KullaniciID, tdoBasvuruId);
                     }
@@ -1665,15 +1665,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpGet]
         public ActionResult GetDetailTiBasvuru(int id, Guid? uniqueId)
-        { 
-            var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, uniqueId); 
+        {
+            var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, uniqueId);
             return View(model);
         }
         [Authorize]
         [HttpGet]
         public ActionResult GetDetailTdoBasvuru(int id, Guid? uniqueId)
-        { 
-            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId); 
+        {
+            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
@@ -3449,7 +3449,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize]
-        public ActionResult GetEnstituOgrencileri(string term, string EnstituKod)
+        public ActionResult GetEnstituOgrencileri(string term, string enstituKod)
         {
 
             var kuls = (from k in _entities.Kullanicilars
@@ -3466,14 +3466,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             k.OgrenciNo,
                             Images = k.ResimAdi
 
-                        }).Take(15).ToList(); 
+                        }).Take(15).ToList();
             return kuls.ToJsonResult();
         }
         [Authorize]
         public ActionResult GetYTUOgretimEleman(string term)
         {
             var data = Management.getWsPersisOE(term);
-            var YtuUni = _entities.Universitelers.Where(p => p.UniversiteID == 67).FirstOrDefault();
+            var YtuUni = _entities.Universitelers.FirstOrDefault(p => p.UniversiteID == 67);
             var kul2 = data.Table.Select(s => new
             {
                 id = s.ADSOYAD,
@@ -3481,7 +3481,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 text = s.ADSOYAD,
                 BolumAdi = s.BOLUMADI.Replace("BÖLÜMÜ", ""),
                 UnvanAdi = s.AKADEMIKUNVAN.ToJuriUnvanAdi(),
-                UniversiteID = YtuUni != null ? YtuUni.UniversiteID : 67,
+                UniversiteID = YtuUni?.UniversiteID ?? 67,
                 UniversiteAdi = (YtuUni != null ? YtuUni.Ad : "Yıldız Teknik Üniversitesi (İstanbul)").ToUpper(),
                 EMail = s.KURUMMAIL
             }).OrderBy(o => o.AdSoyad).Take(25).ToList();
@@ -3489,9 +3489,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return kul2.ToJsonResult();
         }
         [Authorize]
-        public ActionResult GetYTULUBOgretimEleman(string term)
+        public ActionResult GetTdoDanismans(string term)
         {
-            var danismanUnvanIDs = new List<int>() { 17, 42, 73 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye 
+            var danismanUnvanIDs = new List<int>() { 17, 42, 73, 5, 66 }; //Doç.Dr Prof.Dr, Dr. Öğr. Üye ,arş gör dr, öğr gör dr,
             var kul2 = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && danismanUnvanIDs.Contains(p.UnvanID ?? 0) && (p.Ad + " " + p.Soyad).StartsWith(term)).OrderBy(o => o.Ad).ThenBy(t => t.Soyad).Take(25).Select(s => new
             {
                 id = s.KullaniciID,
@@ -3526,10 +3526,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     using (var db = new LisansustuBasvuruSistemiEntities())
                     {
-                        var terch = new List<BasvurularTercihleri>();
-                        var basvuru = db.Basvurulars.Where(p => p.BasvuruID == basvId).First();
-                        if (btId.HasValue) terch = db.BasvurularTercihleris.Where(p => p.BasvuruTercihID == btId).ToList();
-                        else terch = db.BasvurularTercihleris.Where(p => p.BasvuruID == basvId).ToList();
+                        List<BasvurularTercihleri> terch;
+                        var basvuru = db.Basvurulars.First(p => p.BasvuruID == basvId);
+                        terch = btId.HasValue ? db.BasvurularTercihleris.Where(p => p.BasvuruTercihID == btId).ToList() : db.BasvurularTercihleris.Where(p => p.BasvuruID == basvId).ToList();
                         rprBasvuruDoktora rprDoktora = null;
                         rprBasvuruYL rprYl = null;
 

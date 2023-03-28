@@ -3471,8 +3471,8 @@
     <Content Include="Views\Yeterlik\SinavView.cshtml" />
     <Content Include="Views\Yeterlik\JuriDegerlendirmeListView.cshtml" />
     <Content Include="Views\Yeterlik\YaziliSinavView.cshtml" />
-    <Content Include="Views\Yeterlik\SinavOnayDurumView.cshtml" />
     <Content Include="Views\Yeterlik\SozluSinavView.cshtml" />
+    <Content Include="Views\Yeterlik\JuriDegisiklikView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

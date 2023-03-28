@@ -233,9 +233,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Gelen Başvurular", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
         public const string YeterlikGelenBasvurular = "Yeterlik Gelen Başvurular";
         [Role(GorunurAdi = "Gelen Başvurular Kayıt Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
-        public const string YeterlikGelenBasvurularKayit = "Yeterlik Gelen Başvurular Kayit";
-        [Role(GorunurAdi = "Jüri Olusturma Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
-        public const string YeterlikJuriOlusturma = "Yeterlik Gelen Başvurular Juri Olusturma";
+        public const string YeterlikGelenBasvurularKayit = "Yeterlik Gelen Başvurular Kayit"; 
         [Role(GorunurAdi = "Başvuru Onay Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]
         public const string YeterlikBasvuruOnayYetkisi = "Yeterlik Başvuru Onay Yetkisi";
         [Role(GorunurAdi = "Abd/Jüri Onayı Düzeltme Yetkisi", Kategori = "Yeterlik İşlemleri", Aciklama = "")]

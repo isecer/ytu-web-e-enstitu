@@ -11,6 +11,7 @@
     var kontrolEdilmeyenBasvuruIds = (List<int>)ViewBag.kontrolEdilmeyenBasvuruIds;
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredDanismanIds;
+    var kayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
 }
 
 
@@ -241,7 +242,7 @@
                                             @item.ToYeterlikDurum()
                                         </td>
                                         <td>
-                                            @if (!item.IsEnstituOnaylandi.HasValue)
+                                            @if (kayitYetki && !item.IsEnstituOnaylandi.HasValue)
                                             {
                                                 <a href="@Url.Action("BasvuruYap", "Yeterlik", new { id = item.UniqueID })"><i style="font-size: 11pt;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                                 <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.UniqueID','@item.AdSoyad')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
@@ -273,7 +274,13 @@
         </div>
     }
 </div>
-
+@if (Model.RowCount > 0 && !kayitYetki && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
+{
+    var firstRowUniqueID = Model.Data.First().UniqueID;
+    <script>
+        setTimeout(function () { ShowDetail('@firstRowUniqueID') }, 200);
+    </script>
+}
 <script>
 
     function BasvuruSil(sndr, uniqueId, adsoyad) {
@@ -302,7 +309,7 @@
                                 $(".cls-" + uniqueId).remove();
                             }
                             swal.fire({
-                                html: result.Messages,
+                                html: result.messageView,
                                 icon: (result.IsSuccess ? "success" : "error"),
                                 type: (result.IsSuccess ? "success" : "error"),
                                 confirmButtonText: 'tamam',
@@ -345,12 +352,11 @@
             url: '@Url.Action("GetBasvuruDurum", "Yeterlik")',
             data: { id },
             success: function (result) {
-                debugger
                 $('.yeterlikBasDurum_' + id).html(result);
             },
             complete: function (err) {
             }
-        }); 
+        });
     }
 
 </script> 

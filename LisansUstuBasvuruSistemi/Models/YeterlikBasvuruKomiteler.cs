@@ -22,7 +22,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<System.DateTime> LinkGonderimTarihi { get; set; }
         public Nullable<int> LinkGonderenID { get; set; }
         public Nullable<bool> IsJuriOnaylandi { get; set; }
-        public string Aciklama { get; set; }
         public Nullable<int> DegerlendirmeYapanID { get; set; }
         public Nullable<System.DateTime> DegerlendirmeIslemTarihi { get; set; }
         public string DegerlendirmeIslemYapanIP { get; set; }

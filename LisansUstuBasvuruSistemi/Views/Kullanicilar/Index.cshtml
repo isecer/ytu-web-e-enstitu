@@ -245,36 +245,7 @@
                                                     <li>
                                                         <a href="javascript:void(0)" onclick="detayGor(@item.KullaniciID,'#kulPnl')"><i class="fa fa-file-text-o"></i>Detay Göster</a>
                                                     </li>
-                                                    @if (item.KtipBasvuruYapabilir)
-                                                    {
-                                                        @*if (adinaBasvuru)
-                                                            {
-                                                                <li>
-                                                                    <a href="@Url.Action("BasvuruYap", "Basvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Başvuru Yap</a>
-                                                                </li>
-                                                            }*@
-                                                        if (item.YtuOgrencisi)
-                                                        {
-                                                            if (adinaBasvuruTDO && TDOBAcik.Contains(item.EnstituKod))
-                                                            {
-                                                                <li>
-                                                                    <a href="@Url.Action("BasvuruYap", "TDOBasvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Tez Danışmanı Önerisi Yap</a>
-                                                                </li>
-                                                            }
-                                                            if (adinaBasvuruTI && TIBAcik.Contains(item.EnstituKod))
-                                                            {
-                                                                <li>
-                                                                    <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Tez izleme Başvurusu Yap</a>
-                                                                </li>
-                                                            }
-                                                            if (adinaBasvuruM && mezuniyetBAcik.Contains(item.EnstituKod))
-                                                            {
-                                                                <li>
-                                                                    <a href="@Url.Action("BasvuruYap", "Mezuniyet", new { KullaniciID = item.KullaniciID })" target="_blank"><i class="fa fa-plus"></i>Kullanıcı Adına Mezuniyet Başvurusu Yap</a>
-                                                                </li>
-                                                            }
-                                                        }
-                                                    }
+                                                    
                                                     @if (mailGonder)
                                                     {
                                                         <li>

@@ -38,6 +38,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         SmtpSSL = s.SmtpSSL,
                         SmtpSifre = s.SmtpSifre,
                         SistemErisimAdresi = s.SistemErisimAdresi,
+                        TestEmailAddress = s.TestEmailAddress,
                         IsAktif = s.IsAktif,
                         EnstituAd = s.EnstituAd,
                         IslemTarihi = s.IslemTarihi,
@@ -49,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.EnstituAd.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituAd.Contains(model.EnstituAd));
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd); 
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.EnstituAd);
             model.EnstitulerDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
             var indexModel = new MIndexBilgi
             {
@@ -138,14 +139,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "WebAdresi" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "WebAdresi" });
-
-            if (kModel.ToplamKayitKota <= 0)
-            { 
-                mmMessage.Messages.Add("Toplam Kayıt Kotasını Giriniz.");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ToplamKayitKota" });
+            if (!kModel.TestEmailAddress.IsNullOrWhiteSpace() && kModel.TestEmailAddress.ToIsValidEmail())
+            {
+                mmMessage.Messages.Add("Lütfen Test E-Posta Adresini Doğru Formatta Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TestEmailAddress" });
             }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "ToplamKayitKota" }); 
-
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TestEmailAddress" });
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
@@ -172,15 +171,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.SmtpSifre = kModel.SmtpSifre;
                     data.SistemErisimAdresi = kModel.SistemErisimAdresi;
                     data.WebAdresi = kModel.WebAdresi;
-                    data.ToplamKayitKota = kModel.ToplamKayitKota;
-                    data.LUBMailGonder = kModel.LUBMailGonder;
+                    data.TestEmailAddress = kModel.TestEmailAddress;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemTarihi = DateTime.Now;
-                   
 
-                } 
+
+                }
                 db.SaveChanges();
                 EnstituBus.Enstitulers = db.Enstitulers.ToList();
                 return RedirectToAction("Index");
@@ -189,9 +187,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
-            
 
-            ViewBag.MmMessage = mmMessage;  
+
+            ViewBag.MmMessage = mmMessage;
             return View(kModel);
         }
         public ActionResult Sil(string id)
@@ -201,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bool success = true;
             if (kayit != null)
             {
-                 
+
                 try
                 {
                     message = "'" + kayit.EnstituAd + "' İsimli Enstitü Silindi!";

@@ -25,6 +25,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> YaziliYuzde { get; set; }
         public Nullable<int> SozluYuzde { get; set; }
         public Nullable<decimal> YaziliGecerNot { get; set; }
+        public Nullable<decimal> SozluGecerNot { get; set; }
         public Nullable<decimal> OrtalamaGecerNot { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

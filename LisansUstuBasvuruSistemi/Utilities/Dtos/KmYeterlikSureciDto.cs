@@ -19,6 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int?> YaziliYuzde { get; set; }
         public List<int?> SozluYuzde { get; set; }
         public List<decimal?> YaziliGecerNot { get; set; }
+        public List<decimal?> SozluGecerNot { get; set; }
         public List<decimal?> OrtalamaGecerNot { get; set; }
         public List<KmYeterlikSureciOgrenimTipKriterleri> KmYeterlikSureciOgrenimTipKriterleris { get; set; }
     }

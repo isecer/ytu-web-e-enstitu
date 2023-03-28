@@ -4,20 +4,34 @@
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
 @{
     Layout = null;
+    var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue;
+    var yetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue;
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
     <table style="width: 100%;">
         <tr>
-            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> ABD Komite Üyesi Yeterlik Jüri Değerlendirmeleri</td>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> ABD Komite Üyeleri Yeterlik Jüri Değerlendirmesi <span style="font-size: 8pt;">@(Model.IsAbdKomitesiJuriyiOnayladi.HasValue?"(Tamamlandı)":"")</span></td>
             <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
+                @if (Model.DmYeterlikKomites.All(a => a.IsJuriOnaylandi.HasValue))
+                {
+                    <ul class="panel-controls">
+                        <li>
+                            <a href="javascript:void(0)" onclick="ContentShowDt('@Model.UniqueID','Km')"><span id="Km_shower_@Model.UniqueID" class="fa fa-angle-@(openRow ? "down" : "up")" aria-hidden="true"></span> </a>
+                        </li>
+                    </ul>
+                }
+                else if (yetki && !Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
+                {
+                    <span class="label label-warning" style="cursor: pointer;" onclick="KomiteUyeleriGuncelle('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-refresh" aria-hidden="true"></i> Komite Üyelerini Güncelle</span>
+                }
             </td>
         </tr>
         <tr>
             <td colspan="2" style="padding-left: 10px;">
                 @if (Model.DmYeterlikKomites.Any())
                 {
-                    <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
+                    <div class="widget widget-default @(openRow?"":"hide")" id="KmContent_@Model.UniqueID" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px;">
                         <table class="table" style="width: 100%; margin: 0px;">
                             <tr class="warning">
                                 <th width="35"></th>
@@ -29,7 +43,7 @@
 
                                 @foreach (var itemKom in Model.DmYeterlikKomites.OrderBy(o => o.AdSoyad))
                                 {
-                                    var openRow = false;
+
                                     var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.SozluSinavTarihi.HasValue;
                                     <tr>
                                         <td>
@@ -46,14 +60,14 @@
                                             @itemKom.ToKomiteOnayDurumView()
                                         </td>
                                         <td>
-                                            @if (onayDuzeltmeYetki)
+                                            @if (onayDuzeltmeYetki && openRow)
                                             {
                                                 <a href="javascript:void(0)" title="Komtie üyesi bilgisini düzelt" onclick="HesapKayit(@itemKom.KullaniciID)"><i class="fa fa-edit fa-lg"></i></a>
                                                 <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
                                             }
                                         </td>
                                     </tr>
-                                    <tr class="MainRow2 cls-Km_@itemKom.UniqueID" style="@(openRow ? "" : "display:none;")">
+                                    <tr class="MainRow2 cls-Km_@itemKom.UniqueID" style="display:none;">
                                         <td id="cls-Km_@itemKom.UniqueID" colspan="5" style="padding: 1px 1px 2px 50px;">
                                             <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
                                                 <table style="width: 100%;">
@@ -64,10 +78,9 @@
                                                             <td class="ValueTd">
                                                                 @if (onayDuzeltmeYetki)
                                                                 {
-                                                                    <select onchange="if($(this).val()=='false'){ $('.RwKAck_@itemKom.UniqueID').removeClass('hide'); }else{$('.RwKAck_@itemKom.UniqueID').addClass('hide');}" id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                                    <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
                                                                         <option></option>
                                                                         <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Belirlenen Yeterlik Jürilerini Onaylıyorum</option>
-                                                                        <option value="false" @((itemKom.IsJuriOnaylandi == false).ToSelected())>Belirlenen Yeterlik Jürilerini Onaylamıyorum</option>
                                                                     </select>
                                                                 }
                                                                 else
@@ -76,25 +89,7 @@
                                                                 }
                                                             </td>
                                                         </tr>
-                                                        <tr class="RwKAck_@itemKom.UniqueID @(itemKom.IsJuriOnaylandi == false ? "" : "hide")">
-                                                            <td colspan="3">
-                                                                <table style="width: 100%; margin-top: 5px;">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td class="CaptionTd" width="180"></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="ValueTd">
-                                                                                @if (onayDuzeltmeYetki)
-                                                                                {
-                                                                                    <textarea placeholder="Açıklama Giriniz" id="KomiteOnayAciklama_@itemKom.UniqueID" maxlength="2048" rows="4" style="resize: vertical; border: 1px solid;" class="form-control"></textarea>
-                                                                                }
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
+
                                                         @if (onayDuzeltmeYetki)
                                                         {
                                                             <tr class="RwKBtn_@itemKom.UniqueID">
@@ -125,72 +120,98 @@
 </div>
 
 <script>
-function KomiteJuriOnayKayit(id, uniqueID) {
-    var _panel = $('#bsvrDet_' + id);
-    PanelRefresh(_panel, false);
-    var isGenelSonucBasarili = $('#KomiteIsOnaylandi_' + uniqueID).val();
-    var aciklama = $('#KomiteOnayAciklama_' + uniqueID).val();
-    $.ajax({
-        url: '@Url.Action("KomiteJuriOnay", "Yeterlik")',
-        data: { uniqueID, isGenelSonucBasarili, aciklama },
-        success: function (result) {
-            GetDetail(id);
-            swal.fire({
-                html: result.Messages,
-                icon: (result.IsSuccess ? "success" : "error"),
-                type: (result.IsSuccess ? "success" : "error"),
-                confirmButtonText: 'tamam',
-                padding: '2em'
-            });
-        },
-        complete: function (err) {
-            PanelRefresh(_panel, true);
+    function KmContentShow(id) {
+        var isShow = $('#Km_shower_' + id).hasClass('fa-angle-up')
+        if (isShow) {
+            $('#kmtContent_' + id).removeClass('hide');
+            $('#Km_shower_' + id).removeClass('fa-angle-up').addClass('fa-angle-down');
         }
-    });
-}
-function KomiteLinkGonder(id, UniqueID, AdSoyad) {
-        var _panel = $('#bsvrDet_' + id);
-            PanelRefresh(_panel, false);
-            bootbox.dialog({
-                message: AdSoyad +" isimli komite üyesine yeni yeterlik jüri değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
-                title: "<i class='fa fa-envelope fa-lg'></i> ABD Komite Üyesine Yeni Değerlendirme Linki Gönderme İşlemi",
-                buttons: {
-                    success: {
-                        label: "Gönder",
-                        className: "btn-primary",
-                        callback: function (event) {
-                            $.ajax({
-                                url: '@Url.Action("KomiteDegerlendirmeLinkiGonder", "Yeterlik")',
-                                data: {
-                                    'id': id,
-                                    'UniqueID': UniqueID,
+        else {
+            $('#kmtContent_' + id).addClass('hide');
+            $('#Km_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
+        }
+    }
 
-                                },
-                                success: function (result) {
-                                    PanelRefresh(_panel, true);
-                                    if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                    GetDetail(id);
-                                    showMmMessage(result.Messages, 'Tamam');
-                                },
-                                error: function (err) {
-                                    PanelRefresh(_panel, true);
-                                    alert(err.responseText);
+    function KomiteLinkGonder(id, uniqueId, adSoyad) {
+        Swal.fire({
+            html: adSoyad + " isimli komite üyesine yeni yeterlik jüri değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Gönder',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Gönderiliyor...");
+                return new Promise(function (resolve) {
 
-                                }
+                    $.ajax({
+                        url: '@Url.Action("KomiteDegerlendirmeLinkiGonder", "Yeterlik")',
+                        data: {  uniqueId },
+                        success: function (result) {
+                            if (result.IsSuccess) {
+                                GetDetail(id);
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
                             });
+                        },
+                        complete: function (result) {
                         }
-                    },
-                    danger: {
-                        label: "Kapat",
-                        className: "btn-primary",
-                        callback: function () {
-                            PanelRefresh(_panel, true);
-                        }
-                    }
-                }
-            });
-        }
+                    });
 
+                });
+            }
+        });
+    }
+    function KomiteUyeleriGuncelle(id, adSoyad) {
+        Swal.fire({
+            html: adSoyad + " isimli öğrenci başvurusuna ait Komite üyelerini güncellemek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Anabilim Dalına eşleştirilmiş güncel komite bilgileri çekilecek.</span> ",
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Güncelle',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Güncelleniyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("KomiteBilgileriGuncelle", "Yeterlik")',
+                        data: { id },
+                        success: function (result) {
+                            debugger
+                            if (result.IsSuccess) {
+                                GetDetail(id);
+                            }
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        },
+                        complete: function (result) {
+                        }
+                    });
+
+                });
+            }
+        });
+    }
 </script>
 
 

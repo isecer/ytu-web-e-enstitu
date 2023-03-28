@@ -106,6 +106,9 @@
             this.xrTableRow6 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrCellOgrenciAdSoyad = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrTableRow12 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.xrTableCell16 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.cellTezBaslikTr = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell7 = new DevExpress.XtraReports.UI.XRTableCell();
             this.cellTezBaslikEn = new DevExpress.XtraReports.UI.XRTableCell();
@@ -117,9 +120,6 @@
             this.lblOgrenimTipAdi = new DevExpress.XtraReports.UI.XRLabel();
             this.rprLogo = new DevExpress.XtraReports.UI.XRPictureBox();
             this.xrLblRaporBasligi = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrTableRow12 = new DevExpress.XtraReports.UI.XRTableRow();
-            this.xrTableCell16 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.cellTezBaslikTr = new DevExpress.XtraReports.UI.XRTableCell();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
@@ -941,6 +941,34 @@
             this.xrCellOgrenciAdSoyad.Text = "xrCellOgrenciAdSoyad";
             this.xrCellOgrenciAdSoyad.Weight = 1.9684176546462036D;
             // 
+            // xrTableRow12
+            // 
+            this.xrTableRow12.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.xrTableCell16,
+            this.cellTezBaslikTr});
+            this.xrTableRow12.Name = "xrTableRow12";
+            this.xrTableRow12.Weight = 1.2750003051757812D;
+            // 
+            // xrTableCell16
+            // 
+            this.xrTableCell16.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell16.Name = "xrTableCell16";
+            this.xrTableCell16.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
+            this.xrTableCell16.StylePriority.UseFont = false;
+            this.xrTableCell16.StylePriority.UsePadding = false;
+            this.xrTableCell16.Text = "Tez Başlığı Türkçe";
+            this.xrTableCell16.Weight = 1.0315823453537965D;
+            // 
+            // cellTezBaslikTr
+            // 
+            this.cellTezBaslikTr.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.cellTezBaslikTr.Name = "cellTezBaslikTr";
+            this.cellTezBaslikTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
+            this.cellTezBaslikTr.StylePriority.UseFont = false;
+            this.cellTezBaslikTr.StylePriority.UsePadding = false;
+            this.cellTezBaslikTr.Text = "cellTezBaslikTr";
+            this.cellTezBaslikTr.Weight = 1.9684176546462036D;
+            // 
             // xrTableRow8
             // 
             this.xrTableRow8.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
@@ -1004,7 +1032,7 @@
             this.lblFormNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.lblFormNo.SizeF = new System.Drawing.SizeF(655.7292F, 18.83333F);
             this.lblFormNo.StylePriority.UseFont = false;
-            this.lblFormNo.Text = "(Form No: FR-0302; Revizyon Tarihi: 27.11.2019; Revizyon No:03)";
+            this.lblFormNo.Text = "(Form No: FR-0302)";
             // 
             // PageHeader
             // 
@@ -1033,7 +1061,7 @@
             // 
             this.rprLogo.BackColor = System.Drawing.Color.Transparent;
             this.rprLogo.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.rprLogo.Image = ((System.Drawing.Image)(resources.GetObject("rprLogo.Image")));
+            this.rprLogo.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("rprLogo.ImageSource"));
             this.rprLogo.LocationFloat = new DevExpress.Utils.PointFloat(338.6456F, 0F);
             this.rprLogo.Name = "rprLogo";
             this.rprLogo.SizeF = new System.Drawing.SizeF(66.25F, 61.04166F);
@@ -1055,35 +1083,7 @@
             this.xrLblRaporBasligi.Text = "JÜRİ ÜYELERİNE TEZ TESLİM FORMU";
             this.xrLblRaporBasligi.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
-            // xrTableRow12
-            // 
-            this.xrTableRow12.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
-            this.xrTableCell16,
-            this.cellTezBaslikTr});
-            this.xrTableRow12.Name = "xrTableRow12";
-            this.xrTableRow12.Weight = 1.2750003051757812D;
-            // 
-            // xrTableCell16
-            // 
-            this.xrTableCell16.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
-            this.xrTableCell16.Name = "xrTableCell16";
-            this.xrTableCell16.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
-            this.xrTableCell16.StylePriority.UseFont = false;
-            this.xrTableCell16.StylePriority.UsePadding = false;
-            this.xrTableCell16.Text = "Tez Başlığı Türkçe";
-            this.xrTableCell16.Weight = 1.0315823453537965D;
-            // 
-            // cellTezBaslikTr
-            // 
-            this.cellTezBaslikTr.Font = new System.Drawing.Font("Times New Roman", 10F);
-            this.cellTezBaslikTr.Name = "cellTezBaslikTr";
-            this.cellTezBaslikTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
-            this.cellTezBaslikTr.StylePriority.UseFont = false;
-            this.cellTezBaslikTr.StylePriority.UsePadding = false;
-            this.cellTezBaslikTr.Text = "cellTezBaslikTr";
-            this.cellTezBaslikTr.Weight = 1.9684176546462036D;
-            // 
-            // rprJuriUyelerineTezTeslimFormu_FR0341_FR0302
+            // RprJuriUyelerineTezTeslimFormu_FR0341_FR0302
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -1094,7 +1094,7 @@
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;
-            this.Version = "17.1";
+            this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrRichKaraBigi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();

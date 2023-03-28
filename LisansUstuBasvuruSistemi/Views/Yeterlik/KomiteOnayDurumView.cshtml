@@ -21,7 +21,7 @@
 else
 {
 
-    <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
+    <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;"></i> @(Model.IsLinkGonderildi==true? "Değerlendirme Yapması Bekleniyor." : "Değerlendirme Linki Gönderilmedi.")</span>
     if (Model.IsLinkGonderildi == true)
     {
         <br />

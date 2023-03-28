@@ -16,16 +16,16 @@ namespace LisansUstuBasvuruSistemi.Models
     {
         public int YeterlikBasvuruJuriUyeID { get; set; }
         public int YeterlikBasvuruID { get; set; }
+        public System.Guid UniqueID { get; set; }
+        public bool IsYtuIciOrDisi { get; set; }
         public bool IsSecilenJuri { get; set; }
         public Nullable<bool> IsAsilOrYedek { get; set; }
-        public System.Guid UniqueID { get; set; }
         public string JuriTipAdi { get; set; }
         public string UnvanAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
         public Nullable<int> UniversiteID { get; set; }
         public string UniversiteAdi { get; set; }
-        public Nullable<int> AnabilimDaliID { get; set; }
         public string AnabilimDaliAdi { get; set; }
         public Nullable<bool> IsLinkGonderildi { get; set; }
         public Nullable<System.DateTime> LinkGonderimTarihi { get; set; }

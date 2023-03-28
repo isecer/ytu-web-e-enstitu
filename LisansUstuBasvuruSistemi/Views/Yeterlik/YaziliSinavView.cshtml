@@ -6,69 +6,86 @@
     Layout = null;
 
     var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
+    var closeContent= (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar) && !Model.IsDegerlendirme.HasValue;
+    var readOly = (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar);
+
+
 
 }
 
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 10px;">
-
     <table style="width: 100%;">
         <tr>
-            <td colspan="3" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"> Yazılı Sınavı</td>
-        </tr>
-        <tr>
-            <td class="CaptionTd" width="150">Sınav Durumu</td>
-            <td class="CaptionTd" width="10">:</td>
-            <td class="ValueTd">
-                <select class="form-control" id="IsYaziliSinavinaKatildi_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "") style="color: black;" onchange="if ($(this).val() == 'true') { $('#YaziliSinavNotuRw_@Model.UniqueID').removeClass('hide');}else {$('#YaziliSinavNotuRw_@Model.UniqueID').addClass('hide');}">
-                    <option value="">Henüz Sınav Yapılmadı</option>
-                    <option value="true" @Model.IsYaziliSinavinaKatildi.ToSelected()>Öğrenci Sınava Katıldı</option>
-                    <option value="false" @((Model.IsYaziliSinavinaKatildi == false).ToSelected())>Öğrenci Sınava Katılmadı</option>
-                </select>
+            <td colspan="2" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-edit fa-lg"></i> Yazılı Sınavı <span style="font-size: 8pt;">@(closeContent ? "(Tamamlandı)":"")</span></td>
+            <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
+                <ul class="panel-controls">
+                    <li>
+                        <a href="javascript:void(0)" onclick="ContentShowDt('@Model.UniqueID','Yz')"><span id="Yz_shower_@Model.UniqueID" class="fa fa-angle-@(!readOly?"down":"up")" aria-hidden="true"></span> </a>
+                    </li>
+                </ul>
             </td>
         </tr>
-        <tr>
-            <td class="CaptionTd">Sınav Tarihi/Saati</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd">
-                <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="width: 120px; color: black;" @(isOnaylayanVar ? "disabled" : "") value="@Model.YaziliSinavTarihi.ToFormatDateAndTime()" id="YaziliSinavTarihi_@Model.UniqueID">
-            </td>
-        </tr>
-        <tr>
-            <td class="CaptionTd">Sınav Yeri</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd">
-                <input type="text" maxlength="512" @(isOnaylayanVar ? "disabled" : "") class="form-control" style="color: black;" id="YaziliSinavYeri_@Model.UniqueID" value="@Model.YaziliSinavYeri" />
-            </td>
-        </tr>
-        <tr id="YaziliSinavNotuRw_@Model.UniqueID" class="@(Model.IsYaziliSinavinaKatildi == true ? "" : "hide")">
-            <td class="CaptionTd">Sınav Notu</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd">
-                <input maxlength="3" @(isOnaylayanVar ? "disabled" : "") onkeydown="kDownEvent(window.event,this)" style="color: black;" class="form-control" id="YaziliSinaviNotu_@Model.UniqueID" value="@Model.YaziliSinaviNotu" />
-            </td>
-        </tr>
-        @if (Model.IsYaziliSinavBasarili.HasValue)
-        {
-            <tr>
-                <td class="CaptionTd">Sınav Sonucu</td>
-                <td class="CaptionTd">:</td>
-                <td class="ValueTd">
-                    @Model.IsYaziliSinavBasarili.ToOnayDurumIconLgHtml() @(Model.IsYaziliSinavBasarili.Value?"Başarılı":"Başarısız")
-                </td>
-            </tr>
-        }
-        @if (!isOnaylayanVar && !Model.IsDegerlendirme.HasValue)
-        {
-            <tr>
-                <td></td>
-                <td></td>
-                <td>
-                    <span class="btn btn-info" style="cursor: pointer;" onclick="YaziliSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
-                </td>
-            </tr>
+        <tr  class="@(!closeContent?"":"hide")" id="YzContent_@Model.UniqueID">
+            <td colspan="3">
+                <table style="width:100%;">
+                    <tr>
+                        <td class="CaptionTd" width="150">Sınav Tarihi/Saati</td>
+                        <td class="CaptionTd" width="10">:</td>
+                        <td class="ValueTd">
+                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="width: 120px; color: black;" @(readOly ? "disabled" : "") value="@Model.YaziliSinavTarihi.ToFormatDateAndTime()" id="YaziliSinavTarihi_@Model.UniqueID">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Sınav Yeri</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <input type="text" maxlength="512" @(readOly ? "disabled" : "") class="form-control" style="color: black;" id="YaziliSinavYeri_@Model.UniqueID" value="@Model.YaziliSinavYeri" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Sınav Durumu</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <select class="form-control" id="IsYaziliSinavinaKatildi_@Model.UniqueID" @(readOly ? "disabled" : "") style="color: black;" onchange="if ($(this).val() == 'true') { $('#YaziliSinavNotuRw_@Model.UniqueID').removeClass('hide');}else {$('#YaziliSinavNotuRw_@Model.UniqueID').addClass('hide');}">
+                                <option value="">Henüz Sınav Yapılmadı</option>
+                                <option value="true" @Model.IsYaziliSinavinaKatildi.ToSelected()>Öğrenci Sınava Katıldı</option>
+                                <option value="false" @((Model.IsYaziliSinavinaKatildi == false).ToSelected())>Öğrenci Sınava Katılmadı</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="YaziliSinavNotuRw_@Model.UniqueID" class="@(Model.IsYaziliSinavinaKatildi == true ? "" : "hide")">
+                        <td class="CaptionTd">Sınav Notu</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <input maxlength="3" @(readOly ? "disabled" : "") onkeydown="kDownEvent(window.event,this)" style="color: black;" class="form-control" id="YaziliSinaviNotu_@Model.UniqueID" value="@Model.YaziliSinaviNotu" />
+                        </td>
+                    </tr>
+                    @if (Model.IsYaziliSinavBasarili.HasValue)
+                    {
+                        <tr>
+                            <td class="CaptionTd">Sınav Sonucu</td>
+                            <td class="CaptionTd">:</td>
+                            <td class="ValueTd">
+                                @Model.IsYaziliSinavBasarili.ToOnayDurumIconLgHtml() @(Model.IsYaziliSinavBasarili.Value?"Başarılı":"Başarısız")
+                            </td>
+                        </tr>
+                    }
+                    @if (!readOly && !Model.IsDegerlendirme.HasValue)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span class="btn btn-info" style="cursor: pointer;" onclick="YaziliSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                            </td>
+                        </tr>
 
-        }
+                    }
+                </table>
+            </td>
+        </tr>
+
 
     </table>
 
@@ -115,7 +132,7 @@
         var yaziliSinaviNotu = $('#YaziliSinaviNotu_' + uniqueId).val();
         var msg = "";
         if (isYaziliSinavinaKatildi == "") {
-            msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri komite üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+            msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri jüri üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
         }
         else if (isYaziliSinavinaKatildi == "true") {
             var isBasarili = notKriter <= parseInt(yaziliSinaviNotu);
@@ -181,3 +198,4 @@
 
     </script>
 }
+

@@ -847,6 +847,7 @@
           <Property Name="WebAdresi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="ToplamKayitKota" Type="int" Nullable="false" />
           <Property Name="LUBMailGonder" Type="bit" Nullable="false" />
+          <Property Name="TestEmailAddress" Type="nvarchar" MaxLength="256" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -2753,6 +2754,7 @@
           <Property Name="SozluSinavYeri" Type="nvarchar" MaxLength="512" />
           <Property Name="IsSozluSinavinaKatildi" Type="bit" />
           <Property Name="SozluSinaviOrtalamaNotu" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="IsSozluSinavBasarili" Type="bit" />
           <Property Name="GenelBasariNotu" Type="decimal" Precision="18" Scale="2" />
           <Property Name="IsGenelSonucBasarili" Type="bit" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -2765,16 +2767,16 @@
           </Key>
           <Property Name="YeterlikBasvuruJuriUyeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="YeterlikBasvuruID" Type="int" Nullable="false" />
+          <Property Name="UniqueID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsYtuIciOrDisi" Type="bit" Nullable="false" />
           <Property Name="IsSecilenJuri" Type="bit" Nullable="false" />
           <Property Name="IsAsilOrYedek" Type="bit" />
-          <Property Name="UniqueID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="JuriTipAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UnvanAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="AdSoyad" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="EMail" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UniversiteID" Type="int" />
           <Property Name="UniversiteAdi" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="AnabilimDaliID" Type="int" />
           <Property Name="AnabilimDaliAdi" Type="nvarchar" MaxLength="256" />
           <Property Name="IsLinkGonderildi" Type="bit" />
           <Property Name="LinkGonderimTarihi" Type="datetime" />
@@ -2798,7 +2800,6 @@
           <Property Name="LinkGonderimTarihi" Type="datetime" />
           <Property Name="LinkGonderenID" Type="int" />
           <Property Name="IsJuriOnaylandi" Type="bit" />
-          <Property Name="Aciklama" Type="nvarchar" MaxLength="2048" />
           <Property Name="DegerlendirmeYapanID" Type="int" />
           <Property Name="DegerlendirmeIslemTarihi" Type="datetime" />
           <Property Name="DegerlendirmeIslemYapanIP" Type="nvarchar" MaxLength="16" />
@@ -2847,6 +2848,7 @@
           <Property Name="YaziliYuzde" Type="int" />
           <Property Name="SozluYuzde" Type="int" />
           <Property Name="YaziliGecerNot" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SozluGecerNot" Type="decimal" Precision="18" Scale="2" />
           <Property Name="OrtalamaGecerNot" Type="decimal" Precision="18" Scale="2" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -10864,6 +10866,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="WebAdresi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="ToplamKayitKota" Type="Int32" Nullable="false" />
           <Property Name="LUBMailGonder" Type="Boolean" Nullable="false" />
+          <Property Name="TestEmailAddress" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
@@ -13182,6 +13185,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SozluSinavYeri" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="IsSozluSinavinaKatildi" Type="Boolean" />
           <Property Name="SozluSinaviOrtalamaNotu" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="IsSozluSinavBasarili" Type="Boolean" />
           <Property Name="GenelBasariNotu" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="IsGenelSonucBasarili" Type="Boolean" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -13201,16 +13205,16 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="YeterlikBasvuruJuriUyeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="YeterlikBasvuruID" Type="Int32" Nullable="false" />
+          <Property Name="UniqueID" Type="Guid" Nullable="false" />
+          <Property Name="IsYtuIciOrDisi" Type="Boolean" Nullable="false" />
           <Property Name="IsSecilenJuri" Type="Boolean" Nullable="false" />
           <Property Name="IsAsilOrYedek" Type="Boolean" />
-          <Property Name="UniqueID" Type="Guid" Nullable="false" />
           <Property Name="JuriTipAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UnvanAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="AdSoyad" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="EMail" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="UniversiteID" Type="Int32" />
           <Property Name="UniversiteAdi" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="AnabilimDaliID" Type="Int32" />
           <Property Name="AnabilimDaliAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="IsLinkGonderildi" Type="Boolean" />
           <Property Name="LinkGonderimTarihi" Type="DateTime" Precision="3" />
@@ -13235,7 +13239,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="LinkGonderimTarihi" Type="DateTime" Precision="3" />
           <Property Name="LinkGonderenID" Type="Int32" />
           <Property Name="IsJuriOnaylandi" Type="Boolean" />
-          <Property Name="Aciklama" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
           <Property Name="DegerlendirmeYapanID" Type="Int32" />
           <Property Name="DegerlendirmeIslemTarihi" Type="DateTime" Precision="3" />
           <Property Name="DegerlendirmeIslemYapanIP" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
@@ -13293,6 +13296,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="YaziliYuzde" Type="Int32" />
           <Property Name="SozluYuzde" Type="Int32" />
           <Property Name="YaziliGecerNot" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SozluGecerNot" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="OrtalamaGecerNot" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
@@ -18191,6 +18195,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
+                <ScalarProperty Name="TestEmailAddress" ColumnName="TestEmailAddress" />
                 <ScalarProperty Name="LUBMailGonder" ColumnName="LUBMailGonder" />
                 <ScalarProperty Name="ToplamKayitKota" ColumnName="ToplamKayitKota" />
                 <ScalarProperty Name="WebAdresi" ColumnName="WebAdresi" />
@@ -20180,6 +20185,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="IsGenelSonucBasarili" ColumnName="IsGenelSonucBasarili" />
                 <ScalarProperty Name="GenelBasariNotu" ColumnName="GenelBasariNotu" />
+                <ScalarProperty Name="IsSozluSinavBasarili" ColumnName="IsSozluSinavBasarili" />
                 <ScalarProperty Name="SozluSinaviOrtalamaNotu" ColumnName="SozluSinaviOrtalamaNotu" />
                 <ScalarProperty Name="IsSozluSinavinaKatildi" ColumnName="IsSozluSinavinaKatildi" />
                 <ScalarProperty Name="SozluSinavYeri" ColumnName="SozluSinavYeri" />
@@ -20226,16 +20232,16 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="LinkGonderimTarihi" ColumnName="LinkGonderimTarihi" />
                 <ScalarProperty Name="IsLinkGonderildi" ColumnName="IsLinkGonderildi" />
                 <ScalarProperty Name="AnabilimDaliAdi" ColumnName="AnabilimDaliAdi" />
-                <ScalarProperty Name="AnabilimDaliID" ColumnName="AnabilimDaliID" />
                 <ScalarProperty Name="UniversiteAdi" ColumnName="UniversiteAdi" />
                 <ScalarProperty Name="UniversiteID" ColumnName="UniversiteID" />
                 <ScalarProperty Name="EMail" ColumnName="EMail" />
                 <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
                 <ScalarProperty Name="UnvanAdi" ColumnName="UnvanAdi" />
                 <ScalarProperty Name="JuriTipAdi" ColumnName="JuriTipAdi" />
-                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
                 <ScalarProperty Name="IsAsilOrYedek" ColumnName="IsAsilOrYedek" />
                 <ScalarProperty Name="IsSecilenJuri" ColumnName="IsSecilenJuri" />
+                <ScalarProperty Name="IsYtuIciOrDisi" ColumnName="IsYtuIciOrDisi" />
+                <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
                 <ScalarProperty Name="YeterlikBasvuruID" ColumnName="YeterlikBasvuruID" />
                 <ScalarProperty Name="YeterlikBasvuruJuriUyeID" ColumnName="YeterlikBasvuruJuriUyeID" />
               </MappingFragment>
@@ -20250,7 +20256,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="DegerlendirmeIslemYapanIP" ColumnName="DegerlendirmeIslemYapanIP" />
                 <ScalarProperty Name="DegerlendirmeIslemTarihi" ColumnName="DegerlendirmeIslemTarihi" />
                 <ScalarProperty Name="DegerlendirmeYapanID" ColumnName="DegerlendirmeYapanID" />
-                <ScalarProperty Name="Aciklama" ColumnName="Aciklama" />
                 <ScalarProperty Name="IsJuriOnaylandi" ColumnName="IsJuriOnaylandi" />
                 <ScalarProperty Name="LinkGonderenID" ColumnName="LinkGonderenID" />
                 <ScalarProperty Name="LinkGonderimTarihi" ColumnName="LinkGonderimTarihi" />
@@ -20297,6 +20302,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
                 <ScalarProperty Name="OrtalamaGecerNot" ColumnName="OrtalamaGecerNot" />
+                <ScalarProperty Name="SozluGecerNot" ColumnName="SozluGecerNot" />
                 <ScalarProperty Name="YaziliGecerNot" ColumnName="YaziliGecerNot" />
                 <ScalarProperty Name="SozluYuzde" ColumnName="SozluYuzde" />
                 <ScalarProperty Name="YaziliYuzde" ColumnName="YaziliYuzde" />

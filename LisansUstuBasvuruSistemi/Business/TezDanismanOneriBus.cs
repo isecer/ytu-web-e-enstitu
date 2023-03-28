@@ -246,7 +246,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                       "' lisansüstü.yildiz.edu.tr sistemine üye olması gerekmektedir.";
                         return Tuple.Create(false, hataMesaji);
                     }
-                    var danismanBasvurusuVar = db.TDOBasvuruDanismen.Any(p => p.TDOBasvuru.KullaniciID == kullaniciId);
+
+                    var danismanBasvurusuVar = db.TDOBasvuruDanismen.Any(p => p.TDOBasvuru.KullaniciID == kullaniciId && p.TDOBasvuru.EnstituKod == p.TDOBasvuru.Kullanicilar.EnstituKod);
 
                     if (!danismanBasvurusuVar)
                     {
@@ -375,7 +376,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kul.OgrenimTipKod.IsDoktora())
                         {
                             var aktifDevamEdenBasvuruVar = db.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
@@ -389,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         else
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Tez danışman atama başvurusunu Aktif olarak okuyan öğrencileri tarafından yapılabilir.");
+                            msg.Messages.Add("Tez danışman öneri başvurusunu Aktif olarak doktora seviyesinde okuyan öğrencileri tarafından yapılabilir.");
                         }
                     }
                 }

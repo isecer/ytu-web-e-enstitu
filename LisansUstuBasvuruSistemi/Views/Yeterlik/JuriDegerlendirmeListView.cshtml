@@ -16,7 +16,7 @@
 
 
 
-<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;">
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="juriContentView_@Model.UniqueID">
     <table style="width: 100%;">
         <tr>
             <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i>Yeterlik Jüri Üyeleri Sınav Sonucu Değerlendirmesi</td>
@@ -28,6 +28,7 @@
                     <table class="table" style="width: 100%; margin: 0px;">
                         <tr class="warning">
                             <th width="35"></th>
+                            <th width="100">Unvanı</th>
                             <th>Ad Soyad</th>
                             <th>Sonuç Onayı / Not Giriş Durumu</th>
                             <th width="45"></th>
@@ -38,7 +39,7 @@
                             {
                                 var isTezDanismani = isDanismani && itemJr.JuriTipAdi == "TezDanismani";
                                 var openRow = isTezDanismani;
-                                var editdata = onayDuzeltmeYetki || (isTezDanismani && isDanismani && !itemJr.IsSonucOnaylandi.HasValue);
+                                var editdata = onayDuzeltmeYetki || (isTezDanismani && !itemJr.IsSonucOnaylandi.HasValue);
                                 <tr>
                                     <td>
                                         <ul class="panel-controls">
@@ -47,8 +48,9 @@
                                             </li>
                                         </ul>
                                     </td>
+                                    <td>@itemJr.UnvanAdi<br />@itemJr.JuriTipAdi</td>
                                     <td>
-                                        @itemJr.UnvanAdi @itemJr.AdSoyad<br /> @itemJr.EMail
+                                        @itemJr.AdSoyad<br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                     </td>
                                     <td>
                                         @itemJr.ToJuriOnayDurumView()
@@ -56,8 +58,11 @@
                                     <td>
                                         @if (onayDuzeltmeYetki)
                                         {
-                                            <a href="javascript:void(0)" title="Jüri üyesi bilgisini düzelt"><i class="fa fa-edit fa-lg"></i></a>
-                                            <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="JuriLinkGonder('@Model.UniqueID','@itemJr.UniqueID','@itemJr.UnvanAdi @itemJr.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                            if (!tumJuriOnayladi)
+                                            {
+                                                <a href="javascript:void(0)" title="Jüri üyesi bilgisini düzelt" onclick="GetJuriDegisiklikView('@Model.UniqueID','@itemJr.UniqueID','@itemJr.UnvanAdi @itemJr.AdSoyad')"><i class="fa fa-edit fa-lg"></i></a>
+                                                <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="JuriLinkGonder('@Model.UniqueID','@itemJr.UniqueID','@itemJr.UnvanAdi @itemJr.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                            }
                                         }
                                     </td>
                                 </tr>
@@ -75,7 +80,7 @@
                                                                 <td class="CaptionTd" width="10">:</td>
                                                                 <td class="ValueTd">
 
-                                                                    <input maxlength="3" @(!onayDuzeltmeYetki ? "disabled" : "") onkeydown="kDownEvent(window.event,this)" style="color: black;" class="form-control" id="SozluNotu_@itemJr.UniqueID" value="@itemJr.SozluNotu" />
+                                                                    <input maxlength="3"  onkeydown="kDownEvent(window.event,this)" style="color: black;" class="form-control" id="SozluNotu_@itemJr.UniqueID" value="@itemJr.SozluNotu" />
 
                                                                 </td>
                                                             }
@@ -155,7 +160,7 @@
                                         </td>
                                     </tr>
                                 }
-                                @if (Model.IsYaziliSinavinaKatildi == true && Model.IsSozluSinavinaKatildi == true)
+                                @if (Model.IsYaziliSinavinaKatildi == true && Model.IsSozluSinavinaKatildi == true && Model.IsSozluSinavBasarili==true)
                                 {
                                     <tr>
                                         <td class="CaptionTd">Genel Başarı Notu</td>
@@ -185,7 +190,7 @@
     function kDownEvent(event, sndr) {
         myMask(event, sndr, true, 3, 3, 0);
     }
-   
+
     function JuriLinkGonder(id, uniqueId, adSoyad) {
         Swal.fire({
             html: adSoyad + " isimli jüri üyesine sınav değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
@@ -201,7 +206,7 @@
             allowOutsideClick: false,
             preConfirm: function () {
                 $('.swal2-cancel').first().text("Gönderiliyor...");
-                return new Promise(function (resolve) { 
+                return new Promise(function (resolve) {
                     $.ajax({
                         url: '@Url.Action("JuriDegerlendirmeLinkiGonder", "Yeterlik")',
                         data: { uniqueId},
@@ -223,7 +228,78 @@
 
                 });
             }
-        }); 
+        });
     }
+    function GetJuriDegisiklikView(id, uniqueId, adSoyad) {
+        var pndC =   $('#juriContentView_' + id);
+        PanelRefresh(pndC, false); 
+        $.ajax({
+            url: '@Url.Action("GetJuriDegisiklik")',
+            data: {  uniqueId },
+            async: false,
+            success: function (result) {
+                if (result.IsSuccess) {
+                    bootbox.dialog({
+                        message: "<div id='juriDegisiklikContent'>" + result.view + "</div>",
+                        title: "<span style='font-size:9pt;color:#02393e;font-weight:bold;'>Jüri Düzenleme İşlemi: " + adSoyad+"</span>",
+                        buttons: {
+                            success: {
+                                label: "Kaydet",
+                                className: "btn-success",
+                                callback: function () {
+                                    var pnlx = $('.modal-content');
+                                    PanelRefresh(pnlx, false);
+                                    var EMailOrJuriDegisiklik = $('#JuriDegisiklikSekli_' + uniqueId).val(); 
+                                    var EMail = $('#JuriEMail_' + uniqueId).val();
+                                    var YeniJuriUniqueID = $('#YeniJuriUniqueID_' + uniqueId).val();
 
+                                    $.ajax({
+                                        url: '@Url.Action("JuriDegisiklikPost", "Yeterlik")',
+                                        data: { uniqueId, EMailOrJuriDegisiklik, EMail, YeniJuriUniqueID },
+                                        success: function (result) {
+
+                                            if (result.IsSuccess) {
+                                                GetDetail(id);
+                                                $('.modal-header').find('button').first().click();
+                                            }
+                                            swal.fire({
+                                                html: result.messageView,
+                                                icon: (result.IsSuccess ? "success" : "error"),
+                                                type: (result.IsSuccess ? "success" : "error"),
+                                                confirmButtonText: 'tamam',
+                                                padding: '2em'
+                                            });
+                                        },
+                                        complete: function (result) { 
+                                            PanelRefresh(pndC, false);
+                                        }
+                                    });
+
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    swal.fire({
+                        html: result.message,
+                        icon: "warning",
+                        type: "warning",
+                        confirmButtonText: 'tamam',
+                        padding: '2em'
+                    });
+                }
+            },
+            complete: function (result) {
+                PanelRefresh(pndC, true);
+            }
+        });
+    }
 </script>

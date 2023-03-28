@@ -263,6 +263,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Sistem talep işlemlerine kapalıdır.");
                 }
             }
+
+            if (kModel.TalepGelenTalepID > 0 && !kayitYetki)
+            {
+                var talep = _entities.TalepGelenTaleplers.Find(kModel.TalepGelenTalepID);
+                if (talep.TalepDurumID > TalepDurumu.TalepYapildi)
+                {
+                    mmMessage.Messages.Add("Enstitü tarafından işlem gören talepler düzeltilemez.");
+                }
+            }
             if (mmMessage.Messages.Count == 0)
                 if (kModel.TalepTipID <= 0)
                 {
@@ -911,6 +920,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
            
             if (duzenleYetki == false)
             {
+                if (Management.getAktifTalepSurecID(talep.TalepSurecleri.EnstituKod, talep.TalepSurecID).HasValue)
+                {
+                    mmMessage.MessageType = Msgtype.Error;
+                    mmMessage.IsSuccess = false;
+                    mmMessage.Title = "Uyarı";
+                    mmMessage.Messages.Add("Süreç tamamlandıktan sonra başvurunuzu silemezsiniz!");
+                }
                 if (UserIdentity.Current.Id != talep.KullaniciID)
                 {
                     mmMessage.MessageType = Msgtype.Error;

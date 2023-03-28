@@ -47,6 +47,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AnabilimDaliKod.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliKod == model.AnabilimDaliKod);
             if (!model.AnabilimDaliAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliAdi.Contains(model.AnabilimDaliAdi));
+            if (model.IsKomiteUyesiVar.HasValue) q = q.Where(p => p.YeterlikKomiteUyeCount > 0 == model.IsKomiteUyesiVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
@@ -206,7 +207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetFilterKullanici(string term)
         {
 
-            var ogrenciList = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && (p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+            var ogrenciList = _entities.Kullanicilars.Where(p => p.KullaniciTipID == KullaniciTipBilgi.AkademikPersonel && p.UnvanID.HasValue && ((p.Ad + " " + p.Soyad).Contains(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
             {
                 s.KullaniciID,
                 s.Ad,

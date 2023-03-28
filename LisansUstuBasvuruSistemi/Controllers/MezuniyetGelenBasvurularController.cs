@@ -1207,7 +1207,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 varOlanTik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY.ToUpper();
                                 varOlanTik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN.ToJuriUnvanAdi();
 
-                            } 
+                            }
                         }
                     }
 
@@ -2122,15 +2122,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var baslangicTarihi = basTar.ToDate().Value;
             var bitisTarihi = bitTar.ToDate().Value;
             var isDoktora = ogrenimTipKods.IsDoktora();
-            var qData = _entities.MezuniyetBasvurularis.Where(p => p.MezuniyetSureci.EnstituKod == enstituKod).AsQueryable();
-            qData = raporTipId == RaporTipleri.MezuniyetTezJuriTutanakRaporu ? qData.Where(p => p.SRTalepleris.Any(a => a.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili) && (p.EYKTarihi >= baslangicTarihi && p.EYKTarihi <= bitisTarihi)).OrderByDescending(o => o.OgrenimTipKod).ThenBy(t => t.EYKTarihi)
-                : qData.Where(p => p.IsMezunOldu == true && (p.MezuniyetTarihi >= baslangicTarihi && p.MezuniyetTarihi <= bitisTarihi)).OrderBy(o => o.MezuniyetTarihi);
-            var data = qData.ToList().Where(p => p.OgrenimTipKod.IsDoktora() == isDoktora).ToList();
 
 
 
             if (raporTipId == RaporTipleri.MezuniyetTezJuriTutanakRaporu)
             {
+                var data = _entities.MezuniyetBasvurularis.Where(p =>
+                        p.MezuniyetSureci.EnstituKod == enstituKod &&
+                        p.MezuniyetJuriOneriFormlaris.Any(a => a.EYKDaOnaylandi == true) &&
+                        p.EYKTarihi >= baslangicTarihi &&
+                        p.EYKTarihi <= bitisTarihi)
+                    .OrderByDescending(o => o.OgrenimTipKod).ThenBy(t => t.EYKTarihi).ToList()
+                    .Where(p => p.OgrenimTipKod.IsDoktora() == isDoktora).ToList();
+
+
                 var model = new List<RprTutanakModel>();
                 var rModel = new RprTutanakModel
                 {
@@ -2150,8 +2155,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var abdl = itemO.Programlar.AnabilimDallari;
                     row.OgrenciBilgi = itemO.OgrenciNo + " " + itemO.Ad + " " + itemO.Soyad + " (" + abdl.AnabilimDaliAdi + " / " + prgl.ProgramAdi + ")";
                     var joForm = itemO.MezuniyetJuriOneriFormlaris.First();
-                    var srTalep =
-                        itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
                     var danisman = joForm.MezuniyetJuriOneriFormuJurileris.First(p => p.JuriTipAdi == "TezDanismani");
                     row.DanismanAdSoyad = danisman.UnvanAdi + " " + danisman.AdSoyad;
                     row.DanismanUni = danisman.UniversiteID.HasValue ? danisman.Universiteler.Ad : danisman.UniversiteAdi;
@@ -2183,18 +2186,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     row.YedekUye2 = yedekUye2.UnvanAdi + " " + yedekUye2.AdSoyad;
                     row.YedekUye2Uni = yedekUye2.UniversiteID.HasValue ? yedekUye2.Universiteler.Ad : yedekUye2.UniversiteAdi;
 
-                    if (srTalep.IsTezBasligiDegisti == true)
+                    if (joForm.IsTezBasligiDegisti == true)
                     {
-                        row.TezKonusu = itemO.IsTezDiliTr == true ? srTalep.YeniTezBaslikTr : srTalep.YeniTezBaslikEn; 
+                        row.TezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
                     }
                     else if (joForm.IsTezBasligiDegisti == true)
                     {
-                        row.TezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn; 
+                        row.TezKonusu = itemO.IsTezDiliTr == true ? joForm.YeniTezBaslikTr : joForm.YeniTezBaslikEn;
                     }
                     else
                     {
                         row.TezKonusu = itemO.IsTezDiliTr == true ? itemO.TezBaslikTr : itemO.TezBaslikEn;
-                    }   
+                    }
                     rModel.DetayData.Add(row);
 
                     model.Add(rModel);
@@ -2216,6 +2219,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
+                var data = _entities.MezuniyetBasvurularis.Where(p =>
+                        p.MezuniyetSureci.EnstituKod == enstituKod &&
+                        p.IsMezunOldu == true &&
+                        p.MezuniyetTarihi >= baslangicTarihi &&
+                        p.MezuniyetTarihi <= bitisTarihi
+                    )
+                    .OrderBy(o => o.MezuniyetTarihi).ToList()
+                    .Where(p => p.OgrenimTipKod.IsDoktora() == isDoktora).ToList();
+
                 if (ogrenimTipKods.IsDoktora())
                 {
                     var model = new List<RprMezuniyetTutanakModel>();

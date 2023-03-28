@@ -105,8 +105,6 @@
     @if (Model.IsEnstituOnaylandi == true)
     {
 
-        if (Model.DmYeterlikKomites.Any())
-        {
             if (Model.IsKomiteOrJuri == true)
             {
                 @Model.ToJuriUyeleriListView()
@@ -131,10 +129,9 @@
                                             <td class="ValueTd">
                                                 @if (!itemKom.IsJuriOnaylandi.HasValue)
                                                 {
-                                                    <select onchange="if($(this).val()=='false'){ $('.RwKAck_@itemKom.UniqueID').removeClass('hide'); }else{$('.RwKAck_@itemKom.UniqueID').addClass('hide');}" id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                    <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
                                                         <option></option>
-                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Önerilen Yeterlik Jüri Üyelerini Onaylıyorum</option>
-                                                        <option value="false" @((itemKom.IsJuriOnaylandi == false).ToSelected())>Önerilen Yeterlik Jüri Üyelerini Onaylamıyorum</option>
+                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Önerilen Yeterlik Jüri Üyelerini Onaylıyorum</option> 
                                                     </select>
                                                 }
                                                 else
@@ -143,16 +140,7 @@
                                                 }
                                             </td>
                                         </tr>
-                                        <tr class="RwKAck_@itemKom.UniqueID @(itemKom.IsJuriOnaylandi==false?"":"hide")">
-                                            <td></td>
-                                            <td>:</td>
-                                            <td>
-                                                @if (!itemKom.IsJuriOnaylandi.HasValue)
-                                                {
-                                                    <textarea placeholder="Açıklama Giriniz" id="KomiteOnayAciklama_@itemKom.UniqueID" maxlength="2048" rows="4" style="resize: vertical; border: 1px solid;" class="form-control"></textarea>
-                                                }
-                                            </td>
-                                        </tr>
+                                        
                                         @if (!itemKom.IsJuriOnaylandi.HasValue)
                                         {
                                             <tr class="RwKBtn_@itemKom.UniqueID">
@@ -181,24 +169,68 @@
             else
             {
                 @Model.ToJuriUyeleriListView()
-                @Model.ToKomiteDegerlendirmeListView()
+                if (Model.DmYeterlikKomites.Any())
+                { 
+                    @Model.ToKomiteDegerlendirmeListView()
+                }
 
-                if (Model.DmYeterlikKomites.All(a => a.IsJuriOnaylandi == true))
+                if (Model.IsAbdKomitesiJuriyiOnayladi==true)
                 {
                     @Model.ToSinavView()
                 }
-            }
-
-        }
-
-
-
-
+            } 
     }
 </div>
-
 <script>
+    function ContentShowDt(id,name) {
+        var isShow = $('#' + name+'_shower_' + id).hasClass('fa-angle-up')
+        if (isShow) {
+            $('#'+ name+'Content_' + id).removeClass('hide');
+            $('#'+ name+'_shower_' + id).removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+        else {
+            $('#'+ name+'Content_' + id).addClass('hide');
+            $('#'+ name+'_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
+        }
+    }
+    function KomiteJuriOnayKayit(id, uniqueID) { 
+         Swal.fire({
+            html: "Yukarıda listelenen yeterlik jüri üyeleri için onay işleminizi kaydetmek istiyor musunuz?",
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Kaydet',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Kaydediliyor...");
+                return new Promise(function (resolve) {
+                    var isGenelSonucBasarili = $('#KomiteIsOnaylandi_' + uniqueID).val(); 
+                    $.ajax({
+                        url: '@Url.Action("KomiteJuriOnay", "Yeterlik")',
+                        data: { uniqueID, isGenelSonucBasarili  },
+                        success: function (result) {
+                            GetDetail(id);
+                            swal.fire({
+                                html: result.messageView,
+                                icon: (result.IsSuccess ? "success" : "error"),
+                                type: (result.IsSuccess ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            });
+                        },
+                        complete: function (err) { 
+                        }
+                    });
+                });
+            }
+        }); 
 
+    }
     function GetYeterlikJuriUyeleri(id,adSoyad) {
         $.ajax({
             url: '@Url.Action("GetYeterlikJuriFormu")',

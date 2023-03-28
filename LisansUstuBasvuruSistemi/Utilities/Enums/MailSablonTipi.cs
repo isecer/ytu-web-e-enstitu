@@ -140,7 +140,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public static int Yeterlik_YaziliSinavBasariliGirisiYapidliDanismana = 258;
         public static int Yeterlik_YaziliSinavBasariliGirisiYapidliOgrenciye = 259;
-        public static int Yeterlik_YaziliSinavBasariliGirisiYapidliJurilereLink = 260;
+        public static int Yeterlik_YaziliSinavBasariliGirisiYapidliJurilere = 260;
 
         public static int Yeterlik_YaziliSinavBasarisizOnayYapildiDanismana = 261;
         public static int Yeterlik_YaziliSinavBasarisizOnayYapildiOgrenciye = 262;
@@ -165,24 +165,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiDanismana = 287;
         public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiOgrenciye = 288;
-        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink = 289;
+        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink = 289; 
 
-
-
-
-        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiOgrenciye = 290;
-        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiDanismana = 291;
-        public static int Yeterlik_JuriUyeleriDegerlendirmeyiTamamladiJurilere = 292;
-
-
-        public static List<int> YeterlikJurilerineGidenDegerlendirmeSablonlari = new List<int>
-        {
-            Yeterlik_YaziliSinavBasariliGirisiYapidliJurilereLink,
-            Yeterlik_YaziliSinavBasarisizGirisiYapildiJurilereLink,
-            Yeterlik_YaziliSinavKatilmadiGirisiYapildiJurilereLink,
-            Yeterlik_SozluNotGirisJurilereLink,
-            Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink
-
-        };
+         
     }
 }

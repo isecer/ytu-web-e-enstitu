@@ -51,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string SozluSinavYeri { get; set; }
         public Nullable<bool> IsSozluSinavinaKatildi { get; set; }
         public Nullable<decimal> SozluSinaviOrtalamaNotu { get; set; }
+        public Nullable<bool> IsSozluSinavBasarili { get; set; }
         public Nullable<decimal> GenelBasariNotu { get; set; }
         public Nullable<bool> IsGenelSonucBasarili { get; set; }
         public System.DateTime IslemTarihi { get; set; }

@@ -66,6 +66,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsEnstituOnaylandi = yeterlikBasvuru.IsEnstituOnaylandi,
                         EnstituOnayAciklama = yeterlikBasvuru.EnstituOnayAciklama,
                         IsJuriOlusturuldu = yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any(),
+                        IsAbdKomitesiJuriyiOnayladi = yeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi,
                         YaziliSinavTarihi = yeterlikBasvuru.YaziliSinavTarihi,
                         YaziliSinavYeri = yeterlikBasvuru.YaziliSinavYeri,
                         IsYaziliSinavinaKatildi = yeterlikBasvuru.IsYaziliSinavinaKatildi,
@@ -89,17 +90,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsEnstituOnaylandi.HasValue);
                 else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsEnstituOnaylandi == true);
                 else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsEnstituOnaylandi == false);
+                else if (model.BasvuruDurumID == 3) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu == false);
+                else if (model.BasvuruDurumID == 4) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsAbdKomitesiJuriyiOnayladi != true);
+                else if (model.BasvuruDurumID == 5) q = q.Where(p => p.IsGenelSonucBasarili == true);
+                else if (model.BasvuruDurumID == 6) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
             var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
-            var juriOlusturmaYetkisi = RoleNames.YeterlikJuriOlusturma.InRoleCurrent();
-            if (!yeterlikGbKayitYetki && juriOlusturmaYetkisi)
+            var yeterlikAbdJuriOnayDuzeltme = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+            if (!yeterlikGbKayitYetki && !yeterlikAbdJuriOnayDuzeltme)
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             }
             var isFiltered = q2 != q;
             ViewBag.kontrolEdilmeyenBasvuruIds = isFiltered ? q.Where(p => !p.IsEnstituOnaylandi.HasValue).Select(s => s.YeterlikBasvuruID).ToList() : new List<int>();
             ViewBag.filteredOgrenciIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-            ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered ? q.Select(s => s.TezDanismanID).Distinct().ToList() : new List<int>();
 
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
@@ -138,7 +143,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 StringWriter sw = new StringWriter();
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
-
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_YeterlikBasvuruListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
             #endregion
@@ -195,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var uniqueIds = new List<Guid>();
                     foreach (var item in basvurus)
-                    { 
+                    {
                         uniqueIds.Add(item.UniqueID);
                         item.IsEnstituOnaylandi = true;
                         item.EnstituOnayTarihi = DateTime.Now;
@@ -206,8 +210,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.SaveChanges();
                     foreach (var uniqueId in uniqueIds)
                     {
-                        YeterlikBus.SendMailBasvuruOnayi(uniqueId); 
-                    } 
+                        YeterlikBus.SendMailBasvuruOnayi(uniqueId);
+                    }
                     message = basvurus.Count + " Yeterlik başvurusu onaylandı";
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvurus.ToJson());
 

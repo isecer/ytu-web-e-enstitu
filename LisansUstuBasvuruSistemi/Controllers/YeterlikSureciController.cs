@@ -115,6 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var yaziliYuzde = kModel.YaziliYuzde.Select((s, inx) => new { Inx = inx, YaziliYuzde = s }).ToList();
             var sozluYuzde = kModel.SozluYuzde.Select((s, inx) => new { Inx = inx, SozluYuzde = s }).ToList();
             var yaziliGecerNot = kModel.YaziliGecerNot.Select((s, inx) => new { Inx = inx, YaziliGecerNot = s }).ToList();
+            var sozluGecerNot = kModel.SozluGecerNot.Select((s, inx) => new { Inx = inx, SozluGecerNot = s }).ToList();
             var ortalamaGecerNot = kModel.OrtalamaGecerNot.Select((s, inx) => new { Inx = inx, OrtalamaGecerNot = s }).ToList();
 
             var ogrenimTipleri = _entities.OgrenimTipleris.Where(p => p.EnstituKod == kModel.EnstituKod).ToList();
@@ -128,6 +129,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                       join yzy in yaziliYuzde on ot.Inx equals yzy.Inx
                                                       join szy in sozluYuzde on ot.Inx equals szy.Inx
                                                       join ygn in yaziliGecerNot on ot.Inx equals ygn.Inx
+                                                      join sgn in sozluGecerNot on ot.Inx equals sgn.Inx
                                                       join ogn in ortalamaGecerNot on ot.Inx equals ogn.Inx
                                                       join otl in ogrenimTipleri on ot.OgrenimTipID equals otl.OgrenimTipID
                                                       select new
@@ -143,6 +145,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                           yzy.YaziliYuzde,
                                                           szy.SozluYuzde,
                                                           ygn.YaziliGecerNot,
+                                                          sgn.SozluGecerNot,
                                                           ogn.OrtalamaGecerNot,
                                                           otl.OgrenimTipAdi
                                                       }).ToList();
@@ -159,6 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 YaziliYuzde = s.YaziliYuzde,
                 SozluYuzde = s.SozluYuzde,
                 YaziliGecerNot = s.YaziliGecerNot,
+                SozluGecerNot = s.SozluGecerNot,
                 OrtalamaGecerNot = s.OrtalamaGecerNot
 
             }).ToList();
@@ -212,10 +216,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı ve sözlü yüzde toplamları 100 e eşit olmalıdır.");
                 }
-                if (yeterlikSureciOgrenimTipKriterleri.Any(a => !a.YaziliGecerNot.HasValue || !a.OrtalamaGecerNot.HasValue))
+                if (yeterlikSureciOgrenimTipKriterleri.Any(a =>!a.SozluGecerNot.HasValue || !a.YaziliGecerNot.HasValue || !a.OrtalamaGecerNot.HasValue))
                 {
-                    mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı sınav geçer not kriteri ve ortalama geçer not kriteri boş olmamalıdır.");
+                    mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı,sözlü sınav geçer not kriteri ve ortalama geçer not kriteri boş olmamalıdır.");
                 }
+                
             }
             if (mmMessage.Messages.Count == 0)
             {
@@ -318,6 +323,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     YaziliYuzde = s.YaziliYuzde,
                     SozluYuzde = s.SozluYuzde,
                     YaziliGecerNot = s.YaziliGecerNot,
+                    SozluGecerNot = s.SozluGecerNot,
                     OrtalamaGecerNot = s.OrtalamaGecerNot,
                     IslemTarihi = DateTime.Now,
                     IslemYapanID = UserIdentity.Current.Id,

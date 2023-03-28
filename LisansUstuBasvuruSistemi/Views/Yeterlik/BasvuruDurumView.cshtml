@@ -38,16 +38,15 @@
         durumDetayIconClass = "fa fa-comments-o";
         aciklamaDetay = Model.EnstituOnayAciklama;
     }
-    else if (item.IsEnstituOnaylandi.Value)
+    else
     {
-
         if (item.IsGenelSonucBasarili.HasValue)
         {
             if (item.IsGenelSonucBasarili.Value)
             {
-                tabAdi = "Sınav Süreci";
+                tabAdi = "Yeterlik Başarı Durumu";
                 tabIconClass = "fa fa-list-alt fa-lg";
-                durumAdi = "Sınav Sonucu Başarılı";
+                durumAdi = "Başarılı";
                 durumIconClass = "fa fa-thumbs-o-up fa-lg";
                 durumColor = "green";
                 durumDetay = "Jüri üyeleri tarafından sınav sonucu başarılı olarak değerlendirilmiştir.";
@@ -55,9 +54,9 @@
             }
             else
             {
-                tabAdi = "Sınav Süreci";
+                tabAdi = "Yeterlik Başarı Durumu";
                 tabIconClass = "fa fa-list-alt fa-lg";
-                durumAdi = "Sınav Sonucu Başarısızz";
+                durumAdi = "Başarısız";
                 durumIconClass = "fa fa-thumbs-o-down fa-lg";
                 durumColor = "maroon";
                 durumDetay = "Jüri üyeleri tarafından sınav sonucu başarısız olarak değerlendirilmiştir.";
@@ -65,31 +64,121 @@
             }
 
         }
-        else if (item.SozluSinavTarihi.HasValue)
+        else if (item.IsSozluSinavOnline.HasValue)
         {
-             
+            if (item.IsSozluSinavinaKatildi.HasValue)
+            {
                 tabAdi = "Sözlü Sınav Süreci";
                 tabIconClass = "fa fa-list-alt fa-lg";
-                durumAdi = "Değerlendirme Süreci Devam Ediyor";
-                durumIconClass = "fa fa-clock-o fa-lg";
-                durumColor = "green";
+                durumAdi = (item.IsSozluSinavinaKatildi.Value ? "Öğrenci Sınava Katıldı (Süreç Devam Ediyor)" : "Öğrenci Sınava Katılmadı (Başarısız)");
+                durumIconClass = (item.IsSozluSinavinaKatildi.Value ? "fa fa-clock-o fa-lg" : "fa fa-thumbs-o-down fa-lg");
+                durumColor = (item.IsSozluSinavinaKatildi.Value ? "green" : "maroon");
                 durumDetay = "Jüri üyeleri tarafından sınav sonucu değerlendirme işlemi devam ediyor.";
                 durumDetayIconClass = "fa fa-comments-o";
-            
+            }
+            else
+            {
+                tabAdi = "Sözlü Sınavı Süreci";
+                tabIconClass = "fa fa-list-alt fa-lg";
+                durumAdi = "Sözlü Sınavı Sonuç Girişi Bekleniyor";
+                durumIconClass = "fa fa-clock-o fa-lg";
+                durumColor = "green";
+                durumDetay = "Danışman tarafından sözlü sınavı sonucu girişi bekleniyor.";
+                durumDetayIconClass = "fa fa-comments-o";
+            }
         }
-        else if (item.YaziliSinavTarihi.HasValue)
+        else if (item.IsAbdKomitesiJuriyiOnayladi.HasValue && item.YaziliSinavTarihi.HasValue)
         {
-            tabAdi = "Yazılı Sınav Süreci";
-            tabIconClass = "fa fa-list-alt fa-lg";
-            durumAdi = "Değerlendirme Süreci Devam Ediyor";
+            if (item.IsYaziliSinavinaKatildi.HasValue)
+            {
+                if (item.IsYaziliSinavBasarili == true)
+                {
+                    tabAdi = "Yazılı Sınav Süreci";
+                    tabIconClass = "fa fa-list-alt fa-lg";
+                    durumAdi = (item.IsYaziliSinavinaKatildi.Value ? "Öğrenci Sınava Katıldı (Başarılı)" : "Öğrenci Sınava Katılmadı (Başarısız)");
+                    durumIconClass = (item.IsYaziliSinavinaKatildi.Value ? "fa fa-clock-o fa-lg" : "fa fa-thumbs-o-down fa-lg");
+                    durumColor = "green";
+                    durumDetay = "Danışman tarafından sözlü sınavı bilgi girişi yapılmalı.";
+                    durumDetayIconClass = "fa fa-comments-o";
+                }
+                else
+                {
+
+                    tabAdi = "Yazılı Sınav Süreci";
+                    tabIconClass = "fa fa-list-alt fa-lg";
+                    durumAdi = (item.IsYaziliSinavinaKatildi.Value ? "Öğrenci Sınava Katıldı (Başarısız)" : "Öğrenci Sınava Katılmadı (Başarısız)");
+                    durumIconClass = "fa fa-thumbs-o-down fa-lg";
+                    durumColor = "maroon";
+                    durumDetay = "Jüri üyeleri tarafından sınav sonucu değerlendirme işlemi devam ediyor.";
+                    durumDetayIconClass = "fa fa-comments-o";
+
+                }
+
+            }
+            else
+            {
+                tabAdi = "Yazılı Sınav Süreci";
+                tabIconClass = "fa fa-list-alt fa-lg";
+                durumAdi = "Sınav Sonucu Girişi Bekleniyor";
+                durumIconClass = "fa fa-clock-o fa-lg";
+                durumColor = "green";
+                durumDetay = "Danışman tarafından sınav sonucu giriş işlemi yapılması bekleniyor.";
+                durumDetayIconClass = "fa fa-comments-o";
+            }
+
+        }
+        else if (!item.IsJuriOlusturuldu)
+        {
+            tabAdi = "Jüri Oluşturma Süreci";
+            tabIconClass = "fa fa-group fa-lg";
+            durumAdi = "Danışman Yeterlik Jüri Üyelerini Oluşturmalı";
             durumIconClass = "fa fa-clock-o fa-lg";
             durumColor = "green";
-            durumDetay = "Jüri üyeleri tarafından sınav sonucu değerlendirme işlemi devam ediyor.";
+            durumDetay = "ABD Komite üyelerinin jüri üyelerini onaylayabilmesi için Danışman Jüri listesini oluşturmalı.";
             durumDetayIconClass = "fa fa-comments-o";
+        }
+        else
+        {
+            if (!item.IsAbdKomitesiJuriyiOnayladi.HasValue)
+            {
+                tabAdi = "ABD Komitesi Süreci";
+                tabIconClass = "fa fa-group fa-lg";
+                durumAdi = "Jüri Onaylama Süreci Devam Ediyor";
+                durumIconClass = "fa fa-clock-o fa-lg";
+                durumColor = "green";
+                durumDetay = "Sınav işlemlerine geçilebilmesi için ABD Komitesinin Jüri üyelerini onaylaması gerekmektedir.";
+                durumDetayIconClass = "fa fa-comments-o";
+            }
+            else
+            {
+                if (item.IsAbdKomitesiJuriyiOnayladi.Value)
+                {
+                    tabAdi = "ABD Komitesi Süreci";
+                    tabIconClass = "fa fa-group fa-lg";
+                    durumAdi = "Jüriler Onaylandı";
+                    durumIconClass = "fa fa-thumbs-o-up fa-lg";
+                    durumColor = "green";
+                    durumDetay = "ABD Komite üyeleri Jüri üyelerini onayladı. Danışman yazılı sınavı oluşturmalı.";
+                    durumDetayIconClass = "fa fa-comments-o";
+                }
+                else
+                {
+                    tabAdi = "ABD Komitesi Süreci";
+                    tabIconClass = "fa fa-group fa-lg";
+                    durumAdi = "Jüriler Onaylandı";
+                    durumIconClass = "fa fa-thumbs-o-down fa-lg";
+                    durumColor = "maroon";
+                    durumDetay = "ABD Komite üyelerinin Jüri üyelerini onaylamadı.";
+                    durumDetayIconClass = "fa fa-comments-o";
+                }
+
+            }
+
         }
 
 
     }
+
 }
 
 

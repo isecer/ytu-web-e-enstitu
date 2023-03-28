@@ -1,0 +1,65 @@
+﻿
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.KmYeterlikJuriDegisiklik
+@{
+    Layout = null;
+}
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="juriDegisiklikPanel_@Model.UniqueID">
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="CaptionTd" width="150">Jüri Adı</td>
+                        <td class="CaptionTd" width="10">:</td>
+                        <td class="ValueTd">@Model.UnvanAdi @Model.AdSoyad</td>
+                    </tr>
+                    <tr>
+                        <td class="CaptionTd">Değişiklik Şekli</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <select id="JuriDegisiklikSekli_@Model.UniqueID" onchange="DuzeltmeSekiKontrol('@Model.UniqueID')" class="form-control">
+                                <option value=""></option>
+                                <option value="true">E-Posta düzeltmesi</option>
+                                <option value="false">Jüri yerine yeni jüri seçimi</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="JuriEpostaRw_@Model.UniqueID" class="hide">
+                        <td class="CaptionTd">Jüri E-Posta</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <input maxlength="128" class="form-control" id="JuriEMail_@Model.UniqueID" value="@Model.EMail">
+                        </td>
+                    </tr>
+                    <tr id="YeniJuriRw_@Model.UniqueID"  class="hide">
+                        <td class="CaptionTd">Jüri Değişikliği</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            @Html.DropDownList("YeniJuriUniqueID", Model.SelectListYedekJuriler, new { id = "YeniJuriUniqueID_" + Model.UniqueID, @class = "form-control" })
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    function DuzeltmeSekiKontrol(id) { 
+        var dVal = $('#JuriDegisiklikSekli_' + id).val();
+        if (dVal == "") {
+            $('#JuriEpostaRw_' + id).addClass('hide');
+            $('#YeniJuriRw_' + id).addClass('hide');
+        }
+        else if (dVal == "true") {
+            $('#JuriEpostaRw_' + id).removeClass('hide');
+            $('#YeniJuriRw_' + id).addClass('hide');
+        }
+        else {
+            $('#JuriEpostaRw_' + id).addClass('hide');
+            $('#YeniJuriRw_' + id).removeClass('hide');
+        }
+    } 
+</script>
+

@@ -146,12 +146,13 @@
                                             <th width="35" height="30"></th>
                                             <th width="100">Unvan</th>
                                             <th width="240">Ad Soyad</th>
+                                            <th>Dil Sınavı</th>
                                             <th width="120" style="text-align:center;">Jüri Seçim Durumu</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="4" style="padding:0px;">
+                                            <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => new List<string> { "TezDanismani", "TikUyesi1", "TikUyesi2" }.Contains(p.JuriTipAdi)))
                                                     {
@@ -171,6 +172,12 @@
                                                             <td width="240">
                                                                 @itemJr.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
+                                                            </td>
+                                                            <td>
+                                                                @if (!itemJr.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.DilPuani.IsNullOrWhiteSpace())
+                                                                {
+                                                                    <span style="font-size: 8pt;"> @itemJr.DilSinavAdi<br />@itemJr.DilPuani</span>
+                                                                }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
@@ -264,7 +271,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="4" style="padding:0px;">
+                                            <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuIciJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
@@ -283,6 +290,12 @@
                                                             <td width="240">
                                                                 @itemJr.s.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.s.AnabilimdaliProgramAdi</span>
+                                                            </td>
+                                                            <td>
+                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
+                                                                {
+                                                                    <span style="font-size: 8pt;"> @itemJr.s.DilSinavAdi<br />@itemJr.s.DilPuani</span>
+                                                                }
                                                             </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
@@ -370,12 +383,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="4" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
+                                            <td colspan="5" class="danger" style="text-align:center;font-size:13px;font-weight:bold;">
                                                 Yıldız Teknik Üniversitesi Dışından Juri Adayı Önerisi
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="4" style="padding:0px;">
+                                            <td colspan="5" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;margin:0px;">
                                                     @foreach (var itemJr in juriOneriFormu.MezuniyetJuriOneriFormuJurileris.Where(p => p.JuriTipAdi.Contains("YtuDisiJuri")).Select((s, inx) => new { s, inx = (inx + 1) }))
                                                     {
@@ -395,7 +408,12 @@
                                                                 @itemJr.s.AdSoyad
                                                                 <br /><span style="font-size:7pt;">@itemJr.s.UniversiteAdi</span>
                                                             </td>
-
+                                                            <td>
+                                                                @if (!itemJr.s.DilSinavAdi.IsNullOrWhiteSpace() && !itemJr.s.DilPuani.IsNullOrWhiteSpace())
+                                                                {
+                                                                    <span style="font-size: 8pt;"> @itemJr.s.DilSinavAdi<br />@itemJr.s.DilPuani</span>
+                                                                }
+                                                            </td>
                                                             <td width="120" style="text-align:center;">
                                                                 @if (juriOneriFormuOnayYetkiEykDa && juriOneriFormu.EYKYaGonderildi == true && juriOneriFormu.EYKDaOnaylandi != true)
                                                                 {

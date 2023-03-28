@@ -6,54 +6,64 @@
 @{
     Layout = null;
     var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
+    var readOnly = Model.IsGenelSonucBasarili.HasValue || isOnaylayanVar || Model.IsDegerlendirme.HasValue;
+    var closeContent = Model.IsGenelSonucBasarili.HasValue && !Model.IsDegerlendirme.HasValue;
 
 }
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 10px;">
 
     <table style="width: 100%; margin: 0px;">
         <tr>
-            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"> Sözlü Sınavı</td>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-edit fa-lg"></i> Sözlü Sınavı <span style="font-size: 8pt;">@(closeContent ? "(Tamamlandı)":"")</span></td>
+            <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
+                <ul class="panel-controls">
+                    <li>
+                        <a href="javascript:void(0)" onclick="ContentShowDt('@Model.UniqueID','Sz')"><span id="Sz_shower_@Model.UniqueID" class="fa fa-angle-@(!closeContent?"down":"up")" aria-hidden="true"></span> </a>
+                    </li>
+                </ul>
+            </td>
         </tr>
-        <tr>
-            <td>
+        <tr class="@(!closeContent?"":"hide")" id="SzContent_@Model.UniqueID">
+            <td colspan="2">
                 <table style="width: 100%;">
+
                     <tr>
-                        <td class="CaptionTd" width="150">Sınav Durumu</td>
+                        <td class="CaptionTd" width="150">Sınav Şekli</td>
                         <td class="CaptionTd" width="10">:</td>
                         <td class="ValueTd">
-                            <select class="form-control" style="color: black;" id="IsSozluSinavinaKatildi_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "")>
-                                <option value="">Henüz Sınav Yapılmadı</option>
-                                <option value="true" @Model.IsSozluSinavinaKatildi.ToSelected()>Öğrenci Sınava Katıldı</option>
-                                <option value="false" @((Model.IsSozluSinavinaKatildi == false).ToSelected())>Öğrenci Sınava Katılmadı</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="CaptionTd">Sınav Şekli</td>
-                        <td class="CaptionTd">:</td>
-                        <td class="ValueTd">
-                            <select class="form-control" style="color: black;" id="IsSozluSinavOnline_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "")>
+                            <select class="form-control" style="color: black;" id="IsSozluSinavOnline_@Model.UniqueID" @(readOnly ? "disabled" : "") onchange="if ($(this).val() != '') { $('.SinavSekliRw_@Model.UniqueID').removeClass('hide');}else {$('.SinavSekliRw_@Model.UniqueID').addClass('hide');}">
                                 <option value=""></option>
                                 <option value="true" @Model.IsSozluSinavOnline.ToSelected()>Online</option>
                                 <option value="false" @((Model.IsSozluSinavOnline == false).ToSelected())>Yüz Yüze</option>
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="SinavSekliRw_@Model.UniqueID @(Model.IsSozluSinavOnline.HasValue?"":"hide")">
                         <td class="CaptionTd">Sınav Tarihi/Saati</td>
                         <td class="CaptionTd">:</td>
                         <td class="ValueTd">
-                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="color: black; width: 120px;" @(isOnaylayanVar ? "disabled" : "") value="@Model.SozluSinavTarihi.ToFormatDateAndTime()" id="SozluSinavTarihi_@Model.UniqueID">
+                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="color: black; width: 120px;" @(readOnly ? "disabled" : "") value="@Model.SozluSinavTarihi.ToFormatDateAndTime()" id="SozluSinavTarihi_@Model.UniqueID">
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="SinavSekliRw_@Model.UniqueID @(Model.IsSozluSinavOnline.HasValue?"":"hide")">
                         <td class="CaptionTd">Sınav Yeri / Sınav Linki</td>
                         <td class="CaptionTd">:</td>
                         <td class="ValueTd">
-                            <input type="text" maxlength="512" class="form-control" style="color: black;" id="SozluSinavYeri_@Model.UniqueID" @(isOnaylayanVar ? "disabled" : "") value="@Model.SozluSinavYeri" />
+                            <input type="text" maxlength="512" class="form-control" style="color: black;" id="SozluSinavYeri_@Model.UniqueID" @(readOnly ? "disabled" : "") value="@Model.SozluSinavYeri" />
                         </td>
                     </tr>
-                    @if (!isOnaylayanVar && !Model.IsDegerlendirme.HasValue)
+                    <tr class="SinavSekliRw_@Model.UniqueID @(Model.IsSozluSinavOnline.HasValue?"":"hide")">
+                        <td class="CaptionTd">Sınav Durumu</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <select class="form-control" style="color: black;" id="IsSozluSinavinaKatildi_@Model.UniqueID" @(readOnly ? "disabled" : "")>
+                                <option value="">Henüz Sınav Yapılmadı</option>
+                                <option value="true" @Model.IsSozluSinavinaKatildi.ToSelected()>Öğrenci Sınava Katıldı</option>
+                                <option value="false" @((Model.IsSozluSinavinaKatildi == false).ToSelected())>Öğrenci Sınava Katılmadı</option>
+                            </select>
+                        </td>
+                    </tr>
+                    @if (!readOnly)
                     {
                         <tr>
                             <td></td>
@@ -80,9 +90,10 @@
         var sozluSinavYeri = $('#SozluSinavYeri_' + uniqueId).val();
 
         var msgArr = [];
-        if (isSozluSinavOnline == "") msgArr.push("* Sınav Şekli Seçiniz");
-        if (sozluSinavTarihi == "") msgArr.push("* Sınav Tarihi Giriniz");
-        if (sozluSinavYeri == "") msgArr.push("* Sınav Yeri Giriniz");
+        if (isSozluSinavOnline != "") {
+            if (sozluSinavTarihi == "") msgArr.push("* Sınav Tarihi Giriniz");
+            if (sozluSinavYeri == "") msgArr.push("* Sınav Yeri Giriniz");
+            }
         if (msgArr.length > 0) {
             swal.fire({
                 html: msgArr.join("<br/>"),
@@ -98,18 +109,24 @@
     }
     function SozluSinavKaydet(uniqueId) {
         if (!SozluSinavKayitKontrol(uniqueId)) return;
-        var isSozluSinavinaKatildi = $('#IsSozluSinavinaKatildi_' + uniqueId).val();
+        var isSozluSinavOnline = $('#IsSozluSinavOnline_' + uniqueId).val();
+      var isSozluSinavinaKatildi = $('#IsSozluSinavinaKatildi_' + uniqueId).val();
         var sozluSinaviNotu = $('#SozluSinaviNotu_' + uniqueId).val();
         var msg = "";
-        if (isSozluSinavinaKatildi == "") {
-            msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri komite üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+        if (isSozluSinavOnline!=""){
+            if (isSozluSinavinaKatildi == "") {
+                msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri komite üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+            }
+            else if (isSozluSinavinaKatildi == "true") {
+                msg = "Süreç devamında jüri üyelerine sözlü sınavı not girişi için linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
+            }
+            else if (isSozluSinavinaKatildi == "false") {
+                msg = "Öğrenci sözlü sınavına katılmadığı için <b>başarısız</b> olarak değerledirilecek ve jüri üyelerine sınav sonucu değerlendirme linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
+                }
         }
-        else if (isSozluSinavinaKatildi == "true") {
-            msg = "Süreç devamında jüri üyelerine sözlü sınavı not girişi için linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
-        }
-        else if (isSozluSinavinaKatildi == "false") {
-            msg = "Öğrenci sözlü sınavına katılmadığı için <b>başarısız</b> olarak değerledirilecek ve jüri üyelerine sınav sonucu değerlendirme linki gönderilecektir. Kayıt işlemini onaylıyor musunuz?";
-        }
+        else {
+            msg = "Sözlü Sınav Bilgisini kaldırmak İstiyor Musunuz?";
+            }
         Swal.fire({
             html: msg,
             type: 'warning',

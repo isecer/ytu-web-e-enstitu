@@ -77,7 +77,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Sistem Erişim Adresi</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="SistemErisimAdresi" id="SistemErisimAdresi" value="@Model.SistemErisimAdresi" class="form-control" />
+                                    <input type="text" name="SistemErisimAdresi" id="SistemErisimAdresi" value="@Model.SistemErisimAdresi" class="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -87,20 +87,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Toplam Kayıt Kotası</label>
+                                <label class="col-md-3 col-xs-4 control-label">Test E-Mail Adresi</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input type="text" name="ToplamKayitKota" id="ToplamKayitKota" value="@Model.ToplamKayitKota" class="form-control" />
+                                    <span>Bu mail adresi tanımlandığında sistemdeki tüm mail gönderim işlemleri tanımlanan e-posta adresine gidecektir!</span><br/>
+                                    <input type="text" name="TestEmailAddress" id="TestEmailAddress" value="@Model.TestEmailAddress" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">L.U. Başvurda Mail Gönder</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="LUBMailGonder" class="toggle" @Model.LUBMailGonder.ToChecked() />
-                                    </div>
-                                </div>
 
-                            </div>
                             @if (!Model.EnstituKod.IsNullOrWhiteSpace())
                             {
                                 <div class="form-group">

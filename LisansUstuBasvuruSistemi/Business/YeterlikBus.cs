@@ -71,6 +71,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                           YaziliYuzde = defYo?.YaziliYuzde,
                                           SozluYuzde = defYo?.SozluYuzde,
                                           YaziliGecerNot = defYo?.YaziliGecerNot,
+                                          SozluGecerNot = defYo?.SozluGecerNot,
                                           OrtalamaGecerNot = defYo?.OrtalamaGecerNot
                                       }
                     ).ToList();
@@ -269,6 +270,27 @@ namespace LisansUstuBasvuruSistemi.Business
             lst.Add(new CmbIntDto { Value = 0, Caption = "İşlem Görmeyenler" });
             lst.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
             lst.Add(new CmbIntDto { Value = 2, Caption = "İptal Edilenler" });
+            lst.Add(new CmbIntDto { Value = 3, Caption = "Jüri Oluşturulmayanlar" });
+            lst.Add(new CmbIntDto { Value = 4, Caption = "ABD Komite Onayı Bekleyenler" });
+            lst.Add(new CmbIntDto { Value = 5, Caption = "Başarılı Olanlar" });
+            lst.Add(new CmbIntDto { Value = 6, Caption = "Başarısız Olanlar" });
+            return lst;
+        }
+        public static List<CmbStringDto> GetCmbJuriYedekList(Guid juriUniqueId, bool bosSecimVar = false)
+        {
+            var lst = new List<CmbStringDto>();
+            if (bosSecimVar) lst.Add(new CmbStringDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var juri = db.YeterlikBasvuruJuriUyeleris.First(f => f.UniqueID == juriUniqueId);
+                var juriUyeleri = db.YeterlikBasvuruJuriUyeleris.Where(p => p.YeterlikBasvuruID == juri.YeterlikBasvuruID && !p.IsSecilenJuri && p.IsYtuIciOrDisi == juri.IsYtuIciOrDisi && p.UniqueID != juriUniqueId).ToList();
+                var cmbData = juriUyeleri.Select(s => new CmbStringDto
+                {
+                    Value = s.UniqueID.ToString(),
+                    Caption = s.UnvanAdi + " " + s.AdSoyad
+                }).ToList();
+                lst.AddRange(cmbData);
+            }
             return lst;
         }
         public static MmMessage SendMailBasvuruOnayi(Guid basvuruUniqueId)
@@ -530,7 +552,6 @@ namespace LisansUstuBasvuruSistemi.Business
                             komite.DegerlendirmeIslemYapanIP = null;
                             komite.DegerlendirmeYapanID = null;
                             komite.IsJuriOnaylandi = null;
-                            komite.Aciklama = null;
                             komite.IsLinkGonderildi = true;
                             komite.LinkGonderimTarihi = DateTime.Now;
                             komite.LinkGonderenID = UserIdentity.Current.Id;
@@ -724,23 +745,24 @@ namespace LisansUstuBasvuruSistemi.Business
                             juriMailSablonTipId = MailSablonTipi.Yeterlik_YaziliSinavTalebiYapildiJurilere;
                         }
                         else
-                        { 
+                        {
                             if (basvuru.IsYaziliSinavinaKatildi.Value)
                             {
-                                 
+
                                 ogrenciMailSablonTipId = basvuru.IsYaziliSinavBasarili.Value
                                     ? MailSablonTipi.Yeterlik_YaziliSinavBasariliGirisiYapidliOgrenciye
                                     : MailSablonTipi.Yeterlik_YaziliSinavBasarisizOnayYapildiOgrenciye;
                                 danismanMailSablonTipId = basvuru.IsYaziliSinavBasarili.Value
                                     ? MailSablonTipi.Yeterlik_YaziliSinavBasariliGirisiYapidliDanismana
-                                    : MailSablonTipi.Yeterlik_YaziliSinavBasarisizOnayYapildiDanismana; 
+                                    : MailSablonTipi.Yeterlik_YaziliSinavBasarisizOnayYapildiDanismana;
+                                if (basvuru.IsYaziliSinavBasarili.Value) juriMailSablonTipId = MailSablonTipi.Yeterlik_YaziliSinavBasariliGirisiYapidliJurilere;
                             }
                             else
                             {
                                 ogrenciMailSablonTipId =
                                     MailSablonTipi.Yeterlik_YaziliSinavKatilmadiGirisiYapildiOgrenciye;
                                 danismanMailSablonTipId =
-                                    MailSablonTipi.Yeterlik_YaziliSinavKatilmadiGirisiYapildiDanismana; 
+                                    MailSablonTipi.Yeterlik_YaziliSinavKatilmadiGirisiYapildiDanismana;
                             }
                         }
                     }
@@ -753,7 +775,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             juriMailSablonTipId = MailSablonTipi.Yeterlik_SozluSinavTalebiYapildiJurilere;
                         }
                         else
-                        { 
+                        {
 
 
                             if (basvuru.IsSozluSinavinaKatildi.Value)
@@ -761,15 +783,15 @@ namespace LisansUstuBasvuruSistemi.Business
                                 if (juriler.All(a => a.IsSonucOnaylandi.HasValue))
                                 {
                                     ogrenciMailSablonTipId = basvuru.IsGenelSonucBasarili.Value ? MailSablonTipi.Yeterlik_GenelSinavSonucuBasariliOgrenciye : MailSablonTipi.Yeterlik_GenelSinavSonucuBasarisizOgrenciye;
-                                    danismanMailSablonTipId = basvuru.IsYaziliSinavBasarili.Value ? MailSablonTipi.Yeterlik_GenelSinavSonucuBasariliDanismana : MailSablonTipi.Yeterlik_GenelSinavSonucuBasarisizDanismana;
-                                    juriMailSablonTipId = basvuru.IsYaziliSinavBasarili.Value ? MailSablonTipi.Yeterlik_GenelSinavSonucuBasariliJurilere : MailSablonTipi.Yeterlik_GenelSinavSonucuBasarisizJurilere;
+                                    danismanMailSablonTipId = basvuru.IsGenelSonucBasarili.Value ? MailSablonTipi.Yeterlik_GenelSinavSonucuBasariliDanismana : MailSablonTipi.Yeterlik_GenelSinavSonucuBasarisizDanismana;
+                                    juriMailSablonTipId = basvuru.IsGenelSonucBasarili.Value ? MailSablonTipi.Yeterlik_GenelSinavSonucuBasariliJurilere : MailSablonTipi.Yeterlik_GenelSinavSonucuBasarisizJurilere;
 
-                                } 
+                                }
                             }
                             else
                             {
                                 ogrenciMailSablonTipId = MailSablonTipi.Yeterlik_SozluSinavKatilmadiGirisiYapildiOgrenciye;
-                                danismanMailSablonTipId = MailSablonTipi.Yeterlik_SozluSinavKatilmadiGirisiYapildiDanismana; 
+                                danismanMailSablonTipId = MailSablonTipi.Yeterlik_SozluSinavKatilmadiGirisiYapildiDanismana;
                             }
                         }
                     }
@@ -871,9 +893,25 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavYeri", Value = basvuru.YaziliSinavYeri });
                         }
+                        if (item.SablonParametreleri.Any(a => a == "@SinavSekli") && basvuru.IsSozluSinavOnline.HasValue)
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavSekli", Value = basvuru.IsSozluSinavOnline == true ? "Online" : "Yüz Yüze" });
+                        }
                         if (item.SablonParametreleri.Any(a => a == "@SinavNotu"))
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavNotu", Value = basvuru.YaziliSinaviNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@YaziliNotu"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YaziliNotu", Value = basvuru.YaziliSinaviNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@SozluNotuOrtalama"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SozluNotuOrtalama", Value = basvuru.SozluSinaviOrtalamaNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@GenelOrtalama"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "GenelOrtalama", Value = basvuru.GenelBasariNotu.ToString() });
                         }
                         if (item.UniqueID.HasValue && item.SablonParametreleri.Any(a => a == "@Link"))
                         {
@@ -905,7 +943,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             foreach (var itemMe in gonderilenMailEkleri)
                             {
                                 kModel.GonderilenMailEkleris.Add(itemMe);
-                            }  
+                            }
                             db.GonderilenMaillers.Add(kModel);
                             db.SaveChanges();
                         }
@@ -944,10 +982,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var program = basvuru.Programlar;
                     var juriler = basvuru.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri && p.UniqueID == (uniqueId ?? p.UniqueID)).ToList();
 
-                    if (!uniqueId.HasValue)
-                    {
-                        juriler = juriler.Where(p => p.JuriTipAdi != "TezDanismani").ToList();
-                    }
+
                     foreach (var item in juriler)
                     {
                         item.UniqueID = Guid.NewGuid();
@@ -956,45 +991,30 @@ namespace LisansUstuBasvuruSistemi.Business
                     var juriMailSablonTipId = 0;
                     if (isYaziliOrSozlu)
                     {
-                        if (!basvuru.IsYaziliSinavinaKatildi.HasValue)
+                        if (basvuru.IsYaziliSinavinaKatildi == false)
                         {
-                            juriMailSablonTipId = MailSablonTipi.Yeterlik_YaziliSinavTalebiYapildiJurilere;
+                            juriMailSablonTipId = MailSablonTipi.Yeterlik_YaziliSinavKatilmadiGirisiYapildiJurilereLink;
                         }
-                        else
+                        else if (basvuru.IsYaziliSinavinaKatildi == true && basvuru.IsYaziliSinavBasarili == false)
                         {
-                            
-                            if (basvuru.IsYaziliSinavinaKatildi.Value)
-                            {
-                                juriMailSablonTipId = basvuru.IsYaziliSinavBasarili.Value
-                                    ? MailSablonTipi.Yeterlik_YaziliSinavBasariliGirisiYapidliJurilereLink
-                                    : MailSablonTipi.Yeterlik_YaziliSinavBasarisizGirisiYapildiJurilereLink;
-                            }
-                            else
-                            {
-                                juriMailSablonTipId =
-                                    MailSablonTipi.Yeterlik_YaziliSinavKatilmadiGirisiYapildiJurilereLink;
-                            }
+                            juriMailSablonTipId = MailSablonTipi.Yeterlik_YaziliSinavBasarisizGirisiYapildiJurilereLink;
                         }
+
                     }
                     else
                     {
-                        if (!basvuru.IsSozluSinavinaKatildi.HasValue)
-                        {
-                            juriMailSablonTipId = MailSablonTipi.Yeterlik_SozluSinavTalebiYapildiJurilere;
-                        }
-                        else
+                        if (basvuru.IsSozluSinavinaKatildi.HasValue)
                         {
                             foreach (var item in juriler)
                             {
                                 item.UniqueID = Guid.NewGuid();
                             }
-
                             juriMailSablonTipId = basvuru.IsSozluSinavinaKatildi.Value ? MailSablonTipi.Yeterlik_SozluNotGirisJurilereLink : MailSablonTipi.Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink;
                         }
                     }
 
                     var mModel = new List<SablonMailModel>();
-                    
+
 
                     foreach (var item in juriler)
                     {
@@ -1064,6 +1084,10 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = basvuru.YaziliSinavTarihi.ToFormatDateAndTime() });
                         }
+                        if (item.SablonParametreleri.Any(a => a == "@SinavSekli") && basvuru.IsSozluSinavOnline.HasValue)
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavSekli", Value = basvuru.IsSozluSinavOnline == true ? "Online" : "Yüz Yüze" });
+                        }
                         if (item.SablonParametreleri.Any(a => a == "@SinavYeri"))
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavYeri", Value = basvuru.YaziliSinavYeri });
@@ -1072,6 +1096,21 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavNotu", Value = basvuru.YaziliSinaviNotu.ToString() });
                         }
+                        if (item.SablonParametreleri.Any(a => a == "@YaziliNotu"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YaziliNotu", Value = basvuru.YaziliSinaviNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@SozluNotuOrtalama"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SozluNotuOrtalama", Value = basvuru.SozluSinaviOrtalamaNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@GenelOrtalama"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "GenelOrtalama", Value = basvuru.GenelBasariNotu.ToString() });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = juri.LinkGonderimTarihi?.ToString("dd-MM-yyyy HH:mm") });
+
                         if (item.UniqueID.HasValue && item.SablonParametreleri.Any(a => a == "@Link"))
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/Yeterlik/Index?isKomiteOrJuri=false&isDegerlendirme=" + item.UniqueID, IsLink = true });
@@ -1089,7 +1128,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 Konu = mCOntent.Title
                             };
                             if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
+                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")"; 
                             kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
                             kModel.IslemYapanIP = UserIdentity.Ip;
                             kModel.Aciklama = item.Sablon.Sablon ?? "";
@@ -1103,17 +1142,16 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 kModel.GonderilenMailEkleris.Add(itemMe);
                             }
-                            if (juri != null && MailSablonTipi.YeterlikJurilerineGidenDegerlendirmeSablonlari.Contains(item.MailSablonTipID))
-                            {
-                                juri.IsSonucOnaylandi = null;
-                                juri.SozluNotu = null;
-                                juri.DegerlendirmeTarihi = null;
-                                juri.LinkGonderimTarihi = DateTime.Now;
-                                juri.LinkGonderenID = UserIdentity.Current.Id;
-                                juri.IsLinkGonderildi = true;
-                                basvuru.GenelBasariNotu = null;
-                                basvuru.IsGenelSonucBasarili = null;
-                            }
+
+                            juri.IsSonucOnaylandi = null;
+                            juri.SozluNotu = null;
+                            juri.DegerlendirmeTarihi = null;
+                            juri.LinkGonderimTarihi = DateTime.Now;
+                            juri.LinkGonderenID = UserIdentity.Current.Id;
+                            juri.IsLinkGonderildi = true;
+                            basvuru.GenelBasariNotu = null;
+                            basvuru.IsGenelSonucBasarili = null;
+
 
 
                             db.GonderilenMaillers.Add(kModel);
@@ -1137,7 +1175,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 mmMessage.IsSuccess = false;
             }
             return mmMessage;
-        } 
+        }
 
 
         public static IHtmlString ToYeterlikDurum(this FrYeterlikBasvuruDto model)

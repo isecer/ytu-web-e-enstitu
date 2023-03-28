@@ -2,6 +2,7 @@
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
 @{
     Layout = null;
+    var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue;
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
@@ -12,18 +13,29 @@
             <td width="120" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid; padding-bottom: 2px;">
                 @if (!Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
                 {
-                    if (Model.YeterlikBasvuruJuriUyeleris.Any())
+                    if (!Model.IsDegerlendirme.HasValue)
                     {
-                        <span class="label label-warning" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-edit"></i> Jüri Üyelerini Düzelt</span>
+                        if (Model.YeterlikBasvuruJuriUyeleris.Any())
+                        {
+                            <span class="label label-warning" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-edit"></i> Jüri Üyelerini Düzelt</span>
+                        }
+                        else
+                        {
+                            <span class="label label-info" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-plus"></i> Jüri Üyelerini Oluştur</span>
+                        }
                     }
-                    else
-                    {
-                        <span class="label label-info" style="cursor: pointer;" onclick="GetYeterlikJuriUyeleri('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-plus"></i> Jüri Üyelerini Oluştur</span>
-                    }
-                } 
+                }
+                else
+                {
+                    <ul class="panel-controls">
+                        <li>
+                            <a href="javascript:void(0)" onclick="ContentShowDt('@Model.UniqueID','Jr')"><span id="Jr_shower_@Model.UniqueID" class="fa fa-angle-@(openRow?"down":"up")" aria-hidden="true"></span> </a>
+                        </li>
+                    </ul>
+                }
             </td>
         </tr>
-        <tr>
+        <tr  class="@(openRow?"":"hide")" id="JrContent_@Model.UniqueID">
             <td colspan="2">
                 @if (Model.YeterlikBasvuruJuriUyeleris.Any())
                 {
@@ -35,22 +47,22 @@
                         </tr>
                         <tbody>
 
-                            @foreach (var itemJr in Model.YeterlikBasvuruJuriUyeleris.Select((sj, inx) => new { sj, inx = inx + 1 }))
-                            {
+                        @foreach (var itemJr in Model.YeterlikBasvuruJuriUyeleris.Select((sj, inx) => new { sj, inx = inx + 1 }))
+                        {
 
-                                <tr>
-                                    <td>
-                                        @itemJr.inx)   @itemJr.sj.UnvanAdi @itemJr.sj.AdSoyad (@itemJr.sj.IsAsilOrYedek.ToAsilYedek())
-                                    </td>
-                                    <td>
-                                        @itemJr.sj.UniversiteAdi
-                                    </td>
+                            <tr>
+                                <td>
+                                    @itemJr.inx)   @itemJr.sj.UnvanAdi @itemJr.sj.AdSoyad (@itemJr.sj.IsAsilOrYedek.ToAsilYedek())
+                                </td>
+                                <td>
+                                    @itemJr.sj.UniversiteAdi
+                                </td>
 
-                                    <td>
-                                        @itemJr.sj.AnabilimDaliAdi
-                                    </td>
-                                </tr>
-                            }
+                                <td>
+                                    @itemJr.sj.AnabilimDaliAdi
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 }
@@ -69,3 +81,16 @@
     </table>
 
 </div>
+<script>
+    function JrContentShow(id) {
+        var isShow = $('#Jr_shower_' + id).hasClass('fa-angle-up')
+        if (isShow) {
+            $('#JrContent_' + id).removeClass('hide');
+            $('#Jr_shower_' + id).removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+        else {
+            $('#JrContent_' + id).addClass('hide');
+            $('#Jr_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
+        }
+    }
+</script>

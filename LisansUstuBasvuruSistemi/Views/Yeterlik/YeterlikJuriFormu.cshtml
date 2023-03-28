@@ -72,6 +72,16 @@
                                                         <input type="text" autocomplete="off" class="form-control" name="EMails" readonly="readonly" value="@(tezDanismaniBilgi?.EMail)" style="width: 100%; color: black;" id="TezDanismaniEMail" />
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("AnabilimDaliAdis", Model.SelectListAnabilimDali, new { @class = "form-control", id = "TezDanismaniAnabilimDali" })
+                                                        <script>
+                                                            $('#TezDanismaniAnabilimDali').val('@Html.Raw(tezDanismaniBilgi?.AnabilimDaliAdi)');
+                                                        </script>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </td>
@@ -124,6 +134,16 @@
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd form-group">
                                                         <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri1?.EMail)" style="width: 100%;" id="YtuIciJuri1EMail" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("AnabilimDaliAdis", Model.SelectListAnabilimDali, new { @class = "form-control", id = "YtuIciJuri1AnabilimDali" })
+                                                        <script>
+                                                            $('#YtuIciJuri1AnabilimDali').val('@Html.Raw(ytuIciJuri1?.AnabilimDaliAdi)');
+                                                        </script>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -181,6 +201,16 @@
                                                         <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri2?.EMail)" style="width: 100%;" id="YtuIciJuri2EMail" />
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("AnabilimDaliAdis", Model.SelectListAnabilimDali, new { @class = "form-control", id = "YtuIciJuri2AnabilimDali" })
+                                                        <script>
+                                                            $('#YtuIciJuri2AnabilimDali').val('@Html.Raw(ytuIciJuri2?.AnabilimDaliAdi)');
+                                                        </script>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </td>
@@ -235,7 +265,17 @@
                                                         <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuIciJuri3?.EMail)" style="width: 100%;" id="YtuIciJuri3EMail" />
                                                     </td>
                                                 </tr>
-                                                
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        @Html.DropDownList("AnabilimDaliAdis", Model.SelectListAnabilimDali, new { @class = "form-control", id = "YtuIciJuri3AnabilimDali" })
+                                                        <script>
+                                                            $('#YtuIciJuri3AnabilimDali').val('@Html.Raw(ytuIciJuri3?.AnabilimDaliAdi)');
+                                                        </script>
+                                                      </td>
+                                                </tr>
+
                                             </tbody>
                                         </table>
                                     </td>
@@ -267,6 +307,13 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="AnabilimDaliAdis" value="@(ytuDisiJuri1?.AnabilimDaliAdi)" style="width: 100%; color: black;" id="YtuDisiJuri1AnabilimDali" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td class="CaptionTd" width="150">Ad Soyadı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd form-group">
@@ -294,6 +341,7 @@
                                                         <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMails" value="@(ytuDisiJuri1?.EMail)" style="width: 100%;" id="YtuDisiJuri1EMail" />
                                                     </td>
                                                 </tr>
+
                                             </tbody>
                                         </table>
                                     </td>
@@ -320,6 +368,13 @@
                                                         <script>
                                                             $('#YtuDisiJuri2Universite').val('@Html.Raw(ytuDisiJuri2?.UniversiteID)');
                                                         </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="AnabilimDaliAdis" value="@(ytuDisiJuri2?.AnabilimDaliAdi)" style="width: 100%; color: black;" id="YtuDisiJuri2AnabilimDali" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -378,6 +433,13 @@
                                                         <script>
                                                             $('#YtuDisiJuri3Universite').val('@Html.Raw(ytuDisiJuri3?.UniversiteID)')
                                                         </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="CaptionTd">Anabilim Dalı (*)</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd form-group">
+                                                        <input type="text" autocomplete="off" class="form-control" name="AnabilimDaliAdis" value="@(ytuDisiJuri3?.AnabilimDaliAdi)" style="width: 100%; color: black;" id="YtuDisiJuri3AnabilimDali" />
                                                     </td>
                                                 </tr>
                                                 <tr>

@@ -56,9 +56,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
         public bool ToOrBcc { get; set; }
     }
     public static class MailManager
-    {
-         public static string TestMailAddress = "irfansecer@gmail.com";
-         //public static string TestMailAddress = "";
+    { 
         public static Exception SendMailRetVal(string enstituKod, string konu, string icerik, string eMail, List<Attachment> attach, bool toOrBcc = true)
         {
             Exception exRet = null;
@@ -147,10 +145,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
                 ePosta.From = new MailAddress(emailAdresi, name, System.Text.Encoding.UTF8);
                 ePosta.IsBodyHtml = true;
+                
                 foreach (var item in eMails)
                 {
                     //item.Value == true ? TO: CC;
-                    if (!TestMailAddress.IsNullOrWhiteSpace()) item.EMail = TestMailAddress;
+                    if (!mailBilgi.TestEmailAddress.IsNullOrWhiteSpace()) item.EMail = mailBilgi.TestEmailAddress;
                     if (item.ToOrBcc) ePosta.To.Add(item.EMail);
                     else ePosta.Bcc.Add(item.EMail);
                 }
@@ -233,11 +232,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             }
             model.HtmlContent = string.Join("", contentStrList);
 
-            var mmmC = new MailMainContentDto();
-            mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-            mmmC.EnstituAdi = enstituAdi;
-            mmmC.LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png";
-            mmmC.Content = model.HtmlContent.Replace("_removeRw_", "");
+            var mmmC = new MailMainContentDto
+            {
+                UniversiteAdi = "Yıldız Teknik Üniversitesi",
+                EnstituAdi = enstituAdi,
+                LogoPath = "https://lisansustu.yildiz.edu.tr/Content/assets/images/ytu_logo_tr.png",
+                Content = model.HtmlContent.Replace("_removeRw_", "")
+            };
             model.HtmlContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
 
 

@@ -29,8 +29,8 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            RollerBus.UpdateRoles();
-            MenulerBus.UpdateMenus();
+            //RollerBus.UpdateRoles();
+            //MenulerBus.UpdateMenus();
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
             MenulerBus.Menulers = MenulerBus.GetAllMenu();
