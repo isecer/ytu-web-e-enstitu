@@ -33,7 +33,8 @@ using System.Web.Mvc;
 using System.Xml;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
-using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzleme; 
+using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -5434,6 +5435,20 @@ namespace LisansUstuBasvuruSistemi.Models
                     var ID = DataID[0].Value; // tdo es danisman id
                     var rpr = new RprTezEsDanismaniOneriFormu_FR0320(ID);
 
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.ExportOptions.Pdf.Compressed = true;
+                    ms = new MemoryStream();
+                    rpr.ExportToPdf(ms);
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                    attc.ContentDisposition.ModificationDate = DateTime.Now;
+                    mdl.Add(attc);
+                }
+                else if (raporTipID == RaporTipleri.YeterlikDoktoraSinavSonucFormu)
+                {
+                    var id = DataID[0].Value;  
+                    var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(id);
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;

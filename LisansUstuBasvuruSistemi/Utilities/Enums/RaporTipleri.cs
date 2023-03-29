@@ -43,6 +43,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const byte TezEsDanismanOneriTutanakRaporu = 37;
         public const byte TezDanismanDegisiklikFormu = 38;
 
+        public const byte YeterlikDoktoraSinavSonucFormu = 50;
+
 
     }
 }

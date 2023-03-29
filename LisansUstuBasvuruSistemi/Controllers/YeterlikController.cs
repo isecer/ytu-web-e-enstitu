@@ -521,7 +521,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 _entities.SaveChanges();
 
-                if (!yeterlikBasvuru.YeterlikBasvuruKomitelers.All(a =>
+                if (!yeterlikBasvuru.YeterlikBasvuruKomitelers.Any() || !yeterlikBasvuru.YeterlikBasvuruKomitelers.All(a =>
                         komiteUyeleri.Any(ak => ak.KullaniciID == a.KullaniciID)))
                 {
 
@@ -756,7 +756,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mmMessage.Messages.Add("Sınav Yeri Giriniz");
                     }
-                    if (yeterlikBasvuru.IsYaziliSinavinaKatildi == true)
+                    if (kModel.IsYaziliSinavinaKatildi == true)
                     {
 
                         if (!kModel.YaziliSinaviNotu.HasValue || kModel.YaziliSinaviNotu < 0 || kModel.YaziliSinaviNotu > 100)
@@ -770,10 +770,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (!mmMessage.Messages.Any())
                 {
-                    bool sendMail = yeterlikBasvuru.YaziliSinavTarihi != kModel.YaziliSinavTarihi ||
-                                               yeterlikBasvuru.YaziliSinavYeri != kModel.YaziliSinavYeri ||
-                                               yeterlikBasvuru.IsYaziliSinavinaKatildi != kModel.IsYaziliSinavinaKatildi ||
-                                               yeterlikBasvuru.YaziliSinaviNotu != kModel.YaziliSinaviNotu;
+                    bool isSonucKaldirildi = yeterlikBasvuru.IsYaziliSinavinaKatildi.HasValue &&
+                                             !kModel.IsYaziliSinavinaKatildi.HasValue;
+                    bool sendMail;
+
+
+                    if (kModel.IsYaziliSinavinaKatildi == true)
+                    {
+                        sendMail = yeterlikBasvuru.YaziliSinavTarihi != kModel.YaziliSinavTarihi ||
+                               yeterlikBasvuru.YaziliSinavYeri != kModel.YaziliSinavYeri ||
+                               yeterlikBasvuru.IsYaziliSinavinaKatildi != kModel.IsYaziliSinavinaKatildi ||
+                               yeterlikBasvuru.YaziliSinaviNotu != kModel.YaziliSinaviNotu;
+                    }
+                    else
+                    {
+                        sendMail = yeterlikBasvuru.YaziliSinavTarihi != kModel.YaziliSinavTarihi ||
+                                   yeterlikBasvuru.YaziliSinavYeri != kModel.YaziliSinavYeri ||
+                                   yeterlikBasvuru.IsYaziliSinavinaKatildi != kModel.IsYaziliSinavinaKatildi;
+                    }
+
 
 
                     yeterlikBasvuru.YaziliSinavTarihi = kModel.YaziliSinavTarihi;
@@ -785,8 +800,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var kriterler = yeterlikBasvuru.YeterlikSureci.YeterlikSurecOgrenimTipleris.First(p => p.OgrenimTipID == yeterlikBasvuru.OgrenimTipID);
                         yeterlikBasvuru.IsYaziliSinavBasarili = kriterler.YaziliGecerNot <= yeterlikBasvuru.YaziliSinaviNotu;
+                      
                     }
                     else if (yeterlikBasvuru.IsSozluSinavinaKatildi == false)
+                    {
+                        yeterlikBasvuru.IsYaziliSinavBasarili = false;
+                    }
+
+                    if (yeterlikBasvuru.IsYaziliSinavBasarili==false)
                     {
                         yeterlikBasvuru.IsYaziliSinavBasarili = false;
                     }
@@ -795,15 +816,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");
                     mmMessage.IsSuccess = true;
 
-                    if (sendMail)
+                    if (!isSonucKaldirildi)
                     {
-
-                        if (yeterlikBasvuru.IsYaziliSinavBasarili == false || yeterlikBasvuru.IsYaziliSinavinaKatildi == false || yeterlikBasvuru.IsSozluSinavinaKatildi.HasValue)
+                        if (sendMail)
                         {
-                            YeterlikBus.SendMailSinavJuriLink(yeterlikBasvuru.UniqueID);
+
+                            if (yeterlikBasvuru.IsYaziliSinavBasarili == false || yeterlikBasvuru.IsYaziliSinavinaKatildi == false || yeterlikBasvuru.IsSozluSinavinaKatildi.HasValue)
+                            {
+                                YeterlikBus.SendMailSinavJuriLink(yeterlikBasvuru.UniqueID);
+                            }
+                            else YeterlikBus.SendMailSinavBilgi(yeterlikBasvuru.UniqueID);
                         }
-                        else YeterlikBus.SendMailSinavBilgi(yeterlikBasvuru.UniqueID);
                     }
+
+
 
 
                 }
@@ -953,8 +979,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        basvuru.IsGenelSonucBasarili = basvuru.IsSozluSinavOnline.HasValue ? basvuru.IsSozluSinavinaKatildi : basvuru.IsYaziliSinavBasarili;
+                        if (basvuru.IsSozluSinavBasarili.HasValue)
+                        {
+                            basvuru.IsGenelSonucBasarili = basvuru.IsSozluSinavBasarili == true;
+                        }
+                        else if (basvuru.IsYaziliSinavinaKatildi == false || basvuru.IsYaziliSinavBasarili==false)
+                        {
+                            basvuru.IsGenelSonucBasarili = false;
+                        }
                     }
+
+
+
+
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                     YeterlikBus.SendMailSinavBilgi(basvuru.UniqueID, !basvuru.IsSozluSinavinaKatildi.HasValue);

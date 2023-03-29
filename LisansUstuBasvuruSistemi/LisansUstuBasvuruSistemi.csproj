@@ -877,6 +877,12 @@
     <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.Designer.cs">
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprDrYeterlikSinavDegerlendirmeFormu_FR1227.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\Yeterlik\RprDrYeterlikSinavDegerlendirmeFormu_FR1227.Designer.cs">
+      <DependentUpon>RprDrYeterlikSinavDegerlendirmeFormu_FR1227.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
@@ -3499,7 +3505,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>
@@ -3591,6 +3596,9 @@
     <EmbeddedResource Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormu_FR0307.resx">
       <DependentUpon>RprTiDegerlendirmeFormu_FR0307.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\Yeterlik\RprDrYeterlikSinavDegerlendirmeFormu_FR1227.resx">
+      <DependentUpon>RprDrYeterlikSinavDegerlendirmeFormu_FR1227.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -3651,7 +3659,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57228/</IISUrl>
+          <IISUrl>http://localhost:57328/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

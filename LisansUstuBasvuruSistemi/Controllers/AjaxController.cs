@@ -26,9 +26,9 @@ using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Filters;
+using LisansUstuBasvuruSistemi.Utilities.Extensions; 
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -4695,6 +4695,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var rpr = new RprTezEsDanismaniOneriFormu_FR0320(rapor.TDOBasvuruEsDanismanID);
                     rpr.CreateDocument();
                     rpr.DisplayName = rapor.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + rapor.TDOBasvuruDanisman.TDOBasvuru.Soyad + " " + rpr.DisplayName;
+                    rprX = rpr;
+                }
+                else if (RaporTipi == RaporTipleri.YeterlikDoktoraSinavSonucFormu)
+                {
+                    var id = Request["UniqueID"].ToString();
+                    var uniqueId = new Guid(id);
+                    var rapor = _entities.YeterlikBasvurus.First(p => p.UniqueID == uniqueId);
+                    var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(rapor.YeterlikBasvuruID);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rapor.Kullanicilar.Ad + " " + rapor.Kullanicilar.Soyad + " " + rpr.DisplayName;
                     rprX = rpr;
                 }
             }

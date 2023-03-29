@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
@@ -812,10 +813,12 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
 
                                 JuriTipAdi = "Danışman",
-                                AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
+                                AdSoyad = danisman.Ad + " " + danisman.Soyad,
                                 EMails = new List<MailSendList>
-                                    { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
+                                    { new MailSendList { EMail = danisman.EMail, ToOrBcc = true } },
                                 MailSablonTipID = danismanMailSablonTipId,
+                                Attachments = basvuru.IsGenelSonucBasarili.HasValue ?
+                                    Management.exportRaporPdf(RaporTipleri.YeterlikDoktoraSinavSonucFormu, new List<int?> { basvuru.YeterlikBasvuruID }) : new List<Attachment>()
                             }
                         );
                         juriler = juriler.Where(p => p.JuriTipAdi != "TezDanismani").ToList();
@@ -833,19 +836,21 @@ namespace LisansUstuBasvuruSistemi.Business
                             MailSablonTipID = juriMailSablonTipId
                         });
                     }
+
+
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
                     var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
                     {
 
-                        var juri = juriler.FirstOrDefault(p => p.UniqueID == item.UniqueID);
                         item.Sablon = sablonlar.FirstOrDefault(p => p.MailSablonTipID == item.MailSablonTipID);
                         if (item.Sablon == null) continue;
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
-                        var gonderilenMailEkleri = new List<GonderilenMailEkleri>();
 
+                        var gonderilenMailEkleri = item.Attachments.Select(s=>new GonderilenMailEkleri{EkAdi = s.Name}).ToList(); 
                         foreach (var itemSe in item.Sablon.MailSablonlariEkleris)
                         {
+
                             var ekTamYol = System.Web.HttpContext.Current.Server.MapPath("~" + itemSe.EkDosyaYolu);
                             if (System.IO.File.Exists(ekTamYol))
                             {
@@ -1128,7 +1133,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 Konu = mCOntent.Title
                             };
                             if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")"; 
+                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
                             kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
                             kModel.IslemYapanIP = UserIdentity.Ip;
                             kModel.Aciklama = item.Sablon.Sablon ?? "";

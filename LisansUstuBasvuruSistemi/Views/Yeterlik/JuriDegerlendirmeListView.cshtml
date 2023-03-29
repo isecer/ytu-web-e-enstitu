@@ -2,6 +2,7 @@
 @using DevExpress.Office.Utils
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
 @{
@@ -11,6 +12,7 @@
     var isSozluNotuIstensin = Model.IsYaziliSinavBasarili == true && Model.IsSozluSinavinaKatildi == true;
     var juriler = Model.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).ToList();
     var tumJuriOnayladi = juriler.All(a => a.IsSonucOnaylandi.HasValue);
+    
 }
 
 
@@ -177,7 +179,15 @@
                                         @Model.IsGenelSonucBasarili.ToOnayDurumIconHtml() @(Model.IsGenelSonucBasarili==true?"Başarılı":"Başarısız")
                                     </td>
                                 </tr>
-
+                                <tr>
+                                    <td class="CaptionTd">Sınav Sonuç Formu</td>
+                                    <td class="CaptionTd">:</td>
+                                    <td class="ValueTd">
+                                        <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-1227 Doktora Yeterlik Sınav Değerlendirme Sonuç Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipleri.YeterlikDoktoraSinavSonucFormu&UniqueID=@Model.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                            <i class="fa fa-file-pdf-o"></i> FR-1227 Doktora Yeterlik Sınav Değerlendirme Sonuç Formunu İndir
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

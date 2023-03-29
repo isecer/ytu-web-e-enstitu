@@ -77,7 +77,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <span class="btn btn-info" style="cursor: pointer;" onclick="YaziliSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                <span class="btn btn-info" style="cursor: pointer;" onclick="YaziliSinavKaydet('@Model.UniqueID','@(!Model.IsSozluSinavinaKatildi.HasValue?"": Model.IsSozluSinavinaKatildi.ToString().ToLower())')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
                             </td>
                         </tr>
 
@@ -125,14 +125,21 @@
         return true;
 
      };
-    function YaziliSinavKaydet(uniqueId) {
+    function YaziliSinavKaydet(uniqueId,isSinavaKatildi) {
         if (!YaziliSinavKayitKontrol(uniqueId)) return;
         var notKriter = parseFloat('@Model.YeterlikSurecOgrenimTipleri.YaziliGecerNot');
         var isYaziliSinavinaKatildi = $('#IsYaziliSinavinaKatildi_' + uniqueId).val();
         var yaziliSinaviNotu = $('#YaziliSinaviNotu_' + uniqueId).val();
-        var msg = "";
+        var msg = ""; 
         if (isYaziliSinavinaKatildi == "") {
-            msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri jüri üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+            if (isSinavaKatildi == "") {
+                msg = "Sınav bilgisi henüz sınav yapılmadı şeklinde değiştirilsin mi?";
+            }
+            else {
+                msg = "Kayıt işleminden sonra sınav tarihi ve yeri bilgileri jüri üyelerine bilgi olarak gönderilecek. İşlemi onaylıyor musunuz?";
+            }
+
+           
         }
         else if (isYaziliSinavinaKatildi == "true") {
             var isBasarili = notKriter <= parseInt(yaziliSinaviNotu);

@@ -376,7 +376,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kul.OgrenimTipKod.IsDoktora())
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora()||kul.OgrenimTipKod==OgrenimTipi.TezliYuksekLisans))
                         {
                             var aktifDevamEdenBasvuruVar = db.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
@@ -390,7 +390,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         else
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Tez danışman öneri başvurusunu Aktif olarak doktora seviyesinde okuyan öğrencileri tarafından yapılabilir.");
+                            msg.Messages.Add("Tez danışman öneri başvurusunu Aktif olarak doktora  eya Tezli yl seviyesinde okuyan öğrencileri tarafından yapılabilir.");
                         }
                     }
                 }
@@ -1574,56 +1574,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return mmMessage;
         }
-
-        public static bool IsSuccessYeniKayit(int tdoBasvuruId)
-        {
-            var issuccess = true;
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
-                var sonDanismanBasvuru = basvuru.TDOBasvuruDanisman;
-                var sonEsDanismanBasvuru =
-                    basvuru.TDOBasvuruDanismen.SelectMany(s => s.TDOBasvuruEsDanismen).LastOrDefault();
-                if (sonEsDanismanBasvuru != null)
-                {
-                    if (sonEsDanismanBasvuru.EYKYaGonderildi == true)
-                    {
-                        issuccess = sonEsDanismanBasvuru.EYKDaOnaylandi.HasValue;
-                    }
-                    else issuccess = sonEsDanismanBasvuru.EYKYaGonderildi == false;
-                }
-
-                if (issuccess)
-                {
-                    if (sonDanismanBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi ||
-                        sonDanismanBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
-                    {
-                        if (sonDanismanBasvuru.VarolanDanismanOnayladi == true || sonDanismanBasvuru.VarolanDanismanOnayladi == true)
-                        {
-
-                        }
-                        else issuccess = false;
-                    }
-
-                    if (issuccess)
-                    {
-                        if (sonDanismanBasvuru.DanismanOnayladi == true)
-                        {
-                            if (sonDanismanBasvuru.EYKYaGonderildi == true)
-                            {
-                                if (sonDanismanBasvuru.EYKDaOnaylandi.HasValue)
-                                {
-
-                                }
-                            }
-                        }
-                        else issuccess = false;
-                    }
-                }
-            }
-
-            return issuccess;
-        }
+         
 
     }
 }
