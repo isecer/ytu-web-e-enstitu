@@ -8,47 +8,47 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         //public const string IntihalKontrol = "İntihal Kontrol";
 
 
-        [Menu(MenuID = 65000, MenuAdi = "Salon Rezervasyonu", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 3)]
+        [Menu(MenuID = 65000, MenuAdi = "Salon Rezervasyonu", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020,030", SiraNo = 3)]
         public const string SalonRezervasyonIslemleri = "Salon Rezervasyon İşlemleri";
 
         [Menu(MenuID = 75000, MenuAdi = "Belge Talep", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010", SiraNo = 5)]
         public const string BelgeTalepIslemleri = "Belge Talep";
 
-        [Menu(MenuID = 77000, MenuAdi = "Talep İşlemleri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 6)]
+        [Menu(MenuID = 77000, MenuAdi = "Talep İşlemleri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 6)]
         public const string TalepIslemleri = "Talep İşlemleri";
 
-        [Menu(MenuID = 80000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 7)]
+        [Menu(MenuID = 80000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020,030", SiraNo = 7)]
         public const string BasvuruIslemleri = "Başvuru İşlemleri";
 
-        [Menu(MenuID = 80500, MenuAdi = "YTÜ Yeni Mezun Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 8)]
+        [Menu(MenuID = 80500, MenuAdi = "YTÜ Yeni Mezun Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020,030", SiraNo = 8)]
         public const string YydBasvuruIslemleri = "YYD Başvuru İşlemleri";
 
-        [Menu(MenuID = 81000, MenuAdi = "Yatay Geçiş Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 9)]
+        [Menu(MenuID = 81000, MenuAdi = "Yatay Geçiş Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020,030", SiraNo = 9)]
         public const string YgBasvuruIslemleri = "YG Başvuru İşlemleri";
 
-        [Menu(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 12)]
+        [Menu(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 12)]
         public const string TdoIslemleri = "Tez danışmanı öneri İşlemleri";
 
-        [Menu(MenuID = 82500, MenuAdi = "Yeterlik İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 13)]
+        [Menu(MenuID = 82500, MenuAdi = "Yeterlik İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 13)]
         public const string YeterlikIslemleri = "Yeterlik İşlemleri";
 
 
-        [Menu(MenuID = 83300, MenuAdi = "Tez İzleme İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 15)]
+        [Menu(MenuID = 83300, MenuAdi = "Tez İzleme İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 15)]
         public const string TiIslemleri = "Tez İzleme İşlemleri";
 
-        [Menu(MenuID = 83500, MenuAdi = "Mezuniyet İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020", SiraNo = 16)]
+        [Menu(MenuID = 83500, MenuAdi = "Mezuniyet İşlemleri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 16)]
         public const string MezuniyetIslemleri = "Mezuniyet İşlemleri";
 
-        [Menu(MenuID = 84000, MenuAdi = "Rapor İşlemleri", MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "", YetkiliEnstituler = "010,020", SiraNo = 18)]
+        [Menu(MenuID = 84000, MenuAdi = "Rapor İşlemleri", MenuCssClass = "fa fa-bar-chart-o", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 18)]
         public const string RaporIslemleri = "RaporIslemleri";
 
-        [Menu(MenuID = 85000, MenuAdi = "Kullanıcı İşlemleri", MenuCssClass = "fa fa-group", MenuUrl = "", YetkiliEnstituler = "010,020", SiraNo = 21)]
+        [Menu(MenuID = 85000, MenuAdi = "Kullanıcı İşlemleri", MenuCssClass = "fa fa-group", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 21)]
         public const string KullaniciIslemleri = "Kullanıcı İşlemleri";
 
-        [Menu(MenuID = 90000, MenuAdi = "Tanımlamalar", MenuCssClass = "fa fa-gears", MenuUrl = "", YetkiliEnstituler = "010,020", SiraNo = 24)]
+        [Menu(MenuID = 90000, MenuAdi = "Tanımlamalar", MenuCssClass = "fa fa-gears", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 24)]
         public const string Tanimlamalar = "Tanımlamalar";
 
-        [Menu(MenuID = 100000, MenuAdi = "Sistem", MenuCssClass = "fa fa-desktop", MenuUrl = "", YetkiliEnstituler = "010,020", SiraNo = 27)]
+        [Menu(MenuID = 100000, MenuAdi = "Sistem", MenuCssClass = "fa fa-desktop", MenuUrl = "", YetkiliEnstituler = "010,020,030", SiraNo = 27)]
         public const string Sistem = "Sistem";
 
     }

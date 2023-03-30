@@ -203,7 +203,7 @@
         var _panel = $('#pnlMailGonder');
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getMsjKategoris", "Ajax")',
+            url: '@Url.Action("GetMsjKategoris", "Ajax")',
             data: { 'EnstituKod': _EnstituKod},
             type: 'POST',
             dataType: "json",
@@ -239,7 +239,7 @@
             return;
         }
         $.ajax({
-            url: '@Url.Action("getKtNot", "Ajax")',
+            url: '@Url.Action("GetKtNot", "Ajax")',
             data: { 'MesajKategoriID': _KategoriID },
             type: 'POST',
             dataType: "json",

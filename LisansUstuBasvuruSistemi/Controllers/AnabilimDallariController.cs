@@ -36,6 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituAd = e.EnstituAd,
                         AnabilimDaliKod = s.AnabilimDaliKod,
                         AnabilimDaliAdi = s.AnabilimDaliAdi,
+                        KomiteIds = s.AnabilimDaliYeterlikKomiteUyeleris.Select(sk=>sk.KullaniciID).ToList(),
                         YeterlikKomiteUyeCount = s.AnabilimDaliYeterlikKomiteUyeleris.Count,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
@@ -43,12 +44,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = s.IslemYapanIP,
                         IslemYapan = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                     };
-
+            
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AnabilimDaliKod.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliKod == model.AnabilimDaliKod);
             if (!model.AnabilimDaliAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliAdi.Contains(model.AnabilimDaliAdi));
             if (model.IsKomiteUyesiVar.HasValue) q = q.Where(p => p.YeterlikKomiteUyeCount > 0 == model.IsKomiteUyesiVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
+            ViewBag.filteredKomiteIds = q.SelectMany(s => s.KomiteIds).ToList();
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
             model.FrAnabilimDallaris = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();

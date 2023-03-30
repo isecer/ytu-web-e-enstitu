@@ -297,7 +297,7 @@
         PanelRefresh(_panel, false);
         if(sndrVal!=""){
             $.ajax({
-                url: '@Url.Action("getSablonlar", "Ajax")',
+                url: '@Url.Action("GetSablonlar", "Ajax")',
                 data: { 'MailSablonlariID': sndrVal},
                 type: 'POST',
                 dataType: "json",

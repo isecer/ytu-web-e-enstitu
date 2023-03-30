@@ -4,6 +4,7 @@
 @{
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var filteredKomiteIds = (List<int>)ViewBag.filteredKomiteIds;
 }
 
 <div class="row">
@@ -15,9 +16,8 @@
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Anabilim Dalı Listesi</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit", "AnabilimDallari")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Anabilim Dalı Oluştur</span></li>
-                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
+                        <li><span class="label label-primary label-form" style="cursor: pointer;" onclick="mGonderGB('@string.Join(",",filteredKomiteIds)',true,false)"><i class="fa fa-envelope" aria-hidden="true"></i> Komitelere(@filteredKomiteIds.Count) Mail Gönder</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li> 
                     </ul>
                 </div>
                 <div class="panel-body">

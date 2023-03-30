@@ -81,7 +81,7 @@
                                     var _panel = $('.pnlRfrsh');
                                     PanelRefresh(_panel, false);
                                     $.ajax({
-                                        url: '@Url.Action("getSaatList", "Ajax")',
+                                        url: '@Url.Action("GetSaatList", "Ajax")',
                                         data: { 'SRSalonID': salon,'IsPopupFrame':'true', 'SRTalepTipID': 1, 'Tarih': tarih, 'SRTalepID': '@(Model.SRTalepID <= 0 ? "" : Model.SRTalepID.ToString())','MzRowID':'@Model.MzRowID' },
                                         success: function (result) {
                                             $('#saatLstContnt').html(result.Deger);

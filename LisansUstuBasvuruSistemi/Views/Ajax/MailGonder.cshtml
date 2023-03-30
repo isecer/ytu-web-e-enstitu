@@ -94,7 +94,7 @@
                                     var _IsSonucOrMulakat='@Model.IsBasvuruSonuc.ToString().ToLower()'
                                     PanelRefresh(_panel, false);
                                     $.ajax({
-                                        url: '@Url.Action("getProgramlarBS", "Ajax")',
+                                        url: '@Url.Action("GetProgramlarBs", "Ajax")',
                                         data: { 'BasvuruSurecID': '@Model.BasvuruSurecID', 'OgrenimTipKods': _OgrenimTipKods, 'IsBolumOrOgrenci': _IsBolumOrOgrenci, 'IsSonucOrMulakat': _IsSonucOrMulakat},
                                         type: 'POST',
                                         dataType: "json",
@@ -426,7 +426,7 @@
         PanelRefresh(_panel, false);
         if(sndrVal!=""){
             $.ajax({
-                url: '@Url.Action("getSablonlar", "Ajax")',
+                url: '@Url.Action("GetSablonlar", "Ajax")',
                 data: { 'MailSablonlariID': sndrVal},
                 type: 'POST',
                 dataType: "json",

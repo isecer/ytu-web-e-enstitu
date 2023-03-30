@@ -33,8 +33,7 @@ namespace LisansUstuBasvuruSistemi
             //MenulerBus.UpdateMenus();
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
-            MenulerBus.Menulers = MenulerBus.GetAllMenu();
-
+            MenulerBus.Menulers = MenulerBus.GetAllMenu(); 
 
             bool otomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
             if (otomatikMailBilgilendirmeServisiniCalistir)
@@ -116,7 +115,7 @@ namespace LisansUstuBasvuruSistemi
             //        Response.End();
             //    }
             //}
-        } 
+        }
 
         protected void Application_Error(object sender, EventArgs e)
         {

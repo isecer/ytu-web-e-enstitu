@@ -272,7 +272,7 @@
         var _panel = $('#pnlJuri');
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("getJuriEkleKontrol", "Ajax")',
+            url: '@Url.Action("GetJuriEkleKontrol", "Ajax")',
             data: { 'JuriAdi': _JuriAdi,'Email': _Email },
             success: function (result) {
                 if (result.IsSuccess) {
@@ -327,7 +327,7 @@
             var _panel = $('.pnlRfrsh');
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("getSaatList", "Ajax")',
+                url: '@Url.Action("GetSaatList", "Ajax")',
                 data: { 'SRSalonID': salon, 'IsPopupFrame': 'false', 'SRTalepTipID': talepTip, 'Tarih': tarih, 'SRTalepID': '@(Model.SRTalepID<=0?"":Model.SRTalepID.ToString())' },
                 success: function (result) {
                     $('#saatLstContnt').html(result.Deger);

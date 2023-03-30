@@ -19,6 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class FrAnabilimDallariDto : AnabilimDallari
     {
+        public List<int> KomiteIds { get; set; }
         public int YeterlikKomiteUyeCount { get; set; }
         public string EnstituAd { get; set; }
         public string IslemYapan { get; set; }

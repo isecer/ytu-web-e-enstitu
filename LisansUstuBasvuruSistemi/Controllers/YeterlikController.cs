@@ -802,15 +802,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         yeterlikBasvuru.IsYaziliSinavBasarili = kriterler.YaziliGecerNot <= yeterlikBasvuru.YaziliSinaviNotu;
                       
                     }
-                    else if (yeterlikBasvuru.IsSozluSinavinaKatildi == false)
+                    else if (yeterlikBasvuru.IsYaziliSinavinaKatildi == false)
                     {
-                        yeterlikBasvuru.IsYaziliSinavBasarili = false;
+                        yeterlikBasvuru.IsYaziliSinavBasarili = false; 
                     }
 
-                    if (yeterlikBasvuru.IsYaziliSinavBasarili==false)
-                    {
-                        yeterlikBasvuru.IsYaziliSinavBasarili = false;
-                    }
+                    
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");
@@ -955,6 +952,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (juriDegerlendirmeleri.All(a => a.IsSonucOnaylandi.HasValue))
                 {
+                     
+
                     if (basvuru.IsYaziliSinavBasarili == true && basvuru.IsSozluSinavinaKatildi == true)
                     {
                         var kriterler = basvuru.YeterlikSureci.YeterlikSurecOgrenimTipleris.First(p =>

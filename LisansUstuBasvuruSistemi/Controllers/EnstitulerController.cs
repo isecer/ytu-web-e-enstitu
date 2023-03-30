@@ -148,18 +148,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
-                if (kModel.EnstituKod.IsNullOrWhiteSpace())
+                var data = db.Enstitulers.FirstOrDefault(p => p.EnstituKod == kModel.EnstituKod);
+                if (data==null)
                 {
                     kModel.IsAktif = true;
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
                     kModel.IslemTarihi = DateTime.Now;
-                    db.Enstitulers.Add(kModel);
-
+                    db.Enstitulers.Add(kModel); 
                 }
                 else
-                {
-                    var data = db.Enstitulers.First(p => p.EnstituKod == kModel.EnstituKod);
+                { 
                     data.EnstituKod = kModel.EnstituKod;
                     data.EnstituAd = kModel.EnstituAd;
                     data.EnstituKisaAd = kModel.EnstituKisaAd;
@@ -180,7 +179,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
                 db.SaveChanges();
-                EnstituBus.Enstitulers = db.Enstitulers.ToList();
+                EnstituBus.Enstitulers = db.Enstitulers.Where(p=>p.IsAktif).ToList();
                 return RedirectToAction("Index");
             }
             else

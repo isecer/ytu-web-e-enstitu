@@ -673,14 +673,14 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@TezDili"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezDili", Value = tdoBasvuruDanisman.IsTezDiliTr ? "Türkçe" : "İngilizce" });
 
-                        if (item.SablonParametreleri.Any(a => a == "@TezBasligiTr"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBasligiTr", Value = tdoBasvuruDanisman.TezBaslikTr });
+                        if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = tdoBasvuruDanisman.TezBaslikTr });
 
                         if (item.SablonParametreleri.Any(a => a == "@TezBasligiEn"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBasligiEn", Value = tdoBasvuruDanisman.TezBaslikEn });
 
-                        if (item.SablonParametreleri.Any(a => a == "@YeniTezBasligiTr"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniTezBasligiTr", Value = tdoBasvuruDanisman.YeniTezBaslikTr });
+                        if (item.SablonParametreleri.Any(a => a == "@YeniTezBaslikTr"))
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniTezBaslikTr", Value = tdoBasvuruDanisman.YeniTezBaslikTr });
 
                         if (item.SablonParametreleri.Any(a => a == "@YeniTezBasligiEn"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniTezBasligiEn", Value = tdoBasvuruDanisman.YeniTezBaslikEn });
