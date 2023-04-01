@@ -32,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int OgretimYiliBaslangic { get; set; }
         public int OgretimYiliBitis { get; set; }
         public int DonemID { get; set; }
+        public Nullable<int> KullaniciID { get; set; }
         public string AdiSoyadi { get; set; }
         public string OgrenciNo { get; set; }
         public string ErisimKodu { get; set; }
@@ -61,6 +62,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual BelgeTipleri BelgeTipleri { get; set; }
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }
+        public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OgrenimDurumlari OgrenimDurumlari { get; set; }
         public virtual Programlar Programlar { get; set; }
     }

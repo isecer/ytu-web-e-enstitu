@@ -276,11 +276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_MezuniyetBasvuruListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
             }
             #endregion
-            if (isFiltered)
-            {
-                ViewBag.kIds = q.Select(s => s.KullaniciID).ToList();
-            }
-            else ViewBag.kIds = new List<int>();
+            ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
 
             ViewBag.MezuniyetSurecID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecleri(enstituKod, true), "Value", "Caption", model.MezuniyetSurecID);
             ViewBag.MezuniyetSureci = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecGroup(enstituKod, true), "Value", "Caption", model.MezuniyetSureci);

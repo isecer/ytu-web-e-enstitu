@@ -400,8 +400,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Yeterlik jüri üyesi oluşturabilmeniz için " +
                                       yeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi +
                                       " anabilim danı için enstitü tarafından 5 kişilik komite üyesinin belirlenmesi gerekmektedir.");
-                return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult();
-
+                return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult(); 
             }
 
             var juriData = (from unq in kModel.UniqueIDs.Select((s, inx) => new { s, inx })
@@ -498,8 +497,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }).ToList();
                 if (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any())
                 {
-                    _entities.YeterlikBasvuruJuriUyeleris.AddRange(juriEntitys);
-
+                    _entities.YeterlikBasvuruJuriUyeleris.AddRange(juriEntitys); 
                 }
                 else
                 {
@@ -519,12 +517,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else _entities.YeterlikBasvuruJuriUyeleris.Add(juriEntity);
                     }
                 }
-                _entities.SaveChanges();
-
+                _entities.SaveChanges();  
                 if (!yeterlikBasvuru.YeterlikBasvuruKomitelers.Any() || !yeterlikBasvuru.YeterlikBasvuruKomitelers.All(a =>
                         komiteUyeleri.Any(ak => ak.KullaniciID == a.KullaniciID)))
-                {
-
+                { 
                     _entities.YeterlikBasvuruKomitelers.RemoveRange(yeterlikBasvuru.YeterlikBasvuruKomitelers);
                     _entities.YeterlikBasvuruKomitelers.AddRange(komiteUyeleri);
                     _entities.SaveChanges();
@@ -537,16 +533,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         YeterlikBus.SendMailKomiteDegerlendirmeLink(yeterlikBasvuru.UniqueID, komite.UniqueID);
                     }
-                }
-
+                } 
                 LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any() ? IslemTipi.Insert : IslemTipi.Update), juriEntitys.ToJson());
                 mMessage.IsSuccess = true;
                 mMessage.MessageType = Msgtype.Success;
             }
             return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult();
-        }
-
-
+        } 
         public ActionResult KomiteBilgileriGuncelle(Guid id)
         {
             var mMessage = new MmMessage

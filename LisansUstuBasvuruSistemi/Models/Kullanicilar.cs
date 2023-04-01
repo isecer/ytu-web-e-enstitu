@@ -31,6 +31,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.BasvuruSurecOgrenimTipleris = new HashSet<BasvuruSurecOgrenimTipleri>();
             this.BasvuruSurecSinavTipleris = new HashSet<BasvuruSurecSinavTipleri>();
             this.BelgeDurumlaris = new HashSet<BelgeDurumlari>();
+            this.BelgeTalepleris = new HashSet<BelgeTalepleri>();
             this.BelgeTipDetays = new HashSet<BelgeTipDetay>();
             this.BelgeTipleris = new HashSet<BelgeTipleri>();
             this.Birimlers = new HashSet<Birimler>();
@@ -159,6 +160,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<BasvuruSurecSinavTipleri> BasvuruSurecSinavTipleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BelgeDurumlari> BelgeDurumlaris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BelgeTalepleri> BelgeTalepleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BelgeTipDetay> BelgeTipDetays { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

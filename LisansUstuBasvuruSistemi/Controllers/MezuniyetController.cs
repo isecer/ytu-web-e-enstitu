@@ -27,8 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         public ActionResult Index(FmMezuniyetBasvurulari model, string ekd)
-        {
-
+        { 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             if (model.RowID.HasValue)
             {

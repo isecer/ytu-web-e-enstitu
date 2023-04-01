@@ -320,8 +320,9 @@
                     buttons: {
                         success: {
                             label: 'Kaydet',
-                            className: "btn-success",
-                            callback: function (event) {
+                            className: "btn-success MezSrTalep_" + SRTalepID,
+                            callback: function (event) { 
+                                $('.MezSrTalep_' + SRTalepID).addClass('disabled');
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);
                                 $('#MezuniyetSRForm').ajaxForm({
@@ -340,6 +341,7 @@
 
                                     },
                                     complete: function (cmp) {
+                                        $('.MezSrTalep_' + SRTalepID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
@@ -436,8 +438,9 @@
                     buttons: {
                         success: {
                             label: 'Kaydet',
-                            className: "btn-success",
+                            className: "btn-success MezBezkayitBtn_" + MezuniyetBasvurulariID,
                             callback: function (event) {
+                                $('.MezBezkayitBtn_' + MezuniyetBasvurulariID).addClass('disabled');
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);
                                 $('#MezuniyetSRBezCiltForm').ajaxForm({
@@ -456,6 +459,7 @@
 
                                     },
                                     complete: function (cmp) {
+                                        $('.MezBezkayitBtn_' + MezuniyetBasvurulariID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {

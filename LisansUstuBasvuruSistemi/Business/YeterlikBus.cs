@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
+using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -76,6 +77,11 @@ namespace LisansUstuBasvuruSistemi.Business
                                           OrtalamaGecerNot = defYo?.OrtalamaGecerNot
                                       }
                     ).ToList();
+                foreach (var item in ogrenimtipData)
+                {
+                    item.SlistEtikNots = new SelectList(NotDegerleri, item.YsBasEtikNotKriteri);
+                    item.SlistSeminerNots = new SelectList(NotDegerleri, item.YsBasSeminerNotKriteri);
+                }
                 return ogrenimtipData;
 
             }
@@ -273,8 +279,9 @@ namespace LisansUstuBasvuruSistemi.Business
             lst.Add(new CmbIntDto { Value = 2, Caption = "İptal Edilenler" });
             lst.Add(new CmbIntDto { Value = 3, Caption = "Jüri Oluşturulmayanlar" });
             lst.Add(new CmbIntDto { Value = 4, Caption = "ABD Komite Onayı Bekleyenler" });
-            lst.Add(new CmbIntDto { Value = 5, Caption = "Başarılı Olanlar" });
-            lst.Add(new CmbIntDto { Value = 6, Caption = "Başarısız Olanlar" });
+            lst.Add(new CmbIntDto { Value = 5, Caption = "ABD Komite Onayı Tamamlananlar" });
+            lst.Add(new CmbIntDto { Value = 6, Caption = "Başarılı Olanlar" });
+            lst.Add(new CmbIntDto { Value = 7, Caption = "Başarısız Olanlar" });
             return lst;
         }
         public static List<CmbStringDto> GetCmbJuriYedekList(Guid juriUniqueId, bool bosSecimVar = false)

@@ -676,6 +676,7 @@
           <Property Name="OgretimYiliBaslangic" Type="int" Nullable="false" />
           <Property Name="OgretimYiliBitis" Type="int" Nullable="false" />
           <Property Name="DonemID" Type="int" Nullable="false" />
+          <Property Name="KullaniciID" Type="int" />
           <Property Name="AdiSoyadi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="OgrenciNo" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="ErisimKodu" Type="nvarchar" MaxLength="6" Nullable="false" />
@@ -4011,6 +4012,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="BelgeTalepleri">
               <PropertyRef Name="EnstituKod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BelgeTalepleri_Kullanicilar">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="0..1" />
+          <End Role="BelgeTalepleri" Type="Self.BelgeTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="BelgeTalepleri">
+              <PropertyRef Name="KullaniciID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7457,6 +7470,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Enstituler" EntitySet="Enstituler" />
             <End Role="BelgeTalepleri" EntitySet="BelgeTalepleri" />
           </AssociationSet>
+          <AssociationSet Name="FK_BelgeTalepleri_Kullanicilar" Association="Self.FK_BelgeTalepleri_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="BelgeTalepleri" EntitySet="BelgeTalepleri" />
+          </AssociationSet>
           <AssociationSet Name="FK_BelgeTalepleri_OgrenimDurumlari" Association="Self.FK_BelgeTalepleri_OgrenimDurumlari">
             <End Role="OgrenimDurumlari" EntitySet="OgrenimDurumlari" />
             <End Role="BelgeTalepleri" EntitySet="BelgeTalepleri" />
@@ -8975,6 +8992,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </AssociationSet>
           <AssociationSet Name="FK_BelgeTalepleri_Enstituler" Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Enstituler">
             <End Role="Enstituler" EntitySet="Enstitulers" />
+            <End Role="BelgeTalepleri" EntitySet="BelgeTalepleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BelgeTalepleri_Kullanicilar" Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Kullanicilar">
+            <End Role="Kullanicilar" EntitySet="Kullanicilars" />
             <End Role="BelgeTalepleri" EntitySet="BelgeTalepleris" />
           </AssociationSet>
           <AssociationSet Name="FK_BelgeTalepleri_OgrenimDurumlari" Association="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_OgrenimDurumlari">
@@ -10651,6 +10672,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="OgretimYiliBaslangic" Type="Int32" Nullable="false" />
           <Property Name="OgretimYiliBitis" Type="Int32" Nullable="false" />
           <Property Name="DonemID" Type="Int32" Nullable="false" />
+          <Property Name="KullaniciID" Type="Int32" />
           <Property Name="AdiSoyadi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="OgrenciNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="ErisimKodu" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
@@ -10678,6 +10700,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="BelgeTipleri" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_BelgeTipleri" FromRole="BelgeTalepleri" ToRole="BelgeTipleri" />
           <NavigationProperty Name="Donemler" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Donemler" FromRole="BelgeTalepleri" ToRole="Donemler" />
           <NavigationProperty Name="Enstituler" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Enstituler" FromRole="BelgeTalepleri" ToRole="Enstituler" />
+          <NavigationProperty Name="Kullanicilar" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Kullanicilar" FromRole="BelgeTalepleri" ToRole="Kullanicilar" />
           <NavigationProperty Name="OgrenimDurumlari" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_OgrenimDurumlari" FromRole="BelgeTalepleri" ToRole="OgrenimDurumlari" />
           <NavigationProperty Name="Programlar" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Programlar" FromRole="BelgeTalepleri" ToRole="Programlar" />
         </EntityType>
@@ -11094,6 +11117,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="BasvuruSurecOgrenimTipleris" Relationship="LisansustuBasvuruSistemiModel.FK_BasvuruSurecOgrenimTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="BasvuruSurecOgrenimTipleri" />
           <NavigationProperty Name="BasvuruSurecSinavTipleris" Relationship="LisansustuBasvuruSistemiModel.FK_BasvuruSurecSinavTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="BasvuruSurecSinavTipleri" />
           <NavigationProperty Name="BelgeDurumlaris" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeDurumlari_Kullanicilar" FromRole="Kullanicilar" ToRole="BelgeDurumlari" />
+          <NavigationProperty Name="BelgeTalepleris" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTalepleri_Kullanicilar" FromRole="Kullanicilar" ToRole="BelgeTalepleri" />
           <NavigationProperty Name="BelgeTipDetays" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTipDetay_Kullanicilar" FromRole="Kullanicilar" ToRole="BelgeTipDetay" />
           <NavigationProperty Name="BelgeTipleris" Relationship="LisansustuBasvuruSistemiModel.FK_BelgeTipleri_Kullanicilar" FromRole="Kullanicilar" ToRole="BelgeTipleri" />
           <NavigationProperty Name="Birimlers" Relationship="LisansustuBasvuruSistemiModel.FK_Birimler_Kullanicilar" FromRole="Kullanicilar" ToRole="Birimler" />
@@ -14637,6 +14661,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_BelgeTalepleri_Kullanicilar">
+          <End Type="LisansustuBasvuruSistemiModel.Kullanicilar" Role="Kullanicilar" Multiplicity="0..1" />
+          <End Type="LisansustuBasvuruSistemiModel.BelgeTalepleri" Role="BelgeTalepleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="BelgeTalepleri">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BelgeTalepleri_OgrenimDurumlari">
           <End Type="LisansustuBasvuruSistemiModel.OgrenimDurumlari" Role="OgrenimDurumlari" Multiplicity="1" />
           <End Type="LisansustuBasvuruSistemiModel.BelgeTalepleri" Role="BelgeTalepleri" Multiplicity="*" />
@@ -18033,6 +18069,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="ErisimKodu" ColumnName="ErisimKodu" />
                 <ScalarProperty Name="OgrenciNo" ColumnName="OgrenciNo" />
                 <ScalarProperty Name="AdiSoyadi" ColumnName="AdiSoyadi" />
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
                 <ScalarProperty Name="DonemID" ColumnName="DonemID" />
                 <ScalarProperty Name="OgretimYiliBitis" ColumnName="OgretimYiliBitis" />
                 <ScalarProperty Name="OgretimYiliBaslangic" ColumnName="OgretimYiliBaslangic" />

@@ -1126,8 +1126,9 @@
                         buttons: {
                             success: {
                                 label: "Kaydet",
-                                className: "btn-info",
+                                className: "btn-info btnMbSinavSave_" + UniqueID,
                                 callback: function (event) {
+                                    $('.btnMbSinavSave_' + UniqueID).addClass('disabled');
                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                     PanelRefresh(pnlx, false);
 
@@ -1152,6 +1153,9 @@
                                             PanelRefresh(pnlx, true);
                                             alert(err.responseText);
 
+                                        },
+                                        complete: function () { 
+                                            $('.btnMbSinavSave_' + UniqueID).removeClass('disabled');
                                         }
                                     });
 

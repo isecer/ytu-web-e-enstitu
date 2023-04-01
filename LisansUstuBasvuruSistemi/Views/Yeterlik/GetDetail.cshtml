@@ -193,7 +193,7 @@
             $('#'+ name+'_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
         }
     }
-    function KomiteJuriOnayKayit(id, uniqueID) { 
+    function KomiteJuriOnayKayit(id, uniqueID) {
          Swal.fire({
             html: "Yukarıda listelenen yeterlik jüri üyeleri için onay işleminizi kaydetmek istiyor musunuz?",
             type: 'warning',
@@ -209,7 +209,7 @@
             preConfirm: function () {
                 $('.swal2-cancel').first().text("Kaydediliyor...");
                 return new Promise(function (resolve) {
-                    var isGenelSonucBasarili = $('#KomiteIsOnaylandi_' + uniqueID).val(); 
+                    var isGenelSonucBasarili = $('#KomiteIsOnaylandi_' + uniqueID).val();
                     $.ajax({
                         url: '@Url.Action("KomiteJuriOnay", "Yeterlik")',
                         data: { uniqueID, isGenelSonucBasarili  },
@@ -223,19 +223,60 @@
                                 padding: '2em'
                             });
                         },
-                        complete: function (err) { 
+                        complete: function (err) {
                         }
                     });
                 });
             }
-        }); 
+        });
 
     }
-    function GetYeterlikJuriUyeleri(id,adSoyad) {
+    function JuriUyeleriKaydet(id) {
+        Swal.fire({
+            html: "Jüri bilgilerini kaydetmek istiyor musunuz?",
+            type: 'warning',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Kaydet',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Kaydediliyor...");
+                return new Promise(function (resolve) {
+                    $('.btnKaydetYj_' + id).addClass('disabled');
+                    var pnlx = $('.modal-content');
+                    PanelRefresh(pnlx, false);
+                    $('#FrmYeterlikJuri').ajaxForm({
+                        success: function (resultJ) {
+                            if (resultJ.IsSuccess) {
+                                toastr["success"]("Yeterlik jüri oluşturma işlemi tamamlandı.", "Yeterlik Jüri Oluşturma İşlemi");
+                                GetDetail(id);
+                                $('.modal-header').find('button').first().click();
+                                 
+                            }
+                            else { 
+                                if (resultJ.mMessage.Messages.length > 0) getMsg(resultJ.mMessage);
+                                $("[href='#tab-" + resultJ.SelectedTabId + "']").first().click(); 
+                            }
+                            Swal.close();
+                        },
+                        complete: function (cmp) {
+                            $('.btnKaydetYj_' + id).removeClass('disabled');
+                            PanelRefresh(pnlx, true);
+                        }
+                    }).submit();
+                });
+            }
+        });
+    }
+    function GetYeterlikJuriUyeleri(id, adSoyad) { 
         $.ajax({
             url: '@Url.Action("GetYeterlikJuriFormu")',
             data: { id: id },
-            async: false,
             success: function (result) {
                 if (result.success) {
                     bootbox.dialog({
@@ -245,26 +286,9 @@
                         buttons: {
                             success: {
                                 label: "Kaydet",
-                                className: "btn-success",
+                                className: "btn-success btnKaydetYj_"+id,
                                 callback: function () {
-                                    var pnlx = $('.modal-content');
-                                    PanelRefresh(pnlx, false);
-                                    $('#FrmYeterlikJuri').ajaxForm({
-                                        success: function (resultJ) {
-                                            if (resultJ.IsSuccess) {
-                                                toastr["success"]("Yeterlik jüri oluşturma işlemi tamamlandı.", "Yeterlik Jüri Oluşturma İşlemi");
-                                                GetDetail(id);
-                                                $('.modal-header').find('button').first().click();
-                                            }
-                                            else {
-                                                if (resultJ.mMessage.Messages.length > 0) getMsg(resultJ.mMessage);
-                                                $("[href='#tab-" + resultJ.SelectedTabId + "']").first().click();
-                                            }
-                                        },
-                                        complete: function (cmp) {
-                                            PanelRefresh(pnlx, true);
-                                        }
-                                    }).submit();
+                                    JuriUyeleriKaydet(id);
                                     return false;
                                 }
                             },

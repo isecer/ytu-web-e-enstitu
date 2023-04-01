@@ -17,8 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         // GET: TIGelenBasvurular
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
-        {
-
+        { 
             var model = new fmTIBasvuru() { PageSize = 50 };
             //var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
             //if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent())
@@ -32,11 +31,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(fmTIBasvuru model, string ekd)
         {
 
-            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-
-
-            var nowDate = DateTime.Now;
-            var KullaniciID = UserIdentity.Current.Id;
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd); 
             var q = from s in _entities.TIBasvurus
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID

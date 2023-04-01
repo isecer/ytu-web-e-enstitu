@@ -191,8 +191,7 @@
                     $.ajax({
                         url: '@Url.Action("KomiteBilgileriGuncelle", "Yeterlik")',
                         data: { id },
-                        success: function (result) {
-                            debugger
+                        success: function (result) { 
                             if (result.IsSuccess) {
                                 GetDetail(id);
                             }

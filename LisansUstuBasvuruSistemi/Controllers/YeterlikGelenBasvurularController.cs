@@ -91,9 +91,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsEnstituOnaylandi == true);
                 else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsEnstituOnaylandi == false);
                 else if (model.BasvuruDurumID == 3) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu == false);
-                else if (model.BasvuruDurumID == 4) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsAbdKomitesiJuriyiOnayladi != true);
-                else if (model.BasvuruDurumID == 5) q = q.Where(p => p.IsGenelSonucBasarili == true);
-                else if (model.BasvuruDurumID == 6) q = q.Where(p => p.IsGenelSonucBasarili == false);
+                else if (model.BasvuruDurumID == 4) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi != true);
+                else if (model.BasvuruDurumID == 5) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi == true);
+                else if (model.BasvuruDurumID == 6) q = q.Where(p => p.IsGenelSonucBasarili == true);
+                else if (model.BasvuruDurumID == 7) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
             var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
             var yeterlikAbdJuriOnayDuzeltme = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
@@ -134,7 +135,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      s.TezDanismanAdi,
                                      s.TezDanismanCepTel,
                                      s.TezDanismanEmail,
-                                     EnstituOnayDurum = s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor"
+                                     EnstituOnayDurum = s.IsEnstituOnaylandi.HasValue ? (s.IsEnstituOnaylandi == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor",
+                                     BasariDurumu = s.IsEnstituOnaylandi==true && s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Başarılı" : "Başarısız") : "İşlem Bekliyor",
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";

@@ -398,10 +398,11 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     buttons: {
                         success: {
                             label: "Kaydet",
-                            className: "btn-primary",
+                            className: "btn-primary btnSrKayit_"+TIBasvuruAraRaporID,
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                PanelRefresh(pnlx, false);
+                                $('.btnSrKayit_' + TIBasvuruAraRaporID).addClass('disabled');
+                                 PanelRefresh(pnlx, false);
                                 $('#TIAraRaporSrForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
@@ -418,6 +419,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
                                     },
                                     complete: function (cmp) {
+                                        $('.btnSrKayit_' + TIBasvuruAraRaporID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {

@@ -1451,12 +1451,13 @@
                          buttons: {
                              success: {
                                  label: 'Kaydet',
-                                 className: "btn-info",
+                                 className: "btn-info DanDegKayit_" + TDOBasvuruDanismanID,
                                  callback: function (event) {
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
                                      $('#FrmTdoFormu').ajaxForm({
                                          success: function (result) {
+                                             $('.DanDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
                                              if (result.IsSuccess) {
                                                  if (result.Messages.length > 0) toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                                  var _clsBtn = $('.bootbox-close-button').first();
@@ -1471,6 +1472,7 @@
                                              PanelRefresh(pnlx, true);
                                          },
                                          complete: function (cmp) {
+                                             $('.DanDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
                                              PanelRefresh(pnlx, true);
                                          }
 
@@ -1519,8 +1521,9 @@
                          buttons: {
                              success: {
                                  label: 'Kaydet',
-                                 className: "btn-info",
+                                 className: "btn-info TezDilDegKayit_" + TDOBasvuruDanismanID,
                                  callback: function (event) {
+                                     $('.TezDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
                                      $('#FrmTdoFormu').ajaxForm({
@@ -1539,6 +1542,7 @@
                                              PanelRefresh(pnlx, true);
                                          },
                                          complete: function (cmp) {
+                                             $('.TezDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
                                              PanelRefresh(pnlx, true);
                                          }
 
@@ -1587,8 +1591,10 @@
                          buttons: {
                              success: {
                                  label: 'Kaydet',
-                                 className: "btn-info",
+                                 className: "btn-info TezDanDilDegKayit_" + TDOBasvuruDanismanID,
                                  callback: function (event) {
+
+                                     $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).addClass('disabled');
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
                                      $('#FrmTdoFormu').ajaxForm({
@@ -1607,6 +1613,7 @@
                                              PanelRefresh(pnlx, true);
                                          },
                                          complete: function (cmp) {
+                                             $('.TezDanDilDegKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
                                              PanelRefresh(pnlx, true);
                                          }
 
@@ -1636,7 +1643,7 @@
              }
          });
     }
-    function GetTdoYeniDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID, isCopy, TDODanismanTalepTipID) {
+    function GetTdoYeniDanismanFormu(TDOBasvuruID, TDOBasvuruDanismanID) {
           var _panel = $('#bsvrDet_' + TDOBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({
@@ -1655,8 +1662,9 @@
 
                                 success: {
                                     label: 'Kaydet',
-                                    className: "btn-info",
+                                    className: "btn-info YeniDanKayit_" + TDOBasvuruDanismanID,
                                     callback: function (event) {
+                                        $('.YeniDanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         PanelRefresh(pnlx, false);
                                         $('#FrmTdoFormu').ajaxForm({
@@ -1675,6 +1683,7 @@
                                                 PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
+                                                $('.YeniDanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
                                                 PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {
@@ -1728,8 +1737,9 @@
 
                                 success: {
                                     label: 'Kaydet',
-                                    className: "btn-info",
+                                    className: "btn-info EsDanismanKayit_" + TDOBasvuruDanismanID,
                                     callback: function (event) {
+                                        $('.EsDanismanKayit_' + TDOBasvuruDanismanID).addClass('disabled');
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         PanelRefresh(pnlx, false);
                                         $('#FrmTDOEsDanismanFormu').ajaxForm({
@@ -1747,6 +1757,8 @@
                                                 PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
+
+                                                $('.EsDanismanKayit_' + TDOBasvuruDanismanID).removeClass('disabled');
                                                 PanelRefresh(pnlx, true);
                                             },
                                             error: function (err) {

@@ -79,9 +79,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join dk in _entities.SistemDilleris on s.BelgeDilKodu equals dk.DilKodu
                     join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == enstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
                     join od in _entities.OgrenimDurumlaris on s.OgrenimDurumID equals od.OgrenimDurumID
-                    join kul in _entities.Kullanicilars on s.OgrenciNo equals kul.OgrenciNo into defk
+                    join kul in _entities.Kullanicilars on s.KullaniciID equals kul.KullaniciID into defk
                     from kl in defk.DefaultIfEmpty()
-                    where s.OgrenciNo == kullanici.OgrenciNo && s.EnstituKod == enstituKod
+                    where s.KullaniciID == kullanici.KullaniciID && s.EnstituKod == enstituKod
                     select new
                     {
                         s.BelgeTalepID,
@@ -214,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                join dk in _entities.SistemDilleris on s.BelgeDilKodu equals dk.DilKodu
                                join ot in _entities.OgrenimTipleris on new { s.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
                                join od in _entities.OgrenimDurumlaris on s.OgrenimDurumID equals od.OgrenimDurumID
-                               join kul in _entities.Kullanicilars on s.OgrenciNo equals kul.OgrenciNo into defk
+                               join kul in _entities.Kullanicilars on s.KullaniciID equals kul.KullaniciID into defk
                                from kl in defk.DefaultIfEmpty()
                                join prg in _entities.Programlars on s.ProgramKod equals prg.ProgramKod
                                where s.BelgeTalepID == id
@@ -322,7 +322,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mmMessage = new MmMessage();
             bool belgeDuzenleYetki = RoleNames.BelgeTalebiDuzelt.InRoleCurrent();
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
-            if (BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(enstituKod, "0").ToBoolean().Value)
+            if (BelgeTalepAyar.BelgeTalebiAcikmi.GetAyarBt(enstituKod, "0").ToBoolean(false))
             {
 
                 if (id.HasValue)
@@ -330,15 +330,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     belge = _entities.BelgeTalepleris.First(p => p.BelgeTalepID == id.Value);
                     if (belgeDuzenleYetki == false)
                     {
-                        if (belge.OgrenciNo != kul.OgrenciNo && belge.IslemYapanID != kul.KullaniciID)
+                        if (belge.KullaniciID != kul.KullaniciID && belge.IslemYapanID != kul.KullaniciID)
                         {
                             SistemBilgilendirmeBus.SistemBilgisiKaydet("Farklı bir kullanıcıya ait belge talebi güncellenmek isteniyor! \r\n BelgeTalepID:" + belge.BelgeTalepID + " \r\n Ad Soyad" + belge.AdiSoyadi, "BelgeTalebi/TalepYap", LogType.Saldırı);
                             mmMessage.Messages.Add("Size ait olmayan bir belgeyi düzenlemeye hakkınız yoktur!");
 
                         }
                         else if (belge.BelgeDurumID == BelgeTalepDurum.IptalEdildi || belge.BelgeDurumID == BelgeTalepDurum.Kapatildi || belge.BelgeDurumID == BelgeTalepDurum.Verildi)
-                        {
-                            var bDurumAdi = belge.BelgeDurumlari.DurumAdi;
+                        { 
                             mmMessage.Messages.Add("Bu Belge Talebini Düzeltemezsiniz.");
                         }
 
@@ -347,7 +346,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (kod.IsNullOrWhiteSpace() == false)
                 {
-                    var ID = kod.Split('_')[0].ToInt().Value;
+                    var ID = kod.Split('_')[0].ToInt(0);
                     var kd = kod.Split('_')[1].ToString();
                     var belgeT = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == ID && p.ErisimKodu == kd);
                     if (belgeT == null)
@@ -582,6 +581,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.UcretsizMiktar = btip.UcretsizMiktar;
                     kModel.DonemlikKota = btip.DonemlikKota;
                     kModel.BelgeFiyati = btip.BelgeFiyati;
+                    kModel.KullaniciID = UserIdentity.Current.Id;
                     msg = "Talep Yapıldı";
                     var bt = _entities.BelgeTalepleris.Add(kModel);
                     if (UserIdentity.Current.Informations.Any(a => a.Key == "BTAnket"))
@@ -1127,7 +1127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsSuccess = true
             };
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
-            var belge = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == id && p.OgrenciNo == kul.OgrenciNo);
+            var belge = _entities.BelgeTalepleris.FirstOrDefault(p => p.BelgeTalepID == id && p.KullaniciID == kul.KullaniciID);
             if (mmMessage.IsSuccess)
             {
                 try

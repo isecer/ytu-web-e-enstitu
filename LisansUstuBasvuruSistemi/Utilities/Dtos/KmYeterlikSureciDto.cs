@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
@@ -27,5 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public bool IsSelected { get; set; }
         public string OgrenimTipAdi { get; set; }
+        public  SelectList SlistEtikNots { get; set; }
+        public SelectList SlistSeminerNots { get; set; }
     }
 }

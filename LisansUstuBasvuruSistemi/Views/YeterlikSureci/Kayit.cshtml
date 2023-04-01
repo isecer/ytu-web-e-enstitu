@@ -54,12 +54,12 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Öğrenim Tipleri</th>
-                                                        <th width="80" title="Maks Kabul Edilecek Dönem Numarası (Okuduğu dönem numarası seçilen dönemden büyükse başvuru yapamayacak)">Dnm Krtr</th>
-                                                        <th width="80" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
-                                                        <th width="80" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
-                                                        <th width="80" title="Toplam kredisi belirlenen krediden az ise başvuru yapamayacak. (Kredi kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">T. Kredi</th>
-                                                        <th width="80" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Yazılı %</th>
-                                                        <th width="80" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Sözlü %</th>
+                                                        <th width="70" title="Maks Kabul Edilecek Dönem Numarası (Okuduğu dönem numarası seçilen dönemden büyükse başvuru yapamayacak)">Dnm Krtr</th>
+                                                        <th width="60" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
+                                                        <th width="60" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Sem. Not</th>
+                                                        <th width="60" title="Toplam kredisi belirlenen krediden az ise başvuru yapamayacak. (Kredi kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">T. Kredi</th>
+                                                        <th width="60" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Yazılı %</th>
+                                                        <th width="60" title="Öğrenci yazılı sınavını geçerse eğer sözlü sınavından aldığı notu ile yazılı notunun ortalamasını hesaplamak için gereklidir.">Sözlü %</th>
                                                         <th width="80" title="Öğrencinin yazılı sınavı için mininmum başarı kriterini belirler">Yaz Not Krtr</th>
                                                         <th width="80" title="Öğrencinin sözlü sınavı için mininmum başarı kriterini belirler">Söz Not Krtr</th>
                                                         <th width="80" title="Öğrencinin ortalamasında mininmum başarı kriterini belirler">Ort. Not Krtr</th>
@@ -78,17 +78,17 @@
                                                             </div>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsMaxBasvuruDonemNo" value="@item.YsMaxBasvuruDonemNo" />
+                                                                <input type="text" class="form-control" name="YsMaxBasvuruDonemNo" value="@item.YsMaxBasvuruDonemNo"/>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsBasEtikNotKriteri" value="@item.YsBasEtikNotKriteri" />
+                                                                @Html.DropDownList("YsBasEtikNotKriteri", item.SlistEtikNots,"",new {@class="form-control"}) 
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                <input type="text" class="form-control" name="YsBasSeminerNotKriteri" value="@item.YsBasSeminerNotKriteri">
+                                                                @Html.DropDownList("YsBasSeminerNotKriteri", item.SlistSeminerNots, "", new { @class = "form-control" })
                                                             </div>
                                                         </td>
                                                         <td>

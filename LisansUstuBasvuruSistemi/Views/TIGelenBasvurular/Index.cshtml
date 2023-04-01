@@ -287,9 +287,10 @@
                         buttons: {
                             success: {
                                 label: "Kaydet",
-                                className: "btn-success",
+                                className: "btn-success btnSrKayit_" + TIBasvuruAraRaporID,
                                 callback: function (event) {
-                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    $('.btnSrKayit_' + TIBasvuruAraRaporID).addClass('disabled');
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first(); 
                                     PanelRefresh(pnlx, false);
                                     $('#TIAraRaporSrForm').ajaxForm({
                                         success: function (result) {
@@ -307,6 +308,7 @@
 
                                         },
                                         complete: function (cmp) {
+                                            $('.btnSrKayit_' + TIBasvuruAraRaporID).removeClass('disabled');
                                             PanelRefresh(pnlx, true);
                                         },
                                         error: function (err) {
