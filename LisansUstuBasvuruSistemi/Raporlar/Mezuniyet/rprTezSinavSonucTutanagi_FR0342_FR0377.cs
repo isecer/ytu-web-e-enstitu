@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 }
                 else
                 {
-                    cellTezBasligiDegisecek.Text = "";
+                    cellTezBasligiDegisecek.Text = "Hayır (No)";
                     cellYeniTezBaslikTr.Text = "";
                     cellYeniTezBaslikEn.Text = "";
                 }
@@ -69,6 +69,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     var juri1 = juriler[0];
                     var juri2 = juriler[1];
                     var tikler = uyeler.Where(p => p.JuriTipAdi.Contains("TikUyesi")).ToList();
+ 
                     var tik1 = tikler[0];
                     var tik2 = tikler[1];
 

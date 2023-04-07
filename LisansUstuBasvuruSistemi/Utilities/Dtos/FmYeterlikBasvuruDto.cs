@@ -16,6 +16,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? AktifYeterlikSurecId { get; set; }
         public bool IsAktifSurecBasvuruVar { get; set; }
         public int? BasvuruDurumID { get; set; }
+
         public string EnstituAdi { get; set; }
         public string DonemAdi { get; set; }
         public string AdSoyad { get; set; }
@@ -26,6 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string OgrenimTipAdis { get; set; }
         public int? YeterlikSurecID { get; set; }
         public int? OgrenimTipID { get; set; }
+        public int? AnabilimDaliID { get; set; }
 
         public List<FrYeterlikBasvuruDto> Data { get; set; }
     }
@@ -37,6 +39,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EMail { get; set; }
         public string CepTel { get; set; }
         public string ResimAdi { get; set; }
+        public int AnabilimDaliID { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimDaliAdi { get; set; }
         public string ProgramAdi { get; set; }

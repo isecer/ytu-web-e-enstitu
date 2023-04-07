@@ -3479,6 +3479,7 @@
     <Content Include="Views\Yeterlik\YaziliSinavView.cshtml" />
     <Content Include="Views\Yeterlik\SozluSinavView.cshtml" />
     <Content Include="Views\Yeterlik\JuriDegisiklikView.cshtml" />
+    <Content Include="Views\TDOBasvuru\BasvuruDurumView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -270,6 +270,26 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
+        public static List<CmbIntDto> GetCmbFilterYeterlikAnabilimDallari(string enstituKod, int? basvuruSurecId, bool bosSecimVar = false)
+        {
+            var lst = new List<CmbIntDto>();
+            if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var yeterliAnabilimDaliIds = db.YeterlikBasvurus
+                    .Where(p => p.YeterlikSureci.EnstituKod == enstituKod &&
+                                p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID)).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
+
+                var anabilimDallaris = db.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
+                    .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o=>o.AnabilimDaliAdi).ToList();
+
+                foreach (var item in anabilimDallaris)
+                {
+                    lst.Add(new CmbIntDto { Value = item.AnabilimDaliID, Caption = item.AnabilimDaliAdi });
+                }
+            }
+            return lst;
+        }
         public static List<CmbIntDto> GetCmbBasvuruDurumu(bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
@@ -854,7 +874,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.Sablon == null) continue;
                         item.SablonParametreleri = item.Sablon.MailSablonTipleri.Parametreler.Split(',').ToList().Select(s => s.Trim()).ToList();
 
-                        var gonderilenMailEkleri = item.Attachments.Select(s=>new GonderilenMailEkleri{EkAdi = s.Name}).ToList(); 
+                        var gonderilenMailEkleri = item.Attachments.Select(s => new GonderilenMailEkleri { EkAdi = s.Name }).ToList();
                         foreach (var itemSe in item.Sablon.MailSablonlariEkleris)
                         {
 

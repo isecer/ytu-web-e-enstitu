@@ -2498,6 +2498,7 @@
           <Property Name="EYKYaGonderildi" Type="bit" />
           <Property Name="EYKYaGonderildiIslemYapanID" Type="int" />
           <Property Name="EYKYaGonderildiIslemTarihi" Type="datetime" />
+          <Property Name="EYKYaGonderimDurumAciklamasi" Type="nvarchar" MaxLength="512" />
           <Property Name="EYKDaOnaylandi" Type="bit" />
           <Property Name="EYKDaOnaylandiIslemYapanID" Type="int" />
           <Property Name="EYKDaOnaylandiOnayTarihi" Type="datetime" />
@@ -12917,6 +12918,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="EYKYaGonderildi" Type="Boolean" />
           <Property Name="EYKYaGonderildiIslemYapanID" Type="Int32" />
           <Property Name="EYKYaGonderildiIslemTarihi" Type="DateTime" Precision="3" />
+          <Property Name="EYKYaGonderimDurumAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="EYKDaOnaylandi" Type="Boolean" />
           <Property Name="EYKDaOnaylandiIslemYapanID" Type="Int32" />
           <Property Name="EYKDaOnaylandiOnayTarihi" Type="DateTime" Precision="3" />
@@ -19936,6 +19938,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="EYKDaOnaylandiOnayTarihi" ColumnName="EYKDaOnaylandiOnayTarihi" />
                 <ScalarProperty Name="EYKDaOnaylandiIslemYapanID" ColumnName="EYKDaOnaylandiIslemYapanID" />
                 <ScalarProperty Name="EYKDaOnaylandi" ColumnName="EYKDaOnaylandi" />
+                <ScalarProperty Name="EYKYaGonderimDurumAciklamasi" ColumnName="EYKYaGonderimDurumAciklamasi" />
                 <ScalarProperty Name="EYKYaGonderildiIslemTarihi" ColumnName="EYKYaGonderildiIslemTarihi" />
                 <ScalarProperty Name="EYKYaGonderildiIslemYapanID" ColumnName="EYKYaGonderildiIslemYapanID" />
                 <ScalarProperty Name="EYKYaGonderildi" ColumnName="EYKYaGonderildi" />

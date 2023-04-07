@@ -74,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
 
-                    if ((kul.OgrenimTipKod.IsDoktora() ||  kul.OgrenimTipKod== OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                    if ((kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans) && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         bbModel.KullaniciTipYetki = true;
                         var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
@@ -123,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
                     join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
                     from ard in defard.DefaultIfEmpty()
-                    let ardEs = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == ard.TDOBasvuruDanismanID)
+                    let ardEs = s.TDOBasvuruDanismen.SelectMany(sm => sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).FirstOrDefault(p => p.TDOBasvuruDanismanID == ard.TDOBasvuruDanismanID)
                     where s.EnstituKod == enstituKod && s.KullaniciID == model.KullaniciID
                     select new FrTdoBasvuruDto
                     {
@@ -2010,7 +2010,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Danışman onayı yetkiniz bulunmamaktadır.");
             }
-            else if (tdoBasvuruDanis.EYKYaGonderildi.HasValue)
+            else if (tdoBasvuruDanis.EYKYaGonderildi == true)
             {
                 mMessage.Messages.Add("Enstitü tarafından EYK'ya gönderim işlemi yapılan Danışman öneri formu üzerinden herhangi bir işlemi yapılamaz.");
             }
@@ -2092,7 +2092,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.FormKodu = formKodu;
                     if (kModel.DanismanOnayladi.HasValue) sendMail = true;
                 }
+                if (tdoBasvuruDanis.EYKYaGonderildi == false)
+                {
+                    var program = _entities.Programlars.First(p => p.ProgramKod == kModel.TDProgramKod);
+                    sendMail = (
+                        tdoBasvuruDanis.TDProgramKod != program.ProgramKod ||
+                        tdoBasvuruDanis.TDProgramAdi != program.ProgramAdi ||
+                        tdoBasvuruDanis.TDAnabilimDaliID != program.AnabilimDaliID ||
+                        tdoBasvuruDanis.TDAnabilimDaliAdi != program.AnabilimDallari.AnabilimDaliAdi ||
+                        tdoBasvuruDanis.TDTezSayisiDR != kModel.TDTezSayisiDR ||
+                        tdoBasvuruDanis.TDTezSayisiYL != kModel.TDTezSayisiYL ||
+                        tdoBasvuruDanis.TDOgrenciSayisiDR != kModel.TDOgrenciSayisiDR ||
+                        tdoBasvuruDanis.TDOgrenciSayisiYL != kModel.TDOgrenciSayisiYL
+                    );
+                    if (sendMail) tdoBasvuruDanis.EYKYaGonderildi = null;
 
+                }
                 if (kModel.DanismanOnayladi.HasValue)
                 {
                     var program = _entities.Programlars.First(p => p.ProgramKod == kModel.TDProgramKod);
@@ -2100,6 +2115,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.TDProgramAdi = program.ProgramAdi;
                     tdoBasvuruDanis.TDAnabilimDaliID = program.AnabilimDaliID;
                     tdoBasvuruDanis.TDAnabilimDaliAdi = program.AnabilimDallari.AnabilimDaliAdi;
+
+
+
                 }
 
                 tdoBasvuruDanis.DanismanOnayladi = kModel.DanismanOnayladi;
@@ -2182,7 +2200,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
 
-        public ActionResult TdoEykYaGonderimPost(int tdoBasvuruDanismanId, bool? eykYaGonderildi)
+        public ActionResult TdoEykYaGonderimPost(int tdoBasvuruDanismanId, bool? eykYaGonderildi, string eykYaGonderimDurumAciklamasi)
         {
             var mMessage = new MmMessage
             {
@@ -2202,12 +2220,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Enstitü tarafından EYK'da onaylandı işlemi yapılan Danışman öneri formu üzerinden EYK'ya gönderim işlemi yapılamaz.");
             }
+            else if (tdoBasvuruDanis.EYKDaOnaylandi == false && eykYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+            {
+                mMessage.Messages.Add("EYK'ya gönderilmeme sebebi açıklaması giriniz.");
+            }
             if (!mMessage.Messages.Any())
             {
 
                 tdoBasvuruDanis.EYKYaGonderildi = eykYaGonderildi;
                 tdoBasvuruDanis.EYKYaGonderildiIslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.EYKYaGonderildiIslemYapanID = UserIdentity.Current.Id;
+                tdoBasvuruDanis.EYKYaGonderimDurumAciklamasi =
+                    tdoBasvuruDanis.EYKYaGonderildi == false ? eykYaGonderimDurumAciklamasi : "";
                 tdoBasvuruDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
@@ -2581,8 +2605,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var sendMail = eykDaOnaylandi.HasValue && eykDaOnaylandi != tdoBasvuruEsDanis.EYKDaOnaylandi;
 
                 tdoBasvuruEsDanis.EYKDaOnaylandi = eykDaOnaylandi;
-                if (eykDaOnaylandi == true) tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value;
-                tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = DateTime.Now;
+                if (eykDaOnaylandi == true) tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value; 
                 tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                 if (eykDaOnaylandi == false) tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;

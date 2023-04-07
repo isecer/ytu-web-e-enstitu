@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var aktifSurecId = YeterlikBus.GetYeterlikAktifSurecId(enstituKod);
-            return Index(new FmYeterlikBasvuruDto { PageSize = 40, YeterlikSurecID = aktifSurecId }, ekd, false);
+            return Index(new FmYeterlikBasvuruDto { PageSize = 50, YeterlikSurecID = aktifSurecId }, ekd, false);
         }
         [HttpPost]
         public ActionResult Index(FmYeterlikBasvuruDto model, string ekd, bool export)
@@ -56,6 +56,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         OgrenimTipID = yeterlikBasvuru.OgrenimTipID,
                         OgrenimTipAdi = ogrenimTipleri.OgrenimTipAdi,
                         ProgramAdi = programlar.ProgramAdi,
+                        AnabilimDaliID = programlar.AnabilimDaliID,
                         AnabilimDaliAdi = programlar.AnabilimDallari.AnabilimDaliAdi,
                         KayitTarihi = yeterlikBasvuru.KayitTarihi,
                         OkuduguDonemNo = yeterlikBasvuru.OkuduguDonemNo,
@@ -84,6 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var q2 = q;
             if (model.YeterlikSurecID.HasValue) q = q.Where(p => p.YeterlikSurecID == model.YeterlikSurecID);
             if (model.OgrenimTipID.HasValue) q = q.Where(p => p.OgrenimTipID == model.OgrenimTipID);
+            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimDaliAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue)
             {
@@ -112,6 +114,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
 
             ViewBag.YeterlikSurecID = new SelectList(YeterlikBus.GetCmbYeterlikSurecleri(enstituKod, true), "Value", "Caption", model.YeterlikSurecID);
+            ViewBag.AnabilimDaliID = new SelectList(YeterlikBus.GetCmbFilterYeterlikAnabilimDallari(enstituKod, model.YeterlikSurecID, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.BasvuruDurumID = new SelectList(YeterlikBus.GetCmbBasvuruDurumu(true), "Value", "Caption", model.BasvuruDurumID);
             ViewBag.OgrenimTipID = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipIdDoktora(enstituKod, true), "Value", "Caption", model.OgrenimTipID);
             #region export
@@ -136,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      s.TezDanismanCepTel,
                                      s.TezDanismanEmail,
                                      EnstituOnayDurum = s.IsEnstituOnaylandi.HasValue ? (s.IsEnstituOnaylandi == true ? "Onaylandı" : "İptal Edildi") : "İşlem Bekliyor",
-                                     BasariDurumu = s.IsEnstituOnaylandi==true && s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Başarılı" : "Başarısız") : "İşlem Bekliyor",
+                                     BasariDurumu = s.IsEnstituOnaylandi == true && s.IsGenelSonucBasarili.HasValue ? (s.IsGenelSonucBasarili == true ? "Başarılı" : "Başarısız") : "İşlem Bekliyor",
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";

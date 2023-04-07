@@ -70,6 +70,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<bool> EYKYaGonderildi { get; set; }
         public Nullable<int> EYKYaGonderildiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }
+        public string EYKYaGonderimDurumAciklamasi { get; set; }
         public Nullable<bool> EYKDaOnaylandi { get; set; }
         public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKDaOnaylandiOnayTarihi { get; set; }

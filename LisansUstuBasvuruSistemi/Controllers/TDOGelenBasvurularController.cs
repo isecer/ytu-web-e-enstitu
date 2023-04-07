@@ -44,11 +44,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
                     join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
                     join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID into defard
-                    from Ard in defard.DefaultIfEmpty()
-                    let ardEs = _entities.TDOBasvuruEsDanismen.FirstOrDefault(p => p.TDOBasvuruDanismanID == Ard.TDOBasvuruDanismanID)
+                    from ard in defard.DefaultIfEmpty()
+                    let ardEs = s.TDOBasvuruDanismen.SelectMany(sm=>sm.TDOBasvuruEsDanismen).OrderByDescending(oe => oe.TDOBasvuruEsDanismanID).FirstOrDefault(p => p.TDOBasvuruDanismanID == ard.TDOBasvuruDanismanID)
+
                     select new FrTdoBasvuruDto
                     {
-                        TezDanismanID = Ard.TezDanismanID,
+                        TezDanismanID = ard.TezDanismanID,
                         TDOBasvuruID = s.TDOBasvuruID,
                         BasvuruTarihi = s.BasvuruTarihi,
                         EnstituKod = en.EnstituKod,
@@ -70,23 +71,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTDOBasvuruDanismanID = s.AktifTDOBasvuruDanismanID,
-                        TDODanismanTalepTipID = Ard != null ? Ard.TDODanismanTalepTipID : (int?)null,
-                        AktifDonemID = Ard == null ? null : (Ard.DonemBaslangicYil + "" + Ard.DonemID),
-                        AktifDonemAdi = Ard == null ? "Danışman Önerisi Yok" : (Ard.DonemBaslangicYil + " / " + (Ard.DonemBaslangicYil + 1) + " " + (Ard.DonemID == 1 ? "Güz" : "Bahar")),
-                        EYKYaGonderildiIslemTarihi = Ard == null ? null : Ard.EYKYaGonderildiIslemTarihi,
+                        TDODanismanTalepTipID = ard != null ? ard.TDODanismanTalepTipID : (int?)null,
+                        AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
+                        AktifDonemAdi = ard == null ? "Danışman Önerisi Yok" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        EYKYaGonderildiIslemTarihi = ard == null ? null : ard.EYKYaGonderildiIslemTarihi,
                         EYKYaGonderildiIslemTarihiES = ardEs == null ? null : ardEs.EYKYaGonderildiIslemTarihi,
-                        TDOBasvuruDanisman = Ard,
-                        VarolanTezDanismanID = Ard != null ? Ard.VarolanTezDanismanID : null,
-                        VarolanDanismanOnayladi = Ard != null ? Ard.VarolanDanismanOnayladi : null,
-                        DanismanOnayladi = Ard != null ? Ard.DanismanOnayladi : null,
-                        EYKYaGonderildi = Ard != null ? Ard.EYKYaGonderildi : null,
+                        TDOBasvuruDanisman = ard,
+                        VarolanTezDanismanID = ard != null ? ard.VarolanTezDanismanID : null,
+                        VarolanDanismanOnayladi = ard != null ? ard.VarolanDanismanOnayladi : null,
+                        DanismanOnayladi = ard != null ? ard.DanismanOnayladi : null,
+                        EYKYaGonderildi = ard != null ? ard.EYKYaGonderildi : null,
 
-                        EYKDaOnaylandi = Ard != null ? Ard.EYKDaOnaylandi : null,
+                        EYKDaOnaylandi = ard != null ? ard.EYKDaOnaylandi : null,
                         EsDanismanOnerisiVar = ardEs != null,
                         Es_EYKYaGonderildi = ardEs != null ? ardEs.EYKYaGonderildi : null,
                         Es_EYKDaOnaylandi = ardEs != null ? ardEs.EYKDaOnaylandi : null,
-                        RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (Ard.EYKYaGonderildi == true && !Ard.EYKDaOnaylandi.HasValue ? Ard.EYKYaGonderildiIslemTarihi.Value : (Ard != null ? Ard.BasvuruTarihi : DateTime.MinValue))),
-                        Sira = (Ard != null && (Ard.EYKYaGonderildi == true && Ard.EYKDaOnaylandi == null) || (ardEs != null && ardEs.EYKYaGonderildi == null)) ? 0 : 1,
+                        RowDate = (ardEs.EYKYaGonderildi == true && !ardEs.EYKDaOnaylandi.HasValue ? ardEs.EYKYaGonderildiIslemTarihi.Value : (ard.EYKYaGonderildi == true && !ard.EYKDaOnaylandi.HasValue ? ard.EYKYaGonderildiIslemTarihi.Value : (ard != null ? ard.BasvuruTarihi : DateTime.MinValue))),
+                        Sira = (ard != null && (ard.EYKYaGonderildi == true && ard.EYKDaOnaylandi == null) || (ardEs != null && ardEs.EYKYaGonderildi == null)) ? 0 : 1,
                         TDODanismanDetayModels = (from x in s.TDOBasvuruDanismen
                                                   join xd in _entities.TDOBasvuruEsDanismen on x.TDOBasvuruDanismanID equals xd.TDOBasvuruDanismanID into defX
                                                   from xD in defX.DefaultIfEmpty()
@@ -370,8 +371,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult EYKGonderimOnay(string aktifDonemId)
         {
             var qDanismans = (from s in _entities.TDOBasvurus
-                              join Ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals Ard.TDOBasvuruDanismanID
-                              where Ard.DanismanOnayladi == true && !Ard.EYKYaGonderildi.HasValue && (Ard.DonemBaslangicYil + "" + Ard.DonemID) == aktifDonemId
+                              join ard in _entities.TDOBasvuruDanismen on s.AktifTDOBasvuruDanismanID equals ard.TDOBasvuruDanismanID
+                              where ard.DanismanOnayladi == true && !ard.EYKYaGonderildi.HasValue && (ard.DonemBaslangicYil + "" + ard.DonemID) == aktifDonemId
                               select s.TDOBasvuruDanisman
                          ).ToList();
             foreach (var item in qDanismans)

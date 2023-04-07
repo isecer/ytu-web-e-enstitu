@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
                          select new
                          {
                              s.BasvuruTarihi,
-                             urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "YETB_" + s.UniqueID,
+                             urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "YETB_" + s.YeterlikBasvuruID + "_" + s.UniqueID,
                              s.UniqueID,
                              s.OgrenciNo,
                              AdSoyad = ogrenci.Ad + " " + ogrenci.Soyad,
@@ -101,7 +101,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
                 this.chkYaziliBasarili.Checked = q.IsYaziliSinavBasarili == true;
                 this.chkYaziliBasarisiz.Checked = !this.chkYaziliBasarili.Checked;
 
-                if (q.IsYaziliSinavinaKatildi == true && q.IsYaziliSinavBasarili==true)
+                if (q.IsYaziliSinavinaKatildi == true && q.IsYaziliSinavBasarili == true)
                 {
 
                     this.cellSozluSinavTarih.Text = q.SozluSinavTarihi.ToFormatDateAndTime();
@@ -119,22 +119,22 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
                     this.chkSozluSinavOnline.Checked = q.IsSozluSinavOnline == true;
                     this.chkSozluSinavYuzYuze.Checked = !chkSozluSinavOnline.Checked;
                     this.chkSozluBasarili.Checked = q.IsSozluSinavBasarili == true;
-                    this.chkSozluBasarisiz.Checked = !this.chkSozluBasarili.Checked; 
-                } 
+                    this.chkSozluBasarisiz.Checked = !this.chkSozluBasarili.Checked;
+                }
                 this.cellSozluAltBaslikSinavNotuTr.Text =
                     this.cellSozluAltBaslikSinavNotuTr.Text.Replace("@sinavNotu",
                         q.OgrenimTipKriter.SozluGecerNot.Value.ToString("n0"));
                 this.cellSozluAltBaslikSinavNotuEn.Text =
                     this.cellSozluAltBaslikSinavNotuEn.Text.Replace("@sinavNotu",
                         q.OgrenimTipKriter.SozluGecerNot.Value.ToString("n0"));
-             
+
                 if (q.IsSozluSinavinaKatildi == true)
-                { 
+                {
                     this.cellSonucYuzlukNotTr.Text = "100 üzerinden: " + q.GenelBasariNotu;
                     this.cellSonucYuzlukNotEn.Text = "Out of 100: " + q.GenelBasariNotu;
 
                 }
-                
+
 
 
                 this.cellSonucAltBaslikSinavNotuTr.Text = this.cellSonucAltBaslikSinavNotuTr.Text.Replace("@sinavNotu", q.OgrenimTipKriter.OrtalamaGecerNot.Value.ToString("n0"));

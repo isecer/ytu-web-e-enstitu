@@ -109,7 +109,7 @@
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)" onclick="GetTdoDilBaslikDegisiklikFormu(@Model.TDOBasvuruID,0)"><i class="fa fa-edit"></i>Sadece Tez Dil/Başlığı Değişikliği</a>
-                                    </li> 
+                                    </li>
                                 </ul>
                             </div>
                         }
@@ -475,12 +475,31 @@
                                                             { @item.TDUnvanAdi @item.TDAdSoyad}
                                                         </td>
                                                     </tr>
+
                                                     @if (!item.YeniDanismanOnayIslemiAcik)
                                                     {
                                                         <tr>
                                                             <td class="CaptionTd">Anabilim Dalı / Program</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">@item.TDAnabilimDaliAdi / @item.TDProgramAdi</td>
+                                                        </tr>
+                                                    }
+                                                    @if (!isTezDiliTr)
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd">Dil Sınavı Adı / @(item.TDSinavTipID == -1 ? "Üniversite Adı" : "Yılı / Puanı") </td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                @if (item.IsObsData)
+                                                                {
+                                                                    @("OBS'de doğrulandı")
+                                                                }
+                                                                else
+                                                                {
+                                                                    @($"{item.TDSinavAdi} / {(item.TDSinavTipID == -1 ? item.TDUniversiteAdi : item.TDSinavYili.ToStrObj())} / {item.TDSinavPuani}")
+                                                                }
+
+                                                            </td>
                                                         </tr>
                                                     }
                                                     @if (item.YeniDanismanOnayIslemiAcik)
@@ -551,24 +570,7 @@
                                                     }
                                                     else
                                                     {
-                                                        if (!isTezDiliTr)
-                                                        {
-                                                            <tr>
-                                                                <td class="CaptionTd">Dil Sınavı Adı / @(item.TDSinavTipID == -1 ? "Üniversite Adı" : "Yılı / Puanı") </td>
-                                                                <td class="CaptionTd">:</td>
-                                                                <td class="ValueTd">
-                                                                    @if (item.IsObsData)
-                                                                    {
-                                                                        @("OBS'de doğrulandı")
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        @($"{item.TDSinavAdi} / {(item.TDSinavTipID == -1 ? item.TDUniversiteAdi : item.TDSinavYili.ToStrObj())} / {item.TDSinavPuani}")
-                                                                    }
 
-                                                                </td>
-                                                            </tr>
-                                                        }
                                                         if (item.DanismanOnayladi == true)
                                                         {
 
@@ -674,11 +676,28 @@
                                                                 <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
                                                                 <td class="CaptionTd" width="10">:</td>
                                                                 <td class="ValueTd">
-                                                                    <select class="form-control" id="EYKYaGonderildi_@item.TDOBasvuruDanismanID" onchange="EYKyaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)">
-                                                                        <option @(!item.EYKYaGonderildi.HasValue ? "selected" : "")></option>
-                                                                        <option value="true" @(item.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                                        <option value="false" @(item.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
-                                                                    </select>
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <select class="form-control" id="EYKYaGonderildi_@item.TDOBasvuruDanismanID" onchange="EYKYaOnayChange(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)">
+                                                                                    <option @(!item.EYKYaGonderildi.HasValue ? "selected" : "")></option>
+                                                                                    <option value="true" @(item.EYKYaGonderildi == true ? "selected" : "")>EYK'ya Gönderimi Onaylandı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                    <option value="false" @(item.EYKYaGonderildi == false ? "selected" : "")>EYK'ya Gönderimi Onaylanmadı @(item.EYKYaGonderildiIslemTarihi.HasValue ? "(" + item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime() + ")" : "")</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <label class="btn btn-primary btn-sm" onclick="EYKyaGonder(@item.TDOBasvuruDanismanID,@Model.TDOBasvuruID)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="EYKYaGonderimAciklamaRow_@item.TDOBasvuruDanismanID" class="form-group @(item.EYKYaGonderildi == false ? "" : "hide")">
+                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    <textarea class="form-control" style="min-height:100px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasi_@item.TDOBasvuruDanismanID" maxlength="512">@item.EYKYaGonderimDurumAciklamasi</textarea>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -712,6 +731,16 @@
                                                                     }
                                                                 </td>
                                                             </tr>
+                                                            if (item.EYKYaGonderildi == false && !item.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        @item.EYKYaGonderimDurumAciklamasi
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                         }
 
                                                         @if (item.EYKYaGonderildi == true)
@@ -946,6 +975,7 @@
                                                                                                                         <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı.</span>
 
                                                                                                                     }
+
                                                                                                                 </td>
                                                                                                             </tr>
                                                                                                         }
@@ -1130,7 +1160,15 @@
             $('#EYKDaOnaylandiOnayTarihi_' + id).addClass('hide');
         }
     }
-
+    function EYKYaOnayChange(id) {
+        var val = $('#EYKYaGonderildi_' + id).val();
+        if (val == 'false') {
+            $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
+        }
+        else {
+            $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
+        }
+    }
     function DOnay(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
@@ -1218,11 +1256,12 @@
     function EYKyaGonder(id,id2) {
         var _panel = $('#bsvrDet_' + id2);
         PanelRefresh(_panel, false);
-
         var EYKYaGonderildi = $('#EYKYaGonderildi_' + id).val();
+        var EYKYaGonderimDurumAciklamasi = $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + id).val();
         var model = {
             TDOBasvuruDanismanID: id,
             EYKYaGonderildi: EYKYaGonderildi,
+            EYKYaGonderimDurumAciklamasi: EYKYaGonderimDurumAciklamasi
 
         };
         $.ajax({

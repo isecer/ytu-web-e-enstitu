@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!UserIdentity.Current.IsAuthenticated && (!isKomiteOrJuri.HasValue || !isDegerlendirme.HasValue)) return RedirectToActionPermanent("Login", "Account");
 
-            return Index(new FmYeterlikBasvuruDto { PageSize = 40, IsKomiteOrJuri = isKomiteOrJuri, isDegerlendirme = isDegerlendirme }, ekd);
+            return Index(new FmYeterlikBasvuruDto { PageSize = 50, IsKomiteOrJuri = isKomiteOrJuri, isDegerlendirme = isDegerlendirme }, ekd);
         }
         [AllowAnonymous]
         [HttpPost]

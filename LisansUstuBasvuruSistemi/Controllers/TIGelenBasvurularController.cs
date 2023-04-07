@@ -78,7 +78,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             RaporDonemID = ti.DonemBaslangicYil + "" + ti.DonemID,
                             TIBasvuruAraRaporDurumID = ti.TIBasvuruAraRaporDurumID
                         }).ToList(),
-
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
 

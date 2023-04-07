@@ -13,7 +13,7 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
-    public class TezDanismanOneriBus
+    public static class TezDanismanOneriBus
     {
         public static TdoBasvuruDetayDto GetSecilenBasvuruTdoDetay(int tdoBasvuruId, Guid? uniqueId)
         {
@@ -79,6 +79,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                     EYKYaGonderildi = s.EYKYaGonderildi,
                                                     EYKYaGonderildiIslemTarihi = s.EYKYaGonderildiIslemTarihi,
                                                     EYKYaGonderildiIslemYapanID = s.EYKYaGonderildiIslemYapanID,
+                                                    EYKYaGonderimDurumAciklamasi = s.EYKYaGonderimDurumAciklamasi,
 
                                                     EYKDaOnaylandi = s.EYKDaOnaylandi,
                                                     EYKDaOnaylandiIslemYapanID = s.EYKDaOnaylandiIslemYapanID,
@@ -183,11 +184,11 @@ namespace LisansUstuBasvuruSistemi.Business
                     firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki && firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
                     if (firstRow.VarolanDanismanGozuksun)
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.EYKYaGonderildi.HasValue;
+                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
                     }
                     else
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.EYKYaGonderildi.HasValue;
+                        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
 
                     }
                     firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi;
@@ -200,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuru.TDOBasvuruDanisman != null)
                     lastEsBasvuru = basvuru.TDOBasvuruDanisman.TDOBasvuruEsDanismen
                         .OrderByDescending(o => o.TDOBasvuruEsDanismanID).FirstOrDefault();
-                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.EYKDaOnaylandi != true);
+                model.IsYeniDanismanOneriOrDegisiklik = model.TDOBasvuruDanisman == null || model.TDOBasvuruDanismanList.All(a => a.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi != true);
                 if (model.IsYeniDanismanOneriOrDegisiklik)
                 {
                     model.TdoBasvurusuYapabilir = (model.TDOBasvuruDanisman == null || model.TDOBasvuruDanisman.DanismanOnayladi == false || model.TDOBasvuruDanisman.EYKYaGonderildi == false || model.TDOBasvuruDanisman.EYKDaOnaylandi == false);
@@ -376,7 +377,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else
                     {
-                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora()||kul.OgrenimTipKod==OgrenimTipi.TezliYuksekLisans))
+                        if (kul.YtuOgrencisi && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci && (kul.OgrenimTipKod.IsDoktora() || kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans))
                         {
                             var aktifDevamEdenBasvuruVar = db.TDOBasvurus.Any(p => p.KullaniciID == kullaniciId && p.OgrenciNo == kul.OgrenciNo && p.TDOBasvuruID != tdoBasvuruId.Value);//aynı başvuru sürecindeki başvurular baz alınsın
                             if (aktifDevamEdenBasvuruVar)// toplam başvuru kontrol
@@ -664,7 +665,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanAdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanAdSoyad", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniDanismanUnvanAdi", Value = tdoBasvuruDanisman.TDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanAdSoyad"))
@@ -881,7 +882,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanAdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanAdSoyad", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniDanismanUnvanAdi", Value = tdoBasvuruDanisman.TDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanAdSoyad"))
@@ -1106,7 +1107,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@VarolanDanismanAdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanUnvanAdi", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "VarolanDanismanAdSoyad", Value = tdoBasvuruDanisman.VarolanTDAdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanUnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniDanismanUnvanAdi", Value = tdoBasvuruDanisman.TDUnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@YeniDanismanAdSoyad"))
@@ -1574,7 +1575,15 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return mmMessage;
         }
-         
+
+
+
+        public static IHtmlString ToBasvuruDurumView(this FrTdoBasvuruDto model)
+        {
+            var pagerString = model.ToRenderPartialViewHtml("TDOBasvuru", "BasvuruDurumView");
+            return pagerString;
+        }
+
 
     }
 }

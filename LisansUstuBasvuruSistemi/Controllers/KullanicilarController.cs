@@ -24,6 +24,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.Kullanicilar)]
         public ActionResult Index()
         {
+           
             return Index(new FmKullanicilarDto() { PageSize = 15, Expand = false });
         }
         [HttpPost]
