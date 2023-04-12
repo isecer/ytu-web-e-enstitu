@@ -2074,7 +2074,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return mmMessage;
         }
-        public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = null)
+        public static MmMessage SendMailMezuniyetTezSablonKontrol(int mezuniyetBasvurulariTezDosyaId, int sablonTipId, string aciklama = "")
         {
             var mmMessage = new MmMessage();
             try

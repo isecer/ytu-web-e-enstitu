@@ -8,7 +8,7 @@
     var yetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue;
 }
 
-<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="enstituOnayPanel_@Model.UniqueID">
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="komiteContentView_@Model.UniqueID">
     <table style="width: 100%;">
         <tr>
             <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> ABD Komite Üyeleri Yeterlik Jüri Değerlendirmesi <span style="font-size: 8pt;">@(Model.IsAbdKomitesiJuriyiOnayladi.HasValue?"(Tamamlandı)":"")</span></td>
@@ -37,7 +37,7 @@
                                 <th width="35"></th>
                                 <th>Ad Soyad</th>
                                 <th>Komite Jüri Onay Durumu</th>
-                                <th width="45"></th>
+                                <th width="70"></th>
                             </tr>
                             <tbody>
 
@@ -59,9 +59,13 @@
                                         <td>
                                             @itemKom.ToKomiteOnayDurumView()
                                         </td>
-                                        <td>
+                                        <td style="text-align: right;">
                                             @if (onayDuzeltmeYetki && openRow)
                                             {
+                                                if (!itemKom.IsJuriOnaylandi.HasValue)
+                                                {
+                                                    <a href="javascript:void(0)" title="Komtie üyesi değişikliği yap" onclick="GetKomiteDegisiklikView('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad')"><i class="fa fa-group fa-lg"></i></a>
+                                                }
                                                 <a href="javascript:void(0)" title="Komtie üyesi bilgisini düzelt" onclick="HesapKayit(@itemKom.KullaniciID)"><i class="fa fa-edit fa-lg"></i></a>
                                                 <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
                                             }
@@ -172,6 +176,77 @@
             }
         });
     }
+       function GetKomiteDegisiklikView(id, uniqueId, adSoyad) {
+        var pndC =   $('#komiteContentView_' + id);
+           PanelRefresh(pndC, false);
+        $.ajax({
+            url: '@Url.Action("GetKomiteDegisiklik")',
+            data: {  uniqueId },
+            async: false,
+            success: function (result) {
+                debugger
+                if (result.IsSuccess) {
+                    bootbox.dialog({
+                        message: "<div id='komiteDegisiklikContent'>" + result.view + "</div>",
+                        title: "<span style='font-size:9pt;color:#02393e;font-weight:bold;'>Komite Değişiklik İşlemi: " + adSoyad+"</span>",
+                        buttons: {
+                            success: {
+                                label: "Kaydet",
+                                className: "btn-success",
+                                callback: function () {
+                                    var pnlx = $('.modal-content');
+                                    PanelRefresh(pnlx, false);
+                                    var YeniKomiteID = $('#YeniKomiteID_' + uniqueId).val();
+
+                                    $.ajax({
+                                        url: '@Url.Action("KomiteDegisiklikPost", "Yeterlik")',
+                                        data: { uniqueId, YeniKomiteID },
+                                        success: function (result) {
+
+                                            if (result.IsSuccess) {
+                                                GetDetail(id);
+                                                $('.modal-header').find('button').first().click();
+                                            }
+                                            swal.fire({
+                                                html: result.messageView,
+                                                icon: (result.IsSuccess ? "success" : "error"),
+                                                type: (result.IsSuccess ? "success" : "error"),
+                                                confirmButtonText: 'tamam',
+                                                padding: '2em'
+                                            });
+                                        },
+                                        complete: function (result) {
+                                            PanelRefresh(pndC, false);
+                                        }
+                                    });
+
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    swal.fire({
+                        html: result.message,
+                        icon: "warning",
+                        type: "warning",
+                        confirmButtonText: 'tamam',
+                        padding: '2em'
+                    });
+                }
+            },
+            complete: function (result) {
+                PanelRefresh(pndC, true);
+            }
+        });
+    }
     function KomiteUyeleriGuncelle(id, adSoyad) {
         Swal.fire({
             html: adSoyad + " isimli öğrenci başvurusuna ait Komite üyelerini güncellemek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Anabilim Dalına eşleştirilmiş güncel komite bilgileri çekilecek.</span> ",
@@ -191,7 +266,7 @@
                     $.ajax({
                         url: '@Url.Action("KomiteBilgileriGuncelle", "Yeterlik")',
                         data: { id },
-                        success: function (result) { 
+                        success: function (result) {
                             if (result.IsSuccess) {
                                 GetDetail(id);
                             }

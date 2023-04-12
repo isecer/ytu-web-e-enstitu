@@ -375,19 +375,46 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
         public ActionResult DurumKayit(int id, int? MezuniyetYayinKontrolDurumID, string MezuniyetYayinKontrolDurumAciklamasi)
         {
-            var mmMessage = new MmMessage();
+            var mmMessage = new MmMessage { Title = "Mezuniyet başvurusu durum değişiklik işlemi" };
+            var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
             if (MezuniyetYayinKontrolDurumID.HasValue == false)
             {
                 mmMessage.Messages.Add("Başvuru durumu seçiniz");
             }
-            if (MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi && MezuniyetYayinKontrolDurumAciklamasi.IsNullOrWhiteSpace())
+            else if (MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi && MezuniyetYayinKontrolDurumAciklamasi.IsNullOrWhiteSpace())
             {
                 mmMessage.Messages.Add("Başvuru durumu iptal seçeneği seçilirse İptal açıklaması girilmesi zorunludur.");
             }
+            else if (MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi)
+            {
+
+                if (mBasvur.IsDanismanOnay != true)
+                {
+                    mmMessage.Messages.Add("Başvurunun kabul edilebilmesi için  öncelikle danışman onayı yapılması gerekmektedir.");
+                }
+                else if (mBasvur.MezuniyetBasvurulariYayins.Any(a => !a.Onaylandi.HasValue))
+                {
+                    mmMessage.Messages.Add("Başvurunun kabul edilebilmesi için  öncelikle yayın onaylarının yapılması gerekmektedir."); 
+                }
+
+            }
             if (mmMessage.Messages.Count == 0)
             {
-                var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
                 bool mgonder = (MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.IptalEdildi || MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi) && MezuniyetYayinKontrolDurumID != mBasvur.MezuniyetYayinKontrolDurumID;
+
+
+                if (MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Taslak)
+                {
+                    mBasvur.IsDanismanOnay = null;
+                    mBasvur.DanismanOnayTarihi = null;
+                    foreach (var itemYayin in mBasvur.MezuniyetBasvurulariYayins)
+                    {
+                        itemYayin.Onaylandi = false;
+                        itemYayin.IslemTarihi = DateTime.Now;
+                        itemYayin.IslemYapanIP = UserIdentity.Ip;
+                    }
+
+                }
 
                 mBasvur.MezuniyetYayinKontrolDurumID = MezuniyetYayinKontrolDurumID.Value;
                 mBasvur.MezuniyetYayinKontrolDurumAciklamasi = MezuniyetYayinKontrolDurumAciklamasi;
@@ -395,8 +422,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mBasvur.IslemYapanID = UserIdentity.Current.Id;
                 mBasvur.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mBasvur.ToJson());
+
                 mmMessage.IsSuccess = true;
+                mmMessage.Messages.Add("Başvuru durum değişikliği gerçekleştirildi.");
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mBasvur.ToJson());
+                
                 #region sendMail
                 if (mgonder)
                 {
@@ -498,11 +528,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                mmMessage.Title = "Mezuniyet başvurusu durum kayıt işlemi";
                 mmMessage.IsSuccess = false;
             }
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            return Json(new { Messages = mmMessage }, "application/json", JsonRequestBehavior.AllowGet);
+
+            var message = mmMessage.Messages.Any() ? mmMessage.Messages[0] : "";
+            return new
+            {
+                success = mmMessage.IsSuccess,
+                title = mmMessage.Title,
+                message
+            }.ToJsonResult();
 
         }
         public ActionResult DanismanOnayKayit(int id, bool? IsDanismanOnay, string BasvuruDanismanOnayAciklama)

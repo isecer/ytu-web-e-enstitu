@@ -281,7 +281,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 p.YeterlikSurecID == (basvuruSurecId ?? p.YeterlikSurecID)).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
 
                 var anabilimDallaris = db.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
-                    .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o=>o.AnabilimDaliAdi).ToList();
+                    .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o => o.AnabilimDaliAdi).ToList();
 
                 foreach (var item in anabilimDallaris)
                 {
@@ -300,8 +300,9 @@ namespace LisansUstuBasvuruSistemi.Business
             lst.Add(new CmbIntDto { Value = 3, Caption = "Jüri Oluşturulmayanlar" });
             lst.Add(new CmbIntDto { Value = 4, Caption = "ABD Komite Onayı Bekleyenler" });
             lst.Add(new CmbIntDto { Value = 5, Caption = "ABD Komite Onayı Tamamlananlar" });
-            lst.Add(new CmbIntDto { Value = 6, Caption = "Başarılı Olanlar" });
-            lst.Add(new CmbIntDto { Value = 7, Caption = "Başarısız Olanlar" });
+            lst.Add(new CmbIntDto { Value = 6, Caption = "Sınav Sürecinde Olanlar" });
+            lst.Add(new CmbIntDto { Value = 7, Caption = "Başarılı Olanlar" });
+            lst.Add(new CmbIntDto { Value = 8, Caption = "Başarısız Olanlar" });
             return lst;
         }
         public static List<CmbStringDto> GetCmbJuriYedekList(Guid juriUniqueId, bool bosSecimVar = false)
@@ -316,6 +317,27 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     Value = s.UniqueID.ToString(),
                     Caption = s.UnvanAdi + " " + s.AdSoyad
+                }).ToList();
+                lst.AddRange(cmbData);
+            }
+            return lst;
+        }
+        public static List<CmbStringDto> GetCmbKomiteDegisiklikList(Guid juriUniqueId, bool bosSecimVar = false)
+        {
+            var lst = new List<CmbStringDto>();
+            if (bosSecimVar) lst.Add(new CmbStringDto { Value = null, Caption = "" });
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var komite = db.YeterlikBasvuruKomitelers.First(f => f.UniqueID == juriUniqueId);
+                var komiteler = komite.YeterlikBasvuru.YeterlikBasvuruKomitelers;
+                var anabilimDali = komite.YeterlikBasvuru.Programlar.AnabilimDallari;
+                var haricKomiteKullaniciIds = komiteler.Select(s => s.KullaniciID).ToList();
+                var anabilimDaliYeniKomiteler = anabilimDali.AnabilimDaliYeterlikKomiteUyeleris.Where(p => !haricKomiteKullaniciIds.Contains(p.KullaniciID)).ToList();
+
+                var cmbData = anabilimDaliYeniKomiteler.Select(s => new CmbStringDto
+                {
+                    Value = s.KullaniciID.ToString(),
+                    Caption = s.Kullanicilar.Unvanlar.UnvanAdi + " " + s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad
                 }).ToList();
                 lst.AddRange(cmbData);
             }

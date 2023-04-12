@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
@@ -77,7 +77,7 @@
                                                                                         <span class="input-group-addon" id="DosyaSec_@item.SRTalepID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@item.SRTalepID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
                                                                                     </td>
                                                                                     <td width="120" style="padding:1px;">
-                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@item.SRTalepID" onclick="BasvuruBelgeKaydet('@frmId','@item.SRTalepID',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
+                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@item.SRTalepID" onclick="BasvuruBelgeKaydet('@frmId',@Model.MezuniyetBasvurulariID);" style="background-color:@colorKb;cursor:pointer"><span class="fa fa-save fa-lg"></span> @(isBelgeVar ? "Değiştir" : "Kaydet")</span>
                                                                                     </td>
 
                                                                                 </tr>

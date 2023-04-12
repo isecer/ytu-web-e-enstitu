@@ -15,9 +15,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ResimAdi { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenimTipAdi { get; set; }
+        public int AnabilimDaliID { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
-        public string DanismanAdi { get; set; } 
+        public string DanismanAdi { get; set; }
+        public int AbdYeterlikKomiteUyeCount { get; set; }
         public YeterlikSurecOgrenimTipleri YeterlikSurecOgrenimTipleri { get; set; } 
         public List<DmYeterlikKomite> DmYeterlikKomites { get; set; } 
     }
@@ -56,5 +58,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? EMailOrJuriDegisiklik{ get; set; }
         public Guid? YeniJuriUniqueID { get; set; }
         public SelectList SelectListYedekJuriler;
+    }
+    public class KmYeterlikKomiteDegisiklik : YeterlikBasvuruKomiteler
+    {
+        public int AnabilimDaliID { get; set; }
+        public string UnvanAdi { get; set; }
+        public string AdSoyad { get; set; }
+        public int? YeniKomiteID { get; set; }
+        public bool isDegiseBilecekKomiteVar { get; set; }
+        public SelectList SelectListYeniKomiteler;
     }
 }

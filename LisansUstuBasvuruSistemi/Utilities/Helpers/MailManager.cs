@@ -207,8 +207,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 Title = sablonAdi,
                 HtmlContent = sablonHtml
             };
-            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            foreach (var itemRp in rpModel)
             {
+                itemRp.Value = itemRp.Value ?? "";
                 model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
                 model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
             }

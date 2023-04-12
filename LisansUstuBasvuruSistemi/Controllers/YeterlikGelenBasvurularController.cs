@@ -95,8 +95,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.BasvuruDurumID == 3) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu == false);
                 else if (model.BasvuruDurumID == 4) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi != true);
                 else if (model.BasvuruDurumID == 5) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi == true);
-                else if (model.BasvuruDurumID == 6) q = q.Where(p => p.IsGenelSonucBasarili == true);
-                else if (model.BasvuruDurumID == 7) q = q.Where(p => p.IsGenelSonucBasarili == false);
+                else if (model.BasvuruDurumID == 6) q = q.Where(p => (p.YaziliSinavTarihi.HasValue || p.SozluSinavTarihi.HasValue) && p.IsAbdKomitesiJuriyiOnayladi == true && !p.IsGenelSonucBasarili.HasValue);
+                else if (model.BasvuruDurumID == 7) q = q.Where(p => p.IsGenelSonucBasarili == true);
+                else if (model.BasvuruDurumID == 8) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
             var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
             var yeterlikAbdJuriOnayDuzeltme = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();

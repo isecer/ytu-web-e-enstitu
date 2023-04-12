@@ -3480,6 +3480,7 @@
     <Content Include="Views\Yeterlik\SozluSinavView.cshtml" />
     <Content Include="Views\Yeterlik\JuriDegisiklikView.cshtml" />
     <Content Include="Views\TDOBasvuru\BasvuruDurumView.cshtml" />
+    <Content Include="Views\Yeterlik\KomiteDegisiklikView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -264,7 +264,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                 OgrenciNo = s.OgrenciNo,
                 ProgramAdi = s.Programlar.ProgramAdi,
+                AnabilimDaliID = s.Programlar.AnabilimDaliID,
                 AnabilimdaliAdi = s.Programlar.AnabilimDallari.AnabilimDaliAdi,
+                AbdYeterlikKomiteUyeCount = s.Programlar.AnabilimDallari.AnabilimDaliYeterlikKomiteUyeleris.Count,
                 OgrenimTipAdi = s.OgrenimTipleri.OgrenimTipAdi,
                 OkuduguDonemNo = s.OkuduguDonemNo,
                 TezDanismanID = s.TezDanismanID,
@@ -400,7 +402,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Yeterlik jüri üyesi oluşturabilmeniz için " +
                                       yeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi +
                                       " anabilim danı için enstitü tarafından 5 kişilik komite üyesinin belirlenmesi gerekmektedir.");
-                return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult(); 
+                return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult();
             }
 
             var juriData = (from unq in kModel.UniqueIDs.Select((s, inx) => new { s, inx })
@@ -466,7 +468,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AnabilimDaliAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "AnabilimDali" });
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.AdSoyad.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "AdSoyad" });
                 mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.UnvanAdi.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "UnvanAdi" });
-                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.EMail.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "EMail" });
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = !item.EMail.ToIsValidEmail() ? Msgtype.Success : Msgtype.Error, PropertyName = item.JuriTipAdi + "EMail" });
 
             }
             if (mMessage.Messages.Count > 0)
@@ -497,7 +499,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }).ToList();
                 if (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any())
                 {
-                    _entities.YeterlikBasvuruJuriUyeleris.AddRange(juriEntitys); 
+                    _entities.YeterlikBasvuruJuriUyeleris.AddRange(juriEntitys);
                 }
                 else
                 {
@@ -517,10 +519,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else _entities.YeterlikBasvuruJuriUyeleris.Add(juriEntity);
                     }
                 }
-                _entities.SaveChanges();  
+                _entities.SaveChanges();
                 if (!yeterlikBasvuru.YeterlikBasvuruKomitelers.Any() || !yeterlikBasvuru.YeterlikBasvuruKomitelers.All(a =>
                         komiteUyeleri.Any(ak => ak.KullaniciID == a.KullaniciID)))
-                { 
+                {
                     _entities.YeterlikBasvuruKomitelers.RemoveRange(yeterlikBasvuru.YeterlikBasvuruKomitelers);
                     _entities.YeterlikBasvuruKomitelers.AddRange(komiteUyeleri);
                     _entities.SaveChanges();
@@ -533,13 +535,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         YeterlikBus.SendMailKomiteDegerlendirmeLink(yeterlikBasvuru.UniqueID, komite.UniqueID);
                     }
-                } 
+                }
                 LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any() ? IslemTipi.Insert : IslemTipi.Update), juriEntitys.ToJson());
                 mMessage.IsSuccess = true;
                 mMessage.MessageType = Msgtype.Success;
             }
             return new { mMessage, mMessage.IsSuccess, kModel.SelectedTabId }.ToJsonResult();
-        } 
+        }
         public ActionResult KomiteBilgileriGuncelle(Guid id)
         {
             var mMessage = new MmMessage
@@ -793,14 +795,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var kriterler = yeterlikBasvuru.YeterlikSureci.YeterlikSurecOgrenimTipleris.First(p => p.OgrenimTipID == yeterlikBasvuru.OgrenimTipID);
                         yeterlikBasvuru.IsYaziliSinavBasarili = kriterler.YaziliGecerNot <= yeterlikBasvuru.YaziliSinaviNotu;
-                      
+
                     }
                     else if (yeterlikBasvuru.IsYaziliSinavinaKatildi == false)
                     {
-                        yeterlikBasvuru.IsYaziliSinavBasarili = false; 
+                        yeterlikBasvuru.IsYaziliSinavBasarili = false;
                     }
 
-                    
+
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");
@@ -945,7 +947,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (juriDegerlendirmeleri.All(a => a.IsSonucOnaylandi.HasValue))
                 {
-                     
+
 
                     if (basvuru.IsYaziliSinavBasarili == true && basvuru.IsSozluSinavinaKatildi == true)
                     {
@@ -975,7 +977,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             basvuru.IsGenelSonucBasarili = basvuru.IsSozluSinavBasarili == true;
                         }
-                        else if (basvuru.IsYaziliSinavinaKatildi == false || basvuru.IsYaziliSinavBasarili==false)
+                        else if (basvuru.IsYaziliSinavinaKatildi == false || basvuru.IsYaziliSinavBasarili == false)
                         {
                             basvuru.IsGenelSonucBasarili = false;
                         }
@@ -1031,7 +1033,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var view = ViewRenderHelper.RenderPartialView("Yeterlik", "JuriDegisiklikView", model);
             return new { IsSuccess = true, view }.ToJsonResult();
         }
-
         public ActionResult JuriDegisiklikPost(KmYeterlikJuriDegisiklik kModel)
         {
             var mMessage = new MmMessage()
@@ -1094,7 +1095,86 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         juri.IsSecilenJuri = false;
                     }
                     _entities.SaveChanges();
+                    mMessage.IsSuccess = true;
                     LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", IslemTipi.Update, juri.ToJson());
+
+                }
+            }
+
+
+
+
+
+            mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
+            var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
+            return new { mMessage.IsSuccess, messageView }.ToJsonResult();
+        }
+        public ActionResult GetKomiteDegisiklik(Guid uniqueId)
+        {
+            var komite = _entities.YeterlikBasvuruKomitelers.First(p => p.UniqueID == uniqueId);
+            if (komite.IsJuriOnaylandi.HasValue)
+            {
+                return new { IsSuccess = false, message = "Komite üyesi değerlendirme işlemini tamamladığından bu işlemi yapamazsınız." }.ToJsonResult();
+            }
+
+            var komiteData = YeterlikBus.GetCmbKomiteDegisiklikList(komite.UniqueID, true);
+            var model = new KmYeterlikKomiteDegisiklik
+            {
+                UniqueID = uniqueId,
+                AnabilimDaliID = komite.YeterlikBasvuru.Programlar.AnabilimDaliID,
+                AdSoyad = komite.Kullanicilar.Ad + " " + komite.Kullanicilar.Soyad,
+                UnvanAdi = komite.Kullanicilar.Unvanlar.UnvanAdi,
+                isDegiseBilecekKomiteVar = komiteData.Any(a => !a.Value.IsNullOrWhiteSpace()),
+                SelectListYeniKomiteler = new SelectList(komiteData, "Value", "Caption", null)
+            };
+
+            var view = ViewRenderHelper.RenderPartialView("Yeterlik", "KomiteDegisiklikView", model);
+            return new { IsSuccess = true, view }.ToJsonResult();
+        }
+        public ActionResult KomiteDegisiklikPost(KmYeterlikKomiteDegisiklik kModel)
+        {
+            var mMessage = new MmMessage()
+            {
+                Title = "Komite Değişiklik İşlemi"
+            };
+            var duzeltmeyetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRole();
+
+            var varolankomite = _entities.YeterlikBasvuruKomitelers.First(p => p.UniqueID == kModel.UniqueID);
+            if (!duzeltmeyetki)
+            {
+                mMessage.Messages.Add("Komite üye değişikliği işlemi için yetkili değilsiniz.");
+            }
+            else if (varolankomite.IsJuriOnaylandi.HasValue)
+            {
+                mMessage.Messages.Add("Komite üyesi değerlendirme işlemini tamamladığından bu işlemi yapamazsınız.");
+            }
+
+            if (!mMessage.Messages.Any())
+            {
+
+
+                if (!kModel.YeniKomiteID.HasValue)
+                {
+                    mMessage.Messages.Add("Yeni Komite üyesi seçiniz.");
+                }
+                if (!mMessage.Messages.Any())
+                {
+                    var abdKomite = varolankomite.YeterlikBasvuru.Programlar.AnabilimDallari.AnabilimDaliYeterlikKomiteUyeleris.First(p => p.KullaniciID == kModel.YeniKomiteID);
+                    var yeniKomite = new YeterlikBasvuruKomiteler
+                    {
+                        UniqueID = Guid.NewGuid(),
+                        YeterlikBasvuruID = varolankomite.YeterlikBasvuruID,
+                        KullaniciID = abdKomite.KullaniciID,
+                        IslemTarihi = DateTime.Now,
+                        IslemYapanID = UserIdentity.Current.Id,
+                        IslemYapanIP = UserIdentity.Ip
+                    };
+                    _entities.YeterlikBasvuruKomitelers.Remove(varolankomite);
+                    _entities.YeterlikBasvuruKomitelers.Add(yeniKomite);
+                    _entities.SaveChanges();
+                    mMessage.IsSuccess = true;
+                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Delete, varolankomite.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Insert, yeniKomite.ToJson());
 
                 }
             }

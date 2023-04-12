@@ -7,8 +7,8 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model DmYeterlikDetayDto
 @{
-    Layout = null;
-    var basvuruOnayYetki = RoleNames.YeterlikBasvuruOnayYetkisi.InRoleCurrent();
+    Layout = null; 
+    var abdKayitYetki = RoleNames.AnabilimDallari.InRoleCurrent();
 }
 <style>
 
@@ -62,6 +62,17 @@
                             <td class="CaptionTd">:</td>
                             <td class="ValueTd">@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
                         </tr>
+                        @if (abdKayitYetki)
+                        {
+                            <tr>
+                                <td class="CaptionTd">ABD Komite Durum</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">
+                                    <label class="label label-@(Model.AbdYeterlikKomiteUyeCount>0 ? "success" : "default") label-form" onclick="GetYeterlikKomiteUyeleri(@Model.AnabilimDaliID);" style="cursor: pointer; margin: 0px; padding: 2px 5px;" id="yeterlikUyeRowContent_@Model.AnabilimDaliID"><i class="fa fa-group fa-lg"></i> @Model.AbdYeterlikKomiteUyeCount Üye</label>
+                                </td>
+                            </tr>
+
+                        }
                         <tr>
                             <td class="CaptionTd">Kayıt Dönem</td>
                             <td class="CaptionTd">:</td>
@@ -87,6 +98,8 @@
 
                             </td>
                         </tr>
+                     
+
                     </table>
                 </td>
                 <td width="100" style="text-align: center;">
@@ -105,80 +118,80 @@
     @if (Model.IsEnstituOnaylandi == true)
     {
 
-            if (Model.IsKomiteOrJuri == true)
-            {
-                @Model.ToJuriUyeleriListView()
-                var itemKom = Model.DmYeterlikKomites.First(p => p.UniqueID == Model.IsDegerlendirme);
-                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
-                    <table style="width:100%;">
-                        <tbody>
-                            <tr>
-                                <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Yeterlik ABD Komite Üyesi Önerilen Jüri Değerlendirmesi</td>
-                            </tr>
-                            <tr>
-                                <td style="padding-left:10px;text-align:left;">
-                                    <table style="width:100%;">
-                                        <tr>
-                                            <td class="CaptionTd" width="140">Adı Soyadı</td>
-                                            <td class="CaptionTd" width="10">:</td>
-                                            <td class="ValueTd">@itemKom.UnvanAdi @itemKom.AdSoyad</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="CaptionTd">Onay Durumu</td>
-                                            <td class="CaptionTd">:</td>
-                                            <td class="ValueTd">
-                                                @if (!itemKom.IsJuriOnaylandi.HasValue)
-                                                {
-                                                    <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
-                                                        <option></option>
-                                                        <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Önerilen Yeterlik Jüri Üyelerini Onaylıyorum</option> 
-                                                    </select>
-                                                }
-                                                else
-                                                {
-                                                    @itemKom.ToKomiteOnayDurumView()
-                                                }
+        if (Model.IsKomiteOrJuri == true)
+        {
+            @Model.ToJuriUyeleriListView()
+            var itemKom = Model.DmYeterlikKomites.First(p => p.UniqueID == Model.IsDegerlendirme);
+            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                <table style="width:100%;">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Yeterlik ABD Komite Üyesi Önerilen Jüri Değerlendirmesi</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left:10px;text-align:left;">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td class="CaptionTd" width="140">Adı Soyadı</td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd">@itemKom.UnvanAdi @itemKom.AdSoyad</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="CaptionTd">Onay Durumu</td>
+                                        <td class="CaptionTd">:</td>
+                                        <td class="ValueTd">
+                                            @if (!itemKom.IsJuriOnaylandi.HasValue)
+                                            {
+                                                <select id="KomiteIsOnaylandi_@itemKom.UniqueID">
+                                                    <option></option>
+                                                    <option value="true" @itemKom.IsJuriOnaylandi.ToSelected()>Önerilen Yeterlik Jüri Üyelerini Onaylıyorum</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                @itemKom.ToKomiteOnayDurumView()
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    @if (!itemKom.IsJuriOnaylandi.HasValue)
+                                    {
+                                        <tr class="RwKBtn_@itemKom.UniqueID">
+                                            <td></td>
+                                            <td>:</td>
+                                            <td style="padding-top: 5px; font-size: 11pt;">
+                                                <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
                                             </td>
                                         </tr>
-                                        
-                                        @if (!itemKom.IsJuriOnaylandi.HasValue)
-                                        {
-                                            <tr class="RwKBtn_@itemKom.UniqueID">
-                                                <td></td>
-                                                <td>:</td>
-                                                <td style="padding-top: 5px; font-size: 11pt;">
-                                                    <span class="label label-primary" style="cursor: pointer;" onclick="KomiteJuriOnayKayit('@Model.UniqueID','@itemKom.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Onaylama İşlemini Kaydet</span>
-                                                </td>
-                                            </tr>
 
-                                        }
-                                    </table>
-                                </td>
-                            </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
 
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else if (Model.IsKomiteOrJuri == false)
+                    </tbody>
+                </table>
+            </div>
+        }
+        else if (Model.IsKomiteOrJuri == false)
+        {
+
+            @Model.ToSinavView()
+
+        }
+        else
+        {
+            @Model.ToJuriUyeleriListView()
+            if (Model.DmYeterlikKomites.Any())
             {
-             
+                @Model.ToKomiteDegerlendirmeListView()
+            }
+
+            if (Model.IsAbdKomitesiJuriyiOnayladi == true)
+            {
                 @Model.ToSinavView()
-              
             }
-            else
-            {
-                @Model.ToJuriUyeleriListView()
-                if (Model.DmYeterlikKomites.Any())
-                { 
-                    @Model.ToKomiteDegerlendirmeListView()
-                }
-
-                if (Model.IsAbdKomitesiJuriyiOnayladi==true)
-                {
-                    @Model.ToSinavView()
-                }
-            } 
+        }
     }
 </div>
 <script>
@@ -256,11 +269,11 @@
                                 toastr["success"]("Yeterlik jüri oluşturma işlemi tamamlandı.", "Yeterlik Jüri Oluşturma İşlemi");
                                 GetDetail(id);
                                 $('.modal-header').find('button').first().click();
-                                 
+
                             }
-                            else { 
+                            else {
                                 if (resultJ.mMessage.Messages.length > 0) getMsg(resultJ.mMessage);
-                                $("[href='#tab-" + resultJ.SelectedTabId + "']").first().click(); 
+                                $("[href='#tab-" + resultJ.SelectedTabId + "']").first().click();
                             }
                             Swal.close();
                         },
@@ -273,7 +286,7 @@
             }
         });
     }
-    function GetYeterlikJuriUyeleri(id, adSoyad) { 
+    function GetYeterlikJuriUyeleri(id, adSoyad) {
         $.ajax({
             url: '@Url.Action("GetYeterlikJuriFormu")',
             data: { id: id },
@@ -341,4 +354,37 @@
     });
 
 </script>
+@if (abdKayitYetki)
+{
+<script>
+       function GetYeterlikKomiteUyeleriView(id) {
+        var view = "";
+        $.ajax({
+            url: '@Url.Action("YeterlikKomiteUyeleri","AnabilimDallari")',
+            data: { id: id },
+            async: false,
+            success: function (result) {
+                view = result;
+            }
+        });
+        return view;
+    }
+    function GetYeterlikKomiteUyeleri(id) {
+        var view = GetYeterlikKomiteUyeleriView(id);
+        bootbox.dialog({
+            message: "<div id='komiteUyeContent'>" +  view + "</div>",
+            title: "Anabilimdalı Yeterlik Komite Üyeleri",
+            buttons: {
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+
+    }
+</script>
+}
 

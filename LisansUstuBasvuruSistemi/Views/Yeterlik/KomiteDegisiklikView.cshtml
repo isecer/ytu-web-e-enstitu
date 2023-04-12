@@ -1,0 +1,44 @@
+﻿
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.KmYeterlikKomiteDegisiklik
+@{
+    Layout = null; 
+}
+
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="juriDegisiklikPanel_@Model.UniqueID">
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="CaptionTd" width="150">Varolan Komite</td>
+                        <td class="CaptionTd" width="10">:</td>
+                        <td class="ValueTd">@Model.UnvanAdi @Model.AdSoyad</td>
+                    </tr> 
+                    <tr id="YeniJuriRw_@Model.UniqueID">
+                        <td class="CaptionTd">Yeni Komite</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            @if (Model.isDegiseBilecekKomiteVar)
+                            {
+                                @Html.DropDownList("YeniKomiteID", Model.SelectListYeniKomiteler, new { id = "YeniKomiteID_" + Model.UniqueID, @class = "form-control" })
+                            }
+                            else
+                            {
+                                <span>Anabilim Dalında herhangi bir komite değişikliğine rastlanmadı. Değişiklik işleminin yapılabilmesi için öncelikle Anabilim Dalında komite üyelerinin düzeltilmesi gerekmektedir.</span>
+                                <script>
+                                    $('.modal-footer').find('.btn-success').remove();
+                                </script>
+                            }
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div> 
+ 
+

@@ -471,37 +471,78 @@
         }
     }
     function bDurumKayit(mID) {
-        var _panel = $('#bsvrDet_' + mID);
-       var durumID = $('#MezuniyetYayinKontrolDurumID_' + mID).val();
+        var message = "";
+        var successSave = true;
+        var $durumInput =$('#MezuniyetYayinKontrolDurumID_' + mID).first();
+        var durumID = $durumInput.val(); 
+        var selectedBasvuruDurumAdi = $durumInput.children("option").filter(":selected").text();
         var durumAck = $('#MezuniyetYayinKontrolDurumAciklamasi_' + mID).val();
         if (durumID == "" || durumID == null) {
-            alert("kayıt işlemini yapabilmek için başvuru durumunu seçiniz");
-            return;
+            message = "kayıt işlemini yapabilmek için başvuru durumunu seçiniz";
+            successSave = false;
         }
-        if (durumID == "@MezuniyetYayinKontrolDurumu.IptalEdildi" && durumAck.trim() == "") {
-
-            alert("kayıt işlemini yapabilmek için iptal açıklaması giriniz");
-            return;
+        else if (durumID == "@MezuniyetYayinKontrolDurumu.IptalEdildi" && durumAck.trim() == "") {
+            successSave = false;
+            message ="kayıt işlemini yapabilmek için iptal açıklaması giriniz";
         }
-        PanelRefresh(_panel, false);
-        $.ajax({
-            url: '@Url.Action("DurumKayit", "MezuniyetGelenBasvurular")',
-            data: { id: mID, MezuniyetYayinKontrolDurumID: durumID, MezuniyetYayinKontrolDurumAciklamasi: durumAck },
-            success: function (result) {
-                if (result.Messages.IsSuccess == false) {
-                    getMsg(result.Messages);
-                }
-                else {
-                    getDetailx(mID);
-                }
-
-                PanelRefresh(_panel, true);
-            },
-            error: function (err) {
-                PanelRefresh(_panel, true);
-                alert(err.responseText);
+        else if (durumID == "@MezuniyetYayinKontrolDurumu.Taslak") {
+            message = "Başvuru taslağa çekilecek fakat varsa eğer danışman onayı, yayın onayı işlemler geri alınacak.";
+        } 
+        else {
+            message = "Başvuru durumunu " + selectedBasvuruDurumAdi + " olarak değiştirmek istiyor musunuz?";
             }
-        });
+        if (!successSave) {
+            swal.fire({
+                text: message,
+                icon: "error",
+                type: "error",
+                confirmButtonText: 'tamam',
+                padding: '2em'
+            });
+            return;
+        }  
+        Swal.fire({ 
+            text: message,
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            confirmButtonColor: "gren",
+            cancelButtonText: 'Hayır',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Durum Değiştiriliyor...");
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: '@Url.Action("DurumKayit", "MezuniyetGelenBasvurular")',
+                        type: 'POST',
+                        cache: false,
+                        data: { id: mID, MezuniyetYayinKontrolDurumID: durumID, MezuniyetYayinKontrolDurumAciklamasi: durumAck },
+                        success: function (result) {
+                            $('.swal2-cancel').first().text("Evet"); 
+                            if (result.success) { 
+                                getDetailx(mID);  
+                            }
+                            swal.close();
+                            swal.fire({
+                                text: result.message,
+                                icon: (result.success ? "success" : "error"),
+                                type: (result.success ? "success" : "error"),
+                                confirmButtonText: 'tamam',
+                                padding: '2em'
+                            })
+                        },
+                        complete: function (err) {
+                           
+                        }
+                    });
+                });
+            }
+        }); 
     }
     function DanismanBasvuruOnayKayit(mID) {
         var _panel = $('#bsvrDet_' + mID);
