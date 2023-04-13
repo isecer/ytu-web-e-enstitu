@@ -139,7 +139,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
             ViewBag.MmMessage = MmMessage;
-            var model = new kmBasvuruSurec();
+            var model = new KmBasvuruSurec();
             model.IsAktif = true;
             var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
             model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem;
@@ -208,9 +208,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                             from defS in def1.DefaultIfEmpty()
                                                             join ot in db.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
                                                             where o.IsAktif || defS.IsAktif
-                                                            select new CheckObject<krOgrenimTip>
+                                                            select new CheckObject<KrOgrenimTip>
                                                             {
-                                                                Value = new krOgrenimTip
+                                                                Value = new KrOgrenimTip
                                                                 {
                                                                     EnstituKod = _EnstituKod,
                                                                     BasvuruSurecOgrenimTipID = defS != null ? defS.BasvuruSurecOgrenimTipID : 0,
@@ -268,7 +268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.YydBasvuruSureciKayit)]
-        public ActionResult Kayit(kmBasvuruSurec kModel, string dlgid = "")
+        public ActionResult Kayit(KmBasvuruSurec kModel, string dlgid = "")
         {
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
@@ -283,7 +283,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                   join b in qBasvuruSurecOtoMailID on s.Key equals b.gID
                                   join z in qZamanTipID on s.Key equals z.gID
                                   join za in qZaman on s.Key equals za.gID
-                                  select new kmBsOtoMail
+                                  select new KmBsOtoMail
                                   {
                                       BasvuruSurecID = b.Key.ToInt().Value,
                                       ZamanTipID = z.Key.ToInt().Value,
@@ -637,9 +637,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                              from defS in def1.DefaultIfEmpty()
                                                              join ot in db.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
                                                              where o.IsAktif || defS.IsAktif
-                                                             select new CheckObject<krOgrenimTip>
+                                                             select new CheckObject<KrOgrenimTip>
                                                              {
-                                                                 Value = new krOgrenimTip
+                                                                 Value = new KrOgrenimTip
                                                                  {
 
                                                                      EnstituKod = kModel.EnstituKod,
@@ -981,15 +981,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult getOtBilgi(string EnstituKod, int BasvuruSurecID)
         {
-            var Model = new kmBasvuruSurecOgrenimTipModel();
+            var Model = new KmBasvuruSurecOgrenimTipModel();
             Model.OgrenimTipleriDataList = (from o in db.OgrenimTipleris.Where(p => p.EnstituKod == EnstituKod)
                                             join s in db.BasvuruSurecOgrenimTipleris on new { o.OgrenimTipKod, BasvuruSurecID } equals new { s.OgrenimTipKod, s.BasvuruSurecID } into def1
                                             from defS in def1.DefaultIfEmpty()
                                             join ot in db.OgrenimTipleris on o.OgrenimTipID equals ot.OgrenimTipID
                                             where o.IsAktif || defS.IsAktif
-                                            select new CheckObject<krOgrenimTip>
+                                            select new CheckObject<KrOgrenimTip>
                                             {
-                                                Value = new krOgrenimTip
+                                                Value = new KrOgrenimTip
                                                 {
                                                     EnstituKod = EnstituKod,
                                                     BasvuruSurecOgrenimTipID = defS != null ? defS.BasvuruSurecOgrenimTipID : 0,
@@ -1107,7 +1107,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.MulakatSTurModel = (from ms in db.MulakatSinavTurleris
                                         join bsm in db.BasvuruSurecMulakatSinavTurleris on new { ms.MulakatSinavTurID, mdl.BasvuruSurecID } equals new { bsm.MulakatSinavTurID, bsm.BasvuruSurecID }
                                         orderby ms.MulakatSinavTurAdi
-                                        select new mulakatSturModel
+                                        select new MulakatSturModel
                                         {
                                             MulakatSinavTurID = ms.MulakatSinavTurID,
                                             SinavTurAdi = ms.MulakatSinavTurAdi,
@@ -1117,7 +1117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mdl.OgrenimTipleriLst = (from s in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == mdl.BasvuruSurecID)
                                          join ot in db.OgrenimTipleris on new { s.BasvuruSurec.EnstituKod, s.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
                                          where s.IsAktif
-                                         select new krOgrenimTip
+                                         select new KrOgrenimTip
                                          {
                                              EnstituKod = s.BasvuruSurec.EnstituKod,
                                              BasvuruSurecOgrenimTipID = s.BasvuruSurecOgrenimTipID,
@@ -1883,13 +1883,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 {
                                     itemP.GirisSinavNotu = itemP.SozluNotu;
                                 }
-                                itemP.GenelBasariNotu = itemP.Agno.Value.toGenelBasariNotu(itemP.MulakatSurecineGirecek, ogrenimBilgi, itemP.IsAlesYerineDosyaNotuIstensin, itemP.AlesNotuOrDosyaNotu, itemP.GirisSinavNotu.Value);
+                                itemP.GenelBasariNotu = itemP.Agno.Value.ToGenelBasariNotu(itemP.MulakatSurecineGirecek, ogrenimBilgi, itemP.IsAlesYerineDosyaNotuIstensin, itemP.AlesNotuOrDosyaNotu, itemP.GirisSinavNotu.Value);
 
                             }
                         }
                         else
                         {
-                            itemP.GenelBasariNotu = itemP.Agno.Value.toGenelBasariNotu(itemP.MulakatSurecineGirecek, ogrenimBilgi, itemP.IsAlesYerineDosyaNotuIstensin, itemP.AlesNotuOrDosyaNotu, null);
+                            itemP.GenelBasariNotu = itemP.Agno.Value.ToGenelBasariNotu(itemP.MulakatSurecineGirecek, ogrenimBilgi, itemP.IsAlesYerineDosyaNotuIstensin, itemP.AlesNotuOrDosyaNotu, null);
                         }
 
                     }
@@ -2387,7 +2387,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                   join enst in db.Enstitulers on new { bs.EnstituKod } equals new { enst.EnstituKod }
 
                                   //where bt.ProgramKod == "701" && bt.OgrenimTipKod == 1
-                                  select new mailBsonucModel
+                                  select new MailBsonucModel
                                   {
                                       BasvuruID = b.BasvuruID,
                                       RowID = b.RowID,

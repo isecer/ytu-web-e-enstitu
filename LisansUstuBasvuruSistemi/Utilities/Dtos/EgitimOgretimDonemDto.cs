@@ -14,7 +14,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int Donem { get; set; }
         public string DonemAdi { get; set; }
     }
-    public class TarihAralikModel
+    public class EgitimOgretimDonemDetayDto
     {
         public int BaslangicYil { get; set; }
         public int BitisYil { get { return (this.BaslangicYil > 0 ? this.BaslangicYil + 1 : 0); } }

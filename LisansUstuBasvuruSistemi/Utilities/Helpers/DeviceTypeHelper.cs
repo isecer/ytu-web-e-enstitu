@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     public static class DeviceTypeHelper
     {
 
-        public static string toDeviceType(this string ua)
+        public static string ToDeviceType(this string ua)
         {
             string ret = "";
             // Check if user agent is a smart TV - http://goo.gl/FocDk

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
@@ -15,19 +16,19 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
             {
 
 
-                var data = (from s in db.SRTalepleriBezCiltFormus
-                            join sr in db.SRTalepleris on s.SRTalepID equals sr.SRTalepID
-                            join mb in db.MezuniyetBasvurularis on sr.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
+                var data = (from s in db.MezuniyetBasvurulariTezTeslimFormlaris 
+                            join mb in db.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
                             join ms in db.MezuniyetSurecis on mb.MezuniyetSurecID equals ms.MezuniyetSurecID
                             join dnm in db.Donemlers on mb.KayitOgretimYiliDonemID equals dnm.DonemID
                             join enst in db.Enstitulers on ms.EnstituKod equals enst.EnstituKod
                             join osl in db.OgrenimTipleris on new { mb.OgrenimTipKod, enst.EnstituKod } equals new { osl.OgrenimTipKod, osl.EnstituKod }
                             join prg in db.Programlars on mb.ProgramKod equals prg.ProgramKod
                             join abd in db.AnabilimDallaris on prg.AnabilimDaliKod equals abd.AnabilimDaliKod
-                            where s.SRTalepleriBezCiltFormID == id
+                            where s.MezuniyetBasvurulariTezTeslimFormID == id
                             select new
                             {
-                                s.SRTalepleriBezCiltFormID,
+                                s.MezuniyetBasvurulariTezTeslimFormID,
+                                mb.MezuniyetBasvurulariID,
                                 ms.EnstituKod,
                                 enst.SistemErisimAdresi,
                                 mb.OgrenciNo,
@@ -44,11 +45,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                                 s.TezDili,
                                 s.TezBaslikTr,
                                 s.TezBaslikEn,
-                                sr.Tarih,
                                 mb.TezTeslimSonTarih,
-                                urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + s.SRTalepleriBezCiltFormID + "_" + s.RowID
+                                urlAdd = enst.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + s.MezuniyetBasvurulariTezTeslimFormID + "_" + s.RowID
                             }).First();
 
+                var sonSr = db.SRTalepleris.First(f =>
+                    f.MezuniyetBasvurulariID==data.MezuniyetBasvurulariID && f.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
                 this.DisplayName = data.AdSoyad + " FR-1243 Lisansüstü Ciltli Tez Teslim Formu";
                 cellOgrenciNo.Text = data.OgrenciNo;
                 cellOgrenciAdSoyad.Text = data.AdSoyad;
@@ -60,12 +62,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cellTezDili.Text = data.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
                 cellTezBaslikTr.Text = data.TezBaslikTr;
                 cellTezBaslikEn.Text = data.TezBaslikEn;
-                CellTezSavunmaSinavTarihi.Text = data.Tarih.ToFormatDate();
+                CellTezSavunmaSinavTarihi.Text = sonSr.Tarih.ToFormatDate();
 
                 cellImzaOgrenciAdSoyad.Text = data.AdSoyad;
 
                 cellFormKodu.Text = "Form Kodu: " + data.RowID.ToString().Substring(0, 8).ToUpper();
-                var qrUlr = data.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + data.SRTalepleriBezCiltFormID + "_" + data.RowID;
+                var qrUlr = data.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + data.MezuniyetBasvurulariTezTeslimFormID + "_" + data.RowID;
                 xrQRCode.ImageUrl = qrUlr;
                 xrQRCode.Image = qrUlr.CreateQrCode();
 

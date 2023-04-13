@@ -384,7 +384,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTdoYeniDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
         {
 
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TDODanismanTalepTip.TezDanismaniOnerisi };
+            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TdoDanismanTalepTip.TezDanismaniOnerisi };
             var mMessage = new MmMessage()
             {
                 Title = "Tez Danışmanı Öneri İşlemi"
@@ -443,20 +443,20 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (isCopy == true)
                     {
                         model.TDOBasvuruDanismanID = 0;
-                        if (model.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi)
+                        if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi)
                         {
                             model.YeniTezBaslikTr = null;
                             model.YeniTezBaslikEn = null;
                             model.VarolanTezDanismanID = null;
                         }
-                        else if (model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi)
+                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi)
                         {
                             model.VarolanTezDanismanID = tdoBd.TezDanismanID;
                             model.TDAnabilimDaliID = null;
                             model.TDProgramKod = null;
                             model.TezDanismanID = 0;
                         }
-                        else if (model.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                        else if (model.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
                         {
                             model.YeniTezBaslikTr = null;
                             model.YeniTezBaslikEn = null;
@@ -468,7 +468,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TDODanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
                 model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
                 model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
@@ -725,7 +725,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezDanismaniOnerisi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniOnerisi;
                 kModel.IsTezDiliTr = isTezDiliTr.Value;
 
                 if (isTezDiliTr == true)
@@ -1077,7 +1077,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     formKodu = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                 }
-                kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezDanismaniDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniDegisikligi;
                 kModel.UniqueID = Guid.NewGuid();
                 kModel.FormKodu = formKodu;
                 kModel.VarolanTezDanismanID = oncekiBasvuru.TezDanismanID;
@@ -1241,7 +1241,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TDODanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
                 model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
                 model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
@@ -1421,11 +1421,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezBasligiDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezBasligiDegisikligi;
                 kModel.TezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
-                if (oncekiBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi ||
-                    oncekiBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
+                    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
                 {
                     kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
                     kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
@@ -1595,7 +1595,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
 
-                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TDODanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
+                model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTip.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.cmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrup.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
                 model.SListTDAnabilimDali = new SelectList(Management.cmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
                 model.SListTDProgram = new SelectList(Management.cmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
@@ -1866,7 +1866,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
-                kModel.TDODanismanTalepTipID = TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 kModel.VarolanTezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.VarolanTDAdSoyad = oncekiBasvuru.TDAdSoyad;
                 kModel.VarolanTDUnvanAdi = oncekiBasvuru.TDUnvanAdi;
@@ -1874,8 +1874,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.VarolanTDProgramAdi = oncekiBasvuru.TDProgramAdi;
                 kModel.TezDanismanID = kModel.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
-                if (oncekiBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi ||
-                    oncekiBasvuru.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
+                    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
                 {
                     kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
                     kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;

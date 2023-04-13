@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class KmTIBasvuru : TIBasvuru
+    public class KmTiBasvuru : TIBasvuru
     {
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }

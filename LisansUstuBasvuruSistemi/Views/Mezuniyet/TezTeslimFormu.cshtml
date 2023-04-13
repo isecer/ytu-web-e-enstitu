@@ -1,13 +1,13 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@model SRTalepleriBezCiltFormu
+@model MezuniyetBasvurulariTezTeslimFormlari
 @{
     Layout = null;
 }
 
-@using (Ajax.BeginForm("BezCiltFormPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "MezuniyetSRBezCiltForm" }))
+@using (Ajax.BeginForm("TezTeslimFormuPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "MezuniyetTezTeslimForm" }))
 {
-    @Html.HiddenFor(p => p.SRTalepID)
-    @Html.HiddenFor(p => p.SRTalepleriBezCiltFormID)
+    @Html.HiddenFor(p => p.MezuniyetBasvurulariID)
+    @Html.HiddenFor(p => p.MezuniyetBasvurulariTezTeslimFormID)
     <div class="panel panel-info" style="margin: 0px; padding: 0px;">
         <div class="panel-body" style="padding: 0px;">
             <div class="panel panel-default form-horizontal" id="_PnpEADP">
@@ -35,7 +35,7 @@
                                         </script>
                                     </td>
                                     <td width="5"></td>
-                                    <td class="@(Model.SRTalepleriBezCiltFormID<=0 || Model.IsTezDiliTr?"hide":"")" id="digerDilGiris">
+                                    <td class="@(Model.MezuniyetBasvurulariTezTeslimFormID<=0 || Model.IsTezDiliTr?"hide":"")" id="digerDilGiris">
                                         <input type="text" name="TezDili" id="TezDili" maxlength="64" value="@Model.TezDili" class="form-control" />
                                     </td>
                                 </tr>
@@ -97,7 +97,7 @@
 
         });
     });
-    $("#MezuniyetSRBezCiltForm").on("submit", function () {
+    $("#MezuniyetTezTeslimForm").on("submit", function () {
         var _TezOzetHtml = $('#TezOzetHtml').summernote('code');
         $('#TezOzet').val($("<div />").html(_TezOzetHtml).text());
         var _TezAbstractHtml = $('#TezAbstractHtml').summernote('code');

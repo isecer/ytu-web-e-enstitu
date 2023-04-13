@@ -58,12 +58,18 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             var intValue = obj.ToIntObj();
             if (obj != null && intValue.HasValue)
             {
-
-                if (intValue == 1) return true;
-                else if (intValue == 0) return false;
-                else return (bool?)null;
+                switch (intValue)
+                {
+                    case 1:
+                        return true;
+                    case 0:
+                        return false;
+                    default:
+                        return (bool?)null;
+                }
             }
-            else return (bool?)null;
+
+            return (bool?)null;
         }
         public static bool? ToBooleanObj(this object obj)
         {

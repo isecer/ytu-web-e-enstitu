@@ -5,17 +5,17 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rprBasvuruSonucBolumModel
+    public class RprBasvuruSonucBolumModel
     {
         public string ProgramAdi { get; set; }
         public string BolumAdi { get; set; }
-        public List<rprBasvuruSonucModel> ProgramB { get; set; }
+        public List<RprBasvuruSonucModel> ProgramB { get; set; }
         public List<krMulakatDetay> MulakatDetayB { get; set; }
-        public List<rwMulakatJuri> MulakatJuriB { get; set; }
-        public List<rwMulakatJuri> k2 { get; set; }
-        public rprBasvuruSonucBolumModel()
+        public List<RwMulakatJuri> MulakatJuriB { get; set; }
+        public List<RwMulakatJuri> k2 { get; set; }
+        public RprBasvuruSonucBolumModel()
         {
-            k2 = new List<rwMulakatJuri>();
+            k2 = new List<RwMulakatJuri>();
         }
     }
 }

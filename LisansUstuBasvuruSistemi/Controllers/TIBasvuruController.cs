@@ -26,10 +26,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!UserIdentity.Current.IsAuthenticated && isDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
 
-            return Index(new fmTIBasvuru() { TIBasvuruID = tiBasvuruId, KullaniciID = kullaniciId, IsDegerlendirme = isDegerlendirme, PageSize = 10 }, ekd);
+            return Index(new FmTiBasvuru() { TIBasvuruID = tiBasvuruId, KullaniciID = kullaniciId, IsDegerlendirme = isDegerlendirme, PageSize = 10 }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmTIBasvuru model, string ekd)
+        public ActionResult Index(FmTiBasvuru model, string ekd)
         {
             if (!UserIdentity.Current.IsAuthenticated && model.IsDegerlendirme == null) return RedirectToActionPermanent("Login", "Account");
 
@@ -159,7 +159,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult BasvuruYap(int? tiBasvuruId, int? kullaniciId, string ekd)
         {
-            var model = new KmTIBasvuru();
+            var model = new KmTiBasvuru();
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
 
@@ -254,7 +254,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult BasvuruYap(KmTIBasvuru kModel, string ekd)
+        public ActionResult BasvuruYap(KmTiBasvuru kModel, string ekd)
         {
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
@@ -386,7 +386,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Ara rapor formu kayıt yetkisine sahip değilsiniz.");
 
             }
-            else if (tiBasvuruAraRapor != null && tiBasvuruAraRapor.TIBasvuruAraRaporDurumID > TIAraRaporDurumu.ToplantiBilgileriGirildi)
+            else if (tiBasvuruAraRapor != null && tiBasvuruAraRapor.TIBasvuruAraRaporDurumID > TiAraRaporDurumu.ToplantiBilgileriGirildi)
             {
                 mMessage.Messages.Add("Komite üyelerine değerlendirme linki gönderildikten sonra rapor bilgisinde değişiklik yapamazsınız. ");
             }
@@ -664,7 +664,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Tez izleme raporunu başlatabilmeniz için " + donemBilgi.DonemAdiLong + " döneminde " + tiBasvuru.BasvuruSonDonemSecilecekDersKodlari + " kodlu derslere kayıt olmanız gerekmektedir.");
                 }
-                else if (tiBasvuruAraRapor != null && tiBasvuruAraRapor.TIBasvuruAraRaporDurumID > TIAraRaporDurumu.ToplantiBilgileriGirildi)
+                else if (tiBasvuruAraRapor != null && tiBasvuruAraRapor.TIBasvuruAraRaporDurumID > TiAraRaporDurumu.ToplantiBilgileriGirildi)
                 {
                     mMessage.Messages.Add("Komite üyelerine değerlendirme yaptıktan sonra rapor bilgisinde değişiklik yapamazsınız. ");
                 }
@@ -1049,7 +1049,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuruAraRapor.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.RaporTarihi = DateTime.Now;
                                 tiBasvuruAraRapor.DonemBaslangicYil = donemBilgi.BaslangicYil;
-                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.ToplantiBilgileriGirilmedi;
+                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirilmedi;
                                 tiBasvuruAraRapor = _entities.TIBasvuruAraRapors.Add(tiBasvuruAraRapor);
                             }
 
@@ -1122,7 +1122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
             var tiAraRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
-            var model = new kmSRTalep();
+            var model = new KmSRTalep();
             if (!toplantiYetki && tiAraRapor.TIBasvuru.TezDanismanID != UserIdentity.Current.Id) model.YetkisizErisim = true;
             else
             {
@@ -1171,7 +1171,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [HttpPost]
-        public ActionResult RezervasyonAlPost(kmSRTalep kModel, bool isSendMail = true)
+        public ActionResult RezervasyonAlPost(KmSRTalep kModel, bool isSendMail = true)
         {
             var mmMessage = new MmMessage
             {
@@ -1296,7 +1296,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 IslemYapanIP = kModel.IslemYapanIP
 
                             });
-                            tiAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.ToplantiBilgileriGirildi;
+                            tiAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirildi;
 
                         }
                         else
@@ -1523,7 +1523,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (isDegerlendirmeTamam)
                         {
 
-                            tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciTamamlandi;
+                            tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.DegerlendirmeSureciTamamlandi;
                             tiBasvuruAraRapor.IsBasariliOrBasarisiz = tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == true) > tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == false);
                             tiBasvuruAraRapor.IsOyBirligiOrCoklugu = tiBasvuruAraRaporKomites.Count == tiBasvuruAraRaporKomites.Count(c => c.IsBasarili == tiBasvuruAraRapor.IsBasariliOrBasarisiz);
 
@@ -1552,11 +1552,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             tiBasvuruAraRapor.IsOyBirligiOrCoklugu = null;
                             if (tiBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
                             {
-                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciBaslatildi;
+                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.DegerlendirmeSureciBaslatildi;
                             }
                             else
                             {
-                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.ToplantiBilgileriGirildi;
+                                tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirildi;
                             }
                         }
                         LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, komite.ToJson());
@@ -1605,11 +1605,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     araRapor.IsOyBirligiOrCoklugu = null;
                     if (araRapor.TIBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
                     {
-                        araRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.DegerlendirmeSureciBaslatildi;
+                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.DegerlendirmeSureciBaslatildi;
                     }
                     else
                     {
-                        araRapor.TIBasvuruAraRaporDurumID = TIAraRaporDurumu.ToplantiBilgileriGirildi;
+                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirildi;
                     }
                     _entities.SaveChanges();
                     mMessage.IsSuccess = true;
@@ -1641,7 +1641,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bool isAdminRemove = false;
                 if (UserIdentity.Current.IsAdmin)
                 {
-                    if (kayit.TIBasvuruAraRapors.All(a => a.TIBasvuruAraRaporDurumID != TIAraRaporDurumu.DegerlendirmeSureciTamamlandi))
+                    if (kayit.TIBasvuruAraRapors.All(a => a.TIBasvuruAraRaporDurumID != TiAraRaporDurumu.DegerlendirmeSureciTamamlandi))
                     {
                         isAdminRemove = true;
                     }
@@ -1706,7 +1706,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Silinmek istenen kayıt sistemde bulunamadı.");
             }
-            else if (araRapor.TIBasvuruAraRaporDurumID > TIAraRaporDurumu.ToplantiBilgileriGirildi)
+            else if (araRapor.TIBasvuruAraRaporDurumID > TiAraRaporDurumu.ToplantiBilgileriGirildi)
             {
                 mmMessage.Messages.Add("Komite üyelerine değerlendirme yaptıktan sonra rapor bilgisi silinemez. ");
             }

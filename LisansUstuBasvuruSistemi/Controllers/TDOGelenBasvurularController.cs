@@ -117,47 +117,47 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
             {
-                if (model.AktifDurumID == TDODansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylandi) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnayBekleniyor) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnaylandi) q = q.Where(p => p.EYKDaOnaylandi == true);
-                else if (model.AktifDurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.EYKDaOnaylandi == false);
+                if (model.AktifDurumID == TdoDansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => !p.DanismanOnayladi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.DanismanOnayladi == false && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.DanismanOnayladi == true && !p.EYKYaGonderildi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.EYKYaGonderildi == false && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.EYKDaOnaylandi == true);
+                else if (model.AktifDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.EYKDaOnaylandi == false);
             }
             if (model.AktifEsDurumID.HasValue)
             {
-                if (model.AktifEsDurumID == TDODansimanDurumu.EYKYaGonderimOnayiBekleniyor) q = q.Where(p => p.EsDanismanOnerisiVar && !p.Es_EYKYaGonderildi.HasValue);
-                else if (model.AktifEsDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylandi) q = q.Where(p => p.Es_EYKYaGonderildi == true);
-                else if (model.AktifEsDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.Es_EYKYaGonderildi == false);
-                else if (model.AktifEsDurumID == TDODansimanDurumu.EYKDaOnayBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKDaOnaylandi.HasValue);
-                else if (model.AktifEsDurumID == TDODansimanDurumu.EYKDaOnaylandi) q = q.Where(p => p.Es_EYKDaOnaylandi == true);
-                else if (model.AktifEsDurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.Es_EYKDaOnaylandi == false);
+                if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.EsDanismanOnerisiVar && !p.Es_EYKYaGonderildi.HasValue);
+                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.Es_EYKYaGonderildi == true);
+                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.Es_EYKYaGonderildi == false);
+                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.Es_EYKYaGonderildi == true && !p.Es_EYKDaOnaylandi.HasValue);
+                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.Es_EYKDaOnaylandi == true);
+                else if (model.AktifEsDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.Es_EYKDaOnaylandi == false);
             }
             if (model.TDOBasvuruID.HasValue) q = q.Where(p => p.TDOBasvuruID == model.TDOBasvuruID);
             if (!model.DonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TDODanismanDetayModels.Any(a => a.RaporDonemID == model.DonemID));
             if (model.DurumID.HasValue)
             {
-                if (model.DurumID == TDODansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.DanismanOnayladi.HasValue));
-                else if (model.DurumID == TDODansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true));
-                else if (model.DurumID == TDODansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == false));
-                else if (model.DurumID == TDODansimanDurumu.EYKYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true && !p2.EYKYaGonderildi.HasValue));
-                else if (model.DurumID == TDODansimanDurumu.EYKYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true));
-                else if (model.DurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == false));
-                else if (model.DurumID == TDODansimanDurumu.EYKDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true && !p2.EYKDaOnaylandi.HasValue));
-                else if (model.DurumID == TDODansimanDurumu.EYKDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == true));
-                else if (model.DurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == false));
+                if (model.DurumID == TdoDansimanDurumu.DanismanOnayiBekliyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.DanismanOnayladi.HasValue));
+                else if (model.DurumID == TdoDansimanDurumu.DanismanTarafindanOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true));
+                else if (model.DurumID == TdoDansimanDurumu.DanismanTarafindanOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == false));
+                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.DanismanOnayladi == true && !p2.EYKYaGonderildi.HasValue));
+                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true));
+                else if (model.DurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == false));
+                else if (model.DurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKYaGonderildi == true && !p2.EYKDaOnaylandi.HasValue));
+                else if (model.DurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == true));
+                else if (model.DurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.EYKDaOnaylandi == false));
             }
             if (model.EsDurumID.HasValue)
             {
-                if (model.EsDurumID == TDODansimanDurumu.EYKYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.Es_EYKYaGonderildi.HasValue));
-                else if (model.EsDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true));
-                else if (model.EsDurumID == TDODansimanDurumu.EYKYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == false));
-                else if (model.EsDurumID == TDODansimanDurumu.EYKDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true && !p2.Es_EYKDaOnaylandi.HasValue));
-                else if (model.EsDurumID == TDODansimanDurumu.EYKDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == true));
-                else if (model.EsDurumID == TDODansimanDurumu.EYKDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
+                if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimOnayiBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => !p2.Es_EYKYaGonderildi.HasValue));
+                else if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true));
+                else if (model.EsDurumID == TdoDansimanDurumu.EykYaGonderimiOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == false));
+                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnayBekleniyor) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKYaGonderildi == true && !p2.Es_EYKDaOnaylandi.HasValue));
+                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnaylandi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == true));
+                else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
             }
 
             if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcKimlikNo == model.AdSoyad || p.TDODanismanDetayModels.Any(a => a.FormKodu == model.AdSoyad || a.Es_FormKodu == model.AdSoyad || a.DanismanAdSoyad.Contains(model.AdSoyad)));

@@ -53,10 +53,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 case "MBBBC":
                 {
-                    var srTalepleriBezCiltFormu = _entities.SRTalepleriBezCiltFormus.FirstOrDefault(p => p.RowID == rowId && p.SRTalepleriBezCiltFormID == tid);
+                    var srTalepleriBezCiltFormu = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.RowID == rowId && p.MezuniyetBasvurulariTezTeslimFormID == tid);
                     if (srTalepleriBezCiltFormu != null)
                     {
-                        RprMezuniyetCiltliTezTeslimFormu_FR1243 rpr = new RprMezuniyetCiltliTezTeslimFormu_FR1243(srTalepleriBezCiltFormu.SRTalepleriBezCiltFormID);
+                        RprMezuniyetCiltliTezTeslimFormu_FR1243 rpr = new RprMezuniyetCiltliTezTeslimFormu_FR1243(srTalepleriBezCiltFormu.MezuniyetBasvurulariTezTeslimFormID);
                         rpr.PrintingSystem.ContinuousPageNumbering = true;
                         rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
                         rprX = rpr;
@@ -123,7 +123,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var tdoBasvuruDanisman = _entities.TDOBasvuruDanismen.FirstOrDefault(p => p.UniqueID == rowId);
                     if (tdoBasvuruDanisman != null)
                     {
-                        if (tdoBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniOnerisi)
+                        if (tdoBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniOnerisi)
                         {
                             var rpr = new RprTezDanismaniOneriFormu_FR0347(tdoBasvuruDanisman.TDOBasvuruDanismanID);
                             rpr.CreateDocument();

@@ -9,13 +9,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
 {
     public static class IslemTipi
     {
-        public static string Insert { get { return "Insert"; } }
-        public static string Update { get { return "Update"; } }
-        public static string Delete { get { return "Delete"; } }
+        public static string Insert => "Insert";
+        public static string Update => "Update";
+        public static string Delete => "Delete";
     }
     public static class LogIslemleri
     {
-        public static void LogEkle(string TabloAdi, string IslemTipi, string TableData)
+        public static void LogEkle(string tabloAdi, string islemTipi, string tableData)
         {
             try
             {
@@ -25,9 +25,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
 
                     db.Logs.Add(new Log
                     {
-                        TabloAdi = TabloAdi, 
-                        IslemTipi = IslemTipi,
-                        TableData = TableData,
+                        TabloAdi = tabloAdi, 
+                        IslemTipi = islemTipi,
+                        TableData = tableData,
                         IslemTarihi = DateTime.Now,
                         IslemYapanID = UserIdentity.Current.Id,
                         IslemYapanIP = UserIdentity.Ip
@@ -35,9 +35,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
                     db.SaveChanges();
                 }
             }
-            catch 
+            catch
             {
-
+                // ignored
             }
         }
     }

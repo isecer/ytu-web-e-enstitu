@@ -104,7 +104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetTarihi = s.MezuniyetTarihi,
                         SrTalebi = srT,
                         SRDurumID = srT.SRDurumID,
-                        TeslimFormDurumu = srT != null && srT.SRTalepleriBezCiltFormus.Any(),
+                        TeslimFormDurumu = srT != null && s.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
                         UzatmaSuresiGun = mOt.MBSinavUzatmaSuresiGun,
@@ -917,9 +917,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (isMezunOldu == true)
             {
-                var sonAlinanSr = talep.SRTalepleris.OrderByDescending(o => o.SRTalepID).First();
-
-                if (sonAlinanSr.SRTalepleriBezCiltFormus.Any() == false)
+               
+                if (talep.MezuniyetBasvurulariTezTeslimFormlaris.Any() == false)
                 {
                     mmMessage.Messages.Add("Öğrencinin mezun olabilmesi için Tez Teslim formunun oluşturulması gerekmektedir.");
 
@@ -2268,7 +2267,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var prgl = itemO.Programlar;
                         var abdl = itemO.Programlar.AnabilimDallari;
                         var sinav = itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
-                        var tezSonBilgi = sinav.SRTalepleriBezCiltFormus.First();
+                        var tezSonBilgi = itemO.MezuniyetBasvurulariTezTeslimFormlaris.First();
                         var danismanBilgi = "";
                         var joForm = itemO.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                         if (joForm != null)
@@ -2323,7 +2322,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         row.OgrenciBilgi = itemO.OgrenciNo + " " + itemO.Ad + " " + itemO.Soyad + " (" + abdl.AnabilimDaliAdi + " / " + prgl.ProgramAdi + ")";
 
                         var sinav = itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
-                        var tezSonBilgi = sinav.SRTalepleriBezCiltFormus.First();
+                        var tezSonBilgi = sinav.MezuniyetBasvurulari.MezuniyetBasvurulariTezTeslimFormlaris.First();
                         var danismanBilgi = "";
                         var joForm = itemO.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                         if (joForm != null)

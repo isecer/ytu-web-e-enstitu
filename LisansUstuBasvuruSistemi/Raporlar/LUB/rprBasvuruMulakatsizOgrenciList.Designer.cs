@@ -432,12 +432,12 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprBasvuruSonucModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprBasvuruSonucModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // objectDataSource2
             // 
-            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprBasvuruSonucBolumModel);
+            this.objectDataSource2.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprBasvuruSonucBolumModel);
             this.objectDataSource2.Name = "objectDataSource2";
             // 
             // rprBasvuruMulakatsizOgrenciList

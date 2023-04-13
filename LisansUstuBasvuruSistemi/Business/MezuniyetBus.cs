@@ -188,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p => p.MezuniyetSurecID == mezuniyetSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
                                 var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
-                                 
+
                                 var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
                                 var bkMsg = new List<string>();
                                 if (basvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) != basvuruSonDonemSecilecekDersKodlari.Count)
@@ -231,9 +231,9 @@ namespace LisansUstuBasvuruSistemi.Business
             return msg;
 
         }
-        public static kmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)
+        public static KmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)
         {
-            var model = new kmMezuniyetBasvuru();
+            var model = new KmMezuniyetBasvuru();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -255,7 +255,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.ResimAdi = kul.ResimAdi;
                     model.Ad = kul.Ad;
                     model.Soyad = kul.Soyad;
-                    model.TcKimlikNo = kul.TcKimlikNo; 
+                    model.TcKimlikNo = kul.TcKimlikNo;
 
 
                 }
@@ -265,7 +265,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     model.ResimAdi = basvuru.ResimAdi;
                     model.Ad = basvuru.Ad;
                     model.Soyad = basvuru.Soyad;
-                    model.TcKimlikNo = basvuru.TcKimlikNo; 
+                    model.TcKimlikNo = basvuru.TcKimlikNo;
                     model.UyrukKod = basvuru.UyrukKod;
                 }
                 model.OgrenciNo = basvuru.OgrenciNo;
@@ -420,7 +420,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ResimAdi = basvuru.ResimAdi;
                 model.Ad = basvuru.Ad;
                 model.Soyad = basvuru.Soyad;
-                model.TcKimlikNo = basvuru.TcKimlikNo; 
+                model.TcKimlikNo = basvuru.TcKimlikNo;
                 model.UyrukKod = basvuru.UyrukKod;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == bsurec.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
@@ -474,7 +474,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.EYKTarihi = basvuru.EYKTarihi;
                 model.TezTeslimSonTarih = basvuru.TezTeslimSonTarih;
                 model.MezuniyetJuriOneriFormlaris = db.MezuniyetJuriOneriFormlaris.Include("MezuniyetJuriOneriFormuJurileris").Where(p => p.MezuniyetBasvurulariID == basvuru.MezuniyetBasvurulariID).ToList();
-
+                model.MezuniyetBasvurulariTezTeslimFormlaris = basvuru.MezuniyetBasvurulariTezTeslimFormlaris;
 
                 foreach (var item in model.MezuniyetJuriOneriFormlaris.SelectMany(s => s.MezuniyetJuriOneriFormuJurileris).Where(p => p.UniversiteID.HasValue))
                 {
@@ -633,7 +633,6 @@ namespace LisansUstuBasvuruSistemi.Business
                                                                    SRTaleplerJuris = s.SRTaleplerJuris.ToList(),
                                                                    IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
                                                                    // IslemYetkisiVar = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID) && (!mb.MezuniyetBasvurulariTezDosyalaris.Any(a => a.IsOnaylandiOrDuzeltme == true)),
-                                                                   SRTalepleriBezCiltFormus = s.SRTalepleriBezCiltFormus,
                                                                    UzatmaSonSRTarih = s.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? (EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBSinavUzatmaSuresiGun).Value) : DateTime.Now,
                                                                    TeslimSonTarih = model.TezTeslimSonTarih ?? EntityFunctions.AddDays(s.Tarih, bSurecOtKriter.MBTezTeslimSuresiGun).Value,
                                                                    IsOgrenciUzatmaSonrasiOnay = s.IsOgrenciUzatmaSonrasiOnay,
@@ -725,7 +724,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return model;
 
         }
-        public static MmMessage TezKontrol(kmMezuniyetBasvuru kModel)
+        public static MmMessage TezKontrol(KmMezuniyetBasvuru kModel)
         {
             var mmMessage = new MmMessage();
             if (!kModel.IsTezDiliTr.HasValue)
@@ -888,7 +887,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return ots;
             }
         }
-        public static MmMessage YayinKontrol(kmMezuniyetBasvuru kModel)
+        public static MmMessage YayinKontrol(KmMezuniyetBasvuru kModel)
         {
             var mmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -1141,7 +1140,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("Ajax", "getDetailMezuniyet_t5_MezuniyetSureci");
             return pagerString;
         }
-     
+
         public static bool ToJoFormSuccessRow(this string juriTipAdi, bool tezDiliTr, bool adSoyadSuccess, bool unvanAdiSuccess, bool eMailSuccess, bool universiteIdSuccess, bool uzmanlikAlaniSuccess, bool bilimselCalismalarAnahtarSozcuklerSuccess, bool dilSinavAdiSuccess, bool dilPuaniSuccess)
         {
             var retVal = false;
@@ -1328,7 +1327,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return kdonems;
         }
-       
+
         public static List<CmbIntDto> GetCmbMezuniyetYayinDurum(bool bosSecimVar = false, bool tumu = false)
         {
             var dct = new List<CmbIntDto>();

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Text;
+using System.Threading;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
@@ -63,7 +65,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             try
             {
-                MailManager.SendMail(enstituKod, konu, icerik, eMail, attach, toOrBcc);
+                SendMail(enstituKod, konu, icerik, eMail, attach, toOrBcc);
 
             }
             catch (Exception ex)
@@ -79,7 +81,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             try
             {
-                MailManager.SendMail(enstituKod, konu, icerik, eMails, attach);
+                SendMail(enstituKod, konu, icerik, eMails, attach);
 
             }
             catch (Exception ex)
@@ -95,7 +97,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             #region sendMail
             var uid = UserIdentity.Current.Id;
             var uIp = UserIdentity.Ip;
-            new System.Threading.Thread(() =>
+            new Thread(() =>
             {
                 try
                 {
@@ -104,7 +106,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                         var qeklenen = dbb.GonderilenMaillers.First(p => p.GonderilenMailID == gonderilenMailId);
                         try
                         {
-                            MailManager.SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
+                            SendMail(qeklenen.EnstituKod, konu, icerik, eMails, attachs);
                             qeklenen.Gonderildi = true;
                             qeklenen.IslemTarihi = DateTime.Now;
                         }
@@ -143,7 +145,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             using (var ePosta = new MailMessage())
             {
-                ePosta.From = new MailAddress(emailAdresi, name, System.Text.Encoding.UTF8);
+                ePosta.From = new MailAddress(emailAdresi, name, Encoding.UTF8);
                 ePosta.IsBodyHtml = true;
                 
                 foreach (var item in eMails)
@@ -155,14 +157,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 }
                 ePosta.Subject = konu;
                 ePosta.Body = icerik;
-                ePosta.BodyEncoding = System.Text.Encoding.UTF8;
+                ePosta.BodyEncoding = Encoding.UTF8;
                 ePosta.Priority = MailPriority.High;
                 if (attachs != null)
                     foreach (var item in attachs)
                         ePosta.Attachments.Add(item);
                 using (var smtp = new SmtpClient())
                 {
-                    smtp.Credentials = new System.Net.NetworkCredential(emailAdresi, sifre);
+                    smtp.Credentials = new NetworkCredential(emailAdresi, sifre);
                     smtp.Port = port.ToInt(587);
                     smtp.Host = host;
                     smtp.EnableSsl = ssl;
@@ -214,7 +216,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
             }
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
-            var titleStrList = model.Title.Split(new string[] { "{{", "}}" }, StringSplitOptions.None).ToList();
+            var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
             foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
             {
@@ -225,7 +227,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 
             model.HtmlContent = model.HtmlContent.Replace("{{", "{{_removeRw_");
 
-            var contentStrList = model.HtmlContent.Split(new string[] { "{{", "}}" }, StringSplitOptions.None).ToList();
+            var contentStrList = model.HtmlContent.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
             foreach (var itemRp in rpModel.Where(p => p.Value.IsNullOrWhiteSpace()))
             {

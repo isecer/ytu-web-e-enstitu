@@ -8,7 +8,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @{
-    var urlInfo = Request.Url.toUrlInfo();
+    var urlInfo = Request.Url.ToUrlInfo();
 
     bool FixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value : false;
     bool FixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value : false;

@@ -1282,12 +1282,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("Yeterlik", "JuriOnayDurumView");
             return pagerString;
         }
-
-        //public static IHtmlString ToSinavOnayDurumView(this DmYeterlikBasvuruSinav model)
-        //{
-        //    var pagerString = model.ToRenderPartialViewHtml("Yeterlik", "SinavOnayDurumView");
-        //    return pagerString;
-        //}
+         
 
 
 

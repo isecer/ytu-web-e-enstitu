@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kontenjanBilgiModel
+    public class KontenjanBilgiModel
     {
         public string EnstituAdi { get; set; }
         public string EnstituKod { get; set; }
@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int ToplamKalanKota { get; set; }
         public int Kota { get; set; }
         public int KalanKota { get; set; }
-        public List<kontenjanBilgiModel> OBOgrenimTipleri { get; set; }
+        public List<KontenjanBilgiModel> OBOgrenimTipleri { get; set; }
 
     }
    

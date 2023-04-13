@@ -1,12 +1,12 @@
 ﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Web;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             UnvanID = s.UnvanID,
                             BirimID = s.BirimID,
                             CinsiyetID = s.CinsiyetID,
-                            TcKimlikNo = s.TcKimlikNo, 
+                            TcKimlikNo = s.TcKimlikNo,
                             CepTel = s.CepTel,
                             EMail = s.EMail,
                             Adres = s.Adres,
@@ -93,7 +93,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             UnvanID = s.UnvanID,
                             BirimID = s.BirimID,
                             CinsiyetID = s.CinsiyetID,
-                            TcKimlikNo = s.TcKimlikNo, 
+                            TcKimlikNo = s.TcKimlikNo,
                             CepTel = s.CepTel,
                             EMail = s.EMail,
                             Adres = s.Adres,
@@ -149,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             UnvanID = s.UnvanID,
                             BirimID = s.BirimID,
                             CinsiyetID = s.CinsiyetID,
-                            TcKimlikNo = s.TcKimlikNo, 
+                            TcKimlikNo = s.TcKimlikNo,
                             CepTel = s.CepTel,
                             EMail = s.EMail,
                             Adres = s.Adres,
@@ -229,7 +229,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var identityName = userName ?? HttpContext.Current.User.Identity.Name;
             var rolls = new UserRoleDto();
             using (var db = new LisansustuBasvuruSistemiEntities())
-            { 
+            {
                 var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == identityName);
                 if (kull != null)
                 {
@@ -246,11 +246,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
 
                 }
-                else
-                {
-                    FormsAuthenticationUtil.SignOut();
-                    throw new SecurityException("Kullanıcı Tanımlı Değil");
-                }
+
+                FormsAuthenticationUtil.SignOut();
+                throw new SecurityException("Kullanıcı Tanımlı Değil");
 
             }
         }
@@ -260,21 +258,20 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
-                if (kull != null)
-                {
-                    var dRoll = kull.Rollers.ToList();
+                if (kull == null) throw new SecurityException("Kullanıcı Tanımlı Değil");
 
-                    var ygRols = kull.YetkiGruplari.YetkiGrupRolleris.Select(s => s.Roller).ToList();
-                    rolls.YetkiGrupID = kull.YetkiGrupID;
-                    rolls.YetkiGrupAdi = kull.YetkiGruplari.YetkiGrupAdi;
-                    rolls.YetkiGrupRolleri = ygRols;
-                    rolls.TumRoller.AddRange(ygRols);
-                    rolls.TumRoller.AddRange(dRoll.Where(p => ygRols.All(a => a.RolID != p.RolID)).Distinct());
-                    rolls.EklenenRoller.AddRange(rolls.TumRoller.Where(p => rolls.YetkiGrupRolleri.Any(a => a.RolID == p.RolID) == false));
-                    return rolls;
-                }
-                else
-                    throw new SecurityException("Kullanıcı Tanımlı Değil");
+                var dRoll = kull.Rollers.ToList();
+
+                var ygRols = kull.YetkiGruplari.YetkiGrupRolleris.Select(s => s.Roller).ToList();
+                rolls.YetkiGrupID = kull.YetkiGrupID;
+                rolls.YetkiGrupAdi = kull.YetkiGruplari.YetkiGrupAdi;
+                rolls.YetkiGrupRolleri = ygRols;
+                rolls.TumRoller.AddRange(ygRols);
+                rolls.TumRoller.AddRange(dRoll.Where(p => ygRols.All(a => a.RolID != p.RolID)).Distinct());
+                rolls.EklenenRoller.AddRange(rolls.TumRoller.Where(p => rolls.YetkiGrupRolleri.Any(a => a.RolID == p.RolID) == false));
+                return rolls;
+
+
             }
         }
         public static bool InRoleCurrent(this string roleName)
@@ -283,7 +280,8 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 return UserIdentity.Current.Roles.Any(a => a == roleName);
             }
-            else return false;
+
+            return false;
         }
         public static void SetUserRoles(int kullaniciId, List<int> rolIDs, int yetkiGrupId)
         {
@@ -359,7 +357,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
             var roller = UserBus.GetUserRoles(kull.KullaniciID);
 
-            UserIdentity ui = new UserIdentity(userName)
+            var ui = new UserIdentity(userName)
             {
                 NameSurname = kull.Ad + " " + kull.Soyad,
                 Id = kull.KullaniciID,
@@ -390,7 +388,7 @@ namespace LisansUstuBasvuruSistemi.Business
             #region Last Logon Information
             UserBus.SetLastLogon();
             #endregion
-            return ui; 
+            return ui;
         }
         public static void SetLastLogon()
         {

@@ -5,9 +5,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class DonemHelper
     {
-        public static TarihAralikModel ToAraRaporDonemBilgi(this DateTime date)
+        public static EgitimOgretimDonemDetayDto ToAraRaporDonemBilgi(this DateTime date)
         {
-            var model = new TarihAralikModel();
+            var model = new EgitimOgretimDonemDetayDto();
             if (date.Month <= 6)
             {
                 model.BaslangicYil = date.Year - 1;

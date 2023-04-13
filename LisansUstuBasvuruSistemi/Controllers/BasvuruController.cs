@@ -117,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult BasvuruYap(int? BasvuruID, int? KullaniciID = null, string EnstituKod = "", string EKD = "")
         {
-            var model = new kmBasvuru();
+            var model = new KmBasvuru();
             var _MmMessage = new MmMessage();
             if (EnstituKod.IsNullOrWhiteSpace()) EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
             model.EnstituKod = EnstituKod;
@@ -222,7 +222,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult BasvuruYap(kmBasvuru kModel)
+        public ActionResult BasvuruYap(KmBasvuru kModel)
         {
             var stps = new List<int>();
             var _MmMessage = new MmMessage();

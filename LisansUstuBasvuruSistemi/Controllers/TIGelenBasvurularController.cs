@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         { 
-            var model = new fmTIBasvuru() { PageSize = 50 };
+            var model = new FmTiBasvuru() { PageSize = 50 };
             //var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
             //if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent())
             //{
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Index(model, ekd); ;
         }
         [HttpPost]
-        public ActionResult Index(fmTIBasvuru model, string ekd)
+        public ActionResult Index(FmTiBasvuru model, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd); 

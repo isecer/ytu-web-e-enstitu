@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class AlanTipi
+    public class AlanTipi
     {
         public static int AlanIci = 1;
         public static int AlanDisi = 2;

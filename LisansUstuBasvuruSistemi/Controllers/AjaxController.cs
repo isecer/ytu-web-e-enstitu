@@ -1641,7 +1641,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 SrTalebi = srSonTalebi,
                 EYKTarihi = model.EYKTarihi,
                 MezuniyetBasvurulariTezDosyasi = model.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(o => o.MezuniyetBasvurulariTezDosyaID).FirstOrDefault(),
-                TeslimFormDurumu = srSonTalebi != null && srSonTalebi.SRTalepleriBezCiltFormus.Any(),
+                TeslimFormDurumu = srSonTalebi != null && model.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                 IsMezunOldu = model.IsMezunOldu,
                 MezuniyetTarihi = model.MezuniyetTarihi,
 
@@ -1897,7 +1897,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
 
-        public ActionResult OgrenimBilgisiKontrolEt(kmBasvuru kModel, int basvuruId)
+        public ActionResult OgrenimBilgisiKontrolEt(KmBasvuru kModel, int basvuruId)
         {
             var mmMessage = Management.obKontrol(kModel);
             if (kModel.ProgramKod.IsNullOrWhiteSpace())
@@ -1921,7 +1921,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 //Düzeltilecek
                 var basvuruSureci = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == kModel.BasvuruSurecID);
-                kotaKontrolModel alanB;
+                KotaKontrolModel alanB;
                 if (basvuruSureci.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru || basvuruSureci.BasvuruSurecTipID == BasvuruSurecTipi.YTUYeniMezunDRBasvuru)
                     alanB = Management.AlanKontrol(kModel.BasvuruSurecID, kModel.LOgrenciBolumID.Value, kModel.YLOgrenciBolumID, kModel.OgrenimTipKod, kModel.ProgramKod, kModel.KullaniciID, basvuruId);
                 else
@@ -1994,7 +1994,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
         }
         [ValidateInput(false)]
-        public ActionResult ValidationControlSteps(kmBasvuru kModel)
+        public ActionResult ValidationControlSteps(KmBasvuru kModel)
         {
             var showEgitimDiliIsle = false;
             var mmMessage = new MmMessage();
@@ -2295,7 +2295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [ValidateInput(false)]
-        public ActionResult MezuniyetValidationControlSteps(kmMezuniyetBasvuru kModel)
+        public ActionResult MezuniyetValidationControlSteps(KmMezuniyetBasvuru kModel)
         {
             var mmMessage = new MmMessage();
             if (kModel.StepNo == 1)
@@ -2315,12 +2315,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.AddRange(yyK.Messages);
                     mmMessage.MessagesDialog.AddRange(yyK.MessagesDialog);
                 }
-                if (mmMessage.Messages.Count == 0) kModel.sbmtForm = true;
+                if (mmMessage.Messages.Count == 0) kModel.SbmtForm = true;
             }
 
             mmMessage.IsSuccess = mmMessage.Messages.Count == 0;
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            return new { sbmtForm = kModel.sbmtForm, _MmMessage = mmMessage, EkAciklamalar = "" }.ToJsonResult();
+            return new { sbmtForm = kModel.SbmtForm, _MmMessage = mmMessage, EkAciklamalar = "" }.ToJsonResult();
         }
 
 
@@ -3128,7 +3128,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      Images = k.ResimAdi
 
                                  }).Take(25).ToList();
-            var kul = qKullanicilar.Select(k => new mailListModel
+            var kul = qKullanicilar.Select(k => new MailListDto
             {
                 id = k.id.ToString(),
                 AdSoyad = k.AdSoyad,
@@ -3138,10 +3138,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).ToList();
             if (kul.Count == 0)
             {
-                var lst = new List<mailListModel>();
+                var lst = new List<MailListDto>();
                 if (!term.ToIsValidEmail())
                 {
-                    lst.Add(new mailListModel { id = term, AdSoyad = term, text = term, Images = "".ToKullaniciResim() });
+                    lst.Add(new MailListDto { id = term, AdSoyad = term, text = term, Images = "".ToKullaniciResim() });
                 }
                 return lst.ToJsonResult();
             }
@@ -3205,7 +3205,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [AllowAnonymous]
         public ActionResult GetMsjKategoris(string enstituKod)
         {
-            var ots = MesajlarBus.cmbGetMesajKategorileri(enstituKod, true, true);
+            var ots = MesajlarBus.CmbGetMesajKategorileri(enstituKod, true, true);
             return ots.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
         public ActionResult GetKtNot(int mesajKategoriId)
@@ -3242,7 +3242,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.Email = UserIdentity.Current.Description;
             }
             ViewBag.EnstituAdi = _entities.Enstitulers.Where(p => p.EnstituKod == enstituKod).First().EnstituAd;
-            ViewBag.MesajKategoriID = new SelectList(MesajlarBus.cmbGetMesajKategorileri(enstituKod, true, model != null), "Value", "Caption", model.MesajKategoriID);
+            ViewBag.MesajKategoriID = new SelectList(MesajlarBus.CmbGetMesajKategorileri(enstituKod, true, model != null), "Value", "Caption", model.MesajKategoriID);
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(false), "Value", "Caption", enstituKod);
 
@@ -3610,7 +3610,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 };
                         if (_AlanTipID.HasValue) q = q.Where(p => p.AlanTipID == _AlanTipID);
-                        var data = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenByDescending(t => t.AlanTipAdi).OrderBy(t => t.AdSoyad).Select(s => new rprBasvuruSonucModel
+                        var data = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenByDescending(t => t.AlanTipAdi).OrderBy(t => t.AdSoyad).Select(s => new RprBasvuruSonucModel
                         {
                             AnabilimDaliKod = s.AnabilimDaliKod,
                             AnabilimDaliAdi = s.AnabilimDaliAdi,
@@ -3753,7 +3753,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             q = q.Where(p => _MulakatSonucTipID.Contains(p.MulakatSonucTipID));
                         }
-                        var data = q.Select(s => new rprBasvuruSonucModel
+                        var data = q.Select(s => new RprBasvuruSonucModel
                         {
                             BasvuruSurecID = s.BasvuruSurecID,
                             RowID = s.RowID,
@@ -3788,7 +3788,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         if (_RowID.IsNullOrWhiteSpace() && _SubRaporTipID != 1)
                         {
-                            var nData = new List<rprBasvuruSonucModel>();
+                            var nData = new List<RprBasvuruSonucModel>();
                             var qGrup = q.Select(s => new { s.ProgramKod, s.OgrenimTipKod, s.AlanTipID }).Distinct().ToList();
 
                             foreach (var item in qGrup)
@@ -3908,7 +3908,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     using (var db = new LisansustuBasvuruSistemiEntities())
                     {
                         var mulakat = db.Mulakats.Where(p => p.MulakatID == _MulakatID).First();
-                        var data = new List<rprBasvuruSonucModel>();
+                        var data = new List<RprBasvuruSonucModel>();
                         if (_PuanlarGozuksun.Value)
                         {
 
@@ -3967,7 +3967,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenByDescending(t => t.AlanTipAdi).ThenByDescending(t => t.GenelBasariNotu);
                             if (_AlanTipID.HasValue) q = q.Where(p => p.AlanTipID == _AlanTipID.Value);
 
-                            data = q.Select(s => new rprBasvuruSonucModel
+                            data = q.Select(s => new RprBasvuruSonucModel
                             {
                                 BasvuruSurecID = s.BasvuruSurecID,
                                 AnabilimDaliKod = s.AnabilimDaliKod,
@@ -4042,7 +4042,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                     };
                             if (_AlanTipID.HasValue) q = q.Where(p => p.AlanTipID == _AlanTipID.Value);
-                            data = q.Select(s => new rprBasvuruSonucModel
+                            data = q.Select(s => new RprBasvuruSonucModel
                             {
                                 AnabilimDaliKod = s.AnabilimDaliKod,
                                 AnabilimDaliAdi = s.AnabilimDaliAdi,
@@ -4127,7 +4127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
 
                         }
-                        var mdl = new rprBasvuruSonucBolumModel();
+                        var mdl = new RprBasvuruSonucBolumModel();
                         var firstD = data.FirstOrDefault();
                         if (firstD != null)
                         {
@@ -4135,7 +4135,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             mdl.ProgramAdi = firstD.ProgramAdi + " " + firstD.OgrenimTipAdi;
                         }
                         mdl.ProgramB = data;
-                        var juri = db.MulakatJuris.Where(p => p.MulakatID == _MulakatID).Select(s => new rwMulakatJuri
+                        var juri = db.MulakatJuris.Where(p => p.MulakatID == _MulakatID).Select(s => new RwMulakatJuri
                         {
                             MulakatID = s.MulakatID,
                             MulakatJuriID = s.MulakatJuriID,
@@ -4197,7 +4197,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var imgPath = SistemAyar.KullaniciResimYolu;
                         var basvuruSurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == _BasvuruSurecID).First();
-                        var kayitOlanlar = basvuruSurec.MulakatSonuclaris.Where(p => p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu == true).ToList().Select(s => new rprModelKazananList
+                        var kayitOlanlar = basvuruSurec.MulakatSonuclaris.Where(p => p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu == true).ToList().Select(s => new RprModelKazananList
                         {
                             ProgramKodu = s.BasvurularTercihleri.ProgramKod,
                             ProgramAdi = s.BasvurularTercihleri.Programlar.ProgramAdi + " (" + s.BasvurularTercihleri.ProgramKod + ")",
@@ -4253,7 +4253,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var qGroup = from s in q
                                      group s by new { s.AnabilimDaliKod, s.AnabilimDaliAdi, s.OgrenimTipKod, s.OgrenimTipAdi, s.ProgramKodu, s.ProgramAdi, s.EgitimDili } into g1
 
-                                     select new rprModelBolumProgramList
+                                     select new RprModelBolumProgramList
                                      {
 
                                          AnabilimDaliKod = g1.Key.AnabilimDaliKod,
@@ -4290,14 +4290,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var qx = (from s in qbs
                                   join enst in db.Enstitulers on s.EnstituKod equals enst.EnstituKod
                                   join dnm in db.Donemlers on s.DonemID equals dnm.DonemID
-                                  select new raporLUBModel
+                                  select new RaporLUBModel
                                   {
                                       EnstituAdi = enst.EnstituAd,
                                       AkademikYil = s.BaslangicYil + " / " + s.BitisYil + " " + dnm.DonemAdi,
                                       ToplamTercihSayisi = s.MulakatSonuclaris.Count,
                                       OgrenimTipleri = (from s2 in s.BasvuruSurecOgrenimTipleris.Where(p => p.IsAktif)
                                                         join otl in db.OgrenimTipleris.Where(p => s.EnstituKod == p.EnstituKod) on s2.OgrenimTipKod equals otl.OgrenimTipKod
-                                                        select new raporOtipModel
+                                                        select new RaporOtipModel
                                                         {
                                                             GBNO = s2.BasariNotOrtalamasi,
                                                             OgrenimTipAdi = otl.OgrenimTipAdi,
@@ -4387,7 +4387,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var bitisT = Request["T2"].ToStrObj();
                     var eKod = Request["eKod"].ToStrObj();
                     var yilModel = new List<int>();
-                    var yilAyModel = new List<raporBTSayisalModel>();
+                    var yilAyModel = new List<RaporBTSayisalModel>();
                     using (var db = new LisansustuBasvuruSistemiEntities())
                     {
                         var btipdetayIds = db.BelgeTipDetayBelgelers.Where(p => p.BelgeTipDetay.IsAktif).Select(s => s.BelgeTipID).Distinct();
@@ -4402,7 +4402,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                 foreach (var item in bTips)
                                 {
-                                    yilAyModel.Add(new raporBTSayisalModel { Yil = i.Year, Ay = i.Month, BelgeTipID = item.BelgeTipID, BelgeTipAdi = item.BelgeTipAdi });
+                                    yilAyModel.Add(new RaporBTSayisalModel { Yil = i.Year, Ay = i.Month, BelgeTipID = item.BelgeTipID, BelgeTipAdi = item.BelgeTipAdi });
                                 }
                             }
                             yilModel = yilAyModel.Select(s => s.Yil).Distinct().ToList();
@@ -4410,13 +4410,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         var data = (from s in db.Enstitulers
                                     where s.EnstituKod == eKod
-                                    select new raporBTModel
+                                    select new RaporBTModel
                                     {
                                         EnstituAdi = s.EnstituAd,
                                         SurecTarihi = baslangicT + " / " + bitisT,
 
                                         YilaGoreToplam = (from ya in yilModel
-                                                          select new raporBTSayisalModel
+                                                          select new RaporBTSayisalModel
                                                           {
                                                               Yil = ya,
                                                               Toplam = db.BelgeTalepleris.Count(p => btipdetayIds.Contains(p.BelgeTipID) && p.TalepTarihi.Year == ya),
@@ -4432,7 +4432,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             item.EnstituAdi = item.EnstituAdi.ToUpper();
                             item.DetayliToplam = (from ya in yilAyModel
-                                                  select new raporBTSayisalModel
+                                                  select new RaporBTSayisalModel
                                                   {
                                                       Yil = ya.Yil,
                                                       Ay = ya.Ay,

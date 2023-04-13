@@ -732,12 +732,12 @@ namespace LisansUstuBasvuruSistemi.Models
             return dct;
 
         }
-        public static List<kmBsOtoMail> getBsMailZamanData()
+        public static List<KmBsOtoMail> getBsMailZamanData()
         {
 
-            var bsMList = new List<kmBsOtoMail>();
-            bsMList.Add(new kmBsOtoMail { gID = 1, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false });
-            bsMList.Add(new kmBsOtoMail { gID = 2, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false });
+            var bsMList = new List<KmBsOtoMail>();
+            bsMList.Add(new KmBsOtoMail { gID = 1, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false });
+            bsMList.Add(new KmBsOtoMail { gID = 2, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false });
             //bsMList.Add(new kmBsOtoMail {gID=3, ZamanTipID = ZamanTipi.Saat, Zaman = 8, Gonderildi = false });
             //bsMList.Add(new kmBsOtoMail {gID=4, ZamanTipID = ZamanTipi.Saat, Zaman = 1, Gonderildi = false });
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -750,23 +750,23 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return bsMList;
         }
-        public static List<kmMzOtoMail> getZmMailZamanData(bool? chkD = null)
+        public static List<KmMzOtoMail> getZmMailZamanData(bool? chkD = null)
         {
 
-            var bsMList = new List<kmMzOtoMail>();
-            bsMList.Add(new kmMzOtoMail { gID = 1, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 1 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 2, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 2 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 3, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 10, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 10 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 4, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 5 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 5, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "SR talebi yapma sürecini 5 Gün aşanları bildir (Enstitü)" });
+            var bsMList = new List<KmMzOtoMail>();
+            bsMList.Add(new KmMzOtoMail { gID = 1, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 1, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 1 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 2, Checked = chkD ?? false, MailSablonTipID = null, ZamanTipID = ZamanTipi.Gun, Zaman = 2, Gonderildi = false, Aciklama = "Başvuru süreci bitimine 2 Gün kala Taslak durumundaki başvuruları bildir (Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 3, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 10, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 10 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 4, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "SR talebi yapma süreci bitimine 5 Gün kala SR talebi yapmayanları bildir (Danışman,Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 5, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_EykTarihineGoreSrAlinmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "SR talebi yapma sürecini 5 Gün aşanları bildir (Enstitü)" });
 
-            bsMList.Add(new kmMzOtoMail { gID = 10, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanDR, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "DR Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
-            bsMList.Add(new kmMzOtoMail { gID = 11, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanYL, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "YL Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
+            bsMList.Add(new KmMzOtoMail { gID = 10, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanDR, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "DR Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
+            bsMList.Add(new KmMzOtoMail { gID = 11, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_SinavDegerlendirmeHatirlantmaDanismanYL, ZamanTipID = ZamanTipi.Gun, Zaman = -1, Gonderildi = false, Aciklama = "YL Sınav sonucu değerlendirmesi için hatırlatma (Danışman)" });
 
-            bsMList.Add(new kmMzOtoMail { gID = 6, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezSinavSonucuSistemeGirilmedi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Sınav olup sonucunu 5 gün içinde getirmeyenleri bildir (Estitü,Danışman,Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 7, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezKontrolTezDosyasiYuklenmeli, ZamanTipID = ZamanTipi.Gun, Zaman = -7, Gonderildi = false, Aciklama = "Sınav olup Tez Dosyasını 7 gün içinde yüklemeyenleri bildir (Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 8, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihine 5 gün kala teslim etmeyenleri bildir (Danışman,Öğrenci)" });
-            bsMList.Add(new kmMzOtoMail { gID = 9, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihini 5 gün geçirenleri bildir (Enstitü)" });
+            bsMList.Add(new KmMzOtoMail { gID = 6, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezSinavSonucuSistemeGirilmedi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Sınav olup sonucunu 5 gün içinde getirmeyenleri bildir (Estitü,Danışman,Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 7, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_TezKontrolTezDosyasiYuklenmeli, ZamanTipID = ZamanTipi.Gun, Zaman = -7, Gonderildi = false, Aciklama = "Sınav olup Tez Dosyasını 7 gün içinde yüklemeyenleri bildir (Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 8, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmali, ZamanTipID = ZamanTipi.Gun, Zaman = 5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihine 5 gün kala teslim etmeyenleri bildir (Danışman,Öğrenci)" });
+            bsMList.Add(new KmMzOtoMail { gID = 9, Checked = chkD ?? false, MailSablonTipID = MailSablonTipi.Mez_CiltliTezTeslimYapilmadi, ZamanTipID = ZamanTipi.Gun, Zaman = -5, Gonderildi = false, Aciklama = "Tez teslim tutanağını teslim tarihini 5 gün geçirenleri bildir (Enstitü)" });
 
             return bsMList;
         }
@@ -2633,11 +2633,11 @@ namespace LisansUstuBasvuruSistemi.Models
                 return Model;
             }
         }
-        public static kontenjanBilgiModel getOgrenimTipiKotaBilgi(int BasvuruSurecID, int OgrenimTipKod, int KullaniciID, int BasvuruSurecTipID, int? BasvuruID = null, List<int> EklenenOgrenimTipIDs = null)
+        public static KontenjanBilgiModel getOgrenimTipiKotaBilgi(int BasvuruSurecID, int OgrenimTipKod, int KullaniciID, int BasvuruSurecTipID, int? BasvuruID = null, List<int> EklenenOgrenimTipIDs = null)
         {
 
             //var BasvuruSurecID = Management.getAktifBasvuruSurecID(EnstituKod);
-            var mdl = new kontenjanBilgiModel();
+            var mdl = new KontenjanBilgiModel();
 
             EklenenOgrenimTipIDs = EklenenOgrenimTipIDs ?? new List<int>();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -2676,7 +2676,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                               BasvuruSureci.ToplamKota,
                                               ot.IsAktif,
                                           } into g1
-                                          select new kontenjanBilgiModel
+                                          select new KontenjanBilgiModel
                                           {
                                               BasvuruSurecKontrolTipID = BasvuruSureci.Kota_BasvuruSurecKontrolTipID,
                                               EnstituKod = g1.Key.EnstituKod,
@@ -2744,7 +2744,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (mdl == null)
                 {
                     var Ot = db.OgrenimTipleris.Where(p => p.OgrenimTipKod == OgrenimTipKod).First();
-                    mdl = new kontenjanBilgiModel { OgrenimTipAdi = Ot.OgrenimTipAdi, GrupAdi = Ot.GrupAdi, OgrenimTipKod = OgrenimTipKod };
+                    mdl = new KontenjanBilgiModel { OgrenimTipAdi = Ot.OgrenimTipAdi, GrupAdi = Ot.GrupAdi, OgrenimTipKod = OgrenimTipKod };
                 }
                 mdl.OBOgrenimTipleri = OgrenimTipKotaList.Where(p => p.OgrenimTipKod != OgrenimTipKod).ToList();
 
@@ -2770,9 +2770,9 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return mdl;
         }
-        public static kontenjanProgramBilgiModel getKontenjanProgramBilgi(string ProgramKod, int OgrenimTipKod, int BasvuruSurecID, int KullaniciTipID, int? LOgrenimDurumID = null, int? LUniversiteID = null)
+        public static KontenjanProgramBilgiModel getKontenjanProgramBilgi(string ProgramKod, int OgrenimTipKod, int BasvuruSurecID, int KullaniciTipID, int? LOgrenimDurumID = null, int? LUniversiteID = null)
         {
-            var mdl = new kontenjanProgramBilgiModel();
+            var mdl = new KontenjanProgramBilgiModel();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 bool Yerli = true;
@@ -2787,7 +2787,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         join ot in db.OgrenimTipleris on new { k.BasvuruSurec.EnstituKod, k.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
                         join ota in db.OgrenimTipleris on ot.OgrenimTipID equals ota.OgrenimTipID
                         where p.ProgramKod == ProgramKod && k.OgrenimTipKod == OgrenimTipKod && p.KullaniciTipleri.Yerli == Yerli
-                        select new kontenjanProgramBilgiModel
+                        select new KontenjanProgramBilgiModel
                         {
                             ProgramlarAlesEslesmeleris = p.ProgramlarAlesEslesmeleris,
                             OgrenimTipKod = k.OgrenimTipKod,
@@ -3085,9 +3085,9 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             return ViewRenderHelper.RenderPartialView("Basvuru", "CreateTercihRowHtml", model);
         }
-        public static kotaKontrolModel AlanKontrol(int BasvuruSurecID, int LOgrenciBolumID, int? YLOgrenciBolumID, int OgrenimTipKod, string tprog, int KullaniciID, int BasvuruID = 0)
+        public static KotaKontrolModel AlanKontrol(int BasvuruSurecID, int LOgrenciBolumID, int? YLOgrenciBolumID, int OgrenimTipKod, string tprog, int KullaniciID, int BasvuruID = 0)
         {
-            var Model = new kotaKontrolModel();
+            var Model = new KotaKontrolModel();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var BasvuruSurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
@@ -3211,9 +3211,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return Model;
 
         }
-        public static kotaKontrolModel AlanKontrolYG(int BasvuruSurecID, List<int> OgrenciBolumID, int OgrenimTipKod, string tprog, int KullaniciID, int BasvuruID = 0)
+        public static KotaKontrolModel AlanKontrolYG(int BasvuruSurecID, List<int> OgrenciBolumID, int OgrenimTipKod, string tprog, int KullaniciID, int BasvuruID = 0)
         {
-            var Model = new kotaKontrolModel();
+            var Model = new KotaKontrolModel();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var BasvuruSurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
@@ -3972,7 +3972,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static MmMessage obKontrol(kmBasvuru kModel)
+        public static MmMessage obKontrol(KmBasvuru kModel)
         {
             var _MmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4151,7 +4151,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return _MmMessage;
         }
-        public static MmMessage programAgnoMinControl(kmBasvuru kModel, List<CmbIntDto> ProgramBilgi)
+        public static MmMessage programAgnoMinControl(KmBasvuru kModel, List<CmbIntDto> ProgramBilgi)
         {
             var _MmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4161,7 +4161,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 if (bsurec.AGNOGirisBaslangicTarihi.HasValue == false || kModel.LOgrenimDurumID != OgrenimDurum.HalenOğrenci)
                 {
 
-                    var prBilgi = new List<kontenjanProgramBilgiModel>();
+                    var prBilgi = new List<KontenjanProgramBilgiModel>();
                     foreach (var item in ProgramBilgi)
                     {
                         var kotPmodel = Management.getKontenjanProgramBilgi(item.Caption, item.Value.Value, kModel.BasvuruSurecID, kModel.KullaniciTipID.Value, kModel.LOgrenimDurumID, kModel.LUniversiteID);
@@ -4813,9 +4813,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return msg;
 
         }
-        public static kmBasvuru getSecilenBasvuru(int BasvuruID)
+        public static KmBasvuru getSecilenBasvuru(int BasvuruID)
         {
-            var model = new kmBasvuru();
+            var model = new KmBasvuru();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -5102,7 +5102,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                      ProgramKod = s.ProgramKod,
                                      IsSecilenTercih = s.IsSecilenTercih,
                                      IsAsilOrYedek = s.MulakatSonuclaris.Any(a => new List<int> { MulakatSonucTipi.Asil, MulakatSonucTipi.Yedek }.Contains(a.MulakatSonucTipID)),
-                                     ProgramBilgileri = new kontenjanProgramBilgiModel(),
+                                     ProgramBilgileri = new KontenjanProgramBilgiModel(),
                                      IsLagnoOrYlAgnoAlinsin = s.OgrenimTipKod == OgrenimTipi.Doktra ? (s.Programlar.BasvuruAgnoAlimTipID.HasValue ? s.Programlar.BasvuruAgnoAlimTipID.Value == BasvuruAgnoAlimTipi.LisansAlinsin : false) : true,
                                  }).ToList();
                 foreach (var item in tercihler)

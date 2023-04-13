@@ -133,7 +133,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.DialogID = dlgid;
             ViewBag.MmMessage = MmMessage;
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var model = new kmKotalar();
+            var model = new KmKotalar();
 
             string AnabilimDaliKod = "";
             if (id.HasValue)
@@ -172,7 +172,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(kmKotalar kModel, string EnstituKod, string AnabilimDaliKod, string dlgid = "")
+        public ActionResult Kayit(KmKotalar kModel, string EnstituKod, string AnabilimDaliKod, string dlgid = "")
         {
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();

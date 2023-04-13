@@ -125,7 +125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var model = new kmBolumEslestir();
+            var model = new KmBolumEslestir();
 
             if (id.IsNullOrWhiteSpace() == false)
             {
@@ -160,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(kmBolumEslestir kModel, List<int> KullaniciTipIds = null, List<int> OgrenciBolumIDs = null)
+        public ActionResult Kayit(KmBolumEslestir kModel, List<int> KullaniciTipIds = null, List<int> OgrenciBolumIDs = null)
         {
             var MmMessage = new MmMessage();
             var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();

@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                             if (!ogrenci.KAYIT_TARIHI.IsNullOrWhiteSpace())
                             {
                                 model.KayitTarihi = ogrenci.KAYIT_TARIHI.ToDate().Value;
-                                var donem = DonemHelper.ToAraRaporDonemBilgi(model.KayitTarihi.Value);
+                                var donem = model.KayitTarihi.Value.ToAraRaporDonemBilgi();
                                 model.BaslangicYil = donem.BaslangicYil;
                                 model.BitisYil = donem.BitisYil;
                                 model.DonemID = donem.DonemID;
@@ -160,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             if (model.SonTezIzlemeBilgileri == null) model.SonTezIzlemeBilgileri = new TezIzlemeBilgileri();
 
             if (model.SonTezIzlemeBilgileri.tezIzljuribilgileri == null)
-                model.SonTezIzlemeBilgileri.tezIzljuribilgileri = new TezIzlJuriBilgileri[0];
+                model.SonTezIzlemeBilgileri.tezIzljuribilgileri = Array.Empty<TezIzlJuriBilgileri>();
             return model;
         }
 

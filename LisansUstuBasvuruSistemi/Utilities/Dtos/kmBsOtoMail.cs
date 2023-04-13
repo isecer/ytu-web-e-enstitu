@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmBsOtoMail : BasvuruSurecOtoMail
+    public class KmBsOtoMail : BasvuruSurecOtoMail
     {
         public int gID { get; set; }
         public bool Checked { get; set; }

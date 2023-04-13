@@ -19,10 +19,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
-            return Index(new fmYetkiGruplari());
+            return Index(new FmYetkiGruplari());
         }
         [HttpPost]
-        public ActionResult Index(fmYetkiGruplari model)
+        public ActionResult Index(FmYetkiGruplari model)
         {
             var q = from s in db.YetkiGruplaris
                     select new
@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.YetkiGrupAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.YetkiGrupAdi.Contains(model.YetkiGrupAdi));
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(t => t.YetkiGrupAdi);  
-            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new frYetkiGruplari
+            model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrYetkiGruplari
             {
                 YetkiGrupID = s.YetkiGrupID,
                 YetkiGrupAdi = s.YetkiGrupAdi,

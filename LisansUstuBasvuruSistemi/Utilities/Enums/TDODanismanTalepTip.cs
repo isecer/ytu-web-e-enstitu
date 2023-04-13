@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public class TDODanismanTalepTip
+    public class TdoDanismanTalepTip
     {
         public static int TezDanismaniOnerisi = 1;
         public static int TezDanismaniVeBaslikDegisikligi = 2;

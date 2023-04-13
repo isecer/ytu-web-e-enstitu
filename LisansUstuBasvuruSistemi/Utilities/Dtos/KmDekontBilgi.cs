@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool KullaniciAktif { get; set; }
         public bool GirisAktif { get; set; }
 
-        public kontenjanProgramBilgiModel ProgramBilgi { get; set; }
+        public KontenjanProgramBilgiModel ProgramBilgi { get; set; }
 
     }
 }

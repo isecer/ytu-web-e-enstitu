@@ -98,19 +98,15 @@ namespace LisansUstuBasvuruSistemi.Models
                                     else if (item.MailSablonTipID == MailSablonTipi.Mez_TezKontrolTezDosyasiYuklenmeli)
                                     {
                                         //Sınav sonucu başarılı olup tez dosyasını teslim etmeyenler getir.
-                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili &&
-                                                                             p.MezuniyetBasvurulariTezDosyalaris.Any() == false &&
-                                                                             p.SRTalepleris.Any(p2 => p2.SRDurumID == SRTalepDurum.Onaylandı && p2.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && p2.SRTalepleriBezCiltFormus.Any() == false)
-                                                                        );
+                                        qbasvurular = qbasvurular.Where(p =>  p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && !p.MezuniyetBasvurulariTezTeslimFormlaris.Any());
                                     }
                                     else if (item.MailSablonTipID == MailSablonTipi.Mez_CiltliTezTeslimYapilmali || item.MailSablonTipID == MailSablonTipi.Mez_CiltliTezTeslimYapilmadi)
                                     {
                                         //Sınav sonucu başarılı olup bezcilt formunu oluşturmayanlar ya da oluşturup teslim etmeyenleri getir.
-                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili
-                                                                          && (
-                                                                             p.SRTalepleris.Any(p2 => p2.SRDurumID == SRTalepDurum.Onaylandı && p2.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && p2.SRTalepleriBezCiltFormus.Any() == false)
-                                                                             ||
-                                                                             p.SRTalepleris.Any(p2 => p2.SRDurumID == SRTalepDurum.Onaylandı && p2.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && p2.SRTalepleriBezCiltFormus.Any() && !p.IsMezunOldu.HasValue)
+                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili  && 
+                                                                             (!p.MezuniyetBasvurulariTezTeslimFormlaris.Any()
+                                                                              ||
+                                                                             (p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili && p.MezuniyetBasvurulariTezTeslimFormlaris.Any() && !p.IsMezunOldu.HasValue)
                                                                              )
                                                                         );
                                     }

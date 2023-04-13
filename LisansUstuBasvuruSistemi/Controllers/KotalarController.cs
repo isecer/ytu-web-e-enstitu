@@ -131,7 +131,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             ViewBag.MmMessage = MmMessage;
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);
-            var model = new kmKotalar();
+            var model = new KmKotalar();
 
             string AnabilimDaliKod = "";
             if (id.HasValue)
@@ -170,7 +170,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(kmKotalar kModel, string EnstituKod, string AnabilimDaliKod)
+        public ActionResult Kayit(KmKotalar kModel, string EnstituKod, string AnabilimDaliKod)
         {
             var MmMessage = new MmMessage();
             #region Kontrol

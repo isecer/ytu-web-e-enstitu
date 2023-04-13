@@ -559,6 +559,9 @@
     <Compile Include="Models\MezuniyetBasvurulariTezDosyalari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MezuniyetBasvurulariTezTeslimFormlari.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MezuniyetBasvurulariYayin.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -757,9 +760,6 @@
     <Compile Include="Models\SRTalepleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SRTalepleriBezCiltFormu.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SRTaleplerJuri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -904,30 +904,30 @@
     <Compile Include="Utilities\Dtos\ChkListDto.cs" />
     <Compile Include="Utilities\Dtos\EkAciklamaContentDto.cs" />
     <Compile Include="Utilities\Dtos\EgitimOgretimDonemDto.cs" />
-    <Compile Include="Utilities\Dtos\kmAnketlerCevap.cs" />
-    <Compile Include="Utilities\Dtos\kmBsOtoMail.cs" />
+    <Compile Include="Utilities\Dtos\KmAnketlerCevap.cs" />
+    <Compile Include="Utilities\Dtos\KmBsOtoMail.cs" />
     <Compile Include="Utilities\Dtos\KmMailGonder.cs" />
-    <Compile Include="Utilities\Dtos\kmMzOtoMail.cs" />
-    <Compile Include="Utilities\Dtos\kontenjanBilgiModel.cs" />
-    <Compile Include="Utilities\Dtos\kontenjanProgramBilgiModel.cs" />
-    <Compile Include="Utilities\Dtos\kmMulakatSonuc.cs" />
-    <Compile Include="Utilities\Dtos\kotaKontrolModel.cs" />
-    <Compile Include="Utilities\Dtos\krOgrenimTip.cs" />
-    <Compile Include="Utilities\Dtos\kulaniciProgramYetkiModel.cs" />
-    <Compile Include="Utilities\Dtos\mailBsonucModel.cs" />
-    <Compile Include="Utilities\Dtos\mailListModel.cs" />
+    <Compile Include="Utilities\Dtos\KmMzOtoMail.cs" />
+    <Compile Include="Utilities\Dtos\KontenjanBilgiModel.cs" />
+    <Compile Include="Utilities\Dtos\KontenjanProgramBilgiModel.cs" />
+    <Compile Include="Utilities\Dtos\KmMulakatSonuc.cs" />
+    <Compile Include="Utilities\Dtos\KotaKontrolModel.cs" />
+    <Compile Include="Utilities\Dtos\KrOgrenimTip.cs" />
+    <Compile Include="Utilities\Dtos\KulaniciProgramYetkiModel.cs" />
+    <Compile Include="Utilities\Dtos\MailBsonucModel.cs" />
+    <Compile Include="Utilities\Dtos\MailListDto.cs" />
     <Compile Include="Utilities\Dtos\MulakatSinavYerJuriBilgiMailDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetJuriOneriFormuKayitDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetYayinKontrolDurumDto.cs" />
     <Compile Include="Utilities\Dtos\MIndexBilgi.cs" />
     <Compile Include="Utilities\Dtos\MmMessage.cs" />
-    <Compile Include="Utilities\Dtos\msUrecDetay.cs" />
+    <Compile Include="Utilities\Dtos\MSurecDetay.cs" />
     <Compile Include="Utilities\Dtos\MulakatBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\OnlineOdemeProgramDetayModel.cs" />
     <Compile Include="Utilities\Dtos\PersisWsDataModel.cs" />
-    <Compile Include="Utilities\Dtos\rprBasvuruSonucBolumModel.cs" />
-    <Compile Include="Utilities\Dtos\rprBasvuruSonucModel.cs" />
-    <Compile Include="Utilities\Dtos\rwMulakatJuri.cs" />
+    <Compile Include="Utilities\Dtos\RprBasvuruSonucBolumModel.cs" />
+    <Compile Include="Utilities\Dtos\RprBasvuruSonucModel.cs" />
+    <Compile Include="Utilities\Dtos\RwMulakatJuri.cs" />
     <Compile Include="Utilities\Dtos\SablonMailModel.cs" />
     <Compile Include="Utilities\Dtos\SinavBilgiModel.cs" />
     <Compile Include="Utilities\Dtos\SinavSonucBilgiModel.cs" />
@@ -941,28 +941,28 @@
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariYayinDto.cs" />
     <Compile Include="Utilities\Dtos\KmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
-    <Compile Include="Utilities\Enums\TDODanismanTalepTip.cs" />
+    <Compile Include="Utilities\Enums\TdoDanismanTalepTip.cs" />
     <Compile Include="Utilities\Extensions\IconExtension.cs" />
     <Compile Include="Utilities\Logs\RequestLogger.cs" />
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
-    <Compile Include="Utilities\Dtos\kmKotalar.cs" />
-    <Compile Include="Utilities\Dtos\kmBolumEslestir.cs" />
+    <Compile Include="Utilities\Dtos\KmKotalar.cs" />
+    <Compile Include="Utilities\Dtos\KmBolumEslestir.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleri.cs" />
-    <Compile Include="Utilities\Dtos\kmSinavTipleriSPNA.cs" />
-    <Compile Include="Utilities\Dtos\kmBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\kmBasvuruSurec.cs" />
-    <Compile Include="Utilities\Dtos\kmSalonlar.cs" />
-    <Compile Include="Utilities\Dtos\kmMulakat.cs" />
-    <Compile Include="Utilities\Dtos\kmSRTalep.cs" />
+    <Compile Include="Utilities\Dtos\KmSinavTipleriSPNA.cs" />
+    <Compile Include="Utilities\Dtos\KmBasvuru.cs" />
+    <Compile Include="Utilities\Dtos\KmBasvuruSurec.cs" />
+    <Compile Include="Utilities\Dtos\KmSalonlar.cs" />
+    <Compile Include="Utilities\Dtos\KmMulakat.cs" />
+    <Compile Include="Utilities\Dtos\KmSRTalep.cs" />
     <Compile Include="Utilities\Dtos\KmTDOBasvuruDanisman.cs" />
     <Compile Include="Utilities\Dtos\KmTDOBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\KmTIBasvuru.cs" />
+    <Compile Include="Utilities\Dtos\KmTiBasvuru.cs" />
     <Compile Include="Utilities\Dtos\KmTIAraRaporFormuModel.cs" />
-    <Compile Include="Utilities\Dtos\kmMezuniyetBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\kmMezuniyetSureci.cs" />
-    <Compile Include="Utilities\Dtos\kmMezuniyetYonetmelik.cs" />
+    <Compile Include="Utilities\Dtos\KmMezuniyetBasvuru.cs" />
+    <Compile Include="Utilities\Dtos\KmMezuniyetSureci.cs" />
+    <Compile Include="Utilities\Dtos\KmMezuniyetYonetmelik.cs" />
     <Compile Include="Utilities\Dtos\KmMezuniyetJuriOneriFormuJurileri.cs" />
     <Compile Include="Utilities\Dtos\KmDekontBilgi.cs" />
     <Compile Include="Utilities\Dtos\RprTDOEYKModel.cs" />
@@ -971,15 +971,14 @@
     <Compile Include="Utilities\Dtos\RprModelProgramDilBilgi.cs" />
     <Compile Include="Utilities\Dtos\RprModelProgramAgnoKriterBilgi.cs" />
     <Compile Include="Utilities\Dtos\RprMezuniyetTezDegerlendirmeYayinBilgi.cs" />
-    <Compile Include="Utilities\Dtos\rprModelProgramList.cs" />
-    <Compile Include="Utilities\Dtos\rprModelBolumProgramList.cs" />
-    <Compile Include="Utilities\Dtos\rprModelKazananList.cs" />
-    <Compile Include="Utilities\Dtos\raporMezuniyetBasvuruFormModel.cs" />
-    <Compile Include="Utilities\Dtos\raporBTModel.cs" />
-    <Compile Include="Utilities\Dtos\raporBTSayisalModel.cs" />
-    <Compile Include="Utilities\Dtos\raporLUBModel.cs" />
-    <Compile Include="Utilities\Dtos\raporOtipModel.cs" />
-    <Compile Include="Utilities\Helpers\DekontHelper.cs" />
+    <Compile Include="Utilities\Dtos\RprModelProgramList.cs" />
+    <Compile Include="Utilities\Dtos\RprModelBolumProgramList.cs" />
+    <Compile Include="Utilities\Dtos\RprModelKazananList.cs" />
+    <Compile Include="Utilities\Dtos\RaporMezuniyetBasvuruFormModel.cs" />
+    <Compile Include="Utilities\Dtos\RaporBTModel.cs" />
+    <Compile Include="Utilities\Dtos\RaporBTSayisalModel.cs" />
+    <Compile Include="Utilities\Dtos\RaporLUBModel.cs" />
+    <Compile Include="Utilities\Dtos\RaporOtipModel.cs" />
     <Compile Include="Utilities\Helpers\DeviceTypeHelper.cs" />
     <Compile Include="Utilities\Helpers\DonemHelper.cs" />
     <Compile Include="Utilities\Dtos\CmbStringDto.cs" />
@@ -989,10 +988,10 @@
     <Compile Include="Utilities\Dtos\CmbBoolDatetimeDto.cs" />
     <Compile Include="Utilities\Dtos\CmbBoolDto.cs" />
     <Compile Include="Utilities\Dtos\FmKullanicilarDto.cs" />
-    <Compile Include="Utilities\Dtos\fmYetkiGruplari.cs" />
-    <Compile Include="Utilities\Dtos\fmUnvanlar.cs" />
+    <Compile Include="Utilities\Dtos\FmYetkiGruplari.cs" />
+    <Compile Include="Utilities\Dtos\FmUnvanlar.cs" />
     <Compile Include="Utilities\Dtos\FmBirimlerDto.cs" />
-    <Compile Include="Utilities\Dtos\fmSistemBilgilendirme.cs" />
+    <Compile Include="Utilities\Dtos\FmSistemBilgilendirme.cs" />
     <Compile Include="Utilities\Dtos\FmDuyurularDto.cs" />
     <Compile Include="Utilities\Dtos\FmMailSablonlariDto.cs" />
     <Compile Include="Utilities\Dtos\FmAnketlerDto.cs" />
@@ -1002,22 +1001,22 @@
     <Compile Include="Utilities\Dtos\FmBasvurularDto.cs" />
     <Compile Include="Utilities\Dtos\FmMezuniyetBasvurulari.cs" />
     <Compile Include="Utilities\Dtos\FmMailGondermeDto.cs" />
-    <Compile Include="Utilities\Dtos\fmSehirler.cs" />
-    <Compile Include="Utilities\Dtos\fmUniversiteler.cs" />
-    <Compile Include="Utilities\Dtos\fmUyruklar.cs" />
+    <Compile Include="Utilities\Dtos\FmSehirler.cs" />
+    <Compile Include="Utilities\Dtos\FmUniversiteler.cs" />
+    <Compile Include="Utilities\Dtos\FmUyruklar.cs" />
     <Compile Include="Utilities\Dtos\FmEnstitulerDto.cs" />
     <Compile Include="Utilities\Dtos\FmAnabilimDallariDto.cs" />
     <Compile Include="Utilities\Dtos\FmAlesTipleriDto.cs" />
     <Compile Include="Utilities\Dtos\FmOgrenciBolumleri.cs" />
-    <Compile Include="Utilities\Dtos\fmProgramlar.cs" />
-    <Compile Include="Utilities\Dtos\fmSinavTipleri.cs" />
+    <Compile Include="Utilities\Dtos\FmProgramlar.cs" />
+    <Compile Include="Utilities\Dtos\FmSinavTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmBolumEslestirDto.cs" />
     <Compile Include="Utilities\Dtos\FmKotalarDto.cs" />
     <Compile Include="Utilities\Dtos\FmOgrenimTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmYabanciDilSinavTip.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTalepleriDto.cs" />
-    <Compile Include="Utilities\Dtos\fmTalep.cs" />
-    <Compile Include="Utilities\Dtos\fmTalepSurec.cs" />
+    <Compile Include="Utilities\Dtos\FmTalep.cs" />
+    <Compile Include="Utilities\Dtos\FmTalepSurec.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTipleriDto.cs" />
     <Compile Include="Utilities\Dtos\FmSrTalepTipleri.cs" />
     <Compile Include="Utilities\Dtos\FmBelgeTipDetayDto.cs" />
@@ -1025,12 +1024,12 @@
     <Compile Include="Utilities\Dtos\FmMsonucOranModel.cs" />
     <Compile Include="Utilities\Dtos\FmMulakatSonuc.cs" />
     <Compile Include="Utilities\Dtos\FmMulakatNotGiris.cs" />
-    <Compile Include="Utilities\Dtos\fmSalonlar.cs" />
-    <Compile Include="Utilities\Dtos\fmTalepler.cs" />
-    <Compile Include="Utilities\Dtos\fmSalonBilgi.cs" />
+    <Compile Include="Utilities\Dtos\FmSalonlar.cs" />
+    <Compile Include="Utilities\Dtos\FmTalepler.cs" />
+    <Compile Include="Utilities\Dtos\FmSalonBilgi.cs" />
     <Compile Include="Utilities\Dtos\FmOzelTanimlar.cs" />
-    <Compile Include="Utilities\Dtos\fmTDOBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\fmTIBasvuru.cs" />
+    <Compile Include="Utilities\Dtos\FmTdoBasvuru.cs" />
+    <Compile Include="Utilities\Dtos\FmTiBasvuru.cs" />
     <Compile Include="Utilities\Dtos\FmMezuniyetSureci.cs" />
     <Compile Include="Utilities\Dtos\FmMezuniyetYonetmelikler.cs" />
     <Compile Include="Utilities\Dtos\FmMezuniyetYayinTurleri.cs" />
@@ -1074,8 +1073,8 @@
     <Compile Include="Utilities\Enums\TalepDurumu.cs" />
     <Compile Include="Utilities\Enums\TalepTipi.cs" />
     <Compile Include="Utilities\Enums\TarihKriterSecim.cs" />
-    <Compile Include="Utilities\Enums\TDODansimanDurumu.cs" />
-    <Compile Include="Utilities\Enums\TIAraRaporDurumu.cs" />
+    <Compile Include="Utilities\Enums\TdoDansimanDurumu.cs" />
+    <Compile Include="Utilities\Enums\TiAraRaporDurumu.cs" />
     <Compile Include="Utilities\Enums\WsCekimTipi.cs" />
     <Compile Include="Utilities\Enums\ZamanTipi.cs" />
     <Compile Include="Utilities\Extensions\ExceptionExtension.cs" />
@@ -1092,7 +1091,6 @@
     <Compile Include="Utilities\Helpers\StaticDefinitions.cs" />
     <Compile Include="Utilities\Helpers\UrlInfoHelper.cs" />
     <Compile Include="Utilities\Helpers\ViewRenderHelper.cs" />
-    <Compile Include="Utilities\Helpers\XmlSinavConverter.cs" />
     <Compile Include="Models\ApplicationClock.cs" />
     <Compile Include="Utilities\SystemSetting\BelgeTalepAyar.cs" />
     <Compile Include="Utilities\Helpers\DevexpressHelper.cs" />
@@ -3359,7 +3357,7 @@
     <Content Include="Views\Ajax\GetAnketCevap.cshtml" />
     <Content Include="Views\RaporlarAnket\Index.cshtml" />
     <Content Include="Views\Mezuniyet\RezervasyonAl.cshtml" />
-    <Content Include="Views\Mezuniyet\BezCiltForm.cshtml" />
+    <Content Include="Views\Mezuniyet\TezTeslimFormu.cshtml" />
     <Content Include="Views\Ajax\GetDxReport.cshtml" />
     <Content Include="Views\OnlineOdeme\getOgrenciDetay.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\JuriOneriFormu.cshtml" />
@@ -3661,7 +3659,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57328/</IISUrl>
+          <IISUrl>http://localhost:57350/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

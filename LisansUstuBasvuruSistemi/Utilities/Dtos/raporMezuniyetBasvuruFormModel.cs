@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class raporMezuniyetBasvuruFormModel
+    public class RaporMezuniyetBasvuruFormModel
     {
         public string YayinTurAdi { get; set; }
         public string DanismanIsmiVarMi { get; set; }

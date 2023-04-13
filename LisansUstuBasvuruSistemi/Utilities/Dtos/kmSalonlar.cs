@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmSalonlar : SRSalonlar
+    public class KmSalonlar : SRSalonlar
     {
 
 
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<SRSaatlerMDL> Saatler { get; set; }
         public object TeslimBitisSaat { get; internal set; }
 
-        public kmSalonlar()
+        public KmSalonlar()
         {
             Saatler = new List<SRSaatlerMDL>();
         }

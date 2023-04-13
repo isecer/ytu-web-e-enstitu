@@ -5,17 +5,17 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class TDODansimanDurumu
+    public static class TdoDansimanDurumu
     {
         public static int DanismanOnayiBekliyor = 1;
         public static int DanismanTarafindanOnaylandi = 2;
         public static int DanismanTarafindanOnaylanmadi = 3;
-        public static int EYKYaGonderimOnayiBekleniyor = 4;
-        public static int EYKYaGonderimiOnaylandi = 5;
-        public static int EYKYaGonderimiOnaylanmadi = 6;
-        public static int EYKDaOnayBekleniyor = 7;
-        public static int EYKDaOnaylandi = 8;
-        public static int EYKDaOnaylanmadi = 9;
+        public static int EykYaGonderimOnayiBekleniyor = 4;
+        public static int EykYaGonderimiOnaylandi = 5;
+        public static int EykYaGonderimiOnaylanmadi = 6;
+        public static int EykDaOnayBekleniyor = 7;
+        public static int EykDaOnaylandi = 8;
+        public static int EykDaOnaylanmadi = 9;
 
     }
 }

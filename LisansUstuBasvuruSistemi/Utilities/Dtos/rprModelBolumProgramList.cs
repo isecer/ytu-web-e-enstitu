@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rprModelBolumProgramList
+    public class RprModelBolumProgramList
     {
         public string AnabilimDaliKod { get; set; }
         public string AnabilimDaliAdi { get; set; }

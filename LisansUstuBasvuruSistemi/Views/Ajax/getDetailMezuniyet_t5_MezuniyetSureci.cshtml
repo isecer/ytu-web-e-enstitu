@@ -11,7 +11,7 @@
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
     var itemOnaylananSr = Model.MezuniyetSRModel.SalonRezervasyonlari.FirstOrDefault(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
 
-    var bezCiltForm = itemOnaylananSr?.SRTalepleriBezCiltFormus.FirstOrDefault(); 
+    var mezuniyetBasvurulariTezTeslimFormu = Model.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(); 
     var item = itemOnaylananSr; 
     var colorMz = Model.IsMezunOldu.HasValue ? (Model.IsMezunOldu.Value ? "Green" : "Maroon") : "Gray";
 }
@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <td style="padding-left:10px;text-align:left;">
-                            <div class="widget widget-default" style="border-top:1px solid;color:@item.SColor;border-top-color:@item.SColor; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                            <div class="widget widget-default" style="border-top:1px solid; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                 <table style="width:100%;">
                                     <tbody>
 
@@ -42,11 +42,11 @@
                                                             <table style="table-layout:fixed;width:100%;">
                                                                 <tr>
                                                                     <td>
-                                                                        @if (bezCiltForm == null)
+                                                                        @if (mezuniyetBasvurulariTezTeslimFormu == null)
                                                                         {
                                                                             if (Model.IsAnketVar == false || Model.IsAnketDolduruldu)
                                                                             {
-                                                                                <a href="javascript:void(0);" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID,0)">
+                                                                                <a href="javascript:void(0);" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID,true)">
                                                                                     Yeni Tez Teslim Formu Oluştur
                                                                                 </a>
                                                                             }
@@ -73,21 +73,17 @@
                                                                                                                 if (result.IsSuccess) {
                                                                                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                                                                                     $(_clsBtn).click();
-                                                                                                                    showSRBCiltDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID, 0);
+                                                                                                                    showSRBCiltDialog(@Model.MezuniyetBasvurulariID,true);
                                                                                                                     getDetailx('@Model.MezuniyetSurecID');
                                                                                                                 }
                                                                                                                 else {
                                                                                                                     getMsg(result);
                                                                                                                     return false;
-                                                                                                                }
-                                                                                                                PanelRefresh(pnlx, true);
+                                                                                                                } 
                                                                                                             },
                                                                                                             complete: function (cmp) {
                                                                                                                 PanelRefresh(pnlx, true);
-                                                                                                            },
-                                                                                                            error: function (err) {
-                                                                                                                PanelRefresh(pnlx, true);
-                                                                                                            }
+                                                                                                            } 
 
                                                                                                         });
                                                                                                         $('#FrmAnket').submit();
@@ -105,15 +101,15 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetCiltFormuRaporu&ID=@bezCiltForm.SRTalepleriBezCiltFormID' , 'auto', 'modal-dialog modal-lg' )">@bezCiltForm.IslemTarihi.ToDateString() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
+                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToDateString() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
 
                                                                         }
 
                                                                     </td>
                                                                     <td width="10">
-                                                                        @if (bezCiltForm != null && Model.IsMezunOldu.HasValue == false)
+                                                                        @if (mezuniyetBasvurulariTezTeslimFormu != null && Model.IsMezunOldu.HasValue == false)
                                                                         {
-                                                                            <a href="javascript:void(0)" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID, @item.SRTalepID,@bezCiltForm.SRTalepleriBezCiltFormID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Formunu Düzenle"></i></a>
+                                                                            <a href="javascript:void(0)" onclick="showSRBCiltDialog(@Model.MezuniyetBasvurulariID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Formunu Düzenle"></i></a>
 
                                                                         }
                                                                     </td>
@@ -126,7 +122,7 @@
                                                         <td class="CaptionTd"></td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd" style="color:maroon;">
-                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(bezCiltForm == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
+                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
                                                         </td>
                                                     </tr>
 

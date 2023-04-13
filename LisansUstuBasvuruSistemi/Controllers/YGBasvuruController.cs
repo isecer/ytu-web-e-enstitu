@@ -125,7 +125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult BasvuruYap(int? BasvuruID, int? KullaniciID = null, string EnstituKod = "", string EKD = "")
         {
-            var model = new kmBasvuru();
+            var model = new KmBasvuru();
             var _MmMessage = new MmMessage();
             model.EnstituKod = EnstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(EKD) : EnstituKod;
             var IsGelenBasvuruYetki = RoleNames.YgGelenBasvurularKayit.InRoleCurrent();
@@ -234,7 +234,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult BasvuruYap(kmBasvuru kModel)
+        public ActionResult BasvuruYap(KmBasvuru kModel)
         {
             var stps = new List<int>();
             var _MmMessage = new MmMessage();

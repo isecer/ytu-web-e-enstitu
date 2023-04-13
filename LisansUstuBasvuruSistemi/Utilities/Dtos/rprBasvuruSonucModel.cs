@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rprBasvuruSonucModel
+    public class RprBasvuruSonucModel
     {
         public int SiraNo { get; set; }
         public Guid RowID { get; set; }

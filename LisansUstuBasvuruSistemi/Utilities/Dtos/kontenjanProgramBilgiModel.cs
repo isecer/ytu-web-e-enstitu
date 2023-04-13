@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kontenjanProgramBilgiModel : Programlar
+    public class KontenjanProgramBilgiModel : Programlar
     {
         public int BasvuruSurecID { get; set; }
         public int BasvuruID { get; set; }
@@ -30,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public string UniqueID { get; set; }
 
-        public kontenjanProgramBilgiModel()
+        public KontenjanProgramBilgiModel()
         {
             Kazandi = false;
             KayitEdildi = false;

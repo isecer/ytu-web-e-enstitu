@@ -1265,6 +1265,25 @@
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="MezuniyetBasvurulariTezTeslimFormlari">
+          <Key>
+            <PropertyRef Name="MezuniyetBasvurulariTezTeslimFormID" />
+          </Key>
+          <Property Name="MezuniyetBasvurulariTezTeslimFormID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RowID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MezuniyetBasvurulariID" Type="int" />
+          <Property Name="TezDili" Type="nvarchar" MaxLength="64" />
+          <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
+          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="TezOzet" Type="nvarchar(max)" />
+          <Property Name="TezOzetHtml" Type="nvarchar(max)" />
+          <Property Name="TezAbstract" Type="nvarchar(max)" />
+          <Property Name="TezAbstractHtml" Type="nvarchar(max)" />
+          <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
+          <Property Name="IslemYapanID" Type="int" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="MezuniyetBasvurulariYayin">
           <Key>
             <PropertyRef Name="MezuniyetBasvurulariYayinID" />
@@ -2218,25 +2237,6 @@
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="SRTalepleriBezCiltFormu">
-          <Key>
-            <PropertyRef Name="SRTalepleriBezCiltFormID" />
-          </Key>
-          <Property Name="SRTalepleriBezCiltFormID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RowID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="SRTalepID" Type="int" Nullable="false" />
-          <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
-          <Property Name="TezDili" Type="nvarchar" MaxLength="64" />
-          <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="TezOzet" Type="nvarchar(max)" />
-          <Property Name="TezOzetHtml" Type="nvarchar(max)" />
-          <Property Name="TezAbstract" Type="nvarchar(max)" />
-          <Property Name="TezAbstractHtml" Type="nvarchar(max)" />
-          <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
-          <Property Name="IslemYapanID" Type="int" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <EntityType Name="SRTaleplerJuri">
           <Key>
@@ -4884,6 +4884,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+          <End Role="MezuniyetBasvurulari" Type="Self.MezuniyetBasvurulari" Multiplicity="0..1" />
+          <End Role="MezuniyetBasvurulariTezTeslimFormlari" Type="Self.MezuniyetBasvurulariTezTeslimFormlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetBasvurulari">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Principal>
+            <Dependent Role="MezuniyetBasvurulariTezTeslimFormlari">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari">
           <End Role="MezuniyetBasvurulari" Type="Self.MezuniyetBasvurulari" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -6172,20 +6184,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SRTalepleriBezCiltFormu_SRTalepleri">
-          <End Role="SRTalepleri" Type="Self.SRTalepleri" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="SRTalepleriBezCiltFormu" Type="Self.SRTalepleriBezCiltFormu" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRTalepleri">
-              <PropertyRef Name="SRTalepID" />
-            </Principal>
-            <Dependent Role="SRTalepleriBezCiltFormu">
-              <PropertyRef Name="SRTalepID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri">
           <End Role="MezuniyetJuriOneriFormuJurileri" Type="Self.MezuniyetJuriOneriFormuJurileri" Multiplicity="0..1" />
           <End Role="SRTaleplerJuri" Type="Self.SRTaleplerJuri" Multiplicity="*" />
@@ -6993,6 +6991,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetAyarlar" EntityType="Self.MezuniyetAyarlar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetBasvurulari" EntityType="Self.MezuniyetBasvurulari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetBasvurulariTezDosyalari" EntityType="Self.MezuniyetBasvurulariTezDosyalari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MezuniyetBasvurulariTezTeslimFormlari" EntityType="Self.MezuniyetBasvurulariTezTeslimFormlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetBasvurulariYayin" EntityType="Self.MezuniyetBasvurulariYayin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetJuriOneriFormlari" EntityType="Self.MezuniyetJuriOneriFormlari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MezuniyetJuriOneriFormuJurileri" EntityType="Self.MezuniyetJuriOneriFormuJurileri" Schema="dbo" store:Type="Tables" />
@@ -7059,7 +7058,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SRSalonlar" EntityType="Self.SRSalonlar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRSalonTalepTipleri" EntityType="Self.SRSalonTalepTipleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTalepleri" EntityType="Self.SRTalepleri" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SRTalepleriBezCiltFormu" EntityType="Self.SRTalepleriBezCiltFormu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTaleplerJuri" EntityType="Self.SRTaleplerJuri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTalepTipKullanicilar" EntityType="Self.SRTalepTipKullanicilar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SRTalepTipleri" EntityType="Self.SRTalepTipleri" Schema="dbo" store:Type="Tables" />
@@ -7751,6 +7749,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurulari" />
             <End Role="MezuniyetBasvurulariTezDosyalari" EntitySet="MezuniyetBasvurulariTezDosyalari" />
           </AssociationSet>
+          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" Association="Self.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurulari" />
+            <End Role="MezuniyetBasvurulariTezTeslimFormlari" EntitySet="MezuniyetBasvurulariTezTeslimFormlari" />
+          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" Association="Self.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurulari" />
             <End Role="MezuniyetBasvurulariYayin" EntitySet="MezuniyetBasvurulariYayin" />
@@ -8163,10 +8165,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="TIBasvuruAraRapor" EntitySet="TIBasvuruAraRapor" />
             <End Role="SRTalepleri" EntitySet="SRTalepleri" />
           </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleriBezCiltFormu_SRTalepleri" Association="Self.FK_SRTalepleriBezCiltFormu_SRTalepleri">
-            <End Role="SRTalepleri" EntitySet="SRTalepleri" />
-            <End Role="SRTalepleriBezCiltFormu" EntitySet="SRTalepleriBezCiltFormu" />
-          </AssociationSet>
           <AssociationSet Name="FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri" Association="Self.FK_SRTaleplerJuri_MezuniyetJuriOneriFormuJurileri">
             <End Role="MezuniyetJuriOneriFormuJurileri" EntitySet="MezuniyetJuriOneriFormuJurileri" />
             <End Role="SRTaleplerJuri" EntitySet="SRTaleplerJuri" />
@@ -8487,6 +8485,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="MezuniyetAyarlars" EntityType="LisansustuBasvuruSistemiModel.MezuniyetAyarlar" />
           <EntitySet Name="MezuniyetBasvurularis" EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" />
           <EntitySet Name="MezuniyetBasvurulariTezDosyalaris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezDosyalari" />
+          <EntitySet Name="MezuniyetBasvurulariTezTeslimFormlaris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari" />
           <EntitySet Name="MezuniyetBasvurulariYayins" EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariYayin" />
           <EntitySet Name="MezuniyetJuriOneriFormlaris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormlari" />
           <EntitySet Name="MezuniyetJuriOneriFormuJurileris" EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" />
@@ -8553,7 +8552,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="SRSalonlars" EntityType="LisansustuBasvuruSistemiModel.SRSalonlar" />
           <EntitySet Name="SRSalonTalepTipleris" EntityType="LisansustuBasvuruSistemiModel.SRSalonTalepTipleri" />
           <EntitySet Name="SRTalepleris" EntityType="LisansustuBasvuruSistemiModel.SRTalepleri" />
-          <EntitySet Name="SRTalepleriBezCiltFormus" EntityType="LisansustuBasvuruSistemiModel.SRTalepleriBezCiltFormu" />
           <EntitySet Name="SRTaleplerJuris" EntityType="LisansustuBasvuruSistemiModel.SRTaleplerJuri" />
           <EntitySet Name="SRTalepTipKullanicilars" EntityType="LisansustuBasvuruSistemiModel.SRTalepTipKullanicilar" />
           <EntitySet Name="SRTalepTipleris" EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleri" />
@@ -9459,6 +9457,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetBasvurulariTezDosyalari" EntitySet="MezuniyetBasvurulariTezDosyalaris" />
           </AssociationSet>
+          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+            <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
+            <End Role="MezuniyetBasvurulariTezTeslimFormlari" EntitySet="MezuniyetBasvurulariTezTeslimFormlaris" />
+          </AssociationSet>
           <AssociationSet Name="FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetBasvurulariYayin" EntitySet="MezuniyetBasvurulariYayins" />
@@ -9754,10 +9756,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_SRTalepleri_TIBasvuruAraRapor" Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_TIBasvuruAraRapor">
             <End Role="TIBasvuruAraRapor" EntitySet="TIBasvuruAraRapors" />
             <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SRTalepleriBezCiltFormu_SRTalepleri" Association="LisansustuBasvuruSistemiModel.FK_SRTalepleriBezCiltFormu_SRTalepleri">
-            <End Role="SRTalepleri" EntitySet="SRTalepleris" />
-            <End Role="SRTalepleriBezCiltFormu" EntitySet="SRTalepleriBezCiltFormus" />
           </AssociationSet>
           <AssociationSet Name="FK_SRTaleplerJuri_SRTalepleri" Association="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_SRTalepleri">
             <End Role="SRTalepleri" EntitySet="SRTalepleris" />
@@ -11420,6 +11418,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="OgrenimDurumlari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" FromRole="MezuniyetBasvurulari" ToRole="OgrenimDurumlari" />
           <NavigationProperty Name="Programlar" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Programlar" FromRole="MezuniyetBasvurulari" ToRole="Programlar" />
           <NavigationProperty Name="MezuniyetBasvurulariTezDosyalaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezDosyalari" />
+          <NavigationProperty Name="MezuniyetBasvurulariTezTeslimFormlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezTeslimFormlari" />
           <NavigationProperty Name="MezuniyetBasvurulariYayins" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariYayin" />
           <NavigationProperty Name="MezuniyetJuriOneriFormlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetJuriOneriFormlari" />
           <NavigationProperty Name="SRTalepleris" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleri_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="SRTalepleri" />
@@ -11443,6 +11442,26 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulariTezDosyalari" ToRole="MezuniyetBasvurulari" />
+        </EntityType>
+        <EntityType Name="MezuniyetBasvurulariTezTeslimFormlari">
+          <Key>
+            <PropertyRef Name="MezuniyetBasvurulariTezTeslimFormID" />
+          </Key>
+          <Property Name="MezuniyetBasvurulariTezTeslimFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RowID" Type="Guid" Nullable="false" />
+          <Property Name="MezuniyetBasvurulariID" Type="Int32" />
+          <Property Name="TezDili" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
+          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TezOzet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TezOzetHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TezAbstract" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TezAbstractHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
+          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" FromRole="MezuniyetBasvurulariTezTeslimFormlari" ToRole="MezuniyetBasvurulari" />
         </EntityType>
         <EntityType Name="MezuniyetBasvurulariYayin">
           <Key>
@@ -12601,28 +12620,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="SRSalonlar" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleri_SRSalonlar" FromRole="SRTalepleri" ToRole="SRSalonlar" />
           <NavigationProperty Name="SRTalepTipleri" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleri_SRTalepTipleri" FromRole="SRTalepleri" ToRole="SRTalepTipleri" />
           <NavigationProperty Name="TIBasvuruAraRapor" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleri_TIBasvuruAraRapor" FromRole="SRTalepleri" ToRole="TIBasvuruAraRapor" />
-          <NavigationProperty Name="SRTalepleriBezCiltFormus" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleriBezCiltFormu_SRTalepleri" FromRole="SRTalepleri" ToRole="SRTalepleriBezCiltFormu" />
           <NavigationProperty Name="SRTaleplerJuris" Relationship="LisansustuBasvuruSistemiModel.FK_SRTaleplerJuri_SRTalepleri" FromRole="SRTalepleri" ToRole="SRTaleplerJuri" />
-        </EntityType>
-        <EntityType Name="SRTalepleriBezCiltFormu">
-          <Key>
-            <PropertyRef Name="SRTalepleriBezCiltFormID" />
-          </Key>
-          <Property Name="SRTalepleriBezCiltFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RowID" Type="Guid" Nullable="false" />
-          <Property Name="SRTalepID" Type="Int32" Nullable="false" />
-          <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
-          <Property Name="TezDili" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
-          <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="TezOzet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TezOzetHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TezAbstract" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TezAbstractHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
-          <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SRTalepleri" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleriBezCiltFormu_SRTalepleri" FromRole="SRTalepleriBezCiltFormu" ToRole="SRTalepleri" />
         </EntityType>
         <EntityType Name="SRTaleplerJuri">
           <Key>
@@ -16077,6 +16075,18 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+          <End Type="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="0..1" />
+          <End Type="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari" Role="MezuniyetBasvurulariTezTeslimFormlari" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MezuniyetBasvurulari">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Principal>
+            <Dependent Role="MezuniyetBasvurulariTezTeslimFormlari">
+              <PropertyRef Name="MezuniyetBasvurulariID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari">
           <End Type="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -17012,20 +17022,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Principal>
             <Dependent Role="SRTalepleri">
               <PropertyRef Name="TIBasvuruAraRaporID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SRTalepleriBezCiltFormu_SRTalepleri">
-          <End Type="LisansustuBasvuruSistemiModel.SRTalepleri" Role="SRTalepleri" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="LisansustuBasvuruSistemiModel.SRTalepleriBezCiltFormu" Role="SRTalepleriBezCiltFormu" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SRTalepleri">
-              <PropertyRef Name="SRTalepID" />
-            </Principal>
-            <Dependent Role="SRTalepleriBezCiltFormu">
-              <PropertyRef Name="SRTalepID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -18669,6 +18665,26 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MezuniyetBasvurulariTezTeslimFormlaris">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari">
+              <MappingFragment StoreEntitySet="MezuniyetBasvurulariTezTeslimFormlari">
+                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
+                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
+                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="TezAbstractHtml" ColumnName="TezAbstractHtml" />
+                <ScalarProperty Name="TezAbstract" ColumnName="TezAbstract" />
+                <ScalarProperty Name="TezOzetHtml" ColumnName="TezOzetHtml" />
+                <ScalarProperty Name="TezOzet" ColumnName="TezOzet" />
+                <ScalarProperty Name="TezBaslikEn" ColumnName="TezBaslikEn" />
+                <ScalarProperty Name="TezBaslikTr" ColumnName="TezBaslikTr" />
+                <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
+                <ScalarProperty Name="TezDili" ColumnName="TezDili" />
+                <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
+                <ScalarProperty Name="RowID" ColumnName="RowID" />
+                <ScalarProperty Name="MezuniyetBasvurulariTezTeslimFormID" ColumnName="MezuniyetBasvurulariTezTeslimFormID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="MezuniyetBasvurulariYayins">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariYayin">
               <MappingFragment StoreEntitySet="MezuniyetBasvurulariYayin">
@@ -19685,26 +19701,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
                 <ScalarProperty Name="UniqueID" ColumnName="UniqueID" />
                 <ScalarProperty Name="SRTalepID" ColumnName="SRTalepID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SRTalepleriBezCiltFormus">
-            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.SRTalepleriBezCiltFormu">
-              <MappingFragment StoreEntitySet="SRTalepleriBezCiltFormu">
-                <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
-                <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
-                <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="TezAbstractHtml" ColumnName="TezAbstractHtml" />
-                <ScalarProperty Name="TezAbstract" ColumnName="TezAbstract" />
-                <ScalarProperty Name="TezOzetHtml" ColumnName="TezOzetHtml" />
-                <ScalarProperty Name="TezOzet" ColumnName="TezOzet" />
-                <ScalarProperty Name="TezBaslikEn" ColumnName="TezBaslikEn" />
-                <ScalarProperty Name="TezBaslikTr" ColumnName="TezBaslikTr" />
-                <ScalarProperty Name="TezDili" ColumnName="TezDili" />
-                <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
-                <ScalarProperty Name="SRTalepID" ColumnName="SRTalepID" />
-                <ScalarProperty Name="RowID" ColumnName="RowID" />
-                <ScalarProperty Name="SRTalepleriBezCiltFormID" ColumnName="SRTalepleriBezCiltFormID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

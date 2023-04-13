@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class raporBTSayisalModel
+    public class RaporBTSayisalModel
     {
         public int Yil { get; set; }
         public int Ay { get; set; }

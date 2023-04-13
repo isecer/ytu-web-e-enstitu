@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class raporOtipModel
+    public class RaporOtipModel
     {
         public string OgrenimTipAdi { get; set; }
         public double GBNO { get; set; }

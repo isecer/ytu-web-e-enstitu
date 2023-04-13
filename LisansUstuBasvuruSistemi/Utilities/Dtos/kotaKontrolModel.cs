@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kotaKontrolModel
+    public class KotaKontrolModel
     {
         public string RowClass { get; set; }
         public int AlanTipID { get; set; }

@@ -400,8 +400,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 paramereDegerleri.Add(new MailReplaceParameterDto
                                 {
                                     Key = "ToplantiSaati",
-                                    Value =
-                                    $"{srTalebi.BasSaat:hh\\:mm}"
+                                    Value =$"{srTalebi.BasSaat:hh\\:mm}"
                                 });
 
                             if (!srTalebi.IsOnline)
@@ -457,40 +456,36 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         var mCOntent = SystemMails.GetSystemMailContent(enstitu.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        isSended = true;
+                        var kModel = new GonderilenMailler
                         {
-                            isSended = true;
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = enstitu.EnstituKod,
-                                MesajID = null,
-                                IslemTarihi = DateTime.Now,
-                                Konu = mCOntent.Title
-                            };
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
-                            kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
-                            kModel.IslemYapanIP = UserIdentity.Ip;
-                            kModel.Aciklama = item.Sablon.Sablon ?? "";
-                            kModel.AciklamaHtml = mCOntent.HtmlContent ?? "";
-                            kModel.Gonderildi = true;
-                            foreach (var itemGk in item.EMails)
-                            {
-                                kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = itemGk.EMail });
-                            }
-                            foreach (var itemMe in gonderilenMEkleris)
-                            {
-                                kModel.GonderilenMailEkleris.Add(itemMe);
-                            }
-                            db.GonderilenMaillers.Add(kModel);
-                            if (isAraRaporOrToplanti) tiAraRapor.RSBaslatildiMailGonderimTarihi = DateTime.Now;
-                            else tiAraRapor.ToplantiBilgiGonderimTarihi = DateTime.Now;
-
-                            LogIslemleri.LogEkle("TIBasvuruAraRapor", IslemTipi.Update, tiAraRapor.ToJson());
-
-
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = mCOntent.Title
+                        };
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
+                        kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
+                        kModel.IslemYapanIP = UserIdentity.Ip;
+                        kModel.Aciklama = item.Sablon.Sablon ?? "";
+                        kModel.AciklamaHtml = mCOntent.HtmlContent ?? "";
+                        kModel.Gonderildi = true;
+                        foreach (var itemGk in item.EMails)
+                        {
+                            kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = itemGk.EMail });
                         }
+                        foreach (var itemMe in gonderilenMEkleris)
+                        {
+                            kModel.GonderilenMailEkleris.Add(itemMe);
+                        }
+                        db.GonderilenMaillers.Add(kModel);
+                        if (isAraRaporOrToplanti) tiAraRapor.RSBaslatildiMailGonderimTarihi = DateTime.Now;
+                        else tiAraRapor.ToplantiBilgiGonderimTarihi = DateTime.Now;
+
+                        LogIslemleri.LogEkle("TIBasvuruAraRapor", IslemTipi.Update, tiAraRapor.ToJson());
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -544,19 +539,15 @@ namespace LisansUstuBasvuruSistemi.Business
                         });
                     }
 
-                    foreach (var item in juriler)
+                    mModel.AddRange(juriler.Select(item => new SablonMailModel
                     {
-                        mModel.Add(new SablonMailModel
-                        {
-                            UniqueID = item.UniqueID,
-
-                            UnvanAdi = item.UnvanAdi,
-                            AdSoyad = item.AdSoyad,
-                            EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
-                            MailSablonTipID = isLinkOrSonuc ? MailSablonTipi.TI_DegerlendirmeLinkGonderimKomite : MailSablonTipi.TI_DegerlendirmeSonucGonderimDanisman,
-                            JuriTipAdi = item.JuriTipAdi,
-                        });
-                    }
+                        UniqueID = item.UniqueID,
+                        UnvanAdi = item.UnvanAdi,
+                        AdSoyad = item.AdSoyad,
+                        EMails = new List<MailSendList> { new MailSendList { EMail = item.EMail, ToOrBcc = true } },
+                        MailSablonTipID = isLinkOrSonuc ? MailSablonTipi.TI_DegerlendirmeLinkGonderimKomite : MailSablonTipi.TI_DegerlendirmeSonucGonderimDanisman,
+                        JuriTipAdi = item.JuriTipAdi,
+                    }));
                     var mailSablonTipIDs = mModel.Select(s => s.MailSablonTipID).Distinct().ToList();
                     var sablonlar = db.MailSablonlaris.Where(p => mailSablonTipIDs.Contains(p.MailSablonTipID) && p.EnstituKod == enstitu.EnstituKod).ToList();
                     foreach (var item in mModel)
@@ -644,48 +635,48 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         var mCOntent = SystemMails.GetSystemMailContent(enstitu.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, item.Attachments);
-                        if (snded)
+                        if (!snded) continue;
+                        var kModel = new GonderilenMailler
                         {
-                            var kModel = new GonderilenMailler();
-                            kModel.Tarih = DateTime.Now;
-                            kModel.EnstituKod = enstitu.EnstituKod;
-                            kModel.MesajID = null;
-                            kModel.IslemTarihi = DateTime.Now;
-                            kModel.Konu = mCOntent.Title;
-                            if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
-                            if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
-                            kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
-                            kModel.IslemYapanIP = UserIdentity.Ip;
-                            kModel.Aciklama = item.Sablon.Sablon ?? "";
-                            kModel.AciklamaHtml = mCOntent.HtmlContent ?? "";
-                            kModel.Gonderildi = true;
-                            foreach (var itemGk in item.EMails)
-                            {
-                                kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = itemGk.EMail });
-                            }
-                            foreach (var itemMe in gonderilenMailEkleri)
-                            {
-                                kModel.GonderilenMailEkleris.Add(itemMe);
-                            }
-                            if (isLinkOrSonuc)
-                            {
-                                juri.DegerlendirmeIslemTarihi = null;
-                                juri.DegerlendirmeIslemYapanIP = null;
-                                juri.DegerlendirmeYapanID = null;
-                                juri.IsBasarili = null;
-                                juri.IsTezIzlemeRaporuAltAlanUygun = null;
-                                juri.IsTezIzlemeRaporuTezOnerisiUygun = null;
-                                juri.Aciklama = null;
-                                juri.IsLinkGonderildi = true;
-                                juri.LinkGonderimTarihi = DateTime.Now;
-                                juri.LinkGonderenID = UserIdentity.Current.Id;
-
-                            }
-
-                            db.GonderilenMaillers.Add(kModel);
-                            db.SaveChanges();
-                            if (isLinkOrSonuc) LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, juri.ToJson());
+                            Tarih = DateTime.Now,
+                            EnstituKod = enstitu.EnstituKod,
+                            MesajID = null,
+                            IslemTarihi = DateTime.Now,
+                            Konu = mCOntent.Title
+                        };
+                        if (!item.AdSoyad.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.AdSoyad + ")";
+                        if (!item.JuriTipAdi.IsNullOrWhiteSpace()) kModel.Konu += " (" + item.JuriTipAdi + ")";
+                        kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
+                        kModel.IslemYapanIP = UserIdentity.Ip;
+                        kModel.Aciklama = item.Sablon.Sablon ?? "";
+                        kModel.AciklamaHtml = mCOntent.HtmlContent ?? "";
+                        kModel.Gonderildi = true;
+                        foreach (var itemGk in item.EMails)
+                        {
+                            kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = itemGk.EMail });
                         }
+                        foreach (var itemMe in gonderilenMailEkleri)
+                        {
+                            kModel.GonderilenMailEkleris.Add(itemMe);
+                        }
+                        if (isLinkOrSonuc)
+                        {
+                            juri.DegerlendirmeIslemTarihi = null;
+                            juri.DegerlendirmeIslemYapanIP = null;
+                            juri.DegerlendirmeYapanID = null;
+                            juri.IsBasarili = null;
+                            juri.IsTezIzlemeRaporuAltAlanUygun = null;
+                            juri.IsTezIzlemeRaporuTezOnerisiUygun = null;
+                            juri.Aciklama = null;
+                            juri.IsLinkGonderildi = true;
+                            juri.LinkGonderimTarihi = DateTime.Now;
+                            juri.LinkGonderenID = UserIdentity.Current.Id;
+
+                        }
+
+                        db.GonderilenMaillers.Add(kModel);
+                        db.SaveChanges();
+                        if (isLinkOrSonuc) LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, juri.ToJson());
                     }
 
                     mmMessage.IsSuccess = true;

@@ -6,13 +6,13 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmYetkiGruplari : PagerOption
+    public class FmYetkiGruplari : PagerOption
     {
         public int YetkiGrupID { get; set; }
         public string YetkiGrupAdi { get; set; }
-        public IEnumerable<frYetkiGruplari> Data { get; set; }
+        public IEnumerable<FrYetkiGruplari> Data { get; set; }
     }
-    public class frYetkiGruplari
+    public class FrYetkiGruplari
     {
         public int YetkiGrupID { get; set; }
         public string YetkiGrupAdi { get; set; }

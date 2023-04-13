@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rprModelKazananList
+    public class RprModelKazananList
     {
         public string ProgramKodu { get; set; }
         public string ProgramAdi { get; set; }

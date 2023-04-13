@@ -406,7 +406,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.raporMezuniyetBasvuruFormModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporMezuniyetBasvuruFormModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // xrPictureBox1

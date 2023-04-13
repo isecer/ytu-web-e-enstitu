@@ -89,7 +89,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DialogID = dlgid
             };
             ViewBag.MmMessage = mmMessage;
-            var model = new kmSalonlar
+            var model = new KmSalonlar
             {
                 EnstituKod = enstituKod,
                 SRSalonTalepTipleris = new List<SRSalonTalepTipleri>()
@@ -134,7 +134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.SrSalonlarKayıt)]
-        public ActionResult Kayit(kmSalonlar kModel, List<int> srTalepTipIDs, string oldId, string ekd, string dlgid = "")
+        public ActionResult Kayit(KmSalonlar kModel, List<int> srTalepTipIDs, string oldId, string ekd, string dlgid = "")
         {
             srTalepTipIDs = srTalepTipIDs ?? new List<int>();
             

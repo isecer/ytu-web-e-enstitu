@@ -11,9 +11,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static  class ImageHelper
     {
-        public static Image CreateQrCode(this string Kod, int Width = 360, int Height = 360)
+        public static Image CreateQrCode(this string kod, int width = 360, int height = 360)
         {
-            var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", Kod, Width, Height);
+            var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", kod, width, height);
             WebResponse response = default(WebResponse);
             Stream remoteStream = default(Stream);
             StreamReader readStream = default(StreamReader);

@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rprModelProgramList
+    public class RprModelProgramList
     {
         public string AnabilimDaliAdi { get; set; }
         public string EnstituKod { get; set; }
@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<rprModelProgramDilBilgi> ProgramDilBilgi { get; set; }
         public List<rprModelProgramAgnoKriterBilgi> AgnoKriterBilgi { get; set; }
         public List<CmbIntDto> EslestirilenBolumler { get; set; }
-        public rprModelProgramList()
+        public RprModelProgramList()
         {
             ProgramDilBilgi = new List<rprModelProgramDilBilgi>();
             AgnoKriterBilgi = new List<rprModelProgramAgnoKriterBilgi>();

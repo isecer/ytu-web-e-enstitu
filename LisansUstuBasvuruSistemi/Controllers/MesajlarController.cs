@@ -153,11 +153,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsAktif = s.IsAktif
             }).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
-            ViewBag.MesajKategoriID = new SelectList(MesajlarBus.cmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
+            ViewBag.MesajKategoriID = new SelectList(MesajlarBus.CmbGetMesajKategorileri(model.EnstituKod, true), "Value", "Caption", model.MesajKategoriID);
             ViewBag.IndexModel = indexModel;
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAcikKapaliData(true), "Value", "Caption", model.IsAktif);
             ViewBag.IsDosyaEkDurum = new SelectList(ComboData.GetCmbDosyaEkiDurumData(true), "Value", "Caption", model.IsDosyaEkDurum);
-            ViewBag.MesajYili = new SelectList(MesajlarBus.cmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
+            ViewBag.MesajYili = new SelectList(MesajlarBus.CmbGetMesajYillari(model.EnstituKod, true), "Value", "Caption", model.MesajYili);
 
             return View(model);
         }

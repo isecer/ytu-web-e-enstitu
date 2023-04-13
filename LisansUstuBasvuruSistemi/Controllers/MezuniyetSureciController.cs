@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                   join z in qZamanTipId on s.Key equals z.gID
                                   join tt in qMailSablonTipId on s.Key equals tt.gID
                                   join za in qZaman on s.Key equals za.gID
-                                  select new kmMzOtoMail
+                                  select new KmMzOtoMail
                                   {
                                       ZamanTipID = z.Key.Value,
                                       Zaman = za.Key.ToInt().Value,

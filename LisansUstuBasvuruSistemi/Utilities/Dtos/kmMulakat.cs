@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmMulakat : Mulakat
+    public class KmMulakat : Mulakat
     {
         public List<int> MulakatDetayID { get; set; }
         public List<int> KampusID { get; set; }
@@ -21,7 +21,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> JuriAdi { get; set; }
 
         public List<krMulakatDetay> MulakatDetayi { get; set; }
-        public kmMulakat()
+        public KmMulakat()
         {
             MulakatDetayID = new List<int>();
             KampusID = new List<int>();

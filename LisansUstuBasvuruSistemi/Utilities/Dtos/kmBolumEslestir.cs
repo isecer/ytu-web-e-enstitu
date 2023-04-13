@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmBolumEslestir
+    public class KmBolumEslestir
     {
         public string EnstituKod { get; set; }
         public string EnstituAd { get; set; }

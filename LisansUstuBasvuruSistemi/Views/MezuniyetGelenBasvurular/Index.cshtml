@@ -847,17 +847,17 @@
         })
     }
 
-    function showSRBCiltDialog(MezuniyetBasvurulariID, SRTalepID, SRTalepleriBezCiltFormID) {
+    function showSRBCiltDialog(MezuniyetBasvurulariID,  isYeni) {
         var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("BezCiltForm", "Mezuniyet")',
-            data: { 'SRTalepID': SRTalepID, 'SRTalepleriBezCiltFormID': SRTalepleriBezCiltFormID },
+            url: '@Url.Action("TezTeslimFormu", "Mezuniyet")',
+            data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID},
             success: function (result) {
                 PanelRefresh(_panel, true);
                 var btbxxFS = bootbox.dialog({
                     message: result,
-                    title: "<i class='fa fa-file-text-o'></i> " + (SRTalepleriBezCiltFormID <= 0 ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzelt'),
+                    title: "<i class='fa fa-file-text-o'></i> " + (isYeni ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzelt'),
                     buttons: {
                         success: {
                             label: 'Kaydet',
@@ -865,9 +865,10 @@
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);
-                                $('#MezuniyetSRBezCiltForm').ajaxForm({
+                                $('#MezuniyetTezTeslimForm').ajaxForm({
                                     success: function (result) {
-                                        if (result.IsSuccess) {
+                                        if (result.IsSuccess)
+                                        {
                                             toastr["success"](result.Messages[0], result.Title);
                                             getDetailx(MezuniyetBasvurulariID);
                                             var _clsBtn = $('.modal-header').find('button').first();
@@ -876,19 +877,15 @@
                                         else {
                                             getMsg(result);
                                             return false;
-                                        }
-                                        PanelRefresh(pnlx, true);
+                                        } 
 
                                     },
                                     complete: function (cmp) {
                                         PanelRefresh(pnlx, true);
-                                    },
-                                    error: function (err) {
-                                        PanelRefresh(pnlx, true);
-                                    }
+                                    } 
 
                                 });
-                                $('#MezuniyetSRBezCiltForm').submit();
+                                $('#MezuniyetTezTeslimForm').submit();
 
                                 return false;
                             }
@@ -910,88 +907,7 @@
             }
         });
     }
-    function BasvuruBelgeKaydet(frmID, bID) {
-        var pnlx = $('#bsvrDet_' + bID);
-        PanelRefresh(pnlx, false);
 
-        $('#' + frmID).ajaxForm({
-            success: function (result) {
-                PanelRefresh(pnlx, true);
-                getDetailx(bID);
-                showMmMessage(result.Messages, 'Tamam');
-            },
-            complete: function (cmp) {
-                PanelRefresh(pnlx, true);
-            },
-            error: function (err) {
-                PanelRefresh(pnlx, true);
-            }
-
-        }).submit();
-    }
-    function ChangeFile(sndr, BTipID) {
-        var _BelgeIconID = '#BelgeIcon_' + BTipID;
-        var _BelgeAdiID = '#BelgeAdi_' + BTipID;
-        var _BelgeyiKaydetID = '#BelgeyiKaydet_' + BTipID;
-        var _ChkInptTbl = '#yOnayChk_' + BTipID;
-        $(_BelgeAdiID).removeAttr("onclick");
-        $(_BelgeIconID).removeAttr("onclick");
-        var isSuccessFSize = true;
-        if (sndr.files[0].size > (1024 * 1024 * 20)) {
-            isSuccessFSize = false;
-            var btbx = bootbox.dialog({
-                message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 20 MB olabilir.</td></tr></table>",
-                title: "Belge Kayıt İşlemi",
-                buttons: {
-                    success: {
-                        label: 'Tamam',
-                        className: "btn-info",
-                        callback: function () {
-                        }
-                    }
-
-                }
-            });
-        }
-        if (sndr.files.length > 0 && isSuccessFSize) {
-
-            $(_BelgeAdiID).val(sndr.files[0].name);
-            $(_BelgeyiKaydetID).removeClass('hide');
-            $(_ChkInptTbl).addClass('hide');
-
-        }
-        else {
-            $(sndr).val("");
-            $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
-            $(_BelgeyiKaydetID).addClass('hide');
-
-        }
-    }
-    function TdDurumKayit(MezuniyetBasvurulariID, MezuniyetBasvurulariTezDosyaID) {
-        var _panel = $('#bsvrDet_' + MezuniyetBasvurulariID);
-        PanelRefresh(_panel, false);
-        $('#TdDurumKaydet_' + MezuniyetBasvurulariTezDosyaID).ajaxForm({
-            success: function (result) {
-                 if (result.IsSuccess) {
-                    getDetailx(MezuniyetBasvurulariID);
-                }
-                else {
-                    showMmMessage(result.Messages, 'Tamam');
-
-                }
-                PanelRefresh(_panel, true);
-
-            },
-            complete: function (cmp) {
-                PanelRefresh(_panel, true);
-            },
-            error: function (err) {
-                PanelRefresh(_panel, true);
-            }
-
-        }).submit();
-
-    }
     function MzDurumKaydet(MezuniyetBasvurulariID) {
         var _IsMezunOldu = $('#IsMezunOldu_' + MezuniyetBasvurulariID).val();
         var _MezuniyetTarihi = $('#MezuniyetTarihi_' + MezuniyetBasvurulariID).val();

@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         public ActionResult Index(FmMezuniyetBasvurulari model, string ekd)
-        { 
+        {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             if (model.RowID.HasValue)
             {
@@ -149,7 +149,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         MezuniyetTarihi = s.MezuniyetTarihi,
                         SrTalebi = srT,
                         SRDurumID = srT.SRDurumID,
-                        TeslimFormDurumu = srT != null && srT.SRTalepleriBezCiltFormus.Any(),
+                        TeslimFormDurumu = srT != null && s.MezuniyetBasvurulariTezTeslimFormlaris.Any(),
                         IsOnaylandiOrDuzeltme = td != null ? td.IsOnaylandiOrDuzeltme : null,
                         MezuniyetBasvurulariTezDosyasi = td,
                         UzatmaSuresiGun = mOt.MBSinavUzatmaSuresiGun,
@@ -194,7 +194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult BasvuruYap(int? mezuniyetBasvurulariId, int? kullaniciId = null, string enstituKod = "", string ekd = "")
         {
-            var model = new kmMezuniyetBasvuru
+            var model = new KmMezuniyetBasvuru
             {
                 EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod
             };
@@ -318,7 +318,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult BasvuruYap(kmMezuniyetBasvuru kModel)
+        public ActionResult BasvuruYap(KmMezuniyetBasvuru kModel)
         {
             var stps = new List<int>();
 
@@ -813,7 +813,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(mdl);
         }
 
-        public ActionResult YayinEklemeKontrol(kmMezuniyetBasvuru model)
+        public ActionResult YayinEklemeKontrol(KmMezuniyetBasvuru model)
         {
             string projeTurAdi = "";
             if (model.YayinBilgisi.MezuniyetYayinProjeTurID.HasValue)
@@ -1091,7 +1091,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!yetkiliKullanici && !srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.KullaniciID == UserIdentity.Current.Id);
             else if (srYetkiliKullanici) mezuniyetBasvurularis.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             var mezuniyetBasvuru = mezuniyetBasvurularis.First();
-            var model = new kmSRTalep
+            var model = new KmSRTalep
             {
                 IsSalonSecilsin = mezuniyetBasvuru.OgrenimTipKod.IsDoktora() && mezuniyetBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.FenBilimleri
             };
@@ -1122,7 +1122,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult RezervasyonAlPost(kmSRTalep kModel)
+        public ActionResult RezervasyonAlPost(KmSRTalep kModel)
         {
 
             var mmMessage = new MmMessage();
@@ -1387,48 +1387,45 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
 
-        public ActionResult BezCiltForm(int srTalepId, int srTalepleriBezCiltFormId)
+        public ActionResult TezTeslimFormu(int mezuniyetBasvurulariId)
         {
             var yetkiliKullanici = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
-            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId && p.TalepYapanID == (yetkiliKullanici ? p.TalepYapanID : UserIdentity.Current.Id));
-            var mBasvuru = srTalep.MezuniyetBasvurulari;
-            var model = new SRTalepleriBezCiltFormu();
-            if (srTalepleriBezCiltFormId > 0)
-            {
-                var data = srTalep.SRTalepleriBezCiltFormus.First(p => p.SRTalepleriBezCiltFormID == srTalepleriBezCiltFormId);
-                //var Jof= SrTalep.MezuniyetBasvurulari.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-                // if (Jof != null)
-                // {
-
-                // }
-                model.SRTalepleriBezCiltFormID = data.SRTalepleriBezCiltFormID;
-                model.SRTalepID = data.SRTalepID;
+            var mBasvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.KullaniciID == (yetkiliKullanici ? p.KullaniciID : UserIdentity.Current.Id));
+            var mezuniyetBasvurulariTezTeslimForm = mBasvuru.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
+            var model = new MezuniyetBasvurulariTezTeslimFormlari();
+            if (mezuniyetBasvurulariTezTeslimForm!=null)
+            { 
+                model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
+                model.MezuniyetBasvurulariTezTeslimFormID = mezuniyetBasvurulariTezTeslimForm.MezuniyetBasvurulariTezTeslimFormID;
                 model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
-                model.TezDili = data.TezDili;
-                model.TezBaslikTr = data.TezBaslikTr;
-                model.TezBaslikEn = data.TezBaslikEn;
-                model.TezOzet = data.TezOzet;
-                model.TezOzetHtml = data.TezOzetHtml;
-                model.TezAbstract = data.TezAbstract;
-                model.TezAbstractHtml = data.TezAbstractHtml;
+                model.TezDili = mezuniyetBasvurulariTezTeslimForm.TezDili;
+                model.TezBaslikTr = mezuniyetBasvurulariTezTeslimForm.TezBaslikTr;
+                model.TezBaslikEn = mezuniyetBasvurulariTezTeslimForm.TezBaslikEn;
+                model.TezOzet = mezuniyetBasvurulariTezTeslimForm.TezOzet;
+                model.TezOzetHtml = mezuniyetBasvurulariTezTeslimForm.TezOzetHtml;
+                model.TezAbstract = mezuniyetBasvurulariTezTeslimForm.TezAbstract;
+                model.TezAbstractHtml = mezuniyetBasvurulariTezTeslimForm.TezAbstractHtml;
             }
             else
             {
+                var jof = mBasvuru.MezuniyetJuriOneriFormlaris.First();
+                var srTalep = mBasvuru.SRTalepleris.FirstOrDefault(f => f.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
+                model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
                 model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
-                model.TezBaslikTr = srTalep.MezuniyetBasvurulari.TezBaslikTr;
-                model.TezBaslikEn = srTalep.MezuniyetBasvurulari.TezBaslikEn;
-                model.TezOzet = srTalep.MezuniyetBasvurulari.TezOzet;
-                model.TezOzetHtml = srTalep.MezuniyetBasvurulari.TezOzetHtml;
-                model.TezAbstract = srTalep.MezuniyetBasvurulari.TezAbstract;
-                model.TezAbstractHtml = srTalep.MezuniyetBasvurulari.TezAbstractHtml;
+                model.TezBaslikTr = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikTr : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikTr : mBasvuru.TezBaslikTr);
+                model.TezBaslikEn = srTalep.IsTezBasligiDegisti == true ? srTalep.YeniTezBaslikEn : (jof.IsTezBasligiDegisti == true ? jof.YeniTezBaslikEn : mBasvuru.TezBaslikEn);
+                model.TezOzet = mBasvuru.TezOzet;
+                model.TezOzetHtml = mBasvuru.TezOzet;
+                model.TezAbstract = mBasvuru.TezAbstract;
+                model.TezAbstractHtml = mBasvuru.TezAbstract;
 
             }
             return View(model);
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult BezCiltFormPost(SRTalepleriBezCiltFormu kModel, bool? isTezDiliTr)
+        public ActionResult TezTeslimFormuPost(MezuniyetBasvurulariTezTeslimFormlari kModel, bool? isTezDiliTr)
         {
             var mmMessage = new MmMessage
             {
@@ -1437,20 +1434,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = Msgtype.Warning
             };
 
-            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
-
-            var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == kModel.SRTalepID);
-
-            var mzTalep = srTalep.MezuniyetBasvurulari;
-
-
-            if (srTalep.TalepYapanID != UserIdentity.Current.Id && !yetkiliK)
-            {
-                string msg = "Başka bir kullanıcı adına rezervasyon yapmaya ya da düzeltmeye yetkili değilsiniz!";
-                mmMessage.Messages.Add(msg);
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(msg + "\r\n İşlem yapılmak istenen KullanıcıID:" + srTalep.TalepYapanID + "\r\n İşlemYapanID:" + UserIdentity.Current.Id, "Mezuniyet/RezervasyonAlPost", LogType.Saldırı);
+            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent(); 
+            var mezuniyetBasvuru = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID); 
+            if (mezuniyetBasvuru.KullaniciID != UserIdentity.Current.Id && !yetkiliK)
+            { 
+                mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
             }
-            else if (mzTalep.IsMezunOldu.HasValue)
+            else if (mezuniyetBasvuru.IsMezunOldu.HasValue)
             {
                 mmMessage.Messages.Add("Mezuniyet sonuç bilgisi girilildikten sonra Tez teslim formu üzerinde düzeltme işlemi yapılamaz!");
 
@@ -1497,30 +1487,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemYapanID = UserIdentity.Current.Id;
                     kModel.IslemYapanIP = UserIdentity.Ip;
 
-                    if (kModel.SRTalepleriBezCiltFormID <= 0)
+                    var kKayit = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
+                    if (kKayit==null)
                     {
-                        _entities.SRTalepleriBezCiltFormus.Add(new SRTalepleriBezCiltFormu
-                        {
-                            SRTalepID = kModel.SRTalepID,
-                            RowID = Guid.NewGuid(),
-                            IsTezDiliTr = kModel.IsTezDiliTr,
-                            TezDili = kModel.TezDili,
-                            TezBaslikTr = kModel.TezBaslikTr,
-                            TezBaslikEn = kModel.TezBaslikEn,
-                            TezOzet = kModel.TezOzet,
-                            TezOzetHtml = kModel.TezOzetHtml,
-                            TezAbstract = kModel.TezAbstract,
-                            TezAbstractHtml = kModel.TezAbstractHtml,
-                            IslemTarihi = kModel.IslemTarihi,
-                            IslemYapanID = kModel.IslemYapanID,
-                            IslemYapanIP = kModel.IslemYapanIP,
-
-                        });
+                        kModel.RowID = Guid.NewGuid();
+                        _entities.MezuniyetBasvurulariTezTeslimFormlaris.Add(kModel);
                     }
                     else
                     {
-                        var kKayit = _entities.SRTalepleriBezCiltFormus.First(p => p.SRTalepID == kModel.SRTalepID && p.SRTalepleriBezCiltFormID == kModel.SRTalepleriBezCiltFormID);
-                        if (
+                         if (
                             kKayit.IsTezDiliTr != kModel.IsTezDiliTr ||
                             kKayit.TezDili != kModel.TezDili ||
                             kKayit.TezBaslikTr != kModel.TezBaslikTr ||
@@ -1544,6 +1519,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
+                    mmMessage.Messages.Add("Tez Teslim Formu Oluşturuldu.");
                     mmMessage.MessageType = Msgtype.Success;
 
 
@@ -2079,7 +2055,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              Aciklama = s.Aciklama,
                              SRTaleplerJuris = s.SRTaleplerJuris.Where(p => p.UniqueID == uniqueId.Value).ToList(),
                              IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
-                             SRTalepleriBezCiltFormus = s.SRTalepleriBezCiltFormus,
                          }).Where(p => p.IsSonSRTalebi).OrderByDescending(o => o.SRTalepID).First();
             var sinavJuri = model.SRTaleplerJuris.First();
             var juriOneriFormuJuri = _entities.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == sinavJuri.MezuniyetJuriOneriFormuJuriID);

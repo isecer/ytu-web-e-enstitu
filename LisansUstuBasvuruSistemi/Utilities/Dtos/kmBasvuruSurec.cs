@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmBasvuruSurec : BasvuruSurec
+    public class KmBasvuruSurec : BasvuruSurec
     {
         public string OgretimYili { get; set; }
 
@@ -30,9 +30,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int> MulakatSinavTurID { get; set; }
         public List<int> MulakatSinavTurIDSecilen { get; set; }
         public List<int?> YuzdeOran { get; set; }
-        public List<mulakatSturModel> MulakatSTurModel { get; set; }
+        public List<MulakatSturModel> MulakatSTurModel { get; set; }
 
-        public kmBasvuruSurecOgrenimTipModel OgrenimTipModel { get; set; }
+        public KmBasvuruSurecOgrenimTipModel OgrenimTipModel { get; set; }
 
         public List<DateTime?> AsilBasTar { get; set; }
         public List<DateTime?> AsilBitTar { get; set; }
@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<DateTime?> YedekBitTar { get; set; }
 
 
-        public kmBasvuruSurec()
+        public KmBasvuruSurec()
         {
             gID = new List<int>();
             BasvuruSurecOtoMailID = new List<string>();
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             YuzdeOran = new List<int?>();
 
 
-            OgrenimTipModel = new kmBasvuruSurecOgrenimTipModel();
+            OgrenimTipModel = new KmBasvuruSurecOgrenimTipModel();
 
             AsilBasTar = new List<DateTime?>();
             AsilBitTar = new List<DateTime?>();
@@ -67,15 +67,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             YedekBitTar = new List<DateTime?>();
         }
     }
-    public class kmBasvuruSurecOgrenimTipModel
+    public class KmBasvuruSurecOgrenimTipModel
     {
         public bool IsBelgeYuklemeVar { get; set; }
         public string EnstituKod { get; set; }
         public int BasvuruSurecID { get; set; }
         public List<CmbIntDto> EnstituOgrenimTipleri = new List<CmbIntDto>();
-        public IEnumerable<CheckObject<krOgrenimTip>> OgrenimTipleriDataList { get; set; }
+        public IEnumerable<CheckObject<KrOgrenimTip>> OgrenimTipleriDataList { get; set; }
     }
-    public class mulakatSturModel : MulakatSinavTurleri
+    public class MulakatSturModel : MulakatSinavTurleri
     {
         public bool? Success { get; set; }
         public int IndexNo { get; set; }

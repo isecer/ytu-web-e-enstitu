@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
 
     public class RequestLogger : ActionFilterAttribute
     {
-        private string _logFilePath = @"C:\lisansutuActionLogs.txt";
+        private const string LogFilePath = @"C:\lisansutuActionLogs.txt";
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -20,9 +20,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
             var ip = request.UserHostAddress;
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-            var logMessage = string.Format("{0} {1} from {2}", method, url, ip);
-            File.AppendAllText(_logFilePath, string.Format("{0} | {1}\n", timestamp, logMessage));
-
+            var logMessage = $"{method} {url} from {ip}";
+            File.AppendAllText(LogFilePath, $"{timestamp} | {logMessage}\n"); 
             base.OnActionExecuting(filterContext);
         }
     }

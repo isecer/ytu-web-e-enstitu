@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kayitBilgi;
             }
         }
-        public static MmMessage KullaniciKayitKontrol(kmBasvuru kModel)
+        public static MmMessage KullaniciKayitKontrol(KmBasvuru kModel)
         {
             var mmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())

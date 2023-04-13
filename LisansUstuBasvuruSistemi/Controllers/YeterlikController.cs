@@ -819,11 +819,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else YeterlikBus.SendMailSinavBilgi(yeterlikBasvuru.UniqueID);
                         }
-                    }
-
-
-
-
+                    } 
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1275,10 +1271,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new { mmMessage.IsSuccess, messageView }.ToJsonResult();
-        }
-
-
-
+        } 
         public ActionResult GetJuriData(string term)
         {
             var data = Management.getWsPersisOE(term);
@@ -1293,9 +1286,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
             return kul2.ToJsonResult();
-        }
-
-
+        } 
         public ActionResult GetBasvuruDurum(Guid id)
         {
             var q = _entities.YeterlikBasvurus.Where(p => p.UniqueID == id).Select(s => new

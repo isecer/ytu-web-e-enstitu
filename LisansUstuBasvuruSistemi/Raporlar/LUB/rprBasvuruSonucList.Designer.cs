@@ -489,7 +489,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprBasvuruSonucModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprBasvuruSonucModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // rprBasvuruSonucList

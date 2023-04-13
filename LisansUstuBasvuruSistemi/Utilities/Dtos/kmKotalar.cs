@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmKotalar : Kotalar
+    public class KmKotalar : Kotalar
     {
         public int? AlanIciKota { get; set; }
         public int? AlanDisiKota { get; set; }

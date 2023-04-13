@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class krOgrenimTip : BasvuruSurecOgrenimTipleri
+    public class KrOgrenimTip : BasvuruSurecOgrenimTipleri
     {
         public string EnstituKod { get; set; }
         public bool? Success { get; set; }
@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string OgrenimTipAdi { get; set; }
         public List<int> SecilenBSOTIDs { get; set; }
 
-        public krOgrenimTip()
+        public KrOgrenimTip()
         {
             SecilenBSOTIDs = new List<int>();
 

@@ -147,7 +147,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
-            var model = new kmMulakat();
+            var model = new KmMulakat();
 
             var kulProgIDs = UserBus.GetUserProgramKods(UserIdentity.Current.Id, _EnstituKod);
             if (id.HasValue)
@@ -227,7 +227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.YgMulakatKayıt)]
-        public ActionResult MulakatKayit(kmMulakat kModel, string EKD, string dlgid)
+        public ActionResult MulakatKayit(KmMulakat kModel, string EKD, string dlgid)
         {
             
             var _EnstituKod = EnstituBus.GetSelectedEnstitu(EKD);

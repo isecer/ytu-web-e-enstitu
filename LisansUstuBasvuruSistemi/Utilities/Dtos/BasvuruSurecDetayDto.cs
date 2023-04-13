@@ -17,8 +17,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string IslemYapan { get; set; }
         public string DonemAdi { get; set; }
         public MIndexBilgi ToplamBasvuruBilgisi { get; set; }
-        public List<mulakatSturModel> MulakatSTurModel { get; set; }
-        public List<krOgrenimTip> OgrenimTipleriLst { get; set; }
+        public List<MulakatSturModel> MulakatSTurModel { get; set; }
+        public List<KrOgrenimTip> OgrenimTipleriLst { get; set; }
         public List<FrKotalarDto> ProgramKotaLst { get; set; }
         public List<KrSinavTipleri> SinavTipleri { get; set; }
         public FmMulakatNotGiris MulakatBilgi { get; set; }

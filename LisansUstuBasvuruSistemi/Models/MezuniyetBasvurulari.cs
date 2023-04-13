@@ -19,6 +19,7 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             this.AnketCevaplaris = new HashSet<AnketCevaplari>();
             this.MezuniyetBasvurulariTezDosyalaris = new HashSet<MezuniyetBasvurulariTezDosyalari>();
+            this.MezuniyetBasvurulariTezTeslimFormlaris = new HashSet<MezuniyetBasvurulariTezTeslimFormlari>();
             this.MezuniyetBasvurulariYayins = new HashSet<MezuniyetBasvurulariYayin>();
             this.MezuniyetJuriOneriFormlaris = new HashSet<MezuniyetJuriOneriFormlari>();
             this.SRTalepleris = new HashSet<SRTalepleri>();
@@ -88,6 +89,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Programlar Programlar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetBasvurulariTezTeslimFormlari> MezuniyetBasvurulariTezTeslimFormlaris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

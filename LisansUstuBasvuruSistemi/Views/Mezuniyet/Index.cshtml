@@ -369,72 +369,16 @@
             }
         });
     }
-    function BasvuruBelgeKaydet(frmID, id, bID) {
-        var pldID = $('#bsvrDet_' + bID);
-
-        PanelRefresh(pldID, false);
-        var aFrm = $('#' + frmID).ajaxForm({
-            success: function (result) {
-                PanelRefresh(pldID, true);
-                getDetailx(bID);
-                showMmMessage(result.Messages, 'Tamam');
-            },
-            complete: function (cmp) {
-                PanelRefresh(pldID, true);
-            },
-            error: function (err) {
-                PanelRefresh(pldID, true);
-            }
-
-        }).submit();
-    }
-    function ChangeFile(sndr, BTipID) {
-        var _BelgeIconID = '#BelgeIcon_' + BTipID;
-        var _BelgeAdiID = '#BelgeAdi_' + BTipID;
-        var _BelgeyiKaydetID = '#BelgeyiKaydet_' + BTipID;
-        var _ChkInptTbl = '#yOnayChk_' + BTipID;
-        $(_BelgeAdiID).removeAttr("onclick");
-        $(_BelgeIconID).removeAttr("onclick");
-        var isSuccessFSize = true;
-        if (sndr.files[0].size > (1024 * 1024 * 20)) {
-            isSuccessFSize = false;
-            var btbx = bootbox.dialog({
-                message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 20 MB olabilir.</td></tr></table>",
-                title: "Belge Kayıt İşlemi",
-                buttons: {
-                    success: {
-                        label: 'Tamam',
-                        className: "btn-success",
-                        callback: function () {
-                        }
-                    }
-
-                }
-            });
-        }
-        if (sndr.files.length > 0 && isSuccessFSize) {
-
-            $(_BelgeAdiID).val(sndr.files[0].name);
-            $(_BelgeyiKaydetID).removeClass('hide');
-            $(_ChkInptTbl).addClass('hide');
-
-        }
-        else {
-            $(sndr).val("");
-            $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
-            $(_BelgeyiKaydetID).addClass('hide');
-
-        }
-    }
-    function showSRBCiltDialog(MezuniyetBasvurulariID, SRTalepID, SRTalepleriBezCiltFormID) {
+ 
+    function showSRBCiltDialog(MezuniyetBasvurulariID, isYeni) {
         $.ajax({
-            url: '@Url.Action("BezCiltForm", "Mezuniyet")',
-            data: { 'SRTalepID': SRTalepID, 'SRTalepleriBezCiltFormID': SRTalepleriBezCiltFormID },
+            url: '@Url.Action("TezTeslimFormu", "Mezuniyet")',
+            data: { 'MezuniyetBasvurulariID': MezuniyetBasvurulariID },
             success: function (result) {
 
                 var btbxxFS = bootbox.dialog({
                     message: result,
-                    title: "<i class='fa fa-file-text-o'></i> " + (SRTalepleriBezCiltFormID <= 0 ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzenle'),
+                    title: "<i class='fa fa-file-text-o'></i> " + (isYeni ? 'Yeni Tez Teslim Formu Oluştur' : 'Tez Teslim Formunu Düzenle'),
                     buttons: {
                         success: {
                             label: 'Kaydet',
@@ -443,7 +387,7 @@
                                 $('.MezBezkayitBtn_' + MezuniyetBasvurulariID).addClass('disabled');
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);
-                                $('#MezuniyetSRBezCiltForm').ajaxForm({
+                                $('#MezuniyetTezTeslimForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
                                             toastr["success"](result.Messages[0], result.Title);
@@ -454,20 +398,15 @@
                                         else {
                                             getMsg(result);
                                             return false;
-                                        }
-                                        PanelRefresh(pnlx, true);
-
+                                        }  
                                     },
                                     complete: function (cmp) {
                                         $('.MezBezkayitBtn_' + MezuniyetBasvurulariID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
-                                    },
-                                    error: function (err) {
-                                        PanelRefresh(pnlx, true);
-                                    }
+                                    } 
 
                                 });
-                                $('#MezuniyetSRBezCiltForm').submit();
+                                $('#MezuniyetTezTeslimForm').submit();
 
                                 return false;
                             }

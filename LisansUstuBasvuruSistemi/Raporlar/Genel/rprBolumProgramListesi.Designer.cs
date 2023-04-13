@@ -374,7 +374,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.rprModelBolumProgramList);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RprModelBolumProgramList);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // rprBolumProgramListesi

@@ -1,12 +1,7 @@
-﻿using System;
+﻿using BiskaUtil;
+using LisansUstuBasvuruSistemi.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
 
 namespace LisansUstuBasvuruSistemi.Business
 {

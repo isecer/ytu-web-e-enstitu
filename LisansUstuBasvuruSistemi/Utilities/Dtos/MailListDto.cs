@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class mailListModel
+    public class MailListDto
     {
         public string id { get; set; }
         public string AdSoyad { get; set; }

@@ -1697,7 +1697,7 @@
             // 
             // objectDataSource1
             // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.raporLUBModel);
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporLUBModel);
             this.objectDataSource1.Name = "objectDataSource1";
             // 
             // DetailReport1

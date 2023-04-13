@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class fmSalonBilgi : PagerOption
+    public class FmSalonBilgi : PagerOption
     {
         public string EnstituKod { get; set; }
         public int? SRTalepTipID { get; set; }
@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool? IsDolu { get; set; }
         public IEnumerable<frSalonBilgi> data { get; set; }
 
-        public fmSalonBilgi()
+        public FmSalonBilgi()
         {
             SRSalonID = new List<int>();
             HaftaGunID = new List<int>();

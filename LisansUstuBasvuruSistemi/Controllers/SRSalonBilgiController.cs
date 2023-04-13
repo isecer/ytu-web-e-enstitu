@@ -20,10 +20,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(string ekd)
         {
 
-            return Index(new fmSalonBilgi { }, ekd);
+            return Index(new FmSalonBilgi { }, ekd);
         }
         [HttpPost]
-        public ActionResult Index(fmSalonBilgi model, string ekd)
+        public ActionResult Index(FmSalonBilgi model, string ekd)
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             model.EnstituKod = enstituKod;

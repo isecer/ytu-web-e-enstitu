@@ -17,7 +17,6 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SRTalepleri()
         {
-            this.SRTalepleriBezCiltFormus = new HashSet<SRTalepleriBezCiltFormu>();
             this.SRTaleplerJuris = new HashSet<SRTaleplerJuri>();
         }
     
@@ -72,8 +71,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual SRSalonlar SRSalonlar { get; set; }
         public virtual SRTalepTipleri SRTalepTipleri { get; set; }
         public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SRTalepleriBezCiltFormu> SRTalepleriBezCiltFormus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
     }

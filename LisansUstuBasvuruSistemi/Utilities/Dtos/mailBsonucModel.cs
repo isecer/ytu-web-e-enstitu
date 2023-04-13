@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class mailBsonucModel : rprBasvuruSonucModel
+    public class MailBsonucModel : RprBasvuruSonucModel
     {
         public int KullaniciID { get; set; }
         public int BasvuruID { get; set; }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
-    public static class TIAraRaporDurumu
+    public static class TiAraRaporDurumu
     {
         public static int ToplantiBilgileriGirilmedi = 1;
         public static int ToplantiBilgileriGirildi = 2;

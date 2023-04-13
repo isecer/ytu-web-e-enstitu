@@ -6,11 +6,11 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class kmMezuniyetBasvuru : MezuniyetBasvurulari
+    public class KmMezuniyetBasvuru : MezuniyetBasvurulari
     {
         public int SelectedTabIndex { get; set; }
         public bool Onaylandi { get; set; }
-        public bool sbmtForm { get; set; }
+        public bool SbmtForm { get; set; }
         public int StepNo { get; set; }
         public int? SetSelectedStep { get; set; }
         public bool IsYerli { get; set; }
@@ -54,7 +54,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public MezuniyetBasvurulariYayinDto YayinBilgisi { get; set; }
 
         public List<MezuniyetBasvurulariYayinDto> MezuniyetBasvuruYayinlari { get; set; }
-        public kmMezuniyetBasvuru()
+        public KmMezuniyetBasvuru()
         {
             _MezuniyetBasvurulariYayinID = new List<int>();
             _Yayinlanmis = new List<bool?>();

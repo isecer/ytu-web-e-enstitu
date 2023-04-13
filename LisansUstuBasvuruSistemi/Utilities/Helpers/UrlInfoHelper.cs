@@ -9,10 +9,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class UrlInfoHelper
     {
-        public static UrlInfoModel toUrlInfo(this Uri uri)
+        public static UrlInfoModel ToUrlInfo(this Uri uri)
         {
-            var model = new UrlInfoModel();
-            model.Root = LisansUstuBasvuruSistemi.Models.Management.getRoot();
+            var model = new UrlInfoModel
+            {
+                Root = LisansUstuBasvuruSistemi.Models.Management.getRoot()
+            };
             var webSite = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
 
             webSite = webSite.IndexOf("?") > -1 ? webSite.Substring(0, webSite.IndexOf("?")) : webSite;

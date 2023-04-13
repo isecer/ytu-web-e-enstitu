@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                               join sd in db.MezuniyetYayinTurleris on new { s.MezuniyetYayinTurID } equals new { sd.MezuniyetYayinTurID }
                               join Inx in db.MezuniyetYayinIndexTurleris on new { yy.MezuniyetYayinIndexTurID } equals new { MezuniyetYayinIndexTurID = (int?)Inx.MezuniyetYayinIndexTurID } into defInx
                               from InxB in defInx.DefaultIfEmpty()
-                              select new raporMezuniyetBasvuruFormModel
+                              select new RaporMezuniyetBasvuruFormModel
                               {
 
                                   YayinTurAdi = sd.MezuniyetYayinTurAdi,

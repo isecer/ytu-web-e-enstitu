@@ -18,8 +18,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var ogUyeUnvan = new List<string> { "DR.ÖĞR.ÜYE".ToLower(), "DR.ÖĞR.ÜYESİ".ToLower(), "DR.ÖĞRETİM.ÜYE".ToLower(), "DR.ÖĞRETİM.ÜYESİ".ToLower() };
             if (profUnvan.Any(a => a.Contains(unvanAdi))) return "PROF.DR.";
             if (docUnvan.Any(a => a.Contains(unvanAdi))) return "DOÇ.DR.";
-            if (ogUyeUnvan.Any(a => a.Contains(unvanAdi))) return "DR.ÖĞR.ÜYE.";
-            return unvanAdi.ToUpper();
+            return ogUyeUnvan.Any(a => a.Contains(unvanAdi)) ? "DR.ÖĞR.ÜYE." : unvanAdi.ToUpper();
         }
 
         public static List<CmbStringDto> GetCmbJuriUnvanlar(bool bosSecimVar = false)
@@ -27,10 +26,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var dct = new List<CmbStringDto>();
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             var unvanList = new List<string> { "PROF.DR.", "DOÇ.DR.", "DR.ÖĞR.ÜYE." };
-            foreach (var item in unvanList)
-            {
-                dct.Add(new CmbStringDto { Value = item, Caption = item });
-            }
+            dct.AddRange(unvanList.Select(item => new CmbStringDto { Value = item, Caption = item }));
             return dct;
 
         }

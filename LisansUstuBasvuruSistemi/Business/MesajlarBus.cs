@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
         }
 
-        public static List<CmbIntDto> cmbGetMesajKategorileri(string EnstituKod = "", bool bosSecimVar = false, bool? IsAktif = null)
+        public static List<CmbIntDto> CmbGetMesajKategorileri(string EnstituKod = "", bool bosSecimVar = false, bool? IsAktif = null)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
@@ -63,7 +63,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
         }
 
-        public static List<CmbIntDto> cmbGetMesajYillari(string EnstituKod = "", bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbGetMesajYillari(string EnstituKod = "", bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });

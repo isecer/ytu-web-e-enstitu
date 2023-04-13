@@ -11,13 +11,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string RemoveIllegalFileNameChars(this string input, string replacement = "")
         {
             var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
             return r.Replace(input, replacement);
         }
         public static string ReplaceSpecialCharacter(this string gelenStr)
         {
-            string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+            var r = new Regex($"[{Regex.Escape(regexSearch)}]");
             var fname = r.Replace(gelenStr, "");
             return fname;
 

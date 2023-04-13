@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class rwMulakatJuri : MulakatJuri
+    public class RwMulakatJuri : MulakatJuri
     {
         public string AsilYedek { get; set; }
     }

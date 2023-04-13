@@ -15,21 +15,21 @@
                 <span> Danışman Formu Oluşturulmadı </span>
             }
 
-            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !Model.VarolanDanismanOnayladi.HasValue)
+            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && !Model.VarolanDanismanOnayladi.HasValue)
             {
                 <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Onayı Bekleniyor</span>
             }
-            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && Model.VarolanDanismanOnayladi == true && !Model.DanismanOnayladi.HasValue)
+            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && Model.VarolanDanismanOnayladi == true && !Model.DanismanOnayladi.HasValue)
             {
                 <span style="color:green;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> Varolan Danışman Tarafından Onayladı</span>
             }
-            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && Model.VarolanDanismanOnayladi == false)
+            else if ((Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi) && Model.VarolanDanismanOnayladi == false)
             {
                 <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i>Varolan Danışman Tarafından Onaylamanmadı</span>
             }
             else if (!Model.DanismanOnayladi.HasValue)
             {
-                <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor</span>
+                <span aria-hidden="true"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> @(Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || Model.TDOBasvuruDanisman.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi ? "Yeni " : "")Danışman Onayı Bekleniyor</span>
             }
             else if (Model.DanismanOnayladi == true && !Model.EYKYaGonderildi.HasValue)
             {

@@ -12,13 +12,13 @@ namespace LisansUstuBasvuruSistemi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SRTalepleriBezCiltFormu
+    public partial class MezuniyetBasvurulariTezTeslimFormlari
     {
-        public int SRTalepleriBezCiltFormID { get; set; }
+        public int MezuniyetBasvurulariTezTeslimFormID { get; set; }
         public System.Guid RowID { get; set; }
-        public int SRTalepID { get; set; }
-        public bool IsTezDiliTr { get; set; }
+        public Nullable<int> MezuniyetBasvurulariID { get; set; }
         public string TezDili { get; set; }
+        public bool IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
         public string TezOzet { get; set; }
@@ -29,6 +29,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual SRTalepleri SRTalepleri { get; set; }
+        public virtual MezuniyetBasvurulari MezuniyetBasvurulari { get; set; }
     }
 }

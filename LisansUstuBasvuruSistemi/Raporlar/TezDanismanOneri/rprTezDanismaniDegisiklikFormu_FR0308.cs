@@ -87,7 +87,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 cellTezBaslikTr.Text = q.TezBaslikTr;
                 cellTezBaslikEn.Text = q.TezBaslikEn;
 
-                chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 chkDanismanDegisecekHayir.Checked = !chkDanismanDegisecekEvet.Checked;
                 if (chkDanismanDegisecekEvet.Checked)
                 {
@@ -100,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                     cellUzerineKayitliOgrenciSayisiDR.Text = q.TDOgrenciSayisiDR.ToString();
                     cellUzerineKayitliOgrenciSayisiYL.Text = q.TDOgrenciSayisiYL.ToString();
                 }
-                chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TDODanismanTalepTip.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TDODanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
+                chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 chkTezBasligiDegisecekHayir.Checked = !chkTezBasligiDegisecekEvet.Checked;
                 if (chkTezBasligiDegisecekEvet.Checked)
                 {

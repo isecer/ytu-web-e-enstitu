@@ -11,17 +11,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class NotConverterHelper
     {
-        public static CevrilenNotDto ToNotCevir(this double deger, int Sistem)
+        public static CevrilenNotDto ToNotCevir(this double deger, int notSistemi)
         {
             var mdl = new CevrilenNotDto();
-            if (Sistem == NotSistemi.Not1LikSistem)
+            if (notSistemi == NotSistemi.Not1LikSistem)
             {  // && CSistem == 100
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (30d + (-35d / 2d + (0.5825d + (0.1925d + 0.195833d * (-2d + deger)) * (-3d + deger)) * (-1d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (Sistem == NotSistemi.Not4LükSistem)
+            else if (notSistemi == NotSistemi.Not4LükSistem)
             {
                 //&& CSistem == 100
                 mdl.Not1Lik = 1;
@@ -29,21 +29,21 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (100d + (70d / 3d + (0.00166667d + 0.00166667d * (-2d + deger)) * (-1d + deger)) * (-4d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (Sistem == NotSistemi.Not5LikSistem)
+            else if (notSistemi == NotSistemi.Not5LikSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = (100d + (18.6667d + (-0.000952381d + (0.0021645d + 0.00155844d * (-4d + deger)) * (-3d + deger)) * (-1.25d + deger)) * (-5d + deger)).ToString("n2").ToDouble().Value;
             }
-            else if (Sistem == NotSistemi.Not100LükSistem)
+            else if (notSistemi == NotSistemi.Not100LükSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
                 mdl.Not5Lik = 5;
                 mdl.Not100Luk = deger.ToString("n2").ToDouble().Value;
             }
-            else if (Sistem == NotSistemi.Not20LikSistem)
+            else if (notSistemi == NotSistemi.Not20LikSistem)
             {
                 mdl.Not1Lik = 1;
                 mdl.Not4Luk = 4;
@@ -53,27 +53,27 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             return mdl;
 
         }
-        public static double toGenelBasariNotu(this double MezuniyetNotu100LukSistem, bool MulakatSurecineGirecek, BasvuruSurecOgrenimTipleri BasurecOT, bool IsAlesYerineDosyaNotuIstensin, double? AlesNotu, double? GirisSinavNotu = null)
+        public static double ToGenelBasariNotu(this double mezuniyetNotu100LukSistem, bool mulakatSurecineGirecek, BasvuruSurecOgrenimTipleri basurecOt, bool isAlesYerineDosyaNotuIstensin, double? alesNotu, double? girisSinavNotu = null)
         {
 
             var formul = "";
 
             string retVal = "";
             string reGexF = "";
-            string AlesKey = IsAlesYerineDosyaNotuIstensin ? "Dosya" : "Ales";
-            if (BasurecOT.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans)
+            string AlesKey = isAlesYerineDosyaNotuIstensin ? "Dosya" : "Ales";
+            if (basurecOt.OgrenimTipKod == OgrenimTipi.TezsizYuksekLisans)
             {
-                if (AlesNotu.HasValue)
+                if (alesNotu.HasValue)
                 {
                     // MezuniyetNotu100LukSistem + AlesNotu
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluD : BasurecOT.GBNFormulu;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.ToString());
+                    formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluD : basurecOt.GBNFormulu;
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
                 else
                 {
                     //sadece MezuniyetNotu100LukSistem  
-                    reGexF = MezuniyetNotu100LukSistem.ToString();
+                    reGexF = mezuniyetNotu100LukSistem.ToString();
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
             }
@@ -81,31 +81,31 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
             {
 
 
-                if (AlesNotu.HasValue && GirisSinavNotu.HasValue)
+                if (alesNotu.HasValue && girisSinavNotu.HasValue)
                 {
                     // MezuniyetNotu100LukSistem + GirisSinavNotu + AGNO 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluD : BasurecOT.GBNFormulu;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.ToString()).Replace("Mülakat", GirisSinavNotu.Value.ToString());
+                    formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluD : basurecOt.GBNFormulu;
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.ToString()).Replace("Mülakat", girisSinavNotu.Value.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
-                else if (GirisSinavNotu.HasValue)
+                else if (girisSinavNotu.HasValue)
                 {
 
                     // MezuniyetNotu100LukSistem + GirisSinavNotu 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluDDosyasiz : BasurecOT.GBNFormuluAlessiz;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace("Mülakat", GirisSinavNotu.Value.ToString());
+                    formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluDDosyasiz : basurecOt.GBNFormuluAlessiz;
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace("Mülakat", girisSinavNotu.Value.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
-                else if (AlesNotu.HasValue)
+                else if (alesNotu.HasValue)
                 {
                     // MezuniyetNotu100LukSistem + GirisSinavNotu 
-                    formul = IsAlesYerineDosyaNotuIstensin ? BasurecOT.GBNFormuluDMulakatsiz : BasurecOT.GBNFormuluMulakatsiz;
-                    reGexF = formul.Replace("Agno", MezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, AlesNotu.Value.ToString());
+                    formul = isAlesYerineDosyaNotuIstensin ? basurecOt.GBNFormuluDMulakatsiz : basurecOt.GBNFormuluMulakatsiz;
+                    reGexF = formul.Replace("Agno", mezuniyetNotu100LukSistem.ToString()).Replace(AlesKey, alesNotu.Value.ToString());
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
                 else
                 {
-                    reGexF = MezuniyetNotu100LukSistem.ToString();
+                    reGexF = mezuniyetNotu100LukSistem.ToString();
                     retVal = reGexF.Replace(".", ",").EvaluateExpression().ToString("n2");
                 }
             }

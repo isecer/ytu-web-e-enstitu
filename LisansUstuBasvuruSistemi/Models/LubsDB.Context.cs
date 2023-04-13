@@ -103,6 +103,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<MezuniyetAyarlar> MezuniyetAyarlars { get; set; }
         public virtual DbSet<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
         public virtual DbSet<MezuniyetBasvurulariTezDosyalari> MezuniyetBasvurulariTezDosyalaris { get; set; }
+        public virtual DbSet<MezuniyetBasvurulariTezTeslimFormlari> MezuniyetBasvurulariTezTeslimFormlaris { get; set; }
         public virtual DbSet<MezuniyetBasvurulariYayin> MezuniyetBasvurulariYayins { get; set; }
         public virtual DbSet<MezuniyetJuriOneriFormlari> MezuniyetJuriOneriFormlaris { get; set; }
         public virtual DbSet<MezuniyetJuriOneriFormuJurileri> MezuniyetJuriOneriFormuJurileris { get; set; }
@@ -169,7 +170,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<SRSalonlar> SRSalonlars { get; set; }
         public virtual DbSet<SRSalonTalepTipleri> SRSalonTalepTipleris { get; set; }
         public virtual DbSet<SRTalepleri> SRTalepleris { get; set; }
-        public virtual DbSet<SRTalepleriBezCiltFormu> SRTalepleriBezCiltFormus { get; set; }
         public virtual DbSet<SRTaleplerJuri> SRTaleplerJuris { get; set; }
         public virtual DbSet<SRTalepTipKullanicilar> SRTalepTipKullanicilars { get; set; }
         public virtual DbSet<SRTalepTipleri> SRTalepTipleris { get; set; }

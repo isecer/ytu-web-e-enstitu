@@ -203,7 +203,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var hashCode = "";
                     var cardModel = model;
-                    var UrlInfo = Request.Url.toUrlInfo();
+                    var UrlInfo = Request.Url.ToUrlInfo();
 
                     #region paymentCollection
                     string transactionType = "Auth";//İşlem tipi
