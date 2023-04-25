@@ -1588,7 +1588,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (belgeDosyasi != null && belgeDosyasi.FileName.Split('.').Last().ToLower() != "pdf")
                 {
                     mMessage.Messages.Add("Yükleyeceğiniz belge 'PDF' türünde olmalıdır.");
-                }
+                } 
             }
             if (mMessage.Messages.Count == 0)
             {
@@ -1997,7 +1997,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [AllowAnonymous]
         public ActionResult GSinavDegerlendir(Guid? uniqueId)
         {
-
+            
             var model = (from s in _entities.SRTalepleris.Where(p => p.SRTaleplerJuris.Any(a2 => a2.UniqueID == uniqueId.Value))
                          join tt in _entities.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
                          join mb in _entities.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
@@ -2055,19 +2055,26 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              Aciklama = s.Aciklama,
                              SRTaleplerJuris = s.SRTaleplerJuris.Where(p => p.UniqueID == uniqueId.Value).ToList(),
                              IsSonSRTalebi = !mb.SRTalepleris.Any(a => a.SRTalepID > s.SRTalepID),
-                         }).Where(p => p.IsSonSRTalebi).OrderByDescending(o => o.SRTalepID).First();
-            var sinavJuri = model.SRTaleplerJuris.First();
-            var juriOneriFormuJuri = _entities.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == sinavJuri.MezuniyetJuriOneriFormuJuriID);
-            var juriOneriFormu = juriOneriFormuJuri.MezuniyetJuriOneriFormlari;
-            var basvuru = juriOneriFormu.MezuniyetBasvurulari;
-            model.IsOncedenUzatmaAlindi =
-                basvuru.SRTalepleris.Any(a => a.SRTalepID <= model.SRTalepID && a.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma);
-            model.ResimAdi = basvuru.Kullanicilar.ResimAdi;
-            var ogtrenimTip = _entities.OgrenimTipleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod);
-            ViewBag.OgtrenimTipi = ogtrenimTip;
-            ViewBag.MezuniyetBasvurulari = basvuru;
-            ViewBag.JuriOneriFormu = juriOneriFormu;
-            ViewBag.UniqueID = uniqueId;
+                         }).Where(p => p.IsSonSRTalebi).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+
+            if (model != null)
+            {
+                var sinavJuri = model.SRTaleplerJuris.First();
+                var juriOneriFormuJuri = _entities.MezuniyetJuriOneriFormuJurileris.First(p =>
+                    p.MezuniyetJuriOneriFormuJuriID == sinavJuri.MezuniyetJuriOneriFormuJuriID);
+                var juriOneriFormu = juriOneriFormuJuri.MezuniyetJuriOneriFormlari;
+                var basvuru = juriOneriFormu.MezuniyetBasvurulari;
+                model.IsOncedenUzatmaAlindi =
+                    basvuru.SRTalepleris.Any(a =>
+                        a.SRTalepID <= model.SRTalepID && a.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma);
+                model.ResimAdi = basvuru.Kullanicilar.ResimAdi;
+                var ogtrenimTip = _entities.OgrenimTipleris.First(p => p.OgrenimTipKod == basvuru.OgrenimTipKod);
+                ViewBag.OgtrenimTipi = ogtrenimTip;
+                ViewBag.MezuniyetBasvurulari = basvuru;
+                ViewBag.JuriOneriFormu = juriOneriFormu;
+                ViewBag.UniqueID = uniqueId;
+            }
+
             return View(model);
         }
 

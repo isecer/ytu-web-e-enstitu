@@ -5,7 +5,9 @@
 @{
     Layout = null;
     var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue;
-    var yetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue;
+    var isDanisman = Model.TezDanismanID == UserIdentity.Current.Id && !Model.IsDegerlendirme.HasValue;
+    var isYetkili = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.IsDegerlendirme.HasValue; 
+    var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.SozluSinavTarihi.HasValue;
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="komiteContentView_@Model.UniqueID">
@@ -21,7 +23,7 @@
                         </li>
                     </ul>
                 }
-                else if (yetki && !Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
+                else if (isYetkili && !Model.DmYeterlikKomites.Any(a => a.IsJuriOnaylandi.HasValue))
                 {
                     <span class="label label-warning" style="cursor: pointer;" onclick="KomiteUyeleriGuncelle('@Model.UniqueID','@Model.AdSoyad')"><i class="fa fa-refresh" aria-hidden="true"></i> Komite Üyelerini Güncelle</span>
                 }
@@ -44,7 +46,7 @@
                                 @foreach (var itemKom in Model.DmYeterlikKomites.OrderBy(o => o.AdSoyad))
                                 {
 
-                                    var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent() && !Model.SozluSinavTarihi.HasValue;
+
                                     <tr>
                                         <td>
                                             <ul class="panel-controls">
@@ -60,14 +62,20 @@
                                             @itemKom.ToKomiteOnayDurumView()
                                         </td>
                                         <td style="text-align: right;">
-                                            @if (onayDuzeltmeYetki && openRow)
+                                            @if ((isDanisman || isYetkili) && openRow)
                                             {
-                                                if (!itemKom.IsJuriOnaylandi.HasValue)
+                                                if (isYetkili && !itemKom.IsJuriOnaylandi.HasValue)
                                                 {
                                                     <a href="javascript:void(0)" title="Komtie üyesi değişikliği yap" onclick="GetKomiteDegisiklikView('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad')"><i class="fa fa-group fa-lg"></i></a>
                                                 }
-                                                <a href="javascript:void(0)" title="Komtie üyesi bilgisini düzelt" onclick="HesapKayit(@itemKom.KullaniciID)"><i class="fa fa-edit fa-lg"></i></a>
-                                                <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                                if (isYetkili)
+                                                {
+                                                    <a href="javascript:void(0)" title="Komtie üyesi bilgisini düzelt" onclick="HesapKayit(@itemKom.KullaniciID)"><i class="fa fa-edit fa-lg"></i></a>
+                                                }
+                                                if (isYetkili || !itemKom.IsJuriOnaylandi.HasValue)
+                                                {
+                                                    <a href="javascript:void(0)" title="Değerlendirme Linkini Tekrar Gönder" onclick="KomiteLinkGonder('@Model.UniqueID','@itemKom.UniqueID','@itemKom.UnvanAdi @itemKom.AdSoyad');"><i class="fa fa-envelope fa-lg"></i></a>
+                                                } 
                                             }
                                         </td>
                                     </tr>

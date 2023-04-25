@@ -36,47 +36,7 @@ namespace BiskaUtil
                 return "";
             }            
         }
-        public static string Decrypt(this string stringToDecrypt)
-        {
-            byte[] inputByteArray = new byte[stringToDecrypt.Length + 1];
-            try
-            {
-                DESCryptoServiceProvider des = new DESCryptoServiceProvider();                
-                inputByteArray = Convert.FromBase64String(stringToDecrypt);
-                MemoryStream ms = new MemoryStream();
-                CryptoStream cs = new CryptoStream(ms,
-                  des.CreateDecryptor(key, IV), CryptoStreamMode.Write);
-                cs.Write(inputByteArray, 0, inputByteArray.Length);
-                cs.FlushFinalBlock();
-                System.Text.Encoding encoding = System.Text.Encoding.UTF8;
-                return encoding.GetString(ms.ToArray());
-            }
-            catch (Exception e)
-            {
-                return "";
-            }
-        }
-
-        public static string Encrypt(this string stringToEncrypt, string sEncryptionKey)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(sEncryptionKey) == false)
-                   key = System.Text.Encoding.UTF8.GetBytes(sEncryptionKey);
-                DESCryptoServiceProvider des = new DESCryptoServiceProvider();
-                byte[] inputByteArray = Encoding.UTF8.GetBytes(stringToEncrypt);
-                MemoryStream ms = new MemoryStream();
-                CryptoStream cs = new CryptoStream(ms,
-                  des.CreateEncryptor(key, IV), CryptoStreamMode.Write);
-                cs.Write(inputByteArray, 0, inputByteArray.Length);
-                cs.FlushFinalBlock();
-                return Convert.ToBase64String(ms.ToArray());
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
+   
         public static string Encrypt(this string stringToEncrypt)
         {
             try

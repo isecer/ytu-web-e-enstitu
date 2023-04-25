@@ -71,25 +71,25 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                     if (model.BasvurularSinavBilgi_A.SinavDetay.WebService)
                     {
 
-                        var wsxmlNot = model.BasvurularSinavBilgi_A.Sinav.WsXmlData.toSinavSonucAlesXmlModel();
-                        if (btercih.ProgramBilgileri.AlesNotuYuksekOlanAlinsin)
-                        {
-                            var maxNot = new Dictionary<int, double>();
-                            if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                            if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                            if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                            model.BasvurularSinavBilgi_A.Sinav.SinavNotu = maxNot.Select(s => s.Value).Max();
-                        }
-                        else
-                        {
-                            if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.Sayısal)
-                                model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                            else if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.Sözel)
-                                model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                            else if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                        }
-                        cell_SinavTarih.Text = model.BasvurularSinavBilgi_A.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_A.Sinav.WsAciklanmaTarihi.ToString("dd.MM.yyyy");
+                        //var wsxmlNot = model.BasvurularSinavBilgi_A.Sinav.WsXmlData.toSinavSonucAlesXmlModel();
+                        //if (btercih.ProgramBilgileri.AlesNotuYuksekOlanAlinsin)
+                        //{
+                        //    var maxNot = new Dictionary<int, double>();
+                        //    if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                        //    if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                        //    if (btercih.ProgramBilgileri.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                        //    model.BasvurularSinavBilgi_A.Sinav.SinavNotu = maxNot.Select(s => s.Value).Max();
+                        //}
+                        //else
+                        //{
+                        //    if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.Sayısal)
+                        //        model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                        //    else if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.Sözel)
+                        //        model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                        //    else if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                        //        model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                        //}
+                        //cell_SinavTarih.Text = model.BasvurularSinavBilgi_A.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_A.Sinav.WsAciklanmaTarihi.ToString("dd.MM.yyyy");
                     }
                     else
                     {

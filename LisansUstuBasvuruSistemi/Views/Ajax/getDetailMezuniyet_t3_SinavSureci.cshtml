@@ -99,23 +99,23 @@
                                             <td colspan="6" style="padding:0px;">
                                                 <table class="table table-hover" style="width:100%;table-layout:fixed;@Model.DurumColor;margin:0px;">
                                                     @{
-                                                        int RowIndex = Model.MezuniyetSRModel.SalonRezervasyonlari.Count;
+                                                        int rowIndex = Model.MezuniyetSRModel.SalonRezervasyonlari.Count;
                                                         foreach (var item in Model.MezuniyetSRModel.SalonRezervasyonlari)
                                                         {
-                                                            var JuriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
-                                                            var IsJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
-                                                            var IsJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
-                                                            var IsEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
-                                                            var IsSrTalebiDuzeltilebilir = item.SRDurumID == SRTalepDurum.TalepEdildi && item.IsSonSRTalebi && !IsEnstituSonucuGirdi && (isJuriDegerlendirmeVar ? !IsJuriDegerlendirmeBasladi : true);
+                                                            var juriOnayiOlmayacak = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi && !(item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
+                                                            var isJuriSonucGirildi = item.JuriSonucMezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                            var isJuriDegerlendirmeBasladi = item.SRTaleplerJuris.Any(a => a.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi);
+                                                            var isEnstituSonucuGirdi = item.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
+                                                            var isSrTalebiDuzeltilebilir = item.SRDurumID == SRTalepDurum.TalepEdildi && item.IsSonSRTalebi && !isEnstituSonucuGirdi && (!isJuriDegerlendirmeVar || !isJuriDegerlendirmeBasladi);
                                                             <tr>
                                                                 <td width="55">
                                                                     <table>
                                                                         <tr>
-                                                                            <td style="width:20px;font-size:12pt;">@RowIndex)</td>
+                                                                            <td style="width:20px;font-size:12pt;">@rowIndex)</td>
                                                                             <td>
                                                                                 <ul class="panel-controls">
                                                                                     <li id="iShow_Ap_@item.SRTalepID" onclick="showDetailY('Ap_@item.SRTalepID')">
-                                                                                        <a href="javascript:void(0)"><span class="fa @(RowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
+                                                                                        <a href="javascript:void(0)"><span class="fa @(rowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "fa-angle-down" : "fa-angle-up")"></span> </a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </td>
@@ -162,7 +162,7 @@
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (IsEnstituSonucuGirdi)
+                                                                        if (isEnstituSonucuGirdi)
                                                                         {
                                                                             <i class="@item.SClassName"></i> @item.SDurumListeAdi
                                                                         }
@@ -181,14 +181,14 @@
                                                                     }
                                                                 </td>
                                                                 <td width="40">
-                                                                    @if (IsSrTalebiDuzeltilebilir)
+                                                                    @if (isSrTalebiDuzeltilebilir)
                                                                     {
                                                                         <a href="javascript:void(0)" onclick="showSRDialog(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Rezervasyonu Düzenle"></i></a>
                                                                     }
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="MainRow2 cls-Ap_@item.SRTalepID" style="@(RowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "" : "display:none;")">
+                                                            <tr class="MainRow2 cls-Ap_@item.SRTalepID" style="@(rowIndex == Model.MezuniyetSRModel.SalonRezervasyonlari.Count ? "" : "display:none;")">
                                                                 <td id="cls-Ap_@item.SRTalepID" colspan="6" style="padding: 1px 1px 2px 50px;">
 
                                                                     <div class="widget widget-default" style="border-top:1px solid;color:@item.Color;border-top-color:@item.Color; margin-bottom:8px;padding:6px 10px;min-height:20px;">
@@ -288,7 +288,7 @@
                                                                                                 <td class="CaptionTd" width="140">Salon Talep Durumu</td>
                                                                                                 <td class="CaptionTd" width="10">:</td>
                                                                                                 <td class="ValueTd">
-                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi && (isJuriDegerlendirmeVar ? !IsJuriDegerlendirmeBasladi : true) && !IsEnstituSonucuGirdi)
+                                                                                                    @if (kayitYetki && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi && (isJuriDegerlendirmeVar ? !isJuriDegerlendirmeBasladi : true) && !isEnstituSonucuGirdi)
                                                                                                     {
                                                                                                         @Html.DropDownList("SRDurumID", item.SrDurumSelectList.SRDurumID, new { id = "SRDurumID_" + item.SRTalepID, onchange = "DurumKontrol(" + item.SRTalepID + ")", style = "width:120px;" })
                                                                                                         <span class="label label-primary" style="cursor:pointer;font-size:8pt;" onclick="SrDurumKaydet(@Model.MezuniyetBasvurulariID,@item.SRTalepID)"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
@@ -409,7 +409,7 @@
                                                                                     <tr>
                                                                                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Jüri Üyeleri Değerlendirme Bilgileri</td>
                                                                                         <td width="40" style=" border-bottom:1px solid;">
-                                                                                            @if (kayitYetki && !IsJuriSonucGirildi && !IsEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && !a.MezuniyetSinavDurumID.HasValue))
+                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && !a.MezuniyetSinavDurumID.HasValue))
                                                                                             {
                                                                                                 <span class="label label-info" style="cursor:pointer;font-size:8pt;" onclick="SrJuriDegistir(@Model.MezuniyetBasvurulariID,'@item.UniqueID')"><i class="fa fa-group"></i> Jüri Değiştir</span>
                                                                                             }
@@ -423,7 +423,7 @@
                                                                                                     <th width="35"></th>
                                                                                                     <th width="100" class="clsHide">Unvanı</th>
                                                                                                     <th width="220">Ad Soyad</th>
-                                                                                                    @if (!JuriOnayiOlmayacak)
+                                                                                                    @if (!juriOnayiOlmayacak)
                                                                                                     {
                                                                                                         <th>Tez Sınavı Değerlendirmesi</th>
                                                                                                         <th width="25"></th>
@@ -434,7 +434,7 @@
                                                                                                     {
                                                                                                         var IsJuriDanisman = itemJuri.JuriTipAdi == "TezDanismani";
                                                                                                         var IsJuriDegerlendirmeYapti = itemJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi;
-                                                                                                        var ShowDanismanRow = isDanismani && IsJuriDanisman && !IsJuriSonucGirildi;
+                                                                                                        var ShowDanismanRow = isDanismani && IsJuriDanisman && !isJuriSonucGirildi;
                                                                                                         var UzatmaSonrasiOgrenciTaahhutu = item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? item.IsOgrenciUzatmaSonrasiOnay.HasValue : false;
 
                                                                                                         <tr>
@@ -454,7 +454,7 @@
                                                                                                                 @itemJuri.JuriAdi
                                                                                                                 <br><span style="font-size:7pt;">@itemJuri.UniversiteAdi</span>
                                                                                                             </td>
-                                                                                                            @if (!JuriOnayiOlmayacak)
+                                                                                                            @if (!juriOnayiOlmayacak)
                                                                                                             {
                                                                                                                 <td>
                                                                                                                     @if (isOgrenci && !kayitYetki)
@@ -505,7 +505,7 @@
                                                                                                                     }
                                                                                                                 </td>
                                                                                                                 <td>
-                                                                                                                    @if ((kayitYetki || isDanismani) && !IsEnstituSonucuGirdi && isJuriDegerlendirmeVar)
+                                                                                                                    @if ((kayitYetki || isDanismani) && !isEnstituSonucuGirdi && isJuriDegerlendirmeVar)
                                                                                                                     {
                                                                                                                         <span class="fa fa-envelope" style="cursor:pointer;font-size:16pt;" title="Değerlendirme Linkini Tekrar Gönder" onclick="showDLinkGonder(@Model.MezuniyetBasvurulariID,@item.SRTalepID,'@itemJuri.UniqueID');" aria-hidden="true"></span><span class="sr-only">Değerlendirme Linkini Tekrar Gönder</span>
                                                                                                                     }
@@ -535,9 +535,9 @@
                                                                                                                         </tbody>
                                                                                                                     </table>
                                                                                                                 </div>
-                                                                                                                @if ((!isOgrenci || isDanismani || kayitYetki) && !JuriOnayiOlmayacak && !IsEnstituSonucuGirdi)
+                                                                                                                @if ((!isOgrenci || isDanismani || kayitYetki) && !juriOnayiOlmayacak && !isEnstituSonucuGirdi)
                                                                                                                 {
-                                                                                                                    var JuriVeriGirisYetki = item.IsSonSRTalebi && isJuriDegerlendirmeVar && ((IsJuriDanisman && isDanismani && !IsJuriDegerlendirmeYapti && !IsEnstituSonucuGirdi) || (kayitYetki && !IsEnstituSonucuGirdi));
+                                                                                                                    var JuriVeriGirisYetki = item.IsSonSRTalebi && isJuriDegerlendirmeVar && ((IsJuriDanisman && isDanismani && !IsJuriDegerlendirmeYapti && !isEnstituSonucuGirdi) || (kayitYetki && !isEnstituSonucuGirdi));
 
                                                                                                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                                                         <table style="width:100%;">
@@ -707,7 +707,7 @@
 
                                                                             </table>
 
-                                                                            @if (IsJuriSonucGirildi || IsEnstituSonucuGirdi)
+                                                                            @if (isJuriSonucGirildi || isEnstituSonucuGirdi)
                                                                             {
                                                                                 <br />
                                                                                 <table style="width:100%;">
@@ -731,25 +731,27 @@
                                                                                             }
                                                                                         </td>
                                                                                     </tr>
-                                                                                    <tr>
-                                                                                        <td class="CaptionTd">Tutanak Formu</td>
-                                                                                        <td class="CaptionTd">:</td>
-                                                                                        <td class="ValueTd">
-                                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora()?"FR-0377 Doktora":"FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                                                <i class="fa fa-file-pdf-o"></i> @(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora":"FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formunu İndir
-                                                                                            </a>
-                                                                                        </td>
-                                                                                    </tr>
-
+                                                                                    @if (isJuriDegerlendirmeBasladi)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="CaptionTd">Tutanak Formu</td>
+                                                                                            <td class="CaptionTd">:</td>
+                                                                                            <td class="ValueTd">
+                                                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&IsPdfStream=true&RaporTipi=@RaporTipleri.MezuniyetTezSinavSonucFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                                                    <i class="fa fa-file-pdf-o"></i> @(Model.OgrenimTipKod.IsDoktora() ? "FR-0377 Doktora" : "FR-0342 Yüksek Lisas") Tez Sınav Sonuç Tutanağı Formunu İndir
+                                                                                                </a>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
                                                                                 </table>
                                                                             }
                                                                         </div>
 
 
 
-                                                                        if (kayitYetki || (IsEnstituSonucuGirdi || IsJuriSonucGirildi))
+                                                                        if (kayitYetki || (isEnstituSonucuGirdi || isJuriSonucGirildi))
                                                                         {
-                                                                            var EnstituDegerlendirmeYetki = (kayitYetki && (isJuriDegerlendirmeVar ? IsJuriSonucGirildi : true) && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
+                                                                            var EnstituDegerlendirmeYetki = (kayitYetki && (isJuriDegerlendirmeVar ? isJuriSonucGirildi : true) && Model.IsMezunOldu.HasValue == false && item.IsSonSRTalebi) && !Model.MezuniyetBasvurulariTezDosyalaris.Any();
 
                                                                             <div class="widget widget-default" style="border-top:1px solid;color:@item.SColor;border-top-color:@item.SColor; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                 <table style="width:100%;">
@@ -862,7 +864,7 @@
                                                                                 </table>
                                                                             </div>
                                                                         }
-                                                                        if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && (IsEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
+                                                                        if (item.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && (isEnstituSonucuGirdi || item.IsOgrenciUzatmaSonrasiOnay.HasValue))
                                                                         {
                                                                             var ShowKayitOgrenci = (isOgrenci || kayitYetki) && !item.IsDanismanUzatmaSonrasiOnay.HasValue && item.IsSonSRTalebi;
                                                                             <br />
@@ -1085,7 +1087,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            RowIndex--;
+                                                            rowIndex--;
                                                         }
 
                                                     }
@@ -1154,7 +1156,7 @@
                                             alert(err.responseText);
 
                                         },
-                                        complete: function () { 
+                                        complete: function () {
                                             $('.btnMbSinavSave_' + UniqueID).removeClass('disabled');
                                         }
                                     });

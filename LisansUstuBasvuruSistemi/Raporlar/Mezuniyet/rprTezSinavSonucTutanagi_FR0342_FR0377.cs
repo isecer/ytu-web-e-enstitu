@@ -69,7 +69,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     var juri1 = juriler[0];
                     var juri2 = juriler[1];
                     var tikler = uyeler.Where(p => p.JuriTipAdi.Contains("TikUyesi")).ToList();
- 
+
+                    if (!tikler.Any())
+                    {
+                        throw new Exception("Tez sınav sonuç tutanağı raporu için Tik üyeleri bilgileri bulunamadı!");
+                    }
                     var tik1 = tikler[0];
                     var tik2 = tikler[1];
 

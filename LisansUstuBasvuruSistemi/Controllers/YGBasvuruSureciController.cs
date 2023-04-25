@@ -137,7 +137,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
             MmMessage.DialogID = dlgid;
             ViewBag.MmMessage = MmMessage;
-            var model = new KmBasvuruSurec();
+            var model = new kmBasvuruSurec();
             model.IsAktif = true;
             var eoY = DateTime.Now.ToEgitimOgretimYilBilgi();
             model.OgretimYili = eoY.BaslangicYili + "/" + eoY.BitisYili + "/" + eoY.Donem;
@@ -277,7 +277,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         [Authorize(Roles = RoleNames.YgBasvuruSureciKayit)]
-        public ActionResult Kayit(KmBasvuruSurec kModel, string dlgid = "")
+        public ActionResult Kayit(kmBasvuruSurec kModel, string dlgid = "")
         {
             var MmMessage = new MmMessage();
             MmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
@@ -1189,7 +1189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult getOtBilgi(string EnstituKod, int BasvuruSurecID)
         {
-            var Model = new KmBasvuruSurecOgrenimTipModel();
+            var Model = new kmBasvuruSurecOgrenimTipModel();
             Model.OgrenimTipleriDataList = (from o in db.OgrenimTipleris.Where(p => p.EnstituKod == EnstituKod)
                                             join s in db.BasvuruSurecOgrenimTipleris on new { o.OgrenimTipKod, BasvuruSurecID } equals new { s.OgrenimTipKod, s.BasvuruSurecID } into def1
                                             from defS in def1.DefaultIfEmpty()

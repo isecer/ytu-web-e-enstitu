@@ -6,7 +6,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class KmBasvuru : Basvurular
+    public class kmBasvuru : Basvurular
     {
         public bool Onaylandi { get; set; }
         public bool sbmtForm { get; set; }
@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemAdi { get; set; }
 
         public List<basvuruTercihModel> BasvuruTercihleri { get; set; }
-        public KmBasvuru()
+        public kmBasvuru()
         {
             _UniqueID = new List<string>();
             _tSiraNo = new List<int>();

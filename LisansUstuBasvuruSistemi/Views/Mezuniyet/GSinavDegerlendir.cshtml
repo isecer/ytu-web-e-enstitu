@@ -1,24 +1,18 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
-@using LisansUstuBasvuruSistemi.Business 
-@using LisansUstuBasvuruSistemi.Utilities.Extensions 
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model FrTalepler
-@{
 
-    var item = Model;
-    var itemJuri = item.SRTaleplerJuris.First();
-    var isDanismani = itemJuri.JuriTipAdi == "TezDanismani";
+@if (Model != null && Model.SRDurumID == SRTalepDurum.Onaylandı)
+{
+    var itemJuri = Model.SRTaleplerJuris.First();
     var juriOneriFormu = (MezuniyetJuriOneriFormlari)ViewBag.JuriOneriFormu;
     var mezuniyetBasvurusu = (MezuniyetBasvurulari)ViewBag.MezuniyetBasvurulari;
     var bOgtrenimTipi = (OgrenimTipleri)ViewBag.OgtrenimTipi;
     var uniqueId = (Guid)ViewBag.UniqueID;
-
-}
-
-@if (item.SRDurumID == SRTalepDurum.Onaylandı)
-{
 
     <div class="row">
         <div class="col-md-12">
@@ -60,7 +54,7 @@
                                         </table>
                                     </td>
                                     <td class="clsHide" width="100" style="text-align:center;">
-                                        <img src="@item.ResimAdi.ToKullaniciResim()" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                                        <img src="@Model.ResimAdi.ToKullaniciResim()" style="width:90px;height:90px;" class="img-circle img-thumbnail">
                                     </td>
                                 </tr>
                             </tbody>
@@ -80,14 +74,14 @@
                                                     <td class="CaptionTd" width="140">Salon Adı</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">
-                                                        @item.SalonAdi
+                                                        @Model.SalonAdi
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="CaptionTd">Sınav Tarihi</td>
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd">
-                                                        @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                        @Model.Tarih.ToString("dd.MM.yyyy") @Model.HaftaGunAdi @string.Format("{0:hh\\:mm}", Model.BasSaat) - @string.Format("{0:hh\\:mm}", Model.BitSaat)
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -166,24 +160,24 @@
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
                                                     <select class="form-control" style="width:100%;" id="IsTezBasligiDegisti_@itemJuri.UniqueID" onchange="if($(this).val()=='true'){ $('.RwtezBasliklari_@itemJuri.SRTalepJuriID').removeClass('hide'); }else{$('.RwtezBasliklari_@itemJuri.SRTalepJuriID').addClass('hide');}">
-                                                        <option @((item.IsTezBasligiDegisti  == null).ToSelected()) value=""></option>
-                                                        <option @((item.IsTezBasligiDegisti  == true).ToSelected()) value="true">Tez Başlığı Değişti</option>
-                                                        <option @((item.IsTezBasligiDegisti  == false).ToSelected()) value="false">Tez Başlığı Değişmedi</option>
+                                                        <option @((Model.IsTezBasligiDegisti == null).ToSelected()) value=""></option>
+                                                        <option @((Model.IsTezBasligiDegisti == true).ToSelected()) value="true">Tez Başlığı Değişti</option>
+                                                        <option @((Model.IsTezBasligiDegisti == false).ToSelected()) value="false">Tez Başlığı Değişmedi</option>
                                                     </select>
                                                 </td>
                                             </tr>
-                                            <tr class="@(item.IsTezBasligiDegisti  == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
+                                            <tr class="@(Model.IsTezBasligiDegisti  == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
                                                 <td class="CaptionTd">Yeni Tez Türkçe</td>
                                                 <td class="CaptionTd">:</td>
                                                 <td class="ValueTd">
-                                                    <textarea class="form-control" style="width:100%;height:40px;resize: vertical;" id="YeniTezBaslikTr_@itemJuri.UniqueID">@item.YeniTezBaslikTr</textarea>
+                                                    <textarea class="form-control" style="width:100%;height:40px;resize: vertical;" id="YeniTezBaslikTr_@itemJuri.UniqueID">@Model.YeniTezBaslikTr</textarea>
                                                 </td>
                                             </tr>
-                                            <tr class="@(item.IsTezBasligiDegisti == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
+                                            <tr class="@(Model.IsTezBasligiDegisti == true ? "" : "hide") RwtezBasliklari_@itemJuri.SRTalepJuriID">
                                                 <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
                                                 <td class="CaptionTd">:</td>
                                                 <td class="ValueTd">
-                                                    <textarea class="form-control" style="width:100%;height:40px; resize: vertical;" id="YeniTezBaslikEn_@itemJuri.UniqueID">@item.TezBaslikEn</textarea>
+                                                    <textarea class="form-control" style="width:100%;height:40px; resize: vertical;" id="YeniTezBaslikEn_@itemJuri.UniqueID">@Model.TezBaslikEn</textarea>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -206,16 +200,16 @@
                                                     <td class="ValueTd">
                                                         <select class="form-control" style="width:100%;" id="IsYokDrBursiyeriVar_@itemJuri.UniqueID" onchange="if ($(this).val()=='true') { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').removeClass('hide'); } else { $('.IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID').addClass('hide'); }">
                                                             <option></option>
-                                                            <option value="true" @(item.IsYokDrBursiyeriVar == true ? "selected" : "")>Evet</option>
-                                                            <option value="false" @(item.IsYokDrBursiyeriVar == false ? "selected" : "")>Hayır</option>
+                                                            <option value="true" @(Model.IsYokDrBursiyeriVar == true ? "selected" : "")>Evet</option>
+                                                            <option value="false" @(Model.IsYokDrBursiyeriVar == false ? "selected" : "")>Hayır</option>
                                                         </select>
                                                     </td>
                                                 </tr>
-                                                <tr class="@(item.IsYokDrBursiyeriVar == true ? "" : "hide") IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID">
+                                                <tr class="@(Model.IsYokDrBursiyeriVar == true ? "" : "hide") IsYokDrBursiyeriVarRw_@itemJuri.SRTalepJuriID">
                                                     <td class="CaptionTd">Öncelikli Alt Alan Adı</td>
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd">
-                                                        <input type="text" style="width:100%;" id="YokDrOncelikliAlan_@itemJuri.UniqueID" autocomplete="off" name="YokDrOncelikliAlan" value="@item.YokDrOncelikliAlan" maxlength="128" class="form-control" />
+                                                        <input type="text" style="width:100%;" id="YokDrOncelikliAlan_@itemJuri.UniqueID" autocomplete="off" name="YokDrOncelikliAlan" value="@Model.YokDrOncelikliAlan" maxlength="128" class="form-control" />
                                                     </td>
                                                 </tr>
                                             }
@@ -264,13 +258,13 @@
                                         if (itemJuri.JuriTipAdi == "TezDanismani")
                                         {
 
-                                            if (item.IsTezBasligiDegisti.HasValue)
+                                            if (Model.IsTezBasligiDegisti.HasValue)
                                             {
                                                 <tr>
                                                     <td class="CaptionTd" width="140">Tez Başlığı Değişti Mi</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">
-                                                        @(item.IsTezBasligiDegisti == true ? "Tez Başlığı Değişti" : "Tez Başlığı Değişmedi")
+                                                        @(Model.IsTezBasligiDegisti == true ? "Tez Başlığı Değişti" : "Tez Başlığı Değişmedi")
                                                     </td>
                                                 </tr>
                                             }
@@ -278,21 +272,21 @@
                                                 <td class="CaptionTd" width="140">Tez Dili</td>
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
-                                                    @(item.IsTezDiliTr == true ? "Türkçe" : "İngilizce")
+                                                    @(Model.IsTezDiliTr == true ? "Türkçe" : "İngilizce")
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti  == true ? "Yeni " : "")Tez Başlığı Türkçe</td>
+                                                <td class="CaptionTd" width="140">@(Model.IsTezBasligiDegisti  == true ? "Yeni " : "")Tez Başlığı Türkçe</td>
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
-                                                    @item.TezBaslikTr
+                                                    @Model.TezBaslikTr
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="CaptionTd" width="140">@(item.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı İngilizce</td>
+                                                <td class="CaptionTd" width="140">@(Model.IsTezBasligiDegisti == true ? "Yeni " : "")Tez Başlığı İngilizce</td>
                                                 <td class="CaptionTd" width="10">:</td>
                                                 <td class="ValueTd">
-                                                    @item.TezBaslikEn
+                                                    @Model.TezBaslikEn
                                                 </td>
                                             </tr>
                                             <tr>
@@ -317,22 +311,22 @@
 
                                                 </td>
                                             </tr>
-                                            if (bOgtrenimTipi.OgrenimTipKod.IsDoktora() && item.IsYokDrBursiyeriVar.HasValue)
+                                            if (bOgtrenimTipi.OgrenimTipKod.IsDoktora() && Model.IsYokDrBursiyeriVar.HasValue)
                                             {
                                                 <tr>
                                                     <td class="CaptionTd" width="140">100/2000 YÖK Bursiyeri</td>
                                                     <td class="CaptionTd" width="10">:</td>
                                                     <td class="ValueTd">
-                                                        @(item.IsYokDrBursiyeriVar == true ? "Var " : "Yok")
+                                                        @(Model.IsYokDrBursiyeriVar == true ? "Var " : "Yok")
                                                     </td>
                                                 </tr>
-                                                if (item.IsYokDrBursiyeriVar == true)
+                                                if (Model.IsYokDrBursiyeriVar == true)
                                                 {
                                                     <tr>
                                                         <td class="CaptionTd" width="140">Öncelikli Alt Alan Adı</td>
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">
-                                                            @item.YokDrOncelikliAlan
+                                                            @Model.YokDrOncelikliAlan
                                                         </td>
                                                     </tr>
                                                 }

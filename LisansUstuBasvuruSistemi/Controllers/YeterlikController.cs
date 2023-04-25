@@ -601,7 +601,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 Title = "ABD Komitesi Jüri Değerlendirme Linki Gönderme İşlemi"
             };
-            var onayDuzeltmeYetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
 
             var uye = _entities.YeterlikBasvuruKomitelers.FirstOrDefault(p => p.UniqueID == uniqueId);
             if (uye == null)
@@ -609,45 +608,43 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
 
             }
-            else if (!onayDuzeltmeYetki)
-            {
-                mMessage.Messages.Add("Komite üyeleri değerlendirme linki gönderim işlemi için yetkili değilsiniz.");
-            }
-            if (!mMessage.Messages.Any())
+            else
             {
                 var juriDuzeltmeYetkisi = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
-                if (!juriDuzeltmeYetkisi && uye.YeterlikBasvuru.TezDanismanID != UserIdentity.Current.Id)
+                var danismanYetkisi = uye.YeterlikBasvuru.TezDanismanID == UserIdentity.Current.Id;
+                if (!juriDuzeltmeYetkisi && !danismanYetkisi)
                 {
-                    mMessage.MessageType = Msgtype.Warning;
-                    mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
-                }
-                else if (!juriDuzeltmeYetkisi && uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count ==
-                         uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count(c => c.IsJuriOnaylandi.HasValue))
-                {
-                    mMessage.MessageType = Msgtype.Warning;
-                    mMessage.Messages.Add(
-                        "Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+                    mMessage.Messages.Add("Komite üyeleri değerlendirme linki gönderim işlemi için yetkili değilsiniz.");
                 }
                 else
                 {
-
-
-
-                    var messages = YeterlikBus.SendMailKomiteDegerlendirmeLink(uye.YeterlikBasvuru.UniqueID, uniqueId);
-                    if (messages.IsSuccess)
+                    if (!juriDuzeltmeYetkisi && uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count ==
+                        uye.YeterlikBasvuru.YeterlikBasvuruKomitelers.Count(c => c.IsJuriOnaylandi.HasValue))
                     {
-
-                        uye.YeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi = null;
-                        _entities.SaveChanges();
-                        mMessage.IsSuccess = true;
-                        mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
-
+                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.Messages.Add(
+                            "Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
                     }
-                    else
-                    {
-                        mMessage.Messages.AddRange(messages.Messages);
+                }
 
-                    }
+            }
+
+            if (!mMessage.Messages.Any())
+            { 
+                var messages = YeterlikBus.SendMailKomiteDegerlendirmeLink(uye.YeterlikBasvuru.UniqueID, uniqueId);
+                if (messages.IsSuccess)
+                {
+
+                    uye.YeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi = null;
+                    _entities.SaveChanges();
+                    mMessage.IsSuccess = true;
+                    mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
+
+                }
+                else
+                {
+                    mMessage.Messages.AddRange(messages.Messages);
+
                 }
             }
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
@@ -819,7 +816,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else YeterlikBus.SendMailSinavBilgi(yeterlikBasvuru.UniqueID);
                         }
-                    } 
+                    }
                 }
             }
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
@@ -1271,7 +1268,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "GetMessage", mmMessage);
             return new { mmMessage.IsSuccess, messageView }.ToJsonResult();
-        } 
+        }
         public ActionResult GetJuriData(string term)
         {
             var data = Management.getWsPersisOE(term);
@@ -1286,7 +1283,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
             return kul2.ToJsonResult();
-        } 
+        }
         public ActionResult GetBasvuruDurum(Guid id)
         {
             var q = _entities.YeterlikBasvurus.Where(p => p.UniqueID == id).Select(s => new

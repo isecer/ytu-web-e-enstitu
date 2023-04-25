@@ -5,14 +5,14 @@
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
-@model  fmTIBasvuru
-@{ 
+@model  FmTiBasvuru
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kyetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
     var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
     var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
     var toplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
-    var mKids = (List<int>)ViewBag.kIds; 
+    var mKids = (List<int>)ViewBag.kIds;
 }
 
 <div class="row">
@@ -206,13 +206,20 @@
         </div>
     }
 </div>
-@if (Model.RowCount > 0 && Model.Data.First().TezDanismanID == UserIdentity.Current.Id)
+@if (Model.RowCount > 0)
 {
-    <script>
+    var firstRow = Model.Data.First();
+    if (firstRow.TezDanismanID == UserIdentity.Current.Id && 
+        firstRow.TIAraRaporRaporDurumID.HasValue &&
+        firstRow.TIAraRaporRaporDurumID != TiAraRaporDurumu.DegerlendirmeSureciTamamlandi
+       )
+    {
+        <script>
         $(function () {
             ShowDetail('@Model.Data.First().TIBasvuruID');
         },200)
-    </script>
+        </script>
+    }
 }
 <script type="text/javascript">
     $(function () {
@@ -290,7 +297,7 @@
                                 className: "btn-success btnSrKayit_" + TIBasvuruAraRaporID,
                                 callback: function (event) {
                                     $('.btnSrKayit_' + TIBasvuruAraRaporID).addClass('disabled');
-                                    var pnlx = $(btbxxFS).find('.modal-dialog').first(); 
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                     PanelRefresh(pnlx, false);
                                     $('#TIAraRaporSrForm').ajaxForm({
                                         success: function (result) {
@@ -484,7 +491,7 @@
 }
 @if (kyetki)
 {
-<script>
+    <script>
 
         function BasvuruSil(sndr, id, adSoyad) {
             bootbox.dialog({
@@ -522,7 +529,7 @@
 
         }
 
-</script>
+    </script>
 }
 @if (degerlendirmeYetki || tiTezDegerlendirmeDuzeltme)
 {

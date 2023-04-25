@@ -602,7 +602,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      SinavPuani = s.SinavNotu,
                                      SinavDilID = s.SinavDilID,
                                      SinavDilAdi = s.SinavDilID.HasValue ? sinavDilleris.First(p => p.SinavDilID == s.SinavDilID).DilAdi : (bs.WebService && s.SinavTipGrupID == SinavTipGrup.DilSinavlari ? s.WsSinavDili : ""),
-                                     AlesXmlModel = s.SinavTipGrupID == SinavTipGrup.Ales_Gree && bs.WebService ? s.WsXmlData.toSinavSonucAlesXmlModel() : null,
+                                     //AlesXmlModel = s.SinavTipGrupID == SinavTipGrup.Ales_Gree && bs.WebService ? s.WsXmlData.toSinavSonucAlesXmlModel() : null,
                                  }).OrderBy(o => o.SinavTipGrupID).ToList();
 
                 #endregion
@@ -1897,7 +1897,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
         }
 
-        public ActionResult OgrenimBilgisiKontrolEt(KmBasvuru kModel, int basvuruId)
+        public ActionResult OgrenimBilgisiKontrolEt(kmBasvuru kModel, int basvuruId)
         {
             var mmMessage = Management.obKontrol(kModel);
             if (kModel.ProgramKod.IsNullOrWhiteSpace())
@@ -1994,7 +1994,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
         }
         [ValidateInput(false)]
-        public ActionResult ValidationControlSteps(KmBasvuru kModel)
+        public ActionResult ValidationControlSteps(kmBasvuru kModel)
         {
             var showEgitimDiliIsle = false;
             var mmMessage = new MmMessage();
@@ -4101,24 +4101,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                                     if (_snvBilgi.WebService) // ales notu al
                                     {
-                                        var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
-                                        if (btercih.Programlar.AlesNotuYuksekOlanAlinsin && btercih.Programlar.AnabilimDallari.EnstituKod == EnstituKodlari.SosyalBilimleri)
-                                        {
-                                            var maxNot = new Dictionary<int, double>();
-                                            if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                            if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                            if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                            item.AlesNotu = maxNot.Select(s => s.Value).Max();
-                                        }
-                                        else
-                                        {
-                                            if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
-                                                item.AlesNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                            else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
-                                                item.AlesNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                            else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                                item.AlesNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        }
+                                        //var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
+                                        //if (btercih.Programlar.AlesNotuYuksekOlanAlinsin && btercih.Programlar.AnabilimDallari.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                                        //{
+                                        //    var maxNot = new Dictionary<int, double>();
+                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                        //    item.AlesNotu = maxNot.Select(s => s.Value).Max();
+                                        //}
+                                        //else
+                                        //{
+                                        //    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
+                                        //        item.AlesNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                        //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
+                                        //        item.AlesNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                        //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                                        //        item.AlesNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                        //}
                                     }
                                     else
                                         item.AlesNotu = sinavBilgi.SinavNotu;

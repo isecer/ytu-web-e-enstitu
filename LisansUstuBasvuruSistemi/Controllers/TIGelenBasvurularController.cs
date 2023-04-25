@@ -70,6 +70,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AraRaporSayisi = ard != null ? ard.AraRaporSayisi : (int?)null,
                         TIAraRaporAktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         TIAraRaporRaporDurumID = ard != null ? ard.TIBasvuruAraRaporDurumID : (int?)null,
+                        RaporTarihi= ard != null ? ard.RaporTarihi : (DateTime?)null,
                         tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TIAraraporFiltreModel
                         {
                             AraRaporSayisi = ti.AraRaporSayisi,
@@ -101,12 +102,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (tezDegerlendirme && !mbGelenBKayitYetki)
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
+                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o=>o.TIAraRaporRaporDurumID??999).ThenByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
+            }
+            else
+            {
+                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
             }
             var isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
             //IndexModel.Toplam = model.RowCount;
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi); 
+           
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
             ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifTIAraRaporDonemID);

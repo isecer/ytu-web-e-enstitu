@@ -77,8 +77,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
 
 
-        public ActionResult GetDuyuruJson(int popupTipId, string ekd)
+        public ActionResult GetDuyuruJson(int? popupTipId, string ekd)
         { 
+            if(!popupTipId.HasValue || ekd.IsNullOrWhiteSpace())
+                return Json(new { ShowMessage = false, HtmlMessage = "" });
+
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var fModel = new FmDuyurularDto
             {

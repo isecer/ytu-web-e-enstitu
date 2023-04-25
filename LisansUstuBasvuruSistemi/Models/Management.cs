@@ -2008,24 +2008,24 @@ namespace LisansUstuBasvuruSistemi.Models
                             var _snvBilgi = bsSinavBilgi.Where(p => p.SinavTipID == sinavBilgi.SinavTipID).First();
                             if (_snvBilgi.WebService) // ales notu al
                             {
-                                var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
-                                if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
-                                {
-                                    var maxNot = new Dictionary<int, double>();
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
-                                }
-                                else
-                                {
-                                    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                }
+                                //var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
+                                //if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
+                                //{
+                                //    var maxNot = new Dictionary<int, double>();
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
+                                //}
+                                //else
+                                //{
+                                //    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //}
                             }
                             else
                                 mlktSonucItem.AlesNotuOrDosyaNotu = sinavBilgi.SinavNotu;
@@ -2175,24 +2175,24 @@ namespace LisansUstuBasvuruSistemi.Models
                             var _snvBilgi = bsSinavBilgi.Where(p => p.SinavTipID == sinavBilgi.SinavTipID).First();
                             if (_snvBilgi.WebService) // ales notu al
                             {
-                                var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
-                                if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
-                                {
-                                    var maxNot = new Dictionary<int, double>();
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                    mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
-                                }
-                                else
-                                {
-                                    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                }
+                                //var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
+                                //if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
+                                //{
+                                //    var maxNot = new Dictionary<int, double>();
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                //    mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
+                                //}
+                                //else
+                                //{
+                                //    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                                //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                //}
                             }
                             else
                                 mlktSonucItem.AlesNotuOrDosyaNotu = sinavBilgi.SinavNotu;
@@ -3598,42 +3598,42 @@ namespace LisansUstuBasvuruSistemi.Models
                                     }
                                     else
                                     {
-                                        var output = mdl.WsXmlData.toSinavSonucAlesXmlModel();
-                                        mdl.jSonValAlesSinavi = output;
-                                        if (sinav.EnstituKod == EnstituKodlari.FenBilimleri)
-                                        {
+                                        //var output = mdl.WsXmlData.toSinavSonucAlesXmlModel();
+                                        //mdl.jSonValAlesSinavi = output;
+                                        //if (sinav.EnstituKod == EnstituKodlari.FenBilimleri)
+                                        //{
 
-                                            if (mdl.jSonValAlesSinavi.SAY_PUAN.ToDouble().HasValue)
-                                            {
-                                                mdl.Puan = output.SAY_PUAN.Replace('.', ',').ToDouble().Value.ToString("n2").ToDouble().Value;
-                                            }
-                                            else
-                                            {
-                                                mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
-                                                mdl.Puan = 0;
-                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
-                                                string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SAY_PUAN;
-                                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
-                                            }
-                                            mdl.AlesTipID = AlesTipBilgi.Sayısal;
-                                        }
-                                        else
-                                        {
-                                            if (mdl.jSonValAlesSinavi.SOZ_PUAN.ToDouble().HasValue)
-                                            {
-                                                mdl.Puan = output.SOZ_PUAN.Replace('.', ',').ToDouble().Value.ToString("n2").ToDouble().Value;
+                                        //    if (mdl.jSonValAlesSinavi.SAY_PUAN.ToDouble().HasValue)
+                                        //    {
+                                        //        mdl.Puan = output.SAY_PUAN.Replace('.', ',').ToDouble().Value.ToString("n2").ToDouble().Value;
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
+                                        //        mdl.Puan = 0;
+                                        //        mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
+                                        //        string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SAY_PUAN;
+                                        //        SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                        //    }
+                                        //    mdl.AlesTipID = AlesTipBilgi.Sayısal;
+                                        //}
+                                        //else
+                                        //{
+                                        //    if (mdl.jSonValAlesSinavi.SOZ_PUAN.ToDouble().HasValue)
+                                        //    {
+                                        //        mdl.Puan = output.SOZ_PUAN.Replace('.', ',').ToDouble().Value.ToString("n2").ToDouble().Value;
 
-                                            }
-                                            else
-                                            {
-                                                mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
-                                                mdl.Puan = 0;
-                                                mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
-                                                string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SOZ_PUAN;
-                                                SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
-                                            }
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuYok;
+                                        //        mdl.Puan = 0;
+                                        //        mdl.Aciklama = sonuc.Aciklama ?? sonuc.SonucKodu.ToStrObjEmptString();
+                                        //        string bilgi = "SinavID=" + SinavTipID + "," + sinav.SinavAdi + " \r\n BasvuruSurecID=" + BasvuruSurecID + " \r\n Yıl=" + Yil + "\r\n TcKimlikNo=" + Tck + "\r\n Puan=" + output.SOZ_PUAN;
+                                        //        SistemBilgilendirmeBus.SistemBilgisiKaydet("Web servisinden çekilen sınav bilgisine ait sayısal bir sonuca rastlanmadı!\r\n" + bilgi + " \r\n XmlData: " + mdl.WsXmlData, "Management/getSinavTipSonucModel", LogType.Bilgi, UserIdentity.Current.Id, UserIdentity.Ip);
+                                        //    }
 
-                                        }
+                                        //}
                                     }
 
                                 }
@@ -3972,7 +3972,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-        public static MmMessage obKontrol(KmBasvuru kModel)
+        public static MmMessage obKontrol(kmBasvuru kModel)
         {
             var _MmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4151,7 +4151,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return _MmMessage;
         }
-        public static MmMessage programAgnoMinControl(KmBasvuru kModel, List<CmbIntDto> ProgramBilgi)
+        public static MmMessage programAgnoMinControl(kmBasvuru kModel, List<CmbIntDto> ProgramBilgi)
         {
             var _MmMessage = new MmMessage();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -4274,73 +4274,73 @@ namespace LisansUstuBasvuruSistemi.Models
 
                         if (mdlSinavTip.SinavTipGrupID == SinavTipGrup.Ales_Gree)
                         {
-                            var output = WsXmlData.toSinavSonucAlesXmlModel();
-                            var Programlars = db.Programlars.Where(p => ProgramKods.Contains(p.ProgramKod)).ToList();
-                            double tepmNot = 0;
-                            var _min = mdlSinavTip.Min.Value;
-                            var _max = mdlSinavTip.Max.Value;
-                            foreach (var item in Programlars)
-                            {
-                                if (item.AlesNotuYuksekOlanAlinsin && item.AnabilimDallari.EnstituKod == EnstituKodlari.SosyalBilimleri)
-                                {
-                                    var maxNot = new Dictionary<int, double>();
-                                    var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
-                                    if (bsurec.EnstituKod == EnstituKodlari.SosyalBilimleri)
-                                    {
-                                        if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, output.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                            //var output = WsXmlData.toSinavSonucAlesXmlModel();
+                            //var Programlars = db.Programlars.Where(p => ProgramKods.Contains(p.ProgramKod)).ToList();
+                            //double tepmNot = 0;
+                            //var _min = mdlSinavTip.Min.Value;
+                            //var _max = mdlSinavTip.Max.Value;
+                            //foreach (var item in Programlars)
+                            //{
+                            //    if (item.AlesNotuYuksekOlanAlinsin && item.AnabilimDallari.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                            //    {
+                            //        var maxNot = new Dictionary<int, double>();
+                            //        var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
+                            //        if (bsurec.EnstituKod == EnstituKodlari.SosyalBilimleri)
+                            //        {
+                            //            if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, output.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                            //            if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                            //            if (item.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
 
-                                    }
-                                    else
-                                    {
-                                        maxNot.Add(AlesTipBilgi.Sözel, output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        maxNot.Add(AlesTipBilgi.EşitAğırlık, output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                            //        }
+                            //        else
+                            //        {
+                            //            maxNot.Add(AlesTipBilgi.Sözel, output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                            //            maxNot.Add(AlesTipBilgi.EşitAğırlık, output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
 
-                                    }
-                                    tepmNot = maxNot.Select(s => s.Value).Max();
-                                    if (tepmNot < _min || tepmNot > _max)
-                                    {
-                                        _MmMessage.Messages.Add(item.ProgramAdi + " Programı tercihi için " + item.AlesTipleri.AlesTipAdi + " sınav notu " + _min.ToString() + " ile " + _max.ToString() + " notları arasında olması gerekmektedir!");
-                                        if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
-                                        else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
-                                    }
-                                    else
-                                    {
-                                        if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
-                                        else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
-                                    }
-                                }
-                                else
-                                {
-                                    if (item.AlesTipID == AlesTipBilgi.Sayısal)
-                                    {
-                                        tepmNot = output.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
-                                    }
-                                    else if (item.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                    {
-                                        tepmNot = output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
-                                    }
-                                    else if (item.AlesTipID == AlesTipBilgi.Sözel)
-                                    {
-                                        tepmNot = output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
+                            //        }
+                            //        tepmNot = maxNot.Select(s => s.Value).Max();
+                            //        if (tepmNot < _min || tepmNot > _max)
+                            //        {
+                            //            _MmMessage.Messages.Add(item.ProgramAdi + " Programı tercihi için " + item.AlesTipleri.AlesTipAdi + " sınav notu " + _min.ToString() + " ile " + _max.ToString() + " notları arasında olması gerekmektedir!");
+                            //            if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
+                            //            else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
+                            //        }
+                            //        else
+                            //        {
+                            //            if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
+                            //            else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
+                            //        }
+                            //    }
+                            //    else
+                            //    {
+                            //        if (item.AlesTipID == AlesTipBilgi.Sayısal)
+                            //        {
+                            //            tepmNot = output.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
+                            //        }
+                            //        else if (item.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                            //        {
+                            //            tepmNot = output.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
+                            //        }
+                            //        else if (item.AlesTipID == AlesTipBilgi.Sözel)
+                            //        {
+                            //            tepmNot = output.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value;
 
-                                    }
-                                    if (tepmNot < _min || tepmNot > _max)
-                                    {
-                                        _MmMessage.Messages.Add(item.ProgramAdi + " Programı tercihi için " + item.AlesTipleri.AlesTipAdi + " sınav notu " + _min.ToString() + " ile " + _max.ToString() + " notları arasında olması gerekmektedir!");
-                                        if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
-                                        else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
-                                    }
-                                    else
-                                    {
-                                        if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
-                                        else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
-                                    }
-                                }
+                            //        }
+                            //        if (tepmNot < _min || tepmNot > _max)
+                            //        {
+                            //            _MmMessage.Messages.Add(item.ProgramAdi + " Programı tercihi için " + item.AlesTipleri.AlesTipAdi + " sınav notu " + _min.ToString() + " ile " + _max.ToString() + " notları arasında olması gerekmektedir!");
+                            //            if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
+                            //            else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
+                            //        }
+                            //        else
+                            //        {
+                            //            if (mdlSinavTip.NotDonusum) _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".BasvuruSurecSubNot" });
+                            //            else _MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_" + IdN + ".SinavNotu" });
+                            //        }
+                            //    }
 
 
-                            }
+                            //}
 
                         }
                         else
@@ -4813,9 +4813,9 @@ namespace LisansUstuBasvuruSistemi.Models
             return msg;
 
         }
-        public static KmBasvuru getSecilenBasvuru(int BasvuruID)
+        public static kmBasvuru getSecilenBasvuru(int BasvuruID)
         {
-            var model = new KmBasvuru();
+            var model = new kmBasvuru();
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
@@ -5464,12 +5464,13 @@ namespace LisansUstuBasvuruSistemi.Models
 
         public static double? toSinavSonucAlesMaxNot(this List<int> AlesTips, string xmlstring)
         {
-            var sonuclar = xmlstring.toSinavSonucAlesXmlModel();
-            var maxNot = new Dictionary<int, double>();
-            if (AlesTips.Any(a => a == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, sonuclar.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-            if (AlesTips.Any(a => a == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, sonuclar.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-            if (AlesTips.Any(a => a == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, sonuclar.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-            return maxNot.Select(s => s.Value).Max();
+            return null;
+            //var sonuclar = xmlstring.toSinavSonucAlesXmlModel();
+            //var maxNot = new Dictionary<int, double>();
+            //if (AlesTips.Any(a => a == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, sonuclar.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+            //if (AlesTips.Any(a => a == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, sonuclar.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+            //if (AlesTips.Any(a => a == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, sonuclar.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+            //return maxNot.Select(s => s.Value).Max();
         }
         public static SinavSonucDilXmlModel toSinavSonucDilXmlModel(this string obj)
         {

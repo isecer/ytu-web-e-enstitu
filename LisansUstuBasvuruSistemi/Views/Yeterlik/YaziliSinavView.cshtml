@@ -8,7 +8,7 @@
     var isOnaylayanVar = Model.YeterlikBasvuruJuriUyeleris.Any(a => a.IsSecilenJuri && a.IsSonucOnaylandi.HasValue);
     var closeContent= (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar) && !Model.IsDegerlendirme.HasValue;
     var readOly = (Model.IsSozluSinavOnline.HasValue || isOnaylayanVar);
-
+    var yaziliGecerNot = Model?.YeterlikSurecOgrenimTipleri?.YaziliGecerNot;
 
 
 }
@@ -127,7 +127,7 @@
      };
     function YaziliSinavKaydet(uniqueId,isSinavaKatildi) {
         if (!YaziliSinavKayitKontrol(uniqueId)) return;
-        var notKriter = parseFloat('@Model.YeterlikSurecOgrenimTipleri.YaziliGecerNot');
+        var notKriter = parseFloat('@yaziliGecerNot');
         var isYaziliSinavinaKatildi = $('#IsYaziliSinavinaKatildi_' + uniqueId).val();
         var yaziliSinaviNotu = $('#YaziliSinaviNotu_' + uniqueId).val();
         var msg = ""; 

@@ -99,6 +99,21 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                     cellBasariIleTamamlanmisTezSayisiYL.Text = q.TDTezSayisiYL.ToString();
                     cellUzerineKayitliOgrenciSayisiDR.Text = q.TDOgrenciSayisiDR.ToString();
                     cellUzerineKayitliOgrenciSayisiYL.Text = q.TDOgrenciSayisiYL.ToString();
+
+                    CellMevcutDanismanAd.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
+                    cellMevcutDanismanAnabilimDali.Text = q.VarolanTDAnabilimDaliAdi;
+                    cellMevcutDanismanProgram.Text = q.VarolanTDProgramAdi;
+
+                    cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
+                    cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+                }
+                else
+                {
+                    CellMevcutDanismanAd.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+                    cellMevcutDanismanAnabilimDali.Text = q.TDAnabilimDaliAdi;
+                    cellMevcutDanismanProgram.Text = q.TDProgramAdi;
+
+                    cellImzaMevcutDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
                 }
                 chkTezBasligiDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 chkTezBasligiDegisecekHayir.Checked = !chkTezBasligiDegisecekEvet.Checked;
@@ -123,15 +138,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
                 rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();
 
-                CellMevcutDanismanAd.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
-                cellMevcutDanismanAnabilimDali.Text = q.VarolanTDAnabilimDaliAdi;
-                cellMevcutDanismanProgram.Text = q.VarolanTDProgramAdi;
+             
 
                 cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
-
-                cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
-                cellImzaMevcutDanismanAdSoyad.Text = q.VarolanTDUnvanAdi + " " + q.VarolanTDAdSoyad;
-                cellImzaOnerilenDanismanAdSoyad.Text = q.TDUnvanAdi + " " + q.TDAdSoyad;
+                 
+               
 
             }
         }

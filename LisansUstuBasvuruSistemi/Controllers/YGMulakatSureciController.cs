@@ -1037,24 +1037,24 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 var _snvBilgi = bsSinavBilgi.Where(p => p.SinavTipID == sinavBilgi.SinavTipID).First();
                                 if (_snvBilgi.WebService)
                                 {
-                                    var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
-                                    if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
-                                    {
-                                        var maxNot = new Dictionary<int, double>();
-                                        if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
-                                    }
-                                    else
-                                    {
-                                        if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
-                                            mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
-                                            mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                            mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                    }
+                                    //var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
+                                    //if (btercih.Programlar.AlesNotuYuksekOlanAlinsin)
+                                    //{
+                                    //    var maxNot = new Dictionary<int, double>();
+                                    //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                    //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                    //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
+                                    //    mlktSonucItem.AlesNotuOrDosyaNotu = maxNot.Select(s => s.Value).Max();
+                                    //}
+                                    //else
+                                    //{
+                                    //    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
+                                    //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                    //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
+                                    //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                    //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
+                                    //        mlktSonucItem.AlesNotuOrDosyaNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
+                                    //}
                                 }
                                 else
                                     mlktSonucItem.AlesNotuOrDosyaNotu = sinavBilgi.SinavNotu;

@@ -428,7 +428,7 @@
                                                 @item.TIBasvuruAraaRaporDurumAdi
                                             </td>
                                             <td>
-                                                @if (inxRw == 1 && formOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TIAraRaporDurumu.DegerlendirmeSureciBaslatildi)
+                                                @if (inxRw == 1 && formOlusturmaYetki && item.TIBasvuruAraRaporDurumID < TiAraRaporDurumu.DegerlendirmeSureciBaslatildi)
                                                 {
                                                     <a href="javascript:void(0)" onclick="GetTIAraRaporFormu(@item.TIBasvuruID,@item.TIBasvuruAraRaporID)"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-original-title="Raporu Düzelt"></i> Düzelt</a>
 
@@ -525,7 +525,7 @@
                                                             <td class="ValueTd">@(item.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + item.YokDrOncelikliAlan + ")" : "Yok")</td>
                                                         </tr>
 
-                                                        @if (item.TIBasvuruAraRaporDurumID == TIAraRaporDurumu.DegerlendirmeSureciTamamlandi)
+                                                        @if (item.TIBasvuruAraRaporDurumID == TiAraRaporDurumu.DegerlendirmeSureciTamamlandi)
                                                         {
                                                             <tr>
                                                                 <td class="CaptionTd">Form Kodu</td>
@@ -823,7 +823,7 @@
                                                         <tr>
                                                             <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg"></i> Toplantı Bilgileri</td>
                                                             <td width="120" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding-bottom:2px;">
-                                                                @if (toplantiYetki && item.TIBasvuruAraRaporDurumID <= TIAraRaporDurumu.ToplantiBilgileriGirildi)
+                                                                @if (toplantiYetki && item.TIBasvuruAraRaporDurumID <= TiAraRaporDurumu.ToplantiBilgileriGirildi)
                                                                 {
                                                                     <span class="label label-info" style="cursor:pointer;" onclick="showSRDialog(@item.TIBasvuruID,@item.TIBasvuruAraRaporID,@(srTalebiYapildi ? item.SRModel.SRTalepID : 0))"><i class="fa fa-@(srTalebiYapildi?"edit":"plus") fa-lg"></i> @(srTalebiYapildi ? "Toplantı Bilgilerini Düzenle" : "Yeni Toplantı Oluştur")</span>
                                                                 }
@@ -867,7 +867,7 @@
                                                         </tr>
                                                     </table>
                                                 </div>
-                                                @if (item.TIBasvuruAraRaporDurumID >= TIAraRaporDurumu.ToplantiBilgileriGirildi)
+                                                @if (item.TIBasvuruAraRaporDurumID >= TiAraRaporDurumu.ToplantiBilgileriGirildi)
                                                 {
                                                     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                         <table style="width:100%;margin:0px;">
@@ -877,7 +877,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    @if (item.TIBasvuruAraRaporDurumID <= TIAraRaporDurumu.ToplantiBilgileriGirildi)
+                                                                    @if (item.TIBasvuruAraRaporDurumID <= TiAraRaporDurumu.ToplantiBilgileriGirildi)
                                                                     {
                                                                         <table style="width:100%;table-layout:fixed;">
                                                                             <tr>
@@ -885,7 +885,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     }
-                                                                    else if (item.TIBasvuruAraRaporDurumID <= TIAraRaporDurumu.DegerlendirmeSureciBaslatildi)
+                                                                    else if (item.TIBasvuruAraRaporDurumID <= TiAraRaporDurumu.DegerlendirmeSureciBaslatildi)
                                                                     {
                                                                         <table style="width:100%;table-layout:fixed;">
                                                                             <tr>

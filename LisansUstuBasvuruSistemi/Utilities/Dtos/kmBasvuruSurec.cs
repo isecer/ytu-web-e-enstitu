@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class KmBasvuruSurec : BasvuruSurec
+    public class kmBasvuruSurec : BasvuruSurec
     {
         public string OgretimYili { get; set; }
 
@@ -32,7 +32,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int?> YuzdeOran { get; set; }
         public List<MulakatSturModel> MulakatSTurModel { get; set; }
 
-        public KmBasvuruSurecOgrenimTipModel OgrenimTipModel { get; set; }
+        public kmBasvuruSurecOgrenimTipModel OgrenimTipModel { get; set; }
 
         public List<DateTime?> AsilBasTar { get; set; }
         public List<DateTime?> AsilBitTar { get; set; }
@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<DateTime?> YedekBitTar { get; set; }
 
 
-        public KmBasvuruSurec()
+        public kmBasvuruSurec()
         {
             gID = new List<int>();
             BasvuruSurecOtoMailID = new List<string>();
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             YuzdeOran = new List<int?>();
 
 
-            OgrenimTipModel = new KmBasvuruSurecOgrenimTipModel();
+            OgrenimTipModel = new kmBasvuruSurecOgrenimTipModel();
 
             AsilBasTar = new List<DateTime?>();
             AsilBitTar = new List<DateTime?>();
@@ -67,7 +67,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             YedekBitTar = new List<DateTime?>();
         }
     }
-    public class KmBasvuruSurecOgrenimTipModel
+    public class kmBasvuruSurecOgrenimTipModel
     {
         public bool IsBelgeYuklemeVar { get; set; }
         public string EnstituKod { get; set; }

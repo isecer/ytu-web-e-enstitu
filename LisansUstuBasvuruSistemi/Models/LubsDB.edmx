@@ -803,7 +803,7 @@
           </Key>
           <Property Name="DuyuruDosyaEkID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DuyuruID" Type="int" Nullable="false" />
-          <Property Name="DosyaEkAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="DosyaEkAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="DosyaYolu" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="Duyurular">
@@ -848,7 +848,7 @@
           <Property Name="WebAdresi" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="ToplamKayitKota" Type="int" Nullable="false" />
           <Property Name="LUBMailGonder" Type="bit" Nullable="false" />
-          <Property Name="TestEmailAddress" Type="nvarchar" MaxLength="256" />
+          <Property Name="TestEmailAddress" Type="nvarchar" MaxLength="250" />
           <Property Name="IsAktif" Type="bit" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
@@ -860,7 +860,7 @@
           </Key>
           <Property Name="GonderilenMailEkiID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GonderilenMailID" Type="int" Nullable="false" />
-          <Property Name="EkAdi" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="EkAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="EkDosyaYolu" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="GonderilenMailKullanicilar">
@@ -965,7 +965,7 @@
           <Property Name="UnvanID" Type="int" />
           <Property Name="BirimID" Type="int" />
           <Property Name="ABDKoordinatoru" Type="bit" Nullable="false" />
-          <Property Name="ResimAdi" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResimAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="Ad" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Soyad" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="CinsiyetID" Type="int" />
@@ -1078,7 +1078,7 @@
           </Key>
           <Property Name="MailSablonlariEkiID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MailSablonlariID" Type="int" Nullable="false" />
-          <Property Name="EkAdi" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="EkAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="EkDosyaYolu" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="MailSablonTipleri">
@@ -1201,7 +1201,7 @@
           <Property Name="MezuniyetYayinKontrolDurumAciklamasi" Type="nvarchar" MaxLength="512" />
           <Property Name="KullaniciID" Type="int" Nullable="false" />
           <Property Name="KullaniciTipID" Type="int" />
-          <Property Name="ResimAdi" Type="nvarchar" MaxLength="255" />
+          <Property Name="ResimAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="Ad" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Soyad" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="UyrukKod" Type="int" />
@@ -1233,7 +1233,7 @@
           <Property Name="TezAbstract" Type="nvarchar(max)" />
           <Property Name="AbstractAnahtarKelimeler" Type="nvarchar(max)" />
           <Property Name="TezAbstractHtml" Type="nvarchar(max)" />
-          <Property Name="DanismanImzaliFormDosyaAdi" Type="nvarchar" MaxLength="256" />
+          <Property Name="DanismanImzaliFormDosyaAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="DanismanImzaliFormDosyaYolu" Type="nvarchar(max)" />
           <Property Name="MezuniyetSinavDurumID" Type="int" />
           <Property Name="MezuniyetSinavDurumIslemTarihi" Type="datetime" />
@@ -1272,8 +1272,8 @@
           <Property Name="MezuniyetBasvurulariTezTeslimFormID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RowID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="MezuniyetBasvurulariID" Type="int" />
-          <Property Name="TezDili" Type="nvarchar" MaxLength="64" />
           <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
+          <Property Name="TezDili" Type="nvarchar" MaxLength="64" />
           <Property Name="TezBaslikTr" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="TezBaslikEn" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="TezOzet" Type="nvarchar(max)" />
@@ -1299,17 +1299,17 @@
           <Property Name="MezuniyetYayinTarih" Type="datetime" />
           <Property Name="YayinBasligi" Type="nvarchar" MaxLength="512" Nullable="false" />
           <Property Name="MezuniyetYayinBelgeTurID" Type="int" />
-          <Property Name="MezuniyetYayinBelgeAdi" Type="nvarchar" MaxLength="512" />
+          <Property Name="MezuniyetYayinBelgeAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="MezuniyetYayinBelgeDosyaYolu" Type="nvarchar(max)" />
           <Property Name="MezuniyetYayinKaynakLinkTurID" Type="int" />
           <Property Name="MezuniyetYayinKaynakLinki" Type="nvarchar" MaxLength="512" />
           <Property Name="MezuniyetYayinMetinTurID" Type="int" />
-          <Property Name="MezuniyetYayinMetniBelgeAdi" Type="nvarchar" MaxLength="512" />
+          <Property Name="MezuniyetYayinMetniBelgeAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="MezuniyetYayinMetniBelgeYolu" Type="nvarchar(max)" />
           <Property Name="MezuniyetYayinLinkTurID" Type="int" />
           <Property Name="MezuniyetYayinLinki" Type="nvarchar" MaxLength="512" />
           <Property Name="MezuniyetYayinIndexTurID" Type="int" />
-          <Property Name="MezuniyetYayinKabulEdilmisMakaleAdi" Type="nvarchar" MaxLength="512" />
+          <Property Name="MezuniyetYayinKabulEdilmisMakaleAdi" Type="nvarchar" MaxLength="1024" />
           <Property Name="MezuniyetYayinKabulEdilmisMakaleDosyaYolu" Type="nvarchar(max)" />
           <Property Name="YazarAdi" Type="nvarchar" MaxLength="512" />
           <Property Name="DergiAdi" Type="nvarchar" MaxLength="512" />
@@ -2329,7 +2329,7 @@
           </Key>
           <Property Name="TalepGelenTaleplerBelgeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TalepGelenTalepID" Type="int" Nullable="false" />
-          <Property Name="DosyaAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="DosyaAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="DosyaYolu" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsDanismanOnayDosyasi" Type="bit" Nullable="false" />
         </EntityType>
@@ -2617,7 +2617,7 @@
           <Property Name="SinavAdi" Type="nvarchar" MaxLength="64" />
           <Property Name="SinavPuani" Type="nvarchar" MaxLength="16" />
           <Property Name="SinavYili" Type="int" />
-          <Property Name="TICalismaRaporDosyaAdi" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="TICalismaRaporDosyaAdi" Type="nvarchar" MaxLength="1024" Nullable="false" />
           <Property Name="TICalismaRaporDosyaYolu" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsYokDrBursiyeriVar" Type="bit" Nullable="false" />
           <Property Name="YokDrOncelikliAlan" Type="nvarchar" MaxLength="128" />
@@ -4884,7 +4884,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari">
           <End Role="MezuniyetBasvurulari" Type="Self.MezuniyetBasvurulari" Multiplicity="0..1" />
           <End Role="MezuniyetBasvurulariTezTeslimFormlari" Type="Self.MezuniyetBasvurulariTezTeslimFormlari" Multiplicity="*" />
           <ReferentialConstraint>
@@ -7749,7 +7749,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurulari" />
             <End Role="MezuniyetBasvurulariTezDosyalari" EntitySet="MezuniyetBasvurulariTezDosyalari" />
           </AssociationSet>
-          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" Association="Self.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" Association="Self.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurulari" />
             <End Role="MezuniyetBasvurulariTezTeslimFormlari" EntitySet="MezuniyetBasvurulariTezTeslimFormlari" />
           </AssociationSet>
@@ -9457,7 +9457,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetBasvurulariTezDosyalari" EntitySet="MezuniyetBasvurulariTezDosyalaris" />
           </AssociationSet>
-          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+          <AssociationSet Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari">
             <End Role="MezuniyetBasvurulari" EntitySet="MezuniyetBasvurularis" />
             <End Role="MezuniyetBasvurulariTezTeslimFormlari" EntitySet="MezuniyetBasvurulariTezTeslimFormlaris" />
           </AssociationSet>
@@ -10839,7 +10839,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="DuyuruDosyaEkID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DuyuruID" Type="Int32" Nullable="false" />
-          <Property Name="DosyaEkAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="DosyaEkAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="DosyaYolu" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Duyurular" Relationship="LisansustuBasvuruSistemiModel.FK_DuyuruEkleri_Duyurular" FromRole="DuyuruEkleri" ToRole="Duyurular" />
         </EntityType>
@@ -10888,7 +10888,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="WebAdresi" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="ToplamKayitKota" Type="Int32" Nullable="false" />
           <Property Name="LUBMailGonder" Type="Boolean" Nullable="false" />
-          <Property Name="TestEmailAddress" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TestEmailAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="IsAktif" Type="Boolean" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
@@ -10926,7 +10926,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="GonderilenMailEkiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GonderilenMailID" Type="Int32" Nullable="false" />
-          <Property Name="EkAdi" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="EkAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="EkDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GonderilenMailler" Relationship="LisansustuBasvuruSistemiModel.FK_GonderilenMailEkleri_GonderilenMailler" FromRole="GonderilenMailEkleri" ToRole="GonderilenMailler" />
         </EntityType>
@@ -11052,7 +11052,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="UnvanID" Type="Int32" />
           <Property Name="BirimID" Type="Int32" />
           <Property Name="ABDKoordinatoru" Type="Boolean" Nullable="false" />
-          <Property Name="ResimAdi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResimAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="Ad" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Soyad" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="CinsiyetID" Type="Int32" />
@@ -11235,7 +11235,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="MailSablonlariEkiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MailSablonlariID" Type="Int32" Nullable="false" />
-          <Property Name="EkAdi" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="EkAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="EkDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MailSablonlari" Relationship="LisansustuBasvuruSistemiModel.FK_MailSablonlariEkleri_MailSablonlari" FromRole="MailSablonlariEkleri" ToRole="MailSablonlari" />
         </EntityType>
@@ -11365,7 +11365,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetYayinKontrolDurumAciklamasi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="KullaniciID" Type="Int32" Nullable="false" />
           <Property Name="KullaniciTipID" Type="Int32" />
-          <Property Name="ResimAdi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ResimAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="Ad" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Soyad" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="UyrukKod" Type="Int32" />
@@ -11397,7 +11397,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="TezAbstract" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="AbstractAnahtarKelimeler" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TezAbstractHtml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DanismanImzaliFormDosyaAdi" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="DanismanImzaliFormDosyaAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="DanismanImzaliFormDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetSinavDurumID" Type="Int32" />
           <Property Name="MezuniyetSinavDurumIslemTarihi" Type="DateTime" Precision="3" />
@@ -11418,7 +11418,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="OgrenimDurumlari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" FromRole="MezuniyetBasvurulari" ToRole="OgrenimDurumlari" />
           <NavigationProperty Name="Programlar" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Programlar" FromRole="MezuniyetBasvurulari" ToRole="Programlar" />
           <NavigationProperty Name="MezuniyetBasvurulariTezDosyalaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezDosyalari" />
-          <NavigationProperty Name="MezuniyetBasvurulariTezTeslimFormlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezTeslimFormlari" />
+          <NavigationProperty Name="MezuniyetBasvurulariTezTeslimFormlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariTezTeslimFormlari" />
           <NavigationProperty Name="MezuniyetBasvurulariYayins" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetBasvurulariYayin" />
           <NavigationProperty Name="MezuniyetJuriOneriFormlaris" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="MezuniyetJuriOneriFormlari" />
           <NavigationProperty Name="SRTalepleris" Relationship="LisansustuBasvuruSistemiModel.FK_SRTalepleri_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulari" ToRole="SRTalepleri" />
@@ -11450,8 +11450,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetBasvurulariTezTeslimFormID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RowID" Type="Guid" Nullable="false" />
           <Property Name="MezuniyetBasvurulariID" Type="Int32" />
-          <Property Name="TezDili" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
+          <Property Name="TezDili" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="TezBaslikTr" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="TezBaslikEn" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="TezOzet" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -11461,7 +11461,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" FromRole="MezuniyetBasvurulariTezTeslimFormlari" ToRole="MezuniyetBasvurulari" />
+          <NavigationProperty Name="MezuniyetBasvurulari" Relationship="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" FromRole="MezuniyetBasvurulariTezTeslimFormlari" ToRole="MezuniyetBasvurulari" />
         </EntityType>
         <EntityType Name="MezuniyetBasvurulariYayin">
           <Key>
@@ -11478,17 +11478,17 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="MezuniyetYayinTarih" Type="DateTime" Precision="3" />
           <Property Name="YayinBasligi" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinBelgeTurID" Type="Int32" />
-          <Property Name="MezuniyetYayinBelgeAdi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="MezuniyetYayinBelgeAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinBelgeDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinKaynakLinkTurID" Type="Int32" />
           <Property Name="MezuniyetYayinKaynakLinki" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinMetinTurID" Type="Int32" />
-          <Property Name="MezuniyetYayinMetniBelgeAdi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="MezuniyetYayinMetniBelgeAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinMetniBelgeYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinLinkTurID" Type="Int32" />
           <Property Name="MezuniyetYayinLinki" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinIndexTurID" Type="Int32" />
-          <Property Name="MezuniyetYayinKabulEdilmisMakaleAdi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="MezuniyetYayinKabulEdilmisMakaleAdi" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="MezuniyetYayinKabulEdilmisMakaleDosyaYolu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="YazarAdi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="DergiAdi" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
@@ -12726,7 +12726,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="TalepGelenTaleplerBelgeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TalepGelenTalepID" Type="Int32" Nullable="false" />
-          <Property Name="DosyaAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="DosyaAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="DosyaYolu" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsDanismanOnayDosyasi" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TalepGelenTalepler" Relationship="LisansustuBasvuruSistemiModel.FK_TalepGelenTalepBelgeleri_TalepGelenTalepler" FromRole="TalepGelenTalepBelgeleri" ToRole="TalepGelenTalepler" />
@@ -13054,7 +13054,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SinavAdi" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="SinavPuani" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="SinavYili" Type="Int32" />
-          <Property Name="TICalismaRaporDosyaAdi" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="TICalismaRaporDosyaAdi" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
           <Property Name="TICalismaRaporDosyaYolu" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsYokDrBursiyeriVar" Type="Boolean" Nullable="false" />
           <Property Name="YokDrOncelikliAlan" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
@@ -16075,7 +16075,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1">
+        <Association Name="FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari">
           <End Type="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Role="MezuniyetBasvurulari" Multiplicity="0..1" />
           <End Type="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari" Role="MezuniyetBasvurulariTezTeslimFormlari" Multiplicity="*" />
           <ReferentialConstraint>
@@ -18677,8 +18677,8 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="TezOzet" ColumnName="TezOzet" />
                 <ScalarProperty Name="TezBaslikEn" ColumnName="TezBaslikEn" />
                 <ScalarProperty Name="TezBaslikTr" ColumnName="TezBaslikTr" />
-                <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
                 <ScalarProperty Name="TezDili" ColumnName="TezDili" />
+                <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
                 <ScalarProperty Name="MezuniyetBasvurulariID" ColumnName="MezuniyetBasvurulariID" />
                 <ScalarProperty Name="RowID" ColumnName="RowID" />
                 <ScalarProperty Name="MezuniyetBasvurulariTezTeslimFormID" ColumnName="MezuniyetBasvurulariTezTeslimFormID" />
