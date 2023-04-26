@@ -95,7 +95,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.TIAraRaporRaporDurumID.HasValue) q = q.Where(p => p.tIAraraporFiltreModels.Any(a => a.TIBasvuruAraRaporDurumID == model.TIAraRaporRaporDurumID.Value));
             if (model.TIAraRaporSayisi.HasValue) q = q.Where(p => p.tIAraraporFiltreModels.Any(a => a.AraRaporSayisi == model.TIAraRaporSayisi.Value));
 
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcKimlikNo == model.AdSoyad || p.KullaniciTipAdi.Contains(model.AdSoyad) || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) 
+                q = q.Where(p => 
+                    p.AdSoyad.Contains(model.AdSoyad) 
+                    || p.OgrenciNo.Contains(model.AdSoyad) 
+                    || p.KullaniciTipAdi.Contains(model.AdSoyad) 
+                    || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
 
             var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
             var mbGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();

@@ -160,7 +160,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (model.EsDurumID == TdoDansimanDurumu.EykDaOnaylanmadi) q = q.Where(p => p.TDODanismanDetayModels.Any(p2 => p2.Es_EYKDaOnaylandi == false));
             }
 
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.TcKimlikNo == model.AdSoyad || p.TDODanismanDetayModels.Any(a => a.FormKodu == model.AdSoyad || a.Es_FormKodu == model.AdSoyad || a.DanismanAdSoyad.Contains(model.AdSoyad)));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) 
+                q = q.Where(p =>
+                                 p.AdSoyad.Contains(model.AdSoyad) 
+                                 || p.OgrenciNo.Contains(model.AdSoyad) 
+                                 || p.TDODanismanDetayModels.Any(a => a.FormKodu == model.AdSoyad || a.Es_FormKodu == model.AdSoyad || a.DanismanAdSoyad.Contains(model.AdSoyad)));
 
             var isFiltered = q != q2;
 

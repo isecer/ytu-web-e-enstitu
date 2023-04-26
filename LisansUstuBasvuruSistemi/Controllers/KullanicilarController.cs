@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YtuOgrencisi
                     };
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad);
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => (p.Ad + " " + p.Soyad).Contains(model.AdSoyad) || p.EMail.Contains(model.AdSoyad) || p.KullaniciAdi.Contains(model.AdSoyad) || p.TcKimlikNo.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad));
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif.Value);
             if (model.KullaniciTipID.HasValue) q = q.Where(p => p.KullaniciTipID == model.KullaniciTipID.Value);
             if (model.BirimID.HasValue) q = q.Where(p => p.BirimID == model.BirimID.Value);

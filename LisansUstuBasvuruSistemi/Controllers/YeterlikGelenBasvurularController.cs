@@ -86,7 +86,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.YeterlikSurecID.HasValue) q = q.Where(p => p.YeterlikSurecID == model.YeterlikSurecID);
             if (model.OgrenimTipID.HasValue) q = q.Where(p => p.OgrenimTipID == model.OgrenimTipID);
             if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo == model.AdSoyad || p.ProgramAdi.Contains(model.AdSoyad) || p.AnabilimDaliAdi.Contains(model.AdSoyad));
+            if (!model.AdSoyad.IsNullOrWhiteSpace()) 
+                q = q.Where(p =>
+                    p.AdSoyad.Contains(model.AdSoyad) 
+                    || p.OgrenciNo.Contains(model.AdSoyad) 
+                    || p.TezDanismanAdi.Contains(model.AdSoyad)
+                    || p.ProgramAdi.Contains(model.AdSoyad) 
+                    || p.AnabilimDaliAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue)
             {
                 if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsEnstituOnaylandi.HasValue);

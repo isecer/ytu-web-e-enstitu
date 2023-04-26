@@ -140,15 +140,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.MezuniyetSureci.HasValue)
             {
-                int basYil = model.MezuniyetSureci.ToString().Substring(0, 4).ToInt().Value;
-                int donemId = model.MezuniyetSureci.ToString().Substring(4, 1).ToInt().Value;
+                int basYil = model.MezuniyetSureci.ToString().Substring(0, 4).ToInt(0);
+                int donemId = model.MezuniyetSureci.ToString().Substring(4, 1).ToInt(0);
                 q = q.Where(p => p.SurecBaslangicYil == basYil && p.DonemID == donemId);
             }
             if (model.MezuniyetSurecID.HasValue) q = q.Where(p => p.MezuniyetSurecID == model.MezuniyetSurecID.Value);
             if (model.KayitDonemi.IsNullOrWhiteSpace() == false)
             {
-                var yil = model.KayitDonemi.Split('_')[0].ToInt().Value;
-                var donem = model.KayitDonemi.Split('_')[1].ToInt().Value;
+                var yil = model.KayitDonemi.Split('_')[0].ToInt(0);
+                var donem = model.KayitDonemi.Split('_')[1].ToInt(0);
                 q = q.Where(p => p.KayitOgretimYiliBaslangic == yil && p.KayitOgretimYiliDonemID == donem);
             }
             if (model.MezuniyetYayinKontrolDurumID.HasValue)
@@ -180,20 +180,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var isOnaylandiOrDuzeltme = (model.TDDurumID == 1);
                     q = q.Where(p => p.IsOnaylandiOrDuzeltme == isOnaylandiOrDuzeltme);
-                }
-
+                } 
             }
             if (model.MezuniyetSinavDurumID.HasValue)
             {
-                if (model.MezuniyetSinavDurumID == MezuniyetSinavDurum.SonucGirilmedi) q = q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
-                else q = q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
+                q = model.MezuniyetSinavDurumID == MezuniyetSinavDurum.SonucGirilmedi
+                    ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value) 
+                    : q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
             }
             if (model.TeslimFormDurumu.HasValue) q = q.Where(p => p.TeslimFormDurumu == model.TeslimFormDurumu.Value);
             if (model.MezuniyetDurumID != -1)
             {
-                var isMezunOldu = model.MezuniyetDurumID.HasValue ? (model.MezuniyetDurumID == 1 ? true : false) : (bool?)null;
-                q = q.Where(p => p.IsMezunOldu == isMezunOldu);
-
+                var isMezunOldu = model.MezuniyetDurumID.HasValue ? (model.MezuniyetDurumID == 1) : (bool?)null;
+                q = q.Where(p => p.IsMezunOldu == isMezunOldu); 
                 if (isMezunOldu == true)
                 {
                     if (model.MBaslangicTarihi.HasValue && model.MBitisTarihi.HasValue) q = q.Where(p => model.MBaslangicTarihi <= p.MezuniyetTarihi && model.MBitisTarihi >= p.MezuniyetTarihi);
@@ -204,10 +203,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace())
             {
                 model.AdSoyad = model.AdSoyad.Trim();
-                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.TcKimlikNo == model.AdSoyad || p.OgrenciNo == model.AdSoyad || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
+                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) ||  p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
             }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
-            bool isFiltered = q != q2;
+            var isFiltered = q != q2;
 
             model.RowCount = q.Count();
             if (!model.Sort.IsNullOrWhiteSpace()) q = q.OrderBy(model.Sort);

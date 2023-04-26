@@ -941,11 +941,23 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "JuriUyesiUnvanAdi", Value = item.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@SinavTarihi"))
                         {
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = basvuru.YaziliSinavTarihi.ToFormatDateAndTime() });
+                            paramereDegerleri.Add(new MailReplaceParameterDto
+                            {
+                                Key = "SinavTarihi",
+                                Value = isYaziliOrSozlu ?
+                                basvuru.YaziliSinavTarihi.ToFormatDateAndTime()
+                                : basvuru.SozluSinavTarihi.ToFormatDateAndTime()
+                            });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@SinavYeri"))
                         {
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavYeri", Value = basvuru.YaziliSinavYeri });
+                            paramereDegerleri.Add(new MailReplaceParameterDto
+                            {
+                                Key = "SinavYeri",
+                                Value = isYaziliOrSozlu ?
+                                basvuru.YaziliSinavYeri 
+                                : basvuru.SozluSinavYeri
+                            });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@SinavSekli") && basvuru.IsSozluSinavOnline.HasValue)
                         {
@@ -1136,16 +1148,28 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "JuriUyesiUnvanAdi", Value = item.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@SinavTarihi"))
                         {
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = basvuru.YaziliSinavTarihi.ToFormatDateAndTime() });
+                            paramereDegerleri.Add(new MailReplaceParameterDto
+                            {
+                                Key = "SinavTarihi",
+                                Value = isYaziliOrSozlu ?
+                                    basvuru.YaziliSinavTarihi.ToFormatDateAndTime()
+                                    : basvuru.SozluSinavTarihi.ToFormatDateAndTime()
+                            });
+                        }
+                        if (item.SablonParametreleri.Any(a => a == "@SinavYeri"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto
+                            {
+                                Key = "SinavYeri",
+                                Value = isYaziliOrSozlu ?
+                                    basvuru.YaziliSinavYeri
+                                    : basvuru.SozluSinavYeri
+                            });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@SinavSekli") && basvuru.IsSozluSinavOnline.HasValue)
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavSekli", Value = basvuru.IsSozluSinavOnline == true ? "Online" : "Yüz Yüze" });
-                        }
-                        if (item.SablonParametreleri.Any(a => a == "@SinavYeri"))
-                        {
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavYeri", Value = basvuru.YaziliSinavYeri });
-                        }
+                        } 
                         if (item.SablonParametreleri.Any(a => a == "@SinavNotu"))
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavNotu", Value = basvuru.YaziliSinaviNotu.ToString() });
@@ -1282,7 +1306,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("Yeterlik", "JuriOnayDurumView");
             return pagerString;
         }
-         
+
 
 
 
