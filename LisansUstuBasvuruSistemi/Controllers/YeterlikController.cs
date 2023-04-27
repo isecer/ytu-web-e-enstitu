@@ -630,7 +630,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             if (!mMessage.Messages.Any())
-            { 
+            {
                 var messages = YeterlikBus.SendMailKomiteDegerlendirmeLink(uye.YeterlikBasvuru.UniqueID, uniqueId);
                 if (messages.IsSuccess)
                 {
@@ -1188,45 +1188,49 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsSuccess = false,
                 Title = "Jüri Üyesine Değerlendirme Linki Gönderme İşlemi"
             };
-            var duzeltmeyetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
             var uye = _entities.YeterlikBasvuruJuriUyeleris.FirstOrDefault(p => p.UniqueID == uniqueId);
             if (uye == null)
             {
                 mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
             }
-            else if (!duzeltmeyetki)
-            {
-                mMessage.Messages.Add("Jüri üyeleri değerlendirme linki gönderim işlemi için yetkili değilsiniz.");
-            }
             else
             {
-                var basvuru = uye.YeterlikBasvuru;
-                var juriDuzeltmeYetkisi = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
-                if (!juriDuzeltmeYetkisi && basvuru.TezDanismanID != UserIdentity.Current.Id)
+                var duzeltmeyetki = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+                var isDanisman = uye.YeterlikBasvuru.TezDanismanID == UserIdentity.Current.Id;
+                if (!duzeltmeyetki && !isDanisman)
                 {
-                    mMessage.MessageType = Msgtype.Warning;
-                    mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
+                    mMessage.Messages.Add("Jüri üyeleri değerlendirme linki gönderim işlemi için yetkili değilsiniz.");
                 }
-                else if (!juriDuzeltmeYetkisi && basvuru.YeterlikBasvuruJuriUyeleris.Count ==
-                         basvuru.YeterlikBasvuruJuriUyeleris.Count(c => c.SozluNotu.HasValue))
+                if (!mMessage.Messages.Any())
                 {
-                    mMessage.MessageType = Msgtype.Warning;
-                    mMessage.Messages.Add(
-                        "Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
-                }
-                else
-                {
-                    mMessage = YeterlikBus.SendMailSinavJuriLink(basvuru.UniqueID,
-                        !basvuru.IsSozluSinavinaKatildi.HasValue, uniqueId);
-                    if (mMessage.IsSuccess)
+                    var basvuru = uye.YeterlikBasvuru;
+                    var juriDuzeltmeYetkisi = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();
+                    if (!juriDuzeltmeYetkisi && basvuru.TezDanismanID != UserIdentity.Current.Id)
                     {
-
-                        mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi.");
-
+                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
+                    }
+                    else if (!juriDuzeltmeYetkisi && basvuru.YeterlikBasvuruJuriUyeleris.Count ==
+                             basvuru.YeterlikBasvuruJuriUyeleris.Count(c => c.SozluNotu.HasValue))
+                    {
+                        mMessage.MessageType = Msgtype.Warning;
+                        mMessage.Messages.Add(
+                            "Değerlendirme işlemi tüm Jüri üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
                     }
                     else
                     {
-                        mMessage.Messages.AddRange(mMessage.Messages);
+                        mMessage = YeterlikBus.SendMailSinavJuriLink(basvuru.UniqueID,
+                            !basvuru.IsSozluSinavinaKatildi.HasValue, uniqueId);
+                        if (mMessage.IsSuccess)
+                        {
+
+                            mMessage.Messages.Add("Değerlendirme Linki Jüri Üyesine Gönderildi.");
+
+                        }
+                        else
+                        {
+                            mMessage.Messages.AddRange(mMessage.Messages);
+                        }
                     }
                 }
             }

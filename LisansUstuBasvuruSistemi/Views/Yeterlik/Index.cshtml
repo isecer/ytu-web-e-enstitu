@@ -265,6 +265,9 @@ else if (Model.Data.Any())
 
 }
 <script>
+     function YeniBasvuruDuyuruKontrol() {
+        ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
+    }
     var isDegerlendirme = '@(Model.isDegerlendirme.HasValue?Model.isDegerlendirme.ToString().ToLower():"")';
     var isKomiteOrJuri='@(Model.IsKomiteOrJuri.HasValue?Model.IsKomiteOrJuri.ToString().ToLower():"")';
     function GetDetail(id) {
@@ -289,7 +292,7 @@ else if (Model.Data.Any())
         $.ajax({
             url: '@Url.Action("GetBasvuruDurum", "Yeterlik")',
             data: { id },
-            success: function (result) { 
+            success: function (result) {
                 $('.yeterlikBasDurum_' + id).html(result);
             },
             complete: function (err) {
