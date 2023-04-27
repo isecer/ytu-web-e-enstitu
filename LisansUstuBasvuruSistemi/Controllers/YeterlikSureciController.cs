@@ -386,8 +386,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return true.ToJsonResult();
         }
         public ActionResult GetFilterKullanici(string term)
-        {
-
+        { 
             var ogrenciList = _entities.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
             {
                 s.KullaniciID,

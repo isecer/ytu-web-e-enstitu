@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
 
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                this.DisplayName = "FR-1227 DOKTORA YETERLİK SINAVI DEĞERLENDİRME FORMU";
+                DisplayName = "FR-1227 DOKTORA YETERLİK SINAVI DEĞERLENDİRME FORMU";
 
                 var q = (from s in db.YeterlikBasvurus.Where(p => p.YeterlikBasvuruID == id)
                          join bs in db.YeterlikSurecis on s.YeterlikSurecID equals bs.YeterlikSurecID
@@ -66,7 +66,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
                              s.IsSozluSinavBasarili,
                              s.GenelBasariNotu,
                              s.IsGenelSonucBasarili,
-                             Juris = s.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).OrderBy(o => o.IsYtuIciOrDisi).ToList(),
+                             Juris = s.YeterlikBasvuruJuriUyeleris.Where(p => p.IsSecilenJuri).OrderByDescending(o => o.IsYtuIciOrDisi).ThenBy(t => t.JuriTipAdi == "TezDanismani" ? 1 : 2).ThenBy(t=>t.JuriTipAdi).ToList(),
                              OgrenimTipKriter = bs.YeterlikSurecOgrenimTipleris.FirstOrDefault(f => f.OgrenimTipID == s.OgrenimTipID)
                          }).First();
 
