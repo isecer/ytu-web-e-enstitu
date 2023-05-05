@@ -124,21 +124,21 @@ namespace LisansUstuBasvuruSistemi.Business
                     var durum = "(" + belge.BelgeDurumlari.DurumAdi + ")";
                     if (verilecekTarih == DateTime.Now.TodateToShortDate())
                     {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Bu Gün Verilecek " + durum + "</span>";
+                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Bu Gün Verilecek " + durum + "</span>";
                     }
                     else if (day == 1)
                     {
-                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Yarın Verilecek " + durum + "</span>";
+                        html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>Yarın Verilecek " + durum + "</span>";
                     }
                     else
                     {
                         if (gelecek)
                         {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + day + " Gün Sonra Verilecek " + durum + "</span>";
+                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + day + " Gün Sonra Verilecek " + durum + "</span>";
                         }
                         else
                         {
-                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToString("dd.MM.yyyy") + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + Math.Abs(day) + " Gün Önce Verilmeliydi" + durum + "</span>";
+                            html += "<span style='font-size:9pt;font-weight:bold;'>" + verilecekTarih.ToFormatDate() + " " + saatAralik + "</span> <br /><span style='font-size:8.5pt;'>" + Math.Abs(day) + " Gün Önce Verilmeliydi" + durum + "</span>";
 
                         }
                     }

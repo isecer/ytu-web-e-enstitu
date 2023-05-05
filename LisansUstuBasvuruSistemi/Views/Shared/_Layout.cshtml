@@ -1002,7 +1002,14 @@
             });
 
         });
-
+        function getFormattedDate(date) {
+            var year = date.getFullYear();
+            var month = (1 + date.getMonth()).toString();
+            month = month.length > 1 ? month : '0' + month;
+            var day = date.getDate().toString();
+            day = day.length > 1 ? day : '0' + day;
+            return day + "." + month + "." + year;
+        }
         function tabchangeSet(tabName, tSiraNo) {
             for (var i = 1; i < 10; i++) {
                 $('#' + tabName  + '-' + i).removeClass('active');
@@ -1556,7 +1563,7 @@
             $('.date-picker').datetimepicker({
                 lang: 'tr',
                 timepicker: false,
-                format: 'd-m-Y'
+                format: 'Y-m-d',
             });
             setTimeout(function () {
                 if ($('#msgs').length > 0) {

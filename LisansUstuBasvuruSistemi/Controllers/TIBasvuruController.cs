@@ -62,7 +62,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1);
                             }
-                            if (Kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
+                            if (Kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + Kul.KayitTarihi.ToFormatDate();
                             model.AktifOgrenimIcinBasvuruVar = _entities.TIBasvurus.Any(a => a.KullaniciID == Kul.KullaniciID && a.OgrenciNo == Kul.OgrenciNo);
                         }
                         else

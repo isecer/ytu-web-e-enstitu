@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -107,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
 
-                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_BolumEslestirmeListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_BolumEslestirmeListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
 
 

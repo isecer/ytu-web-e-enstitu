@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMulakat
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -135,7 +136,7 @@
                                                                     }
                                                                     <td>
                                                                         <input type="hidden" name="SinavTarihi" value="@item.SinavTarihi" />
-                                                                        @item.SinavTarihi.ToString("dd-MM-yyyy HH:mm")
+                                                                        @item.SinavTarihi.ToFormatDateAndTime()
                                                                     </td>
                                                                     <td>
                                                                         <input type="hidden" name="KampusID" value="@item.KampusID" />
@@ -443,7 +444,7 @@
         $('#_SinavTarihi').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'd-m-Y'
+            format: 'Y-m-d'
         });
 
         $('#ddLst').nestable().on('change', function () {

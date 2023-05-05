@@ -6,6 +6,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models; 
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -112,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else if (salonSaatleri.Count == 0)
                 { 
-                    model.GenelAciklama = model.SRSalonAdi + " Salonu için " + model.Tarih.ToString("dd.MM.yyyy") + " tarihi için rezervasyon alınamaz.";
+                    model.GenelAciklama = model.SRSalonAdi + " Salonu için " + model.Tarih.ToFormatDate() + " tarihi için rezervasyon alınamaz.";
                 }
 
                 model.HaftaGunID = haftaGunu.HaftaGunID;

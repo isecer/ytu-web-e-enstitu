@@ -60,7 +60,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (bbModel.KullaniciTipYetki)
                 {
                     var otb = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
-                    //  bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1) + " " + db.Donemlers.Where(p => p.DonemID == Kul.KayitDonemID.Value).First().DonemAdi + " , " + Kul.KayitTarihi.ToString("dd.MM.yyyy");
                     bbModel.OgrenimDurumAdi = kullanici.OgrenimDurumlari.OgrenimDurumAdi;
                     bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
                     bbModel.AnabilimdaliAdi = kullanici.Programlar.AnabilimDallari.AnabilimDaliAdi;
@@ -1087,7 +1086,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         string GunHesap(DateTime islemTarihi, int eklenecekGun, TimeSpan teslimBaslangicSaat, TimeSpan teslimBitisSaat, bool ucretli, string adres)
         {
-            adres = "Talep ettiğiniz belgeyi " + islemTarihi.AddDays(eklenecekGun).ToString("dd.MM.yyyy") + " Tarihi Saat " + teslimBaslangicSaat.ToString(@"hh\:mm") + " ile " + teslimBitisSaat.ToString(@"hh\:mm") + " arası Banka Dekontu ile birlikte " + adres + " adresine gelip alabilirsiniz";
+            adres = "Talep ettiğiniz belgeyi " + islemTarihi.AddDays(eklenecekGun).ToFormatDate() + " Tarihi Saat " + teslimBaslangicSaat.ToString(@"hh\:mm") + " ile " + teslimBitisSaat.ToString(@"hh\:mm") + " arası Banka Dekontu ile birlikte " + adres + " adresine gelip alabilirsiniz";
             return adres;
         }
         public int AyniDonemAlinenBelgeSayisi(BelgeTalepleri mdl)

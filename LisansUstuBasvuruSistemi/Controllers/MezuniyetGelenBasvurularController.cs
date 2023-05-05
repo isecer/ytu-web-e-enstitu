@@ -180,19 +180,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var isOnaylandiOrDuzeltme = (model.TDDurumID == 1);
                     q = q.Where(p => p.IsOnaylandiOrDuzeltme == isOnaylandiOrDuzeltme);
-                } 
+                }
             }
             if (model.MezuniyetSinavDurumID.HasValue)
             {
                 q = model.MezuniyetSinavDurumID == MezuniyetSinavDurum.SonucGirilmedi
-                    ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value) 
+                    ? q.Where(p => !p.SrTalebi.MezuniyetSinavDurumID.HasValue || p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value)
                     : q.Where(p => p.SrTalebi.MezuniyetSinavDurumID == model.MezuniyetSinavDurumID.Value);
             }
             if (model.TeslimFormDurumu.HasValue) q = q.Where(p => p.TeslimFormDurumu == model.TeslimFormDurumu.Value);
             if (model.MezuniyetDurumID != -1)
             {
                 var isMezunOldu = model.MezuniyetDurumID.HasValue ? (model.MezuniyetDurumID == 1) : (bool?)null;
-                q = q.Where(p => p.IsMezunOldu == isMezunOldu); 
+                q = q.Where(p => p.IsMezunOldu == isMezunOldu);
                 if (isMezunOldu == true)
                 {
                     if (model.MBaslangicTarihi.HasValue && model.MBitisTarihi.HasValue) q = q.Where(p => model.MBaslangicTarihi <= p.MezuniyetTarihi && model.MBitisTarihi >= p.MezuniyetTarihi);
@@ -203,7 +203,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace())
             {
                 model.AdSoyad = model.AdSoyad.Trim();
-                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) ||  p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
+                q = q.Where(p => p.AdSoyad.Contains(model.AdSoyad) || p.OgrenciNo.Contains(model.AdSoyad) || p.FormNo == model.AdSoyad || p.TezDanismanAdi.Contains(model.AdSoyad));
             }
             if (model.UyrukKod.HasValue) q = q.Where(p => p.UyrukKod == model.UyrukKod);
             var isFiltered = q != q2;
@@ -232,7 +232,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      DanismanEmail = td.EMail,
                                      s.AnabilimdaliAdi,
                                      s.ProgramAdi,
-                                     GsisKayitTarihi = s.KayitTarihi != null ? s.KayitTarihi.ToString("dd.MM.yyyy") : "",
+                                     GsisKayitTarihi = s.KayitTarihi != null ? s.KayitTarihi.ToFormatDate() : "",
                                      s.AdSoyad,
                                      s.TcKimlikNo,
                                      s.OgrenciNo,
@@ -246,23 +246,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                      UABildiriSayisi = s.MBYayinTurIDs.Count(p => p == 3),
                                      UAMakaleSayisi = s.MBYayinTurIDs.Count(p => p == 5),
                                      s.MezuniyetYayinKontrolDurumAdi,
-                                     EYKTarihi = s.EYKTarihi != null ? s.EYKTarihi.Value.ToString("dd.MM.yyyy") : "",
+                                     EYKTarihi = s.EYKTarihi != null ? s.EYKTarihi.Value.ToFormatDate() : "",
                                      JOFTezbasligiDegisti = s.MezuniyetJuriOneriFormu != null ? (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? "Değişti" : "Değişmedi") : "-",
                                      JOFTezDili = s.MezuniyetJuriOneriFormu != null ? (s.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "",
                                      JOFTezBasligiTr = s.MezuniyetJuriOneriFormu != null ? s.TezBaslikTr : "-",
                                      JOFTezBasligiEn = s.MezuniyetJuriOneriFormu != null ? s.TezBaslikEn : "-",
                                      JOFYeniTezBaslikTr = s.MezuniyetJuriOneriFormu != null ? s.MezuniyetJuriOneriFormu.YeniTezBaslikTr : "-",
                                      JOFYeniTezBaslikEn = s.MezuniyetJuriOneriFormu != null ? s.MezuniyetJuriOneriFormu.YeniTezBaslikEn : "-",
-                                     SinavTarihi = s.SrTalebi != null ? s.SrTalebi.Tarih.ToString("dd.MM.yyyy") : "",
+                                     SinavTarihi = s.SrTalebi != null ? s.SrTalebi.Tarih.ToFormatDate() : "",
                                      SinavdaTezbasligiDegisti = s.SrTalebi != null ? (s.SrTalebi.IsTezBasligiDegisti == true ? "Değişti" : "Değişmedi") : null,
                                      SinavTezDili = s.SrTalebi != null ? (s.IsTezDiliTr == true ? "Türkçe" : "İngilizce") : "",
                                      SinavTezBasligiTr = s.SrTalebi != null ? (s.SrTalebi.IsTezBasligiDegisti == true ? s.SrTalebi.YeniTezBaslikTr : (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? s.MezuniyetJuriOneriFormu.YeniTezBaslikTr : s.TezBaslikTr)) : "-",
                                      SinavTezBasligiEn = s.SrTalebi != null ? (s.SrTalebi.IsTezBasligiDegisti == true ? s.SrTalebi.YeniTezBaslikEn : (s.MezuniyetJuriOneriFormu.IsTezBasligiDegisti == true ? s.MezuniyetJuriOneriFormu.YeniTezBaslikEn : s.TezBaslikEn)) : "-",
                                      s.MezuniyetSinavDurumAdi,
-                                     UzatmaTarihi = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? s.SrTalebi.Tarih.AddDays(s.UzatmaSuresiGun).ToString("dd.MM.yyyy") : "",
+                                     UzatmaTarihi = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma ? s.SrTalebi.Tarih.AddDays(s.UzatmaSuresiGun).ToFormatDate() : "",
                                      TezTeslimSonTarih = s.SrTalebi != null && s.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili ? (s.TezTeslimSonTarih ?? s.SrTalebi.Tarih.AddDays(s.MezuniyetSuresiGun).Date).ToString("dd.MM.yyy") : "",
                                      MezuniyetDurumu = s.IsMezunOldu.HasValue ? (s.IsMezunOldu.Value ? "Mezun Oldu" : "Mezun Olamadı") : "İşlem Bekliyor",
-                                     MezuniyetTarihi = s.IsMezunOldu == true ? s.MezuniyetTarihi.Value.ToString("dd.MM.yyyy") : "",
+                                     MezuniyetTarihi = s.IsMezunOldu == true ? s.MezuniyetTarihi.Value.ToFormatDate() : "",
                                  }).ToList();
                 gv.DataBind();
                 Response.ContentType = "application/ms-excel";
@@ -272,7 +272,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
 
-                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_MezuniyetBasvuruListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_MezuniyetBasvuruListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
             #endregion
             ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
@@ -393,7 +393,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (mBasvur.MezuniyetBasvurulariYayins.Any(a => !a.Onaylandi.HasValue))
                 {
-                    mmMessage.Messages.Add("Başvurunun kabul edilebilmesi için  öncelikle yayın onaylarının yapılması gerekmektedir."); 
+                    mmMessage.Messages.Add("Başvurunun kabul edilebilmesi için  öncelikle yayın onaylarının yapılması gerekmektedir.");
                 }
 
             }
@@ -425,7 +425,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.IsSuccess = true;
                 mmMessage.Messages.Add("Başvuru durum değişikliği gerçekleştirildi.");
                 LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mBasvur.ToJson());
-                
+
                 #region sendMail
                 if (mgonder)
                 {
@@ -916,7 +916,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (isMezunOldu == true)
             {
-               
+
                 if (talep.MezuniyetBasvurulariTezTeslimFormlaris.Any() == false)
                 {
                     mmMessage.Messages.Add("Öğrencinin mezun olabilmesi için Tez Teslim formunun oluşturulması gerekmektedir.");
@@ -928,7 +928,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     //var TezTeslimSonTarihi = SonAlinanSr.Tarih.AddDays(talep.MezuniyetSureci.TezTeslimSuresiGun);
                     //if (Tarih > TezTeslimSonTarihi)
                     //{
-                    //    mmMessage.Messages.Add("Mezuniyeti onaylanacak öğrencinin mezuniyet tarihi tez teslim tarihinden büyük olamaz! Tez teslim son tarih:" + TezTeslimSonTarihi.ToString("dd.MM.yyyy"));
+                    //    mmMessage.Messages.Add("Mezuniyeti onaylanacak öğrencinin mezuniyet tarihi tez teslim tarihinden büyük olamaz! Tez teslim son tarih:" + TezTeslimSonTarihi.ToFormatDate());
                     //}
                 }
 
@@ -1012,7 +1012,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }.ToJsonResult();
         }
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurularKayit)]
-        public ActionResult SinavTarihiKaydet(int id, string sinavTarihi)
+        public ActionResult SinavTarihiKaydet(int id, DateTime? sinavTarihi)
         {
             var mmMessage = new MmMessage
             {
@@ -1020,19 +1020,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == id);
             var mb = srTalep.MezuniyetBasvurulari;
-            DateTime? tarih = Convert.ToDateTime(sinavTarihi);
-            if (!tarih.HasValue)
+            if (!sinavTarihi.HasValue)
             {
                 mmMessage.Messages.Add("Sınav Tarihi Giriniz.");
             }
             else
             {
                 var otBilgiTarihBilgi = mb.MezuniyetSureci.MezuniyetSureciOgrenimTipKriterleris.First(p => p.OgrenimTipKod == mb.OgrenimTipKod);
-                if (srTalep.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || srTalep.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && srTalep.SRDurumID == SRTalepDurum.Onaylandı)
+                var uzatmaOncesiSrTalebi = mb.SRTalepleris.Where(p => p.MezuniyetSinavDurumID != MezuniyetSinavDurum.Uzatma && p.SRDurumID == SRTalepDurum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
+                if (uzatmaOncesiSrTalebi != null && (srTalep.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || srTalep.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma && srTalep.SRDurumID == SRTalepDurum.Onaylandı))
                 {
-                    var uzatmaOncesiSrTalebi = mb.SRTalepleris.Where(p => p.MezuniyetSinavDurumID != MezuniyetSinavDurum.Uzatma && p.SRDurumID == SRTalepDurum.Onaylandı).OrderByDescending(o => o.SRTalepID).FirstOrDefault();
                     var uzatmaOncesiSrAlabilmeTarihi = uzatmaOncesiSrTalebi.Tarih.AddDays(otBilgiTarihBilgi.MBSinavUzatmaSuresiGun);
-                    if (tarih.Value.Date > uzatmaOncesiSrAlabilmeTarihi)
+                    if (sinavTarihi.Value.Date > uzatmaOncesiSrAlabilmeTarihi)
                     {
                         mmMessage.Messages.Add("Mezuniyet sınavı sonucunda almış olduğunuz uzatma işlemi sonrası salon rezervasyonu işemi son tarihi olan '" + uzatmaOncesiSrAlabilmeTarihi.ToFormatDate() + "' tarihini aşamazsınız.");
                     }
@@ -1040,24 +1039,25 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     var srBaslangicTarih = mb.EYKTarihi.Value.AddDays(otBilgiTarihBilgi.MBSRTalebiKacGunSonraAlabilir);
-                    if (tarih.Value.Date < srBaslangicTarih.Date)
+                    if (sinavTarihi.Value.Date < srBaslangicTarih.Date)
                     {
                         mmMessage.Messages.Add("Talep tarihi " + srBaslangicTarih.Date.ToString("yyyy-MM-dd") + " tarihinden küçük olamaz!");
                     }
                 }
-            }
-            if (mmMessage.Messages.Count == 0)
-            {
 
-                srTalep.Tarih = tarih.Value;
-                srTalep.BasSaat = new TimeSpan(tarih.Value.Hour, tarih.Value.Minute, 0);
-                srTalep.BitSaat = new TimeSpan(tarih.Value.Hour + 2, tarih.Value.Minute, 0);
+                if (mmMessage.Messages.Count == 0)
+                {
 
-                _entities.SaveChanges();
-                LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Update, srTalep.ToJson());
-                mmMessage.Messages.Add("Sınav Tarihi Güncellendi");
-                mmMessage.IsSuccess = true;
+                    srTalep.BasSaat = new TimeSpan(sinavTarihi.Value.Hour, sinavTarihi.Value.Minute, 0);
+                    srTalep.BitSaat = new TimeSpan(sinavTarihi.Value.Hour + 2, sinavTarihi.Value.Minute, 0);
+                    srTalep.Tarih = sinavTarihi.Value.Date;
+                    _entities.SaveChanges();
+                    LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Update, srTalep.ToJson());
+                    mmMessage.Messages.Add("Sınav Tarihi Güncellendi");
+                    mmMessage.IsSuccess = true;
+                }
             }
+
             mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Error;
             return new
             {
@@ -2281,11 +2281,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         row.Konu = itemO.Ad + " " + itemO.Soyad + " 'DOKTORA DERECESİ' alması Hk.";
                         row.Aciklama1 = "Enstitümüz " + abdl.AnabilimDaliAdi + " Anabilim Dalı " + prgl.ProgramAdi + " doktora programı öğrencisi <b>" + itemO.OgrenciNo + "</b> no’lu <b>" + itemO.Ad + " " + itemO.Soyad + ";</b> "
                                         + "21/12/2016 gün ve  29925 sayılı Resmi Gazete’de yayımlanarak yürürlüğe giren 'YTÜ Lisansüstü Eğitim - Öğretim Yönetmeliği’nin 24.maddesi uyarınca, "
-                                        + "doktora eğitimi ile ilgili tüm koşullarını yerine getirdiğinden " + sinav.Tarih.Date.ToString("dd.MM.yyyy") + " tarihinde yapılan doktora tez sınavında <b>" + danismanBilgi + "</b> danışmanlığında hazırladığı "
+                                        + "doktora eğitimi ile ilgili tüm koşullarını yerine getirdiğinden " + sinav.Tarih.Date.ToFormatDate() + " tarihinde yapılan doktora tez sınavında <b>" + danismanBilgi + "</b> danışmanlığında hazırladığı "
                                         + "<b>“" + tezSonBilgi.TezBaslikTr + "”</b> başlıklı tezi başarılı bulunmuştur.";
                         row.Aciklama2 = "1 Mart 2017 tarih ve 29994 sayılı Yüksek Öğretim Kurulu Lisansüstü Eğitim ve Öğretim Yönetmeliğinde Değişiklik Yapılmasına Dair Yönetmelik:<b> Madde 2- “Mezuniyet Tarihi tezin sınav "
-                            + "jüri komisyonu tarafından imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince <b>" + itemO.MezuniyetTarihi.Value.Date.ToString("dd.MM.yyyy") + "</b> tarihinde tezini Enstitümüze teslim eden İlgili öğrencinin, tezinin kabul edildiğini ve kendisine "
-                            + "<b>'DOKTORA DERECESİ'</b> verildiğini bildiren jüri ortak raporunun <b>" + raporTarihi.ToDate().Value.ToString("dd.MM.yyyy") + "</b> tarihi itibariyle onanmasına ve Üniversite Senatosu'na sunulmak üzere Rektörlüğe arzına </b>oybirliğiyle</b> karar verildi.";
+                            + "jüri komisyonu tarafından imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince <b>" + itemO.MezuniyetTarihi.Value.Date.ToFormatDate() + "</b> tarihinde tezini Enstitümüze teslim eden İlgili öğrencinin, tezinin kabul edildiğini ve kendisine "
+                            + "<b>'DOKTORA DERECESİ'</b> verildiğini bildiren jüri ortak raporunun <b>" + raporTarihi.ToDate().Value.ToFormatDate() + "</b> tarihi itibariyle onanmasına ve Üniversite Senatosu'na sunulmak üzere Rektörlüğe arzına </b>oybirliğiyle</b> karar verildi.";
                         model.Add(row);
                     }
                     RprMezuniyetMezunlarTutanakDr rpr = new RprMezuniyetMezunlarTutanakDr();
@@ -2309,7 +2309,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         Aciklama1 = "“YTÜ Lisansüstü Eğitim ve Öğretim Yönetmeliği” nin yüksek lisans eğitimi ile ilgili tüm koşullarını yerine getiren, aşağıda adı - soyadı, "
                                     + "Anabilim Dalı/ Programı belirtilen Enstitümüz yüksek lisans programı öğrencilerinin, 1 Mart 2017 tarih ve 29994 sayılı Yüksek Öğretim Kurulu "
                                     + "Lisansüstü Eğitim ve Öğretim Yönetmeliğinde Değişiklik Yapılmasına Dair Yönetmelik:<b> Madde 2 - “Mezuniyet Tarihi tezin sınav jüri komisyonu tarafından "
-                                    + "imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince, " + baslangicTarihi.ToString("dd.MM.yyyy") + " ile " + bitisTarihi.ToString("dd.MM.yyyy") + " tarihleri arasında tezlerini Enstitümüze teslim eden öğrencilerin "
+                                    + "imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince, " + baslangicTarihi.ToFormatDate() + " ile " + bitisTarihi.ToFormatDate() + " tarihleri arasında tezlerini Enstitümüze teslim eden öğrencilerin "
                                     + "aşağıda belirtilen tez teslim tarihinde mezuniyetlerine oybirliğiyle karar verildi."
                     };
 
@@ -2335,8 +2335,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         row.DanismanAdSoyad = danismanBilgi;
                         row.TezKonusu = tezSonBilgi.IsTezDiliTr ? tezSonBilgi.TezBaslikTr : tezSonBilgi.TezBaslikEn;
-                        row.SavunmaTarihi = sinav.Tarih.ToString("dd.MM.yyyy");
-                        row.TezTeslimTarihi = itemO.MezuniyetTarihi.ToString("dd.MM.yyyy");
+                        row.SavunmaTarihi = sinav.Tarih.ToFormatDate();
+                        row.TezTeslimTarihi = itemO.MezuniyetTarihi.ToFormatDate();
 
                         model.Data.Add(row);
 

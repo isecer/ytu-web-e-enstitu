@@ -43,9 +43,9 @@
                                 <div class="col-md-8 col-xs-7">
                                     <table>
                                         <tr>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi == DateTime.MinValue ? "" : Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BaslangicTarihi.ToFormatDateAndTimeInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
                                             <td style="width:5px;text-align:center;">/</td>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi == DateTime.MinValue ? "" : Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitisTarihi.ToFormatDateAndTimeInput()" name="BitisTarihi" id="BitisTarihi"></td>
                                         </tr>
                                     </table>
 
@@ -54,7 +54,7 @@
                             <div class="form-group">
                                 <label class="col-md-4 col-xs-5 control-label">Tez Teslim Formu Tarih Kriteri <br /><span style="font-size:7pt;">(Belirtilen tarih sonrası tez teslimi yapanlar başvurabilir)</span></label>
                                 <div class="col-md-8 col-xs-7">
-                                   <input class="mlkT form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.SonucGirisBaslangicTarihi.HasValue == false || Model.SonucGirisBaslangicTarihi.Value == DateTime.MinValue ? "" : Model.SonucGirisBaslangicTarihi.Value.ToString("yyyy-MM-dd"))" name="SonucGirisBaslangicTarihi" id="SonucGirisBaslangicTarihi">
+                                   <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.SonucGirisBaslangicTarihi.ToFormatDateAndTimeInput()" name="SonucGirisBaslangicTarihi" id="SonucGirisBaslangicTarihi">
                                           
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
         $('#SonucGirisBaslangicTarihi').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'Y-m-d'
+            format: 'Y-m-d H:i'
         });
        
         

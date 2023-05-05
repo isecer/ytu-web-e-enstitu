@@ -42,7 +42,7 @@
                         <td class="CaptionTd">Sınav Tarihi/Saati</td>
                         <td class="CaptionTd">:</td>
                         <td class="ValueTd">
-                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="color: black; width: 120px;" @(readOnly ? "disabled" : "") value="@Model.SozluSinavTarihi.ToFormatDateAndTime()" id="SozluSinavTarihi_@Model.UniqueID">
+                            <input type="text" class="form-control SinavTarihi" autocomplete="off" size="16" style="color: black; width: 120px;" @(readOnly ? "disabled" : "") value="@Model.SozluSinavTarihi.ToFormatDateAndTimeInput()" id="SozluSinavTarihi_@Model.UniqueID">
                         </td>
                     </tr>
                     <tr class="SinavSekliRw_@Model.UniqueID @(Model.IsSozluSinavOnline.HasValue?"":"hide")">
@@ -69,7 +69,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <span class="btn btn-info" style="cursor: pointer;" onclick="SozluSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
+                                <span class="btn btn-primary btn-sm" style="cursor: pointer;" onclick="SozluSinavKaydet('@Model.UniqueID')"><i class="fa fa-save" aria-hidden="true"></i> Kaydet</span>
                             </td>
                         </tr>
                     }

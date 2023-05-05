@@ -3,6 +3,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
@@ -52,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cellTezBaslikTr.Text = tezBasligiTr;
                 cellTezBaslikEn.Text = tezBasligiEn;
 
-                string sinavTarihi = srTalep.Tarih.ToString("dd.MM.yyyy");
+                string sinavTarihi = srTalep.Tarih.ToFormatDate();
                 xrRichEdit.Html = "<table style='width:100%;table-layour:fixed;font:arial;font-size:11pt;'>" +
                                   "<tbody><tr><td style='font-weight:bold;  text-align:center;'>ENSTİTÜ MÜDÜRLÜĞÜNE </td></tr>" +
                                           "<tr><td>Yukarıda bilgileri verilen ve " + sinavTarihi + " tarihinde girdiği Yüksek Lisans tez savunma sınavından başarılı olan öğrenci; " +

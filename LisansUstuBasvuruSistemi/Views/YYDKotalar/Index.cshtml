@@ -117,7 +117,7 @@
                                         <td id="tdMad_@item.KotaID">
                                             @item.AnabilimDaliAdi <br />
                                             @item.ProgramAdi<br />
-                                            <b>İşlem Tarihi:@item.IslemTarihi.ToString("dd.MM.yyyy HH:mm")</b>
+                                            <b>İşlem Tarihi:@item.IslemTarihi.ToFormatDateAndTime()</b>
                                         </td>
                                         @if (item.OrtakKota)
                                         {

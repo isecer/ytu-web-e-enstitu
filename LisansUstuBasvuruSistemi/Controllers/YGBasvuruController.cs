@@ -940,7 +940,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.LOgrenimDurumID.HasValue && kModel.LOgrenimDurumID == OgrenimDurum.HalenOğrenci)
                     {
                         var od = db.OgrenimDurumlaris.Where(p => p.OgrenimDurumID == kModel.LOgrenimDurumID.Value).First();
-                        var Msg = od.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy")).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy HH:mm")).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToString("dd-MM-yyyy HH:mm"));
+                        var Msg = od.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToFormatDate()).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToFormatDateAndTime()).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToFormatDateAndTime());
                         mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Dikkat", Aciklama = Msg });
 
                     }
@@ -1060,7 +1060,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string Msg = "";
             if (LOgrenimDurumID == OgrenimDurum.HalenOğrenci && bsurec.AGNOGirisBaslangicTarihi.HasValue)
             {
-                Msg = od.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy")).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy HH:mm")).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToString("dd-MM-yyyy HH:mm"));
+                Msg = od.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToFormatDate()).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToFormatDateAndTime()).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToFormatDateAndTime());
                 ShowMsg = true;
             }
             _MmMessage.Title = "Uyarı";

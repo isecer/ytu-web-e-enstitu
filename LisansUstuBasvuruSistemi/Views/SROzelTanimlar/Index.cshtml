@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmOzelTanimlar
 @{
     ViewBag.Title = "Index";
@@ -98,7 +99,7 @@
                                             }
                                             else if (item.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
                                             {
-                                                <span>@item.BasTarih.Value.ToString("dd.MM.yyyy") - @item.BitTarih.Value.ToString("dd.MM.yyyy") </span>
+                                                <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() </span>
                                             }
                                             else if (item.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
                                             {
@@ -107,7 +108,7 @@
 
                                                 <span>
                                                     @item.SalonAdi   <br />
-                                                    @item.Tarih.ToString("dd.MM.yyyy") @haftaGunu.HaftaGunAdi
+                                                    @item.Tarih.ToFormatDate() @haftaGunu.HaftaGunAdi
                                                     <br />
                                                     <span>@string.Join(", ", item.SROzelTanimSaatlers.Select(s => string.Format("{0:hh\\:mm}", s.BasSaat) + "-" + string.Format("{0:hh\\:mm}", s.BitSaat)).ToList())</span>
                                                 </span>
@@ -115,7 +116,7 @@
                                             else if (item.SROzelTanimTipID == SROzelTanimTip.Rezerve)
                                             {
                                                 @item.SalonAdi <br />
-                                                <span>@item.BasTarih.Value.ToString("dd.MM.yyyy") - @item.BitTarih.Value.ToString("dd.MM.yyyy") Tarih Arası</span>
+                                                <span>@item.BasTarih.Value.ToFormatDate() - @item.BitTarih.Value.ToFormatDate() Tarih Arası</span>
                                             }
                                         </td>
                                         <td>

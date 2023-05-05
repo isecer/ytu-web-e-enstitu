@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMulakat
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -63,7 +64,7 @@
                                                         <tr>
                                                             <td>
                                                                 <div class="input-group bootstrap-timepicker">
-                                                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" name="_SinavTarihi" id="_SinavTarihi">
+                                                                    <input class="form-contro input-medium" autocomplete="off" size="16" type="text" name="_SinavTarihi" id="_SinavTarihi">
                                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                                                 </div>
                                                             </td>
@@ -135,7 +136,7 @@
                                                                     }
                                                                     <td>
                                                                         <input type="hidden" name="SinavTarihi" value="@item.SinavTarihi" />
-                                                                        @item.SinavTarihi.ToString("dd-MM-yyyy HH:mm")
+                                                                        @item.SinavTarihi.ToFormatDateAndTime()
                                                                     </td>
                                                                     <td>
                                                                         <input type="hidden" name="KampusID" value="@item.KampusID" />
@@ -443,7 +444,7 @@
         $('#_SinavTarihi').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'd-m-Y'
+            format: 'Y-m-d'
         });
 
         $('#ddLst').nestable().on('change', function () {

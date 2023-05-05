@@ -1,6 +1,7 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model OnlineOdemeProgramDetayModel
 @{
     Layout = null;
@@ -48,7 +49,7 @@
                                     <td style="text-align:right;line-height:30px;">Dekont Tarihi</td>
                                     <td style="padding: 4px;">:</td>
                                     <td style="font-weight:bold;font-size:13pt;padding: 4px;">
-                                        <input type="text" name="DekontTarihi" id="DekontTarihi" maxlength="12" autocomplete="off" size="16" placeholder="Örnek Format: @DateTime.Now.ToString("dd-MM-yyyy")" style="font-size:14pt;" class="form-control form-control-inline input-medium date-picker" value="@(IlkDekont==null || IlkDekont.DekontTarih.HasValue == false ? "" : IlkDekont.DekontTarih.ToString("dd-MM-yyyy"))" />
+                                        <input type="text" name="DekontTarihi" id="DekontTarihi" maxlength="12" autocomplete="off" size="16" placeholder="Örnek Format: @DateTime.Now.ToFormatDate()" style="font-size:14pt;" class="form-control form-control-inline input-medium date-picker" value="@(IlkDekont==null || IlkDekont.DekontTarih.HasValue == false ? "" : IlkDekont.DekontTarih.ToFormatDate())" />
                                     </td>
                                 </tr>
 
@@ -118,7 +119,7 @@
                     <script>
                         $('.date-picker').datetimepicker({
                             timepicker: false,
-                            format: 'd-m-Y'
+                            format: 'Y-m-d'
                         });
                         $.datetimepicker.setLocale('tr');
                     </script>

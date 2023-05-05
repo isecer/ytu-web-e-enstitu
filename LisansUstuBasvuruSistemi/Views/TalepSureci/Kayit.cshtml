@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model TalepSurecleri
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -38,9 +39,9 @@
                                 <div class="col-md-9 col-xs-7">
                                     <table>
                                         <tr>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi==DateTime.MinValue?"":Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BaslangicTarihi.ToFormatDateAndTimeInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
                                             <td style="width:5px;text-align:center;">/</td>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi==DateTime.MinValue?"": Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitisTarihi.ToFormatDateAndTimeInput()" name="BitisTarihi" id="BitisTarihi"></td>
                                         </tr>
                                     </table>
 
@@ -69,8 +70,8 @@
 
                 </div>
                 <div class="panel-footer">
-                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
-                    <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
+                    <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply"></i>Geri Dön</a>
+                    <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save"></i>Kaydet</button>
                 </div>
             </div>
         </div>

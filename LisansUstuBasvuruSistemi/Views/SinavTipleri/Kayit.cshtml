@@ -220,13 +220,13 @@
                                         <div class="form-group @(Model.OzelTarih && Model.OzelTarihTipID.HasValue? "" : "hide")" id="grpTarihDiv">
                                             <label class="col-md-2 col-xs-3 control-label" id="lblTar1Capt">@(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi ? "Başlangıç Tarihi" : "Tarih")</label>
                                             <div class="col-md-10 col-xs-9">
-                                                <input type="text" class="form-control date-picker" name="Tarih1" id="_SinavTarihi" value="@(Model.Tarih1 == DateTime.MinValue ? "" : Model.Tarih1.ToString("dd-MM-yyyy"))" autocomplete="off" />
+                                                <input type="text" class="form-control date-picker" name="Tarih1" id="_SinavTarihi" value="@(Model.Tarih1 == DateTime.MinValue ? "" : Model.Tarih1.ToFormatDateInput())" autocomplete="off" />
                                             </div>
                                         </div>
                                         <div class="form-group @(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi ? "" : "hide")" id="grpTarih2Div">
                                             <label class="col-md-2 col-xs-3 control-label" id="lblTar2Capt">Bitiş Tarihi</label>
                                             <div class="col-md-10 col-xs-9">
-                                                <input type="text" class="form-control date-picker" name="Tarih2" id="_SinavTarihi2" value="@(Model.Tarih2 == DateTime.MinValue ? "" : Model.Tarih2.ToString("dd-MM-yyyy"))" autocomplete="off" />
+                                                <input type="text" class="form-control date-picker" name="Tarih2" id="_SinavTarihi2" value="@(Model.Tarih2 == DateTime.MinValue ? "" : Model.Tarih2.ToFormatDateInput())" autocomplete="off" />
                                             </div>
                                         </div>
                                         <div class="panel-body  @(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.BelirliTarihler ? "" : "hide")" id="belirliTarihList">

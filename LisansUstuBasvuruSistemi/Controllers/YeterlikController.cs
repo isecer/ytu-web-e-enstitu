@@ -1233,8 +1233,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
                 }
-            }
-
+            } 
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();

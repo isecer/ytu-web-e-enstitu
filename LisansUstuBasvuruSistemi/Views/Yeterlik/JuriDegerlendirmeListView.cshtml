@@ -21,7 +21,7 @@
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 40px;" id="juriContentView_@Model.UniqueID">
     <table style="width: 100%;">
         <tr>
-            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i>Yeterlik Jüri Üyeleri Sınav Sonucu Değerlendirmesi</td>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i>Yeterlik Jüri Üyeleri Sınav Sonucu Değerlendirmesi <span style="font-size: 8pt;">@(tumJuriOnayladi ? "(Tamamlandı)":"")</span></td>
 
         </tr>
         <tr>
@@ -209,7 +209,7 @@
 
     function JuriLinkGonder(id, uniqueId, adSoyad) {
         Swal.fire({
-            html: adSoyad + " isimli jüri üyesine sınav değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme var ise sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
+            html: adSoyad + " isimli jüri üyesine sınav değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme varsa sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
             type: 'warning',
             icon: 'question',
             showCancelButton: true,

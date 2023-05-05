@@ -2016,7 +2016,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
 
                         if (item.SablonParametreleri.Any(a => a == "@SinavTarihi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = talep.Tarih.ToString("dd-MM-yyyy") });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = talep.Tarih.ToFormatDate() });
                         if (item.SablonParametreleri.Any(a => a == "@SinavYeri"))
                         {
                             var sinavYerAdi = talep.SRSalonID.HasValue ? talep.SRSalonlar.SalonAdi : talep.SalonAdi;
@@ -2026,7 +2026,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             if (talep.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma)
                             {
-                                var uzatmaTarihi = talep.Tarih.AddDays(mbOtipKriter.MBSinavUzatmaSuresiGun).ToString("dd-MM-yyyy");
+                                var uzatmaTarihi = talep.Tarih.AddDays(mbOtipKriter.MBSinavUzatmaSuresiGun).ToFormatDate();
                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "UzatmaTarihi", Value = uzatmaTarihi });
                             }
                         }

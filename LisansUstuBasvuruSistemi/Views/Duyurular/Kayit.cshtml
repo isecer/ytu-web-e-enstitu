@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Duyurular
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -33,13 +34,13 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Duyuru Tarihi</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.Tarih == DateTime.MinValue ? DateTime.Now.ToString("yyyy-MM-dd HH:mm") : Model.Tarih.ToString("yyyy-MM-dd HH:mm"))" name="Tarih" id="Tarih">
+                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@Model.Tarih.ToFormatDateAndTimeInput()" name="Tarih" id="Tarih">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Duyurunun Yayınlanacağı Son Tarih</label>
                                 <div class="col-md-9 col-xs-8">
-                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.YayinSonTarih.HasValue ==false? "" : Model.YayinSonTarih.ToString("yyyy-MM-dd HH:mm"))" name="YayinSonTarih" id="YayinSonTarih">
+                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@Model.YayinSonTarih.ToFormatDateAndTimeInput()" name="YayinSonTarih" id="YayinSonTarih">
                                 </div>
                             </div>
                             <div class="form-group">

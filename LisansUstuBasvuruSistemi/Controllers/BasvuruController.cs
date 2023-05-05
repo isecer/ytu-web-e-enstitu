@@ -865,63 +865,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 LogIslemleri.LogEkle("Basvurular", IsNewRecord ? IslemTipi.Insert : IslemTipi.Update, data.ToJson());
-                if (sendMail && bsurec.Enstituler.LUBMailGonder)
-                {
-                    var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(kModel.EnstituKod);
-                    var mmmC = new MailMainContentDto();
-                    mmmC.EnstituAdi = bsurec.Enstituler.EnstituAd;
-                    var _ea = mailBilgi.SistemErisimAdresi;
-                    var WurlAddr = _ea.Split('/').ToList();
-                    if (_ea.Contains("//"))
-                        _ea = WurlAddr[0] + "//" + WurlAddr.Skip(2).Take(1).First();
-                    else
-                        _ea = "http://" + WurlAddr.First();
-                    mmmC.LogoPath = _ea + "/Content/assets/images/ytu_logo_tr.png";
-                    mmmC.UniversiteAdi = "YILDIZ TEKNİK ÜNİVERSİTESİ";
-
-                    var mtc = new MailTableContentDto();
-                    if (kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı) mtc.AciklamaDetayi = "Başvurunuza ait kısa bilgi aşağıdaki gibidir. Başvurunuzun detaylı bilgisini Mail ekinden  PDF olarak indirebilirsiniz.";
-                    else mtc.AciklamaDetayi = "Başvurunuz İptal Edilmiştir. Detaylar Aşağıdaki Gibidir.";
-                    mtc.GrupBasligi = "Başvuru Bilgisi";
-
-                    var BasvuruDurumData = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == kModel.BasvuruDurumID).First();
-                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Enstitü Adı", Aciklama = bsurec.Enstituler.EnstituAd });
-                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Dönem Bilgisi", Aciklama = kModel.DonemAdi });
-                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Türü", Aciklama = "Lisansüstü Başvurusu" });
-                    mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Durumu", Aciklama = BasvuruDurumData.BasvuruDurumAdi });
-                    if (kModel.BasvuruDurumID == BasvuruDurumu.IptalEdildi)
-                    {
-                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Açıklama", Aciklama = kModel.BasvuruDurumAciklamasi.ToString() });
-                    }
-                    else
-                    {
-                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Başvuru Tarihi", Aciklama = kModel.BasvuruTarihi.ToString() });
-                    }
-                    if (kModel.LOgrenimDurumID.HasValue && kModel.LOgrenimDurumID == OgrenimDurum.HalenOğrenci)
-                    {
-                        var OgrenimDurumData = db.OgrenimDurumlaris.Where(p => p.OgrenimDurumID == kModel.LOgrenimDurumID.Value).First();
-                        var Msg = OgrenimDurumData.LUBAciklama.Replace("_AGNOGirisBasTarx_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy")).Replace("_AGNOGirisBasTar_", bsurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy HH:mm")).Replace("_AGNOGirisBitTar_", bsurec.AGNOGirisBitisTarihi.ToString("dd-MM-yyyy HH:mm"));
-                        mtc.Detaylar.Add(new MailTableRowDto { Baslik = "Dikkat", Aciklama = Msg });
-
-                    }
-
-                    var tableContent = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", mtc);
-                    mmmC.Content = tableContent;
-                    string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-
-
-                    var attchL = new List<System.Net.Mail.Attachment>();
-                    string mTitle = "";
-                    if (kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı)
-                    {
-                        mTitle = "Başvurunuz Sisteme Kaydedilmiştir";
-                        attchL = Management.exportRaporPdf(RaporTipleri.Basvuru, new List<int?> { kModel.BasvuruID });
-
-                    }
-                    else mTitle = "Başvurunuz İptal Edilmiştir";
-                    var uBilgi = db.Kullanicilars.Where(p => p.KullaniciID == kModel.KullaniciID).First();
-                    var emailSend = MailManager.SendMail(kModel.EnstituKod, mTitle, htmlMail, uBilgi.EMail, attchL);
-                }
+                
                 int? BelgeDetailBasvuruID = null;
                 if (bsurec.IsBelgeYuklemeVar && kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı)
                 {
@@ -1011,7 +955,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             string Msg = "";
             if (LOgrenimDurumID == OgrenimDurum.HalenOğrenci && BasvuruSurec.AGNOGirisBaslangicTarihi.HasValue)
             {
-                Msg = BasvuruOgrenimDurumu.LUBAciklama.Replace("_AGNOGirisBasTarx_", BasvuruSurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy")).Replace("_AGNOGirisBasTar_", BasvuruSurec.AGNOGirisBaslangicTarihi.ToString("dd-MM-yyyy HH:mm")).Replace("_AGNOGirisBitTar_", BasvuruSurec.AGNOGirisBitisTarihi.ToString("dd-MM-yyyy HH:mm"));
+                Msg = BasvuruOgrenimDurumu.LUBAciklama.Replace("_AGNOGirisBasTarx_", BasvuruSurec.AGNOGirisBaslangicTarihi.ToFormatDate()).Replace("_AGNOGirisBasTar_", BasvuruSurec.AGNOGirisBaslangicTarihi.ToFormatDateAndTime()).Replace("_AGNOGirisBitTar_", BasvuruSurec.AGNOGirisBitisTarihi.ToFormatDateAndTime());
                 ShowMsg = true;
             }
             _MmMessage.Title = "Uyarı";

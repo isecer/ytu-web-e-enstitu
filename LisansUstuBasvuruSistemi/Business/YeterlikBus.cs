@@ -569,7 +569,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "Link", Value = enstitu.SistemErisimAdresi + "/Yeterlik/Index?isKomiteOrJuri=true&isDegerlendirme=" + item.UniqueID, IsLink = true });
 
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = komite.LinkGonderimTarihi?.ToString("dd-MM-yyyy HH:mm") });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = komite.LinkGonderimTarihi?.ToFormatDateAndTime() });
 
                         var mCOntent = SystemMails.GetSystemMailContent(enstitu.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);
                         var snded = MailManager.SendMail(enstitu.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, item.EMails, item.Attachments);
@@ -1187,7 +1187,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "GenelOrtalama", Value = basvuru.GenelBasariNotu.ToString() });
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = juri.LinkGonderimTarihi?.ToString("dd-MM-yyyy HH:mm") });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = juri.LinkGonderimTarihi?.ToFormatDateAndTime() });
 
                         if (item.UniqueID.HasValue && item.SablonParametreleri.Any(a => a == "@Link"))
                         {

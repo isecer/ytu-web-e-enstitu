@@ -639,7 +639,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         try
                         {
-                            var saat = Convert.ToDateTime(DateTime.Now.ToString("dd-MM-yyyy") + " " + data.SinavSaati);
+                            var saat = Convert.ToDateTime(DateTime.Now.ToFormatDate() + " " + data.SinavSaati);
                             mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "_SinavSaati" });
                         }
                         catch (Exception)

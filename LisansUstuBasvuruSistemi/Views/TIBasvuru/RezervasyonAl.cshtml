@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model KmSRTalep
 @{ 
@@ -39,7 +40,7 @@ else
                         <div class="form-group Online">
                             <label class="col-md-3 col-xs-3 control-label">Toplantı Tarihi</label>
                             <div class="col-md-9 col-xs-9">
-                                <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.Tarih == DateTime.MinValue ? "" : Model.Tarih.ToString("yyyy-MM-dd HH:mm"))" name="Tarih" id="Tarih">
+                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.Tarih.ToFormatDateAndTimeInput()" name="Tarih" id="Tarih">
                             </div>
                         </div>
                         <div class="form-group ">
@@ -98,14 +99,5 @@ else
         });
         $.datetimepicker.setLocale('tr');
     }
-
-    function getFormattedDate(date) {
-        var year = date.getFullYear();
-        var month = (1 + date.getMonth()).toString();
-        month = month.length > 1 ? month : '0' + month;
-        var day = date.getDate().toString();
-        day = day.length > 1 ? day : '0' + day;
-        return year + "-" + month + "-" + day;
-    }
-
+     
 </script>

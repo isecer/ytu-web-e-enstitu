@@ -23,6 +23,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public Guid? DegerlendirenUniqueID { get; set; }
         public bool TdoBasvurusuYapabilir { get; set; }
         public bool IsYeniDanismanOneriOrDegisiklik { get; set; }
+        public bool IsDanismanHesabiBulunamadi { get; set; }
+        public string BulunamayanDanismanAdSoyad { get; set; }
         public List<TdoBasvuruDanismanDto> TDOBasvuruDanismanList { get; set; }
     }
     public class TdoBasvuruDanismanDto : TDOBasvuruDanisman

@@ -100,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.Tarih,
                         s.OgrenciNo,
                         s.KayitDonemAdi,
-                        KayitTarihi = s.KayitTarihi.HasValue ? s.KayitTarihi.ToString("dd.MM.yyyy") : "",
+                        KayitTarihi = s.KayitTarihi.HasValue ? s.KayitTarihi.ToFormatDate() : "",
                         s.OgrenimTipAdi,
                         s.AnabilimdaliAdi,
                         s.ProgramAdi
@@ -131,7 +131,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
 
-                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_GelenMesajListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_GelenMesajListesi_" + DateTime.Now.ToFormatDate() + ".xls");
 
 
             }

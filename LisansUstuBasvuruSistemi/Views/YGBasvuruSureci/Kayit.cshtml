@@ -43,9 +43,9 @@
                                 <div class="col-md-8 col-xs-7">
                                     <table>
                                         <tr>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi == DateTime.MinValue ? "" : Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BaslangicTarihi.ToFormatDateAndTimeInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
                                             <td style="width:5px;text-align:center;">/</td>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi == DateTime.MinValue ? "" : Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitisTarihi.ToFormatDateAndTimeInput()" name="BitisTarihi" id="BitisTarihi"></td>
                                         </tr>
                                     </table>
 
@@ -145,9 +145,9 @@
                                                 <div class="col-md-8 col-xs-7">
                                                     <table>
                                                         <tr>
-                                                            <td><input class="mlkT form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.SonucGirisBaslangicTarihi.HasValue == false || Model.SonucGirisBaslangicTarihi.Value == DateTime.MinValue ? "" : Model.SonucGirisBaslangicTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="SonucGirisBaslangicTarihi" id="SonucGirisBaslangicTarihi"></td>
+                                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.SonucGirisBaslangicTarihi.ToFormatDateAndTimeInput()" name="SonucGirisBaslangicTarihi" id="SonucGirisBaslangicTarihi"></td>
                                                             <td style="width:5px;text-align:center;">/</td>
-                                                            <td><input class="mlkT form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.SonucGirisBitisTarihi.HasValue == false || Model.SonucGirisBitisTarihi.Value == DateTime.MinValue ? "" : Model.SonucGirisBitisTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="SonucGirisBitisTarihi" id="SonucGirisBitisTarihi"></td>
+                                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.SonucGirisBitisTarihi.ToFormatDateAndTimeInput())" name="SonucGirisBitisTarihi" id="SonucGirisBitisTarihi"></td>
                                                         </tr>
                                                     </table>
 
@@ -158,9 +158,9 @@
                                                 <div class="col-md-8 col-xs-7">
                                                     <table>
                                                         <tr>
-                                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(!Model.AGNOGirisBaslangicTarihi.HasValue ? "" : Model.AGNOGirisBaslangicTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="AGNOGirisBaslangicTarihi" id="AGNOGirisBaslangicTarihi"></td>
+                                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.AGNOGirisBaslangicTarihi.ToFormatDateAndTimeInput()" name="AGNOGirisBaslangicTarihi" id="AGNOGirisBaslangicTarihi"></td>
                                                             <td style="width:5px;text-align:center;">/</td>
-                                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.AGNOGirisBitisTarihi.HasValue==false ? "" : Model.AGNOGirisBitisTarihi.Value.ToString("yyyy-MM-dd HH:mm"))" name="AGNOGirisBitisTarihi" id="AGNOGirisBitisTarihi"></td>
+                                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.AGNOGirisBitisTarihi.ToFormatDateAndTimeInput()" name="AGNOGirisBitisTarihi" id="AGNOGirisBitisTarihi"></td>
                                                         </tr>
                                                     </table>
 

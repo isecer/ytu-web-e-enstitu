@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             bbModel.KayitDonemi = kul.KayitYilBaslangic + "/" + (kul.KayitYilBaslangic + 1);
                         }
-                        if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToString("dd.MM.yyyy");
+                        if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToFormatDate();
                         model.AktifOgrenimIcinBasvuruVar = _entities.TDOBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenimTipKod == kul.OgrenimTipKod && a.ProgramKod == kul.ProgramKod);
                     }
                     else
@@ -201,15 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(enstituKod, kullaniciId, tdoBasvuruId);
 
-            if (mmMessage.IsSuccess && !(tdoBasvuruId > 0))
-            {
-                var result = TezDanismanOneriBus.ObsDanismanBasvuruBilgiEslestir(kul.KullaniciID, null);
-                if (!result.Item2.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add(result.Item2);
-                    mmMessage.IsSuccess = false;
-                }
-            }
+          
             if (mmMessage.IsSuccess)
             {
                 model.KayitTarihi = kul.KayitTarihi;

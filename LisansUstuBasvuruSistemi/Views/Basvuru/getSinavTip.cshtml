@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model SinavBilgiModel
 @{
     Layout = null;
@@ -353,14 +354,14 @@ else
         <div class="form-group">
             <label class="col-md-3 col-xs-4 control-label">Sınav Tarihi</label>
             <div class="col-md-9 col-xs-8 " style="text-align: left;">
-                <input class="form-control form-control-inline input-medium date-picker" placeholder="Örnek Format: @DateTime.Now.ToString("dd-MM-yyyy")" autocomplete="off" size="16" type="text" value="@(sD!=null && sD.SinavTarihi.HasValue? sD.SinavTarihi.Value.ToString("dd-MM-yyyy"):"")" name="BasvurularSinavBilgi_@(IdN).SinavTarihi" id="@(IdN)SinavTarihi">
+                <input class="form-control form-control-inline input-medium date-picker" placeholder="Örnek Format: @DateTime.Now.ToFormatDateInput()" autocomplete="off" size="16" type="text" value="@(sD!=null && sD.SinavTarihi.HasValue? sD.SinavTarihi.Value.ToFormatDateInput():"")" name="BasvurularSinavBilgi_@(IdN).SinavTarihi" id="@(IdN)SinavTarihi">
             </div>
         </div>
 
         <script>
             $('#@(IdN)SinavTarihi').datetimepicker({
                 timepicker: false,
-                format: 'd-m-Y'
+                format: 'Y-m-d'
             });
             $.datetimepicker.setLocale('tr');
         </script>

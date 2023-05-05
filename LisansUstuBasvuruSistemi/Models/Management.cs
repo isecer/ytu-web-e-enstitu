@@ -208,14 +208,14 @@ namespace LisansUstuBasvuruSistemi.Models
                     }
                     else
                     {
-                        _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToString("dd.MM.yyyy") + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisi ile işlenirken bir hata oluştu! Sevisten dönen değer:" + vsRetVal;
+                        _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToFormatDate() + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisi ile işlenirken bir hata oluştu! Sevisten dönen değer:" + vsRetVal;
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToString("dd.MM.yyyy") + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisine işlenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
+                _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToFormatDate() + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisine işlenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
 
             }
             Msj = _msj;
@@ -3741,9 +3741,9 @@ namespace LisansUstuBasvuruSistemi.Models
                             mdl.Durum = qSonuc != null ? OsymSonucTip.BuAdayaAitSinavSonucuMevcut : OsymSonucTip.BuAdayaAitSinavSonucuYok;
                             mdl.SinavKodu = sinav.SinavTipKod.ToString();
                             mdl.SinavYili = snvB.SinavTarihi.Value.Year.ToString();
-                            mdl.SinavAdi = (mdl.SinavYili + " - " + snvB.SinavTarihi.ToString("dd-MM-yyyy") + " - " + sinav.SinavAdi + " (" + dBilgi.DilAdi + ")");
+                            mdl.SinavAdi = (mdl.SinavYili + " - " + snvB.SinavTarihi.ToFormatDate() + " - " + sinav.SinavAdi + " (" + dBilgi.DilAdi + ")");
                             mdl.TCKimlikNo = Tck;
-                            mdl.SinavDonemi = (mdl.SinavYili + " " + snvB.SinavTarihi.ToString("dd-MM-yyyy") + "-" + sinav.SinavAdi + " (" + dBilgi.DilAdi + ")");
+                            mdl.SinavDonemi = (mdl.SinavYili + " " + snvB.SinavTarihi.ToFormatDate() + "-" + sinav.SinavAdi + " (" + dBilgi.DilAdi + ")");
                             mdl.AciklanmaTarihi = qSonuc != null ? qSonuc.SinavTarihi.TodateToShortDate() : (DateTime?)null;
                             mdl.EnstituKod = sinav.EnstituKod;
                             if (mdl.Durum == OsymSonucTip.BuAdayaAitSinavSonucuMevcut)
@@ -3768,7 +3768,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             mdl.Durum = OsymSonucTip.BuAdayaAitSinavSonucuMevcut;
                             mdl.SinavTipGrupID = sinav.SinavTipGrupID;
                             mdl.SinavKodu = sinav.WebServiceKod;
-                            mdl.SinavAdi = snvB.WsSinavYil + " (" + snvB.WsAciklanmaTarihi.ToString("dd.MM.yyyy") + ") " + sinav.SinavAdi;
+                            mdl.SinavAdi = snvB.WsSinavYil + " (" + snvB.WsAciklanmaTarihi.ToFormatDate() + ") " + sinav.SinavAdi;
                             mdl.TCKimlikNo = snvB.Basvurular.Kullanicilar.TcKimlikNo;
                             mdl.SinavYili = snvB.WsSinavYil.ToString();
                             // mdl.SinavDonemi = snvB.WsSinavDonem + " , " + dBilgi.DonemAdi;
@@ -5589,7 +5589,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         contentHtml = contentHtml.Replace("@ProgramAdi", tercihPrg.ProgramAdi);
                         contentHtml = contentHtml.Replace("@KartNo", CardNo);
                         contentHtml = contentHtml.Replace("@DekontNo", SiparisNo);
-                        contentHtml = contentHtml.Replace("@DekontTarihi", DekontBilgi.DekontTarih.ToString("dd.MM.yyyy"));
+                        contentHtml = contentHtml.Replace("@DekontTarihi", DekontBilgi.DekontTarih.ToFormatDate());
                         contentHtml = contentHtml.Replace("@KartNo", CardNo);
                         contentHtml = contentHtml.Replace("@Ucret", Ucret);
                         contentHtml = contentHtml.Replace("@Taksit", TaksitBilgisi);
@@ -5599,7 +5599,7 @@ namespace LisansUstuBasvuruSistemi.Models
                         mmmC.Content = contentHtml;
                         #endregion
                         msg = contentHtml;
-                        // msg = "Sayın " + kul.Ad + " " + kul.Soyad + " <br/>Lisansüstü başvuru sistemi üzerinden <b>" + CardNo + "</b> numaralı kartınızla <b>" + DekontBilgi.DekontTarih.ToString("dd.MM.yyyy") + "</b> tarihinde yapmış olduğunuz <b>" + tercihPrg.ProgramAdi + "</b> Program kaydı için gereken <b>" + Ucret + " TL</b> Ücretli Sanal Pos ödeme işleminiz <b>" + (taksit.IsNullOrWhiteSpace() ? "Taksitsiz" : taksit + " Taksit") + "</b> olarak <b>" + SiparisNo + "</b> Sipariş Numarası ile başarılı bir şekilde gerçekleşmiştir.";
+                        // msg = "Sayın " + kul.Ad + " " + kul.Soyad + " <br/>Lisansüstü başvuru sistemi üzerinden <b>" + CardNo + "</b> numaralı kartınızla <b>" + DekontBilgi.DekontTarih.ToFormatDate() + "</b> tarihinde yapmış olduğunuz <b>" + tercihPrg.ProgramAdi + "</b> Program kaydı için gereken <b>" + Ucret + " TL</b> Ücretli Sanal Pos ödeme işleminiz <b>" + (taksit.IsNullOrWhiteSpace() ? "Taksitsiz" : taksit + " Taksit") + "</b> olarak <b>" + SiparisNo + "</b> Sipariş Numarası ile başarılı bir şekilde gerçekleşmiştir.";
 
                         var EMailList = new List<MailSendList> { new MailSendList { EMail = kul.EMail, ToOrBcc = true } };
                         mmmC.Content = contentHtml;

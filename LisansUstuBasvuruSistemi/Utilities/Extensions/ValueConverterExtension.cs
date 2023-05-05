@@ -35,7 +35,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             var groupSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyGroupSeparator;
             var decimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
             return ToMoney(moneyString, decimalSeparator, groupSeparator);
-        } 
+        }
         public static decimal? ToMoney(this string moneyString, string decimalSeparator, string groupSeparator)
         {
             char[] numbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -109,7 +109,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         public static string ToFormatDate(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
-            return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("dd.MM.yyyy");
+            return datetime == DateTime.MinValue ? "" : datetime.Value.ToFormatDate();
         }
         public static string ToFormatDate(this DateTime datetime)
         {
@@ -117,12 +117,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         }
         public static string ToFormatDateAndTime(this DateTime? datetime)
         {
-            if (!datetime.HasValue) return "";
-            return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("dd.MM.yyyy HH:mm");
+            if (!datetime.HasValue || datetime == DateTime.MinValue) return "";
+            return datetime.Value.ToString("dd.MM.yyyy HH:mm");
         }
         public static string ToFormatDateAndTime(this DateTime datetime)
         {
             return datetime == DateTime.MinValue ? "" : datetime.ToString("dd.MM.yyyy HH:mm");
+        }
+        public static string ToFormatDateInput(this DateTime? datetime)
+        {
+            if (!datetime.HasValue) return "";
+            return datetime == DateTime.MinValue ? "" : datetime.Value.ToFormatDateInput();
+        }
+        public static string ToFormatDateInput(this DateTime datetime)
+        {
+            return datetime == DateTime.MinValue ? "" : datetime.ToString("yyyy-MM-dd");
+        }
+        public static string ToFormatDateAndTimeInput(this DateTime? datetime)
+        {
+            if (!datetime.HasValue || datetime == DateTime.MinValue) return "";
+            return datetime.Value.ToString("yyyy-MM-dd HH:mm");
+        }
+        public static string ToFormatDateAndTimeInput(this DateTime datetime)
+        {
+            return datetime == DateTime.MinValue ? "" : datetime.ToString("yyyy-MM-dd HH:mm");
         }
         public static string ToFormatTime(this DateTime? datetime)
         {
@@ -196,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             }
             return returnSonuc;
         }
-    
+
 
         public static string ToKullaniciResim(this string resimAdi)
         {

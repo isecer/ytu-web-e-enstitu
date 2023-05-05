@@ -235,7 +235,7 @@
                                                             <div class="form-group">
                                                                 <label class="col-md-4 col-xs-5 control-label ">Doğum Tarihi</label>
                                                                 <div class="col-md-8 col-xs-7 " style="text-align: left;">
-                                                                    <input class="form-control form-control-inline input-medium date-pickerx" placeholder="Örnek Format: Gün-Ay-Yıl" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToString("dd-MM-yyyy"))" name="DogumTarihi" id="DogumTarihi">
+                                                                    <input class="form-control form-control-inline input-medium date-pickerx" placeholder="Örnek Format: Gün-Ay-Yıl" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToFormatDateInput())" name="DogumTarihi" id="DogumTarihi">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group @(!Model.IsYerli ? " hide" : "" )">
@@ -277,7 +277,7 @@
                                                             <div class="form-group">
                                                                 <label class="col-md-4 col-xs-5 control-label ">Doğum Tarihi</label>
                                                                 <div class="col-md-8 col-xs-7 " style="text-align: left;">
-                                                                    <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToString("dd-MM-yyyy"))" name="DogumTarihi" id="DogumTarihi">
+                                                                    <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.DogumTarihi == DateTime.MinValue ? " " : Model.DogumTarihi.ToFormatDateInput())" name="DogumTarihi" id="DogumTarihi">
                                                                 </div>
                                                             </div>
 
@@ -987,7 +987,7 @@
     }
     $('.date-pickerx').datetimepicker({
         timepicker: false,
-        format: 'd-m-Y'
+        format: 'Y-m-d'
     });
     $.datetimepicker.setLocale('tr');
     $('#ddLst').nestable().on('change', function () {

@@ -155,7 +155,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 StringWriter sw = new StringWriter();
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
                 gv.RenderControl(htw);
-                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_YeterlikBasvuruListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_YeterlikBasvuruListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
             #endregion
             return View(model);

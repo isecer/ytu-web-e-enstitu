@@ -240,7 +240,7 @@
                                             </table>
                                         </td>
                                         <td>
-                                            @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi <br />
+                                            @item.Tarih.ToFormatDate() @item.HaftaGunAdi <br />
                                             @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
                                         </td>
                                         <td>

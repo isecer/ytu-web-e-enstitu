@@ -131,7 +131,7 @@
                                                             @(Model.EYKTarihi.HasValue ? Model.EYKTarihi.Value.ToDateString() : "EYK Tarihi Girilmedi")
                                                         </td>
                                                         <td id="eykInp_@Model.MezuniyetBasvurulariID" class="hide">
-                                                            <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToString("dd-MM-yyyy"))" id="InpEyk_@Model.MezuniyetBasvurulariID">
+                                                            <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToFormatDateInput())" id="InpEyk_@Model.MezuniyetBasvurulariID">
                                                         </td>
                                                         @if (kayitYetki)
                                                         {
@@ -140,7 +140,7 @@
                                                                 <script>
                                                                     $('.date-pickerx').datetimepicker({
                                                                         timepicker: false,
-                                                                        format: 'd-m-Y'
+                                                                        format: 'Y-m-d'
                                                                     });
                                                                     function ShowEykTarih(id, sndr) {
                                                                         if ($('#eykLbl_' + id).hasClass('hide')) {
@@ -163,17 +163,10 @@
                                                                 <script>
 
                                                                 function SaveEykTarihi(id, sndr) {
-                                                                    var val = $('#InpEyk_' + id).val();
-                                                                    var dt = null;
-                                                                    if (val != "" && val != null) {
-                                                                        var _yil = val.split("-")[2];
-                                                                        var _ay = val.split("-")[1];
-                                                                        var _gun = val.split("-")[0];
-                                                                        dt = _ay + "-" + _gun + "-" + _yil ;
-                                                                    }
+                                                                    var val = $('#InpEyk_' + id).val(); 
                                                                     $.ajax({
                                                                         url: '@Url.Action("EykTarihiKaydet", "MezuniyetGelenBasvurular")',
-                                                                        data: { 'id': id, 'EYKTarihi': dt },
+                                                                        data: { 'id': id, 'EYKTarihi': val },
                                                                         success: function (result) {
                                                                             getMsg(result.MmMessage);
                                                                             if (result.IsSuccess) {

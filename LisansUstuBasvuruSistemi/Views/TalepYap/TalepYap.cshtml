@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model TalepGelenTalepler
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
@@ -173,7 +174,7 @@
                                     <div class="form-group AllGroup EkSureDr DondurmaDr">
                                         <label class="col-md-3 col-xs-5 control-label">Tez Öneri Tarihi</label>
                                         <div class="col-md-9 col-xs-7">
-                                            <input class="form-control form-control-inline input-medium" style="width: 100px;" autocomplete="off" size="16" type="text" value="@(!Model.DoktoraTezOneriTarihi.HasValue ? "" : Model.DoktoraTezOneriTarihi.ToString("dd-MM-yyyy"))" name="DoktoraTezOneriTarihi" id="DoktoraTezOneriTarihi" />
+                                            <input class="form-control input-medium" style="width: 100px;" autocomplete="off" size="16" type="text" value="@Model.DoktoraTezOneriTarihi.ToFormatDateInput()" name="DoktoraTezOneriTarihi" id="DoktoraTezOneriTarihi" />
                                         </div>
                                     </div>
                                     <div class="form-group AllGroup EkSureDr DondurmaDr">
@@ -259,7 +260,7 @@
         $('#DoktoraTezOneriTarihi').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'd-m-Y'
+            format: 'Y-m-d',
         });
         var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);

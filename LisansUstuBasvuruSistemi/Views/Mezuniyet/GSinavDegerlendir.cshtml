@@ -81,7 +81,7 @@
                                                     <td class="CaptionTd">Sınav Tarihi</td>
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd">
-                                                        @Model.Tarih.ToString("dd.MM.yyyy") @Model.HaftaGunAdi @string.Format("{0:hh\\:mm}", Model.BasSaat) - @string.Format("{0:hh\\:mm}", Model.BitSaat)
+                                                        @Model.Tarih.ToFormatDate() @Model.HaftaGunAdi @string.Format("{0:hh\\:mm}", Model.BasSaat) - @string.Format("{0:hh\\:mm}", Model.BitSaat)
                                                     </td>
                                                 </tr>
                                             </tbody>

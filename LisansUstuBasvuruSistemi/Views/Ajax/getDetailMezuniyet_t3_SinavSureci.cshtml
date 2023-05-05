@@ -123,7 +123,7 @@
                                                                     </table>
                                                                 </td>
                                                                 <td width="145">
-                                                                    @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi <br />@string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                                    @item.Tarih.ToFormatDate() @item.HaftaGunAdi <br />@string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
                                                                 </td>
                                                                 <td width="130" style="color:@item.Color">
 
@@ -216,11 +216,11 @@
                                                                                                     <table>
                                                                                                         <tr>
                                                                                                             <td id="SrSinavTarihLblContent_@item.SRTalepID">
-                                                                                                                @item.Tarih.ToString("dd.MM.yyyy") @item.HaftaGunAdi  @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
+                                                                                                                @item.Tarih.ToFormatDate() @item.HaftaGunAdi  @string.Format("{0:hh\\:mm}", item.BasSaat) - @string.Format("{0:hh\\:mm}", item.BitSaat)
 
                                                                                                             </td>
                                                                                                             <td id="SrSinavTarihiContent_@item.SRTalepID" class="hide">
-                                                                                                                <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@item.Tarih.AddHours(item.BasSaat.Hours).AddMinutes(item.BasSaat.Minutes).ToString("dd-MM-yyyy HH:mm")" id="SrSinavTarihiIInput_@item.SRTalepID">
+                                                                                                                <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@item.Tarih.AddHours(item.BasSaat.Hours).AddMinutes(item.BasSaat.Minutes).ToFormatDateAndTimeInput()" id="SrSinavTarihiIInput_@item.SRTalepID">
                                                                                                             </td>
                                                                                                             @if (kayitYetki)
                                                                                                             {
@@ -230,7 +230,7 @@
                                                                                                                         $('#SrSinavTarihiIInput_@item.SRTalepID').datetimepicker({
                                                                                                                             lang: 'tr',
                                                                                                                             timepicker: true,
-                                                                                                                            format: 'd-m-Y H:i'
+                                                                                                                            format: 'Y-m-d H:i'
                                                                                                                         });
 
                                                                                                                         function ShowSinavTarihi(id) {
@@ -254,7 +254,7 @@
                                                                                                                     <script>
 
                                                                                                                             function SaveSinavTarihiTarihi(id) {
-                                                                                                                                var val = $('#SrSinavTarihiIInput_' + id).val();
+                                                                                                                                var val = $('#SrSinavTarihiIInput_' + id).val(); 
                                                                                                                                 var _panel = $('#bsvrDet_@Model.MezuniyetBasvurulariID');
                                                                                                                                 PanelRefresh(_panel, false);
                                                                                                                                 $.ajax({
@@ -782,7 +782,7 @@
                                                                                                         <td class="ValueTd">
                                                                                                             @if (EnstituDegerlendirmeYetki)
                                                                                                             {
-                                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" style="max-width:90px;height:22px;float:left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToString("dd-MM-yyyy")" />
+                                                                                                                <input class="form-control form-control-inline input-medium date-pickerx" style="max-width:90px;height:22px;float:left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToFormatDateInput()" />
                                                                                                             }
                                                                                                             else
                                                                                                             {
@@ -790,15 +790,15 @@
                                                                                                                 {
                                                                                                                     <table>
                                                                                                                         <tr>
-                                                                                                                            <td id="SrTezTeslimSonTrLblRw_@item.SRTalepID">@item.TeslimSonTarih.ToString("dd-MM-yyyy")</td>
-                                                                                                                            <td id="SrTezTeslimTarihiContent_@item.SRTalepID" class="hide"><input class="form-control form-control-inline input-medium" id="SrTezTeslimTarihiIInput_@item.SRTalepID" style="max-width: 90px; height: 22px; float: left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToString("dd-MM-yyyy")" /></td>
+                                                                                                                            <td id="SrTezTeslimSonTrLblRw_@item.SRTalepID">@item.TeslimSonTarih.ToFormatDate()</td>
+                                                                                                                            <td id="SrTezTeslimTarihiContent_@item.SRTalepID" class="hide"><input class="form-control form-control-inline input-medium" id="SrTezTeslimTarihiIInput_@item.SRTalepID" style="max-width: 90px; height: 22px; float: left;" autocomplete="off" size="10" type="text" value="@item.TeslimSonTarih.ToFormatDateInput()" /></td>
                                                                                                                             <td style="padding-left: 3px;">
                                                                                                                                 <a href="javascript:void(0)" onclick="ShowTezTeslimTarihi(@item.SRTalepID)"><i class="fa fa-edit fa-lg" title="Tez Teslim Son Tarih Kriterini Düzenle"></i></a>
                                                                                                                                 <script>
                                                                                                                                     $('#SrTezTeslimTarihiIInput_@item.SRTalepID').datetimepicker({
                                                                                                                                         lang: 'tr',
                                                                                                                                         timepicker: false,
-                                                                                                                                        format: 'd-m-Y'
+                                                                                                                                        format: 'Y-m-d'
                                                                                                                                     });
                                                                                                                                     function ShowTezTeslimTarihi(id) {
                                                                                                                                         if ($('#SrTezTeslimSonTrLblRw_' + id).hasClass('hide')) {
@@ -847,7 +847,7 @@
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
-                                                                                                                    @item.TeslimSonTarih.ToString("dd-MM-yyyy")
+                                                                                                                    @item.TeslimSonTarih.ToFormatDate()
                                                                                                                 }
 
 

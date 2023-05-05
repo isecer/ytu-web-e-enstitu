@@ -45,7 +45,7 @@
                                 }
                                 else if (Model.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen)
                                 {
-                                    <span>@Model.BasTarih.Value.ToString("dd.MM.yyyy") - @Model.BitTarih.Value.ToString("dd.MM.yyyy") </span>
+                                    <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() </span>
                                 }
                                 else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezervasyon)
                                 {
@@ -54,7 +54,7 @@
 
                                     <span>
                                         @Model.SalonAdi <br />
-                                        @Model.Tarih.ToString("dd.MM.yyyy") @haftaGunu.HaftaGunAdi
+                                        @Model.Tarih.ToFormatDate() @haftaGunu.HaftaGunAdi
                                         @foreach (var item2 in Model.SROzelTanimSaatlers)
                                         {
                                             <br />
@@ -65,7 +65,7 @@
                                 else if (Model.SROzelTanimTipID == SROzelTanimTip.Rezerve)
                                 {
                                     @Model.SalonAdi <br />
-                                                                                <span>@Model.BasTarih.Value.ToString("dd.MM.yyyy") - @Model.BitTarih.Value.ToString("dd.MM.yyyy") Tarih Arası</span>
+                                                                                <span>@Model.BasTarih.Value.ToFormatDate() - @Model.BitTarih.Value.ToFormatDate() Tarih Arası</span>
                                     if (Model.SROzelTanimGunlers.Count > 0)
                                     {
                                         <table style="width:100%;table-layout:fixed;" class="table">

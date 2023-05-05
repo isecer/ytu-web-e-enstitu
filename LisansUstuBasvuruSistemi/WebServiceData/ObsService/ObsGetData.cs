@@ -127,8 +127,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                     var danismanBilgi = danismanResult[0];
                                     if (danismanBilgi.Sucess)
                                     {
-                                        model.DanismanInfo = danismanBilgi.personel.FirstOrDefault();
-
+                                        model.DanismanInfo = danismanBilgi.personel.FirstOrDefault(); 
                                     }
                                 }
                             }
@@ -149,9 +148,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             catch (Exception ex)
             {
                 model.Hata = true;
-                model.HataMsj =
-                    "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz! Hata:" +
-                    ex.ToExceptionMessage();
+                model.HataMsj = "OBS sisteminden kayıt kontrolü başarısız oldu! Lütfen sistem yöneticisine başvurunuz! Hata:" + ex.ToExceptionMessage();
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(model.HataMsj, "Management/studentControl\r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
             }
 
@@ -189,6 +186,8 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                         if (ogrenciTez.Any() && ogrenciTez[0].Sucess)
                         {
                             model.OgrenciTez = ogrenciTez[0].ogrencitez[0];
+                            model.OgrenciTez.tezizlemebilgileri = model.OgrenciTez.tezizlemebilgileri
+                                .OrderByDescending(o => o.TEZ_IZL_SIRA.ToInt()).ToArray();
                         }
 
                         var ogrenciTezJuri = service.OgrenciTezizlemeJuriBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);

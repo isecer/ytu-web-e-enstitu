@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         bbModel.KullaniciTipYetki = false;
                         bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
                     }
-                    else bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " + _entities.Donemlers.First(p => p.DonemID == kullanici.KayitDonemID.Value).DonemAdi + " , " + kullanici.KayitTarihi.ToString("dd.MM.yyyy");
+                    else bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " + _entities.Donemlers.First(p => p.DonemID == kullanici.KayitDonemID.Value).DonemAdi + " , " + kullanici.KayitTarihi.ToFormatDate();
 
                 }
 
@@ -1574,6 +1574,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else if (belgeDosyasi != null && belgeDosyasi.ContentLength > (1024 * 1024 * 20))
             {
                 mMessage.Messages.Add("Yükleyeceğiniz dosya boyutu en fazla 20MB olmalıdır.");
+            }
+            else if (belgeDosyasi.FileName.Length > 1024)
+            {
+                mMessage.Messages.Add("Yükleyeceğiniz dosya adı en fazla 1024 karakter uzunluğunda olmalıdır.");
             }
             else
             {

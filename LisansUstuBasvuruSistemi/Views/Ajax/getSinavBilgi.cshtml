@@ -40,7 +40,7 @@
                         <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
                         <td>Dönem Seçimi</td>
                         <td>:</td>
-                        <td style="font-weight:bold;">@(Model.SinavDetay.WsSinavCekimTipID.HasValue && Model.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih ? Model.Sinav.SinavTarihi.Value.ToString("dd-MM-yyyy") : Model.SinavDetay.SinavTipleriDonems.Where(p => p.WsDonemKod == Model.Sinav.WsSinavDonem).First().WsDonemAd)</td>
+                        <td style="font-weight:bold;">@(Model.SinavDetay.WsSinavCekimTipID.HasValue && Model.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih ? Model.Sinav.SinavTarihi.Value.ToFormatDate() : Model.SinavDetay.SinavTipleriDonems.Where(p => p.WsDonemKod == Model.Sinav.WsSinavDonem).First().WsDonemAd)</td>
                     </tr>
 
                     if (Model.Sinav.WsAciklanmaTarihi.HasValue)

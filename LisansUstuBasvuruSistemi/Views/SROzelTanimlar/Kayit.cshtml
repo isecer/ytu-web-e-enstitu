@@ -2,6 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model SROzelTanimlar
 @{
     var mmMessage = ViewBag.MmMessage as MmMessage;
@@ -17,7 +18,7 @@
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.SROzelTanimID <= 0 ? "Yeni Özel Tanım işlemi" : "Özel tanımı düzenleme işlemi")</h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.SROzelTanimID <= 0 ? "Yeni Özel Tanım işlemi" : "Özel tanımı düzenleme işlemi")</h3>
                     <ul class="panel-controls">
                         <li><a href="@Url.Action("Kayit", Model.SROzelTanimID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>
@@ -41,7 +42,7 @@
                             <div class="_Sabit form-group @(Model.SROzelTanimTipID==SROzelTanimTip.ResmiTatilSabit ? "" : "hide")">
                                 <div class="panel panel-default" style="margin:0px;">
                                     <div class="panel-heading padding-0" style="padding:0px;">
-                                        <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Resmi Tatil Sabit Tarihler</h3>
+                                        <h3 class="panel-title"><i class="fa fa-pencil"></i> Resmi Tatil Sabit Tarihler</h3>
                                     </div>
                                     <div class="panel-body" style="padding:0px;">
                                         <div class="col-md-12 col-xs-12">
@@ -54,7 +55,7 @@
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-3 control-label">Gün</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@Model.Gun" name="Gun" id="Gun">
+                                                    <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.Gun" name="Gun" id="Gun">
                                                 </div>
                                             </div>
                                         </div>
@@ -71,13 +72,13 @@
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BasTarih.HasValue==false ? "" : Model.BasTarih.ToString("yyyy-MM-dd"))" name="BasTarih" id="BasTarih">
+                                                    <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BasTarih.ToFormatDateInput()" name="BasTarih" id="BasTarih">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitTarih.HasValue==false ? "" : Model.BitTarih.ToString("yyyy-MM-dd"))" name="BitTarih" id="BitTarih">
+                                                    <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitTarih.ToFormatDateInput()" name="BitTarih" id="BitTarih">
                                                 </div>
                                             </div>
                                         </div>
@@ -106,13 +107,13 @@
                                         <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
                                             <label class="col-md-3 col-xs-3 control-label">Başlangıç Tarihi</label>
                                             <div class="col-md-9 col-xs-9">
-                                                <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BasTarih.HasValue == false ? "" : Model.BasTarih.ToString("yyyy-MM-dd"))" name="BasTarih2" id="BasTarih2">
+                                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BasTarih.ToFormatDateInput()" name="BasTarih2" id="BasTarih2">
                                             </div>
                                         </div>
                                         <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
                                             <label class="col-md-3 col-xs-3 control-label">Bitiş Tarihi</label>
                                             <div class="col-md-9 col-xs-9">
-                                                <input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitTarih.HasValue == false ? "" : Model.BitTarih.ToString("yyyy-MM-dd"))" name="BitTarih2" id="BitTarih2">
+                                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitTarih.ToFormatDateInput()" name="BitTarih2" id="BitTarih2">
                                             </div>
                                         </div>
                                         <div class="form-group _Rezerve @(Model.SROzelTanimTipID==SROzelTanimTip.Rezerve ? "" : "hide")">
@@ -137,7 +138,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="panel-body" style="height:228px;padding:0px;">
-                                                            <input type="text" id="Tarih" name="Tarih" value="@Model.Tarih.ToString("yyyy-MM-dd")" />
+                                                            <input type="text" id="Tarih" name="Tarih" value="@Model.Tarih.ToFormatDateInput()" />
                                                         </div>
                                                     </div>
                                                 </td>
@@ -228,11 +229,11 @@
         }
     }
     $(function () {
-        var dttme = $('#Tarih').datetimepicker({
+         $('#Tarih').datetimepicker({
             lang: 'tr',
             inline: true,
             timepicker: false,
-            format: 'Y-m-d',
+            format: 'Y-m-d'
             onSelectDate: function () {
                 getSaatler();
             },
@@ -252,12 +253,12 @@
         $('#BasTarih').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'Y-m-d'
+            format: 'Y-m-d',
         });
         $('#BitTarih').datetimepicker({
             lang: 'tr',
             timepicker: false,
-            format: 'Y-m-d'
+            format: 'Y-m-d',
         });
         $('#BasTarih2').datetimepicker({
             lang: 'tr',
@@ -304,15 +305,7 @@
         else {
             $('#saatLstContnt').css("display", "none");
         }
-    }
-    function getFormattedDate(date) {
-        var year = date.getFullYear();
-        var month = (1 + date.getMonth()).toString();
-        month = month.length > 1 ? month : '0' + month;
-        var day = date.getDate().toString();
-        day = day.length > 1 ? day : '0' + day;
-        return year + "-" + month + "-" + day;
-    }
+    } 
     function getSalonlar() {
         var enstituKod = $('#EnstituKod').val();
         var ttip = $('#SRTalepTipID').val();

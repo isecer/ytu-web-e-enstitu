@@ -229,7 +229,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
                 gv.RenderControl(htw);
 
-                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_BasvuruListesi_" + DateTime.Now.ToString("dd.MM.yyyy") + ".xls");
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_BasvuruListesi_" + DateTime.Now.ToFormatDate() + ".xls");
             }
 
 

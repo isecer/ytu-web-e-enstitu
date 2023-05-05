@@ -214,14 +214,14 @@ namespace LisansUstuBasvuruSistemi.WebServiceData
         //            }
         //            else
         //            {
-        //                _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToString("dd.MM.yyyy") + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisi ile işlenirken bir hata oluştu! Sevisten dönen değer:" + vsRetVal;
+        //                _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToFormatDate() + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisi ile işlenirken bir hata oluştu! Sevisten dönen değer:" + vsRetVal;
         //            }
 
         //        }
         //    }
         //    catch (Exception ex)
         //    {
-        //        _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToString("dd.MM.yyyy") + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisine işlenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
+        //        _msj = OgrenciNo + " numaralı öğrencinin  " + DekontNo + " dekont numarası " + DekontTarihi.ToFormatDate() + " ödeme tarihi ve " + OdenenTutar + " TL ödenen tutar bilgisi! Gsis veb servisine işlenirken bir hata oluştu! Hata:" + ex.ToExceptionMessage();
 
         //    }
         //    Msj = _msj;

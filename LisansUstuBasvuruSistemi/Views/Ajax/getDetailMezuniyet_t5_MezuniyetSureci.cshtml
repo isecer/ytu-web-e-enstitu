@@ -3,6 +3,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
 @{ 
@@ -187,7 +188,7 @@
                                                             }
                                                             else
                                                             {
-                                                                @Model.MezuniyetTarihi.ToString("yyyy-MM-dd")
+                                                                @Model.MezuniyetTarihi.ToFormatDate()
                                                             }
                                                         </td>
                                                     </tr>

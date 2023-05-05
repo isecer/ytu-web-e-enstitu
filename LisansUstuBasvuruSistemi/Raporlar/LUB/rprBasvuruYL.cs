@@ -107,7 +107,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                         //    else if (btercih.ProgramBilgileri.AlesTipID == AlesTipBilgi.EşitAğırlık)
                         //        model.BasvurularSinavBilgi_A.Sinav.SinavNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
                         //}
-                        //cell_SinavTarih.Text = model.BasvurularSinavBilgi_A.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_A.Sinav.WsAciklanmaTarihi.ToString("dd.MM.yyyy");
+                        //cell_SinavTarih.Text = model.BasvurularSinavBilgi_A.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_A.Sinav.WsAciklanmaTarihi.ToFormatDate();
 
                     }
                     else
@@ -191,11 +191,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar
                         if (model.BasvurularSinavBilgi_D.SinavDetay.WsSinavCekimTipID.HasValue && model.BasvurularSinavBilgi_D.SinavDetay.WsSinavCekimTipID == WsCekimTipi.Tarih)
                         {
 
-                            cell_SinavTarihYD.Text = model.BasvurularSinavBilgi_D.Sinav.SinavTarihi.Value.Year.ToString() + " / " + model.BasvurularSinavBilgi_D.Sinav.SinavTarihi.Value.ToString("dd.MM.yyyy");
+                            cell_SinavTarihYD.Text = model.BasvurularSinavBilgi_D.Sinav.SinavTarihi.Value.Year.ToString() + " / " + model.BasvurularSinavBilgi_D.Sinav.SinavTarihi.Value.ToFormatDate();
                         }
                         else
                         {
-                            cell_SinavTarihYD.Text = model.BasvurularSinavBilgi_D.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_D.Sinav.WsAciklanmaTarihi.ToString("dd.MM.yyyy");
+                            cell_SinavTarihYD.Text = model.BasvurularSinavBilgi_D.Sinav.WsSinavYil.ToString() + " / " + model.BasvurularSinavBilgi_D.Sinav.WsAciklanmaTarihi.ToFormatDate();
                         }
                     }
                 }

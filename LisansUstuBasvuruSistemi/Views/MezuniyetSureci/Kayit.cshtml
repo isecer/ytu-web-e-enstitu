@@ -1,11 +1,12 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetSureci
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kmMzOtoMail = (List<KmMzOtoMail>)ViewBag.kmMzOtoMail;
-    var IsYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
+    var isYonetmelikKopyala = (bool?)ViewBag.IsYonetmelikKopyala;
 }
 
 <div class="row">
@@ -41,9 +42,9 @@
                                 <div class="col-md-9 col-xs-7">
                                     <table>
                                         <tr>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BaslangicTarihi == DateTime.MinValue ? "" : Model.BaslangicTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BaslangicTarihi" id="BaslangicTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BaslangicTarihi.ToFormatDateAndTimeInput()" name="BaslangicTarihi" id="BaslangicTarihi"></td>
                                             <td style="width:5px;text-align:center;">/</td>
-                                            <td><input class="trh form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@(Model.BitisTarihi == DateTime.MinValue ? "" : Model.BitisTarihi.ToString("yyyy-MM-dd HH:mm"))" name="BitisTarihi" id="BitisTarihi"></td>
+                                            <td><input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.BitisTarihi.ToFormatDateAndTimeInput()" name="BitisTarihi" id="BitisTarihi"></td>
                                         </tr>
                                     </table>
 
@@ -97,7 +98,7 @@
                                     <label class="col-md-3 col-xs-5 control-label padding-top-0 padding-bottom-0">Yönetmelik Bilgilerini Kopyala</label>
                                     <div class="col-md-9 col-xs-7 padding-top-0 padding-bottom-0">
                                         <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                            <input type="checkbox" value="true" name="IsYonetmelikKopyala" class="toggle" @IsYonetmelikKopyala.ToChecked() />
+                                            <input type="checkbox" value="true" name="IsYonetmelikKopyala" class="toggle" @isYonetmelikKopyala.ToChecked() />
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +139,7 @@
         });
          
 
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
     });
     function getOtBilgi(sndr) {

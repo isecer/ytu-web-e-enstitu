@@ -389,7 +389,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         if (item.SablonParametreleri.Any(a => a == "@OncekiMailTarihi"))
                         {
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = oncekiMailTarihi?.ToString("dd-MM-yyyy HH:mm") });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OncekiMailTarihi", Value = oncekiMailTarihi?.ToFormatDateAndTime() });
                         }
                         #region SR Talebi
                         if (item.MailSablonTipID == MailSablonTipi.TI_ToplantiBilgiKomite || item.MailSablonTipID == MailSablonTipi.TI_ToplantiBilgiOgrenci)
@@ -625,12 +625,12 @@ namespace LisansUstuBasvuruSistemi.Business
                                 ? new MailReplaceParameterDto
                                 {
                                     Key = "OncekiMailTarihi",
-                                    Value = juri.LinkGonderimTarihi?.ToString("dd-MM-yyyy HH:mm")
+                                    Value = juri.LinkGonderimTarihi?.ToFormatDateAndTime()
                                 }
                                 : new MailReplaceParameterDto
                                 {
                                     Key = "OncekiMailTarihi",
-                                    Value = tiAraRapor.DegerlendirmeSonucMailTarihi?.ToString("dd-MM-yyyy HH:mm")
+                                    Value = tiAraRapor.DegerlendirmeSonucMailTarihi?.ToFormatDateAndTime()
                                 });
                         }
                         var mCOntent = SystemMails.GetSystemMailContent(enstitu.EnstituAd, item.Sablon.SablonHtml, item.Sablon.SablonAdi, paramereDegerleri);

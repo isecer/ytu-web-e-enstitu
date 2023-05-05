@@ -28,7 +28,7 @@ using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.Extensions; 
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -1673,7 +1673,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpGet]
         public ActionResult GetDetailTdoBasvuru(int id, Guid? uniqueId)
         {
-            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
+            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId); 
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
@@ -2657,7 +2657,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetGunler(int srSalonId, int srTalepTipId, DateTime tarih, DateTime? tarih2 = null, int? srOzelTanimId = null)
         {
 
-            var ttip = _entities.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
 
             var gunler = _entities.SRSaatlers.Where(p => p.SRSalonID == srSalonId).Select(s => s.HaftaGunID).Distinct();
 
@@ -2665,17 +2664,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             for (DateTime date = tarih; date <= tarih2.Value; date = date.AddDays(1.0))
             {
-                var nTarih = date.ToShortDateString().ToDate().Value;
-                var dofW = nTarih.DayOfWeek.ToString("d").ToInt().Value;
+                var nTarih = date.Date;
+                var dofW = nTarih.DayOfWeek.ToString("d").ToInt(0);
 
-                var salon = _entities.SRSalonlars.First(p => p.SRSalonID == srSalonId);
 
-                var haftaGunu = _entities.HaftaGunleris.First(p => p.HaftaGunID == dofW);
                 var resmiTatilDegisen = _entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilDegisen && p.BasTarih.Value <= nTarih && p.BitTarih >= nTarih);
                 var resmiTatilSabit = _entities.SROzelTanimlars.FirstOrDefault(p => p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.ResmiTatilSabit && p.Ay.Value == nTarih.Month && p.Gun == nTarih.Day);
                 var rezervasyonlar = _entities.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezervasyon && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
                 var rezerve = _entities.SROzelTanimlars.Where(p => p.SROzelTanimID != (srOzelTanimId ?? 0) && p.IsAktif && p.SROzelTanimTipID == SROzelTanimTip.Rezerve && p.SRSalonID == srSalonId && p.Tarih == nTarih).ToList();
-                var tTip = _entities.SRTalepTipleris.First(p => p.SRTalepTipID == srTalepTipId);
                 bool isSuccess = true;
                 var qTalepEslesen = _entities.SRTalepleris.Where(a => a.SRSalonID == srSalonId && a.Tarih == nTarih).Any(p => p.SRDurumID == SRTalepDurum.Onaylandı || p.SRDurumID == SRTalepDurum.TalepEdildi);
                 if (qTalepEslesen)
@@ -4352,7 +4348,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         foreach (var itemD in data)
                         {
                             itemD.EnstituAdi = itemD.EnstituAdi.ToUpper();
-                            itemD.SurecTarihi = bsurec.BaslangicTarihi.ToString("dd-MM-yyyy HH:mm") + " / " + bsurec.BitisTarihi.ToString("dd-MM-yyyy HH:mm");
+                            itemD.SurecTarihi = bsurec.BaslangicTarihi.ToFormatDateAndTime() + " / " + bsurec.BitisTarihi.ToFormatDateAndTime();
                             var toplmMdl = new List<FmMsonucOranModel>();
                             toplmMdl.Add(itemD.AIToplamModel);
                             toplmMdl.Add(itemD.ADToplamModel);
@@ -4564,9 +4560,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var TS = (t2 - t1).TotalSeconds;
 
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("'" + anket.AnketAdi + "' Anket Raporu Oluşturuldu. Oluşturulma Süresi: " + TS + " Sn.", "Ajax/GetDxReport", LogType.Bilgi);
-                        RprAnket rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToString("dd-MM-yyyy") + " - " + bitTar.ToString("dd-MM-yyyy") + " Tarih aralığındaki anket sonuçları");
+                        RprAnket rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki anket sonuçları");
                         rpr.DataSource = qModel;
-                        rpr.DisplayName = basTar.ToString("dd-MM-yyyy") + " - " + bitTar.ToString("dd-MM-yyyy") + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
+                        rpr.DisplayName = basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
                         rpr.PrintingSystem.ContinuousPageNumbering = true;
                         rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFile;
 
