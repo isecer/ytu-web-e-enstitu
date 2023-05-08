@@ -2483,7 +2483,7 @@
             this.xrPictureBox1,
             this.xrLabel1,
             this.lblEnstituAdi});
-            this.TopMargin.HeightF = 95.50005F;
+            this.TopMargin.HeightF = 91.78848F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -2493,9 +2493,9 @@
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(3.790275F, 32.00002F);
+            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(3.790275F, 27.00002F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(148F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -2503,7 +2503,7 @@
             // 
             this.xrLabel1.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrLabel1.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Italic);
-            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(154.983F, 62.08335F);
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(154.983F, 52.08335F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel1.SizeF = new System.Drawing.SizeF(440.034F, 25.08338F);
@@ -2517,7 +2517,7 @@
             // 
             this.lblEnstituAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.lblEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
-            this.lblEnstituAdi.LocationFloat = new DevExpress.Utils.PointFloat(154.983F, 37.00002F);
+            this.lblEnstituAdi.LocationFloat = new DevExpress.Utils.PointFloat(154.983F, 27.00002F);
             this.lblEnstituAdi.Name = "lblEnstituAdi";
             this.lblEnstituAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.lblEnstituAdi.SizeF = new System.Drawing.SizeF(440.034F, 25.08334F);
@@ -2570,7 +2570,7 @@
             this.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.Margins = new System.Drawing.Printing.Margins(40, 37, 96, 36);
+            this.Margins = new System.Drawing.Printing.Margins(40, 37, 92, 36);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

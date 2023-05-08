@@ -7,18 +7,16 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model MezuniyetBasvuruDetayDto
-@{
-
-
+@{ 
     Layout = null;
-    bool kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-    bool tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
-    bool isKendiBasvuruSu = Model.KullaniciID == UserIdentity.Current.Id;
+    var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+    var tdKayitYetki = kayitYetki || RoleNames.MezuniyetGelenBasvurularTezKontrol.InRoleCurrent();
+    var isKendiBasvuruSu = Model.KullaniciID == UserIdentity.Current.Id;
 
     var tbName = TabAdlari.MezuniyetBasvurulariTN + "-" + (Model.IsDelete ? Model.MezuniyetBasvurulariID.ToString() + "_cp" : Model.MezuniyetBasvurulariID.ToString());
 
     var isTezDanisman = Model.TezDanismanID == UserIdentity.Current.Id;
-    bool sonucGirisSureciAktif = (Model.sonucGirisSureciAktif || kayitYetki) && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
+    var sonucGirisSureciAktif = (Model.sonucGirisSureciAktif || kayitYetki) && Model.MezuniyetJuriOneriFormlaris.All(a => a.EYKYaGonderildi != true);
 
 }
 <div class="tab-pane @(Model.SelectedTabIndex==1?"active":"") " id="@tbName-1">
@@ -184,6 +182,7 @@
                                             <td class="CaptionTd" style="font-weight:bold;">@(Model.IsDanismanOnay.Value?"Onay":"Ret") Tarihi</td>
                                             <td class="CaptionTd" style="font-weight:bold;">:</td>
                                             <td class="ValueTd">
+                                                @Model.DanismanOnayTarihi.ToFormatDateAndTime()
                                             </td>
                                         </tr>
 

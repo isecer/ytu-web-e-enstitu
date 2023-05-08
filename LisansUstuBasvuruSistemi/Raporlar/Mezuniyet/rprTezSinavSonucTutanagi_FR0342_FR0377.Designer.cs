@@ -537,7 +537,7 @@
             // 
             // chkOyBirligi
             // 
-            this.chkOyBirligi.GlyphAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.chkOyBirligi.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Center;
             this.chkOyBirligi.LocationFloat = new DevExpress.Utils.PointFloat(7.947285E-05F, 0F);
             this.chkOyBirligi.Name = "chkOyBirligi";
             this.chkOyBirligi.SizeF = new System.Drawing.SizeF(16.11352F, 19.07988F);
@@ -585,7 +585,7 @@
             // 
             // chkOyCoklugu
             // 
-            this.chkOyCoklugu.GlyphAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.chkOyCoklugu.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Center;
             this.chkOyCoklugu.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.chkOyCoklugu.Name = "chkOyCoklugu";
             this.chkOyCoklugu.SizeF = new System.Drawing.SizeF(16.11352F, 19.07988F);
@@ -688,7 +688,7 @@
             // 
             // chkBasarili
             // 
-            this.chkBasarili.GlyphAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.chkBasarili.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Center;
             this.chkBasarili.LocationFloat = new DevExpress.Utils.PointFloat(7.126714F, 0.08901596F);
             this.chkBasarili.Name = "chkBasarili";
             this.chkBasarili.SizeF = new System.Drawing.SizeF(16.11352F, 19.07988F);
@@ -727,7 +727,7 @@
             // 
             // chkBasarisiz
             // 
-            this.chkBasarisiz.GlyphAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.chkBasarisiz.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Center;
             this.chkBasarisiz.LocationFloat = new DevExpress.Utils.PointFloat(4.287235F, 0.08901596F);
             this.chkBasarisiz.Name = "chkBasarisiz";
             this.chkBasarisiz.SizeF = new System.Drawing.SizeF(16.11352F, 19.07988F);
@@ -775,7 +775,7 @@
             // 
             // chkUzatma
             // 
-            this.chkUzatma.GlyphAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.chkUzatma.GlyphOptions.Alignment = DevExpress.Utils.HorzAlignment.Center;
             this.chkUzatma.LocationFloat = new DevExpress.Utils.PointFloat(5.153815F, 0F);
             this.chkUzatma.Name = "chkUzatma";
             this.chkUzatma.SizeF = new System.Drawing.SizeF(16.11352F, 19.07988F);
@@ -2344,7 +2344,7 @@
             this.xrQRCode,
             this.xrTableFK,
             this.xrPictureBox1});
-            this.TopMargin.HeightF = 88F;
+            this.TopMargin.HeightF = 95F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -2380,9 +2380,9 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(685.9026F, 22.9092F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(677F, 19.5759F);
             this.xrQRCode.Name = "xrQRCode";
-            this.xrQRCode.SizeF = new System.Drawing.SizeF(65F, 63.00002F);
+            this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
             this.xrQRCode.StylePriority.UseBorders = false;
             // 
@@ -2390,11 +2390,11 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(552.2147F, 68.61755F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(555.0695F, 69.62498F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
-            this.xrTableFK.SizeF = new System.Drawing.SizeF(133.6879F, 17.29167F);
+            this.xrTableFK.SizeF = new System.Drawing.SizeF(110.4476F, 17.29167F);
             this.xrTableFK.StylePriority.UseBorders = false;
             this.xrTableFK.StylePriority.UseFont = false;
             this.xrTableFK.StylePriority.UseTextAlignment = false;
@@ -2422,11 +2422,11 @@
             // xrPictureBox1
             // 
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrPictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("xrPictureBox1.Image")));
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(1.097382F, 22.90923F);
+            this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
+            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(1.097382F, 24.91666F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.75F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -4204,7 +4204,7 @@
             this.xrRichText30.StylePriority.UseFont = false;
             this.xrRichText30.StylePriority.UsePadding = false;
             // 
-            // rprTezSinavSonucTutanagi_FR0342_FR0377
+            // RprTezSinavSonucTutanagi_FR0342_FR0377
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -4213,11 +4213,11 @@
             this.DetailReport,
             this.DetailReport1,
             this.DetailReport2});
-            this.Margins = new System.Drawing.Printing.Margins(39, 36, 88, 44);
+            this.Margins = new System.Drawing.Printing.Margins(39, 36, 95, 44);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;
-            this.Version = "17.1";
+            this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable42)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable44)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable43)).EndInit();

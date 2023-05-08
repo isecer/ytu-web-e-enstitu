@@ -81,13 +81,13 @@
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
             this.cell_OnaylayanKisi = new DevExpress.XtraReports.UI.XRTableCell();
-            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
             this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.lblEnstituAdi = new DevExpress.XtraReports.UI.XRLabel();
             this.xrQRCode = new DevExpress.XtraReports.UI.XRPictureBox();
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
+            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -638,11 +638,6 @@
             this.cell_OnaylayanKisi.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.cell_OnaylayanKisi.Weight = 0.638518300589587D;
             // 
-            // objectDataSource1
-            // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporMezuniyetBasvuruFormModel);
-            this.objectDataSource1.Name = "objectDataSource1";
-            // 
             // ReportHeader
             // 
             this.ReportHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
@@ -651,7 +646,7 @@
             this.lblEnstituAdi,
             this.xrQRCode,
             this.xrPictureBox1});
-            this.ReportHeader.HeightF = 85F;
+            this.ReportHeader.HeightF = 91F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // xrLabel2
@@ -699,9 +694,9 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(666.5001F, 0F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(677F, 10F);
             this.xrQRCode.Name = "xrQRCode";
-            this.xrQRCode.SizeF = new System.Drawing.SizeF(85F, 85F);
+            this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.Squeeze;
             this.xrQRCode.StylePriority.UseBorders = false;
             // 
@@ -710,11 +705,16 @@
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.499939F, 11.50002F);
+            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.499939F, 9.215767F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.75F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
+            // 
+            // objectDataSource1
+            // 
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporMezuniyetBasvuruFormModel);
+            this.objectDataSource1.Name = "objectDataSource1";
             // 
             // RprMezuniyetYayinSartiOnayiFormu
             // 

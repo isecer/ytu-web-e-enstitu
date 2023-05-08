@@ -26,6 +26,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string AnabilimDaliKod { get; set; }
         public string EnstituKod { get; set; }
         public string AnabilimDaliAdi { get; set; }
+        public string EMail { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }

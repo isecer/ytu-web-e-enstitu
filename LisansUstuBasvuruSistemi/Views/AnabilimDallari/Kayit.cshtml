@@ -40,6 +40,12 @@
                                     <input type="text" name="AnabilimDaliAdi" id="AnabilimDaliAdi" value="@Model.AnabilimDaliAdi" class="form-control" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">E-Posta</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <input type="text" name="EMail" id="EMail" value="@Model.EMail" maxlength="250" class="form-control" />
+                                </div>
+                            </div>
                             @if (Model.AnabilimDaliID > 0)
                             {
                                 <div class="form-group">

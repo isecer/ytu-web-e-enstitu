@@ -3872,7 +3872,7 @@
             this.xrQRCode,
             this.xrLabel1,
             this.lblEnstituAdi});
-            this.TopMargin.HeightF = 90.83334F;
+            this.TopMargin.HeightF = 97.99255F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -3882,9 +3882,9 @@
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.0003178914F, 22.99257F);
+            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.0003178914F, 25F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(148F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -3892,11 +3892,11 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(551.1177F, 68.70088F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(542.8094F, 69.70833F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
-            this.xrTableFK.SizeF = new System.Drawing.SizeF(133.6879F, 17.29167F);
+            this.xrTableFK.SizeF = new System.Drawing.SizeF(125.2606F, 17.29167F);
             this.xrTableFK.StylePriority.UseBorders = false;
             this.xrTableFK.StylePriority.UseFont = false;
             this.xrTableFK.StylePriority.UseTextAlignment = false;
@@ -3924,9 +3924,9 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(684.8056F, 22.99255F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 22.99255F);
             this.xrQRCode.Name = "xrQRCode";
-            this.xrQRCode.SizeF = new System.Drawing.SizeF(65F, 65F);
+            this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
             this.xrQRCode.StylePriority.UseBorders = false;
             // 
@@ -4036,7 +4036,7 @@
             this.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.Margins = new System.Drawing.Printing.Margins(40, 37, 91, 32);
+            this.Margins = new System.Drawing.Printing.Margins(40, 37, 98, 32);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

@@ -9,6 +9,7 @@ namespace OsymWebServiceClient
     {
         public OSYMBinding()
         {
+
             var security =
             TransportSecurityBindingElement.CreateUserNameOverTransportBindingElement(); security.IncludeTimestamp = true;
             security.DefaultAlgorithmSuite = SecurityAlgorithmSuite.Basic256; security.MessageSecurityVersion =

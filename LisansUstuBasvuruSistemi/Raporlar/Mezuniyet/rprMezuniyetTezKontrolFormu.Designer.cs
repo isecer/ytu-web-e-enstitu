@@ -62,11 +62,11 @@
             this.xrTableRow8 = new DevExpress.XtraReports.UI.XRTableRow();
             this.cellOnayTarihi = new DevExpress.XtraReports.UI.XRTableCell();
             this.cell_OnaylayanKisi = new DevExpress.XtraReports.UI.XRTableCell();
-            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
+            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).BeginInit();
@@ -89,9 +89,9 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(667.0001F, 0F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(677F, 10F);
             this.xrQRCode.Name = "xrQRCode";
-            this.xrQRCode.SizeF = new System.Drawing.SizeF(85F, 85F);
+            this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.Squeeze;
             this.xrQRCode.StylePriority.UseBorders = false;
             // 
@@ -404,19 +404,14 @@
             this.cell_OnaylayanKisi.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.cell_OnaylayanKisi.Weight = 0.31925915029479351D;
             // 
-            // objectDataSource1
-            // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporMezuniyetBasvuruFormModel);
-            this.objectDataSource1.Name = "objectDataSource1";
-            // 
             // xrPictureBox1
             // 
             this.xrPictureBox1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrPictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("xrPictureBox1.Image")));
             this.xrPictureBox1.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.BottomCenter;
-            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(1.000023F, 12.00002F);
+            this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
+            this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.5F, 10F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.75F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -456,10 +451,15 @@
             this.xrLabel1,
             this.xrLabel2,
             this.xrQRCode});
-            this.ReportHeader.HeightF = 85.00001F;
+            this.ReportHeader.HeightF = 91F;
             this.ReportHeader.Name = "ReportHeader";
             // 
-            // rprMezuniyetTezKontrolFormu
+            // objectDataSource1
+            // 
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.RaporMezuniyetBasvuruFormModel);
+            this.objectDataSource1.Name = "objectDataSource1";
+            // 
+            // RprMezuniyetTezKontrolFormu
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,
@@ -476,7 +476,7 @@
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;
-            this.Version = "17.1";
+            this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).EndInit();

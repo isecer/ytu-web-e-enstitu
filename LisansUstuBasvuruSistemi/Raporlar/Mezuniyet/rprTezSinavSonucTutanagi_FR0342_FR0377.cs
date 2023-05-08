@@ -140,7 +140,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 chkUzatma.Checked = srTalebi.JuriSonucMezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma || srTalebi.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma;
 
                 cellFormKodu.Text = "Form Kodu: " + srTalebi.UniqueID.ToString().Substring(0, 8).ToUpper();
-                var qrUlr = enstL.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MBBBC_" + mBasvuru.MezuniyetBasvurulariID + "_" + srTalebi.UniqueID;
+                var qrUlr = enstL.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "MZTSS_" + mBasvuru.MezuniyetBasvurulariID + "_" + srTalebi.UniqueID;
                 xrQRCode.ImageUrl = qrUlr;
                 xrQRCode.Image = qrUlr.CreateQrCode();
 

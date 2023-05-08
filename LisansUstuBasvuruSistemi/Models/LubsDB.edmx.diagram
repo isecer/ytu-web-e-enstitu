@@ -5,188 +5,188 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="0e627b69ebd249c39d55ddb35390f018" Name="Diagram1" ZoomLevel="28">
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlanTipleri" Width="1.5" PointX="5.25" PointY="40.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="65.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="7.5" PointY="56.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnabilimDallari" Width="1.5" PointX="5.25" PointY="56" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Anket" Width="1.5" PointX="10.5" PointY="59.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketCevaplari" Width="1.5" PointX="7.5" PointY="52.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoru" Width="1.5" PointX="12.75" PointY="60.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoruSecenek" Width="1.5" PointX="15" PointY="60.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Ayarlar" Width="1.5" PointX="5.25" PointY="64.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Aylar" Width="1.5" PointX="0.75" PointY="58.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="5.25" PointY="68" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleri" Width="1.5" PointX="5.25" PointY="66.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="7.5" PointY="66.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruDurumlari" Width="1.5" PointX="5.25" PointY="45.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Basvurular" Width="1.5" PointX="5.25" PointY="52.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularSinavBilgi" Width="1.5" PointX="7.5" PointY="50.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleri" Width="1.5" PointX="7.5" PointY="54.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="12.75" PointY="53.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="7.5" PointY="59.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurec" Width="1.5" PointX="15.75" PointY="59.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="20" PointY="69" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="23.25" PointY="66.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="13.5" PointY="45.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKotalar" Width="1.5" PointX="18" PointY="62.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="24" PointY="58.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="21" PointY="54.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOtoMail" Width="1.5" PointX="24" PointY="56.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="18" PointY="72" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="21" PointY="62.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="23.25" PointY="48.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="23.25" PointY="50.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="21" PointY="52.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="26.25" PointY="52.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="26.25" PointY="50.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="23" PointY="65.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="25.25" PointY="65.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="14.75" PointY="72" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="24" PointY="61.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="17.75" PointY="70" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="23.25" PointY="47" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecTipleri" Width="1.5" PointX="13.5" PointY="68.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeDurumlari" Width="1.5" PointX="5.25" PointY="54.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepAyarlar" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepleri" Width="1.5" PointX="15.75" PointY="49.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetay" Width="1.5" PointX="10.5" PointY="55.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetayBelgeler" Width="1.5" PointX="12.75" PointY="48.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetaySaatler" Width="1.5" PointX="15.75" PointY="55.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipleri" Width="1.5" PointX="5.25" PointY="48.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Birimler" Width="1.5" PointX="5.25" PointY="60.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BolumEslestir" Width="1.5" PointX="15.75" PointY="52.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Cinsiyetler" Width="1.5" PointX="0.75" PointY="48.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Donemler" Width="1.5" PointX="13.5" PointY="47.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.DuyuruEkleri" Width="1.5" PointX="12.75" PointY="59.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Duyurular" Width="1.5" PointX="10.5" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Enstituler" Width="1.5" PointX="5.25" PointY="62.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailEkleri" Width="1.5" PointX="9.75" PointY="68.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailKullanicilar" Width="1.5" PointX="12.75" PointY="50.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailler" Width="1.5" PointX="7.5" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.HaftaGunleri" Width="1.5" PointX="13.5" PointY="43.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kampusler" Width="1.5" PointX="23" PointY="71.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KayitDurumlari" Width="1.5" PointX="10.5" PointY="48.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kotalar" Width="1.5" PointX="18.75" PointY="55.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciEnstituYetkileri" Width="1.5" PointX="10.5" PointY="61.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kullanicilar" Width="1.5" PointX="3" PointY="52.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciProgramlari" Width="1.5" PointX="15.75" PointY="50.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciTipleri" Width="1.5" PointX="0.75" PointY="52.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Log" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlari" Width="1.5" PointX="10.5" PointY="51.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlariEkleri" Width="1.5" PointX="12.75" PointY="51.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonTipleri" Width="1.5" PointX="8.25" PointY="44.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MedeniHaller" Width="1.5" PointX="3" PointY="47.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Menuler" Width="1.5" PointX="3" PointY="48.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajEkleri" Width="1.5" PointX="21" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajKategorileri" Width="1.5" PointX="13.5" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mesajlar" Width="1.5" PointX="18.75" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetAyarlar" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Width="1.5" PointX="20" PointY="60.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="22.25" PointY="69.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="22.25" PointY="68" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="23.25" PointY="51.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="22.25" PointY="63.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="24.5" PointY="63.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSinavDurumlari" Width="1.5" PointX="24" PointY="43.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureci" Width="1.5" PointX="15.75" PointY="57.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="21" PointY="55.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="2.75" PointY="2.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="7.5" PointY="76.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="13.5" PointY="62.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail" Width="1.5" PointX="18" PointY="50.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="21" PointY="47.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="21" PointY="49.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="17.75" PointY="47.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="6" PointY="39.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="6" PointY="37.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="21" PointY="42" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinTurleri" Width="1.5" PointX="8.25" PointY="48.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleri" Width="1.5" PointX="7.5" PointY="63.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="15.5" PointY="54.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mulakat" Width="1.5" PointX="18" PointY="58.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatDetay" Width="1.5" PointX="25.25" PointY="59.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatJuri" Width="1.5" PointX="20.25" PointY="66" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSinavTurleri" Width="1.5" PointX="21.75" PointY="70.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonuclari" Width="1.5" PointX="12.75" PointY="55.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonucTipleri" Width="1.5" PointX="10.5" PointY="46.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.NotSistemleri" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenciBolumleri" Width="1.5" PointX="5.25" PointY="57.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="54" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleri" Width="1.5" PointX="10.5" PointY="53.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleriOrtBasvr" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelNotTipleri" Width="1.5" PointX="5.25" PointY="70.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelTarihTipleri" Width="1.5" PointX="5.25" PointY="69.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramKullaniciTipleri" Width="1.5" PointX="18.75" PointY="64.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Programlar" Width="1.5" PointX="7.5" PointY="65" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="18.75" PointY="67.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlesEslesmeleri" Width="1.5" PointX="12.75" PointY="73.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarEkBilgi" Width="1.5" PointX="4.75" PointY="2.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Roller" Width="1.5" PointX="5.25" PointY="49.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Sehirler" Width="1.5" PointX="5.25" PointY="47" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SikcaSorulanSorular" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavDilleri" Width="1.5" PointX="5.25" PointY="44.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavNotlari" Width="1.5" PointX="9.75" PointY="49.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTarihleri" Width="1.5" PointX="9.75" PointY="71.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipGruplari" Width="1.5" PointX="5.25" PointY="42.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleri" Width="1.5" PointX="7.5" PointY="61.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDil" Width="1.5" PointX="12.75" PointY="67.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDonem" Width="1.5" PointX="15.75" PointY="65.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA" Width="1.5" PointX="9.75" PointY="70" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="12" PointY="70" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="12" PointY="71.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="15.75" PointY="67" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="18" PointY="66" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="9.75" PointY="72.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemBilgilendirme" Width="1.5" PointX="5.25" PointY="51.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemDilleri" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRAyarlar" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRDurumlari" Width="1.5" PointX="24" PointY="42" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimGunler" Width="1.5" PointX="14.75" PointY="70.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimlar" Width="1.5" PointX="10.5" PointY="65.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimSaatler" Width="1.5" PointX="12.75" PointY="65.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimTipleri" Width="1.5" PointX="8.25" PointY="74.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSaatler" Width="1.5" PointX="18.75" PointY="63.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonDurumlari" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonlar" Width="1.5" PointX="10.5" PointY="63.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonTalepTipleri" Width="1.5" PointX="15.75" PointY="68.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepleri" Width="1.5" PointX="26.25" PointY="57.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTaleplerJuri" Width="1.5" PointX="28.5" PointY="60.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipKullanicilar" Width="1.5" PointX="3" PointY="50.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleri" Width="1.5" PointX="0.75" PointY="50.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleriAktifAylar" Width="1.5" PointX="3" PointY="54.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.sysdiagram" Width="1.5" PointX="6.75" PointY="2.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepArGorStatuleri" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepDurumlari" Width="1.5" PointX="10.5" PointY="78.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="15" PointY="64.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepler" Width="1.5" PointX="12.75" PointY="64.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSureciTalepTipleri" Width="1.5" PointX="9.75" PointY="75.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSurecleri" Width="1.5" PointX="7.5" PointY="75.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepTipleri" Width="1.5" PointX="10.5" PointY="77.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOAyarlar" Width="1.5" PointX="6.75" PointY="4.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuru" Width="1.5" PointX="18.75" PointY="51.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruDanisman" Width="1.5" PointX="24" PointY="55.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruEsDanisman" Width="1.5" PointX="26.25" PointY="55.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDODanismanTalepTipleri" Width="1.5" PointX="21.75" PointY="43.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIAyarlar" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuru" Width="1.5" PointX="18.75" PointY="53.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRapor" Width="1.5" PointX="21" PointY="51.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="18.75" PointY="49.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="26.25" PointY="49.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Universiteler" Width="1.5" PointX="24" PointY="45.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Unvanlar" Width="1.5" PointX="0.75" PointY="55.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Uyruklar" Width="1.5" PointX="0.75" PointY="56.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekimTipleri" Width="1.5" PointX="5.25" PointY="59.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekipTipDetay" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuru" Width="1.5" PointX="20.75" PointY="59.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuruJuriUyeleri" Width="1.5" PointX="23" PointY="60.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuruKomiteler" Width="1.5" PointX="24" PointY="53.875" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSureci" Width="1.5" PointX="10.5" PointY="67.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSureciKriterMuafOgrenciler" Width="1.5" PointX="17.75" PointY="61.125" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSurecOgrenimTipleri" Width="1.5" PointX="15.75" PointY="62.5" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGruplari" Width="1.5" PointX="0.75" PointY="57.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGrupRolleri" Width="1.5" PointX="7.5" PointY="46.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ZamanTipleri" Width="1.5" PointX="21.75" PointY="45.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlanTipleri" Width="1.5" PointX="8.25" PointY="190.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AlesTipleri" Width="1.5" PointX="5.25" PointY="194.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnabilimDaliYeterlikKomiteUyeleri" Width="1.5" PointX="10.5" PointY="198.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnabilimDallari" Width="1.5" PointX="5.25" PointY="186.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Anket" Width="1.5" PointX="10.5" PointY="227.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketCevaplari" Width="1.5" PointX="13.5" PointY="201.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoru" Width="1.5" PointX="12.75" PointY="246.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.AnketSoruSecenek" Width="1.5" PointX="15" PointY="246.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Ayarlar" Width="1.5" PointX="5.25" PointY="190.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Aylar" Width="1.5" PointX="29.75" PointY="251.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruAgnoAlimTipleri" Width="1.5" PointX="11.25" PointY="190.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleri" Width="1.5" PointX="5.25" PointY="178" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruBelgeTipleriYuklemeSekli" Width="1.5" PointX="7.5" PointY="178.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruDurumlari" Width="1.5" PointX="5.25" PointY="182.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Basvurular" Width="1.5" PointX="8.25" PointY="196.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularSinavBilgi" Width="1.5" PointX="10.5" PointY="207.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleri" Width="1.5" PointX="10.5" PointY="201.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularTercihleriKayitOdemeleri" Width="1.5" PointX="15.75" PointY="202.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvurularYuklenenBelgeler" Width="1.5" PointX="10.5" PointY="193.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurec" Width="1.5" PointX="26.75" PointY="230.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleri" Width="1.5" PointX="30" PointY="212" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecBelgeTipleriYuklemeSekli" Width="1.5" PointX="35.25" PointY="194.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKontrolTipleri" Width="1.5" PointX="24.5" PointY="232.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecKotalar" Width="1.5" PointX="18.75" PointY="188.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecMulakatSinavTurleri" Width="1.5" PointX="32" PointY="235.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOgrenimTipleri" Width="1.5" PointX="35" PointY="216.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOtoMail" Width="1.5" PointX="29" PointY="235.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecOTOrtBasvr" Width="1.5" PointX="29" PointY="254.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="21.75" PointY="206" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavNotlari" Width="1.5" PointX="37.25" PointY="234.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTarihleri" Width="1.5" PointX="37.25" PointY="229.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleri" Width="1.5" PointX="35" PointY="225.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDil" Width="1.5" PointX="37.25" PointY="231.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriDonem" Width="1.5" PointX="37.25" PointY="225.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA" Width="1.5" PointX="32" PointY="231.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_OT" Width="1.5" PointX="34.25" PointY="235.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOT_SNA_PR" Width="1.5" PointX="15.75" PointY="191.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklari" Width="1.5" PointX="29" PointY="230" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="15.75" PointY="188.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecSinavTiplerSubSinavAralik" Width="1.5" PointX="37.25" PointY="237.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BasvuruSurecTipleri" Width="1.5" PointX="24.5" PointY="239.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeDurumlari" Width="1.5" PointX="5.25" PointY="234.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepAyarlar" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTalepleri" Width="1.5" PointX="26.75" PointY="220" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetay" Width="1.5" PointX="7.5" PointY="228.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetayBelgeler" Width="1.5" PointX="9.75" PointY="236" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipDetaySaatler" Width="1.5" PointX="15.75" PointY="233.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BelgeTipleri" Width="1.5" PointX="5.25" PointY="221.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Birimler" Width="1.5" PointX="5.25" PointY="217.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.BolumEslestir" Width="1.5" PointX="21.75" PointY="202" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Cinsiyetler" Width="1.5" PointX="0.75" PointY="197.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Donemler" Width="1.5" PointX="24.5" PointY="249.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.DuyuruEkleri" Width="1.5" PointX="9.75" PointY="232.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Duyurular" Width="1.5" PointX="7.5" PointY="222" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Enstituler" Width="1.5" PointX="5.25" PointY="247.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailEkleri" Width="1.5" PointX="12.75" PointY="233.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailKullanicilar" Width="1.5" PointX="15.75" PointY="211.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.GonderilenMailler" Width="1.5" PointX="10.5" PointY="222.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.HaftaGunleri" Width="1.5" PointX="29.75" PointY="247.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kampusler" Width="1.5" PointX="24.75" PointY="196.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KayitDurumlari" Width="1.5" PointX="13.5" PointY="186.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kotalar" Width="1.5" PointX="18.75" PointY="218.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciEnstituYetkileri" Width="1.5" PointX="10.5" PointY="218.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Kullanicilar" Width="1.5" PointX="3" PointY="191.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciProgramlari" Width="1.5" PointX="15.75" PointY="207.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.KullaniciTipleri" Width="1.5" PointX="0.75" PointY="202.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Log" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlari" Width="1.5" PointX="13.5" PointY="217.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonlariEkleri" Width="1.5" PointX="15.75" PointY="214.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MailSablonTipleri" Width="1.5" PointX="11.25" PointY="187.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MedeniHaller" Width="1.5" PointX="6" PointY="174.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Menuler" Width="1.5" PointX="3" PointY="187.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajEkleri" Width="1.5" PointX="24" PointY="235.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MesajKategorileri" Width="1.5" PointX="7.5" PointY="218" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mesajlar" Width="1.5" PointX="21.75" PointY="233.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetAyarlar" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulari" Width="1.5" PointX="18.75" PointY="197.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezDosyalari" Width="1.5" PointX="21" PointY="188.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariTezTeslimFormlari" Width="1.5" PointX="21" PointY="183.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetBasvurulariYayin" Width="1.5" PointX="30" PointY="201.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormlari" Width="1.5" PointX="21" PointY="176.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetJuriOneriFormuJurileri" Width="1.5" PointX="23.25" PointY="176.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSinavDurumlari" Width="1.5" PointX="33" PointY="188.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureci" Width="1.5" PointX="18.75" PointY="212.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciOgrenimTipKriterleri" Width="1.5" PointX="29" PointY="217" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYayinTurleri" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleri" Width="1.5" PointX="7.5" PointY="305.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSureciYonetmelikleriOT" Width="1.5" PointX="15.5" PointY="257.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetSurecOtoMail" Width="1.5" PointX="21" PointY="241" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinBelgeTurleri" Width="1.5" PointX="27.75" PointY="197.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinIndexTurleri" Width="1.5" PointX="27.75" PointY="182" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinKontrolDurumlari" Width="1.5" PointX="16.5" PointY="183.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinLinkTurleri" Width="1.5" PointX="27.75" PointY="191" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinMetinTurleri" Width="1.5" PointX="27.75" PointY="187.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinProjeTurleri" Width="1.5" PointX="27.75" PointY="184.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYayinTurleri" Width="1.5" PointX="13.25" PointY="207.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleri" Width="1.5" PointX="16.5" PointY="217.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MezuniyetYonetmelikleriOT" Width="1.5" PointX="27.75" PointY="213.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Mulakat" Width="1.5" PointX="24.75" PointY="199.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatDetay" Width="1.5" PointX="27" PointY="200" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatJuri" Width="1.5" PointX="27" PointY="204" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSinavTurleri" Width="1.5" PointX="24.75" PointY="192.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonuclari" Width="1.5" PointX="15.75" PointY="195" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.MulakatSonucTipleri" Width="1.5" PointX="13.5" PointY="183.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.NotSistemleri" Width="1.5" PointX="2.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenciBolumleri" Width="1.5" PointX="5.25" PointY="212.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimDurumlari" Width="1.5" PointX="0.75" PointY="213.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleri" Width="1.5" PointX="13.5" PointY="223.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OgrenimTipleriOrtBasvr" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelNotTipleri" Width="1.5" PointX="14.25" PointY="264.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.OzelTarihTipleri" Width="1.5" PointX="14.25" PointY="243.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramKullaniciTipleri" Width="1.5" PointX="21.75" PointY="197.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Programlar" Width="1.5" PointX="13.5" PointY="190" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlandisiBolumKisitlamalari" Width="1.5" PointX="23.75" PointY="209.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarAlesEslesmeleri" Width="1.5" PointX="18.75" PointY="194.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ProgramlarEkBilgi" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Roller" Width="1.5" PointX="5.25" PointY="200.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Sehirler" Width="1.5" PointX="5.25" PointY="230.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SikcaSorulanSorular" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavDilleri" Width="1.5" PointX="8.25" PointY="182.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavNotlari" Width="1.5" PointX="18.75" PointY="229" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTarihleri" Width="1.5" PointX="18.75" PointY="237.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipGruplari" Width="1.5" PointX="8.25" PointY="186.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleri" Width="1.5" PointX="16.5" PointY="223" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDil" Width="1.5" PointX="29.75" PointY="222.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriDonem" Width="1.5" PointX="29.75" PointY="226.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA" Width="1.5" PointX="18.75" PointY="225.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_OT" Width="1.5" PointX="21" PointY="225.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOT_SNA_PR" Width="1.5" PointX="21" PointY="209.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklari" Width="1.5" PointX="18.75" PointY="240.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTipleriOTNotAraliklariGecersizProgramlar" Width="1.5" PointX="21.75" PointY="193.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SinavTiplerSubSinavAralik" Width="1.5" PointX="18.75" PointY="231.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemBilgilendirme" Width="1.5" PointX="5.25" PointY="258" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SistemDilleri" Width="1.5" PointX="6.75" PointY="7.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRAyarlar" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRDurumlari" Width="1.5" PointX="29.75" PointY="243.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimGunler" Width="1.5" PointX="12.75" PointY="251.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimlar" Width="1.5" PointX="10.5" PointY="250" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimSaatler" Width="1.5" PointX="12.75" PointY="254.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SROzelTanimTipleri" Width="1.5" PointX="8.25" PointY="247.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSaatler" Width="1.5" PointX="24.75" PointY="205.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonDurumlari" Width="1.5" PointX="8.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonlar" Width="1.5" PointX="7.5" PointY="214" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRSalonTalepTipleri" Width="1.5" PointX="9.75" PointY="214.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepleri" Width="1.5" PointX="32" PointY="216.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTaleplerJuri" Width="1.5" PointX="35.25" PointY="198" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipKullanicilar" Width="1.5" PointX="6" PointY="203.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleri" Width="1.5" PointX="29.75" PointY="239.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.SRTalepTipleriAktifAylar" Width="1.5" PointX="32" PointY="240" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.sysdiagram" Width="1.5" PointX="2.75" PointY="9.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepArGorStatuleri" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepDurumlari" Width="1.5" PointX="7.5" PointY="239.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepBelgeleri" Width="1.5" PointX="12" PointY="242.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepGelenTalepler" Width="1.5" PointX="9.75" PointY="240.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSureciTalepTipleri" Width="1.5" PointX="9.75" PointY="291.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepSurecleri" Width="1.5" PointX="7.5" PointY="291.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TalepTipleri" Width="1.5" PointX="7.5" PointY="242.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOAyarlar" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuru" Width="1.5" PointX="24.75" PointY="212.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruDanisman" Width="1.5" PointX="33" PointY="201.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDOBasvuruEsDanisman" Width="1.5" PointX="35.25" PointY="205.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TDODanismanTalepTipleri" Width="1.5" PointX="30.75" PointY="188.5" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIAyarlar" Width="1.5" PointX="4.75" PointY="10.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuru" Width="1.5" PointX="21.75" PointY="214.125" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRapor" Width="1.5" PointX="30" PointY="191" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporDurumlari" Width="1.5" PointX="27.75" PointY="194.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.TIBasvuruAraRaporKomite" Width="1.5" PointX="32.25" PointY="192.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Universiteler" Width="1.5" PointX="21" PointY="172.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Unvanlar" Width="1.5" PointX="0.75" PointY="210.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.Uyruklar" Width="1.5" PointX="0.75" PointY="194.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekimTipleri" Width="1.5" PointX="14.25" PointY="261.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.WsSinavCekipTipDetay" Width="1.5" PointX="10.75" PointY="5.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuru" Width="1.5" PointX="23.75" PointY="222.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuruJuriUyeleri" Width="1.5" PointX="26" PointY="243.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikBasvuruKomiteler" Width="1.5" PointX="27" PointY="207.875" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSureci" Width="1.5" PointX="7.5" PointY="250.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSureciKriterMuafOgrenciler" Width="1.5" PointX="12.75" PointY="237" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YeterlikSurecOgrenimTipleri" Width="1.5" PointX="15.75" PointY="237.625" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGruplari" Width="1.5" PointX="0.75" PointY="207.25" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.YetkiGrupRolleri" Width="1.5" PointX="7.5" PointY="193.375" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.ZamanTipleri" Width="1.5" PointX="26.75" PointY="249.75" />
+        <EntityTypeShape EntityType="LisansustuBasvuruSistemiModel.vW_ProgramBasvuruSonucSayisal" Width="1.5" PointX="10.75" PointY="8.75" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_BasvurularTercihleri_AlanTipleri" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MulakatSonuclari_AlanTipleri" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_AlesTipleri_Kullanicilar" />
@@ -404,7 +404,7 @@
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_OgrenimDurumlari" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulari_Programlar" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezDosyalari_MezuniyetBasvurulari" />
-        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari" />
+        <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariTezTeslimFormlari_MezuniyetBasvurulari1" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetBasvurulariYayin_MezuniyetBasvurulari" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_MezuniyetJuriOneriFormlari_MezuniyetBasvurulari" />
         <AssociationConnector Association="LisansustuBasvuruSistemiModel.FK_SRTalepleri_MezuniyetBasvurulari" />

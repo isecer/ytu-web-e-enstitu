@@ -36,7 +36,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituAd = e.EnstituAd,
                         AnabilimDaliKod = s.AnabilimDaliKod,
                         AnabilimDaliAdi = s.AnabilimDaliAdi,
-                        KomiteIds = s.AnabilimDaliYeterlikKomiteUyeleris.Select(sk=>sk.KullaniciID).ToList(),
+                        IsEmailVar = s.EMail != null && s.EMail != "",
+                        EMail = s.EMail,
+                        KomiteIds = s.AnabilimDaliYeterlikKomiteUyeleris.Select(sk => sk.KullaniciID).ToList(),
                         YeterlikKomiteUyeCount = s.AnabilimDaliYeterlikKomiteUyeleris.Count,
                         IsAktif = s.IsAktif,
                         IslemTarihi = s.IslemTarihi,
@@ -44,13 +46,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IslemYapanIP = s.IslemYapanIP,
                         IslemYapan = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
                     };
-            
+
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod);
             if (!model.AnabilimDaliKod.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliKod == model.AnabilimDaliKod);
             if (!model.AnabilimDaliAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.AnabilimDaliAdi.Contains(model.AnabilimDaliAdi));
             if (model.IsKomiteUyesiVar.HasValue) q = q.Where(p => p.YeterlikKomiteUyeCount > 0 == model.IsKomiteUyesiVar.Value);
             if (model.IsAktif.HasValue) q = q.Where(p => p.IsAktif == model.IsAktif);
-            ViewBag.filteredKomiteIds = q.SelectMany(s => s.KomiteIds).ToList();
+            if (model.IsEmailVar.HasValue) q = q.Where(p => p.IsEmailVar == model.IsEmailVar.Value);
+            ViewBag.filteredKomiteIds = q.SelectMany(s => s.KomiteIds).Distinct().ToList();
+            ViewBag.filteredAbdIds = q.Where(p=>p.IsEmailVar).Select(s => s.EMail).Distinct().ToList();
             model.RowCount = q.Count();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.AnabilimDaliAdi);
             model.FrAnabilimDallaris = q.Skip(model.StartRowIndex).Take(model.PageSize).ToArray();
@@ -63,6 +67,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.IndexModel = indexModel;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             ViewBag.IsKomiteUyesiVar = new SelectList(ComboData.GetCmbKomiteUyeKayitDurumData(true), "Value", "Caption", model.IsKomiteUyesiVar);
+            ViewBag.IsEmailVar = new SelectList(ComboData.GetCmbVarYokData(true), "Value", "Caption", model.IsEmailVar);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
             return View(model);
         }
@@ -98,17 +103,31 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EnstituKod" });
             if (kModel.AnabilimDaliKod.IsNullOrWhiteSpace())
             {
-                mmMessage.Messages.Add("Anabilim Dalı Kodunu Giriniz.");
+                mmMessage.Messages.Add("Kod Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliKod" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliKod" });
             if (kModel.AnabilimDaliAdi.IsNullOrWhiteSpace())
             {
-                mmMessage.Messages.Add("Anabilim Dalı Adını Giriniz.");
+                mmMessage.Messages.Add("Ad Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnabilimDaliAdi" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnabilimDaliAdi" });
-
+            if (kModel.EMail.IsNullOrWhiteSpace())
+            {
+                mmMessage.Messages.Add("EMail Bilgisini Giriniz.");
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+            }
+            else
+            {
+                if (kModel.EMail.ToIsValidEmail())
+                {
+                    mmMessage.Messages.Add("EMail Formatı uygun değildir.");
+                    mmMessage.MessagesDialog.Add(
+                        new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
+                }
+                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
+            }
             if (mmMessage.Messages.Count == 0)
             {
                 var cnt = _entities.AnabilimDallaris.Count(p => p.AnabilimDaliKod == kModel.AnabilimDaliKod && p.EnstituKod == kModel.EnstituKod && p.AnabilimDaliID != kModel.AnabilimDaliID);
@@ -137,6 +156,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.EnstituKod = kModel.EnstituKod;
                     data.AnabilimDaliKod = kModel.AnabilimDaliKod;
                     data.AnabilimDaliAdi = kModel.AnabilimDaliAdi;
+                    data.EMail = kModel.EMail;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     data.IslemYapanIP = UserIdentity.Ip;

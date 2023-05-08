@@ -192,7 +192,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 errorMessage.Add("Yeterlik Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
-                            var basvuruVar = db.YeterlikBasvurus.Any(p => p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
+                            var basvuruVar = db.YeterlikBasvurus.Any(p =>p.IsEnstituOnaylandi!=false && p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                             if (basvuruVar)
                             {
                                 errorMessage.Add("Bu Yeterlik süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
