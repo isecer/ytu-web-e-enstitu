@@ -13,5 +13,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int DegerlendirmeSureciTamamlandi = 4;
 
 
+        public static int DegerlendirmeBasariliOlanlar = 1000;
+        public static int DegerlendirmeBasarisizliOlanlar = 1001;
+
+
     }
 }

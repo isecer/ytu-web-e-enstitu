@@ -12,28 +12,28 @@ namespace LisansUstuBasvuruSistemi.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TIBasvuru
+    public partial class TikBasvuru
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public TIBasvuru()
+        public TikBasvuru()
         {
-            this.TIBasvuruAraRapors = new HashSet<TIBasvuruAraRapor>();
+            this.TikBasvuruOneris = new HashSet<TikBasvuruOneri>();
         }
     
-        public int TIBasvuruID { get; set; }
+        public int TikBasvuruID { get; set; }
         public System.Guid UniqueID { get; set; }
         public string EnstituKod { get; set; }
         public string BasvuruSonDonemSecilecekDersKodlari { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
         public int KullaniciID { get; set; }
         public string OgrenciNo { get; set; }
-        public int OgrenimTipKod { get; set; }
+        public int OgrenimTipID { get; set; }
         public string ProgramKod { get; set; }
         public Nullable<int> KayitOgretimYiliBaslangic { get; set; }
         public Nullable<int> KayitOgretimYiliDonemID { get; set; }
         public Nullable<System.DateTime> KayitTarihi { get; set; }
-        public Nullable<int> TezDanismanID { get; set; }
-        public Nullable<int> AktifTIBasvuruAraRaporID { get; set; }
+        public int TezDanismanID { get; set; }
+        public System.DateTime YeterlikSozluSinavTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
@@ -41,9 +41,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
+        public virtual OgrenimTipleri OgrenimTipleri { get; set; }
         public virtual Programlar Programlar { get; set; }
-        public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
+        public virtual ICollection<TikBasvuruOneri> TikBasvuruOneris { get; set; }
     }
 }

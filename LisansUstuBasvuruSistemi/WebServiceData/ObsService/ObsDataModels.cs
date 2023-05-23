@@ -41,7 +41,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
             DersKodNums = new List<string>();
             DersKodus = new List<string>();
         }
-        public int ToplamKredi { get; set; }
+        public int ToplamKredi { get; set; } 
         public int ToplamAkts { get; set; }
         public double Agno { get; set; }
         public string EtikDersNotu { get; set; }

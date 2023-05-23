@@ -10,13 +10,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public bool GelenBasvuru { get; set; }
         public string EnstituAdi { get; set; }
-        public string OgrenimDurumAdi { get; set; }
+        public string ResimAdi { get; set; }
+        public string TcKimlikNo { get; set; }
+        public string Ad { get; set; }
+        public string Soyad { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
-        public string KayitDonemi { get; set; }
-        public string BasvuruKayitSureciTarihi { get; set; }
-        public string KullaniciTipAdi { get; set; }
+        public string KayitDonemi { get; set; }  
         public string TezDanismanBilgiEslesen { get; set; }
 
         public string DurumClassName { get; set; }

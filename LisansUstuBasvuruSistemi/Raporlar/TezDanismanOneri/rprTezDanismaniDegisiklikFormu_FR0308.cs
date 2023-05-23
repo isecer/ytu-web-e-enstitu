@@ -126,14 +126,15 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 chkTezDiliDegisecekHayir.Checked = !chkTezDiliDegisecekEvet.Checked;
                 if (chkTezDiliDegisecekEvet.Checked)
                 {
-                    cellYeniTezDili.Text = q.IsYeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)";
+                    cellYeniTezDili.Text = q.IsYeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)"; 
                 }
-                else
-                {
-                    rwYeniTezDili.Visible = false;
-                }
-
-                detGrupTezDiliDr.Visible = q.OgrenimTipKod.IsDoktora();
+                detGrupDanismanDegisiklik.Visible = chkDanismanDegisecekEvet.Checked;
+                rwOnerilenTdBaslikEn.Visible = detGrupDanismanDegisiklik.Visible;
+                rwOnerilenTdBaslikTr.Visible = detGrupDanismanDegisiklik.Visible;
+                rwOnerilenTdDetayBaslik.Visible = detGrupDanismanDegisiklik.Visible;
+                rwOnerilenTdDetayBilgileri.Visible= detGrupDanismanDegisiklik.Visible;
+                detGrupTezBaslikDegisiklik.Visible = chkTezBasligiDegisecekEvet.Checked;
+                detGrupTezDiliDr.Visible = chkTezDiliDegisecekEvet.Checked;
                 rwTezOneriTarihDr.Visible = q.OgrenimTipKod.IsDoktora();
                 rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
                 rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();

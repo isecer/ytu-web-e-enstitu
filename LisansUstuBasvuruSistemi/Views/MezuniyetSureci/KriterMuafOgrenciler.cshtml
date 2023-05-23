@@ -1,0 +1,148 @@
+﻿@model LisansUstuBasvuruSistemi.Models.MezuniyetSureci
+@{
+    Layout = null;
+    var ogrenciData = Model.MezuniyetSureciKriterMuafOgrencilers.OrderBy(o => o.Kullanicilar.Ad + " " + o.Kullanicilar.Soyad).ToList();
+}
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Ekle</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td><input type="text" id="MuafOgrenci" value="" style="width: 100%;" /></td>
+                        <td width="50">
+                            <button class="btn btn-info" style="cursor: pointer;" onclick="KriterMuafOgrenciEkle()"><i class="fa fa-plus" aria-hidden="true"></i> Ekle</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="panel" style="border-top: 1px solid; border-top-color: lightgray; background-color: white; margin-bottom: 8px; padding: 6px 10px; min-height: 20px; max-height: 350px; overflow: auto;">
+    <table class="table" style="width: 100%;">
+        @if (ogrenciData.Any())
+        {
+            var rowIndex = 0;
+            foreach (var ogrenci in ogrenciData)
+            {
+                rowIndex++;
+                <tr>
+                    <td>@rowIndex) @ogrenci.Kullanicilar.Ad @ogrenci.Kullanicilar.Soyad [@ogrenci.Kullanicilar.OgrenciNo]</td>
+                    <td width="20">
+                        <i class="fa fa-trash-o fa-lg" style="cursor: pointer;" onclick="KriterMuafOgrenciSil(@ogrenci.KullaniciID,this)"></i>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" style="text-align: center;">Eklenen Öğrenci Yok</td>
+            </tr>
+        }
+
+    </table>
+</div>
+<script>
+ $(function () {
+     $("#MuafOgrenci").select2({
+         tags: true,
+         tokenSeparators: [",", " "],
+         minimumInputLength: 2,
+         maximumSelectionSize: 1,
+            ajax: {
+                url: '@Url.Action("GetFilterKullanici")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        term: term
+                    };
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var src =   result.Images.toString();
+                var cont2="<table class='table table-striped' style='width:100%; margin:0px;'>"+
+                            "<tbody>"+
+                                "<tr>"+
+                                    "<td style='vertical-align:middle;' width='40'>"+
+                                        "<span class='user' style='width: 40px;height:40px;margin-right:5px;'> "+
+                                            "<img style='width:40px;height:40px;' src='" + src + "' class='pull-left' alt='" + result.AdSoyad + "'>"+
+                                        "</span> "+
+                                    "</td>"+
+                                    "<td style='vertical-align:middle;'>"+
+                                        "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> "+
+                                            "<tbody>"+
+                                                "<tr> "+
+                                                    "<td>" + result.text + "</td> "+
+                                                "</tr>  "+
+                                                "<tr> "+
+                                                    "<td>" + result.ProgramAdi + "</td> "+
+                                                "</tr>"+
+                                            "</tbody> "+
+                                        "</table> "+
+                                    "</td>"+
+                                "</tr> "+
+                            "</tbody>"+
+                        "</table>";
+                return cont2;
+            }
+        });
+ });
+    function KriterMuafOgrenciEkle() {
+        var ogrenciID = $("#MuafOgrenci").val();
+        var panel = $('#muafOgrenciContent');
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("KriterMuafOgrenciEkle")',
+            data: { mezuniyetSurecId:@Model.MezuniyetSurecID, ogrenciID },
+            success: function (result) {
+                if (!result.success) {
+                    swal.fire({
+                        text: result.message,
+                        icon: (result.success ? "success" : "error"),
+                        type: (result.success ? "success" : "error"),
+                        confirmButtonText: 'tamam',
+                        padding: '2em'
+                    });
+                }
+                else {
+                    var view = GetKriterMuafOgrencilerView(@Model.MezuniyetSurecID);
+                    $('#muafOgrenciContent').html(view);
+                }
+                PanelRefresh(panel, false);
+            },
+            error: function (err) {
+                PanelRefresh(panel, false);
+                alert(err.responseText);
+            }
+        });
+    }
+    function KriterMuafOgrenciSil(ogrenciID,sndr) {
+        var panel = $('#muafOgrenciContent');
+        PanelRefresh(panel, false);
+        $.ajax({
+            url: '@Url.Action("KriterMuafOgrenciSil")',
+            data: { mezuniyetSurecId:@Model.MezuniyetSurecID, ogrenciID },
+            success: function (result) {
+                $(sndr).parents('tr').first().remove();
+                PanelRefresh(panel, false);
+            },
+            error: function (err) {
+                PanelRefresh(panel, false);
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+
+
+

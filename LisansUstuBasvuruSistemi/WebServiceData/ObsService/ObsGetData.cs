@@ -79,7 +79,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                             if (ogrenciDersler[0].Sucess)
                             {
                                 var ogrenciDers = ogrenciDersler[0].ogrencidersnot[0];
-                                model.AktifDonemDers.ToplamKredi = ogrenciDers.TOP_KREDI.ToIntObj().Value;
+                                model.AktifDonemDers.ToplamKredi = ogrenciDers.SON_KREDI.ToIntObj().Value;
                                 model.AktifDonemDers.ToplamAkts = ogrenciDers.TOP_AKTS.ToDecimalObj().ToIntObj().Value;
                                 model.AktifDonemDers.Agno = ogrenciDers.TOP_AKTS.ToDoubleObj().Value;
                                 model.AktifDonemDers.EtikDersNotu = ogrenciDers.B_ETIK_DERS_NOTU;

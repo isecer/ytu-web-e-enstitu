@@ -386,24 +386,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return true.ToJsonResult();
         }
         public ActionResult GetFilterKullanici(string term)
-        { 
-            var ogrenciList = _entities.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
-            {
-                s.KullaniciID,
-                s.Ad,
-                s.Soyad,
-                s.OgrenciNo,
-                s.ResimAdi,
-                s.Programlar.ProgramAdi
-            }).Take(15).ToList()
-                .Select(s => new
-                {
-                    id = s.KullaniciID,
-                    s.ProgramAdi,
-                    text = s.OgrenciNo + " " + s.Ad + " " + s.Soyad,
-                    Images = s.ResimAdi.ToKullaniciResim()
-                }).ToList();
-            return ogrenciList.ToJsonResult();
+        {  
+            return KullanicilarBus.GetFilterKullaniciJsonResult(term);
         }
 
 

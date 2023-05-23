@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.ObsService;
@@ -234,6 +235,30 @@ namespace LisansUstuBasvuruSistemi.Business
             return mmMessage;
         }
 
+        public static JsonResult GetFilterKullaniciJsonResult(string term)
+        {
+            using (var db=new LisansustuBasvuruSistemiEntities())
+            {
+                var ogrenciList = db.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+                    {
+                        s.KullaniciID,
+                        s.Ad,
+                        s.Soyad,
+                        s.OgrenciNo,
+                        s.ResimAdi,
+                        s.Programlar.ProgramAdi
+                    }).Take(15).ToList()
+                    .Select(s => new
+                    {
+                        id = s.KullaniciID,
+                        s.ProgramAdi,
+                        text = s.OgrenciNo + " " + s.Ad + " " + s.Soyad,
+                        Images = s.ResimAdi.ToKullaniciResim()
+                    }).ToList();
+
+                return ogrenciList.ToJsonResult();
+            }
+        }
         public static List<CmbIntDto> GetCmbKullaniciTipleri(bool bosSecimVar = false, bool isHesapOlusturFiltre = false)
         {
             var dct = new List<CmbIntDto>();

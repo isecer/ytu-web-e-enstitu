@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public MezuniyetSureci()
         {
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
+            this.MezuniyetSureciKriterMuafOgrencilers = new HashSet<MezuniyetSureciKriterMuafOgrenciler>();
             this.MezuniyetSureciOgrenimTipKriterleris = new HashSet<MezuniyetSureciOgrenimTipKriterleri>();
             this.MezuniyetSurecOtoMails = new HashSet<MezuniyetSurecOtoMail>();
         }
@@ -42,6 +43,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MezuniyetSureciKriterMuafOgrenciler> MezuniyetSureciKriterMuafOgrencilers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -109,6 +109,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<MezuniyetJuriOneriFormuJurileri> MezuniyetJuriOneriFormuJurileris { get; set; }
         public virtual DbSet<MezuniyetSinavDurumlari> MezuniyetSinavDurumlaris { get; set; }
         public virtual DbSet<MezuniyetSureci> MezuniyetSurecis { get; set; }
+        public virtual DbSet<MezuniyetSureciKriterMuafOgrenciler> MezuniyetSureciKriterMuafOgrencilers { get; set; }
         public virtual DbSet<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
         public virtual DbSet<MezuniyetSureciYayinTurleri> MezuniyetSureciYayinTurleris { get; set; }
         public virtual DbSet<MezuniyetSureciYonetmelikleri> MezuniyetSureciYonetmelikleris { get; set; }
@@ -192,6 +193,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
         public virtual DbSet<TIBasvuruAraRaporDurumlari> TIBasvuruAraRaporDurumlaris { get; set; }
         public virtual DbSet<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
+        public virtual DbSet<TikBasvuru> TikBasvurus { get; set; }
+        public virtual DbSet<TikBasvuruOneri> TikBasvuruOneris { get; set; }
+        public virtual DbSet<TikBasvuruOneriKomite> TikBasvuruOneriKomites { get; set; }
         public virtual DbSet<Universiteler> Universitelers { get; set; }
         public virtual DbSet<Unvanlar> Unvanlars { get; set; }
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }

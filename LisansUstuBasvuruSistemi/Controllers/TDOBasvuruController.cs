@@ -777,7 +777,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.UniqueID = kModel.UniqueID;
                     tdoBasvuruDanis.IsTezDiliTr = kModel.IsTezDiliTr;
                     tdoBasvuruDanis.TezBaslikTr = kModel.TezBaslikTr;
-                    tdoBasvuruDanis.TezBaslikEn = kModel.TezBaslikEn;
+                    tdoBasvuruDanis.TezBaslikEn = kModel.TezBaslikEn; 
                     tdoBasvuruDanis.SinavTipID = kModel.SinavTipID;
                     tdoBasvuruDanis.SinavAdi = kModel.SinavAdi;
                     tdoBasvuruDanis.SinavPuani = kModel.SinavPuani;

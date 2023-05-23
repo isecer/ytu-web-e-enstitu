@@ -952,7 +952,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (basvuru.IsSozluSinavBasarili.Value)
                         {
 
-                            var genelBasariNotu = (basvuru.YaziliSinaviNotu * kriterler.YaziliYuzde / 100) +
+                            var genelBasariNotu = (basvuru.YaziliSinaviNotu * kriterler.YaziliYuzde / (decimal)100) +
                                                   (sozluOrtalama * kriterler.SozluYuzde / 100);
                             basvuru.GenelBasariNotu = genelBasariNotu;
                             basvuru.IsGenelSonucBasarili = kriterler.OrtalamaGecerNot <= genelBasariNotu;

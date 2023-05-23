@@ -185,6 +185,12 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string OKUDUGU_DNM_YENIKANUNField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ES_DANISMAN_UNVANField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ES_DANISMAN_ADSOYADField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -568,6 +574,32 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
                 if ((object.ReferenceEquals(this.OKUDUGU_DNM_YENIKANUNField, value) != true)) {
                     this.OKUDUGU_DNM_YENIKANUNField = value;
                     this.RaisePropertyChanged("OKUDUGU_DNM_YENIKANUN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=29)]
+        public string ES_DANISMAN_UNVAN {
+            get {
+                return this.ES_DANISMAN_UNVANField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ES_DANISMAN_UNVANField, value) != true)) {
+                    this.ES_DANISMAN_UNVANField = value;
+                    this.RaisePropertyChanged("ES_DANISMAN_UNVAN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=30)]
+        public string ES_DANISMAN_ADSOYAD {
+            get {
+                return this.ES_DANISMAN_ADSOYADField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ES_DANISMAN_ADSOYADField, value) != true)) {
+                    this.ES_DANISMAN_ADSOYADField = value;
+                    this.RaisePropertyChanged("ES_DANISMAN_ADSOYAD");
                 }
             }
         }
@@ -1265,6 +1297,9 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         private string TOP_AKTSField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SON_KREDIField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string AGNOField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1345,6 +1380,19 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
+        public string SON_KREDI {
+            get {
+                return this.SON_KREDIField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SON_KREDIField, value) != true)) {
+                    this.SON_KREDIField = value;
+                    this.RaisePropertyChanged("SON_KREDI");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
         public string AGNO {
             get {
                 return this.AGNOField;
@@ -1357,7 +1405,7 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=6)]
         public string B_ETIK_DERS_NOTU {
             get {
                 return this.B_ETIK_DERS_NOTUField;
@@ -1370,7 +1418,7 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=6)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=7)]
         public string SEMINER_DERS_NOTU {
             get {
                 return this.SEMINER_DERS_NOTUField;
@@ -1383,7 +1431,7 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=7)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=8)]
         public string ZORUN_DERS_SAYISI {
             get {
                 return this.ZORUN_DERS_SAYISIField;
@@ -1396,7 +1444,7 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=8)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=9)]
         public string ANABILIMDALI_DERS_SAYISI {
             get {
                 return this.ANABILIMDALI_DERS_SAYISIField;
@@ -1409,7 +1457,7 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=9)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=10)]
         public string AKTIF_DNM_DERS {
             get {
                 return this.AKTIF_DNM_DERSField;

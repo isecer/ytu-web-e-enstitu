@@ -577,6 +577,9 @@
     <Compile Include="Models\MezuniyetSureci.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MezuniyetSureciKriterMuafOgrenciler.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MezuniyetSureciOgrenimTipKriterleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -826,6 +829,15 @@
     <Compile Include="Models\TIBasvuruAraRaporKomite.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TikBasvuru.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TikBasvuruOneri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TikBasvuruOneriKomite.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Universiteler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -870,6 +882,12 @@
     </Compile>
     <Compile Include="Models\ZamanTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\TezDanismanOneri\RprTdoTutanak.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\TezDanismanOneri\RprTdoTutanak.Designer.cs">
+      <DependentUpon>RprTdoTutanak.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.cs">
       <SubType>Component</SubType>
@@ -965,7 +983,7 @@
     <Compile Include="Utilities\Dtos\KmMezuniyetYonetmelik.cs" />
     <Compile Include="Utilities\Dtos\KmMezuniyetJuriOneriFormuJurileri.cs" />
     <Compile Include="Utilities\Dtos\KmDekontBilgi.cs" />
-    <Compile Include="Utilities\Dtos\RprTDOEYKModel.cs" />
+    <Compile Include="Utilities\Dtos\RprTdoEykDto.cs" />
     <Compile Include="Utilities\Dtos\RprTutanakModel.cs" />
     <Compile Include="Utilities\Dtos\RprMezuniyetTutanakModel.cs" />
     <Compile Include="Utilities\Dtos\RprModelProgramDilBilgi.cs" />
@@ -3479,6 +3497,7 @@
     <Content Include="Views\Yeterlik\JuriDegisiklikView.cshtml" />
     <Content Include="Views\TDOBasvuru\BasvuruDurumView.cshtml" />
     <Content Include="Views\Yeterlik\KomiteDegisiklikView.cshtml" />
+    <Content Include="Views\MezuniyetSureci\KriterMuafOgrenciler.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3580,6 +3599,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\Mezuniyet\RprMezuniyetTezTeslimFormu_0338.resx">
       <DependentUpon>RprMezuniyetTezTeslimFormu_0338.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTdoTutanak.resx">
+      <DependentUpon>RprTdoTutanak.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.resx">
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>

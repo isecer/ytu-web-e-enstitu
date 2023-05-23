@@ -403,11 +403,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.cellImzaMevcutDanismanAdSoyad = new DevExpress.XtraReports.UI.XRTableCell();
             this.cellImzaMevcutDanismanTarih = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell169 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow136 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.rwOnerilenTdBaslikTr = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell170 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow137 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.rwOnerilenTdBaslikEn = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell173 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow138 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.rwOnerilenTdDetayBaslik = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell162 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTable56 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow140 = new DevExpress.XtraReports.UI.XRTableRow();
@@ -421,7 +421,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow143 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell177 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell171 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.xrTableRow139 = new DevExpress.XtraReports.UI.XRTableRow();
+            this.rwOnerilenTdDetayBilgileri = new DevExpress.XtraReports.UI.XRTableRow();
             this.cellImzaOnerilenDanismanAdSoyad = new DevExpress.XtraReports.UI.XRTableCell();
             this.cellImzaOnerilenDanismanTarih = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell175 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -4467,10 +4467,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow72,
             this.xrTableRow127,
             this.xrTableRow135,
-            this.xrTableRow136,
-            this.xrTableRow137,
-            this.xrTableRow138,
-            this.xrTableRow139,
+            this.rwOnerilenTdBaslikTr,
+            this.rwOnerilenTdBaslikEn,
+            this.rwOnerilenTdDetayBaslik,
+            this.rwOnerilenTdDetayBilgileri,
             this.xrTableRow144,
             this.xrTableRow145,
             this.xrTableRow146,
@@ -4987,12 +4987,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell169.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell169.Weight = 0.25D;
             // 
-            // xrTableRow136
+            // rwOnerilenTdBaslikTr
             // 
-            this.xrTableRow136.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.rwOnerilenTdBaslikTr.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell170});
-            this.xrTableRow136.Name = "xrTableRow136";
-            this.xrTableRow136.Weight = 1.0000804034493889D;
+            this.rwOnerilenTdBaslikTr.Name = "rwOnerilenTdBaslikTr";
+            this.rwOnerilenTdBaslikTr.Weight = 1.0000804034493889D;
             // 
             // xrTableCell170
             // 
@@ -5010,12 +5010,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell170.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell170.Weight = 1D;
             // 
-            // xrTableRow137
+            // rwOnerilenTdBaslikEn
             // 
-            this.xrTableRow137.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.rwOnerilenTdBaslikEn.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell173});
-            this.xrTableRow137.Name = "xrTableRow137";
-            this.xrTableRow137.Weight = 1.0000793048162247D;
+            this.rwOnerilenTdBaslikEn.Name = "rwOnerilenTdBaslikEn";
+            this.rwOnerilenTdBaslikEn.Weight = 1.0000793048162247D;
             // 
             // xrTableCell173
             // 
@@ -5033,14 +5033,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell173.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell173.Weight = 1D;
             // 
-            // xrTableRow138
+            // rwOnerilenTdDetayBaslik
             // 
-            this.xrTableRow138.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.rwOnerilenTdDetayBaslik.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.xrTableCell162,
             this.xrTableCell168,
             this.xrTableCell171});
-            this.xrTableRow138.Name = "xrTableRow138";
-            this.xrTableRow138.Weight = 2.3594408348514437D;
+            this.rwOnerilenTdDetayBaslik.Name = "rwOnerilenTdDetayBaslik";
+            this.rwOnerilenTdDetayBaslik.Weight = 2.3594408348514437D;
             // 
             // xrTableCell162
             // 
@@ -5187,14 +5187,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableCell171.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell171.Weight = 0.25D;
             // 
-            // xrTableRow139
+            // rwOnerilenTdDetayBilgileri
             // 
-            this.xrTableRow139.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
+            this.rwOnerilenTdDetayBilgileri.Cells.AddRange(new DevExpress.XtraReports.UI.XRTableCell[] {
             this.cellImzaOnerilenDanismanAdSoyad,
             this.cellImzaOnerilenDanismanTarih,
             this.xrTableCell175});
-            this.xrTableRow139.Name = "xrTableRow139";
-            this.xrTableRow139.Weight = 2.3594408348514437D;
+            this.rwOnerilenTdDetayBilgileri.Name = "rwOnerilenTdDetayBilgileri";
+            this.rwOnerilenTdDetayBilgileri.Weight = 2.3594408348514437D;
             // 
             // cellImzaOnerilenDanismanAdSoyad
             // 
@@ -5576,7 +5576,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.Detail8});
             this.detGrupTezDiliDr.Level = 6;
             this.detGrupTezDiliDr.Name = "detGrupTezDiliDr";
-            this.detGrupTezDiliDr.PageBreak = DevExpress.XtraReports.UI.PageBreak.BeforeBand;
             // 
             // Detail8
             // 
@@ -6819,11 +6818,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableCell cellImzaMevcutDanismanAdSoyad;
         private DevExpress.XtraReports.UI.XRTableCell cellImzaMevcutDanismanTarih;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell169;
-        private DevExpress.XtraReports.UI.XRTableRow xrTableRow136;
+        private DevExpress.XtraReports.UI.XRTableRow rwOnerilenTdBaslikTr;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell170;
-        private DevExpress.XtraReports.UI.XRTableRow xrTableRow137;
+        private DevExpress.XtraReports.UI.XRTableRow rwOnerilenTdBaslikEn;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell173;
-        private DevExpress.XtraReports.UI.XRTableRow xrTableRow138;
+        private DevExpress.XtraReports.UI.XRTableRow rwOnerilenTdDetayBaslik;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell162;
         private DevExpress.XtraReports.UI.XRTable xrTable56;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow140;
@@ -6837,7 +6836,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow143;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell177;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell171;
-        private DevExpress.XtraReports.UI.XRTableRow xrTableRow139;
+        private DevExpress.XtraReports.UI.XRTableRow rwOnerilenTdDetayBilgileri;
         private DevExpress.XtraReports.UI.XRTableCell cellImzaOnerilenDanismanAdSoyad;
         private DevExpress.XtraReports.UI.XRTableCell cellImzaOnerilenDanismanTarih;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell175;

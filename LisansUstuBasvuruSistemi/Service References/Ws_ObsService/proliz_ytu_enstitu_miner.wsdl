@@ -67,6 +67,8 @@
           <s:element minOccurs="0" maxOccurs="1" name="GSM1" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="GSM2" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="OKUDUGU_DNM_YENIKANUN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ES_DANISMAN_UNVAN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ES_DANISMAN_ADSOYAD" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="AkademikPersonelBilgiGetir">
@@ -177,6 +179,7 @@
           <s:element minOccurs="0" maxOccurs="1" name="TCKIMLIKNO" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="TOP_KREDI" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="TOP_AKTS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SON_KREDI" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="AGNO" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="B_ETIK_DERS_NOTU" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="SEMINER_DERS_NOTU" type="s:string" />

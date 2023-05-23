@@ -1673,7 +1673,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpGet]
         public ActionResult GetDetailTdoBasvuru(int id, Guid? uniqueId)
         {
-            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId); 
+            var model = TezDanismanOneriBus.GetSecilenBasvuruTdoDetay(id, uniqueId);
             ViewBag.ProgramKod = new SelectList(Management.cmbGetAktifProgramlar(model.EnstituKod, true, true), "Value", "Caption", model.ProgramKod);
             return View(model);
         }
@@ -2823,13 +2823,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize(Roles = RoleNames.MailGonder)]
         public ActionResult MailGonderPost(KmMailGonder model, List<HttpPostedFileBase> dosyaEki, List<string> dosyaEkiAdi, List<string> ekYolu, string ekd)
         {
-            var mmMessage = new MmMessage();
-            mmMessage.Title = "Mail gönderme işlemi";
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            var mmMessage = new MmMessage
+            {
+                Title = "Mail gönderme işlemi"
+            };
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
-            dosyaEki = dosyaEki == null ? new List<HttpPostedFileBase>() : dosyaEki;
-            dosyaEkiAdi = dosyaEkiAdi == null ? new List<string>() : dosyaEkiAdi;
-            ekYolu = ekYolu == null ? new List<string>() : ekYolu;
+            dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
+            dosyaEkiAdi = dosyaEkiAdi ?? new List<string>();
+            ekYolu = ekYolu ?? new List<string>();
 
             var secilenAlicilar = new List<string>();
             if (model.Alici.IsNullOrWhiteSpace() == false) model.Alici.Split(',').ToList().ForEach((itm) => { secilenAlicilar.Add(itm); });
@@ -2839,8 +2841,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var geriDonusLink = "";
                 if (model.MesajID.HasValue)
                 {
-                    var enstitu = _entities.Enstitulers.Where(p => p.EnstituKod == _EnstituKod).First();
-                    var mesaj = _entities.Mesajlars.Where(p => p.MesajID == model.MesajID.Value).First();
+                    var enstitu = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
+                    var mesaj = _entities.Mesajlars.First(p => p.MesajID == model.MesajID.Value);
                     if (mesaj.Mesajlar2 != null) mesaj = mesaj.Mesajlar2;
                     model.MesajID = mesaj.MesajID;
                     var cevapAdresi = enstitu.SistemErisimAdresi + "/Home/Index?MesajGroupID=" + mesaj.GroupID;
@@ -2855,25 +2857,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (model.IsBolumOrOgrenci)
                 {
-                    var surec = _entities.BasvuruSurecs.Where(p => p.BasvuruSurecID == model.BasvuruSurecID.Value).First();
+                    var surec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == model.BasvuruSurecID.Value);
                     //Yetkili Kullanıcılara MAİLGÖNDER
                     var rollers = new List<string>();
-                    if (surec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rollers = new List<string>() { RoleNames.MulakatSureci, RoleNames.MulakatKayıt };
-                    else if (surec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) rollers = new List<string>() { RoleNames.YgMulakatSureci, RoleNames.YgMulakatKayıt };
+                    if (surec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru)
+                        rollers = new List<string>() { RoleNames.MulakatSureci, RoleNames.MulakatKayıt };
+                    else if (surec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru)
+                        rollers = new List<string>() { RoleNames.YgMulakatSureci, RoleNames.YgMulakatKayıt };
 
                     var qBolumlerEmailList = _entities.KullaniciProgramlaris.Where(p => (p.Kullanicilar.Rollers.Any(a => rollers.Contains(a.RolAdi))
                                                                                 || p.Kullanicilar.YetkiGruplari.YetkiGrupRolleris.Any(a => rollers.Contains(a.Roller.RolAdi))) &&
                                                                                 model.ProgramKods.Contains(p.ProgramKod)).Select(s => s.Kullanicilar.EMail).ToList();
-
-                    var kullanicilar = _entities.KullaniciProgramlaris.Where(p => (p.Kullanicilar.Rollers.Any(a => rollers.Contains(a.RolAdi))
-                                                                                  || p.Kullanicilar.YetkiGruplari.YetkiGrupRolleris.Any(a => rollers.Contains(a.Roller.RolAdi))) &&
-                                                                                  model.ProgramKods.Contains(p.ProgramKod)).ToList().Select(s => s.Kullanicilar).Distinct().Select(s => new
-                                                                                  {
-                                                                                      s.Ad,
-                                                                                      s.Soyad,
-                                                                                      s.YetkiGruplari.YetkiGrupAdi,
-                                                                                      ProgramYetkileri = s.KullaniciProgramlaris.ToList()
-                                                                                  }).ToList();
 
                     secilenAlicilar.AddRange(qBolumlerEmailList);
                 }
@@ -2923,21 +2917,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             if (secilenAlicilar.Count == 0)
-            {
-                string msg = "Mail Gönderilecek Hiçbir Alıcı Belirlenemedi!";
-                mmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Mail Gönderilecek Hiçbir Alıcı Belirlenemedi!");
             }
 
             if (model.Konu.IsNullOrWhiteSpace())
-            {
-                string msg = "Konu Giriniz.";
-                mmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("Konu Giriniz.");
             }
 
             if (model.Aciklama.IsNullOrWhiteSpace() && model.AciklamaHtml.IsNullOrWhiteSpace())
-            {
-                string msg = "İçerik Giriniz.";
-                mmMessage.Messages.Add(msg);
+            { 
+                mmMessage.Messages.Add("İçerik Giriniz.");
             }
             #endregion
 
@@ -2946,7 +2937,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mmMessage.Messages.Count == 0)
             {
 
-                kModel.EnstituKod = _EnstituKod;
+                kModel.EnstituKod = enstituKod;
                 kModel.MesajID = model.MesajID;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.Konu = model.Konu;
@@ -2959,8 +2950,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 foreach (var item in qDosyalar)
                 {
-                    if (item.Dosya != null)
-                        item.Dosya.SaveAs(Server.MapPath("~" + item.DosyaYolu));
+                    item.Dosya?.SaveAs(Server.MapPath("~" + item.DosyaYolu));
                     eklenen.GonderilenMailEkleris.Add(new GonderilenMailEkleri
                     {
                         EkAdi = item.FExtension,
@@ -2980,19 +2970,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 var mailList = new List<GonderilenMailKullanicilar>();
-                var tari = DateTime.Now;
                 secilenAlicilar = secilenAlicilar.Distinct().ToList();
                 if (secilenAlicilar.Count > 0)
                 {
-                    var qscIDs = secilenAlicilar.Where(p => p.IsNumber()).Select(s => s.ToInt().Value).ToList();
+                    var qscIDs = secilenAlicilar.Where(p => p.IsNumber()).Select(s => s.ToInt(0)).ToList();
                     var qscMails = secilenAlicilar.Where(p => p.IsNumber() == false).ToList();
                     var dataqx = (from s in _entities.Kullanicilars
                                   where qscIDs.Contains(s.KullaniciID)
                                   select new
                                   {
                                       Email = s.EMail,
-                                      GonderilenMailID = eklenen.GonderilenMailID,
-                                      KullaniciID = s.KullaniciID
+                                      eklenen.GonderilenMailID,
+                                      s.KullaniciID
                                   }).ToList();
                     foreach (var item in dataqx)
                     {
@@ -3027,9 +3016,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mesaj.IsAktif = true;
                     if (mesaj.UstMesajID.HasValue)
                     {
-                        var UstMesaj = mesaj.Mesajlar2;
-                        UstMesaj.ToplamEkSayisi = (UstMesaj.MesajEkleris.Count + UstMesaj.Mesajlar1.Sum(s => s.MesajEkleris.Count) + UstMesaj.GonderilenMaillers.Sum(s => s.GonderilenMailEkleris.Count));
-                        UstMesaj.SonMesajTarihi = mesaj.Tarih;
+                        var ustMesaj = mesaj.Mesajlar2;
+                        ustMesaj.ToplamEkSayisi = (ustMesaj.MesajEkleris.Count + ustMesaj.Mesajlar1.Sum(s => s.MesajEkleris.Count) + ustMesaj.GonderilenMaillers.Sum(s => s.GonderilenMailEkleris.Count));
+                        ustMesaj.SonMesajTarihi = mesaj.Tarih;
                     }
                     else
                     {
@@ -3053,7 +3042,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 var gidecekler = mailList.Select(s => s.Email).ToList();
                 var dct = new Dictionary<int, List<MailSendList>>();
-                model.IsToOrBCC = model.BasvuruSurecID.HasValue ? false : model.IsToOrBCC;
+                model.IsToOrBCC = !model.BasvuruSurecID.HasValue && model.IsToOrBCC;
                 int inx = 0;
                 while (gidecekler.Count > 500)
                 {
@@ -3066,7 +3055,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 foreach (var item in dct)
                 {
-                    var excpt = MailManager.SendMailRetVal(_EnstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
+                    var excpt = MailManager.SendMailRetVal(enstituKod, kModel.Konu, kModel.AciklamaHtml, item.Value, attach);
                     if (excpt == null)
                     {
                         mmMessage.Messages.Add("Mail gönderildi!");
@@ -3082,7 +3071,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         try
                         {
                             _entities.GonderilenMaillers.Remove(eklenen);
-                            //db.SaveChanges();
+                            _entities.SaveChanges();
                             foreach (var item2 in qDosyalar)
                             {
                                 if (System.IO.File.Exists(Server.MapPath("~" + item2.DosyaYolu)))
@@ -3102,10 +3091,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Warning;
             }
 
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-            //return Content(strView, MediaTypeNames.Text.Html);
-            return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet);
-            //return new JsonResult { Data = new { IsSuccess = mmMessage.IsSuccess, Message = strView } };
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage); 
+            return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet); 
 
         }
 
@@ -4645,10 +4632,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
                     var rapor = _entities.TIBasvuruAraRapors.Where(p => p.UniqueID == uniqueId).FirstOrDefault();
+                    var kul = rapor.TIBasvuru.Kullanicilar;
 
                     var rpr = new RprTiDegerlendirmeFormu_FR0307(rapor.TIBasvuruAraRaporID);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rapor.TIBasvuru.Ad + " " + rapor.TIBasvuru.Soyad + " " + rpr.DisplayName;
+                    rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
 
 
                     if (rapor.TIBasvuru.KullaniciID != UserIdentity.Current.Id || RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent())

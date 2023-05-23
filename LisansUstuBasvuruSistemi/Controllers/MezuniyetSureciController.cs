@@ -597,8 +597,55 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Content(page, "text/html");
         }
 
+        public ActionResult KriterMuafOgrenciler(int id)
+        {
+            var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == id);
+            return View(surec);
+        }
+        public ActionResult KriterMuafOgrenciEkle(int mezuniyetSurecId, int? ogrenciId)
+        {
+            var success = false;
+            var message = "";
+            if (!ogrenciId.HasValue)
+            {
+                message = "Öğrenci seçiniz.";
+            }
+            else if (_entities.MezuniyetSureciKriterMuafOgrencilers.Any(p => p.MezuniyetSurecID == mezuniyetSurecId && p.KullaniciID == ogrenciId.Value))
+            {
+                message = "Bu öğrenci daha önce eklendi.";
+            }
+            else
+            {
+                _entities.MezuniyetSureciKriterMuafOgrencilers.Add(new MezuniyetSureciKriterMuafOgrenciler
+                {
+                    MezuniyetSurecID = mezuniyetSurecId,
+                    KullaniciID = ogrenciId.Value,
+                    IslemTarihi = DateTime.Now,
+                    IslemYapanID = UserIdentity.Current.Id
+                });
+                _entities.SaveChanges();
+                success = true;
+            }
+            return new { success, message }.ToJsonResult();
 
+        }
+        public ActionResult KriterMuafOgrenciSil(int mezuniyetSurecId, int ogrenciId)
+        {
 
+            if (_entities.MezuniyetSureciKriterMuafOgrencilers.Any(p => p.MezuniyetSurecID == mezuniyetSurecId && p.KullaniciID == ogrenciId))
+            {
+                var ogrenci = _entities.MezuniyetSureciKriterMuafOgrencilers.First(p =>
+                    p.MezuniyetSurecID == mezuniyetSurecId && p.KullaniciID == ogrenciId);
+                _entities.MezuniyetSureciKriterMuafOgrencilers.Remove(ogrenci);
+                _entities.SaveChanges();
+            }
+
+            return true.ToJsonResult();
+        }
+        public ActionResult GetFilterKullanici(string term)
+        {
+            return KullanicilarBus.GetFilterKullaniciJsonResult(term);
+        }
 
 
         [Authorize(Roles = RoleNames.MezuniyetSureciKayıt)]

@@ -12,7 +12,8 @@
     var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
     var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
     var toplantiTalepYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
-    var mKids = (List<int>)ViewBag.kIds;
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
 }
 
 <div class="row">
@@ -28,19 +29,30 @@
                     </h3>
                     <ul class="panel-controls">
 
-                        @*@if (Model.RowCount > 0)
-                            {
-                                <li>
-                                    <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
-                                </li>
-
-                            }*@
-                        @if (kyetki && mKids.Count > 0)
+                        @if (!Model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() && Model.RowCount > 0)
                         {
                             <li>
-                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
+
                         }
+                        @if (RoleNames.TiGelenBasvuruKayit.InRole())
+                        {
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+
+
+                        } 
                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                     </ul>
                 </div>
@@ -59,17 +71,18 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td style="padding-left:10px;">
+                            <td style="padding-left: 10px;">
                                 <table style="width:100%;table-layout:fixed;">
                                     <tbody>
                                         <tr>
-                                            <td width="160">Rapor Sayısı</td>
+                                            <td width="160">Anabilim Dalı</td>
                                             <td>
-                                                @Html.DropDownList("AktifAraRaporSayisi", null, new { @class = "form-control" })
+                                                @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
+
                             </td>
                         </tr>
                         <tr>
@@ -86,19 +99,37 @@
                                     </tbody>
                                 </table>
                             </td>
-                            <td style="padding-left:10px; vertical-align:top;">
-                                <table style="width:100%;table-layout:fixed;">
+                            <td style="padding-left: 10px; vertical-align: top;">
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Rapor Sayısı</td>
+                                            <td>
+                                                @Html.DropDownList("AktifAraRaporSayisi", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+
+                                <table style="width: 100%; table-layout: fixed;">
                                     <tbody>
                                         <tr>
                                             <td width="160">Aranacak Kelime</td>
                                             <td>
 
-                                                <table style="width:100%;table-layout:fixed;">
+                                                <table style="width: 100%; table-layout: fixed;">
                                                     <tbody>
                                                         <tr>
                                                             <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
                                                             <td width="110">
-                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width:110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -160,7 +191,7 @@
                                             <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
                                                 <tr>
                                                     <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
-                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.KullaniciTipAdi</td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.OgrenciNo</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -209,7 +240,7 @@
 @if (Model.RowCount > 0)
 {
     var firstRow = Model.Data.First();
-    if (firstRow.TezDanismanID == UserIdentity.Current.Id && 
+    if (firstRow.TezDanismanID == UserIdentity.Current.Id &&
         firstRow.TIAraRaporRaporDurumID.HasValue &&
         firstRow.TIAraRaporRaporDurumID != TiAraRaporDurumu.DegerlendirmeSureciTamamlandi
        )

@@ -106,18 +106,15 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
                 model.KullaniciID = basvuru.KullaniciID;
                 model.KayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi;
-                model.KullaniciTipID = basvuru.KullaniciTipID;
-                model.ResimAdi = basvuru.ResimAdi;
+                model.ResimAdi = basvuru.Kullanicilar.ResimAdi;
                 model.Ad = basvuru.Kullanicilar.Ad;
                 model.Soyad = basvuru.Kullanicilar.Soyad;
-                model.TcKimlikNo = basvuru.TcKimlikNo; 
-                model.UyrukKod = basvuru.UyrukKod;
+                model.TcKimlikNo = basvuru.Kullanicilar.TcKimlikNo; 
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
 
                 model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                model.ProgramAdi = basvuru.Programlar.ProgramAdi;
-                model.OgrenimDurumID = basvuru.OgrenimDurumID;
+                model.ProgramAdi = basvuru.Programlar.ProgramAdi; 
                 model.OgrenimTipKod = basvuru.OgrenimTipKod;
                 model.ProgramKod = basvuru.ProgramKod;
                 model.KayitOgretimYiliBaslangic = basvuru.KayitOgretimYiliBaslangic;
@@ -283,7 +280,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             EkDosyaYolu = tiAraRapor.TICalismaRaporDosyaYolu,
                         }
                     };
-
+                    var kul = tiAraRapor.TIBasvuru.Kullanicilar;
                     if (tiBasvuruAraRaporId.HasValue)
                     {
                         isAraRaporOrToplanti = true;
@@ -299,8 +296,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         });
                         mModel.Add(new SablonMailModel
                         {
-                            JuriTipAdi = "Öğrenci " + tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
-                            AdSoyad = tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
+                            JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
+                            AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
                             MailSablonTipID = MailSablonTipi.TI_AraRaporBaslatildiOgrenci
                         });
@@ -311,8 +308,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         mModel.Add(new SablonMailModel
                         {
 
-                            JuriTipAdi = "Öğrenci " + tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
-                            AdSoyad = tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
+                            JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
+                            AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
                             MailSablonTipID = MailSablonTipi.TI_ToplantiBilgiOgrenci
                         });
@@ -369,7 +366,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "UnvanAdi", Value = item.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = kul.Ad + " " + kul.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = tiAraRapor.TIBasvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
@@ -400,7 +397,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 paramereDegerleri.Add(new MailReplaceParameterDto
                                 {
                                     Key = "ToplantiSaati",
-                                    Value =$"{srTalebi.BasSaat:hh\\:mm}"
+                                    Value = $"{srTalebi.BasSaat:hh\\:mm}"
                                 });
 
                             if (!srTalebi.IsOnline)
@@ -519,7 +516,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var abdL = tiAraRapor.TIBasvuru.Programlar.AnabilimDallari;
                     var prgL = tiAraRapor.TIBasvuru.Programlar;
-
+                    var kul = tiAraRapor.Kullanicilar;
                     if (isLinkOrSonuc)
                     {
                         foreach (var item in juriler)
@@ -532,8 +529,8 @@ namespace LisansUstuBasvuruSistemi.Business
                         mModel.Add(new SablonMailModel
                         {
 
-                            JuriTipAdi = "Öğrenci " + tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
-                            AdSoyad = tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad,
+                            JuriTipAdi = "Öğrenci " + kul.Ad + " " + kul.Soyad,
+                            AdSoyad = kul.Ad + " " + kul.Soyad,
                             EMails = new List<MailSendList> { new MailSendList { EMail = tiAraRapor.TIBasvuru.Kullanicilar.EMail, ToOrBcc = true } },
                             MailSablonTipID = MailSablonTipi.TI_DegerlendirmeSonucGonderimOgrenci,
                         });
@@ -597,7 +594,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "UnvanAdi", Value = item.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciAdSoyad"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = tiAraRapor.TIBasvuru.Ad + " " + tiAraRapor.TIBasvuru.Soyad });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciAdSoyad", Value = kul.Ad + " " + kul.Soyad });
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = tiAraRapor.TIBasvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@AnabilimdaliAdi"))
@@ -790,6 +787,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return dct;
         }
+
         public static List<CmbIntDto> CmbTiAraRaporDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -800,6 +798,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 var arDurums = db.TIBasvuruAraRaporDurumlaris.Select(s => new CmbIntDto { Value = s.TIBasvuruAraRaporDurumID, Caption = s.TIBasvuruAraRaporDurumAdi }).ToList();
                 dct.AddRange(arDurums);
             }
+            dct.Add(new CmbIntDto { Value = 1000, Caption = "Başarılı Olanlar" });
+            dct.Add(new CmbIntDto { Value = 1001, Caption = "Başarısız Olanlar" });
             return dct;
         }
         public static List<CmbIntDto> CmbAraRaporSayisi(bool bosSecimVar = false, int max = 50)
@@ -814,5 +814,40 @@ namespace LisansUstuBasvuruSistemi.Business
             return dct;
 
         }
+        public static List<CmbStringDto> CmbTiDonemListe(string enstituKod, bool bosSecimVar = false)
+        {
+
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var donems = db.TIBasvuruAraRapors.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
+                    {
+                        Value = s.DonemBaslangicYil + "" + s.DonemID,
+                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
+
+                    }).ToList();
+                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+                return donems;
+            }
+        }
+
+        public static List<CmbIntDto> GetCmbFilterTiAnabilimDallari(string enstituKod, bool bosSecimVar = false)
+        {
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var yeterliAnabilimDaliIds = db.TIBasvurus
+                    .Where(p => p.EnstituKod == enstituKod).Select(s => s.Programlar.AnabilimDaliID).Distinct().ToList();
+
+                var anabilimDallaris = db.AnabilimDallaris.Where(p => yeterliAnabilimDaliIds.Contains(p.AnabilimDaliID))
+                    .Select(s => new { s.AnabilimDaliID, s.AnabilimDaliAdi }).OrderBy(o => o.AnabilimDaliAdi).Select(
+                        s =>
+                            new CmbIntDto { Value = s.AnabilimDaliID, Caption = s.AnabilimDaliAdi }
+                        ).ToList();
+                if (bosSecimVar) anabilimDallaris.Insert(0, new CmbIntDto { Value = null, Caption = "" });
+
+                return anabilimDallaris;
+            }
+        }
+
     }
 }

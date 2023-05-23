@@ -22,7 +22,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.Kullanicilars = new HashSet<Kullanicilar>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
-            this.TIBasvurus = new HashSet<TIBasvuru>();
         }
     
         public int OgrenimDurumID { get; set; }
@@ -45,7 +44,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TDOBasvuru> TDOBasvurus { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
     }
 }

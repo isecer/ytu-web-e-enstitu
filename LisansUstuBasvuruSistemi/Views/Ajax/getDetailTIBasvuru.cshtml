@@ -212,10 +212,9 @@
                                                                 </select>
                                                             }
                                                             else
-                                                            {
-                                                                var Uygun = itemJr.IsTezIzlemeRaporuTezOnerisiUygun;
-                                                                var Text = (Uygun.HasValue ? (Uygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi");
-                                                                <span style="font-size:10pt;">@Text</span>
+                                                            { 
+                                                                var text = (itemJr.IsTezIzlemeRaporuTezOnerisiUygun.HasValue ? (itemJr.IsTezIzlemeRaporuTezOnerisiUygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi");
+                                                                <span style="font-size:10pt;">@text</span>
                                                             }
                                                         </td>
                                                     </tr>
@@ -235,10 +234,9 @@
                                                                     </select>
                                                                 }
                                                                 else
-                                                                {
-                                                                    var Uygun = itemJr.IsTezIzlemeRaporuAltAlanUygun;
-                                                                    var Text = (Uygun.HasValue ? (Uygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi");
-                                                                    <span style="font-size:10pt;" aria-hidden="true">@Text</span>
+                                                                { 
+                                                                    var text = (itemJr.IsTezIzlemeRaporuAltAlanUygun.HasValue ? (itemJr.IsTezIzlemeRaporuAltAlanUygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi");
+                                                                    <span style="font-size:10pt;" aria-hidden="true">@text</span>
 
                                                                 }
                                                             </td>
@@ -258,10 +256,9 @@
                                                                 </select>
                                                             }
                                                             else
-                                                            {
-                                                                var Uygun = itemJr.IsBasarili;
-                                                                var Text = (Uygun.HasValue ? (Uygun.Value ? "Başarılı" : "Başarısız") : "Henüz Değerlendirilmedi");
-                                                                <span style="font-size:10pt;">@Text</span>
+                                                            { 
+                                                                var text = (itemJr.IsBasarili.HasValue ? (itemJr.IsBasarili.Value ? "Başarılı" : "Başarısız") : "Henüz Değerlendirilmedi");
+                                                                <span style="font-size:10pt;">@text</span>
                                                             }
                                                         </td>
                                                     </tr>
@@ -735,9 +732,8 @@
                                                                                                     </select>
                                                                                                 }
                                                                                                 else
-                                                                                                {
-                                                                                                    var uygun = itemJr.IsTezIzlemeRaporuAltAlanUygun;
-                                                                                                    @(uygun.HasValue ? (uygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi") 
+                                                                                                { 
+                                                                                                    @(itemJr.IsTezIzlemeRaporuAltAlanUygun.HasValue ? (itemJr.IsTezIzlemeRaporuAltAlanUygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi") 
                                                                                                 }
                                                                                             </td>
                                                                                         </tr>
@@ -756,9 +752,8 @@
                                                                                                 </select>
                                                                                             }
                                                                                             else
-                                                                                            {
-                                                                                                var uygun = itemJr.IsBasarili;
-                                                                                                @(uygun.HasValue ? (uygun.Value ? "Başarılı" : "Başarısız") : "Henüz Değerlendirilmedi")
+                                                                                            { 
+                                                                                                @(itemJr.IsBasarili.HasValue ? (itemJr.IsBasarili.Value ? "Başarılı" : "Başarısız") : "Henüz Değerlendirilmedi")
                                                                                             }
                                                                                         </td>
                                                                                     </tr>

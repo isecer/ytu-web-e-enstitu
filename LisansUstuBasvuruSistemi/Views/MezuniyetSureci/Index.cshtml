@@ -81,6 +81,9 @@
                                                                     <li>
                                                                         <a href="@Url.Action("Kayit", new { id = item.MezuniyetSurecID })"><i class="fa fa-edit"></i>Düzenle</a>
                                                                     </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" onclick="GetKriterMuafOgrenciler(@item.MezuniyetSurecID)"><i class="fa fa-group"></i>Kriterden Muaf Tutulanlar</a>
+                                                                    </li>
                                                                 }
                                                                 @if (silme)
                                                                 {
@@ -208,7 +211,34 @@
 </script>
 
 <script type="text/javascript">
+      function GetKriterMuafOgrencilerView(id) {
+        var view = "";
+        $.ajax({
+            url: '@Url.Action("KriterMuafOgrenciler")',
+            data: { id: id },
+            async: false,
+            success: function (result) {
+                view = result;
+            }
+        });
+        return view;
+    }
+    function GetKriterMuafOgrenciler(id) {
+        var view  = GetKriterMuafOgrencilerView(id);
+        bootbox.dialog({
+            message: "<div id='muafOgrenciContent'>" +  view + "</div>",
+            title: "Mezuniyet Süreci Balvuru Kriterinden Muaf Öğrenciler",
+            buttons: {
+                danger: {
+                    label: "Kapat",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
 
+    }
     function SilmeOnay(id) {
         var btbx = bootbox.dialog({
             message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Mezuniyet Sürecini Silmek İstiyor Musunuz?</td></tr></table>",

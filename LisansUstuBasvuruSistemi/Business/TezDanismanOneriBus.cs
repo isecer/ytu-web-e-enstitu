@@ -523,6 +523,22 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
             return dct;
         }
+        public static List<CmbStringDto> CmbTdoDonemListe(string enstituKod, bool bosSecimVar = false)
+        {
+
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var donems = db.TDOBasvuruDanismen.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
+                    {
+                        Value = s.DonemBaslangicYil + "" + s.DonemID,
+                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
+
+                    }).ToList();
+                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+                return donems;
+            }
+        }
         public static MmMessage SendMailTdoBilgisi(int tdoBasvuruDanismanId)
         {
             var mmMessage = new MmMessage();

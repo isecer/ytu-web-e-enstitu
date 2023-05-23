@@ -4,9 +4,14 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -17,7 +22,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         // GET: TIGelenBasvurular
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
-        { 
+        {
             var model = new FmTiBasvuru() { PageSize = 50 };
             //var DonemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
             //if (RoleNames.TIGelenBasvuruKayit.InRoleCurrent())
@@ -28,21 +33,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Index(model, ekd); ;
         }
         [HttpPost]
-        public ActionResult Index(FmTiBasvuru model, string ekd)
+        public ActionResult Index(FmTiBasvuru model, string ekd, bool export = false)
         {
-
-            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd); 
+            int? baslangicYil = null;
+            int? donemID = null;
+            if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace())
+            {
+                baslangicYil = model.AktifTIAraRaporDonemID.Substring(0, 4).ToInt(0);
+                donemID = model.AktifTIAraRaporDonemID.Substring(4, 1).ToInt(0);
+            }
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from s in _entities.TIBasvurus
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, e.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
-                    join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
-                    join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
+                    join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
+                    join ab in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
-                    join ktip in _entities.KullaniciTipleris on k.KullaniciTipID equals ktip.KullaniciTipID
-                    join ard in _entities.TIBasvuruAraRapors on s.AktifTIBasvuruAraRaporID equals ard.TIBasvuruAraRaporID into defard
-                    from ard in defard.DefaultIfEmpty()
-                    where en.EnstituKod == enstituKod
+                      let ard =
+                        s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemID && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
+
+
                     select new frTIBasvuru
                     {
                         TIBasvuruID = s.TIBasvuruID,
@@ -51,26 +62,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituKod = en.EnstituKod,
                         EnstituAdi = en.EnstituAd,
                         OgrenimTipAdi = o.OgrenimTipAdi,
+                        AnabilimDaliID = ab.AnabilimDaliID,
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
-                        AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        TcKimlikNo = s.Kullanicilar.TcKimlikNo,
+                        AdSoyad = k.Ad + " " + k.Soyad,
+                        EMail = k.EMail,
+                        CepTel = k.CepTel,
+                        TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
-                        ResimAdi = s.Kullanicilar.ResimAdi,
-                        KullaniciTipID = s.Kullanicilar.KullaniciTipID,
-                        KullaniciTipAdi = ktip.KullaniciTipAdi,
+                        ResimAdi = k.ResimAdi, 
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTIBasvuruAraRaporID = s.AktifTIBasvuruAraRaporID,
+                        AraRaporDanismanID = ard == null ? null : ard.TezDanismanID,
                         TIAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         TIAraRaporRaporDurumAdi = ard == null ? "Rapor Girişi Yapılmadı" : ard.TIBasvuruAraRaporDurumlari.TIBasvuruAraRaporDurumAdi,
                         AraRaporSayisi = ard != null ? ard.AraRaporSayisi : (int?)null,
                         TIAraRaporAktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         TIAraRaporRaporDurumID = ard != null ? ard.TIBasvuruAraRaporDurumID : (int?)null,
-                        RaporTarihi= ard != null ? ard.RaporTarihi : (DateTime?)null,
+                        RaporTarihi = ard != null ? ard.RaporTarihi : (DateTime?)null,
+                        ToplantiTarihi = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.Tarih).FirstOrDefault() : (DateTime?)null,
+                        ToplantiSaati = baslangicYil.HasValue ? ard.SRTalepleris.Select(sr => sr.BasSaat).FirstOrDefault() : (TimeSpan?)null,
                         tIAraraporFiltreModels = s.TIBasvuruAraRapors.Select(ti => new TIAraraporFiltreModel
                         {
                             AraRaporSayisi = ti.AraRaporSayisi,
@@ -87,19 +101,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var q2 = q;
             q = q.Where(p => p.EnstituKod == enstituKod);
+            if (baslangicYil.HasValue) q = q.Where(p => p.AraRaporDanismanID.HasValue);
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TIAraRaporAktifDonemID == model.AktifTIAraRaporDonemID);
-            if (model.AktifTIAraRaporRaporDurumID.HasValue) q = q.Where(p => p.TIAraRaporRaporDurumID == model.AktifTIAraRaporRaporDurumID);
+            if (model.AktifTIAraRaporRaporDurumID.HasValue)
+            {
+                if (model.AktifTIAraRaporRaporDurumID < 1000)
+                {
+                    q = q.Where(p => p.TIAraRaporRaporDurumID == model.AktifTIAraRaporRaporDurumID);
+                }
+                else
+                {
+                    q = q.Where(p => p.TIAraRaporRaporDurumID == TiAraRaporDurumu.DegerlendirmeSureciTamamlandi && p.IsBasariliOrBasarisiz == (model.AktifTIAraRaporRaporDurumID.Value == TiAraRaporDurumu.DegerlendirmeBasariliOlanlar));
+                }
+
+            }
             if (model.AktifAraRaporSayisi.HasValue) q = q.Where(p => p.AraRaporSayisi == model.AktifAraRaporSayisi);
+            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
 
             if (!model.TIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.tIAraraporFiltreModels.Any(a => a.RaporDonemID == model.TIAraRaporDonemID));
             if (model.TIAraRaporRaporDurumID.HasValue) q = q.Where(p => p.tIAraraporFiltreModels.Any(a => a.TIBasvuruAraRaporDurumID == model.TIAraRaporRaporDurumID.Value));
             if (model.TIAraRaporSayisi.HasValue) q = q.Where(p => p.tIAraraporFiltreModels.Any(a => a.AraRaporSayisi == model.TIAraRaporSayisi.Value));
 
-            if (!model.AdSoyad.IsNullOrWhiteSpace()) 
-                q = q.Where(p => 
-                    p.AdSoyad.Contains(model.AdSoyad) 
+            if (!model.AdSoyad.IsNullOrWhiteSpace())
+                q = q.Where(p =>
+                    p.AdSoyad.Contains(model.AdSoyad)
                     || p.OgrenciNo.Contains(model.AdSoyad) 
-                    || p.KullaniciTipAdi.Contains(model.AdSoyad) 
+                    || p.TcKimlikNo.Contains(model.AdSoyad)
                     || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
 
             var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
@@ -107,25 +134,82 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (tezDegerlendirme && !mbGelenBKayitYetki)
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
-                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o=>o.TIAraRaporRaporDurumID??999).ThenByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
+                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.TIAraRaporRaporDurumID ?? 999).ThenByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
             }
             else
             {
                 q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
             }
+
+
+            #region export
+            if (export && model.RowCount > 0)
+            {
+                var gv = new GridView();
+                var data = q.Select(s => new
+                {
+                    s.KullaniciID,
+                    s.OgrenciNo,
+                    s.TcKimlikNo,
+                    s.AdSoyad,
+                    s.EMail,
+                    s.CepTel,
+                    s.AnabilimdaliAdi,
+                    s.ProgramAdi,
+                    s.AraRaporDanismanID,
+                    DonemAdi = s.TIAraRaporAktifDonemAdi,
+                    s.ToplantiTarihi,
+                    s.ToplantiSaati,
+                    s.TIAraRaporRaporDurumAdi
+                }).ToList();
+                var danismanIds = data.Select(s => s.AraRaporDanismanID).ToList();
+                var danismans = _entities.Kullanicilars.Where(p => danismanIds.Contains(p.KullaniciID))
+                    .Select(s => new { s.KullaniciID, Danisman = s.Unvanlar.UnvanAdi + " " + s.Ad + " " + s.Soyad }).ToList();
+
+                var exportData = (from s in data
+                                  join d in danismans on s.AraRaporDanismanID equals d.KullaniciID
+                                  select new
+                                  {
+                                      s.OgrenciNo,
+                                      s.TcKimlikNo,
+                                      s.AdSoyad,
+                                      s.EMail,
+                                      s.CepTel,
+                                      s.AnabilimdaliAdi,
+                                      s.ProgramAdi,
+                                      d.Danisman,
+                                      s.DonemAdi,
+                                      s.ToplantiTarihi,
+                                      s.ToplantiSaati,
+                                      AraRaporDurumu = s.TIAraRaporRaporDurumAdi
+                                  }).ToList();
+
+                gv.DataSource = exportData;
+                gv.DataBind();
+                Response.ContentType = "application/ms-excel";
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+                StringWriter sw = new StringWriter();
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                gv.RenderControl(htw);
+
+                return File(System.Text.Encoding.UTF8.GetBytes(sw.ToString()), Response.ContentType, "Export_TezIzlemeAraRaporListesi_" + DateTime.Now.ToFormatDate() + ".xls");
+            }
+            #endregion
+
             var isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
-            //IndexModel.Toplam = model.RowCount;
-           
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
-            ViewBag.kIds = isFiltered ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-            ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.AktifTIAraRaporDonemID);
-            ViewBag.TIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiAktifDonemListe(true), "Value", "Caption", model.TIAraRaporDonemID);
+            ViewBag.filteredOgrenciIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered && !model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.AraRaporDanismanID.HasValue).Select(s => s.AraRaporDanismanID.Value).Distinct().ToList() : new List<int>();
+
+            ViewBag.AktifTIAraRaporDonemID = new SelectList(TezIzlemeBus.CmbTiDonemListe(enstituKod, true), "Value", "Caption", model.AktifTIAraRaporDonemID);
             ViewBag.AktifTIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.AktifTIAraRaporRaporDurumID);
             ViewBag.TIAraRaporRaporDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.TIAraRaporRaporDurumID);
+            ViewBag.AnabilimDaliID = new SelectList(TezIzlemeBus.GetCmbFilterTiAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.AktifAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AktifAraRaporSayisi);
-            ViewBag.TIAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi); 
+            ViewBag.TIAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.TIAraRaporSayisi);
             ViewBag.IndexModel = indexModel;
             return View(model);
         }

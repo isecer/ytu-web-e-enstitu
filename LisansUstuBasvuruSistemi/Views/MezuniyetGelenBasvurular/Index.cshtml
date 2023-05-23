@@ -6,13 +6,13 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmMezuniyetBasvurulari
-@{
-    //var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    //var IndexModel2 = (MIndexBilgi)ViewBag.IndexModel2;
+@{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
     var kYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
     var eykYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent() || RoleNames.MezuniyetGelenBasvurularJuriOneriFormuOnay.InRoleCurrent();
-    var mKids = (List<int>)ViewBag.kIds;
+
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
 }
 
 <div class="row">
@@ -117,12 +117,23 @@
                             </li>
 
                         }
-                        @if (kYetki && mKids.Count > 0)
+                        @if (kYetki)
                         {
-                            <li>
-                                <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
-                            </li>
-                        }
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+
+
+                        } 
                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                     </ul>
                 </div>

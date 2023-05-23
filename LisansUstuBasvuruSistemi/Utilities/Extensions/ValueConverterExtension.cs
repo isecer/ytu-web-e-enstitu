@@ -202,13 +202,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             else cins = "Yedek";
             return cins;
         }
-        public static string ToTiDegerlendirmeSonucu(bool? IsOyBirligiOrCoklugu, bool? isBasariliOrBasarisiz)
+        public static string ToTiDegerlendirmeSonucu(bool? isOyBirligiOrCoklugu, bool? isBasariliOrBasarisiz)
         {
             var returnSonuc = "";
 
-            if (IsOyBirligiOrCoklugu.HasValue && isBasariliOrBasarisiz.HasValue)
+            if (isOyBirligiOrCoklugu.HasValue && isBasariliOrBasarisiz.HasValue)
             {
-                returnSonuc += IsOyBirligiOrCoklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
+                returnSonuc += isOyBirligiOrCoklugu.Value ? "Oy Birliği ile" : "Oy Çokluğu ile";
                 returnSonuc += isBasariliOrBasarisiz.Value ? " Başarılı" : " Başarısız";
 
             }

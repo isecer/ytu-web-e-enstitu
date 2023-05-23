@@ -153,6 +153,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         if (kul.YtuOgrencisi)
                         {
+
                             if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
                             {
                                 msg.IsSuccess = false;
@@ -186,36 +187,65 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
                             else
                             {
-                                var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p => p.MezuniyetSurecID == mezuniyetSurecId.Value && p.OgrenimTipKod == kul.OgrenimTipKod);
-                                var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
+                                if (!db.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
+                                        a.MezuniyetSurecID == mezuniyetSurecId.Value &&
+                                        a.KullaniciID == kul.KullaniciID))
+                                {
 
-                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
-                                var bkMsg = new List<string>();
-                                if (basvuruSonDonemSecilecekDersKodlari.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) != basvuruSonDonemSecilecekDersKodlari.Count)
-                                {
-                                    bkMsg.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) + " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
-                                }
-                                if (basvuruKriterleri.MBasvuruToplamKrediKriteri > ogrenciBilgi.AktifDonemDers.ToplamKredi)
-                                {
-                                    bkMsg.Add("Toplam Kredi sayınız " + basvuruKriterleri.MBasvuruToplamKrediKriteri + " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " + ogrenciBilgi.AktifDonemDers.ToplamKredi);
 
-                                }
-                                if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
-                                {
-                                    bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri + " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " + ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
+                                    var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p =>
+                                        p.MezuniyetSurecID == mezuniyetSurecId.Value &&
+                                        p.OgrenimTipKod == kul.OgrenimTipKod);
+                                    var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri
+                                        .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
+                                        .Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
-                                }
-                                if (basvuruKriterleri.MBasvuruAKTSKriteri > ogrenciBilgi.AktifDonemDers.ToplamAkts)
-                                {
-                                    bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri + " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " + ogrenciBilgi.AktifDonemDers.ToplamAkts);
+                                    var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                                    var bkMsg = new List<string>();
+                                    if (basvuruSonDonemSecilecekDersKodlari.Any() &&
+                                        ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
+                                            basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
+                                        basvuruSonDonemSecilecekDersKodlari.Count)
+                                    {
+                                        bkMsg.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
+                                                  " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
+                                    }
 
-                                }
-                                if (bkMsg.Count > 0)
-                                {
-                                    var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
-                                    msg.Messages.Add(otsAdi + " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
-                                    msg.Messages.AddRange(bkMsg);
-                                    msg.IsSuccess = false;
+                                    if (basvuruKriterleri.MBasvuruToplamKrediKriteri >
+                                        ogrenciBilgi.AktifDonemDers.ToplamKredi)
+                                    {
+                                        bkMsg.Add("Toplam Kredi sayınız " +
+                                                  basvuruKriterleri.MBasvuruToplamKrediKriteri +
+                                                  " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
+                                                  ogrenciBilgi.AktifDonemDers.ToplamKredi);
+
+                                    }
+
+                                    if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
+                                    {
+                                        bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
+                                                  " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
+                                                  ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
+
+                                    }
+
+                                    if (basvuruKriterleri.MBasvuruAKTSKriteri > ogrenciBilgi.AktifDonemDers.ToplamAkts)
+                                    {
+                                        bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
+                                                  " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
+                                                  ogrenciBilgi.AktifDonemDers.ToplamAkts);
+
+                                    }
+
+                                    if (bkMsg.Count > 0)
+                                    {
+                                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                                            .OgrenimTipAdi;
+                                        msg.Messages.Add(otsAdi +
+                                                         " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
+                                        msg.Messages.AddRange(bkMsg);
+                                        msg.IsSuccess = false;
+                                    }
                                 }
                             }
                         }

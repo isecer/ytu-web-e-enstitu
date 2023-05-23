@@ -126,9 +126,9 @@
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 var _RaporTarihi = $('#RaporTarihi').val();
                                                                                 var _Sayi = $('#Sayi').val();
-                                                                                var _isDanismanOrEsDanisman = $('#isDanismanOrEsDanisman').val();
+                                                                                var _tutanakTipId = $('#tutanakTipId').val();
 
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' + _Sayi + '&isDanismanOrEsDanisman=' + _isDanismanOrEsDanisman;
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' + _Sayi + '&tutanakTipId=' + _tutanakTipId;
 
                                                                                 toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                             }
@@ -285,8 +285,8 @@
                             <tr>
                                 <th width="75"></th>
                                 <th>Ad Soyad</th>
-                                <th width="160">Aktif Başvuru Dönemi</th>
-                                <th width="350">Aktif Başvuru Durumu</th>
+                                <th width="160">Başvuru Dönemi</th>
+                                <th width="350">Başvuru Durumu</th>
                                 <th width="45"></th>
                             </tr>
 
