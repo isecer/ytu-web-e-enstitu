@@ -192,7 +192,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 errorMessage.Add("Yeterlik Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
-                            var basvuruVar = db.YeterlikBasvurus.Any(p =>p.IsEnstituOnaylandi!=false && p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
+                            var basvuruVar = db.YeterlikBasvurus.Any(p => p.IsEnstituOnaylandi != false && p.YeterlikSurecID == yeterlikSurecId && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                             if (basvuruVar)
                             {
                                 errorMessage.Add("Bu Yeterlik süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
@@ -290,19 +290,22 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
+
+     
         public static List<CmbIntDto> GetCmbBasvuruDurumu(bool bosSecimVar = false)
         {
             var lst = new List<CmbIntDto>();
             if (bosSecimVar) lst.Add(new CmbIntDto { Value = null, Caption = "" });
-            lst.Add(new CmbIntDto { Value = 0, Caption = "İşlem Görmeyenler" });
-            lst.Add(new CmbIntDto { Value = 1, Caption = "Onaylananlar" });
-            lst.Add(new CmbIntDto { Value = 2, Caption = "İptal Edilenler" });
-            lst.Add(new CmbIntDto { Value = 3, Caption = "Jüri Oluşturulmayanlar" });
-            lst.Add(new CmbIntDto { Value = 4, Caption = "ABD Komite Onayı Bekleyenler" });
-            lst.Add(new CmbIntDto { Value = 5, Caption = "ABD Komite Onayı Tamamlananlar" });
-            lst.Add(new CmbIntDto { Value = 6, Caption = "Sınav Sürecinde Olanlar" });
-            lst.Add(new CmbIntDto { Value = 7, Caption = "Başarılı Olanlar" });
-            lst.Add(new CmbIntDto { Value = 8, Caption = "Başarısız Olanlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.IslemGormeyenler, Caption = "İşlem Görmeyenler" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.Onaylananlar, Caption = "Onaylananlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.IptalEdilenler, Caption = "İptal Edilenler" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.JuriOlusturulmayanlar, Caption = "Jüri Oluşturulmayanlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.KomiteOnayiBekleyenler, Caption = "ABD Komite Onayı Bekleyenler" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.KomiteOnayiTamamlananlar, Caption = "ABD Komite Onayı Tamamlananlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.SinavSureciniBaslatilmayanlar, Caption = "Sınav Süreci Başlatılmayanlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.SinavSurecindeOlanlar, Caption = "Sınav Sürecinde Olanlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.BasariliOlanlar, Caption = "Başarılı Olanlar" });
+            lst.Add(new CmbIntDto { Value = YeterlikBasvuruFilterEnum.BasarisizOlanlar, Caption = "Başarısız Olanlar" });
             return lst;
         }
         public static List<CmbStringDto> GetCmbJuriYedekList(Guid juriUniqueId, bool bosSecimVar = false)
@@ -955,7 +958,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 Key = "SinavYeri",
                                 Value = isYaziliOrSozlu ?
-                                basvuru.YaziliSinavYeri 
+                                basvuru.YaziliSinavYeri
                                 : basvuru.SozluSinavYeri
                             });
                         }
@@ -1169,7 +1172,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@SinavSekli") && basvuru.IsSozluSinavOnline.HasValue)
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavSekli", Value = basvuru.IsSozluSinavOnline == true ? "Online" : "Yüz Yüze" });
-                        } 
+                        }
                         if (item.SablonParametreleri.Any(a => a == "@SinavNotu"))
                         {
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavNotu", Value = basvuru.YaziliSinaviNotu.ToString() });

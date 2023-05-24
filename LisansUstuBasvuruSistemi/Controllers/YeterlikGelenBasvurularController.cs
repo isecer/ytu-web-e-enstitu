@@ -95,15 +95,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     || p.AnabilimDaliAdi.Contains(model.AdSoyad));
             if (model.BasvuruDurumID.HasValue)
             {
-                if (model.BasvuruDurumID == 0) q = q.Where(p => !p.IsEnstituOnaylandi.HasValue);
-                else if (model.BasvuruDurumID == 1) q = q.Where(p => p.IsEnstituOnaylandi == true);
-                else if (model.BasvuruDurumID == 2) q = q.Where(p => p.IsEnstituOnaylandi == false);
-                else if (model.BasvuruDurumID == 3) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu == false);
-                else if (model.BasvuruDurumID == 4) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi != true);
-                else if (model.BasvuruDurumID == 5) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi == true);
-                else if (model.BasvuruDurumID == 6) q = q.Where(p => (p.YaziliSinavTarihi.HasValue || p.SozluSinavTarihi.HasValue) && p.IsAbdKomitesiJuriyiOnayladi == true && !p.IsGenelSonucBasarili.HasValue);
-                else if (model.BasvuruDurumID == 7) q = q.Where(p => p.IsGenelSonucBasarili == true);
-                else if (model.BasvuruDurumID == 8) q = q.Where(p => p.IsGenelSonucBasarili == false);
+                if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.IslemGormeyenler) q = q.Where(p => !p.IsEnstituOnaylandi.HasValue);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.Onaylananlar) q = q.Where(p => p.IsEnstituOnaylandi == true);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.IptalEdilenler) q = q.Where(p => p.IsEnstituOnaylandi == false);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.JuriOlusturulmayanlar) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu == false);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.KomiteOnayiBekleyenler) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi != true);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.KomiteOnayiTamamlananlar) q = q.Where(p => p.IsEnstituOnaylandi == true && p.IsJuriOlusturuldu && p.IsAbdKomitesiJuriyiOnayladi == true);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.SinavSureciniBaslatilmayanlar) q = q.Where(p => (!p.YaziliSinavTarihi.HasValue) && p.IsAbdKomitesiJuriyiOnayladi == true && !p.IsYaziliSinavBasarili.HasValue);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.SinavSurecindeOlanlar) q = q.Where(p => (p.YaziliSinavTarihi.HasValue || p.SozluSinavTarihi.HasValue) && p.IsAbdKomitesiJuriyiOnayladi == true && !p.IsGenelSonucBasarili.HasValue);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.BasariliOlanlar) q = q.Where(p => p.IsGenelSonucBasarili == true);
+                else if (model.BasvuruDurumID == YeterlikBasvuruFilterEnum.BasarisizOlanlar) q = q.Where(p => p.IsGenelSonucBasarili == false);
             }
             var yeterlikGbKayitYetki = RoleNames.YeterlikGelenBasvurularKayit.InRoleCurrent();
             var yeterlikAbdJuriOnayDuzeltme = RoleNames.YeterlikAbdJuriOnayDuzeltme.InRoleCurrent();

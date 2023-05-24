@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
@@ -11,5 +12,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string AnabilimdaliAdi { get; set; }
+        public string Ad { get; set; }
+        public string Soyad { get; set; }
     }
 }

@@ -966,19 +966,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        if (basvuru.IsSozluSinavBasarili.HasValue)
+                        if (basvuru.IsSozluSinavinaKatildi == false)
                         {
-                            basvuru.IsGenelSonucBasarili = basvuru.IsSozluSinavBasarili == true;
+                            basvuru.IsSozluSinavBasarili = false;
+                            basvuru.IsGenelSonucBasarili = false;
                         }
                         else if (basvuru.IsYaziliSinavinaKatildi == false || basvuru.IsYaziliSinavBasarili == false)
                         {
                             basvuru.IsGenelSonucBasarili = false;
                         }
                     }
-
-
-
-
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
                     YeterlikBus.SendMailSinavBilgi(basvuru.UniqueID, !basvuru.IsSozluSinavinaKatildi.HasValue);
@@ -1233,7 +1230,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
                 }
-            } 
+            }
             mMessage.MessageType = mMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
             var messageView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
             return new { mMessage.IsSuccess, messageView }.ToJsonResult();
