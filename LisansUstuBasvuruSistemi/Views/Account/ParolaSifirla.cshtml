@@ -2,8 +2,8 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @model Kullanicilar
 @{
-    int? kullaniciId = (int?)ViewBag.KullaniciID; 
-    Layout = kullaniciId.HasValue ? "~/Views/Shared/_LayoutPupupFrame.cshtml" : "~/Views/Shared/_Layout.cshtml"; 
+    int? kullaniciId = (int?)ViewBag.KullaniciID;
+    Layout = kullaniciId.HasValue ? "~/Views/Shared/_LayoutPupupFrame.cshtml" : "~/Views/Shared/_Layout.cshtml";
     var mmMessage = ViewBag.MmMessage as MmMessage;
     string eskiSifre = (string)ViewBag.EskiSifre;
     string yeniSifre = (string)ViewBag.YeniSifre;

@@ -281,6 +281,10 @@ else
                     }
                     <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
                 }
+                @if (tdoEykyaGonderimYetkisi && Model.AktifTDOBasvuruDanismanID == item.TDOBasvuruDanismanID && item.IsObsData)
+                {
+                    <a href="javascript:void(0)" onclick="DetayDanismanSil('@item.TDOBasvuruID',@item.TDOBasvuruDanismanID,'@item.BasvuruTarihi.ToFormatDateAndTime()','@item.TalepTipAdi')"><i style="font-size:11pt;" class="glyphicon glyphicon-trash" data-style="blue" data-original-title="Danışman Öneri Formunu Sil"></i></a>
+                }
             </td>
         </tr>
         <tr class="MainRow2 cls-Rpr_@item.TDOBasvuruDanismanID" style="@(showRow ? "" : "display:none;")">

@@ -166,8 +166,7 @@
                                                                 </ul>
                                                             </td>
                                                             <td width="100">
-                                                                @(itemJr.JuriTipAdi == "TezDanismani" ? "Tez Danışmanı" : "Tik Üyesi")
-                                                                <br />@itemJr.UnvanAdi
+                                                                @itemJr.UnvanAdi   <br /><span style="font-size:7pt;">@(itemJr.JuriTipAdi == "TezDanismani" ? "Tez Danışmanı" : "Tik Üyesi")</span>
                                                             </td>
                                                             <td width="240">
                                                                 @itemJr.AdSoyad
@@ -284,8 +283,8 @@
                                                                 </ul>
                                                             </td>
                                                             <td width="100">
-                                                                @itemJr.inx - Üye Önerisi
-                                                                <br />@itemJr.s.UnvanAdi
+                                                                @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
+
                                                             </td>
                                                             <td width="240">
                                                                 @itemJr.s.AdSoyad
@@ -401,8 +400,8 @@
                                                                 </ul>
                                                             </td>
                                                             <td width="100">
-                                                                @itemJr.inx - Üye Önerisi
-                                                                <br />@itemJr.s.UnvanAdi
+                                                                @itemJr.s.UnvanAdi<br /><span style="font-size:7pt;">@itemJr.inx - Üye Önerisi</span>
+
                                                             </td>
                                                             <td width="240">
                                                                 @itemJr.s.AdSoyad

@@ -120,7 +120,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    string msg = "";
+                    var msg = "";
                     var user = UserBus.GetLoginUser(userName);
 
                     if (user != null)
@@ -143,8 +143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             else
                             {
                                 mmMessage.IsSuccess = false;
-                                msg = "Active Directory Kontrolünden Geçilemedi!";
-                                // Management.SistemBilgisiKaydet("Active Directory Kontrolünden Geçilemedi! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
+                                msg = "Uygulama şifresiyle Enstitü Bilgi Sistemine giriş yapılamadı! <a href='https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32' target='_blank' style='color:white;'>Detaylı bilgi almak için tıklayınız. https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32</a>";
                             }
                         }
                         if (loginUser != null && !loginUser.IsAktif)
@@ -160,21 +159,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             mmMessage.IsSuccess = true;
-                            //if (loginUser.EnstituKod == EnstituKodlari.FenBilimleri)
-                            //{
-                            //    MmMessage.ReturnUrl = MmMessage.ReturnUrl.Replace("sbe", "fbe");
-
-                            //}
-                            //else
-                            //{
-                            //    MmMessage.ReturnUrl = MmMessage.ReturnUrl.Replace("fbe", "sbe");
-                            //}
                         }
                     }
                     else
                     {
-                        mmMessage.IsSuccess = false;
-                        //Management.SistemBilgisiKaydet("Kullanıcı Sistemde Bulunamadı! Kullanıcı Adı: " + UserName, "Acconunt/Login", BilgiTipi.LoginHatalari, null, UserIdentity.Ip);
+                        mmMessage.IsSuccess = false; 
                         hata = "Kullanıcı sistemde bulunamadı.";
                     }
                 }
@@ -1792,7 +1781,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                var kul = _entities.Kullanicilars.Where(p => p.EMail.Equals(mailAddress) && p.IsAktif).FirstOrDefault();
+                var kul = _entities.Kullanicilars.FirstOrDefault(p => p.EMail.Equals(mailAddress) && p.IsAktif);
                 if (kul == null)
                 {
                     mmMessage.IsSuccess = false;
@@ -1803,7 +1792,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kul.IsActiveDirectoryUser)
                     {
                         mmMessage.IsSuccess = false;
-                        mmMessage.Title = "Girmiş olduğunuz mail adresi 'Active directory' sistemine entegre çalıştığı için ve bilgi işlem tarafından belirlenen ve bazı sistemlere  (YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb)  erişimini sağlayan ortak bir şifresi bulunmaktadır. Bu mail adresi için tanımlanmış şifre sadece bilgi işlem tarafından belirlenip değiştirilebilmektedir. '" + kul.KullaniciAdi + "' kullanıcı adı ile YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb. programlara giriş yaptığınız şifrenizi hatırlamıyorsanız şifre değişikliği işlemi için lütfen Bilgi İşlem ile görüşünüz.";
+                        mmMessage.Title = "Parola sıfırlama işlemi yapılamadı. Parola değişikliği işlemini yapabilmek linke tıklayıp bilgi alabilirsiniz. <a style='color:white;' href='https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32' target='_blank'>https://teknikdestek.yildiz.edu.tr/kb/faq.php?id=32</a>";
+
+                        // "Girmiş olduğunuz mail adresi 'Active directory' sistemine entegre çalıştığı için ve bilgi işlem tarafından belirlenen ve bazı sistemlere  (YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb)  erişimini sağlayan ortak bir şifresi bulunmaktadır. Bu mail adresi için tanımlanmış şifre sadece bilgi işlem tarafından belirlenip değiştirilebilmektedir. '" + kul.KullaniciAdi + "' kullanıcı adı ile YTÜ Mail, EBYS, Lojman Yönetim Sistem, Lisansustu Başvuru Sistemi vb. programlara giriş yaptığınız şifrenizi hatırlamıyorsanız şifre değişikliği işlemi için lütfen Bilgi İşlem ile görüşünüz.";
                     }
                     else
                     {
@@ -2917,17 +2908,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             if (secilenAlicilar.Count == 0)
-            { 
+            {
                 mmMessage.Messages.Add("Mail Gönderilecek Hiçbir Alıcı Belirlenemedi!");
             }
 
             if (model.Konu.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Konu Giriniz.");
             }
 
             if (model.Aciklama.IsNullOrWhiteSpace() && model.AciklamaHtml.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("İçerik Giriniz.");
             }
             #endregion
@@ -3091,8 +3082,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessageType = Msgtype.Warning;
             }
 
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage); 
-            return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet); 
+            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
+            return Json(new { success = mmMessage.IsSuccess, responseText = strView }, JsonRequestBehavior.AllowGet);
 
         }
 

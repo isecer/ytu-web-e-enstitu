@@ -2635,7 +2635,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Silinmek istenen kayıt sistemde bulunamadı.");
             }
-            else if (tdoBasvuruDanisman.VarolanDanismanOnayladi.HasValue || tdoBasvuruDanisman.DanismanOnayladi.HasValue)
+            else if (tdoBasvuruDanismanId!=tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID&&(tdoBasvuruDanisman.VarolanDanismanOnayladi.HasValue || tdoBasvuruDanisman.DanismanOnayladi.HasValue))
             {
                 mmMessage.Messages.Add("Silmek istediğiniz danışman öneri formu danışman tarafından işlemi gördüğünden silme işlemi yapılamaz.");
             }

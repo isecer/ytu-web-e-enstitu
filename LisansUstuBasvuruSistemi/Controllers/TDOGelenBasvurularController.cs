@@ -344,8 +344,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
                         .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
                                                                  a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
-                        .OrderBy(o => o.TDAnabilimDaliAdi).ThenBy(t => t.TDProgramAdi).ThenBy(t => t.TDOBasvuru.Ad)
-                        .ThenBy(t => t.TDOBasvuru.Soyad).ToList();
+                        .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ToList();
                     var dataSource = data.Select((s, inx) => new
                     {
                         SiraNo = inx + 1,
@@ -385,8 +384,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
                         .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
                                                                  a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
-                        .OrderBy(o => o.TDAnabilimDaliAdi).ThenBy(t => t.TDProgramAdi).ThenBy(t => t.TDOBasvuru.Ad)
-                        .ThenBy(t => t.TDOBasvuru.Soyad).ToList();
+                        .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ToList();
 
                     var raporListData = new List<RprTdoEykDto>();
                     var inx = 0;

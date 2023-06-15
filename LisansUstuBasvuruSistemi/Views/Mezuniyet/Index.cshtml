@@ -64,11 +64,7 @@
 
                 @if (bilgiModel.SistemBasvuruyaAcik && bilgiModel.KullaniciTipYetki)
                 {
-                    <tr>
-                        <td>Başvuru Durumu</td>
-                        <td>:</td>
-                        <td>Sistem Başvuru alımına açıktır. Başvuru yapmak için Yeni Başvuru butonuna tıklayınız.</td>
-                    </tr>
+                    
                     <tr>
                         <td></td>
                         <td>:</td>
@@ -82,7 +78,7 @@
                     if (bilgiModel.SistemBasvuruyaAcik == false)
                     {
                         <tr>
-                            <td>Başvuru Durumu</td>
+                            <td>Not</td>
                             <td>:</td>
                             <td>
                                 Sistem başvuru işlemlerine kapalıdır. Başvuru İşlemi ile ilgili detaylı bilgi almak için duyuruları takip edebilirsiniz.
@@ -94,13 +90,14 @@
                     else if (bilgiModel.EnstituYetki == false)
                     {
                         <tr>
-                            <td>Başvuru Durumu</td>
+                            <td>Not</td>
                             <td>:</td>
                             <td>
                                 Seçili enstitü için mezuniyet başvurusu yapamazsınız!
                             </td>
                         </tr>
                     }
+                    
 
 
                 }

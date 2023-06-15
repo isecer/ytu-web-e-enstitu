@@ -86,28 +86,40 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+                var kul = db.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
+                var basvuruVar = db.MezuniyetBasvurularis.Any(p =>
+                                                                   kul.ProgramKod == p.ProgramKod &&
+                                                                   p.KullaniciID == kullaniciId &&
+                                                                   p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
+                                                                   (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi || p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
+
+                if (basvuruVar)
+                {
+                    msg.IsSuccess = false;
+                    msg.Messages.Add("Bu mezuniyet süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
+                    return msg;
+
+                } 
                 if (mezuniyetBasvurulariId.HasValue)
                 {
                     var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
                     if (basvuru == null)
                     {
                         msg.IsSuccess = false;
-                        msg.Messages.Add("Aranan başvuru sistemde bulunamadı.");
-                        if (kayitYetki == false) SistemBilgilendirmeBus.SistemBilgisiKaydet("Aranan başvuru sistemde bulunamadı! \r\n Çağrılan Mezuniyet Başvuru ID:" + mezuniyetBasvurulariId, "Mezuniyet Başvuru Düzelt", LogType.Uyarı);
+                        msg.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
                     }
                     else
                     {
+
                         if (basvuru.MezuniyetSureci.EnstituKod != enstituKod)
                         {
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Seçilen Mezuniyet başvurusu Enstitü kodu ile aktif Enstitü kodu uyuşmuyor! \r\n Çağrılan Mezuniyet Başvuru Enstitü Kod:" + basvuru.MezuniyetSureci.EnstituKod + " \r\n Aktif Enstitü Kod:" + enstituKod + " \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", LogType.Uyarı);
                             enstituKod = basvuru.MezuniyetSureci.EnstituKod;
                         }
+
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
-                            var message = "Bu enstitüye ait mezuniyet başvurusu güncellemeye yetkili değilsiniz!\r\n Mezuniyet Başvuru ID: " + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (!GetMezuniyetAktifSurecId(enstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                         {
@@ -119,7 +131,6 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             msg.IsSuccess = false;
                             msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait Mezuniyet başvurusu düzenlemeye hakkınız yoktur! \r\n Çağrılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi, "Mezuniyet Başvuru Düzelt", LogType.Saldırı);
                         }
                         else if (kayitYetki == false && (basvuru.IsDanismanOnay == true))
                         {
@@ -139,7 +150,6 @@ namespace LisansUstuBasvuruSistemi.Business
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Mezuniyet Başvury Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
-                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
                     if (msg.IsSuccess == false)
                     {
                         msg.Messages.Add("Başvuru Süreci Kapalı");
@@ -165,15 +175,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                 msg.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
                             }
 
-                            var basvuruVar = db.MezuniyetBasvurularis.Any(p => p.MezuniyetSurecID == mezuniyetSurecId &&
-                                                                               p.KullaniciID == kullaniciId);
-                            if (basvuruVar)
-                            {
-                                msg.IsSuccess = false;
-                                msg.Messages.Add("Bu mezuniyet süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
 
-                            }
-                            else if (GetMezuniyetSureciOgrenimTipUygunMu(mezuniyetSurecId.Value, kullaniciId.Value) == false)
+                            if (GetMezuniyetSureciOgrenimTipUygunMu(mezuniyetSurecId.Value, kullaniciId.Value) == false)
                             {
                                 var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
                                 msg.IsSuccess = false;
