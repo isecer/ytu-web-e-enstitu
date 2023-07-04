@@ -516,7 +516,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var abdL = tiAraRapor.TIBasvuru.Programlar.AnabilimDallari;
                     var prgL = tiAraRapor.TIBasvuru.Programlar;
-                    var kul = tiAraRapor.Kullanicilar;
+                    var kul = tiAraRapor.TIBasvuru.Kullanicilar;
                     if (isLinkOrSonuc)
                     {
                         foreach (var item in juriler)

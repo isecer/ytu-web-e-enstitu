@@ -1177,11 +1177,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Komite üyelerinden herhangi biri değerlendirme yaptıktan sonra Toplantı bilgileri değiştirilemez.");
                 }
             }
-            kModel.SRTalepID = srTalep == null ? 0 : srTalep.SRTalepID;
+            kModel.SRTalepID = srTalep?.SRTalepID ?? 0;
 
 
             if (mmMessage.Messages.Count == 0)
             {
+                var adminYetki = RoleNames.TiTezDegerlendirmeDuzeltme.InRole();
 
                 if (kModel.Tarih == DateTime.MinValue)
                 {
@@ -1193,7 +1194,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
                 }
-                else if (tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
+                else if (!adminYetki  && tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
                 {
                     var donemSonuTarihi = tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi;
                     mmMessage.Messages.Add("Toplantı tarihi ara rapor dönem sonu tarihi olan " + donemSonuTarihi.ToLongDateString() + " tarihten büyük olamaz.");
@@ -1544,62 +1545,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
-        public ActionResult DegerlendirmeLinkiGonder(int TIBasvuruID, int TIBasvuruAraRaporID, Guid? UniqueID)
-        {
-            var mMessage = new MmMessage
-            {
-                IsSuccess = false,
-                Title = "Tez İzleme Raporu Değerlendirme Linki Gönderme İşlemi"
-            };
-            var araRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == TIBasvuruAraRaporID);
-            var basvuru = araRapor.TIBasvuru;
-            var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
-            if (!tiTezDegerlendirmeDuzeltme && basvuru.TezDanismanID != UserIdentity.Current.Id)
-            {
-                mMessage.MessageType = Msgtype.Warning;
-                mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
-            }
-            else if (!tiTezDegerlendirmeDuzeltme && araRapor.TIBasvuruAraRaporKomites.Count == araRapor.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue))
-            {
-                mMessage.MessageType = Msgtype.Warning;
-                mMessage.Messages.Add("Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
-            }
-            else
-            {
-                if (UniqueID.HasValue)
-                {
-                    var uye = araRapor.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.UniqueID == UniqueID);
-                    if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
-
-                }
-                var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(TIBasvuruAraRaporID, UniqueID, true);
-                if (messages.IsSuccess)
-                {
-
-                    araRapor.IsBasariliOrBasarisiz = null;
-                    araRapor.IsOyBirligiOrCoklugu = null;
-                    if (araRapor.TIBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
-                    {
-                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.DegerlendirmeSureciBaslatildi;
-                    }
-                    else
-                    {
-                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirildi;
-                    }
-                    _entities.SaveChanges();
-                    mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
-
-                }
-                else
-                {
-                    mMessage.Messages.AddRange(messages.Messages);
-
-                }
-            }
-
-            return new { mMessage, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
-        }
+      
 
 
         [Authorize]
@@ -1709,5 +1655,87 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
             return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
         }
+        [Authorize]
+        public ActionResult DegerlendirmeLinkView(Guid? uniqueId)
+        {
+            var model = _entities.TIBasvuruAraRaporKomites.First(p => p.UniqueID == uniqueId);
+            return View(model);
+        }
+        [Authorize]
+        public ActionResult DegerlendirmeLinkiGonder(int tiBasvuruId, int tiBasvuruAraRaporId, Guid? uniqueId, string eMail, bool isJuriEmailGuncellensin)
+        {
+            var mMessage = new MmMessage
+            {
+                IsSuccess = false,
+                Title = "Tez İzleme Raporu Değerlendirme Linki Gönderme İşlemi"
+            };
+            var araRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
+            var basvuru = araRapor.TIBasvuru;
+            var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+            if (!tiTezDegerlendirmeDuzeltme && basvuru.TezDanismanID != UserIdentity.Current.Id)
+            {
+                mMessage.MessageType = Msgtype.Warning;
+                mMessage.Messages.Add("Değerlendirme Linki Göndermek İçin Yetkili Değilsiniz.");
+            }
+            else if (!tiTezDegerlendirmeDuzeltme && araRapor.TIBasvuruAraRaporKomites.Count == araRapor.TIBasvuruAraRaporKomites.Count(c => c.IsBasarili.HasValue))
+            {
+                mMessage.MessageType = Msgtype.Warning;
+                mMessage.Messages.Add("Değerlendirme işlemi tüm Komite üyeler tarafından tamamlandığı için tekrar değerlendirme linki gönderemezsiniz.");
+            }
+            else if (eMail.IsNullOrWhiteSpace())
+            {
+                mMessage.MessageType = Msgtype.Warning;
+                mMessage.Messages.Add("E-Posta Giriniz");
+            }
+            else if (eMail.ToIsValidEmail())
+            {
+                mMessage.MessageType = Msgtype.Warning;
+                mMessage.Messages.Add("E-Posta Formatı Uygun Değildir.");
+            }
+            else
+            {
+                if (uniqueId.HasValue)
+                {
+                    var uye = araRapor.TIBasvuruAraRaporKomites.FirstOrDefault(p => p.UniqueID == uniqueId);
+                    if (uye == null) mMessage.Messages.Add("Değerlendirme Linki göndermek için benzersiz anahtar bilgisi değişti veya bulunamadı! Sayfayı Yenileyip Tekrar Deneyiniz.");
+                    else
+                    {
+                        if (isJuriEmailGuncellensin)
+                        {
+                            uye.EMail = eMail;
+                            _entities.SaveChanges();
+                        }
+                    }
+                }
+                var messages = TezIzlemeBus.SendMailTiDegerlendirmeLink(tiBasvuruAraRaporId, uniqueId, true);
+                if (messages.IsSuccess)
+                {
+
+                    araRapor.IsBasariliOrBasarisiz = null;
+                    araRapor.IsOyBirligiOrCoklugu = null;
+                    if (araRapor.TIBasvuruAraRaporKomites.Any(a => a.IsBasarili.HasValue))
+                    {
+                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.DegerlendirmeSureciBaslatildi;
+                    }
+                    else
+                    {
+                        araRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirildi;
+                    }
+                    _entities.SaveChanges();
+                    mMessage.IsSuccess = true;
+                    mMessage.Messages.Add("Değerlendirme Linki Komite Üyesine Gönderildi.");
+
+                }
+                else
+                {
+                    mMessage.Messages.AddRange(messages.Messages);
+
+                }
+            }
+            var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
+            return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult(); 
+        }
+
+       
     }
 }

@@ -193,9 +193,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
         public virtual DbSet<TIBasvuruAraRaporDurumlari> TIBasvuruAraRaporDurumlaris { get; set; }
         public virtual DbSet<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
-        public virtual DbSet<TikBasvuru> TikBasvurus { get; set; }
-        public virtual DbSet<TikBasvuruOneri> TikBasvuruOneris { get; set; }
-        public virtual DbSet<TikBasvuruOneriKomite> TikBasvuruOneriKomites { get; set; }
         public virtual DbSet<Universiteler> Universitelers { get; set; }
         public virtual DbSet<Unvanlar> Unvanlars { get; set; }
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }

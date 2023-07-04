@@ -3458,7 +3458,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UniversiteID = YtuUni?.UniversiteID ?? 67,
                 UniversiteAdi = (YtuUni != null ? YtuUni.Ad : "Yıldız Teknik Üniversitesi (İstanbul)").ToUpper(),
                 EMail = s.KURUMMAIL
-            }).OrderBy(o => o.AdSoyad).Take(25).ToList();
+            }).Where(p=> UnvanlarBus.JuriUnvanList.Contains(p.UnvanAdi)).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
             return kul2.ToJsonResult();
         }

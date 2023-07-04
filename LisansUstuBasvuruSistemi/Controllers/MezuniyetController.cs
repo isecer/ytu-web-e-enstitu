@@ -61,7 +61,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bbModel.ProgramAdi = kullanici.Programlar.ProgramAdi;
                 bbModel.OgrenciNo = kullanici.OgrenciNo;
                 bbModel.KullaniciTipYetki = kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci;
-
+                bbModel.EnstituYetki = kullanici.Programlar.AnabilimDallari.EnstituKod == enstituKod;
                 if (kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                 {
                     var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
@@ -256,9 +256,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     model = MezuniyetBus.GetMezuniyetBasvuruBilgi(mezuniyetBasvurulariId.Value);
                     model.EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod;
-                    model.ResimAdi = kul.ResimAdi;
-                    kullaniciId = model.KullaniciID;
-
+                    model.ResimAdi = kul.ResimAdi;  
                 }
                 else
                 {
@@ -282,6 +280,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                     model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
                     model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
+
+                    //if (!model.IsTezDiliTr.HasValue)
+                    //{
+                    //    mmMessage.Messages.Add("Tez dili bilgisi obs sistemine işlenmeli.");
+                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTezDiliTr" });
+                    //}
+                    //if (model.TezBaslikTr.IsNullOrWhiteSpace())
+                    //{
+                    //    mmMessage.Messages.Add("Tez başlığı türkçe bilgisi obs sistemine işlenmeli.");
+                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TezBaslikTr" });
+                    //}
+                    //if (model.TezBaslikEn.IsNullOrWhiteSpace())
+                    //{
+                    //    mmMessage.Messages.Add("Tez başlığı ingilizce bilgisi obs sistemine işlenmeli.");
+                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TezBaslikEn" });
+                    //}
+
+                    //if (mmMessage.Messages.Any())
+                    //{
+                    //    mmMessage.Messages.Insert(0, "Aşağıda bulunan bilgilerin Enstitünüz tarafından (OBS) Öğrenci bilgi sistemine işlenmesi gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    //    mmMessage.Title = "Mezuniyet başvurusu için aşağıdaki uyarıları kontrol ediniz.";
+                    //    MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
+                    //}
                 }
                 var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == model.MezuniyetSurecID);
                 model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;
@@ -312,7 +333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     ClassName = "fa fa-plus",
                     Color = "color:black;"
                 };
-            }
+            } 
             return View(model);
         }
 

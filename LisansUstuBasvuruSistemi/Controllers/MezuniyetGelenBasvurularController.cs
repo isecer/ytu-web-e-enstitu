@@ -41,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Index(model, ekd);
 
         }
+
         [HttpPost]
         [Authorize(Roles = RoleNames.MezuniyetGelenBasvurular)]
         public ActionResult Index(FmMezuniyetBasvurulari model, string ekd, bool export = false)
@@ -50,23 +51,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var q = from s in _entities.MezuniyetBasvurularis
                     join ms in _entities.MezuniyetSurecis on s.MezuniyetSurecID equals ms.MezuniyetSurecID
                     join kul in _entities.Kullanicilars on s.KullaniciID equals kul.KullaniciID
-                    join mOt in _entities.MezuniyetSureciOgrenimTipKriterleris on new { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOt.MezuniyetSurecID, mOt.OgrenimTipKod }
-                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, ms.EnstituKod } equals new { o.OgrenimTipKod, o.EnstituKod }
+                    join mOt in _entities.MezuniyetSureciOgrenimTipKriterleris on new
+                    { s.MezuniyetSurecID, s.OgrenimTipKod } equals new { mOt.MezuniyetSurecID, mOt.OgrenimTipKod }
+                    join o in _entities.OgrenimTipleris on new { s.OgrenimTipKod, ms.EnstituKod } equals new
+                    { o.OgrenimTipKod, o.EnstituKod }
                     join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
                     join abl in _entities.AnabilimDallaris on pr.AnabilimDaliID equals abl.AnabilimDaliID
                     join en in _entities.Enstitulers on s.MezuniyetSureci.EnstituKod equals en.EnstituKod
                     join bs in _entities.MezuniyetSurecis on s.MezuniyetSurecID equals bs.MezuniyetSurecID
                     join d in _entities.Donemlers on bs.DonemID equals d.DonemID
                     join ktip in _entities.KullaniciTipleris on s.Kullanicilar.KullaniciTipID equals ktip.KullaniciTipID
-                    join dr in _entities.MezuniyetYayinKontrolDurumlaris on s.MezuniyetYayinKontrolDurumID equals dr.MezuniyetYayinKontrolDurumID
-                    join qmsd in _entities.MezuniyetSinavDurumlaris on s.MezuniyetSinavDurumID equals qmsd.MezuniyetSinavDurumID into defMsd
+                    join dr in _entities.MezuniyetYayinKontrolDurumlaris on s.MezuniyetYayinKontrolDurumID equals dr
+                        .MezuniyetYayinKontrolDurumID
+                    join qmsd in _entities.MezuniyetSinavDurumlaris on s.MezuniyetSinavDurumID equals qmsd
+                        .MezuniyetSinavDurumID into defMsd
                     from msd in defMsd.DefaultIfEmpty()
-                    join qjOf in _entities.MezuniyetJuriOneriFormlaris on s.MezuniyetBasvurulariID equals qjOf.MezuniyetBasvurulariID into defJof
+                    join qjOf in _entities.MezuniyetJuriOneriFormlaris on s.MezuniyetBasvurulariID equals qjOf
+                        .MezuniyetBasvurulariID into defJof
                     from jOf in defJof.DefaultIfEmpty()
                     let srT = s.SRTalepleris.OrderByDescending(os => os.SRTalepID).FirstOrDefault()
-                    let td = s.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(os => os.MezuniyetBasvurulariTezDosyaID).FirstOrDefault()
+                    let td = s.MezuniyetBasvurulariTezDosyalaris.OrderByDescending(os => os.MezuniyetBasvurulariTezDosyaID)
+                        .FirstOrDefault()
 
-                    where bs.Enstituler.EnstituKisaAd.Contains(ekd) && s.MezuniyetBasvurulariID == (model.SMezuniyetBID ?? s.MezuniyetBasvurulariID)
+                    where bs.Enstituler.EnstituKisaAd.Contains(ekd) &&
+                          s.MezuniyetBasvurulariID == (model.SMezuniyetBID ?? s.MezuniyetBasvurulariID)
                     select new FrMezuniyetBasvurulari
                     {
 
@@ -138,12 +146,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
             }
+
             if (model.MezuniyetSureci.HasValue)
             {
                 int basYil = model.MezuniyetSureci.ToString().Substring(0, 4).ToInt(0);
                 int donemId = model.MezuniyetSureci.ToString().Substring(4, 1).ToInt(0);
                 q = q.Where(p => p.SurecBaslangicYil == basYil && p.DonemID == donemId);
             }
+
             if (model.MezuniyetSurecID.HasValue) q = q.Where(p => p.MezuniyetSurecID == model.MezuniyetSurecID.Value);
             if (model.KayitDonemi.IsNullOrWhiteSpace() == false)
             {
@@ -151,27 +161,41 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var donem = model.KayitDonemi.Split('_')[1].ToInt(0);
                 q = q.Where(p => p.KayitOgretimYiliBaslangic == yil && p.KayitOgretimYiliDonemID == donem);
             }
+
             if (model.MezuniyetYayinKontrolDurumID.HasValue)
             {
                 q = q.Where(p => p.MezuniyetYayinKontrolDurumID == model.MezuniyetYayinKontrolDurumID);
             }
+
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (model.JuriOneriFormuDurumuID.HasValue)
             {
                 if (model.JuriOneriFormuDurumuID == 0)
                     q = q.Where(p => p.MezuniyetJuriOneriFormu == null);
                 else if (model.JuriOneriFormuDurumuID == 1)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu != null && !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue && !p.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue);
+                    q = q.Where(p =>
+                        p.MezuniyetJuriOneriFormu != null && !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue &&
+                        !p.MezuniyetJuriOneriFormu.EYKYaGonderildi.HasValue);
                 else if (model.JuriOneriFormuDurumuID == 2)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == true && !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue);
+                    q = q.Where(p =>
+                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == true &&
+                        !p.MezuniyetJuriOneriFormu.EYKDaOnaylandi.HasValue);
                 else if (model.JuriOneriFormuDurumuID == 3)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == false);
+                    q = q.Where(p =>
+                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKYaGonderildi == false);
                 else if (model.JuriOneriFormuDurumuID == 4)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == true);
+                    q = q.Where(p =>
+                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == true);
                 else if (model.JuriOneriFormuDurumuID == 5)
-                    q = q.Where(p => p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == false);
+                    q = q.Where(p =>
+                        p.MezuniyetJuriOneriFormu != null && p.MezuniyetJuriOneriFormu.EYKDaOnaylandi == false);
             }
-            if (model.SRDurumID.HasValue) q = q.Where(p => p.SRDurumID == model.SRDurumID.Value);
+
+            if (model.SRDurumID.HasValue)
+            {
+                q = model.SRDurumID != -1 ? q.Where(p => p.SRDurumID == model.SRDurumID.Value) : q.Where(p => p.SRDurumID.HasValue);
+            }
+
             if (model.TDDurumID.HasValue)
             {
                 if (model.TDDurumID == 2)
@@ -284,7 +308,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurumListe(true, true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
             ViewBag.JuriOneriFormuDurumuID = new SelectList(MezuniyetBus.GetCmbJuriOneriFormuDurumu(true), "Value", "Caption", model.JuriOneriFormuDurumuID);
             ViewBag.KayitDonemi = new SelectList(MezuniyetBus.GetCmbMezuniyetKayitDonemleri(enstituKod, model.MezuniyetSurecID, true), "Value", "Caption", model.KayitDonemi);
-            ViewBag.SRDurumID = new SelectList(SrTalepleriBus.GetCmbSrDurumListe(true), "Value", "Caption", model.SRDurumID);
+            var srDurms = SrTalepleriBus.GetCmbSrDurumListe(true);
+            srDurms.Add(new CmbIntDto() { Value = -1, Caption = "Tüm Rezervasyonlar" });
+            ViewBag.SRDurumID = new SelectList(srDurms, "Value", "Caption", model.SRDurumID);
             ViewBag.TDDurumID = new SelectList(MezuniyetBus.GetCmbTezDurumListe(true), "Value", "Caption", model.TDDurumID);
             ViewBag.MezuniyetSinavDurumID = new SelectList(MezuniyetBus.GetCmbMzSinavDurumListe(true), "Value", "Caption", model.MezuniyetSinavDurumID);
             ViewBag.TeslimFormDurumu = new SelectList(MezuniyetBus.GetCmbTeslimFormDurumu(true), "Value", "Caption", model.TeslimFormDurumu);
@@ -2312,7 +2338,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     + "Lisansüstü Eğitim ve Öğretim Yönetmeliğinde Değişiklik Yapılmasına Dair Yönetmelik:<b> Madde 2 - “Mezuniyet Tarihi tezin sınav jüri komisyonu tarafından "
                                     + "imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince, " + baslangicTarihi.ToFormatDate() + " ile " + bitisTarihi.ToFormatDate() + " tarihleri arasında tezlerini Enstitümüze teslim eden öğrencilerin "
                                     + "aşağıda belirtilen tez teslim tarihinde mezuniyetlerine oybirliğiyle karar verildi."
-                    }; 
+                    };
                     foreach (var itemO in data)
                     {
                         var row = new RprMezuniyetTutanakRowModel();

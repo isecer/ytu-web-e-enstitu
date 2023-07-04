@@ -829,15 +829,6 @@
     <Compile Include="Models\TIBasvuruAraRaporKomite.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\TikBasvuru.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TikBasvuruOneri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\TikBasvuruOneriKomite.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Universiteler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -3499,6 +3490,7 @@
     <Content Include="Views\TDOBasvuru\BasvuruDurumView.cshtml" />
     <Content Include="Views\Yeterlik\KomiteDegisiklikView.cshtml" />
     <Content Include="Views\MezuniyetSureci\KriterMuafOgrenciler.cshtml" />
+    <Content Include="Views\TIBasvuru\DegerlendirmeLinkView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

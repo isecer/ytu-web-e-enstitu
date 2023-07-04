@@ -349,7 +349,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         SiraNo = inx + 1,
                         s.TDODanismanTalepTipleri.TalepTipAdi,
-                        s.TDOBasvuru.OgrenciNo,
+                        s.TDOBasvuru.OgrenciNo, 
                         OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
                         OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
                                                      s.TDOBasvuru.Programlar.ProgramAdi,
@@ -447,7 +447,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     } 
 
                     var rpr = new RprTdoTutanak();
-                    rpr.DataSource = raporListData.OrderBy(o=>o.IsDoktora).ThenBy(t=>t.OgrenciBilgi);
+                    rpr.DataSource = raporListData;
                     rpr.CreateDocument(); 
                     var displayName = "Tez dil_konu_danışman değişiklikleri EYK raporu";
                     var html = "";

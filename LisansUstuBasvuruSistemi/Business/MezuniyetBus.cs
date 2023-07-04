@@ -52,9 +52,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.IsSuccess = false;
-                        msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
-                        var message = "Bu enstitüye ait mezuniyet başvurusu silmeye yetkili değilsiniz!\r\n Mezuniyet Başvuru ID: " + basvuru.MezuniyetBasvurulariID + " \r\n Mezuniyet Başvuru sahibi: " + basvuru.Kullanicilar.Ad + " " + basvuru.Kullanicilar.Soyad + " \r\n Başvuru Tarihi: " + basvuru.BasvuruTarihi.ToString();
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet(message, "Mezuniyet Başvuru Sil", LogType.Kritik);
+                        msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!"); 
                     }
                     else if (!GetMezuniyetAktifSurecId(basvuru.MezuniyetSureci.EnstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                     {
@@ -66,7 +64,6 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait mezuniyet başvurusunu silmeye hakkınız yoktur! \r\n Silinmeye çalışılan Mezuniyet Başvuru ID:" + basvuru.MezuniyetBasvurulariID + " \r\n Mezuniyet Başvuru Sahibi:" + basvuru.Kullanicilar.KullaniciAdi + " \r\n Başvuru Tarihi:" + basvuru.BasvuruTarihi.ToString(), "Başvuru Sil", LogType.Saldırı);
                     }
                     else if (kayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
                     {
@@ -89,6 +86,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 var kul = db.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
                 var basvuruVar = db.MezuniyetBasvurularis.Any(p =>
                                                                    kul.ProgramKod == p.ProgramKod &&
+                                                                   kul.OgrenciNo == p.OgrenciNo &&
+                                                                   kul.OgrenimTipKod == p.OgrenimTipKod &&
                                                                    p.KullaniciID == kullaniciId &&
                                                                    p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
                                                                    (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi || p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
@@ -96,10 +95,10 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (basvuruVar)
                 {
                     msg.IsSuccess = false;
-                    msg.Messages.Add("Bu mezuniyet süreci için başvurunuz bulunmaktadır tekrar başvuru yapamazsınız!");
+                    msg.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
                     return msg;
 
-                } 
+                }
                 if (mezuniyetBasvurulariId.HasValue)
                 {
                     var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
@@ -147,7 +146,6 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Mezuniyet Başvury Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
                     if (msg.IsSuccess == false)
@@ -163,30 +161,46 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         if (kul.YtuOgrencisi)
                         {
-
                             if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
                             {
                                 msg.IsSuccess = false;
-                                msg.Messages.Add("Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
+                                msg.Messages.Add(
+                                    "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
                             else if (kul.KayitDonemID.HasValue == false)
                             {
                                 msg.IsSuccess = false;
                                 msg.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
                             }
+                            else if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
+
+                            {
+                                msg.IsSuccess = false;
+                                msg.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
+                                return msg;
+                            }
 
 
                             if (GetMezuniyetSureciOgrenimTipUygunMu(mezuniyetSurecId.Value, kullaniciId.Value) == false)
                             {
-                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
+                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                                    .OgrenimTipAdi;
                                 msg.IsSuccess = false;
-                                msg.Messages.Add(otsAdi + " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
+                                msg.Messages.Add(otsAdi +
+                                                 " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
                             }
-                            else if ((kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false) && kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans && (kul.KayitTarihi > Convert.ToDateTime("31-03-2016") && MezuniyetBus.GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value, kul.KayitDonemID.Value).Count < 4))
+                            else if ((kullaniciId != UserIdentity.Current.Id &&
+                                      RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false) &&
+                                     kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
+                                     (kul.KayitTarihi > Convert.ToDateTime("31-03-2016") && MezuniyetBus
+                                         .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
+                                             kul.KayitDonemID.Value).Count < 4))
                             {
-                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod).OgrenimTipAdi;
+                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                                    .OgrenimTipAdi;
                                 msg.IsSuccess = false;
-                                msg.Messages.Add(otsAdi + " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
+                                msg.Messages.Add(otsAdi +
+                                                 " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
                             }
                             else
                             {
@@ -232,7 +246,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
                                     }
 
-                                    if (basvuruKriterleri.MBasvuruAKTSKriteri > ogrenciBilgi.AktifDonemDers.ToplamAkts)
+                                    if (basvuruKriterleri.MBasvuruAKTSKriteri >
+                                        ogrenciBilgi.AktifDonemDers.ToplamAkts)
                                     {
                                         bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
                                                   " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
@@ -242,7 +257,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
                                     if (bkMsg.Count > 0)
                                     {
-                                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                                        var otsAdi = db.OgrenimTipleris
+                                            .First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
                                             .OgrenimTipAdi;
                                         msg.Messages.Add(otsAdi +
                                                          " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
@@ -251,6 +267,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                     }
                                 }
                             }
+
                         }
                         else
                         {

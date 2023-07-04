@@ -7,7 +7,7 @@
 @{ 
     Layout = null;
 
-    var TITezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
+    var tiTezDegerlendirmeDuzeltme = RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent();
 }
 @if (Model.YetkisizErisim)
 {
@@ -49,7 +49,7 @@ else
                                 <input type="text" id="SalonAdi" name="SalonAdi" value="@Model.SalonAdi" maxlength="160" class="form-control" />
                             </div>
                         </div>
-                        @if (TITezDegerlendirmeDuzeltme && Model.SRTalepID > 0)
+                        @if (tiTezDegerlendirmeDuzeltme && Model.SRTalepID > 0)
                         {
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-3 control-label">E-Posta Gönderim</label>

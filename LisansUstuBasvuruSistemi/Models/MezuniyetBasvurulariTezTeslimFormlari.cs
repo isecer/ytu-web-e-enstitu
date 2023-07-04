@@ -17,8 +17,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public int MezuniyetBasvurulariTezTeslimFormID { get; set; }
         public System.Guid RowID { get; set; }
         public Nullable<int> MezuniyetBasvurulariID { get; set; }
-        public string TezDili { get; set; }
         public bool IsTezDiliTr { get; set; }
+        public string TezDili { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
         public string TezOzet { get; set; }

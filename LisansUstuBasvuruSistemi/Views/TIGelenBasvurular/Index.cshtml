@@ -52,7 +52,7 @@
                             }
 
 
-                        } 
+                        }
                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                     </ul>
                 </div>
@@ -434,52 +434,76 @@
                 }
             });
         }
-        function showDLinkGonder(TIBasvuruID, TIBasvuruAraRaporID, UniqueID, AdSoyad) {
-
+    function showDLinkGonder(TIBasvuruID, TIBasvuruAraRaporID,UniqueID) { 
             var _panel = $('#bsvrDet_' + TIBasvuruID);
-            PanelRefresh(_panel, false);
-            var btbxxFS = bootbox.dialog({
-                message: AdSoyad +" isimli komite üyesine yeni değerlendirme linki göndermek istiyor musunuz?<br><span style='color:maroon;'><b>Not:</b> Link bilgisi gönderildikten sonra üyenin yapmış olduğu değerlendirme varsa sıfırlanır ve daha önceden gönderilen değerlendirme linki geçersiz olur.</span> ",
-                title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
-                buttons: {
-                    success: {
-                        label: "Gönder",
-                        className: "btn-primary",
-                        callback: function (event) {
-                            $.ajax({
-                                url: '@Url.Action("DegerlendirmeLinkiGonder", "TIBasvuru")',
-                                data: {
-                                    'TIBasvuruID': TIBasvuruID,
-                                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID,
-                                    'UniqueID': UniqueID,
+             PanelRefresh(_panel, false);
+             $.ajax({
+                 url: '@Url.Action("DegerlendirmeLinkView", "TiBasvuru")',
+                 data: {
+                     'UniqueID': UniqueID,
+                 },
+                 success: function (result) {
+                     PanelRefresh(_panel, true);
+                     var btbxxFS = bootbox.dialog({
+                         message: result,
+                         title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
+                         buttons: {
+                             success: {
+                                 label: "Gönder",
+                                 className: "btn-info",
+                                 callback: function (event) {
+                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                     PanelRefresh(pnlx, false);
+                                     var EMail = $('#EMail_' + UniqueID).val();
+                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val(); 
+                                     $.ajax({
+                                         url: '@Url.Action("DegerlendirmeLinkiGonder", "TiBasvuru")',
+                                         data: {
+                                             'TIBasvuruID': TIBasvuruID,
+                                             'TIBasvuruAraRaporID': TIBasvuruAraRaporID,
+                                             'UniqueID': UniqueID,
+                                             'EMail': EMail,
+                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin 
+                                         },
+                                         success: function (result) {
+                                             PanelRefresh(pnlx, true);
+                                             if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                             GetDetail(TIBasvuruID);
+                                             showMmMessage(result.MessageView, 'Tamam');
+                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
+                                             $(_clsBtn).click();
 
-                                },
-                                success: function (result) {
-                                    PanelRefresh(_panel, true);
-                                    if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                    GetDetail(TIBasvuruID);
+                                         },
+                                         error: function (err) {
+                                             PanelRefresh(pnlx, true);
+                                             alert(err.responseText);
 
-                                    showMmMessage(result.Messages, 'Tamam');
+                                         }
+                                     });
+                                     return false;
+                                 }
+                             },
+                             danger: {
+                                 label: "Kapat",
+                                 className: "btn-primary",
+                                 callback: function () {
+                                     PanelRefresh(_panel, true);
+                                 }
+                             }
+                         }
+                     });
 
-                                },
-                                error: function (err) {
-                                    PanelRefresh(_panel, true);
-                                    alert(err.responseText);
+                 },
+                 error: function (err) {
+                     PanelRefresh(_panel, true);
+                     alert(err.responseText);
 
-                                }
-                            });
-                        }
-                    },
-                    danger: {
-                        label: "Kapat",
-                        className: "btn-primary",
-                        callback: function () {
-                            PanelRefresh(_panel, true);
-                        }
-                    }
-                }
-            });
-        }
+                 }
+             });
+
+
+
+        } 
         function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
