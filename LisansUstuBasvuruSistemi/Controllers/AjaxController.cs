@@ -163,7 +163,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else
                     {
-                        mmMessage.IsSuccess = false; 
+                        mmMessage.IsSuccess = false;
                         hata = "Kullanıcı sistemde bulunamadı.";
                     }
                 }
@@ -312,7 +312,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetKullaniciDetay(int kullaniciId)
         {
-            if (!(RoleNames.Kullanicilar.InRoleCurrent() == true
+            if (!(RoleNames.Kullanicilar.InRoleCurrent()
                   || RoleNames.GelenBasvurular.InRoleCurrent()
                   || RoleNames.BasvuruSureci.InRoleCurrent()
                   || RoleNames.MulakatSureci.InRoleCurrent()
@@ -1852,8 +1852,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mmMessage.ToJsonResult();
         }
 
-        public ActionResult PTipKontrol(int id)
+        public ActionResult PTipKontrol(int? id)
         {
+            if (!id.HasValue) return null;
+
             var pt = _entities.KullaniciTipleris.Where(p => p.KullaniciTipID == id).Select(s => new
             {
                 s.KullaniciTipID,
@@ -2318,9 +2320,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         [Authorize]
-        public ActionResult RotateImage(bool leftOrRight, int kullaniciId)
+        public ActionResult RotateImage(bool? leftOrRight, int? kullaniciId)
         {
-            if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) kullaniciId = UserIdentity.Current.Id;
+            if (!leftOrRight.HasValue || !kullaniciId.HasValue) return null;
+                if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) kullaniciId = UserIdentity.Current.Id;
             var gelenBKayitY = RoleNames.GelenBasvurularKayit.InRoleCurrent();
             var user = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
             string folname = SistemAyar.KullaniciResimYolu;
@@ -2331,7 +2334,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 using (Image img = Image.FromFile(pth))
                 {
-                    img.RotateFlip(leftOrRight ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
+                    img.RotateFlip(leftOrRight.Value ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
                     //  var format = (System.Drawing.Imaging.ImageFormat)img.RawFormat;
                     img.Save(pth, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
@@ -3458,7 +3461,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 UniversiteID = YtuUni?.UniversiteID ?? 67,
                 UniversiteAdi = (YtuUni != null ? YtuUni.Ad : "Yıldız Teknik Üniversitesi (İstanbul)").ToUpper(),
                 EMail = s.KURUMMAIL
-            }).Where(p=> UnvanlarBus.JuriUnvanList.Contains(p.UnvanAdi)).OrderBy(o => o.AdSoyad).Take(25).ToList();
+            }).Where(p => UnvanlarBus.JuriUnvanList.Contains(p.UnvanAdi)).OrderBy(o => o.AdSoyad).Take(25).ToList();
 
             return kul2.ToJsonResult();
         }

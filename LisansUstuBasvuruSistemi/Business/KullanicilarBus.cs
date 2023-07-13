@@ -348,8 +348,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static string ResimKaydet(HttpPostedFileBase resim)
         {
             try
-            {
-                var mimeType = resim.ContentType;
+            { 
                 var fileStream = resim.InputStream;
                 var bmp = new Bitmap(fileStream);
 

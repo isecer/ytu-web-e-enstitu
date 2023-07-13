@@ -431,14 +431,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var kulTipi = _entities.KullaniciTipleris.FirstOrDefault(p => p.KullaniciTipID == model.KullaniciTipID);
 
-            if (kulTipi != null)
-            {
-                ViewBag.KullaniciTipAdi = kulTipi.KullaniciTipAdi;
-            }
-            else
-            {
-                ViewBag.KullaniciTipAdi = "";
-            }
+            ViewBag.KullaniciTipAdi = kulTipi != null ? kulTipi.KullaniciTipAdi : "";
 
             ViewBag.IsKurumIci = isKurumIci;
             ViewBag.IsYerli = isYerli;
@@ -446,7 +439,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult HesapKayit(Kullanicilar kModel, string ekd, bool isKurumIci, bool isYerli)
+        public ActionResult HesapKayit(Kullanicilar kModel,  bool isKurumIci, bool isYerli)
         {
 
             var mmMessage = new MmMessage
@@ -1066,9 +1059,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
             }
-            var YeniResimYolu = resimAdi.ToKullaniciResim();
+            var yeniResimYolu = resimAdi.ToKullaniciResim();
 
-            return new { YeniResimYolu }.ToJsonResult();
+            return new { YeniResimYolu = yeniResimYolu }.ToJsonResult();
         }
 
 

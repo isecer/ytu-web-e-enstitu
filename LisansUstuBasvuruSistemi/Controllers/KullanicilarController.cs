@@ -17,7 +17,7 @@ using System.Web.Mvc;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [Authorize]
-    [System.Web.Mvc.OutputCache(NoStore = false, Duration = 4, VaryByParam = "*")]
+    [System.Web.Mvc.OutputCache(NoStore = false, Duration = 0, VaryByParam = "*")]
     public class KullanicilarController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();

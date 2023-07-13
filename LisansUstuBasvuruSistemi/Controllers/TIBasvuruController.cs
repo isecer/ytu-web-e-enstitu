@@ -284,8 +284,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         BasvuruSonDonemSecilecekDersKodlari = kModel.BasvuruSonDonemSecilecekDersKodlari,
                         UniqueID = Guid.NewGuid(),
                         BasvuruTarihi = kModel.BasvuruTarihi,
-                        KullaniciID = kModel.KullaniciID, 
-                        OgrenciNo = kModel.OgrenciNo, 
+                        KullaniciID = kModel.KullaniciID,
+                        OgrenciNo = kModel.OgrenciNo,
                         OgrenimTipKod = kModel.OgrenimTipKod,
                         ProgramKod = kModel.ProgramKod,
                         KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic,
@@ -305,8 +305,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data = _entities.TIBasvurus.First(p => p.TIBasvuruID == kModel.TIBasvuruID);
                     data.EnstituKod = kModel.EnstituKod;
                     data.BasvuruTarihi = kModel.BasvuruTarihi;
-                    data.KullaniciID = kModel.KullaniciID; 
-                    data.OgrenciNo = kModel.OgrenciNo; 
+                    data.KullaniciID = kModel.KullaniciID;
+                    data.OgrenciNo = kModel.OgrenciNo;
                     data.OgrenimTipKod = kModel.OgrenimTipKod;
                     data.ProgramKod = kModel.ProgramKod;
                     data.KayitOgretimYiliBaslangic = kModel.KayitOgretimYiliBaslangic;
@@ -384,7 +384,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var sondonemKayitolmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "");
 
-                    var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').ToList() : new List<string>();
+                    var kayitYapilacakDersKodlaris = !tiBasvuruAraRaporId.HasValue ? sondonemKayitolmasiGerekenDersKodlari.Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
                     if (kayitYapilacakDersKodlaris.Any() && kayitYapilacakDersKodlaris.Count(p => ogrenciBilgi.AktifDonemDers.DersKodNums.Any(a => a == p)) != kayitYapilacakDersKodlaris.Count)
                     {
                         mMessage.Messages.Add("Tez izleme raporunu başlatabilmeniz için " + donemBilgi.DonemAdiLong + " döneminde " + sondonemKayitolmasiGerekenDersKodlari + " kodlu derslere kayıt olmanız gerekmektedir.");
@@ -568,10 +568,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                         }
-
+                        
                         model.SelectedTabID = 1;
-
-                        model.SListUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption");
+                        var donemSelectedValue = (tiBasvuruAraRaporId.HasValue
+                            ? (tiBasvuruAraRapor.DonemBaslangicYil + "" + tiBasvuruAraRapor.DonemID)
+                            : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
+                        model.SListDonemSecim = 
+                            new SelectList(TezIzlemeBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
+                        model.SListUnvanAdi = new SelectList(cmbUnvanList);
                         model.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption");
                         model.SListAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AraRaporSayisi);
 
@@ -596,19 +600,29 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         [ValidateInput(false)]
-        public ActionResult TiAraRaporFormuPost(TiAraRaporFormuModel kModel, bool saveData = false)
+        public ActionResult TiAraRaporFormuPost(TiAraRaporFormuModel kModel, string donemSecim, bool saveData = false)
         {
             var mMessage = new MmMessage
             {
                 MessageType = Msgtype.Success,
                 Title = "Tez İzleme Rapor Formu Oluşturma İşlemi"
             };
+
             bool isYeniJo = true;
             var tiBasvuru = _entities.TIBasvurus.First(p => p.TIBasvuruID == kModel.TIBasvuruID);
             var tiBasvuruAraRapor = tiBasvuru.TIBasvuruAraRapors.FirstOrDefault(p => p.TIBasvuruAraRaporID == kModel.TIBasvuruAraRaporID);
             var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || tiBasvuru.KullaniciID == UserIdentity.Current.Id;
+            var enstituYetki = RoleNames.TiGelenBasvuruKayit.InRole();
             var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tiBasvuru.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == tiBasvuru.KullaniciID);
+            int? baslangicYil = null;
+            int? donemId = null;
+            if (enstituYetki && !donemSecim.IsNullOrWhiteSpace())
+            {
+                baslangicYil = donemSecim.Substring(0, 4).ToInt(0);
+                donemId = donemSecim.Substring(4, 1).ToInt(0);
+
+            }
 
             if (!degerlendirmeYetki)
             {
@@ -629,7 +643,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bool isDegisiklikVar = false;
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
                 var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.StudentControl(kul.TcKimlikNo) : new StudentControl();
-                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "").Split(',').ToList() : new List<string>();
+                var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "").Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))
                 {
@@ -971,7 +985,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                    ) isDegisiklikVar = true;
 
                             }
-                            tiBasvuruAraRapor.DonemID = donemBilgi.DonemID;
+
+                            tiBasvuruAraRapor.DonemID = donemId ?? donemBilgi.DonemID;
                             tiBasvuruAraRapor.AraRaporSayisi = kModel.AraRaporSayisi;
                             tiBasvuruAraRapor.TIBasvuruID = kModel.TIBasvuruID;
                             tiBasvuruAraRapor.IsTezDiliTr = kModel.IsTezDiliTr;
@@ -1023,7 +1038,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuru.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.RaporTarihi = DateTime.Now;
-                                tiBasvuruAraRapor.DonemBaslangicYil = donemBilgi.BaslangicYil;
+                                tiBasvuruAraRapor.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
                                 tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirilmedi;
                                 tiBasvuruAraRapor = _entities.TIBasvuruAraRapors.Add(tiBasvuruAraRapor);
                             }
@@ -1194,7 +1209,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Messages.Add("Toplantı tarihi bilgisi günümüz tarihten küçük olamaz.");
                     mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
                 }
-                else if (!adminYetki  && tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
+                else if (!adminYetki && tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi.Date < kModel.Tarih.Date)
                 {
                     var donemSonuTarihi = tiAraRapor.RaporTarihi.ToAraRaporDonemBilgi().BitisTarihi;
                     mmMessage.Messages.Add("Toplantı tarihi ara rapor dönem sonu tarihi olan " + donemSonuTarihi.ToLongDateString() + " tarihten büyük olamaz.");
@@ -1545,7 +1560,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return Json(new { mMessage.IsSuccess, Messages = strView, IsRefresh = isRefresh }, "application/json", JsonRequestBehavior.AllowGet);
         }
         [Authorize]
-      
+
 
 
         [Authorize]
@@ -1733,9 +1748,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             var strView = mMessage.Messages.Count > 0 ? ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage) : "";
-            return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult(); 
+            return new { mMessage, MessageView = strView, MessageType = (mMessage.IsSuccess ? "success" : "error") }.ToJsonResult();
         }
 
-       
+
     }
 }

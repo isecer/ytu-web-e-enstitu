@@ -25,7 +25,7 @@
                         var ayar = Model.Where(p => p.Kategori == cat).ToArray();
                         var toggleC = dctGrupToggle.Where(p => p.Key == cat).First();
 
-                        <div class="panel panel-warning @(toggleC.Value?"panel-toggled":"")">
+                        <div class="panel panel-warning">
                             <div class="panel-heading padding-0">
                                 <div class="portlet-title">
                                     <h3 class="panel-title"><i class="fa fa-cogs"></i>&nbsp;@cat</h3>

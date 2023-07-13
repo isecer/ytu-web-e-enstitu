@@ -109,12 +109,12 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.ResimAdi = basvuru.Kullanicilar.ResimAdi;
                 model.Ad = basvuru.Kullanicilar.Ad;
                 model.Soyad = basvuru.Kullanicilar.Soyad;
-                model.TcKimlikNo = basvuru.Kullanicilar.TcKimlikNo; 
+                model.TcKimlikNo = basvuru.Kullanicilar.TcKimlikNo;
                 model.OgrenciNo = basvuru.OgrenciNo;
                 model.OgrenimTipAdi = db.OgrenimTipleris.First(p => p.EnstituKod == basvuru.EnstituKod && p.OgrenimTipKod == basvuru.OgrenimTipKod).OgrenimTipAdi;
 
                 model.AnabilimdaliAdi = basvuru.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                model.ProgramAdi = basvuru.Programlar.ProgramAdi; 
+                model.ProgramAdi = basvuru.Programlar.ProgramAdi;
                 model.OgrenimTipKod = basvuru.OgrenimTipKod;
                 model.ProgramKod = basvuru.ProgramKod;
                 model.KayitOgretimYiliBaslangic = basvuru.KayitOgretimYiliBaslangic;
@@ -189,7 +189,6 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
                     {
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez İzleme Başvuru Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;
                     }
                     var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId.Value);
@@ -817,6 +816,33 @@ namespace LisansUstuBasvuruSistemi.Business
         public static List<CmbStringDto> CmbTiDonemListe(string enstituKod, bool bosSecimVar = false)
         {
 
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                var donems = db.TIBasvuruAraRapors.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
+                    .Distinct().OrderByDescending(o => o.DonemBaslangicYil).ThenByDescending(t => t.DonemID).Select(s => new CmbStringDto
+                    {
+                        Value = s.DonemBaslangicYil + "" + s.DonemID,
+                        Caption = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + s.DonemAdi
+
+                    }).ToList();
+                if (bosSecimVar) donems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+                return donems;
+            }
+        }
+
+        public static List<CmbStringDto> CmbTiDonemListeBasvuru(string enstituKod, bool bosSecimVar = false)
+        {
+            var cmbDonems = CmbTiDonemListe(enstituKod, false);
+            if (!cmbDonems.Any())
+            {
+                var donem = DateTime.Now.ToAraRaporDonemBilgi();
+                cmbDonems.Add(new CmbStringDto()
+                {
+                    Value = donem.BaslangicYil + "" + donem.DonemID,
+                    Caption = donem.BaslangicYil + "/" + (donem.BaslangicYil + 1) + " " + donem.DonemAdi
+                });
+                if (bosSecimVar) cmbDonems.Insert(0, new CmbStringDto { Value = null, Caption = "" });
+            }
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var donems = db.TIBasvuruAraRapors.Select(s => new { s.DonemBaslangicYil, s.DonemID, s.Donemler.DonemAdi })
