@@ -14,17 +14,8 @@ namespace LisansUstuBasvuruSistemi.Models
     
     public partial class BasvuruAgnoAlimTipleri
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public BasvuruAgnoAlimTipleri()
-        {
-            this.Programlars = new HashSet<Programlar>();
-        }
-    
         public int BasvuruAgnoAlimTipID { get; set; }
         public string AgnoAlimTipAdi { get; set; }
         public bool YuzdeGir { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Programlar> Programlars { get; set; }
     }
 }

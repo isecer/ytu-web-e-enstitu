@@ -60,7 +60,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (model.IsOgrenimSeviyeYetki)
                     {
-                        KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
+                        KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                     }
                 }
             }
@@ -126,7 +126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var basvuru = _entities.YeterlikBasvurus.First(p => p.UniqueID == id && p.KullaniciID == (kayitYetki ? p.KullaniciID : UserIdentity.Current.Id));
                     var ogrenimTip = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == basvuru.Kullanicilar.OgrenimTipKod);
-                    var ogrenciBilgi = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(basvuru.KullaniciID);
+                    var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
 
 
                     model.UniqueID = basvuru.UniqueID;
@@ -146,7 +146,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var ogrenciBilgi = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(UserIdentity.Current.Id);
+                    var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(UserIdentity.Current.Id);
                     if (ogrenciBilgi.DanismanInfo == null || ogrenciBilgi.IsDanismanHesabiBulunamadi)
                     {
                         var msg = ogrenciBilgi.DanismanInfo == null
@@ -191,7 +191,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!errprMessages.Any())
             {
                 var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                var ogrenciBilgi = KullanicilarBus.StudentControl(kullanici.TcKimlikNo);
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kullanici.TcKimlikNo);
                 var ogrenimTip = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
 
 

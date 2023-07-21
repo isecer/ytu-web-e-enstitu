@@ -8,8 +8,8 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
-    var kayit = RoleNames.BasvuruSureciKayit.InRoleCurrent();
-    var silme = RoleNames.BasvuruSureciSil.InRoleCurrent();
+    var kayit = RoleNames.MezuniyetSureciKayıt.InRoleCurrent();
+    var silme = RoleNames.MezuniyetSureciSil.InRoleCurrent();
 
 
 }
@@ -22,7 +22,7 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-clock-o"></i>&nbsp; Mezuniyet Süreçleri</h3>
+                    <h3 class="panel-title"><i class="fa fa-clock-o"></i>Mezuniyet Süreçleri</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-success label-form">Toplam: @indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
@@ -227,7 +227,7 @@
         var view  = GetKriterMuafOgrencilerView(id);
         bootbox.dialog({
             message: "<div id='muafOgrenciContent'>" +  view + "</div>",
-            title: "Mezuniyet Süreci Balvuru Kriterinden Muaf Öğrenciler",
+            title: "Mezuniyet Süreci Başvuru Kriterinden Muaf Öğrenciler",
             buttons: {
                 danger: {
                     label: "Kapat",

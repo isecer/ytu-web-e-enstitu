@@ -36,11 +36,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Index(FmTiBasvuru model, string ekd, bool export = false)
         {
             int? baslangicYil = null;
-            int? donemID = null;
+            int? donemId = null;
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace())
             {
                 baslangicYil = model.AktifTIAraRaporDonemID.Substring(0, 4).ToInt(0);
-                donemID = model.AktifTIAraRaporDonemID.Substring(4, 1).ToInt(0);
+                donemId = model.AktifTIAraRaporDonemID.Substring(4, 1).ToInt(0);
             }
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from s in _entities.TIBasvurus
@@ -51,7 +51,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ab in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
                       let ard =
-                        s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemID && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
+                        s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
 
 
                     select new frTIBasvuru
@@ -127,7 +127,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     p.AdSoyad.Contains(model.AdSoyad)
                     || p.OgrenciNo.Contains(model.AdSoyad) 
                     || p.TcKimlikNo.Contains(model.AdSoyad)
-                    || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Contains(model.AdSoyad)));
+                    || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Any(ak=>ak.Contains(model.AdSoyad))));
 
             var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
             var mbGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();

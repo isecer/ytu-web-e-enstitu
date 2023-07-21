@@ -9,12 +9,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
     public static class TiAyar
     {
+        public const string TikOneriAlimiAcik = "Tik Öneri Alımı Açık";
+        public const string TikOneriDegisiklikAlimiAcik = "Tik Öneri Değişikliği Alımı Açık"; 
 
         public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
         public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son Dönem Kayıt Olunması Gereken Ders Kodları";
         public const string UyelerMinSinavPuan = "Üyeler için Dil Sınavı Kabulü Min Puan";
         public const string OgrenciMinSinavPuan = "Öğrenci için Dil Sınavı Kabulü Min Puan";
-        public const string SinavPuanGirisKontroluYapilsin = "Sınav Puan Giriş Kontrolü Yapılsın"; 
+        public const string SinavPuanGirisKontroluYapilsin = "Sınav Puan Giriş Kontrolü Yapılsın";
 
         public static void SetAyarTi(string ayarAdi, string ayarDegeri, string enstituKod)
         {

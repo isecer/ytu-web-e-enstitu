@@ -15,7 +15,6 @@ namespace LisansUstuBasvuruSistemi.Models
     public partial class vW_ProgramBasvuruSonucSayisal
     {
         public int BasvuruSurecID { get; set; }
-        public int KullaniciTipID { get; set; }
         public bool MulakatSurecineGirecek { get; set; }
         public int OgrenimTipKod { get; set; }
         public string OgrenimTipAdi { get; set; }
@@ -23,9 +22,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public string AnabilimDaliAdi { get; set; }
         public string ProgramKod { get; set; }
         public string ProgramAdi { get; set; }
-        public bool Ucretli { get; set; }
-        public Nullable<double> Ucret { get; set; }
-        public string KullaniciTipAdi { get; set; }
         public Nullable<int> AlanIciKota { get; set; }
         public Nullable<int> AIKayitCount { get; set; }
         public Nullable<int> AIAsilCount { get; set; }

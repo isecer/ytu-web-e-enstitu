@@ -50,7 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             bbModel.KullaniciTipYetki = true;
             if (kullanici.KayitDonemID.HasValue == false && kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci && kullanici.KayitDonemID.HasValue == false)
             {
-                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
+                var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                 kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
             }
             if (kullanici.YtuOgrencisi)
@@ -67,11 +67,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (kullanici.Programlar.AnabilimDallari.EnstituKod != enstituKod)
                 {
-                    var oncekiEnstitu = enstituKod == EnstituKodlari.FenBilimleri ? "fbe" : "sbe";
-                    var gidilecekEnstitu = enstituKod == EnstituKodlari.FenBilimleri ? "sbe" : "fbe";
 
-
-                    var urlStr = Url.Action("Index", "TalepYap")?.Replace(oncekiEnstitu, gidilecekEnstitu);
+                    var gelenEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod==enstituKod).EnstituKisaAd.ToLower();
+                    var gidilecekEnstituKisaAd = EnstituBus.Enstitulers.First(p => p.EnstituKod == kullanici.Programlar.AnabilimDallari.EnstituKod).EnstituKisaAd.ToLower();  
+                    var urlStr = Url.Action("Index", "TalepYap")?.Replace(gelenEnstituKisaAd, gidilecekEnstituKisaAd);
                     return Redirect(urlStr);
                 }
             }
@@ -286,7 +285,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (!kul.YtuOgrencisi)
                         {
-                            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kul.KullaniciID);
+                            KullanicilarBus.OgrenciBilgisiGuncelleObs(kul.KullaniciID);
                             mmMessage.Messages.Add(talepTipi.TalepTipAdi + " başvurusu için Aktif YTÜ öğrencisi olunması gerekmektedir. Kullanıcı hesap bilgilerinizi düzeltip YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }

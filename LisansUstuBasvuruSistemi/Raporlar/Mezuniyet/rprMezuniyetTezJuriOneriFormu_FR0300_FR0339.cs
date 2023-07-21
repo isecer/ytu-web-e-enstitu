@@ -60,10 +60,15 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     txtMudurlukAdiTr.Text = "FEN BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF NATURAL and APPLIED SCIENCE";
                 }
-                else
+                else if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.SosyalBilimleri)
                 {
                     txtMudurlukAdiTr.Text = "SOSYAL BİLİMLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
                     txtMudurlukAdiEn.Text = "THE GRADUATE SCHOOL OF SOCIAL SCIENCE";
+                }
+                if (mBasvuru.MezuniyetSureci.EnstituKod == EnstituKodlari.TemizEnerjiTeknolojileri)
+                {
+                    txtMudurlukAdiTr.Text = "TEMİZ ENERJİ TEKNOLOJİLERİ ENSTİTÜSÜ MÜDÜRLÜĞÜNE,";
+                    txtMudurlukAdiEn.Text = "TEMİZ ENERJİ TEKNOLOJİLERİ ENSTİTÜSÜ";
                 }
 
                 List<string> RowIDs;

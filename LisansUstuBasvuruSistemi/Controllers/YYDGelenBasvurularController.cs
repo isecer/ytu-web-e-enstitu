@@ -260,82 +260,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.SelectedPrograms = ProgramKod;
             return View(model);
         }
+         
 
-        [Authorize(Roles = RoleNames.YydGelenBasvurularSil)]
-        public ActionResult Sil(int id)
-        {
-
-
-            var mmMessage = Management.getBasvuruSilKontrol(id, BasvuruSurecTipi.YTUYeniMezunDRBasvuru);
-            if (mmMessage.IsSuccess)
-            {
-                var kayit = db.Basvurulars.Where(p => p.BasvuruID == id).FirstOrDefault();
-                var adSoyad = kayit.Kullanicilar.Ad + " " + kayit.Kullanicilar.Soyad;
-                var tarih = kayit.BasvuruTarihi.ToString();
-                try
-                {
-                    mmMessage.Title = "Uyarı";
-                    db.Basvurulars.Remove(kayit);
-                    db.SaveChanges();
-                    mmMessage.Messages.Add("Başvuru Silindi");
-                    mmMessage.MessageType = Msgtype.Success;
-                }
-                catch (Exception ex)
-                {
-                    mmMessage.MessageType = Msgtype.Error;
-                    mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add("Başvuru Silinemedi");
-                    mmMessage.Title = "Hata";
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YYDGelenBasvurular/Sil<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
-                }
-            }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-
-        [Authorize(Roles = RoleNames.YydGelenBasvurularKayit)]
-        public ActionResult TaslagaCevir(int id)
-        {
-
-
-            var mmMessage = new MmMessage();
-            mmMessage.Title = "Yatay Geçiş Başvurusunu Taslağa Çevirme İşlemi";
-            mmMessage.IsSuccess = true;
-            var basvuru = db.Basvurulars.Where(p => p.BasvuruID == id).First();
-            if (basvuru.BasvuruDurumID == BasvuruDurumu.Onaylandı)
-            {
-                var kayit = db.Basvurulars.Where(p => p.BasvuruID == id).FirstOrDefault();
-                var adSoyad = kayit.Kullanicilar.Ad + " " + kayit.Kullanicilar.Soyad;
-                var tarih = kayit.BasvuruTarihi.ToString();
-                try
-                {
-                    basvuru.BasvuruDurumID = BasvuruDurumu.Taslak;
-                    basvuru.IslemTarihi = DateTime.Now;
-                    basvuru.IslemYapanID = UserIdentity.Current.Id;
-                    basvuru.IslemYapanIP = UserIdentity.Ip;
-                    db.SaveChanges();
-                    mmMessage.Messages.Add(adSoyad + " Öğrencisine ait başvuru taslak durumuna çevrildi");
-                    mmMessage.MessageType = Msgtype.Success;
-                }
-                catch (Exception ex)
-                {
-                    mmMessage.MessageType = Msgtype.Error;
-                    mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add(adSoyad + " Öğrencisine ait başvuru taslak durumuna çevrilemedi. Hata:" + ex.ToExceptionMessage());
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "YGGelenBasvurular/TaslagaCevir<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
-                }
-            }
-            else
-            {
-                mmMessage.MessageType = Msgtype.Error;
-                mmMessage.IsSuccess = false;
-                mmMessage.Messages.Add("Başvuru Taslağa Çevrilemedi! Sadece Onaylanan Başvurular Taslağa Çevrilebilir.");
-            }
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mmMessage);
-
-            return Json(new { IsSuccess = mmMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
+        
 
     }
 }

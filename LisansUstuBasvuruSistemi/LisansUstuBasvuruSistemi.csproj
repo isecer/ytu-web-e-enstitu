@@ -224,6 +224,7 @@
     <Compile Include="Business\TezDanismanOneriBus.cs" />
     <Compile Include="Business\TezIzlemeBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
+    <Compile Include="Business\TezIzlemeJuriOneriBus.cs" />
     <Compile Include="Business\UnvanlarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
     <Compile Include="Business\YeterlikBus.cs" />
@@ -231,13 +232,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\AnketlerController.cs" />
-    <Compile Include="Controllers\BasvuruController.cs" />
-    <Compile Include="Controllers\BasvuruSureciController.cs" />
     <Compile Include="Controllers\BelgeTalebiController.cs" />
     <Compile Include="Controllers\BelgeTalepAyarController.cs" />
     <Compile Include="Controllers\BelgeTipDetayController.cs" />
     <Compile Include="Controllers\BelgeTipleriController.cs" />
-    <Compile Include="Controllers\DekontBilgiController.cs" />
     <Compile Include="Controllers\DosyaKontrolController.cs" />
     <Compile Include="Controllers\TdoAyarlarController.cs" />
     <Compile Include="Controllers\TdoBasvuruController.cs" />
@@ -246,14 +244,12 @@
     <Compile Include="Controllers\TiBasvuruController.cs" />
     <Compile Include="Controllers\GelenBelgeTalepleriController.cs" />
     <Compile Include="Controllers\BirimlerController.cs" />
-    <Compile Include="Controllers\BolumEslestirController.cs" />
     <Compile Include="Controllers\AnabilimDallariController.cs" />
     <Compile Include="Controllers\DuyurularController.cs" />
     <Compile Include="Controllers\EnstitulerController.cs" />
     <Compile Include="Controllers\GelenBasvurularController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KDuyurularController.cs" />
-    <Compile Include="Controllers\KotalarController.cs" />
     <Compile Include="Controllers\KullanicilarController.cs" />
     <Compile Include="Controllers\MailIslemleriController.cs" />
     <Compile Include="Controllers\MailSablonlariController.cs" />
@@ -263,12 +259,10 @@
     <Compile Include="Controllers\MezuniyetController.cs" />
     <Compile Include="Controllers\MezuniyetGelenBasvurularController.cs" />
     <Compile Include="Controllers\MezuniyetSureciController.cs" />
-    <Compile Include="Controllers\MulakatSureciController.cs" />
     <Compile Include="Controllers\OgrenciBolumleriController.cs" />
     <Compile Include="Controllers\OgrenimTipleriController.cs" />
     <Compile Include="Controllers\AppEventController.cs" />
     <Compile Include="Controllers\MailSablonlariSistemController.cs" />
-    <Compile Include="Controllers\OnlineOdemeController.cs" />
     <Compile Include="Controllers\ProgramlarController.cs" />
     <Compile Include="Controllers\RaporlarAnketController.cs" />
     <Compile Include="Controllers\RaporlarBTController.cs" />
@@ -289,6 +283,8 @@
     <Compile Include="Controllers\TalepSureciController.cs" />
     <Compile Include="Controllers\TalepYapController.cs" />
     <Compile Include="Controllers\TiGelenBasvurularController.cs" />
+    <Compile Include="Controllers\TiJuriOneriController.cs" />
+    <Compile Include="Controllers\TiJuriOnerileriGbController.cs" />
     <Compile Include="Controllers\UniversitelerController.cs" />
     <Compile Include="Controllers\UnvanlarController.cs" />
     <Compile Include="Controllers\UyruklarController.cs" />
@@ -298,15 +294,8 @@
     <Compile Include="Controllers\YeterlikSureciController.cs" />
     <Compile Include="Controllers\YetkiGruplariController.cs" />
     <Compile Include="Controllers\MezuniyetYonetmeliklerController.cs" />
-    <Compile Include="Controllers\YYDBasvuruController.cs" />
-    <Compile Include="Controllers\YYDBasvuruSureciController.cs" />
     <Compile Include="Controllers\YYDGelenBasvurularController.cs" />
     <Compile Include="Controllers\YGGelenBasvurularController.cs" />
-    <Compile Include="Controllers\YGBasvuruSureciController.cs" />
-    <Compile Include="Controllers\YYDKotalarController.cs" />
-    <Compile Include="Controllers\YGKotalarController.cs" />
-    <Compile Include="Controllers\YGMulakatSureciController.cs" />
-    <Compile Include="Controllers\YGBasvuruController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -493,9 +482,6 @@
     <Compile Include="Models\KayitDurumlari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Kotalar.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\KullaniciEnstituYetkileri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -652,28 +638,13 @@
     <Compile Include="Models\OgrenimTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\OgrenimTipleriOrtBasvr.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\OzelNotTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OzelTarihTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProgramKullaniciTipleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Programlar.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProgramlarAlandisiBolumKisitlamalari.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProgramlarAlesEslesmeleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProgramlarEkBilgi.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Roller.cs">
@@ -829,6 +800,15 @@
     <Compile Include="Models\TIBasvuruAraRaporKomite.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TijBasvuru.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TijBasvuruOneri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TijBasvuruOneriJuriler.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Universiteler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -894,6 +874,7 @@
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\TikOneriDtos.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikSureciDto.cs" />
     <Compile Include="Utilities\Dtos\KmYeterlikSureciDto.cs" />
@@ -905,8 +886,6 @@
     <Compile Include="Utilities\Dtos\BelgeTalepleriDetayDto.cs" />
     <Compile Include="Utilities\Dtos\BelgeTipDetayKayitDto.cs" />
     <Compile Include="Utilities\Dtos\LogTypeData.cs" />
-    <Compile Include="Utilities\Dtos\BasvuruMulakatDetayDto.cs" />
-    <Compile Include="Utilities\Dtos\BasvuruSurecDetayDto.cs" />
     <Compile Include="Utilities\Dtos\SaatKontrolDto.cs" />
     <Compile Include="Utilities\Dtos\CevrilenNotDto.cs" />
     <Compile Include="Utilities\Dtos\CheckObjectDto.cs" />
@@ -914,7 +893,6 @@
     <Compile Include="Utilities\Dtos\EkAciklamaContentDto.cs" />
     <Compile Include="Utilities\Dtos\EgitimOgretimDonemDto.cs" />
     <Compile Include="Utilities\Dtos\KmAnketlerCevap.cs" />
-    <Compile Include="Utilities\Dtos\KmBsOtoMail.cs" />
     <Compile Include="Utilities\Dtos\KmMailGonder.cs" />
     <Compile Include="Utilities\Dtos\KmMzOtoMail.cs" />
     <Compile Include="Utilities\Dtos\KontenjanBilgiModel.cs" />
@@ -957,12 +935,8 @@
     <Compile Include="Utilities\Filters\IPFilterAttribute.cs" />
     <Compile Include="Utilities\SystemData\ComboData.cs" />
     <Compile Include="WebServiceData\ObsService\ObsDataModels.cs" />
-    <Compile Include="Utilities\Dtos\KmKotalar.cs" />
-    <Compile Include="Utilities\Dtos\KmBolumEslestir.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleri.cs" />
     <Compile Include="Utilities\Dtos\KmSinavTipleriSPNA.cs" />
-    <Compile Include="Utilities\Dtos\KmBasvuru.cs" />
-    <Compile Include="Utilities\Dtos\KmBasvuruSurec.cs" />
     <Compile Include="Utilities\Dtos\KmSalonlar.cs" />
     <Compile Include="Utilities\Dtos\KmMulakat.cs" />
     <Compile Include="Utilities\Dtos\KmSRTalep.cs" />
@@ -974,7 +948,6 @@
     <Compile Include="Utilities\Dtos\KmMezuniyetSureci.cs" />
     <Compile Include="Utilities\Dtos\KmMezuniyetYonetmelik.cs" />
     <Compile Include="Utilities\Dtos\KmMezuniyetJuriOneriFormuJurileri.cs" />
-    <Compile Include="Utilities\Dtos\KmDekontBilgi.cs" />
     <Compile Include="Utilities\Dtos\RprTdoEykDto.cs" />
     <Compile Include="Utilities\Dtos\RprTutanakModel.cs" />
     <Compile Include="Utilities\Dtos\RprMezuniyetTutanakModel.cs" />
@@ -1160,18 +1133,6 @@
     </Compile>
     <Compile Include="Raporlar\LUB\rprBasvuruSonucPuanList.Designer.cs">
       <DependentUpon>rprBasvuruSonucPuanList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Raporlar\LUB\rprBasvuruDoktora.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Raporlar\LUB\rprBasvuruDoktora.Designer.cs">
-      <DependentUpon>rprBasvuruDoktora.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Raporlar\LUB\rprBasvuruYL.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Raporlar\LUB\rprBasvuruYL.Designer.cs">
-      <DependentUpon>rprBasvuruYL.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\Genel\RprBolumProgramListesi.cs">
       <SubType>Component</SubType>
@@ -3211,18 +3172,6 @@
     <Content Include="Views\Ajax\GetKullaniciDetay.cshtml" />
     <Content Include="Views\Ajax\GetMessage.cshtml" />
     <Content Include="Views\Ajax\GetSinavBilgi.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsDetail.cshtml" />
-    <Content Include="Views\BasvuruSureci\Index.cshtml" />
-    <Content Include="Views\BasvuruSureci\Kayit.cshtml" />
-    <Content Include="Views\Basvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\Basvuru\GetbbModel.cshtml" />
-    <Content Include="Views\Basvuru\getOTdetay.cshtml" />
-    <Content Include="Views\Basvuru\getPRdetay.cshtml" />
-    <Content Include="Views\Basvuru\getSinavTip.cshtml" />
-    <Content Include="Views\Basvuru\getSinavTipSonucView.cshtml" />
-    <Content Include="Views\Basvuru\Index.cshtml" />
-    <Content Include="Views\BolumEslestir\Index.cshtml" />
-    <Content Include="Views\BolumEslestir\Kayit.cshtml" />
     <Content Include="Views\AnabilimDallari\Index.cshtml" />
     <Content Include="Views\AnabilimDallari\Kayit.cshtml" />
     <Content Include="Views\Duyurular\Index.cshtml" />
@@ -3232,8 +3181,6 @@
     <Content Include="Views\GelenBasvurular\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\KDuyurular\Index.cshtml" />
-    <Content Include="Views\Kotalar\Index.cshtml" />
-    <Content Include="Views\Kotalar\Kayit.cshtml" />
     <Content Include="Views\Kullanicilar\Index.cshtml" />
     <Content Include="Views\Kullanicilar\Kayit.cshtml" />
     <Content Include="Views\Ajax\MailGonder.cshtml" />
@@ -3279,11 +3226,7 @@
     <Content Include="Views\Birimler\Kayit.cshtml" />
     <Content Include="Views\BelgeTipDetay\Index.cshtml" />
     <Content Include="Views\BelgeTipDetay\Kayit.cshtml" />
-    <Content Include="Views\MulakatSureci\Index.cshtml" />
     <Content Include="Views\Kullanicilar\KullaniciProgramYetkileri.cshtml" />
-    <Content Include="Views\MulakatSureci\MulakatKayit.cshtml" />
-    <Content Include="Views\MulakatSureci\GetMulakatDetay.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBasvuruSonucDetay.cshtml" />
     <Content Include="Views\Ajax\GetMailContent.cshtml" />
     <Content Include="Views\Ajax\GetMailTableContent.cshtml" />
     <Content Include="Views\Ajax\GetMailTableJuriContent.cshtml" />
@@ -3306,15 +3249,8 @@
     <Content Include="Views\SROzelTanimlar\GetDetail.cshtml" />
     <Content Include="Views\KDuyurular\DuyuruHtml.cshtml" />
     <Content Include="Views\SinavTipleri\GetDetail.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsSinavTipleri.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsDetAnaBilgi.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsKotalar.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsMulakat.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsSonuc.cshtml" />
     <Content Include="Views\Ajax\MesajKaydet.cshtml" />
     <Content Include="Views\Mesajlar\Index.cshtml" />
-    <Content Include="Views\DekontBilgi\Index.cshtml" />
-    <Content Include="Views\DekontBilgi\getPRdetay.cshtml" />
     <Content Include="Views\SikcaSorulanSorular\Index.cshtml" />
     <Content Include="Views\SikcaSorulanSorular\Kayit.cshtml" />
     <Content Include="Views\Programlar\ProgramKullanicilarYetki.cshtml" />
@@ -3323,13 +3259,11 @@
     <Content Include="Views\MesajKategorileri\Index.cshtml" />
     <Content Include="Views\MesajKategorileri\Kayit.cshtml" />
     <Content Include="Views\SinavTipleri\STProgramaOzelNotKriterEkle.cshtml" />
-    <Content Include="Views\BasvuruSureci\getOtBilgi.cshtml" />
     <Content Include="Views\MailSablonlariSistem\Index.cshtml" />
     <Content Include="Views\MailSablonlariSistem\Kayit.cshtml" />
     <Content Include="Views\SinavTipleri\GetOtBilgi.cshtml" />
     <Content Include="Views\RaporlarLUB\Index.cshtml" />
     <Content Include="Views\RaporlarBT\Index.cshtml" />
-    <Content Include="Views\Ajax\GetGBNDetail.cshtml" />
     <None Include="Service References\Ws_Osym_1\SonucBusiness.wsdl" />
     <Content Include="Views\MezuniyetGelenBasvurular\Index.cshtml" />
     <Content Include="Views\MezuniyetSureci\Index.cshtml" />
@@ -3358,7 +3292,6 @@
     <Content Include="Views\Anketler\SoruSecenekEkle.cshtml" />
     <Content Include="Views\Anketler\DetaySablon2.cshtml" />
     <Content Include="Views\Ajax\GetAnket.cshtml" />
-    <Content Include="Views\BasvuruSureci\getBsAnket.cshtml" />
     <Content Include="Views\OnlineOdeme\Index.cshtml" />
     <Content Include="Views\OnlineOdeme\getPRdetay.cshtml" />
     <Content Include="Views\Ajax\PaymentResponse.cshtml" />
@@ -3374,7 +3307,6 @@
     <Content Include="Views\Ajax\GetChkList.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\GetTutanakRaporu.cshtml" />
     <Content Include="Views\MezuniyetSureci\GetOtBilgiM.cshtml" />
-    <Content Include="Views\Basvuru\CreateTercihRowHtml.cshtml" />
     <Content Include="Views\Ajax\BasvuruGonderilenMailler.cshtml" />
     <None Include="Service References\Ws_YokOgrenciSorgula\egitim.wsdl" />
     <Content Include="Views\TalepYap\Index.cshtml" />
@@ -3396,54 +3328,8 @@
     <Content Include="Views\DosyaKontrol\Reports.cshtml" />
     <Content Include="Views\TIAyarlar\Index.cshtml" />
     <Content Include="Views\Ajax\GetCaptcha.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\Index.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBasvuruSonucDetay.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsAnket.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsDetail.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsDetAnaBilgi.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsKotalar.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsMulakat.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsSinavTipleri.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getBsSonuc.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\getOtBilgi.cshtml" />
-    <Content Include="Views\YGBasvuruSureci\Kayit.cshtml" />
-    <Content Include="Views\YGBasvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\YGBasvuru\CreateTercihRowHtml.cshtml" />
-    <Content Include="Views\YGBasvuru\getbbModel.cshtml" />
-    <Content Include="Views\YGBasvuru\getOTdetay.cshtml" />
-    <Content Include="Views\YGBasvuru\getPRdetay.cshtml" />
-    <Content Include="Views\YGBasvuru\getSinavTip.cshtml" />
-    <Content Include="Views\YGBasvuru\getSinavTipSonucView.cshtml" />
-    <Content Include="Views\YGBasvuru\Index.cshtml" />
-    <Content Include="Views\YGKotalar\Index.cshtml" />
-    <Content Include="Views\YGKotalar\Kayit.cshtml" />
-    <Content Include="Views\YGMulakatSureci\Index.cshtml" />
-    <Content Include="Views\YGMulakatSureci\getMulakatDetay.cshtml" />
-    <Content Include="Views\YGMulakatSureci\MulakatKayit.cshtml" />
     <Content Include="Views\YGGelenBasvurular\Index.cshtml" />
-    <Content Include="Views\YYDBasvuru\BasvuruYap.cshtml" />
-    <Content Include="Views\YYDBasvuru\CreateTercihRowHtml.cshtml" />
-    <Content Include="Views\YYDBasvuru\getbbModel.cshtml" />
-    <Content Include="Views\YYDBasvuru\getOTdetay.cshtml" />
-    <Content Include="Views\YYDBasvuru\getPRdetay.cshtml" />
-    <Content Include="Views\YYDBasvuru\getSinavTip.cshtml" />
-    <Content Include="Views\YYDBasvuru\getSinavTipSonucView.cshtml" />
-    <Content Include="Views\YYDBasvuru\Index.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBasvuruSonucDetay.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsAnket.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsDetail.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsDetAnaBilgi.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsKotalar.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsMulakat.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsSinavTipleri.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getBsSonuc.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getOtBilgi.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\Index.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\Kayit.cshtml" />
     <Content Include="Views\YYDGelenBasvurular\Index.cshtml" />
-    <Content Include="Views\YYDKotalar\Index.cshtml" />
-    <Content Include="Views\YYDKotalar\Kayit.cshtml" />
-    <Content Include="Views\YYDBasvuruSureci\getMulakatDetay.cshtml" />
     <Content Include="Views\TDOAyarlar\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\Index.cshtml" />
     <Content Include="Views\TDOBasvuru\BasvuruYap.cshtml" />
@@ -3491,6 +3377,11 @@
     <Content Include="Views\Yeterlik\KomiteDegisiklikView.cshtml" />
     <Content Include="Views\MezuniyetSureci\KriterMuafOgrenciler.cshtml" />
     <Content Include="Views\TIBasvuru\DegerlendirmeLinkView.cshtml" />
+    <Content Include="Views\TikDegisiklik\Index.cshtml" />
+    <Content Include="Views\TikDegisiklikGb\Index.cshtml" />
+    <Content Include="Views\TiJuriOneri\Index.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\Index.cshtml" />
+    <Content Include="Views\TiJuriOneri\TikOneriFormu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3537,12 +3428,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\LUB\rprBasvuruSonucPuanList.resx">
       <DependentUpon>rprBasvuruSonucPuanList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\LUB\rprBasvuruDoktora.resx">
-      <DependentUpon>rprBasvuruDoktora.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Raporlar\LUB\rprBasvuruYL.resx">
-      <DependentUpon>rprBasvuruYL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\LUB\rprBasvuruMulakatsizOgrenciList.resx">
       <DependentUpon>rprBasvuruMulakatsizOgrenciList.cs</DependentUpon>

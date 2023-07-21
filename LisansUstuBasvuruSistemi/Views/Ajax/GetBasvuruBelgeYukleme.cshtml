@@ -12,8 +12,7 @@
     var secimColorA = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Asil) ? "#2f8c8d" : "";
     var secimColorY = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipi.Yedek) ? "#2f8c8d" : "";
     var secilenTercihVar = Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (!Model.IsYedekCokluTercih || p.IsSeciliBasvuruyaAitTercih) && p.IsSecilenTercih == true);
-    var kayityetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
-    bool fileDialogShow = !Model.KayitIslemiGordu;
+      bool fileDialogShow = !Model.KayitIslemiGordu;
 
 }
 <div class="panel panel-default" style="padding: 0px; margin: 0px;">
@@ -54,7 +53,7 @@ else if (!Model.IsKayitHakkiVar)
     </table>
 
 }
-else if (!kayityetki && !Model.IsBelgeYuklemeAktif && !Model.Tercihlers.Any(a => a.IsSecilenTercih == true))
+else if (!Model.IsBelgeYuklemeAktif && !Model.Tercihlers.Any(a => a.IsSecilenTercih == true))
 {
     <table style="width:100%;">
         <tr>
@@ -94,16 +93,7 @@ else
                                 </select>
                             </td>
                             <td width="125">
-                                @if (IsBelgeYuklemeAktif)
-                                {
-                                    var tRowID = "";
-                                    if (Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).Count() == 1)
-                                    {
-                                        tRowID = Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Asil).First().UniqueID.ToString();
-                                    }
-                                    <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@secimColorA" onclick="KayitOlunacakTercihiKaydet(@Model.BasvuruID,'KayitTercihUniqueIDA_','@tRowID')"><span class="fa fa-save fa-lg"></span> Seç ve Kaydet</span>
-
-                                }
+                                
                             </td>
                         </tr>
 
@@ -137,15 +127,7 @@ else
                                 </select>
                             </td>
                             <td width="125">
-                                @if (IsBelgeYuklemeAktif)
-                                {
-                                    var tRowID = "";
-                                    if (Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).Count() == 1)
-                                    {
-                                        tRowID = Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipi.Yedek).First().UniqueID.ToString();
-                                    }
-                                    <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@secimColorY" onclick="KayitOlunacakTercihiKaydet(@Model.BasvuruID,'KayitTercihUniqueIDY_','@tRowID')"><span class="fa fa-save fa-lg"></span> Seç ve Kaydet</span>
-                                }
+                                
                             </td>
                         </tr>
 
@@ -214,7 +196,7 @@ else
             </div>
         </li>
     }
-    @if (!kayityetki && secilenTercihVar)
+    @if ( secilenTercihVar)
     {
         <li class="dd-item dd3-item">
             <div class="dd3-content" style="margin:1px;padding :5px;">Aşağıya ekleyeceğiniz belgeler kayıt esnasında yetkililer tarafından kontol edilip onaylanacaktır. Belgelerin pdf olarak eklenmesi gerekmektedir.</div>
@@ -314,7 +296,7 @@ else
 
                                                                                 <table class="@(!BelgeVar ? "hide" : "")" id="yOnayChk_@RwID">
                                                                                     <tr>
-                                                                                        @if (kayityetki && !Model.KayitIslemiGordu)
+                                                                                        @if (!Model.KayitIslemiGordu)
                                                                                         {
                                                                                             <td style="vertical-align:middle;">
                                                                                                 <input type="checkbox" id="yOnayChkInpt_@RwID" style="cursor:pointer;margin:5px;width:18px;height:18px;color:@colorOb;" onchange="BasvuruBelgeOnayla(@Model.BasvuruID,@item.BasvuruBelgeTipID,$(this).prop('checked'))" value="true" @item.IsOnaylandi.ToChecked() />
@@ -415,96 +397,7 @@ else
             repeat: 48,
             speed: 300,
             glow: true
-        });
-        function KayitOlunacakTercihiKaydet(bID, tID,uID) {
-            var pldID = $('#bsvrDet_' + bID);
-            var UniqueID = $('#' + tID + bID).val();
-            var IsSecildi = true;
-            if (UniqueID == "") {
-                UniqueID = uID;
-                IsSecildi = null;
-            }
-            PanelRefresh(pldID, false);
-            $.ajax({
-                url: '@Url.Action("BasvuruKayitOlunacakTercihSet", "Ajax")',
-                data: { id: bID, 'UniqueID': UniqueID, 'IsSecildi': IsSecildi },
-                success: function (result) {
-                    showMmMessage(result.Messages, 'Tamam');
-                    PanelRefresh(pldID, true);
-                    SubData('@Model.BasvuruID', false);
-
-                },
-                error: function (err) {
-                    alert(err.responseText);
-                    PanelRefresh(pldID, true);
-                }
-            });
-        }
-
-        function KayitOlunacakTercihiKaydet2(bID) {
-            var pldID = $('#bsvrDet_' + bID);
-           PanelRefresh(pldID, false);
-            var $KsL = $('#tercihS_' + bID).first();
-            var arrName = $KsL.find('.TRowPrName').map(function () { return $.trim($(this).text()); }).get();
-            var arrUnID = $KsL.find('.TRowUnID').map(function () { return $.trim($(this).val()); }).get();
-            var arrKs = $KsL.find('.KsCls').map(function () { return $.trim($(this).val()); }).get();
-            var arrKo = $KsL.find('.KoCls').map(function () { return $.trim($(this).val()); }).get();
-            var Msg = "";
-            if (arrKs[0] == "") {
-                $KsL.find('.KsCls').first().pulsate({
-                    color: "#fdbe41",
-                    reach: 60,
-                    repeat: 14,
-                    speed: 300,
-                    glow: true
-                });
-                Msg = arrName[0] + " programı için kayıt seçeneğini seçiniz.";
-            }
-            if (arrKs[1] == "") {
-
-                $KsL.find('.KsCls').last().pulsate({
-                    color: "#fdbe41",
-                    reach: 60,
-                    repeat: 14,
-                    speed: 300,
-                    glow: true
-                });
-                Msg += (Msg!=""?"<br/>":"")+ arrName[1] + " programı için kayıt seçeneğini seçiniz.";
-
-            }
-            if (Msg == "") {
-                if (arrKs[0] == "true" && arrKo[0] == "") {
-                    Msg += (Msg != "" ? "<br/>" : "") + arrName[0] + " programı için kayıt önceliğini seçiniz.";
-                }
-                if (arrKs[1] == "true" && arrKo[1] == "") {
-                    Msg += (Msg != "" ? "<br/>" : "") + arrName[1] + " programı için kayıt önceliğini seçiniz.";
-                }
-            }
-            if (Msg != "") {
-                PanelRefresh(pldID, false);
-                showMmMessage(Msg, 'Tamam');
-            }
-            else {
-                $.ajax({
-                    url: '@Url.Action("BasvuruKayitOlunacakTercihSet2", "Ajax")',
-                    type: 'POST',
-                    dataType: "json",
-                    enctype: "multipart/form-data",
-                    data: { id: bID, 'UniqueIDs': arrUnID, 'IsSecildis': arrKs, 'Onceliks': arrKo },
-                    success: function (result) {
-                        showMmMessage(result.Messages, 'Tamam');
-                        PanelRefresh(pldID, true);
-                        SubData('@Model.BasvuruID', false);
-
-                    },
-                    error: function (err) {
-                        alert(err.responseText);
-                        PanelRefresh(pldID, true);
-                    }
-                });
-            }
-        }
-
+        }); 
         function KayitSecenekKontrol(BasvuruTercihID) {
             var $Ks = $('#KayitSecenek_' + BasvuruTercihID);
             var $Ks2 = $('#KayitSecenek_' + BasvuruTercihID).parents('table').first().find('.KsCls').not('#KayitSecenek_' + BasvuruTercihID).first();
@@ -549,96 +442,4 @@ else
     });
 
 </script>
-@if (Model.IsBelgeYuklemeVar && Model.IsKayitHakkiVar)
-{
-    if (kayityetki)
-    {
-        <script>
-            function BasvuruBelgeOnayla(BasvuruID, BasvuruBelgeTipID, IsOnaylandi) {
-                var pldID = $('#bsvrDet_@Model.BasvuruID');
-                PanelRefresh(pldID, false);
-                $.ajax({
-                    url: '@Url.Action("BasvuruDosyaOnayla", "Ajax")',
-                    data: { 'BasvuruID': BasvuruID, 'BasvuruBelgeTipID': BasvuruBelgeTipID, 'IsOnaylandi': IsOnaylandi },
-                    success: function (result) {
-                        showMmMessage(result.Messages, 'Tamam');
-                        PanelRefresh(pldID, true);
-                        SubData('@Model.BasvuruID');
-
-                    },
-                    error: function (err) {
-                        alert(err.responseText);
-                        PanelRefresh(pldID, true);
-                    }
-                });
-            }
-        </script>
-    }
-    <script>
-            function ChangeFile(sndr, BTipID) {
-                var _BelgeIconID = '#BelgeIcon_' + BTipID;
-                var _BelgeAdiID = '#BelgeAdi_' + BTipID;
-                var _DosyaSecID = '#DosyaSec_' + BTipID;
-                var _BelgeyiKaydetID = '#BelgeyiKaydet_' + BTipID;
-                var _ChkInptTbl = '#yOnayChk_' + BTipID;
-                $(_BelgeAdiID).removeAttr("onclick");
-                $(_BelgeIconID).removeAttr("onclick");
-                var isSuccessFSize = true;
-                if (sndr.files[0].size > (1024 * 1024 * 5)) {
-                    isSuccessFSize = false;
-                    var btbx = bootbox.dialog({
-                        message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Ekleyeceğiniz Belge boyutu en fazla 5 MB olabilir.</td></tr></table>",
-                        title: "Belge Kayıt İşlemi",
-                        buttons: {
-                            success: {
-                                label: 'Tamam',
-                                className: "btn-success",
-                                callback: function () {
-                                }
-                            }
-
-                        }
-                    });
-                }
-                if (sndr.files.length > 0 && isSuccessFSize) {
-
-
-                    $(_BelgeAdiID).val(sndr.files[0].name);
-                    $(_BelgeyiKaydetID).removeClass('hide');
-                    $(_ChkInptTbl).addClass('hide');
-
-                }
-                else {
-                    $(sndr).val("");
-                    $(_BelgeAdiID).val('Belge Seçilmedi, Lütfen belge seçiniz.');
-                    $(_BelgeyiKaydetID).addClass('hide');
-
-                }
-            }
-
-            function BasvuruBelgeKaydet(frmID) {
-                var pldID = $('#bsvrDet_@Model.BasvuruID');
-                PanelRefresh(pldID, false);
-                var aFrm = $('#' + frmID).ajaxForm({
-                    success: function (result) {
-                        showMmMessage(result.Messages, 'Tamam');
-                        PanelRefresh(pldID, true);
-                        SubData('@Model.BasvuruID');
-
-                    },
-                    complete: function (cmp) {
-                        PanelRefresh(pldID, true);
-                    },
-                    error: function (err) {
-                        PanelRefresh(pldID, true);
-                    }
-
-                });
-                $(aFrm).submit();
-
-
-            }
-
-
-    </script>
-}
+ 

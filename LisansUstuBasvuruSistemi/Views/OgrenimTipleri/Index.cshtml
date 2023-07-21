@@ -17,6 +17,8 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;Öğrenim Tip Listesi</h3>
                     <ul class="panel-controls">
+                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Öğrenim Tipi Ekle</span></li>
+
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
                         <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
@@ -29,12 +31,10 @@
                             <tr>
                                 <th width="75"></th>
                                 <th class="sirala" field="EnstituAd" width="140">Enstitü Adı</th>
-                                <th class="sirala" field="OgrenimTipKod" width="60">Ö.T.Kod</th> 
+                                <th class="sirala" field="OgrenimTipKod" width="60">Ö.T.Kod</th>
                                 <th class="sirala" field="OgrenimTipAd">Öğrenim Tip Adı</th>
-                                <th width="60" title="Başvurabileceği diğer öğrenim tipleri">BDOT</th>
                                 <th class="sirala" field="IsAktif" width="60">Durum</th>
                                 <th width="50">
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
                                 </th>
                             </tr>
                         </thead>
@@ -46,11 +46,10 @@
                                 </th>
                                 <th>
                                     <input name="OgrenimTipKod" type="text" value="@Model.OgrenimTipKod" class="form-control" />
-                                </th> 
+                                </th>
                                 <th>
                                     <input name="OgrenimTipAd" type="text" value="@Model.OgrenimTipAd" class="form-control" />
                                 </th>
-                                <th></th>
                                 <th>
                                     @Html.DropDownList("IsAktif", null, new { @class = "form-control", style = "padding:0px;" })
                                 </th>
@@ -68,7 +67,7 @@
                                                     <td style="width: 30px;">@rowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.OgrenimTipID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.OgrenimTipID')">
+                                                            <li id="iShow_@item.OgrenimTipID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.OgrenimTipID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
                                                             </li>
                                                         </ul>
@@ -78,15 +77,8 @@
                                         </td>
                                         <td>@item.EnstituAd</td>
                                         <td>@item.OgrenimTipKod</td>
-                                         
-                                        <td id="tdMad_@item.OgrenimTipID">
-                                            @item.OgrenimTipAdi
-                                            @if (item.GrupKodu.IsNullOrWhiteSpace() == false)
-                                            {<br /> @(item.GrupKodu + " " + item.GrupAdi)}
-                                        </td>
-                                        <td id="tdMDOTA_@item.OgrenimTipID">
-                                            @item.BasvurulabilecekDigerOgrenimTipleri.Count
-                                        </td>
+                                        <td>@item.OgrenimTipAdi</td>
+
                                         <td id="tdIa_@item.OgrenimTipID" style="text-align:center;">
                                             <span class="label label-@(item.IsAktif ? "success" : "danger")">@item.IsAktif.ToAktifPasif()</span>
                                         </td>
@@ -120,183 +112,7 @@
                                                                         <label class="col-md-5 control-label">Öğrenim Tipi</label>
                                                                         <div class="col-md-7">@item.OgrenimTipAdi</div>
                                                                     </div>
-                                                                    @if (item.GrupGoster)
-                                                                    {
-                                                                        <div class="form-group">
-                                                                            <label class="col-md-5 control-label">Grup Adı</label>
-                                                                            <div class="col-md-7">@item.GrupAdi</div>
-                                                                        </div>
-                                                                    }
-                                                                    <div class="panel" style="margin:0px; margin-top:4px;">
-                                                                        <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                            <h3 class="panel-title">
-                                                                                <i class="fa fa-gears"></i> Lisansüstü Başvuru Kriter Ayarları
-                                                                            </h3>
 
-                                                                        </div>
-                                                                        <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                            <div class="panel" style="margin:0px; margin:0px;">
-                                                                                <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                                    <h3 class="panel-title" style="float:right;">
-                                                                                        <i class="fa fa-gears"></i> Başvuru Kriterleri
-                                                                                    </h3>
-
-                                                                                </div>
-                                                                                <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label ">Birlikte Başvurabileceği Diğer Öğrenim Tipleri</label>
-                                                                                        <div class="col-md-7" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                                            <table>
-                                                                                                @if (item.BasvurulabilecekDigerOgrenimTipleri.Count == 0)
-                                                                                                {
-                                                                                                    <tr>
-                                                                                                        <td style="color:red;">Birlikte başvurulabilecek herhangi bir öğrenim tipi seçilmedi!</td>
-                                                                                                    </tr>
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    foreach (var kt in item.BasvurulabilecekDigerOgrenimTipleri)
-                                                                                                    {
-                                                                                                        <tr>
-                                                                                                            <td>@kt</td>
-                                                                                                        </tr>
-
-                                                                                                    }
-                                                                                                }
-                                                                                            </table>
-
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Lisans Eğitim Bilgisi İstensin</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.LEgitimBilgisiIste ? "success" : "danger")">@(item.LEgitimBilgisiIste ? "Evet" : "Hayır")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Yüksek Lisans Eğitim Bilgisi İstensin</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.YLEgitimBilgisiIste ? "success" : "danger")">@(item.YLEgitimBilgisiIste ? "Evet" : "Hayır")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Kaç Program Tercihi Yapabilir</label>
-                                                                                        <div class="col-md-7">
-                                                                                            @item.Kota
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="panel" style="margin:0px; margin:0px;">
-                                                                                <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                                    <h3 class="panel-title" style="float:right;">
-                                                                                        <i class="fa fa-gears"></i> Mülakat Kriterleri
-                                                                                    </h3>
-
-                                                                                </div>
-                                                                                <div class="panel-body" style="margin: 0px; padding: 0px;">
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Mülakat Sürecine Girecek</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.MulakatSurecineGirecek ? "success" : "danger")">@(item.MulakatSurecineGirecek ? "Evet" : "Hayır")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Alan İçi Bilimsel Hazırlık</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.AlanIciBilimselHazirlik ? "success" : "danger")">@(item.AlanIciBilimselHazirlik ? "Var" : "Yok")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Alan Dışı Bilimsel Hazırlık</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.AlanDisiBilimselHazirlik ? "success" : "danger")">@(item.AlanDisiBilimselHazirlik ? "Var" : "Yok")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="panel" style="margin:0px; margin:0px;">
-                                                                                <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                                                                    <h3 class="panel-title" style="float:right;">
-                                                                                        <i class="fa fa-gears"></i> Hesaplama ve Kayıt Kriterleri
-                                                                                    </h3>
-
-                                                                                </div>
-                                                                                <div class="panel-body" style="margin: 0px; padding: 0px;">
-
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Başarı Not Ortalaması</label>
-                                                                                        <div class="col-md-6" style="text-align: left;">@item.BasariNotOrtalamasi</div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">GNB Formülü (Ales,Mulakat,Agno)</label>
-                                                                                        <div class="col-md-7">
-                                                                                            @item.GBNFormulu
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">GNB Formülü (Mulakat,Agno)</label>
-                                                                                        <div class="col-md-7">
-                                                                                            @item.GBNFormuluAlessiz
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @if (item.MulakatSurecineGirecek)
-                                                                                    {
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">GNB Formülü (Ales,Agno)</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.GBNFormuluMulakatsiz
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    }
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Dosya GNB Formülü (Dosya,Mulakat,Agno)</label>
-                                                                                        <div class="col-md-7">
-                                                                                            @item.GBNFormuluD
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @if (item.MulakatSurecineGirecek)
-                                                                                    {
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Dosya GNB Formülü (Mulakat,Agno)</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.GBNFormuluDDosyasiz
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Dosya GNB Formülü (Dosya,Agno)</label>
-                                                                                            <div class="col-md-7">
-                                                                                                @item.GBNFormuluDMulakatsiz
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    }
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Hesaplamada Belirlenecek Yedek Öğrenci Sayısı</label>
-                                                                                        <div class="col-md-7">
-                                                                                            @(item.YedekOgrenciSayisiKotaCarpani == 1 ? "Asil Öğrenci Kadar Yedek Öğrenci" : "Asil Öğrencinin " + item.YedekOgrenciSayisiKotaCarpani + " Katı Kadar Yedek Öğrenci")
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="form-group">
-                                                                                        <label class="col-md-5 control-label">Yök Öğrenci Kaydı Kontrolü Yapılsın</label>
-                                                                                        <div class="col-md-7">
-                                                                                            <span class="label label-@(item.YokOgrenciKontroluYap ? "success" : "danger")">@(item.YokOgrenciKontroluYap ? "Evet" : "Hayır")</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @if (item.YokOgrenciKontroluYap)
-                                                                                    {
-                                                                                        <div class="form-group">
-                                                                                            <label class="col-md-5 control-label">Katkı Payı Ücreti</label>
-                                                                                            <div class="col-md-6" title="Başka bir üniverstite de kayıtlı olan öğrenciler seçilen öğrenim tipinde bir programa kayıt olabilmeleri için Ya kaydını sildirmeleri gerekir ya da Katkı Payı Tutarını ödemeleri gerekir">
-                                                                                                @item.IstenecekKatkiPayiTutari TL
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
                                                                     <div class="panel" style="margin:0px; margin-top:4px;">
                                                                         <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
                                                                             <h3 class="panel-title">
@@ -400,7 +216,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="7" style="text-align: center;">
+                                    <td colspan="5" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

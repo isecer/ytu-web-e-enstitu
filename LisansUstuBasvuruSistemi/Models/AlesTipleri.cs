@@ -14,13 +14,6 @@ namespace LisansUstuBasvuruSistemi.Models
     
     public partial class AlesTipleri
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public AlesTipleri()
-        {
-            this.Programlars = new HashSet<Programlar>();
-            this.ProgramlarAlesEslesmeleris = new HashSet<ProgramlarAlesEslesmeleri>();
-        }
-    
         public int AlesTipID { get; set; }
         public string AlesTipAdi { get; set; }
         public bool IsAktif { get; set; }
@@ -29,9 +22,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public string IslemYapanIP { get; set; }
     
         public virtual Kullanicilar Kullanicilar { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Programlar> Programlars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramlarAlesEslesmeleri> ProgramlarAlesEslesmeleris { get; set; }
     }
 }

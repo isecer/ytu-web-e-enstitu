@@ -38,10 +38,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 SistemBasvuruyaAcik = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean(false)
             };
 
-            var kullaniciAdinaBasvuruYetki = RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent();
             var gelenBasvuruDuzeltmeYetki = RoleNames.TdoGelenBasvuruKayit.InRoleCurrent();
 
-            if (kullaniciAdinaBasvuruYetki || gelenBasvuruDuzeltmeYetki)
+            if (gelenBasvuruDuzeltmeYetki)
             {
                 if (model.TDOBasvuruID.HasValue || model.KullaniciID.HasValue)
                 {
@@ -53,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 model.KullaniciID = UserIdentity.Current.Id;
             }
-            var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(model.KullaniciID.Value);
+            var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(model.KullaniciID.Value);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
 
             if (kul.YtuOgrencisi)
@@ -69,7 +68,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kullKayitB.KayitVar == false)
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                    bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Hesap bilgilerinizde bulundna YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
                 }
                 else
                 {
@@ -104,7 +103,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 bbModel.KullaniciTipYetki = false;
-                bbModel.KullaniciTipYetkiYokMsj = "Profil bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden hesap bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
             }
 
 
@@ -201,7 +200,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mmMessage = TezDanismanOneriBus.GetAktifTezDanismanOneriSurecKontrol(enstituKod, kullaniciId, tdoBasvuruId);
 
-          
+
             if (mmMessage.IsSuccess)
             {
                 model.KayitTarihi = kul.KayitTarihi;
@@ -508,7 +507,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tdoBas.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -777,7 +776,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBasvuruDanis.UniqueID = kModel.UniqueID;
                     tdoBasvuruDanis.IsTezDiliTr = kModel.IsTezDiliTr;
                     tdoBasvuruDanis.TezBaslikTr = kModel.TezBaslikTr;
-                    tdoBasvuruDanis.TezBaslikEn = kModel.TezBaslikEn; 
+                    tdoBasvuruDanis.TezBaslikEn = kModel.TezBaslikEn;
                     tdoBasvuruDanis.SinavTipID = kModel.SinavTipID;
                     tdoBasvuruDanis.SinavAdi = kModel.SinavAdi;
                     tdoBasvuruDanis.SinavPuani = kModel.SinavPuani;
@@ -923,7 +922,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
             var isTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
-            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tdoBas.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -1277,7 +1276,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
-            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tdoBas.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
             if (yenTezDiliDegisecekmi == false) kModel.IsYeniTezDiliTr = null;
             var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : oncekiBasvuru.IsTezDiliTr;
             var isOncekiTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
@@ -1631,7 +1630,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
-            KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tdoBas.KullaniciID);
+            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
             if (yenTezDiliDegisecekmi == false) kModel.IsYeniTezDiliTr = null;
             var isTezDiliTr = yenTezDiliDegisecekmi ? kModel.IsYeniTezDiliTr == true : oncekiBasvuru.IsTezDiliTr;
             var isOncekiTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
@@ -2597,7 +2596,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var sendMail = eykDaOnaylandi.HasValue && eykDaOnaylandi != tdoBasvuruEsDanis.EYKDaOnaylandi;
 
                 tdoBasvuruEsDanis.EYKDaOnaylandi = eykDaOnaylandi;
-                if (eykDaOnaylandi == true) tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value; 
+                if (eykDaOnaylandi == true) tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value;
                 tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                 if (eykDaOnaylandi == false) tdoBasvuruEsDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
                 tdoBasvuruEsDanis.IslemTarihi = DateTime.Now;
@@ -2635,7 +2634,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mmMessage.Messages.Add("Silinmek istenen kayıt sistemde bulunamadı.");
             }
-            else if (tdoBasvuruDanismanId!=tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID&&(tdoBasvuruDanisman.VarolanDanismanOnayladi.HasValue || tdoBasvuruDanisman.DanismanOnayladi.HasValue))
+            else if (tdoBasvuruDanismanId != tdoBasvuruDanisman.TDOBasvuru.AktifTDOBasvuruDanismanID && (tdoBasvuruDanisman.VarolanDanismanOnayladi.HasValue || tdoBasvuruDanisman.DanismanOnayladi.HasValue))
             {
                 mmMessage.Messages.Add("Silmek istediğiniz danışman öneri formu danışman tarafından işlemi gördüğünden silme işlemi yapılamaz.");
             }

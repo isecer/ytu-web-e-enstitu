@@ -24,52 +24,30 @@ namespace LisansUstuBasvuruSistemi.Models
             this.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars = new HashSet<BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlar>();
             this.BelgeTalepleris = new HashSet<BelgeTalepleri>();
             this.BolumEslestirs = new HashSet<BolumEslestir>();
-            this.Kotalars = new HashSet<Kotalar>();
             this.Kullanicilars = new HashSet<Kullanicilar>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
             this.Mulakats = new HashSet<Mulakat>();
-            this.ProgramKullaniciTipleris = new HashSet<ProgramKullaniciTipleri>();
-            this.ProgramlarAlandisiBolumKisitlamalaris = new HashSet<ProgramlarAlandisiBolumKisitlamalari>();
-            this.ProgramlarAlesEslesmeleris = new HashSet<ProgramlarAlesEslesmeleri>();
             this.SinavTipleriOT_SNA_PR = new HashSet<SinavTipleriOT_SNA_PR>();
             this.SinavTipleriOTNotAraliklariGecersizProgramlars = new HashSet<SinavTipleriOTNotAraliklariGecersizProgramlar>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
             this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
+            this.TijBasvurus = new HashSet<TijBasvuru>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
         }
     
         public string ProgramKod { get; set; }
         public int AnabilimDaliID { get; set; }
         public string AnabilimDaliKod { get; set; }
-        public int AlesTipID { get; set; }
-        public bool Ingilizce { get; set; }
-        public int KullaniciTipID { get; set; }
-        public bool Ucretli { get; set; }
-        public Nullable<double> Ucret { get; set; }
-        public bool ProgramSecimiEkBilgi { get; set; }
-        public bool AlesNotuYuksekOlanAlinsin { get; set; }
-        public bool LYLHerhangiBirindeGecenAlanIci { get; set; }
-        public Nullable<int> BasvuruAgnoAlimTipID { get; set; }
-        public Nullable<int> LYuzdeOran { get; set; }
-        public Nullable<int> YLYuzdeOran { get; set; }
-        public Nullable<double> YLAgnoKriteri { get; set; }
-        public Nullable<double> TYLAgnoKriteri { get; set; }
-        public Nullable<double> DAgnoKriteri { get; set; }
-        public Nullable<double> BDAgnoKriteri { get; set; }
-        public bool IsAlandisiBolumKisitlamasi { get; set; }
-        public bool YokOgrenciKontroluYap { get; set; }
         public string ProgramAdi { get; set; }
-        public string Aciklama { get; set; }
+        public bool Ingilizce { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
-        public virtual AlesTipleri AlesTipleri { get; set; }
         public virtual AnabilimDallari AnabilimDallari { get; set; }
-        public virtual BasvuruAgnoAlimTipleri BasvuruAgnoAlimTipleri { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvurularTercihleri> BasvurularTercihleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -85,23 +63,14 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BolumEslestir> BolumEslestirs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Kotalar> Kotalars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
-        public virtual KullaniciTipleri KullaniciTipleri { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Mulakat> Mulakats { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramKullaniciTipleri> ProgramKullaniciTipleris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramlarAlandisiBolumKisitlamalari> ProgramlarAlandisiBolumKisitlamalaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramlarAlesEslesmeleri> ProgramlarAlesEslesmeleris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SinavTipleriOT_SNA_PR> SinavTipleriOT_SNA_PR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -112,6 +81,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TDOBasvuruDanisman> TDOBasvuruDanismen { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TijBasvuru> TijBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
     }

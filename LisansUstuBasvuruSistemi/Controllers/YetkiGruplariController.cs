@@ -30,19 +30,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YetkiGrupID,
                         s.YetkiGrupAdi,
                         YetkiSayisi = s.YetkiGrupRolleris.Count,
-                        FBEYetkiliSayisi = s.Kullanicilars.Where(p => p.EnstituKod == EnstituKodlari.FenBilimleri).Count(),
-                        SBEYetkiliSayisi = s.Kullanicilars.Where(p => p.EnstituKod == EnstituKodlari.SosyalBilimleri).Count()
+                        FBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.FenBilimleri),
+                        SBEYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.SosyalBilimleri),
+                        TETYetkiliSayisi = s.Kullanicilars.Count(p => p.EnstituKod == EnstituKodlari.TemizEnerjiTeknolojileri)
                     };
             if (!model.YetkiGrupAdi.IsNullOrWhiteSpace()) q = q.Where(p => p.YetkiGrupAdi.Contains(model.YetkiGrupAdi));
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(t => t.YetkiGrupAdi);  
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(t => t.YetkiGrupAdi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrYetkiGruplari
             {
                 YetkiGrupID = s.YetkiGrupID,
                 YetkiGrupAdi = s.YetkiGrupAdi,
                 YetkiSayisi = s.YetkiSayisi,
                 FbeYetkiliSayisi = s.FBEYetkiliSayisi,
-                SbeYetkiliSayisi = s.SBEYetkiliSayisi
+                SbeYetkiliSayisi = s.SBEYetkiliSayisi,
+                TetYetkiliSayisi = s.TETYetkiliSayisi,
+
             }).ToArray();
 
             return View(model);
@@ -54,7 +57,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new YetkiGruplari();
             if (id.HasValue && id > 0)
             {
-                var data = db.YetkiGruplaris.Where(p => p.YetkiGrupID == id).FirstOrDefault();
+                var data = db.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
                 if (data != null) model = data;
             }
 
@@ -80,23 +83,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Kayit(YetkiGruplari model, List<int> RolID)
+        public ActionResult Kayit(YetkiGruplari model, List<int> rolId)
         {
-            RolID = RolID ?? new List<int>();
-            var MmMessage = new MmMessage();
+            rolId = rolId ?? new List<int>();
+            var mmMessage = new MmMessage();
             if (model.YetkiGrupAdi.IsNullOrWhiteSpace())
             {
                 string msg = "Yetki Grup Adı Giriniz.";
-                MmMessage.Messages.Add(msg);
-                MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YetkiGrupAdi" });
+                mmMessage.Messages.Add(msg);
+                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YetkiGrupAdi" });
             }
-            else MmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YetkiGrupAdi" });
+            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YetkiGrupAdi" });
             //if (RolID == null || RolID.Count == 0)
             //{
             //    string msg = "Yetki Grubuna Ait Rolleri Belirleyiniz!";
             //    MmMessage.Messages.Add(msg);
             //}
-            if (MmMessage.Messages.Count == 0)
+            if (mmMessage.Messages.Count == 0)
             {
                 model.IslemYapanID = UserIdentity.Current.Id;
                 model.IslemYapanIP = UserIdentity.Ip;
@@ -109,12 +112,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var yg = db.YetkiGruplaris.Where(p => p.YetkiGrupID == model.YetkiGrupID).First();
+                    var yg = db.YetkiGruplaris.First(p => p.YetkiGrupID == model.YetkiGrupID);
                     yg.YetkiGrupAdi = model.YetkiGrupAdi;
                 }
                 var eskiROl = db.YetkiGrupRolleris.Where(p => p.YetkiGrupID == model.YetkiGrupID).ToList();
                 db.YetkiGrupRolleris.RemoveRange(eskiROl);
-                foreach (var item in RolID)
+                foreach (var item in rolId)
                 {
                     db.YetkiGrupRolleris.Add(new YetkiGrupRolleri { YetkiGrupID = model.YetkiGrupID, RolID = item });
                 }
@@ -123,11 +126,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, MmMessage.Messages.ToArray());
+                MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
             }
             var roles = RollerBus.GetAllRoles().ToList();
             var sRol = new List<int>();
-            if (RolID != null && RolID.Count > 0) sRol = RolID;
+            if (rolId.Count > 0) sRol = rolId;
 
             var dataR = roles.Select(s => new CheckObject<Roller>
             {
@@ -135,12 +138,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Checked = sRol.Any(p => p == s.RolID)
             });
             ViewBag.Roller = dataR;
-            ViewBag.MmMessage = MmMessage;
+            ViewBag.MmMessage = mmMessage;
             return View(model);
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.YetkiGruplaris.Where(p => p.YetkiGrupID == id).FirstOrDefault();
+            var kayit = db.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
             string message = "";
             bool success = true;
             if (kayit != null)

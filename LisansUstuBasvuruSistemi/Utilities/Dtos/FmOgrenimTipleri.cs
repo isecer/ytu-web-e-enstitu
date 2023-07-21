@@ -19,8 +19,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class FrOgrenimTipleri : OgrenimTipleri
     {
         public string EnstituAd { get; set; }
-        public string IslemYapan { get; set; }
-        public List<string> BasvurulabilecekDigerOgrenimTipleri { get; set; }
+        public string IslemYapan { get; set; } 
 
     }
 }

@@ -16,16 +16,17 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
     {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
-        public StudentControl GetObsStudentControl(string tcKimlikNo)
+        public StudentControl GetObsStudentControl(string tcKimlikNo,string donemId)
         {
             var model = new StudentControl();
             try
             {
                 if (tcKimlikNo.IsNullOrWhiteSpace()) throw new Exception("Tc Kimlik No boş geliyor!");
+                if (donemId.IsNullOrWhiteSpace()) throw new Exception("Dönem Bilgisi No boş geliyor!");
                 using (var service =
                        new proliz_ytu_enstitu_minerSoapClient())
                 {
-
+                  
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
@@ -74,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 
 
                             var ogrenciDersler =
-                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null);
+                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO,null, donemId);
 
                             if (ogrenciDersler[0].Sucess)
                             {
@@ -162,7 +163,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         }
 
 
-        public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo)
+        public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo,string donemId)
         {
             var model = new ObsOgrenciSorgulaModel();
             try
@@ -177,7 +178,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     if (ogrencis.Any() && ogrencis[0].Sucess)
                     {
                         model.Ogrenci = ogrencis[0].ogrenci.OrderBy(p => (p.OGRENIMSEVIYE_ID == "2" || p.OGRENIMSEVIYE_ID == "3" || p.OGRENIMSEVIYE_ID == "8") ? 1 : 2).FirstOrDefault();
-                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null);
+                        var ogrenciDers = service.OgrenciDersBilgileriGetir(UserName, Password, model.Ogrenci?.OGR_NO, null, donemId);
                         if (ogrenciDers.Any() && ogrenciDers[0].Sucess)
                         {
                             model.OgrenciDersNot = ogrenciDers[0].ogrencidersnot[0];

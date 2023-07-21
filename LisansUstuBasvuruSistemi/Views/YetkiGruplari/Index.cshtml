@@ -23,6 +23,7 @@
                                 <th class="sirala" field="YetkiSayisi" width="125">Yetki Sayısı</th>
                                 <th class="sirala" field="FbeYetkiliSayisi" width="125">FBE Yetkili Sayısı</th>
                                 <th class="sirala" field="SbeYetkiliSayisi" width="125">SBE Yetkili Sayısı</th>
+                                <th class="sirala" field="TetYetkiliSayisi" width="125">TET Yetkili Sayısı</th>
                                 <th width="40"></th>
                             </tr>
                         </thead>
@@ -31,6 +32,7 @@
                                 <td style="padding: 0px;">
                                     <input type="text" name="YetkiGrupAdi" class="form-control" value="@Model.YetkiGrupAdi" />
                                 </td>
+                                <td style="padding: 0px;"></td>
                                 <td style="padding: 0px;"></td>
                                 <td style="padding: 0px;"></td>
                                 <td style="padding: 0px;"></td>
@@ -53,6 +55,9 @@
                                         <td style="padding: 4px; vertical-align: middle;">
                                             <i class="fa fa-user-o"></i> @item.SbeYetkiliSayisi
                                         </td>
+                                        <td style="padding: 4px; vertical-align: middle;">
+                                            <i class="fa fa-user-o"></i> @item.TetYetkiliSayisi
+                                        </td>
                                         <td>
                                             <a href="@Url.Action("Kayit", "YetkiGruplari", new { id = item.YetkiGrupID })"><i class="fa fa-edit fa-lg tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
                                             <a href="javascript:void(0)" onclick="SilmeOnay(this,@item.YetkiGrupID)"><i class="fa fa-trash-o fa-lg tooltips" data-style="blue" data-original-title="Sil"></i></a>
@@ -66,7 +71,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="5" style="text-align: center">
+                                    <td colspan="6" style="text-align: center">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

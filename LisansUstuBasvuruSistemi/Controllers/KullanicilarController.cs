@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var q = from s in _entities.Kullanicilars
                     join ktl in _entities.KullaniciTipleris on new { s.KullaniciTipID } equals new { ktl.KullaniciTipID }
                     join en in _entities.Enstitulers on s.EnstituKod equals en.EnstituKod
-                    //where userEnst.Contains(s.EnstituKod)
+                    where userEnst.Contains(s.EnstituKod)
                     select new
                     {
                         s.KullaniciID,
@@ -472,7 +472,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
-                        var ogrenciBilgi = KullanicilarBus.StudentControl(kModel.TcKimlikNo);
+                        var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);
@@ -818,21 +818,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.KullaniciProgramlaris.Add(new KullaniciProgramlari { KullaniciID = kullaniciId, ProgramKod = item });
             }
             _entities.SaveChanges();
-
-            var roles = new List<string> { RoleNames.MulakatKayıt, RoleNames.MulakatSil, RoleNames.MulakatSureci };
-            var eklenecekRoller = _entities.Rollers.Where(p => roles.Contains(p.RolAdi)).ToList();
-
-            var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-            var varolanYetkiler = kul.Rollers.Where(p => eklenecekRoller.Select(s => s.RolID).Contains(p.RolID)).ToList();
-            foreach (var item in varolanYetkiler)
-            {
-                kul.Rollers.Remove(item);
-            }
-            foreach (var item in eklenecekRoller)
-            {
-                kul.Rollers.Add(item);
-            }
-            _entities.SaveChanges();
+         
             MessageBox.Show("Program Yetkileri Kaydedildi", MessageBox.MessageType.Success);
             return RedirectToAction("Index");
         }

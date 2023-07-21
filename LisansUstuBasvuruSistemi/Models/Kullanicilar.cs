@@ -40,7 +40,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.Enstitulers = new HashSet<Enstituler>();
             this.GonderilenMailKullanicilars = new HashSet<GonderilenMailKullanicilar>();
             this.GonderilenMaillers = new HashSet<GonderilenMailler>();
-            this.Kotalars = new HashSet<Kotalar>();
             this.KullaniciEnstituYetkileris = new HashSet<KullaniciEnstituYetkileri>();
             this.Kullanicilar1 = new HashSet<Kullanicilar>();
             this.KullaniciProgramlaris = new HashSet<KullaniciProgramlari>();
@@ -66,6 +65,7 @@ namespace LisansUstuBasvuruSistemi.Models
             this.TDOBasvuruDanismen = new HashSet<TDOBasvuruDanisman>();
             this.TIBasvurus = new HashSet<TIBasvuru>();
             this.TIBasvuruAraRapors = new HashSet<TIBasvuruAraRapor>();
+            this.TijBasvurus = new HashSet<TijBasvuru>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
             this.YeterlikBasvuruKomitelers = new HashSet<YeterlikBasvuruKomiteler>();
             this.YeterlikSureciKriterMuafOgrencilers = new HashSet<YeterlikSureciKriterMuafOgrenciler>();
@@ -182,8 +182,6 @@ namespace LisansUstuBasvuruSistemi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GonderilenMailler> GonderilenMaillers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Kotalar> Kotalars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Kullanicilar> Kullanicilar1 { get; set; }
@@ -243,6 +241,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<TIBasvuru> TIBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TijBasvuru> TijBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

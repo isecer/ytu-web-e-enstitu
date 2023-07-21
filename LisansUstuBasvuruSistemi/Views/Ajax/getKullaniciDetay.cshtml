@@ -101,13 +101,14 @@
                                         }
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Şifre Giriş Türü</td>
-                                    <td>:</td>
-                                    <td>@(Model.IsActiveDirectoryUser ? "Active Directory" : "Lokal Şifre")</td>
-                                </tr>
                                 @if (kYetki)
                                 {
+                                    <tr>
+                                        <td>Şifre Giriş Türü</td>
+                                        <td>:</td>
+                                        <td>@(Model.IsActiveDirectoryUser ? "Active Directory" : "Lokal Şifre")</td>
+                                    </tr>
+
                                     <tr>
                                         <td>Yetki Grubu</td>
                                         <td>:</td>
@@ -213,7 +214,7 @@
                             <td width="5">:</td>
                             <td>@Model.TcKimlikNo</td>
                         </tr>
-                    } 
+                    }
                     @if (Model.CinsiyetID.HasValue)
                     {
                         <tr>

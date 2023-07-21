@@ -20,8 +20,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.Basvurulars = new HashSet<Basvurular>();
             this.Kullanicilars = new HashSet<Kullanicilar>();
             this.MezuniyetBasvurularis = new HashSet<MezuniyetBasvurulari>();
-            this.ProgramKullaniciTipleris = new HashSet<ProgramKullaniciTipleri>();
-            this.Programlars = new HashSet<Programlar>();
             this.SRTalepTipKullanicilars = new HashSet<SRTalepTipKullanicilar>();
             this.TDOBasvurus = new HashSet<TDOBasvuru>();
         }
@@ -40,10 +38,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<Kullanicilar> Kullanicilars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetBasvurulari> MezuniyetBasvurularis { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramKullaniciTipleri> ProgramKullaniciTipleris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Programlar> Programlars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTalepTipKullanicilar> SRTalepTipKullanicilars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

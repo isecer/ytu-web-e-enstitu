@@ -209,7 +209,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                 {
                                     errorMessage.Add("Okuduğunuz öğrenim seviyesi yeterlik başvuru yapmak için uygun değildir.");
                                 }
-                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                               
+                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                                 var controlMessage = new List<string>();
                                 if (basvuruKriterleri.YsMaxBasvuruDonemNo.HasValue && basvuruKriterleri.YsMaxBasvuruDonemNo < ogrenciBilgi.OkuduguDonemNo)
                                 {
@@ -236,7 +237,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         else
                         {
-                            errorMessage.Add("Yeterlik başvurusu yapabilmeniz için Profil bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
+                            errorMessage.Add("Yeterlik başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
                 }

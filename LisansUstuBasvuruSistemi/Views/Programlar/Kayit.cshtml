@@ -5,26 +5,20 @@
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model LisansUstuBasvuruSistemi.Models.Programlar
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
+    var mmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var OldID = (string)ViewBag.OldID; 
-    var KulIds = (List<int>)ViewBag.KullaniciIDs;
-    var OBIds = (List<int>)ViewBag.AOgrenciBolumID;
-    var SecilenOBIds = (List<int>)ViewBag.OgrenciBolumIDs;
-    var SAlesTipIDs = (List<int>)ViewBag.SAlesTipIDs;
-    var EnstituKod = (string)ViewBag.EnstituKod;
-    var BLData = Management.GetProgramaBasvurulamayacakOgrenciBolumleri(EnstituKod, OldID, SecilenOBIds);
-    BLData.InputName = "OgrenciBolumIDs";
-    BLData.PanelTitle = "Alan dışı başvuru da kabul edilecek bölümlerini seçiniz";
+    var oldId = (string)ViewBag.OldID; 
+    var kulIds = (List<int>)ViewBag.KullaniciIDs;   
+    var enstituKod = (string)ViewBag.EnstituKod; 
 }
 <div class="row">
     <form method="post" class="form-horizontal" role="form">
-        <input type="text" style="display:none;" id="OldID" name="OldID" value="@OldID" />
-        <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@EnstituKod" />
+        <input type="text" style="display:none;" id="OldID" name="OldID" value="@oldId" />
+        <input type="text" style="display:none;" id="EnstituKod" name="EnstituKod" value="@enstituKod" />
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(OldID.IsNullOrWhiteSpace() ? "Yeni program tanımlama işlemi" : OldID + " Kodlu program bilgisi düzenleme işlemi")</h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(oldId.IsNullOrWhiteSpace() ? "Yeni program tanımlama işlemi" : oldId + " Kodlu program bilgisi düzenleme işlemi")</h3>
                     <ul class="panel-controls">
                         <li><a href="@Url.Action("Kayit", Model.ProgramKod)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>
@@ -39,7 +33,7 @@
                                     @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control", onchange = "GetKullanicilar();GetOBolumler();" })
                                 </div>
                             </div>
-                            @if (OldID.IsNullOrWhiteSpace())
+                            @if (oldId.IsNullOrWhiteSpace())
                             {
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-4 control-label">Program Kodu</label>
@@ -54,29 +48,7 @@
                                     <input type="text" name="ProgramAdi" id="ProgramAdi" value="@Model.ProgramAdi" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Ales Tipi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("AlesTipID", null, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Ales Not Alım Tipi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                @Html.DropDownList("AlesNotuYuksekOlanAlinsin", null, new { @class = "form-control", id = "AlesNotuYuksekOlanAlinsin", onchange = "AnyoChng(this)" })
-                                            </td>
-                                            <td class="AnyoChng @(Model.AlesNotuYuksekOlanAlinsin?"":"hide")">
-                                                @Html.DropDownList("AlesTipIDs", null, new { @class = "form-control selectpicker", id = "AlesTipIDs", multiple = "multiple" })
-                                            </td>
-                                        </tr>
-                                    </table>
-
-                                </div>
-                            </div>
-
+                            
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Program Dili İnglizce Mi?</label>
                                 <div class="col-md-9 col-xs-8">
@@ -85,145 +57,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Başvurabilecek Öğrenci Tipi</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("KullaniciTipID", null, new { @class = "form-control", id = "KullaniciTipID" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Ücret Alımı</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" onchange="UcretDChng(this)" name="Ucretli" class="toggle" @Model.Ucretli.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group UcretDChng @(Model.Ucretli?"":"hide")">
-                                <label class="col-md-3 col-xs-4 control-label">Ücret</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <input type="text" value="@Model.Ucret" name="Ucret" class="form-control" />
-
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Katkı payı ödemesi için YÖK öğrenci konrolü yapılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="YokOgrenciKontroluYap" class="toggle" @Model.YokOgrenciKontroluYap.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
+                            
 
 
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Doktora'da Alan içi Eşleşme Durumu</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("LYLHerhangiBirindeGecenAlanIci", null, new { @class = "form-control", id = "LYLHerhangiBirindeGecenAlanIci" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3  col-xs-4 control-label">Doktora için AGNO alım tipleri</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("BasvuruAgnoAlimTipID", null, new { @class = "form-control", onchange = "getBAT(this);" })
-                                </div>
-                            </div>
-                            <div class="form-group @(Model.BasvuruAgnoAlimTipID.HasValue && Model.BasvuruAgnoAlimTipID==3?"":"hide")" id="yzdeOrans">
-                                <label class="col-md-3  col-xs-4 control-label">% Oranları</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <table style="width:100%;table-layout:fixed;">
-                                        <tr>
-                                            <td>Lisans % Oranı </td>
-                                            <td><input type="text" name="LYuzdeOran" value="@Model.LYuzdeOran" class="form-control" /></td>
-                                            <td>Yüksek Lisans % Oranı</td>
-                                            <td><input type="text" name="YLYuzdeOran" value="@Model.YLYuzdeOran" class="form-control" /></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3  col-xs-4 control-label">Min Agno Kriterleri (100 Lük Sisteme Göre)</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <table style="width:100%;table-layout:fixed;">
-                                        <tr>
-                                            <td style="text-align:right;width:200px;">Tezsiz Y.Lisans Kriteri </td>
-                                            <td style="text-align:right;">
-                                                <div class="form-group">
-                                                    <div class="col-md-9 col-xs-8">
-                                                        <input type="text" name="YLAgnoKriteri" value="@Model.YLAgnoKriteri" class="form-control" />
-                                                    </div>
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align:right;">Tezli Y.Lisans Kriteri </td>
-                                            <td style="text-align:right;">
-                                                <div class="form-group">
-                                                    <div class="col-md-9 col-xs-8">
-                                                        <input type="text" name="TYLAgnoKriteri" value="@Model.TYLAgnoKriteri" class="form-control" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        <tr>
-                                            <td style="text-align:right;">Doktora Kriteri </td>
-                                            <td style="text-align:right;">
-                                                <div class="form-group">
-                                                    <div class="col-md-9 col-xs-8">
-                                                        <input type="text" name="DAgnoKriteri" value="@Model.DAgnoKriteri" class="form-control" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align:right;">B. Doktora Kriteri </td>
-                                            <td style="text-align:right;">
-                                                <div class="form-group">
-                                                    <div class="col-md-9 col-xs-8">
-                                                        <input type="text" name="BDAgnoKriteri" value="@Model.BDAgnoKriteri" class="form-control" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Program için ek açıklama gösterilsin</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayir" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" onchange="aciklamaChng(this)" name="ProgramSecimiEkBilgi" class="toggle" @Model.ProgramSecimiEkBilgi.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group ekAciklama @(Model.ProgramSecimiEkBilgi?"":"hide")">
-                                <label class="col-md-3 col-xs-4 control-label">Ek Açıklama</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <textarea name="Aciklama" id="Aciklama" class="form-control" rows="5" style="resize:vertical">@Model.Aciklama</textarea>
-                                </div>
-                            </div>
-
-
-
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Alan dışı öğrenci bölümü kısıtlaması</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" onchange="adBkChng(this)" name="IsAlandisiBolumKisitlamasi" class="toggle" @Model.IsAlandisiBolumKisitlamasi.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group adBolumKisit @(Model.IsAlandisiBolumKisitlamasi ? "":"hide")">
-                                <label class="col-md-3 col-xs-4 control-label"></label>
-                                <div class="col-md-9 col-xs-8">
-                                    @BLData.ToRenderPartialViewHtml("Ajax", "getChkList")
-                                </div>
-                            </div>
-
-
-                            @if (!OldID.IsNullOrWhiteSpace())
+                            @if (!oldId.IsNullOrWhiteSpace())
                             {
                                 <div class="form-group">
                                     <label class="col-md-3 col-xs-4 control-label">Durum</label>
@@ -233,24 +70,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
-
-
-
-
-
+                            } 
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Yetkili Kullanıcılar</label>
                                 <div class="col-md-9 col-xs-8">
                                     @Html.DropDownList("KullaniciID", null, new { @class = "form-control selectpicker", id = "KullaniciID", multiple = "multiple", data_live_search = "true", data_live_search_placeholder = "Search", data_actions_box = "true" })
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Eşleşen Ö. Bölümleri</label>
-                                <div class="col-md-9 col-xs-8">
-                                    @Html.DropDownList("OgrenciBolumID", null, new { @class = "form-control selectpicker", id = "OgrenciBolumID", multiple = "multiple", data_live_search = "true", data_live_search_placeholder = "Search", data_actions_box = "true" })
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div id="kulList"></div>
@@ -265,103 +92,28 @@
     </form>
 </div>
 <script>
-    function aciklamaChng(sndr) {
-        if ($(sndr).prop('checked') == true) {
-            $('.ekAciklama').removeClass('hide');
-        }
-        else {
-            $('.ekAciklama').addClass('hide')
-        }
-    }
-    function adBkChng(sndr) {
-        if ($(sndr).prop('checked') == true) {
-            $('.adBolumKisit').removeClass('hide');
-        }
-        else {
-            $('.adBolumKisit').addClass('hide')
-        }
-    }
-    function UcretDChng(sndr) {
-        if ($(sndr).prop('checked') == true) {
-            $('.UcretDChng').removeClass('hide');
-        }
-        else {
-            $('.UcretDChng').addClass('hide')
-        }
-    }
-    function AnyoChng(sndr) {
-        if ($(sndr).val() == "True") {
-            $('.AnyoChng').removeClass('hide');
-        }
-        else {
-            $('.AnyoChng').addClass('hide')
-        }
-    }
+  
+     
     $(function () {
         $('.selectpicker').selectpicker();
-        GetKullanicilar();
-        GetOBolumler();
-        GetAtips();
-        var model = '@Html.Raw(Json.Encode(MmMessage))';
+        GetKullanicilar();  
+        var model = '@Html.Raw(Json.Encode(mmMessage))';
         validateControl(model);
 
-        $('#ekAciklamaX').summernote({
-            height: 120,
-            lang: 'tr',
-            toolbar:
-                [
-                   ['style', ['bold', 'italic', 'underline', 'clear']],
-                   ['fontsize', ['fontsize']],
-                   ['color', ['color']],
-                   ['Insert', ['link', 'table', 'hr']],
-                   ['para', ['ul', 'ol', 'paragraph']],
-                   ['font', ['strikethrough', 'superscript', 'subscript']],
-                   ['height', ['height']]
-                ],
-            codemirror: {
-                mode: 'text/html',
-                htmlMode: true,
-                lineNumbers: true,
-                theme: 'monokai'
-            }
-
-        });
+        
     });
-
-    function getBAT(sndr) {
-        var val = $(sndr).val();
-        if (val != null && val != "") {
-            $.ajax({
-                url: '@Url.Action("GetBat", "Programlar")',
-                data: { BasvuruAgnoAlimTipID: val },
-                success: function (result) {
-                    if (result.Show) {
-                        $('#yzdeOrans').removeClass("hide");
-                    }
-                    else
-                        $('#yzdeOrans').addClass("hide");
-
-                },
-                error: function (err) {
-                    alert(err.responseText);
-                }
-            });
-        }
-        else {
-            $('#yzdeOrans').addClass("hide");
-        }
-    }
+ 
 
     function GetKullanicilar() {
         var _panel = $('#prgPbody');
         PanelRefresh(_panel, false);
-        var sKuls = '@Html.Raw(Json.Encode(KulIds))';
+        var sKuls = '@Html.Raw(Json.Encode(kulIds))';
         var nVal = JSON.parse(sKuls);
         var _AnabilimDaliID = $('#AnabilimDaliID').val();
         if (_AnabilimDaliID != null && _AnabilimDaliID != "") {
             $.ajax({
                 url: '@Url.Action("ProgramKullanicilarYetki", "Programlar")',
-                data: { 'AnabilimDaliID': _AnabilimDaliID, 'ProgramKod': '@(OldID.IsNullOrWhiteSpace()?"": OldID)' },
+                data: { 'AnabilimDaliID': _AnabilimDaliID, 'ProgramKod': '@(oldId.IsNullOrWhiteSpace()?"": oldId)' },
                 type: 'POST',
                 enctype: "multipart/form-data",
                 dataType: "json",
@@ -390,78 +142,5 @@
         else {
             PanelRefresh(_panel, true);
         }
-    }
-    function GetOBolumler() {
-        var _panel = $('#prgPbody');
-        PanelRefresh(_panel, false);
-        var sObs = '@Html.Raw(Json.Encode(OBIds))';
-        var nVal = JSON.parse(sObs);
-        var _AnabilimDaliID = $('#AnabilimDaliID').val();
-        if (_AnabilimDaliID != null && _AnabilimDaliID != "") {
-            $.ajax({
-                url: '@Url.Action("OBolumYetki", "Programlar")',
-                data: { 'AnabilimDaliID': _AnabilimDaliID, 'ProgramKod': '@(OldID.IsNullOrWhiteSpace()?"": OldID)' },
-                type: 'POST',
-                enctype: "multipart/form-data",
-                dataType: "json",
-                success: function (result) {
-                    $('#OgrenciBolumID').empty();
-                    var opt = "";
-                    for (var i = 0; i < result.length; i++) {
-                        var valR = result[i].Value;
-                        var _value = "";
-                        if (valR != null) {
-                            _value = valR;
-                        }
-                        opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
-                    }
-                    $('#OgrenciBolumID').append(opt);
-                    $('#OgrenciBolumID').selectpicker('val', nVal);
-                    $('#OgrenciBolumID').selectpicker("refresh");
-                    PanelRefresh(_panel, true);
-                },
-                error: function (err) {
-                    PanelRefresh(_panel, true);
-                    alert(err.responseText);
-                }
-            });
-        }
-        else {
-            PanelRefresh(_panel, true);
-        }
-    }
-    function GetAtips() {
-        var _panel = $('#prgPbody');
-        PanelRefresh(_panel, false);
-        var sObs = '@Html.Raw(Json.Encode(SAlesTipIDs))';
-        var nVal = JSON.parse(sObs);
-
-        $.ajax({
-            url: '@Url.Action("GetAlesTipIDs", "Programlar")',
-            data: { 'ProgramKod': '@(OldID.IsNullOrWhiteSpace()?"": OldID)' },
-            type: 'POST',
-            enctype: "multipart/form-data",
-            dataType: "json",
-            success: function (result) {
-                $('#AlesTipIDs').empty();
-                var opt = "";
-                for (var i = 0; i < result.length; i++) {
-                    var valR = result[i].Value;
-                    var _value = "";
-                    if (valR != null) {
-                        _value = valR;
-                    }
-                    opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
-                }
-                $('#AlesTipIDs').append(opt);
-                $('#AlesTipIDs').selectpicker('val', nVal);
-                $('#AlesTipIDs').selectpicker("refresh");
-                PanelRefresh(_panel, true);
-            },
-            error: function (err) {
-                PanelRefresh(_panel, true);
-                alert(err.responseText);
-            }
-        });
-    }
+    } 
 </script>

@@ -49,8 +49,29 @@ namespace LisansUstuBasvuruSistemi.Business
                         dbrole.Kategori = attr.Kategori;
                         dbrole.RolAdi = attr.RolAdi;
                     }
-                    db.SaveChanges();
                 }
+
+                var silinenRoller = dbRoller.Where(p => roleAttrs.All(a => a.RolID != p.RolID)).ToList();
+                var silinenRolIds = silinenRoller.Select(s => s.RolID).ToList();
+                var silinecekKullaniciRolleris = db.Kullanicilars
+                    .Where(p => p.Rollers.Any(a => silinenRolIds.Contains(a.RolID))).ToList();
+                foreach (var kul in silinecekKullaniciRolleris)
+                {
+                    foreach (var rol in silinenRoller)
+                    {
+                        kul.Rollers.Remove(rol);
+                    }
+                }
+
+                var yetkiGrupRolleris = db.YetkiGrupRolleris.Where(p => silinenRolIds.Contains(p.RolID)).ToList();
+                db.YetkiGrupRolleris.RemoveRange(yetkiGrupRolleris);
+                foreach (var rol in silinenRoller)
+                { 
+                    db.Rollers.Remove(rol);
+
+                }
+
+                db.SaveChanges();
             }
         }
     }

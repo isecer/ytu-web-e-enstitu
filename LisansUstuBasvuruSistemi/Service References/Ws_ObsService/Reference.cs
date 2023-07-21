@@ -2786,14 +2786,18 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
         public string tcKimlikNo;
         
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
+        public string Donemid;
+        
         public OgrenciDersBilgileriGetirRequestBody() {
         }
         
-        public OgrenciDersBilgileriGetirRequestBody(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+        public OgrenciDersBilgileriGetirRequestBody(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo, string Donemid) {
             this.servisUserName = servisUserName;
             this.servisPass = servisPass;
             this.ogrenciNo = ogrenciNo;
             this.tcKimlikNo = tcKimlikNo;
+            this.Donemid = Donemid;
         }
     }
     
@@ -3245,13 +3249,14 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             return base.Channel.OgrenciDersBilgileriGetir(request);
         }
         
-        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersBilgileriGetir(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+        public LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersNotBilgi[] OgrenciDersBilgileriGetir(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo, string Donemid) {
             LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequest inValue = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequest();
             inValue.Body = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequestBody();
             inValue.Body.servisUserName = servisUserName;
             inValue.Body.servisPass = servisPass;
             inValue.Body.ogrenciNo = ogrenciNo;
             inValue.Body.tcKimlikNo = tcKimlikNo;
+            inValue.Body.Donemid = Donemid;
             LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirResponse retVal = ((LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap)(this)).OgrenciDersBilgileriGetir(inValue);
             return retVal.Body.OgrenciDersBilgileriGetirResult;
         }
@@ -3261,13 +3266,14 @@ namespace LisansUstuBasvuruSistemi.Ws_ObsService {
             return base.Channel.OgrenciDersBilgileriGetirAsync(request);
         }
         
-        public System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirResponse> OgrenciDersBilgileriGetirAsync(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo) {
+        public System.Threading.Tasks.Task<LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirResponse> OgrenciDersBilgileriGetirAsync(string servisUserName, string servisPass, string ogrenciNo, string tcKimlikNo, string Donemid) {
             LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequest inValue = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequest();
             inValue.Body = new LisansUstuBasvuruSistemi.Ws_ObsService.OgrenciDersBilgileriGetirRequestBody();
             inValue.Body.servisUserName = servisUserName;
             inValue.Body.servisPass = servisPass;
             inValue.Body.ogrenciNo = ogrenciNo;
             inValue.Body.tcKimlikNo = tcKimlikNo;
+            inValue.Body.Donemid = Donemid;
             return ((LisansUstuBasvuruSistemi.Ws_ObsService.proliz_ytu_enstitu_minerSoap)(this)).OgrenciDersBilgileriGetirAsync(inValue);
         }
         

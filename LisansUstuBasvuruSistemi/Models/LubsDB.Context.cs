@@ -86,7 +86,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<HaftaGunleri> HaftaGunleris { get; set; }
         public virtual DbSet<Kampusler> Kampuslers { get; set; }
         public virtual DbSet<KayitDurumlari> KayitDurumlaris { get; set; }
-        public virtual DbSet<Kotalar> Kotalars { get; set; }
         public virtual DbSet<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         public virtual DbSet<Kullanicilar> Kullanicilars { get; set; }
         public virtual DbSet<KullaniciProgramlari> KullaniciProgramlaris { get; set; }
@@ -134,14 +133,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<OgrenciBolumleri> OgrenciBolumleris { get; set; }
         public virtual DbSet<OgrenimDurumlari> OgrenimDurumlaris { get; set; }
         public virtual DbSet<OgrenimTipleri> OgrenimTipleris { get; set; }
-        public virtual DbSet<OgrenimTipleriOrtBasvr> OgrenimTipleriOrtBasvrs { get; set; }
         public virtual DbSet<OzelNotTipleri> OzelNotTipleris { get; set; }
         public virtual DbSet<OzelTarihTipleri> OzelTarihTipleris { get; set; }
-        public virtual DbSet<ProgramKullaniciTipleri> ProgramKullaniciTipleris { get; set; }
         public virtual DbSet<Programlar> Programlars { get; set; }
-        public virtual DbSet<ProgramlarAlandisiBolumKisitlamalari> ProgramlarAlandisiBolumKisitlamalaris { get; set; }
-        public virtual DbSet<ProgramlarAlesEslesmeleri> ProgramlarAlesEslesmeleris { get; set; }
-        public virtual DbSet<ProgramlarEkBilgi> ProgramlarEkBilgis { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
         public virtual DbSet<SikcaSorulanSorular> SikcaSorulanSorulars { get; set; }
@@ -193,6 +187,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<TIBasvuruAraRapor> TIBasvuruAraRapors { get; set; }
         public virtual DbSet<TIBasvuruAraRaporDurumlari> TIBasvuruAraRaporDurumlaris { get; set; }
         public virtual DbSet<TIBasvuruAraRaporKomite> TIBasvuruAraRaporKomites { get; set; }
+        public virtual DbSet<TijBasvuru> TijBasvurus { get; set; }
+        public virtual DbSet<TijBasvuruOneri> TijBasvuruOneris { get; set; }
+        public virtual DbSet<TijBasvuruOneriJuriler> TijBasvuruOneriJurilers { get; set; }
         public virtual DbSet<Universiteler> Universitelers { get; set; }
         public virtual DbSet<Unvanlar> Unvanlars { get; set; }
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }

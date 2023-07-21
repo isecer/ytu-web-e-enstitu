@@ -19,5 +19,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int YetkiSayisi { get; set; }
         public int FbeYetkiliSayisi { get; set; }
         public int SbeYetkiliSayisi { get; set; }
+        public int TetYetkiliSayisi { get; set; }
     }
 }

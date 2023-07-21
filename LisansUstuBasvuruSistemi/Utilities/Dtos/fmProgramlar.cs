@@ -29,14 +29,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string EnstituKod { get; set; }
         public string EnstituAd { get; set; }
-        public string AnabilimDaliAdi { get; set; }
-
-        public string AgnoAlimTipAdi { get; set; }
-        public string AlesTipAdi { get; set; }
-        public string IslemYapan { get; set; }
-        public List<string> AlandisiBolumKisitListesi { get; set; }
-        public string KullaniciTipAdi { get; set; }
-        public List<string> SecilenAlesTipleri { get; set; }
+        public string AnabilimDaliAdi { get; set; } 
+        public string IslemYapan { get; set; }  
 
     }
 }

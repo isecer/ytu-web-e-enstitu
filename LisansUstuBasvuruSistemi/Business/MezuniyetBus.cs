@@ -52,7 +52,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.IsSuccess = false;
-                        msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!"); 
+                        msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
                     else if (!GetMezuniyetAktifSurecId(basvuru.MezuniyetSureci.EnstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                     {
@@ -144,7 +144,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     int? mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
                     msg.IsSuccess = mezuniyetSurecId.HasValue;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
-                    else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
+                    else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
                         kullaniciId = UserIdentity.Current.Id;
                     }
@@ -189,8 +189,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 msg.Messages.Add(otsAdi +
                                                  " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
                             }
-                            else if ((kullaniciId != UserIdentity.Current.Id &&
-                                      RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent() == false) &&
+                            else if ( kullaniciId != UserIdentity.Current.Id && 
                                      kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
                                      (kul.KayitTarihi > Convert.ToDateTime("31-03-2016") && MezuniyetBus
                                          .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
@@ -217,7 +216,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                         .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
                                         .Where(p => !p.IsNullOrWhiteSpace()).ToList();
 
-                                    var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                                    var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                                     var bkMsg = new List<string>();
                                     if (basvuruSonDonemSecilecekDersKodlari.Any() &&
                                         ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
@@ -272,7 +271,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         else
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Profil bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
+                            msg.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
                 }

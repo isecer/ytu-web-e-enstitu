@@ -8,11 +8,8 @@
 @model  FmBasvurularDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var kayit = RoleNames.YgGelenBasvurularKayit.InRoleCurrent();
-    var sil = RoleNames.YgGelenBasvurularSil.InRoleCurrent();
-    var mailYetki = RoleNames.MailGonder.InRoleCurrent();
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var mailYetki = RoleNames.MailGonder.InRoleCurrent(); 
     
     var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
     var mKids = (List<int>)ViewBag.kIds;
@@ -261,13 +258,7 @@
                                         </td>
                                         <td>
                                             <span style="font-size:14pt;">@item.TercihSayisi</span>
-                                            @if (item.BasvuruDurumID == BasvuruDurumu.Onaylandı || item.BasvuruDurumID == BasvuruDurumu.Gonderildi)
-                                            {
-                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'BAŞVURU BİLGİSİ','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.Basvuru&BasvuruID=@item.BasvuruID' , 'auto', 'modal-dialog modal-lg' )">
-                                                    <span style="font-size:18pt;" title="Yazdır" class="fa fa-print"></span>
-                                                </a>
-
-                                            }
+        
                                         </td>
                                         <td>
                                             @if (!item.DurumClassName.IsNullOrWhiteSpace())
@@ -299,27 +290,7 @@
                                             }
                                         </td>
                                         <td>
-
-                                            @if (kayit)
-                                            {
-                                                if (item.IsNotDuzelt)
-                                                {
-                                                    <a href="javascript:void(0);" onclick="getGBNDet(@item.BasvuruID)"><i style="font-size:11pt;color:@(item.LOgrenimDurumID==OgrenimDurum.Mezun?"blue":"red");" class="glyphicon glyphicon-pencil tooltips" data-style="blue" data-original-title="Lisans Notunu Düzelt"></i></a>
-                                                }
-
-                                                <a href="@Url.Action("BasvuruYap", "YGBasvuru", new { BasvuruID = item.BasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-
-                                            }
-                                            @if (sil)
-                                            {<a href="javascript:void(0)" onclick="sil('@item.BasvuruID')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>}
-                                            @if (kayit && item.KayitliTercihVar == false)
-                                            {
-                                                if (item.BasvuruDurumID == BasvuruDurumu.Onaylandı)
-                                                {
-                                                    <a href="javascript:void(0);" onclick="taslagaCevir(@item.BasvuruID)"><i style="font-size:13pt;width:17px;text-align:right;" class="tooltips" data-style="blue" data-original-title="Başvuru Durumunu Taslağa Çevir">T</i></a>
-
-                                                }
-                                            }
+ 
                                         </td>
                                     </tr>
                                     <tr class="cls-@item.BasvuruID" style="display:none">
@@ -353,40 +324,7 @@
          if (e.which == 13) {
              return false;
          }
-     });
-    function taslagaCevir(id) {
-        var btbx = bootbox.dialog({
-            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Başvuru Taslak Durumuna Çevrilsin Mi?</td></tr></table>",
-            title: "Yatay Geçiş Başvurusunu Taslak Durumuna Çevirme İşlemi",
-            buttons: {
-                success: {
-                    label: "Taslak Durumuna Çevir",
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
-                            url: '@Url.Action("TaslagaCevir", "YGGelenBasvurular")',
-                            data: { id: id },
-                            success: function (result) {
-                                if (result.IsSuccess) {
-
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-                            },
-                            error: function (err) {
-                                alert(err.responseText);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: "Vazgeç",
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
-            }
-        });
-    }
+     }); 
  function ShowDetail(id, Isdelete, sndr, IsBelgeShow) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
@@ -444,83 +382,4 @@
             }
         });
     }
-</script>
-@if (kayit)
-{
-    <script>
-       function sil(id,result) {
-
-        var btbx = bootbox.dialog({
-            message:" <br/><br/><table style='table-layout:fixed;width:100%;'><tr><td style='font-size:14pt;text-align:center;color:maroon;'>Seçilen Başvuruyu Silmek İstiyor Musunuz?</td></tr></table>",
-            title: "Başvuru Silme İşlemi",
-            buttons: {
-                success: {
-                    label: 'Başvuruyu Sil',
-                    className: "btn-danger",
-                    callback: function () {
-                        var _panel = $(btbx).find('.panel').first();
-                        PanelRefresh(_panel, true);
-                        $.ajax({
-                            url: '@Url.Action("Sil", "YGBasvuru")',
-                            data: { id: id },
-                            success: function (result) {
-                                if (result.IsSuccess) {
-                                    $("#cls-" + id).remove();
-                                    $(".cls-" + id).remove();
-                                }
-                                showMmMessage(result.Messages, 'Tamam');
-
-                                PanelRefresh(_panel, false);
-                            },
-                            error: function (err) {
-                                alert(err.responseText);
-
-                                PanelRefresh(_panel, false);
-                            }
-                        });
-                    }
-                },
-                danger: {
-                    label: 'Vazgeç',
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
-            }
-        });
-
-    }
-        function getGBNDet(bsvID) {
-            $.ajax({
-                url: '@Url.Action("GetGbnDetail", "Ajax")',
-                data: { id: bsvID },
-                success: function (result) {
-
-                    var btbx = bootbox.dialog({
-                        message: result,
-                        title: "AGNO düzeltme işlemi",
-                        buttons: {
-                            success: {
-                                label: 'Kaydet',
-                                className: "btn-success",
-                                callback: function () {
-                                    var retV = _kaydetGNBO();
-                                    return retV;
-                                }
-                            },
-                            danger: {
-                                label: 'Vazgeç',
-                                className: "btn-primary",
-                                callback: function () {
-                                }
-                            }
-                        }
-                    });
-                },
-                error: function (err) {
-                    alert(err.responseText);
-                }
-            });
-        }
-    </script>
-}
+</script> 

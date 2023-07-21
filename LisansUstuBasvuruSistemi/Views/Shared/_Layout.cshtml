@@ -153,7 +153,7 @@
                                     </div>
                                     <ul>
                                         <li style="cursor: pointer;" class="active">
-                                            <a href="javasscript:void(0); " style="text-align: center; font-size: 12pt; color: #ffd559; padding: 0px;">
+                                            <a href="javasscript:void(0); " style="text-align: center; font-size: 11pt; color: #ffd559; padding: 0px;">
                                                 @{
                                                     var enst2 = Enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
                                                     <span>@enst2.EnstituAd</span>
@@ -1091,8 +1091,10 @@
                                 $('#_Form').ajaxForm({
                                     success: function(result){
                                         PanelRefresh($(btbx).find('.modal-dialog').first(), true);
+
                                         showMmMessage(result.responseText, 'Tamam');
-                                        if (result.IsSuccess) {
+
+                                        if (result.success) {
                                             setTimeout(function(){ return true;},2400)
                                         }
                                         else {

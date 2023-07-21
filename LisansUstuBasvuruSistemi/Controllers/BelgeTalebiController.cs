@@ -43,7 +43,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 if (kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                 {
-                    var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
+                    var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                     if (kullKayitB.KayitVar)
                     {
                         kullanici.KayitYilBaslangic = kullKayitB.BaslangicYil;
@@ -53,7 +53,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         bbModel.KullaniciTipYetki = true;
 
                     }
-                    else bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                    else bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Kullanıcı hesabınızdaki YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
 
                 }
                 else bbModel.KullaniciTipYetki = true;
@@ -365,7 +365,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else if (kul.YtuOgrencisi == false)
                 {
-                    mmMessage.Messages.Add("Belge talebi yapabilmek için profil bilginizi düzeltip YTÜ öğrencisi olduğunuzu belirtiniz");
+                    mmMessage.Messages.Add("Belge talebi yapabilmek için Hesap bilginizde bulunan YTÜ öğrencisi bilgilerinizi doldurunuz.");
                     MessageBox.Show("Uyarı", MessageBox.MessageType.Information, mmMessage.Messages.ToArray());
                     return RedirectToAction("Index");
                 }
@@ -380,7 +380,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kul.OgrenimDurumID != OgrenimDurum.OzelOgrenci && kul.KayitTarihi.HasValue == false)
                     {
-                        var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                        var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu!");

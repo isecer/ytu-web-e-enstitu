@@ -24,7 +24,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.BelgeTipDetays = new HashSet<BelgeTipDetay>();
             this.Duyurulars = new HashSet<Duyurular>();
             this.GonderilenMaillers = new HashSet<GonderilenMailler>();
-            this.Kotalars = new HashSet<Kotalar>();
             this.KullaniciEnstituYetkileris = new HashSet<KullaniciEnstituYetkileri>();
             this.MailSablonlaris = new HashSet<MailSablonlari>();
             this.MesajKategorileris = new HashSet<MesajKategorileri>();
@@ -79,8 +78,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GonderilenMailler> GonderilenMaillers { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Kotalar> Kotalars { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KullaniciEnstituYetkileri> KullaniciEnstituYetkileris { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

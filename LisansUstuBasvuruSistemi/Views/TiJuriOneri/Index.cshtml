@@ -1,0 +1,343 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model  FmTikBasvuru
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-bullhorn fa-lg"></i> Başvuru Biglisi</td>
+                </tr>
+                <tr>
+                    <td width="200">Enstitü</td>
+                    <td width="10">:</td>
+                    <td>
+                        @Model.BasvuruKontrolBilgi.EnstituAdi
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ad Soyad</td>
+                    <td>:</td>
+                    <td>@Model.BasvuruKontrolBilgi.AdSoyad</td>
+                </tr>
+                @if (Model.BasvuruKontrolBilgi.IsBasvuruAcik)
+                {
+                    if (Model.BasvuruKontrolBilgi.IsOgrenci)
+                    {
+                        <tr>
+                            <td>Öğrenim Seviyesi / Program</td>
+                            <td>:</td>
+                            <td>
+                                @Model.BasvuruKontrolBilgi.OgrenimTipAdiProgramAdi
+                            </td>
+                        </tr> 
+                    }
+                    <tr>
+                        <td></td>
+                        <td>:</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="YeniBasvuruDuyuruKontrol()"><i class="fa fa-plus"></i>Yeni Tez İzleme Jüri Önerisi Yap</button>
+                        </td>
+                    </tr>
+
+                }
+                else
+                {
+                    <tr>
+                        <td>Not</td>
+                        <td>:</td>
+                        <td> @Model.BasvuruKontrolBilgi.Aciklama</td>
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                    <ul class="panel-controls"></ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th>Ad Soyad</th>
+                                <th>Son Rapor Dönemi</th>
+                                <th width="180">Son Rapor Durumu</th>
+                                <th width="45"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int RowIndex = Model.StartRowIndex; string trCls = "odd";
+                                foreach (var item in Model.Data)
+                                {
+                                    RowIndex++;
+                                    trCls = RowIndex % 2 == 1 ? "" : "even";
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@RowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.TijBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TijBasvuruID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.OgrenciNo</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                           
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { item.TijBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit " data-style="blue" data-original-title="Düzelt"></i></a>
+                                            <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TijBasvuruID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash " data-style="blue" data-original-title="Sil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="cls-@item.TijBasvuruID" style="display:none">
+                                        <td id="cls-@item.TijBasvuruID"  colspan="5" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5"  style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(function () {
+        Resized(window.innerWidth);
+    })
+    function Resized(screenwidth) {
+        if (screenwidth <= 800) {
+            $('.clsHide').addClass('hide');
+            $('.clspTd').attr("colspan", "4");
+            $('.ctWidth').removeAttr('width');
+        }
+        else {
+            $('.clsHide').removeClass('hide');
+            $('.clspTd').attr("colspan", "5");
+            $('.ctWidth').attr('width', '280');
+
+        }
+    }
+    window.addEventListener('resize', function (event) {
+        Resized(window.innerWidth);
+    });
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+
+
+    function ShowDetail(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(id);
+
+    }
+    function GetDetail(id) {
+        var _panel = $('#bsvrDet_' + id);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailTiBasvuru", "Ajax")',
+            data: { id: id },
+            success: function (result) {
+                $('#cls-' + id).html(result);
+                Resized(window.innerWidth);
+                PanelRefresh(_panel, true);
+                var $YnBtn = $('#YeniRaporBtn_' + id);
+                if ($YnBtn.length > 0) {
+                    $YnBtn.pulsate({
+                        color: "#fdbe41",
+                        reach: 60,
+                        repeat: 24,
+                        speed: 300,
+                        glow: true
+                    });
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(_panel, true);
+            }
+        });
+
+    }
+
+    function BasvuruSil(sndr, id,tarih) {
+        bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + tarih + " tarihli başvurunuzu silmek istiyor musunuz?</td></tr></table>",
+            title: "Başvuru Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Başvuruyu Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("Sil", "TIBasvuru")',
+                            data: { id: id },
+                            success: function (result) {
+                                if (result.IsSuccess) {
+                                    $(sndr).closest("tr").remove();
+                                    $(".cls-" + id).remove();
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+     
+    function GetTikOneriFormu(TijBasvuruID, TijBasvuruOneriID) {
+          var _panel = $('#bsvrDet_' + TijBasvuruID);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTikOneriFormu", "TiJuriOneri")',
+                data: {
+                    'TijBasvuruID': TijBasvuruID,
+                    'TijBasvuruOneriID': TijBasvuruOneriID
+                },
+                success: function (resultG) {
+                    PanelRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            buttons: {
+
+                                success: {
+                                    label: 'İleri',
+                                    className: "btn-info btnKaydet",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        PanelRefresh(pnlx, false);
+                                        $('#FrmTIAraRaporFormu').ajaxForm({
+                                            success: function (result) {
+                                                if (result.mMessage.IsSuccess && result.SaveData) {
+                                                    if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    GetDetail(TijBasvuruID);
+
+                                                }
+                                                else {
+                                                    $('#SelectedTabID').val(result.SelectedTabID);
+
+                                                    if (result.SelectedTabID == "4" || !result.IsYeniJO) {
+
+                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
+                                                        $('.btnKaydet').text('Kaydet');
+                                                        $('#SaveData').val("true");
+
+                                                    }
+                                                    else {
+                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
+                                                        $('.btnKaydet').text('İleri');
+                                                        $('#SaveData').val("false");
+                                                    }
+                                                    $("[href='#tab-" + result.SelectedTabID + "']").first().click();
+                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    return false;
+                                                }
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            complete: function (cmp) {
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                PanelRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmTIAraRaporFormu').submit();
+                                        return false;
+                                    }
+                                }
+                            }
+                        });
+
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+</script>
+

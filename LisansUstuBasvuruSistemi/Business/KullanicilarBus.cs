@@ -24,12 +24,18 @@ namespace LisansUstuBasvuruSistemi.Business
             //Doç.Dr Prof.Dr, Dr. Öğr. Üye
             return new List<int> { 17, 42, 73 };
         }
-        public static StudentControl StudentControl(string tcKimlikNo = null)
+        public static StudentControl OgrenciKontrol(string tcKimlikNo = null, string donemId = null)
         {
             var obsData = new ObsGetData();
-            return obsData.GetObsStudentControl(tcKimlikNo);
+            if (donemId == null)
+            {
+                var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
+                donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
+            }
+
+            return obsData.GetObsStudentControl(tcKimlikNo, donemId);
         }
-        public static StudentControl KullaniciObsOgrenciBilgisiGuncelle(int kullaniciId)
+        public static StudentControl OgrenciBilgisiGuncelleObs(int kullaniciId)
         {
             var kayitBilgi = new StudentControl();
             using (var db = new LisansustuBasvuruSistemiEntities())
@@ -38,7 +44,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;
-                    kayitBilgi = StudentControl(tcKimlikNo);
+                    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
+                    kayitBilgi = OgrenciKontrol(tcKimlikNo);
                     if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
                     {
                         kul.KayitDonemID = kayitBilgi.DonemID;
@@ -76,178 +83,20 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kayitBilgi;
             }
         }
-        public static MmMessage KullaniciKayitKontrol(kmBasvuru kModel)
-        {
-            var mmMessage = new MmMessage();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var kullanici = db.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                var isYerli = kullanici.KullaniciTipleri.Yerli;
-                #region kullaniciKontrol 
-                if (isYerli)
-                    if (kModel.TcKimlikNo.IsNullOrWhiteSpace())
-                    {
-                        mmMessage.Messages.Add("Tc Kimlik No Giriniz");
-
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-                    }
-                    else if (kModel.TcKimlikNo.IsNumber() == false)
-                    {
-                        mmMessage.Messages.Add("Tc Kimlik No Sadece Sayıdan Oluşmalıdır");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-
-                    }
-                    else if (kModel.TcKimlikNo.Length != 11)
-                    {
-                        mmMessage.Messages.Add("Tc Kimlik No 11 haneli olmalıdır!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TcKimlikNo" });
-
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "TcKimlikNo" });
-
-                if (!kModel.CinsiyetID.HasValue)
-                {
-                    mmMessage.Messages.Add("Cinsiyet Bilgisini Seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CinsiyetID" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CinsiyetID" });
-
-
-
-                if (kModel.AnaAdi.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Ana Adı Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AnaAdi" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AnaAdi" });
-
-                if (kModel.BabaAdi.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Baba Adı Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BabaAdi" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BabaAdi" });
-
-                if (!kModel.DogumYeriKod.HasValue)
-                {
-                    mmMessage.Messages.Add("Doğum Yeri Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DogumYeriKod" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DogumYeriKod" });
-
-                if (!kModel.DogumTarihi.HasValue)
-                {
-                    mmMessage.Messages.Add("Doğum Tarihi Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "DogumTarihi" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "DogumTarihi" });
-                if (isYerli)
-                    if (!kModel.NufusilIlceKod.HasValue)
-                    {
-                        mmMessage.Messages.Add("Nüfus İl/İlçe Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "NufusilIlceKod" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "NufusilIlceKod" });
-
-                if (isYerli)
-                    if (!kModel.CiltNo.HasValue)
-                    {
-                        mmMessage.Messages.Add("Cilt No Bilgisi Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CiltNo" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CiltNo" });
-                if (isYerli)
-                    if (!kModel.AileNo.HasValue)
-                    {
-                        mmMessage.Messages.Add("Aile No Bilgisi Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "AileNo" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "AileNo" });
-                if (isYerli)
-                    if (!kModel.SiraNo.HasValue)
-                    {
-                        mmMessage.Messages.Add("Sıra No Bilgisi Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SiraNo" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SiraNo" });
-
-                if (!kModel.UyrukKod.HasValue)
-                {
-                    mmMessage.Messages.Add("Uyruk Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "UyrukKod" });
-                }
-                else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "UyrukKod" });
-
-
-
-                if (isYerli)
-                    if (!kModel.SehirKod.HasValue)
-                    {
-                        mmMessage.Messages.Add("Yaşadığı Şehir Bilgisini Giriniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SehirKod" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "SehirKod" });
-
-                if (kModel.CepTel.IsNullOrWhiteSpace() && kModel.EvTel.IsNullOrWhiteSpace() && kModel.IsTel.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Cep, iş ve ev telefonu bilgilerinden en az birinin girilmesi zorunludur!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "CepTel" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EvTel" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTel" });
-                }
-                else
-                {
-                    if (kModel.CepTel.IsNullOrWhiteSpace() == false) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "CepTel" });
-                    if (kModel.EvTel.IsNullOrWhiteSpace() == false) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EvTel" });
-                    if (kModel.IsTel.IsNullOrWhiteSpace() == false) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "IsTel" });
-                }
-
-                if (kModel.EMail.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("EMail Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
-                }
-                else if (kModel.EMail.ToIsValidEmail())
-                {
-                    mmMessage.Messages.Add("Lütfen EMail Formatını Doğru Giriniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EMail" });
-                }
-                else
-                {
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "EMail" });
-                }
-
-                if (kModel.Adres.IsNullOrWhiteSpace() && kModel.Adres2.IsNullOrWhiteSpace())
-                {
-                    mmMessage.Messages.Add("Adres Bilgisi Giriniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Adres" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Adres2" });
-                }
-                else
-                {
-                    if (!kModel.Adres.IsNullOrWhiteSpace()) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Adres" });
-                    if (!kModel.Adres2.IsNullOrWhiteSpace()) mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Adres2" });
-                }
-
-
-                #endregion
-            }
-            return mmMessage;
-        }
-
+      
         public static JsonResult GetFilterKullaniciJsonResult(string term)
         {
-            using (var db=new LisansustuBasvuruSistemiEntities())
+            using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var ogrenciList = db.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
-                    {
-                        s.KullaniciID,
-                        s.Ad,
-                        s.Soyad,
-                        s.OgrenciNo,
-                        s.ResimAdi,
-                        s.Programlar.ProgramAdi
-                    }).Take(15).ToList()
+                {
+                    s.KullaniciID,
+                    s.Ad,
+                    s.Soyad,
+                    s.OgrenciNo,
+                    s.ResimAdi,
+                    s.Programlar.ProgramAdi
+                }).Take(15).ToList()
                     .Select(s => new
                     {
                         id = s.KullaniciID,
@@ -348,7 +197,7 @@ namespace LisansUstuBasvuruSistemi.Business
         public static string ResimKaydet(HttpPostedFileBase resim)
         {
             try
-            { 
+            {
                 var fileStream = resim.InputStream;
                 var bmp = new Bitmap(fileStream);
 

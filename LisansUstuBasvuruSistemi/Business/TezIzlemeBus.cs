@@ -17,6 +17,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class TezIzlemeBus
     {
+
         public static TiBasvuruDetayDto GetSecilenBasvuruTiDetay(int tiBasvuruId, Guid? uniqueId)
         {
             var model = new TiBasvuruDetayDto();
@@ -187,7 +188,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     msg.IsSuccess = TiAyar.BasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean() ?? false;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
-                    else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
+                    else if (kullaniciId != UserIdentity.Current.Id   && UserIdentity.Current.IsAdmin == false)
                     {
                         kullaniciId = UserIdentity.Current.Id;
                     }
@@ -213,7 +214,8 @@ namespace LisansUstuBasvuruSistemi.Business
                                 var sondonemKayitOlmasiGerekenDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(enstituKod, "");
 
                                 var sondonemKayitOlmasiGerekenDersKodlariList = sondonemKayitOlmasiGerekenDersKodlari.Split(',').Where(p => !p.IsNullOrWhiteSpace()).ToList();
-                                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                            
+                                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
 
                                 var bkMsg = new List<string>();
                                 if (sondonemKayitOlmasiGerekenDersKodlariList.Any() && ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p => sondonemKayitOlmasiGerekenDersKodlariList.Any(a => a == p)) != sondonemKayitOlmasiGerekenDersKodlariList.Count)
@@ -774,19 +776,7 @@ namespace LisansUstuBasvuruSistemi.Business
             return retVal;
         }
 
-        public static List<CmbStringDto> CmbTiAktifDonemListe(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            for (int i = DateTime.Now.Year; i >= 2020; i--)
-            {
-                dct.Add(new CmbStringDto { Value = i + "2", Caption = i + "/" + (i + 1) + " Bahar" });
-                dct.Add(new CmbStringDto { Value = i + "1", Caption = i + "/" + (i + 1) + " Güz" });
-            }
-            return dct;
-        }
-
+         
         public static List<CmbIntDto> CmbTiAraRaporDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();

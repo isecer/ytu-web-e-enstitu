@@ -29,11 +29,11 @@ namespace LisansUstuBasvuruSistemi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Membership.OnRequireUserIdentity += Membership_OnRequireUserIdentity;
             SystemInformation.OnEvent += SystemInformation_OnEvent;
-            //RollerBus.UpdateRoles();
             //MenulerBus.UpdateMenus();
+            //RollerBus.UpdateRoles();
             EnstituBus.Enstitulers = EnstituBus.GetEnstituler();
             RollerBus.Roles = RollerBus.GetAllRoles();
-            MenulerBus.Menulers = MenulerBus.GetAllMenu(); 
+            MenulerBus.Menulers = MenulerBus.GetAllMenu();
 
             bool otomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
             if (otomatikMailBilgilendirmeServisiniCalistir)

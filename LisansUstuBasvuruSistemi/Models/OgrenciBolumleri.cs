@@ -19,7 +19,6 @@ namespace LisansUstuBasvuruSistemi.Models
         {
             this.BasvuruSurecProgramlarAlandisiBolumKisitlamalaris = new HashSet<BasvuruSurecProgramlarAlandisiBolumKisitlamalari>();
             this.BolumEslestirs = new HashSet<BolumEslestir>();
-            this.ProgramlarAlandisiBolumKisitlamalaris = new HashSet<ProgramlarAlandisiBolumKisitlamalari>();
         }
     
         public int OgrenciBolumID { get; set; }
@@ -37,7 +36,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OgrenciBolumleri OgrenciBolumleri1 { get; set; }
         public virtual OgrenciBolumleri OgrenciBolumleri2 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProgramlarAlandisiBolumKisitlamalari> ProgramlarAlandisiBolumKisitlamalaris { get; set; }
     }
 }

@@ -314,8 +314,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             if (!(RoleNames.Kullanicilar.InRoleCurrent()
                   || RoleNames.GelenBasvurular.InRoleCurrent()
-                  || RoleNames.BasvuruSureci.InRoleCurrent()
-                  || RoleNames.MulakatSureci.InRoleCurrent()
                   || RoleNames.SrGelenTalepler.InRoleCurrent()
                   || RoleNames.GelenBelgeTalepleri.InRoleCurrent()))
                 kullaniciId = UserIdentity.Current.Id;
@@ -384,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [Authorize]
         public ActionResult GetBasvuruDetay(int id, int tbInx)
         {
-            var kullaniciId = (RoleNames.GelenBasvurular.InRoleCurrent() || RoleNames.MulakatSureci.InRoleCurrent() || RoleNames.BasvuruSureci.InRoleCurrent()) ? (int?)null : UserIdentity.Current.Id;
+            var kullaniciId = (RoleNames.GelenBasvurular.InRoleCurrent()) ? (int?)null : UserIdentity.Current.Id;
             var basvuru = _entities.Basvurulars.First(p => p.BasvuruID == id && p.KullaniciID == (kullaniciId ?? p.KullaniciID));
 
 
@@ -420,7 +418,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
 
             var page = "";
-            var kullaniciId = RoleNames.GelenBasvurular.InRoleCurrent() || RoleNames.MulakatSureci.InRoleCurrent() || RoleNames.BasvuruSureci.InRoleCurrent() ? (int?)null : UserIdentity.Current.Id;
+            var kullaniciId = RoleNames.GelenBasvurular.InRoleCurrent() ? (int?)null : UserIdentity.Current.Id;
             var basvuru = _entities.Basvurulars.First(p => p.BasvuruID == id && p.KullaniciID == (kullaniciId ?? p.KullaniciID));
 
             var mdl = new BasvuruDetayDto
@@ -530,7 +528,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                   join at in _entities.AlanTipleris on s.AlanTipID equals at.AlanTipID
                                   join ot in _entities.OgrenimTipleris.Where(p => p.EnstituKod == basvuru.BasvuruSurec.EnstituKod) on s.OgrenimTipKod equals ot.OgrenimTipKod
                                   join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
-                                  join als in _entities.AlesTipleris on pr.AlesTipID equals als.AlesTipID
                                   join abd in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals abd.AnabilimDaliKod
                                   select new BasvuruTercihDto
                                   {
@@ -538,10 +535,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                       BasvuruID = s.BasvuruID,
                                       UniqueID = s.UniqueID,
                                       SiraNo = s.SiraNo,
-                                      Ingilizce = s.Programlar.Ingilizce,
                                       AlanTipID = at.AlanTipID,
                                       AlanTipAdi = at.AlanTipAdi,
-                                      AlesTipAdi = als.AlesTipAdi,
                                       OgrenimTipKod = s.OgrenimTipKod,
                                       OgrenimTipAdi = ot.OgrenimTipAdi,
                                       ProgramKod = s.ProgramKod,
@@ -566,7 +561,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var sinavTipleriLngs = sinavTipleris.ToList();
                 mdl.LEgitimDiliTurkce = basvuru.LEgitimDiliTurkce;
                 mdl.YLEgitimDiliTurkce = basvuru.YLEgitimDiliTurkce;
-                mdl.IsTurkceProgramVar = basvuru.BasvurularTercihleris.Any(a => !a.Programlar.Ingilizce);
+                mdl.IsTurkceProgramVar = true;
                 mdl.Sinavlars = (from s in sinavlars
                                  join bs in bSurecSinavBilgis on s.SinavTipID equals bs.SinavTipID
                                  join st in sinavTipleris on s.SinavTipID equals st.SinavTipID
@@ -605,9 +600,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var rolAdlari = new List<string>();
                     rolAdlari.Add(RoleNames.GelenBasvurular);
-                    rolAdlari.Add(RoleNames.BasvuruSureci);
-                    rolAdlari.Add(RoleNames.MulakatSureci);
-                    rolAdlari.Add(RoleNames.BasvuruSureciOgrenciKayit);
 
 
                     if (mdl.IsHesaplandi)
@@ -643,7 +635,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                   BasvuruID = s.BasvuruID,
                                                   UniqueID = s.UniqueID,
                                                   SiraNo = s.SiraNo,
-                                                  Ingilizce = s.Programlar.Ingilizce,
                                                   OgrenimTipKod = s.OgrenimTipKod,
                                                   OgrenimTipAdi = ot.OgrenimTipAdi,
                                                   ProgramKod = s.ProgramKod,
@@ -1078,534 +1069,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return View(model);
         }
-        [Authorize]
-        [HttpPost]
-        public ActionResult BasvuruDosyaEklePost(int basvuruSurecId, int basvuruId, int kullaniciId, int basvuruBelgeTipId, HttpPostedFileBase belgeDosyasi)
-        {
-            var mMessage = new MmMessage
-            {
-                MessageType = Msgtype.Warning
-            };
-            var kayitYetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
-            var basv = _entities.Basvurulars.First(p => p.BasvuruID == basvuruId);
-            var varolanBelge = basv.BasvurularYuklenenBelgelers.FirstOrDefault(p => p.BasvuruBelgeTipID == basvuruBelgeTipId);
-            var belgeTipi = basv.BasvuruSurec.BasvuruSurecBelgeTipleris.First(p => p.BasvuruBelgeTipID == basvuruBelgeTipId);
-            string basvuruBelgeTipAdi = belgeTipi.BasvuruBelgeTipleri.BasvuruBelgeTipAdi;
-            var mSonucTip = new List<int> { MulakatSonucTipi.Asil, MulakatSonucTipi.Yedek };
 
-            var donemdekiBasvurulari = basv.BasvuruSurec.Basvurulars.Where(a => a.KullaniciID == basv.KullaniciID).ToList();
-            var donemdekiBasvuruSonuclari = donemdekiBasvurulari.SelectMany(s => s.MulakatSonuclaris).ToList();
-            var basvuruSurec = basv.BasvuruSurec;
 
-            var belgeKtModel = new List<EntBegeKayitT>();
-            var isBelgeYuklemeAktif = false;
-            if (kayitYetki == false)
-            {
-                var nowDate = DateTime.Now;
-                foreach (var item in basvuruSurec.BasvuruSurecOgrenimTipleris.Where(p => p.BelgeYuklemeAsilBasTar.HasValue))
-                {
-                    belgeKtModel.Add(new EntBegeKayitT { EnstituKod = basvuruSurec.EnstituKod, OgrenimTipKod = item.OgrenimTipKod, BaslangicTar = item.BelgeYuklemeAsilBasTar.Value, BitisTar = item.BelgeYuklemeAsilBitTar.Value, MulakatSonucTipID = MulakatSonucTipi.Asil });
-                    belgeKtModel.Add(new EntBegeKayitT { EnstituKod = basvuruSurec.EnstituKod, OgrenimTipKod = item.OgrenimTipKod, BaslangicTar = item.BelgeYuklemeYedekBasTar.Value, BitisTar = item.BelgeYuklemeYedekBitTar.Value, MulakatSonucTipID = MulakatSonucTipi.Yedek });
-                }
-                foreach (var itemB in basv.MulakatSonuclaris.Where(p => mSonucTip.Contains(p.MulakatSonucTipID) && p.BasvurularTercihleri.IsSecilenTercih == true))
-                {
-                    if (!isBelgeYuklemeAktif) isBelgeYuklemeAktif = belgeKtModel.Any(a2 => a2.EnstituKod == basvuruSurec.EnstituKod && itemB.BasvurularTercihleri.OgrenimTipKod == a2.OgrenimTipKod && itemB.MulakatSonucTipID == a2.MulakatSonucTipID && a2.BaslangicTar <= nowDate && a2.BitisTar >= nowDate);
 
-                }
 
-
-
-            }
-
-            if (!kayitYetki && basv.KullaniciID != UserIdentity.Current.Id)
-            {
-                mMessage.Messages.Add("Bu başvuru üstünde işlem yapmaya yetkili değilsiniz.");
-            }
-            else if (basv.MulakatSonuclaris.Any(a => a.KayitDurumID.HasValue && a.KayitDurumlari.IsKayitOldu == true))
-            {
-                mMessage.Messages.Add("Başvurunuz için kayıt işlemi süreci tamamlandığından başvuruda herhangi işlemi yapılamaz!");
-            }
-            else if (donemdekiBasvuruSonuclari.Count(p => mSonucTip.Contains(p.MulakatSonucTipID)) == donemdekiBasvuruSonuclari.Count(a => a.KayitDurumID.HasValue))
-            {
-                mMessage.Messages.Add("Başvurunuz için kayıt işlemi süreci tamamlandığından başvuruda herhangi işlemi yapılamaz!");
-
-            }
-            else if (belgeDosyasi != null && belgeDosyasi.ContentLength > (1024 * 1024 * 5))
-            {
-                mMessage.Messages.Add("Yükleyeceğiniz dosya boyutu en fazla 5MB olmalıdır.");
-            }
-            else if (!kayitYetki && !isBelgeYuklemeAktif)
-            {
-                mMessage.Messages.Add("Sistem belge yükleme işlemlerine kapalıdır.");
-            }
-            else
-            {
-                if (varolanBelge != null && varolanBelge.IsOnaylandi)
-                {
-                    mMessage.Messages.Add(varolanBelge.BelgeAdi + " isimli " + basvuruBelgeTipAdi + " dosyası onaylandığından belge kayıt işlemi yapılamaz.");
-                }
-                else if (belgeDosyasi == null && varolanBelge == null)
-                {
-                    mMessage.Messages.Add(basv.KullaniciTipleri.Yerli ? (basvuruBelgeTipAdi + " yüklemek için dosya seçiniz.") : "Pasaport belgesini yüklemek için dosya seçiniz.");
-                }
-                else if (belgeDosyasi != null && belgeDosyasi.FileName.Split('.').Last().ToLower() != "pdf")
-                {
-                    mMessage.Messages.Add("Yükleyeceğiniz " + basvuruBelgeTipAdi + " dosyası pdf türünde olmalıdır.");
-                }
-            }
-            if (mMessage.Messages.Count == 0)
-            {
-
-
-
-                string belgeAdi = "";
-                string varOlanBelgeAdi = "";
-                if (belgeDosyasi != null)
-                {
-                    int? sinavTipId = null;
-                    int? sinavTipGrupId = null;
-                    if (basvuruBelgeTipId == BasvuruBelgeTipi.AlesGreSinaviBelgesi) sinavTipGrupId = SinavTipGrup.Ales_Gree;
-                    else if (basvuruBelgeTipId == BasvuruBelgeTipi.DilSinaviBelgesi) sinavTipGrupId = SinavTipGrup.DilSinavlari;
-                    else if (basvuruBelgeTipId == BasvuruBelgeTipi.TomerSinaviBelgesi) sinavTipGrupId = SinavTipGrup.Tomer;
-                    if (sinavTipGrupId.HasValue)
-                    {
-
-                        sinavTipId = basv.BasvurularSinavBilgis.First(p => p.SinavTipGrupID == sinavTipGrupId).SinavTipID;
-                    }
-                    string dosyaYolu = "/BasvuruDosyalari/BasvuruKayitBelgeleri/" + belgeDosyasi.FileName.ToFileNameAddGuid(null, basv.BasvuruID.ToString());
-                    belgeDosyasi.SaveAs(Server.MapPath("~" + dosyaYolu));
-                    belgeAdi = belgeDosyasi.FileName.GetFileName();
-                    _entities.BasvurularYuklenenBelgelers.Add(new BasvurularYuklenenBelgeler
-                    {
-                        BasvuruID = basvuruId,
-                        BasvuruBelgeTipID = basvuruBelgeTipId,
-                        SinavTipID = sinavTipId,
-                        BelgeAdi = belgeAdi,
-                        BelgeYolu = dosyaYolu,
-                        IslemTarihi = DateTime.Now,
-                        IslemYapanID = UserIdentity.Current.Id,
-                        IslemYapanIP = UserIdentity.Ip,
-                    });
-
-
-                }
-                if (varolanBelge != null)
-                {
-                    varOlanBelgeAdi = varolanBelge.BelgeAdi;
-                    var path = Server.MapPath("~" + varolanBelge.BelgeYolu);
-
-                    if (System.IO.File.Exists(path))
-                    {
-                        try
-                        {
-
-                            System.IO.File.Delete(path);
-                        }
-                        catch
-                        {
-
-                        }
-
-                    }
-                    _entities.BasvurularYuklenenBelgelers.Remove(varolanBelge);
-                }
-                _entities.SaveChanges();
-                if (belgeDosyasi == null && !varOlanBelgeAdi.IsNullOrWhiteSpace())
-                {
-                    mMessage.Title = "Belge silme işlemi başarılı";
-
-                    mMessage.Messages.Add(belgeAdi + " isimli " + basvuruBelgeTipAdi + " dosyası sistemden silindi.");
-                }
-                else
-                {
-                    mMessage.Title = "Belge yükleme işlemi başarılı";
-                    mMessage.Messages.Add(belgeAdi + " isimli " + basvuruBelgeTipAdi + " dosyası sisteme yüklendi.");
-                }
-
-                mMessage.IsSuccess = true;
-                mMessage.MessageType = Msgtype.Success;
-
-            }
-            else mMessage.Title = "Belge yükleme işlemi başarısız";
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
-            return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-
-        [Authorize]
-        public ActionResult BasvuruDosyaOnayla(int basvuruId, int basvuruBelgeTipId, bool isOnaylandi)
-        {
-            var mMessage = new MmMessage
-            {
-                MessageType = Msgtype.Warning
-            };
-
-            var kayitYetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
-
-            var basv = _entities.Basvurulars.First(p => p.BasvuruID == basvuruId);
-            var varolanBelge = basv.BasvurularYuklenenBelgelers.First(p => p.BasvuruBelgeTipID == basvuruBelgeTipId);
-            var belgeTipi = basv.BasvuruSurec.BasvuruSurecBelgeTipleris.First(p => p.BasvuruBelgeTipID == basvuruBelgeTipId);
-            string basvuruBelgeTipAdi = belgeTipi.BasvuruBelgeTipleri.BasvuruBelgeTipAdi;
-
-            if (!kayitYetki)
-            {
-                mMessage.Messages.Add("Bu işlemi yapmaya yetkili değilsiniz.");
-            }
-            if (mMessage.Messages.Count == 0)
-            {
-                varolanBelge.IsOnaylandi = isOnaylandi;
-                varolanBelge.OnaylamaTarihi = DateTime.Now;
-                varolanBelge.OnaylamaYapanID = UserIdentity.Current.Id;
-                varolanBelge.OnaylamaYapanIP = UserIdentity.Ip;
-                _entities.SaveChanges();
-                mMessage.IsSuccess = true;
-                mMessage.MessageType = Msgtype.Success;
-                mMessage.Messages.Add(varolanBelge.BelgeAdi + " isimli " + basvuruBelgeTipAdi + " dosyası " + (isOnaylandi ? "onaylandı." : "onayı kaldırıldı"));
-            }
-
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
-            return Json(new { mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-        [Authorize]
-        public ActionResult BasvuruKayitOlunacakTercihSet(int id, string uniqueId, bool? isSecildi)
-        {
-
-            var mMessage = new MmMessage();
-            var kayityetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
-
-            var basvuru = _entities.Basvurulars.First(p => p.BasvuruID == id && p.KullaniciID == (!kayityetki ? UserIdentity.Current.Id : p.KullaniciID));
-            var basvuruSurec = basvuru.BasvuruSurec;
-            var isBelgeYuklemeAktif = true;
-            var belgeKtModel = new List<EntBegeKayitT>();
-
-            var donemdekiBasvurulari = basvuruSurec.Basvurulars.Where(a => a.KullaniciID == basvuru.KullaniciID).ToList();
-            var donemdekiBasvuruSonuclari = donemdekiBasvurulari.SelectMany(s => s.MulakatSonuclaris).ToList();
-            var mSonucTip = new List<int> { MulakatSonucTipi.Asil, MulakatSonucTipi.Yedek };
-
-            if (uniqueId.IsNullOrWhiteSpace())
-            {
-                if (donemdekiBasvuruSonuclari.Any(a => a.KayitDurumID.HasValue && a.KayitDurumlari.IsKayitOldu == true))
-                {
-                    mMessage.Messages.Add("Başvurunuz için kayıt işlemi süreci tamamlandığından başvuruda herhangi işlemi yapılamaz!");
-                }
-                else if (donemdekiBasvuruSonuclari.Count(a => mSonucTip.Contains(a.MulakatSonucTipID)) == donemdekiBasvuruSonuclari.Count(a => a.KayitDurumID.HasValue))
-                {
-                    mMessage.Messages.Add("Başvurunuz için kayıt işlemi süreci tamamlandığından başvuruda herhangi işlemi yapılamaz!");
-                }
-                else
-                {
-                    foreach (var item in donemdekiBasvurulari.SelectMany(s => s.BasvurularTercihleris))
-                    {
-                        item.IsSecilenTercih = false;
-                        item.IslemTarihi = DateTime.Now;
-                        item.IslemYapanID = UserIdentity.Current.Id;
-                        item.IslemYapanIP = UserIdentity.Ip;
-                    }
-                    _entities.SaveChanges();
-                    mMessage.IsSuccess = true;
-                    mMessage.Messages.Add("Tercih seçimi kaldırıldı!");
-                }
-            }
-            else
-            {
-                var tGuid = new Guid(uniqueId);
-                var tercih = basvuru.BasvurularTercihleris.First(p => p.UniqueID == tGuid);
-
-                var mulakatSonucu = tercih.MulakatSonuclaris.First();
-
-                if (kayityetki == false)
-                {
-
-                    foreach (var item in basvuruSurec.BasvuruSurecOgrenimTipleris.Where(p => p.BelgeYuklemeAsilBasTar.HasValue))
-                    {
-                        belgeKtModel.Add(new EntBegeKayitT { EnstituKod = basvuruSurec.EnstituKod, OgrenimTipKod = item.OgrenimTipKod, BaslangicTar = item.BelgeYuklemeAsilBasTar.Value, BitisTar = item.BelgeYuklemeAsilBitTar.Value, MulakatSonucTipID = MulakatSonucTipi.Asil });
-                        belgeKtModel.Add(new EntBegeKayitT { EnstituKod = basvuruSurec.EnstituKod, OgrenimTipKod = item.OgrenimTipKod, BaslangicTar = item.BelgeYuklemeYedekBasTar.Value, BitisTar = item.BelgeYuklemeYedekBitTar.Value, MulakatSonucTipID = MulakatSonucTipi.Yedek });
-                    }
-
-                    var nowDate = DateTime.Now;
-                    isBelgeYuklemeAktif = belgeKtModel.Any(a2 => a2.EnstituKod == basvuruSurec.EnstituKod && tercih.OgrenimTipKod == a2.OgrenimTipKod && mulakatSonucu.MulakatSonucTipID == a2.MulakatSonucTipID && a2.BaslangicTar <= nowDate && a2.BitisTar >= nowDate);
-
-                    if (tercih.MulakatSonuclaris.First().KayitDurumID.HasValue)
-                    {
-                        mMessage.Messages.Add("Seçtiğiniz tercih işlem gördüğünden herhangi bir değişiklik yapamazsınız!");
-                    }
-                    else if (donemdekiBasvuruSonuclari.Any(a => a.BasvuruTercihID != tercih.BasvuruTercihID && (a.KayitDurumID == KayitDurumu.KayitOldu || a.KayitDurumID == KayitDurumu.OnKayit)))
-                    {
-                        mMessage.Messages.Add("Kayıt/Ön kayıt işlemi gören tercihiniz bulunduğu için başka tercih seçimi yapamazsınız!");
-                    }
-                }
-
-                if (!isBelgeYuklemeAktif)
-                {
-                    var sonucTipAdi = mulakatSonucu.MulakatSonucTipID == MulakatSonucTipi.Asil ? "Asil" : "Yedek";
-                    var tarihKriteri = belgeKtModel.FirstOrDefault(a2 => a2.EnstituKod == basvuruSurec.EnstituKod && tercih.OgrenimTipKod == a2.OgrenimTipKod && mulakatSonucu.MulakatSonucTipID == a2.MulakatSonucTipID);
-
-                    if (tarihKriteri != null)
-                    {
-                        var tarih = tarihKriteri.BaslangicTar.ToString("yyyy-MM-dd HH:mm") + " / " + tarihKriteri.BitisTar.ToString("yyyy-MM-dd HH:mm");
-                        mMessage.Messages.Add(sonucTipAdi + " kontenjandan kayıt hakkın kazananlar için belge yükleme işlemi " + tarih + "  tarihleri arasında yapılabilir!");
-                    }
-                    else mMessage.Messages.Add("Belge yükleme tarih aralığı belirlenmediği için tercih seçimi yapılamaz!");
-                }
-
-                else if (donemdekiBasvuruSonuclari.Count(a => mSonucTip.Contains(a.MulakatSonucTipID)) == donemdekiBasvuruSonuclari.Count(a => a.KayitDurumID.HasValue))
-                {
-
-                    mMessage.Messages.Add("Başvurunuz için kayıt işlemi süreci tamamlandığından başvuruda herhangi işlemi yapılamaz!");
-
-                }
-
-                else
-                {
-                    tercih.IsSecilenTercih = isSecildi == true;
-                    var digerTercihler = donemdekiBasvurulari.SelectMany(s => s.BasvurularTercihleris).Where(p => p.MulakatSonuclaris.Any(a => a.MulakatSonucTipID == mulakatSonucu.MulakatSonucTipID) && p.IsSecilenTercih != null && p.UniqueID != tercih.UniqueID).ToList();
-                    foreach (var item in digerTercihler)
-                    {
-                        item.IsSecilenTercih = false;
-                        item.IslemTarihi = DateTime.Now;
-                        item.IslemYapanID = UserIdentity.Current.Id;
-                        item.IslemYapanIP = UserIdentity.Ip;
-                    }
-                    tercih.IslemTarihi = DateTime.Now;
-                    tercih.IslemYapanID = UserIdentity.Current.Id;
-                    tercih.IslemYapanIP = UserIdentity.Ip;
-                    _entities.SaveChanges();
-                    mMessage.IsSuccess = true;
-                    if (isSecildi == true)
-                        mMessage.Messages.Add("Kayıt olunmak istenen program seçildi.");
-                    else
-                    {
-                        mMessage.Messages.Add("Kayıt olunmak istenen program seçimi kaldırıldı.");
-                    }
-
-                    #region sendMail
-                    if (isSecildi == true)
-                    {
-                        var htmlBigliRow = new List<MailTableRowDto>();
-                        var contentBilgi = new MailTableContentDto();
-
-                        var otL = _entities.OgrenimTipleris.First(p => p.OgrenimTipKod == tercih.OgrenimTipKod);
-                        var prl = tercih.Programlar;
-
-                        htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = otL.OgrenimTipAdi });
-                        htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program Adı", Aciklama = prl.ProgramAdi });
-                        if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru)
-                        {
-                            contentBilgi.GrupBasligi = "Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
-                        }
-                        else if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru)
-                        {
-                            contentBilgi.GrupBasligi = "Lisansüstü yatay geçiş programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
-                        }
-                        else contentBilgi.GrupBasligi = "YTÜ Yeni mezun Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
-                        contentBilgi.Detaylar = htmlBigliRow;
-
-                        var mmmC = new MailMainContentDto();
-                        var enstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == basvuruSurec.EnstituKod).EnstituAd;
-                        mmmC.EnstituAdi = enstituAdi;
-                        mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-                        var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(basvuruSurec.EnstituKod);
-                        var sistemErisimAdresi = mailBilgi.SistemErisimAdresi;
-                        var wurlAddr = sistemErisimAdresi.Split('/').ToList();
-                        if (sistemErisimAdresi.Contains("//"))
-                            sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
-                        else
-                            sistemErisimAdresi = "http://" + wurlAddr.First();
-                        mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
-                        mmmC.Content = hcb;
-
-                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, "Lisansüstü " + (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru ? "" : "yatay geçiş ") + "başvurusu kayıt olunmak istenen tercih Hk.", htmlMail, basvuru.EMail, null);
-                        if (snded)
-                        {
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = basvuruSurec.EnstituKod,
-                                BasvuruID = basvuru.BasvuruID,
-                                MesajID = null,
-                                Konu = "Kayıt olunmak istenen tercih seçimi (" + basvuru.Ad + " " + basvuru.Soyad + ")",
-                                Aciklama = "",
-                                AciklamaHtml = htmlMail,
-                                IslemYapanID = UserIdentity.Current.Id,
-                                IslemTarihi = DateTime.Now,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>()
-                            };
-                            kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = basvuru.EMail });
-                            _entities.GonderilenMaillers.Add(kModel);
-                            _entities.SaveChanges();
-                        }
-                    }
-                    #endregion
-
-                }
-            }
-            mMessage.MessageType = Msgtype.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
-            return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
-
-
-        [Authorize]
-        public ActionResult BasvuruKayitOlunacakTercihSet2(int id, List<string> UniqueIDs, List<string> isSecildis, List<string> onceliks)
-        {
-
-            var mMessage = new MmMessage();
-            var kayityetki = RoleNames.BasvuruSureciOgrenciKayit.InRoleCurrent();
-
-            var basvuru = _entities.Basvurulars.First(p => p.BasvuruID == id && p.KullaniciID == (!kayityetki ? UserIdentity.Current.Id : p.KullaniciID));
-            var basvuruSurec = basvuru.BasvuruSurec;
-            var belgeKtModel = new List<EntBegeKayitT>();
-
-            var donemdekiBasvurulari = basvuruSurec.Basvurulars.Where(a => a.KullaniciID == basvuru.KullaniciID).ToList();
-            var donemdekiBasvuruSonuclari = donemdekiBasvurulari.SelectMany(s => s.MulakatSonuclaris).ToList();
-            var donemdekiBasvuruTercihleri = donemdekiBasvurulari.SelectMany(s => s.BasvurularTercihleris).ToList();
-            var mSonucTip = new List<int> { MulakatSonucTipi.Asil, MulakatSonucTipi.Yedek };
-
-            UniqueIDs = UniqueIDs ?? new List<string>();
-            isSecildis = isSecildis ?? new List<string>();
-            onceliks = onceliks ?? new List<string>();
-            var uniqueIDs = UniqueIDs.Where(p => !p.IsNullOrWhiteSpace()).Select(s => new Guid(s)).ToList();
-            var isSecildiList = isSecildis.Where(p => !p.IsNullOrWhiteSpace()).Select(s => s.ToBoolean().Value).ToList();
-            var oncelikList = onceliks.Select(s => s.ToIntObj()).ToList();
-
-            var qUniqueIDs = uniqueIDs.Select((s, inx) => new { inx, UniqueID = s }).ToList();
-            var qIsSecildis = isSecildiList.Select((s, inx) => new { inx, IsSecildi = s }).ToList();
-            var qOnceliks = oncelikList.Select((s, inx) => new { inx, Oncelik = s }).ToList();
-            var qBasvuruIDs = _entities.BasvurularTercihleris.Where(p => uniqueIDs.Contains(p.UniqueID)).Select(s => new { s.UniqueID, s.BasvuruID }).ToList();
-
-
-            var qRows = (from u in qUniqueIDs
-                         join b in qBasvuruIDs on u.UniqueID equals b.UniqueID
-                         join I in qIsSecildis on u.inx equals I.inx
-                         join O in qOnceliks on u.inx equals O.inx
-                         select new
-                         {
-                             u.inx,
-                             IslemBasvuruID = id,
-                             TercihUniqueID = u.UniqueID,
-                             TercihBasvuruID = b.BasvuruID,
-                             I.IsSecildi,
-                             O.Oncelik
-                         }).ToList();
-
-            if (qRows.Count > 0)
-            {
-                if (donemdekiBasvuruSonuclari.Any(a => a.KayitDurumID.HasValue))
-                {
-                    mMessage.Messages.Add("Tercihleriniz yetkili tarafından işlem gördüğü için herhangi bir değişiklik yapılamaz.");
-                }
-                else
-                {
-                    var ogrenimTipleriLngs = _entities.OgrenimTipleris.Where(p => p.EnstituKod == basvuruSurec.EnstituKod).Select(s => new { s.OgrenimTipKod, s.OgrenimTipAdi }).ToList();
-                    var nowDate = DateTime.Now;
-                    var isBelgeYuklemeVar = basvuruSurec.IsBelgeYuklemeVar;
-                    var belgeYuklemeTarihleris = basvuruSurec.BasvuruSurecOgrenimTipleris.Where(p => p.BelgeYuklemeAsilBasTar.HasValue).ToList();
-                    var tercihUniqueIDs = new List<Guid>();
-                    foreach (var item in qRows.OrderBy(o => o.Oncelik ?? 5))
-                    {
-                        var tercih = donemdekiBasvuruTercihleri.First(p => p.UniqueID == item.TercihUniqueID);
-                        bool isSuccess = true;
-                        if (isBelgeYuklemeVar && !kayityetki)
-                        {
-                            isSuccess = belgeYuklemeTarihleris.Any(a => a.OgrenimTipKod == tercih.OgrenimTipKod && a.BelgeYuklemeYedekBasTar.Value <= nowDate && a.BelgeYuklemeYedekBitTar >= nowDate);
-                        }
-                        if (isSuccess)
-                        {
-                            tercih.IsSecilenTercih = item.IsSecildi;
-                            tercih.KayitSiraNo = item.IsSecildi ? item.Oncelik.Value : (int?)null;
-                            tercih.IslemTarihi = DateTime.Now;
-                            tercih.IslemYapanID = UserIdentity.Current.Id;
-                            tercih.IslemYapanIP = UserIdentity.Ip;
-                            tercihUniqueIDs.Add(item.TercihUniqueID);
-                        }
-                        else
-                        {
-                            var otL = ogrenimTipleriLngs.First(p => p.OgrenimTipKod == tercih.OgrenimTipKod);
-                            mMessage.Messages.Add(otL.OgrenimTipAdi + " Öğrenim seviyesi için Belge yükleme tarihi aktif olmadığından tercih seçim işlemi yapılamaz!");
-                        }
-                    }
-
-                    #region sendMail
-                    if (tercihUniqueIDs.Count > 0)
-                    {
-                        var htmlBigliRow = new List<MailTableRowDto>();
-                        var contentBilgi = new MailTableContentDto();
-
-                        foreach (var item in tercihUniqueIDs)
-                        {
-                            var qTercih = qRows.First(p => p.TercihUniqueID == item);
-                            var tercih = donemdekiBasvuruTercihleri.First(p => p.UniqueID == item);
-                            var otL = ogrenimTipleriLngs.First(p => p.OgrenimTipKod == tercih.OgrenimTipKod);
-                            var prl = tercih.Programlar;
-                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Öğrenim Seviyesi", Aciklama = otL.OgrenimTipAdi });
-                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "Program Adı", Aciklama = prl.ProgramAdi });
-                            htmlBigliRow.Add(qTercih.IsSecildi
-                                ? new MailTableRowDto
-                                {
-                                    Baslik = "Kayıt Seçeneği",
-                                    Aciklama = "Kayıt Olmak İstenen " + qTercih.Oncelik + ". Tercih"
-                                }
-                                : new MailTableRowDto
-                                { Baslik = "Kayıt Seçeneği", Aciklama = "Kayıt Olmak İstenmiyor" });
-                            htmlBigliRow.Add(new MailTableRowDto { Baslik = "---------------", Aciklama = "-----------------" });
-                        }
-
-                        contentBilgi.GrupBasligi = "Lisansüstü programlarına kayıt olmak için seçtiğiniz tercihi bilgisi aşağıdaki gibidir.";
-                        contentBilgi.Detaylar = htmlBigliRow;
-
-                        var mmmC = new MailMainContentDto();
-                        var enstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == basvuruSurec.EnstituKod).EnstituAd;
-                        mmmC.EnstituAdi = enstituAdi;
-                        mmmC.UniversiteAdi = "Yıldız Teknik Üniversitesi";
-                        var mailBilgi = EnstituMailInfo.GetEnstituMailBilgisi(basvuruSurec.EnstituKod);
-                        var sistemErisimAdresi = mailBilgi.SistemErisimAdresi;
-                        var wurlAddr = sistemErisimAdresi.Split('/').ToList();
-                        if (sistemErisimAdresi.Contains("//"))
-                            sistemErisimAdresi = wurlAddr[0] + "//" + wurlAddr.Skip(2).Take(1).First();
-                        else
-                            sistemErisimAdresi = "http://" + wurlAddr.First();
-                        mmmC.LogoPath = sistemErisimAdresi + "/Content/assets/images/ytu_logo_tr.png";
-                        var hcb = ViewRenderHelper.RenderPartialView("Ajax", "getMailTableContent", contentBilgi);
-                        mmmC.Content = hcb;
-
-                        string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
-                        var sendEmail = basvuru.EMail;
-                        // SendEmail = "irfansecer@gmail.com";
-                        var snded = MailManager.SendMail(mailBilgi.EnstituKod, "Lisansüstü kayıt olunmak istenen tercih Hk.", htmlMail, sendEmail, null);
-                        if (snded)
-                        {
-                            var kModel = new GonderilenMailler
-                            {
-                                Tarih = DateTime.Now,
-                                EnstituKod = basvuruSurec.EnstituKod,
-                                BasvuruID = basvuru.BasvuruID,
-                                MesajID = null,
-                                Konu = "Kayıt olunmak istenen tercih seçimi (" + basvuru.Ad + " " + basvuru.Soyad + ")",
-                                Aciklama = "",
-                                AciklamaHtml = htmlMail,
-                                IslemYapanID = UserIdentity.Current.Id,
-                                IslemTarihi = DateTime.Now,
-                                IslemYapanIP = UserIdentity.Ip,
-                                Gonderildi = true,
-                                GonderilenMailKullanicilars = new List<GonderilenMailKullanicilar>()
-                            };
-                            kModel.GonderilenMailKullanicilars.Add(new GonderilenMailKullanicilar { Email = basvuru.EMail });
-                            _entities.GonderilenMaillers.Add(kModel);
-                            _entities.SaveChanges();
-                        }
-                    }
-                    #endregion
-                }
-            }
-
-
-            mMessage.MessageType = Msgtype.Warning;
-            var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);
-            return Json(new { IsSuccess = mMessage.IsSuccess, Messages = strView }, "application/json", JsonRequestBehavior.AllowGet);
-        }
         [Authorize]
         [HttpGet]
         public ActionResult GetDetailMezuniyet(int id, int? showDetayYayinId, int tbInx, bool isDelete, bool gelenBasvuru = false)
@@ -1667,108 +1134,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public ActionResult GetGbnDetail(int id)
-        {
-            var model = Management.getSecilenBasvuruDetay(id);
 
-            ViewBag.gLOgrenimDurumID = new SelectList(Management.cmbAktifOgrenimDurumu2(true, IsBasvurudaGozuksun: true), "Value", "Caption", model.LOgrenimDurumID);
-            ViewBag.gLNotSistemID = new SelectList(Management.cmbGetNotSistemleri(true), "Value", "Caption", model.LNotSistemID);
-            return View(model);
-        }
-        public ActionResult SetGbnDetail(int basvuruId, int? gLOgrenimDurumId, int? gLNotSistemId, double? gLMezuniyetNotu)
-        {
-            var mmMessage = new MmMessage();
-            var basvuru = _entities.Basvurulars.First(p => p.BasvuruID == basvuruId);
-            var bsurec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuru.BasvuruSurecID);
-
-            if (RoleNames.GelenBasvurularKayit.InRoleCurrent() == false)
-            {
-                if (basvuru.KullaniciID != UserIdentity.Current.Id)
-                {
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya ait başvuru üzerindeki AGNO bilgisi güncellenmek isteniyor!\nBasvuruID:" + basvuru.BasvuruID + "\nKullaniciID:" + UserIdentity.Current.Id + "\nÇağrılan Kullanıcı ID:" + basvuru.KullaniciID, "Ajax/setGBNDetail", LogType.Saldırı);
-                    mmMessage.Messages.Add("Başka bir kullanıcıya ait başvuru üzerindeki AGNO bilgisini güncelleyemezsiniz!");
-                }
-            }
-            var nowDate = DateTime.Now;
-            if (!(bsurec.AGNOGirisBaslangicTarihi <= nowDate && bsurec.AGNOGirisBitisTarihi >= nowDate))
-            {
-                mmMessage.Messages.Add("Aktif bir AGNO bilgisi düzeltme süreci bulunamadı! Düzeltme işlemini yapamazsınız.");
-            }
-
-            if (mmMessage.Messages.Count == 0)
-            {
-                if (!gLOgrenimDurumId.HasValue)
-                {
-                    mmMessage.Messages.Add("Öğrenim durumunuzu seçiniz");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "gLOgrenimDurumID" });
-                }
-                else
-                {
-                    if (gLOgrenimDurumId.Value != OgrenimDurum.Mezun)
-                    {
-                        string msg = "Güncel not bilginizi girebilmeniz için öğrenim durumunuzu Mezun seçeneği olarak seçmeniz gerekmektedir!";
-                        mmMessage.Messages.Add(msg);
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "gLOgrenimDurumID" });
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "gLOgrenimDurumID" });
-                }
-                if (!gLNotSistemId.HasValue)
-                {
-                    string msg = "Lisans Eğitimi Not Sistemi Bilgisini Seçiniz!";
-                    mmMessage.Messages.Add(msg);
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "gLNotSistemID" });
-                }
-                else
-                {
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "gLNotSistemID" });
-
-                    var notSistemi = Management.getNotSistemi(gLNotSistemId.Value);
-                    var nots = _entities.NotSistemleris.First(p => p.NotSistemID == notSistemi.NotSistemID);
-                    if (!gLMezuniyetNotu.HasValue)
-                    {
-                        string msg = "Lisans Eğitimi Not Bilgisini Giriniz!";
-                        mmMessage.Messages.Add(msg);
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "gLMezuniyetNotu" });
-
-                    }
-                    else if ((double)nots.MinNot <= gLMezuniyetNotu.Value && (double)nots.MaxNot >= gLMezuniyetNotu)
-                    {
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "gLMezuniyetNotu" });
-                    }
-                    else
-                    {
-                        mmMessage.Messages.Add("Lisans Eğitimi Notu " + notSistemi.NotSistemAdi + " not sistemine göre " + nots.MinNot.ToString() + " ile " + nots.MaxNot.ToString() + " arasında bir değer olmalıdır!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "gLMezuniyetNotu" });
-                    }
-                }
-                if (mmMessage.Messages.Count == 0)
-                {
-                    basvuru.LNotSistemID = gLNotSistemId.Value;
-                    basvuru.LMezuniyetNotu = gLMezuniyetNotu.Value;
-                    basvuru.LMezuniyetNotu100LukSistem = gLMezuniyetNotu.Value.ToNotCevir(gLNotSistemId.Value).Not100Luk;
-                    basvuru.LOgrenimDurumID = gLOgrenimDurumId.Value;
-                    basvuru.IslemTarihi = DateTime.Now;
-                    basvuru.IslemYapanID = UserIdentity.Current.Id;
-                    basvuru.IslemYapanIP = UserIdentity.Ip;
-                    var btercih = basvuru.BasvurularTercihleris.ToList();
-                    foreach (var item in btercih)
-                    {
-                        var mulR = _entities.MulakatSonuclaris.FirstOrDefault(p => p.BasvuruTercihID == item.BasvuruTercihID);
-                        if (mulR != null)
-                        {
-                            mulR.Agno = basvuru.LMezuniyetNotu100LukSistem;
-
-                        }
-                    }
-
-                    _entities.SaveChanges();
-                    mmMessage.Messages.Add("Not güncelleme işlemi başarılı!");
-                    mmMessage.IsSuccess = true;
-                }
-            }
-            return mmMessage.ToJsonResult();
-        }
 
         public ActionResult SifreResetle(string mailAddress)
         {
@@ -1872,418 +1238,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return cmbmld.ToJsonResult();
         }
-        public ActionResult GetBolumler(int basvuruSurecId, string otKod, int kTipId)
-        {
-            bool isSubOt = _entities.OgrenimTipleris.Any(p => p.IsAktif && p.GrupGoster && p.GrupKodu == otKod);
-            var cmbmld = !isSubOt ? Management.cmbGetAktifBolumlerX(otKod.ToInt().Value, basvuruSurecId, kTipId) : Management.cmbGetAktifSubOgrenimTipleri(basvuruSurecId, otKod, true);
-            bool ylShow = false;
-            if (!isSubOt)
-            {
-                var bs = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == basvuruSurecId);
-                ylShow = _entities.OgrenimTipleris.First(p => p.EnstituKod == bs.EnstituKod && p.OgrenimTipKod == otKod.ToInt().Value).YLEgitimBilgisiIste;
-            }
-            return new { IsSubOT = isSubOt, data = cmbmld.Select(s => new { s.Value, s.Caption }), YLShow = ylShow.ToString().ToLower() }.ToJsonResult();
-        }
+
         public ActionResult GetProgramlar(int bolId, int otId, int basvuruSurecId, int kullaniciTipId)
         {
             var bolm = Management.cmbGetAktifProgramlarX(bolId, otId, basvuruSurecId, kullaniciTipId);
             return bolm.Select(s => new { s.Value, s.Caption }).ToJsonResult();
-        }
-
-        public ActionResult OgrenimBilgisiKontrolEt(kmBasvuru kModel, int basvuruId)
-        {
-            var mmMessage = Management.obKontrol(kModel);
-            if (kModel.ProgramKod.IsNullOrWhiteSpace())
-            {
-                mmMessage.Messages.Add("Ekleyeceğiniz Programı Seçiniz!");
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
-            }
-            else
-            {
-                mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "ProgramKod" });
-            }
-
-            if (mmMessage.Messages.Count == 0)
-            {
-                var programs = new List<CmbIntDto> { new CmbIntDto { Value = kModel.OgrenimTipKod, Caption = kModel.ProgramKod } };
-                var retVal = Management.programAgnoMinControl(kModel, programs);
-                mmMessage.Messages.AddRange(retVal.Messages);
-                mmMessage.MessagesDialog.AddRange(retVal.MessagesDialog);
-            }
-            if (mmMessage.Messages.Count == 0)
-            {
-                //Düzeltilecek
-                var basvuruSureci = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == kModel.BasvuruSurecID);
-                KotaKontrolModel alanB;
-                if (basvuruSureci.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru || basvuruSureci.BasvuruSurecTipID == BasvuruSurecTipi.YTUYeniMezunDRBasvuru)
-                    alanB = Management.AlanKontrol(kModel.BasvuruSurecID, kModel.LOgrenciBolumID.Value, kModel.YLOgrenciBolumID, kModel.OgrenimTipKod, kModel.ProgramKod, kModel.KullaniciID, basvuruId);
-                else
-                {
-                    var bolumIDs = new List<int>();
-                    if (kModel.YLDurum)
-                    {
-                        bolumIDs.Add(kModel.LOgrenciBolumID.Value);
-                        bolumIDs.Add(kModel.YLOgrenciBolumID.Value);
-                        bolumIDs.Add(kModel.DROgrenciBolumID.Value);
-                    }
-                    else
-                    {
-                        bolumIDs.Add(kModel.LOgrenciBolumID.Value);
-                        bolumIDs.Add(kModel.YLOgrenciBolumID.Value);
-                    }
-                    alanB = Management.AlanKontrolYG(kModel.BasvuruSurecID, bolumIDs, kModel.OgrenimTipKod, kModel.ProgramKod, kModel.KullaniciID, basvuruId);
-                }
-
-                if (alanB.Kota <= 0)
-                {
-                    var alanTip = alanB.AlanTipID == AlanTipi.Ortak ? "Ortak" : (alanB.AlanTipID == AlanTipi.AlanIci ? "Alan İci" : "Alan Dışı");
-                    mmMessage.Messages.Add("Girmiş olduğunuz öğrenim bilgilerine göre seçtiğiniz program " + alanTip + " olarak değerlendirilmiştir fakat " + alanTip + " kota bulunmadığından programı ekleyemezsiniz! Lütfen başka bir program seçiniz.");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
-                }
-                else if (alanB.AlanDisiProgramKisitlamasiVar)
-                {
-                    mmMessage.Messages.Add(alanB.AlanDisiProgramKisitlamasiMsg);
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
-                }
-            }
-            else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "ProgramKod" });
-            mmMessage.IsSuccess = mmMessage.Messages.Count == 0;
-            mmMessage.Title = "Ekleme işmini yapabilmek aşağıdaki uyarıları incleyiniz!";
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            return mmMessage.ToJsonResult();
-        }
-
-        public ActionResult GetBolumProgramList(string kod, string tip)
-        {
-            if (tip == "bolum")
-            {
-                var lst = Management.cmbGetYetkiliAnabilimDallari(true, kod);
-                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
-            }
-            else if (tip == "program")
-            {
-                var lst = Management.cmbGetAktifProgramlar(true, kod.ToInt().Value);
-                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
-            }
-            return null;
-
-        }
-        public ActionResult GetKullaniciBolumProgramList(string enstituKod, string bolumKod, string tip)
-        {
-
-            if (tip == "bolum")
-            {
-                var lst = Management.cmbGetYetkiliProgramAnabilimDallari(true, enstituKod);
-                return lst.Select(s => new { s.Value, s.Caption }).ToJsonResult();
-            }
-            else if (tip == "program")
-            {
-                var lstStr = Management.cmbGetKullaniciProgramlari(UserIdentity.Current.Id, enstituKod, bolumKod, true);
-                return lstStr.Select(s => new { s.Value, s.Caption }).ToJsonResult();
-            }
-            else
-            {
-                return null;
-            }
-        }
-        [ValidateInput(false)]
-        public ActionResult ValidationControlSteps(kmBasvuru kModel)
-        {
-            var showEgitimDiliIsle = false;
-            var mmMessage = new MmMessage();
-            var resimBilgi = new CmbStringDto { Caption = "", Value = "" };
-
-            if (kModel.StepNo == 1)
-            {
-                mmMessage.Title = "Bir sonraki adıma geçmek için aşağıdaki uyarıları kontrol ediniz!";
-                var kmM = KullanicilarBus.KullaniciKayitKontrol(kModel);
-                mmMessage.Messages.AddRange(kmM.Messages.ToList());
-                mmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
-            }
-            else if (kModel.StepNo == 2)
-            {
-
-                #region step2
-                mmMessage = Management.obKontrol(kModel);
-                if (mmMessage.Messages.Count == 0 && kModel.TercihSayisi > 0)
-                {
-                    var kulTid = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                    kModel.KullaniciTipID = kulTid.KullaniciTipID;
-                    var qOgrenimTipKod = kModel._OgrenimTipKod.Select((s, inx) => new { Index = inx, OgrenimTipKod = s }).ToList();
-                    var qProgramKod = kModel._ProgramKod.Select((s, inx) => new { Index = inx, ProgramKod = s }).ToList();
-                    var qIngilizce = kModel._Ingilizce.Select((s, inx) => new { Index = inx, Ingilizce = s }).ToList();
-                    var qPrograms = (from s in qOgrenimTipKod
-                                     join p in qProgramKod on s.Index equals p.Index
-                                     join ing in qIngilizce on s.Index equals ing.Index
-                                     select new { s.OgrenimTipKod, p.ProgramKod, ing.Ingilizce }).ToList();
-                    var retVal = Management.programAgnoMinControl(kModel, qPrograms.Select(s => new CmbIntDto { Value = s.OgrenimTipKod, Caption = s.ProgramKod }).ToList());
-                    mmMessage.Messages.AddRange(retVal.Messages);
-                    mmMessage.MessagesDialog.AddRange(retVal.MessagesDialog);
-                    var qtercihler = qPrograms.Select(item => new CmbMultyTypeDto { Value = item.OgrenimTipKod, ValueB = item.Ingilizce, ValueS2 = item.ProgramKod }).ToList();
-                    var tomerVar = Management.cmbGetdAktifSinavlar(qtercihler, kModel.BasvuruSurecID, SinavTipGrup.Tomer, true).Count > 0 && kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci;
-                    showEgitimDiliIsle = tomerVar;
-                    if (tomerVar && !kModel.LEgitimDiliTurkce.HasValue)
-                    {
-                        mmMessage.Messages.Add("Lisans Eğitim Dilini Seçiniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "LEgitimDiliTurkce" });
-
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "LEgitimDiliTurkce" });
-
-                    if (tomerVar && kModel.YLDurum && !kModel.YLEgitimDiliTurkce.HasValue)
-                    {
-                        mmMessage.Messages.Add("Yüksek Lisans Eğitim Dilini Seçiniz.");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YLEgitimDiliTurkce" });
-
-                    }
-                    else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "YLEgitimDiliTurkce" });
-
-                }
-
-                if (kModel.TercihSayisi == 0)
-                {
-                    mmMessage.Messages.Add("Devam edebilmek için en az bir program tercihi eklemeniz gerekmektedir!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "OgrenimTipKod" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "SubOgrenimTipKod" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BolumID" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "ProgramKod" });
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "trch_SiraNo" });
-                }
-                else
-                {
-                    if (kModel.KotaValid)
-                    {
-                        mmMessage.Messages.Add("Kontenjanı bulunmayan bir programı tercihlerinize eklediniz. Devam edebilmek için lütfen kontenjanı olmayan tercihinizi kaldırıp, duyurulan kontenjan bilgisine uygun bir tercih ekleyiniz.");
-                    }
-                    else
-                    {
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "OgrenimTipKod" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "SubOgrenimTipKod" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "BolumID" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Nothing, PropertyName = "ProgramKod" });
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "trch_SiraNo" });
-                    }
-
-                }
-                #endregion
-                mmMessage.Title = "Bir sonraki adıma geçmek için aşağıdaki uyarıları kontrol ediniz!";
-
-            }
-            else if (kModel.StepNo == 3)
-            {
-                mmMessage.Title = "Kayıt işlemini yapabilmek için aşağıdaki uyarıları kontrol ediniz!";
-                #region step3
-                var qOgrenimTipKods = kModel._OgrenimTipKod.Select((s, inx) => new { s = s, Index = inx }).ToList();
-                var qIngilizces = kModel._Ingilizce.Select((s, inx) => new { s = s, Index = inx }).ToList();
-                var qtercihler = (from s in qOgrenimTipKods
-                                  join qi in qIngilizces on s.Index equals qi.Index
-                                  select new CmbMultyTypeDto { Value = s.s, ValueB = qi.s }).ToList();
-
-                var tomerVar = Management.cmbGetdAktifSinavlar(qtercihler, kModel.BasvuruSurecID, SinavTipGrup.Tomer, true).Count > 0 && kModel.KullaniciTipID == KullaniciTipBilgi.YabanciOgrenci;
-                var tomerIstensin = tomerVar && kModel.LEgitimDiliTurkce != true;
-                if (kModel.AlesIstensinmi)
-                {
-
-                    if (kModel.BasvurularSinavBilgi_A.SinavTipID <= 0)
-                    {
-                        mmMessage.Messages.Add("Ales/Gre/Gmat Sınavı grubu için sınav tipi seçiniz!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_A.SinavTipID" });
-                    }
-                    else
-                    {
-                        var kmM = Management.stKontrol(
-                            kModel.BasvuruSurecID,
-                            kModel._OgrenimTipKod,
-                            kModel._Ingilizce,
-                            kModel.BasvurularSinavBilgi_A.SinavTipID,
-                            kModel.BasvurularSinavBilgi_A.WsSinavYil,
-                            null,
-                            kModel.BasvurularSinavBilgi_A.WsSinavDonem,
-                            kModel.BasvurularSinavBilgi_A.WsXmlData,
-                            kModel._ProgramKod,
-                            kModel.BasvurularSinavBilgi_A.SinavTarihi,
-                            kModel.BasvuruTarihi,
-                            kModel.BasvurularSinavBilgi_A.SubSinavAralikID,
-                            kModel.BasvurularSinavBilgi_A.BasvuruSurecSubNot,
-                            kModel.BasvurularSinavBilgi_A.SinavNotu);
-                        mmMessage.Messages.AddRange(kmM.Messages.ToList());
-                        mmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_A.SinavTipID" });
-
-                    }
-                }
-
-                if (kModel.DilIstensinmi)
-                {
-                    var gdilSinavTips = _entities.BasvuruSurecSinavTipleris.Where(p => p.BasvuruSurecID == kModel.BasvuruSurecID && p.SinavTipGrupID == SinavTipGrup.DilSinavlari).Select(s => s.SinavTipID).ToList();
-
-                    if (kModel.BasvurularSinavBilgi_D.SinavTipID <= 0)
-                    {
-                        mmMessage.Messages.Add("Dil Sınavı grubu için sınav tipi seçiniz!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_D.SinavTipID" });
-                    }
-                    else
-                    {
-
-                        var kmM = Management.stKontrol(
-                            kModel.BasvuruSurecID,
-                            kModel._OgrenimTipKod,
-                            kModel._Ingilizce,
-                            kModel.BasvurularSinavBilgi_D.SinavTipID,
-                            kModel.BasvurularSinavBilgi_D.WsSinavYil,
-                            kModel.BasvurularSinavBilgi_D.SinavDilID,
-                            kModel.BasvurularSinavBilgi_D.WsSinavDonem,
-                            kModel.BasvurularSinavBilgi_D.WsXmlData,
-                            kModel._ProgramKod,
-                            kModel.BasvurularSinavBilgi_D.SinavTarihi,
-                            kModel.BasvuruTarihi,
-                            kModel.BasvurularSinavBilgi_D.SubSinavAralikID,
-                            kModel.BasvurularSinavBilgi_D.BasvuruSurecSubNot,
-                            kModel.BasvurularSinavBilgi_D.SinavNotu,
-                            kModel.BasvurularSinavBilgi_D.IsTaahhutVar);
-                        mmMessage.Messages.AddRange(kmM.Messages.ToList());
-                        mmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_D.SinavTipID" });
-
-                    }
-                }
-                if (tomerIstensin)
-                {
-                    if (kModel.BasvurularSinavBilgi_T.SinavTipID <= 0)
-                    {
-                        mmMessage.Messages.Add("Tomer sınav tipi seçiniz!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "BasvurularSinavBilgi_T.SinavTipID" });
-                    }
-                    else
-                    {
-                        var kmM = Management.stKontrol(
-                            kModel.BasvuruSurecID,
-                            kModel._OgrenimTipKod,
-                            kModel._Ingilizce,
-                            kModel.BasvurularSinavBilgi_T.SinavTipID,
-                            kModel.BasvurularSinavBilgi_T.WsSinavYil,
-                            kModel.BasvurularSinavBilgi_T.SinavDilID,
-                            kModel.BasvurularSinavBilgi_T.WsSinavDonem,
-                            null,
-                            kModel._ProgramKod,
-                            kModel.BasvurularSinavBilgi_T.SinavTarihi,
-                            kModel.BasvuruTarihi,
-                            kModel.BasvurularSinavBilgi_T.SubSinavAralikID,
-                            kModel.BasvurularSinavBilgi_T.BasvuruSurecSubNot,
-                            kModel.BasvurularSinavBilgi_T.SinavNotu,
-                            kModel.BasvurularSinavBilgi_T.IsTaahhutVar);
-                        mmMessage.Messages.AddRange(kmM.Messages.ToList());
-                        mmMessage.MessagesDialog.AddRange(kmM.MessagesDialog.ToList());
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "BasvurularSinavBilgi_T.SinavTipID" });
-
-                    }
-                }
-                if (kModel.BasvuruDurumID <= 0)
-                {
-                    mmMessage.Messages.Add("Başvuru Durumunu Seçiniz!");
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Basvuru.BasvuruDurumID" });
-
-                }
-                else
-                {
-                    if (kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı && !kModel.Onaylandi)
-                    {
-                        mmMessage.Messages.Add("Başvuru Onaylayınız!");
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Onaylandi" });
-                    }
-                    else
-                    {
-                        mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Onaylandi" });
-                    }
-                    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Basvuru.BasvuruDurumID" });
-                }
-                if (mmMessage.Messages.Count == 0) kModel.sbmtForm = true;
-                #endregion
-            }
-            mmMessage.IsSuccess = mmMessage.Messages.Count == 0;
-            mmMessage.MessageType = mmMessage.IsSuccess ? Msgtype.Success : Msgtype.Warning;
-            string ekAciklama = "";
-            string anketGiris = "";
-            if (kModel.sbmtForm && kModel.Onaylandi && kModel.BasvuruDurumID == BasvuruDurumu.Onaylandı)
-            {
-
-                var bSurec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == kModel.BasvuruSurecID);
-                if (!bSurec.AnketID.HasValue || (bSurec.AnketID.HasValue && UserIdentity.Current.Informations.Any(a => a.Key == "LUBAnket")))
-                {
-
-                    var model = new EkAciklamaContentDto
-                    {
-                        Baslik = "Başvuru işleminizi tamamlamadan önce aşağıda bulunan programlar ile ilgili ek açıklamaları okuyunuz!"
-                    };
-                    var prgs = _entities.Programlars.Where(p => kModel._ProgramKod.Contains(p.ProgramKod)).ToList();
-                    foreach (var item in prgs)
-                    {
-                        if (item.ProgramSecimiEkBilgi)
-                        {
-                            model.Detay.Add(new CmbStringDto { Caption = item.ProgramAdi + ":", Value = item.Aciklama });
-                        }
-                    }
-
-                    if (model.Detay.Count > 0) ekAciklama = ViewRenderHelper.RenderPartialView("Ajax", "getEkAciklamaContent", model);
-                }
-                else
-                {
-                    if (kModel.BasvuruID <= 0 || !_entities.AnketCevaplaris.Any(a => a.BasvuruID == kModel.BasvuruID))
-                    {
-
-                        var anketSorulari = (from bsa in _entities.Ankets.Where(p => p.AnketID == bSurec.AnketID)
-                                             join aso in _entities.AnketSorus on bsa.AnketID equals aso.AnketID
-                                             join sb in _entities.AnketCevaplaris.Where(p => p.BasvuruID == kModel.BasvuruID && p.Basvurular.KullaniciID == kModel.KullaniciID) on aso.AnketSoruID equals sb.AnketSoruID into def1
-                                             from sbc in def1.DefaultIfEmpty()
-                                             select new
-                                             {
-                                                 aso.AnketSoruID,
-                                                 AnketSoruSecenekID = sbc != null ? sbc.AnketSoruSecenekID : (int?)null,
-                                                 Aciklama = sbc != null ? sbc.EkAciklama : "",
-                                                 aso.SiraNo,
-                                                 aso.SoruAdi,
-                                                 Secenekler = aso.AnketSoruSeceneks.OrderBy(o => o.SiraNo).Select(s => new
-                                                 {
-                                                     s.AnketSoruSecenekID,
-                                                     s.AnketSoruID,
-                                                     s.SiraNo,
-                                                     s.IsEkAciklamaGir,
-                                                     s.SecenekAdi,
-                                                     s.IsYaziOrSayi
-
-                                                 }).ToList()
-
-
-                                             }).OrderBy(o => o.SiraNo).ToList();
-                        var model = new KmAnketlerCevap
-                        {
-                            AnketTipID = 1,
-                            BasvuruSurecID = kModel.BasvuruSurecID,
-                            AnketID = bSurec.AnketID.Value,
-                            JsonStringData = anketSorulari.ToJsonText()
-                        };
-                        foreach (var item in anketSorulari)
-                        {
-                            model.AnketCevapModel.Add(new AnketCevapDto
-                            {
-                                SecilenAnketSoruSecenekID = item.AnketSoruSecenekID,
-                                SoruBilgi = new FrAnketDetayDto { AnketSoruID = item.AnketSoruID, SoruAdi = item.SoruAdi, SiraNo = item.SiraNo, Aciklama = item.Aciklama },
-                                SoruSecenek = item.Secenekler.Select(s => new FrAnketSecenekDetayDto
-                                {
-                                    AnketSoruSecenekID = s.AnketSoruSecenekID,
-                                    SiraNo = s.SiraNo,
-                                    IsEkAciklamaGir = s.IsEkAciklamaGir,
-                                    SecenekAdi = s.SecenekAdi
-                                }).ToList(),
-                                SelectListSoruSecenek = new SelectList(item.Secenekler.ToList(), "AnketSoruSecenekID", "SecenekAdi", item.AnketSoruSecenekID)
-                            });
-                        }
-
-                        anketGiris = ViewRenderHelper.RenderPartialView("Ajax", "getAnket", model);
-                    }
-                }
-            }
-            return new { kModel.sbmtForm, _MmMessage = mmMessage, EkAciklamalar = ekAciklama, AnketGiris = anketGiris, ShowEgitimDili = showEgitimDiliIsle, kModel.YLDurum }.ToJsonResult();
         }
 
 
@@ -2323,11 +1282,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult RotateImage(bool? leftOrRight, int? kullaniciId)
         {
             if (!leftOrRight.HasValue || !kullaniciId.HasValue) return null;
-                if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) kullaniciId = UserIdentity.Current.Id;
-            var gelenBKayitY = RoleNames.GelenBasvurularKayit.InRoleCurrent();
+            if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) kullaniciId = UserIdentity.Current.Id;
             var user = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
             string folname = SistemAyar.KullaniciResimYolu;
-            if ((gelenBKayitY || kullaniciId == UserIdentity.Current.Id) && user.ResimAdi.IsNullOrWhiteSpace() == false)
+            if ((kullaniciId == UserIdentity.Current.Id) && user.ResimAdi.IsNullOrWhiteSpace() == false)
             {
                 var imgPath = folname + "/" + user.ResimAdi;
                 string pth = Server.MapPath(Management.getRoot() + imgPath);
@@ -2849,35 +1807,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (model.BasvuruSurecID.HasValue)
             {
-                if (model.IsBolumOrOgrenci)
-                {
-                    var surec = _entities.BasvuruSurecs.First(p => p.BasvuruSurecID == model.BasvuruSurecID.Value);
-                    //Yetkili Kullanıcılara MAİLGÖNDER
-                    var rollers = new List<string>();
-                    if (surec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru)
-                        rollers = new List<string>() { RoleNames.MulakatSureci, RoleNames.MulakatKayıt };
-                    else if (surec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru)
-                        rollers = new List<string>() { RoleNames.YgMulakatSureci, RoleNames.YgMulakatKayıt };
 
-                    var qBolumlerEmailList = _entities.KullaniciProgramlaris.Where(p => (p.Kullanicilar.Rollers.Any(a => rollers.Contains(a.RolAdi))
-                                                                                || p.Kullanicilar.YetkiGruplari.YetkiGrupRolleris.Any(a => rollers.Contains(a.Roller.RolAdi))) &&
-                                                                                model.ProgramKods.Contains(p.ProgramKod)).Select(s => s.Kullanicilar.EMail).ToList();
+                var qogrenciEmailList = _entities.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == model.BasvuruSurecID && model.ProgramKods.Contains(p.ProgramKod)).AsQueryable();
 
-                    secilenAlicilar.AddRange(qBolumlerEmailList);
-                }
-                else
-                {
-                    var qogrenciEmailList = _entities.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruSurecID == model.BasvuruSurecID && model.ProgramKods.Contains(p.ProgramKod)).AsQueryable();
+                if (model.OgrenimTipKods.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => model.OgrenimTipKods.Contains(p.OgrenimTipKod));
+                if (model.KayitDurumIDs.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => p.MulakatSonuclaris.Any(a => model.KayitDurumIDs.Contains(a.KayitDurumID)));
+                if (model.MulakatSonucTipIDs.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => p.MulakatSonuclaris.Any(a => model.MulakatSonucTipIDs.Contains(a.MulakatSonucTipID)));
+                var data = qogrenciEmailList.Select(s => new { s.Basvurular.EMail, kEmail = s.Basvurular.EMail }).ToList();
+                var tempL = new List<string>();
+                tempL.AddRange(data.Select(s => s.EMail));
+                tempL.AddRange(data.Select(s => s.kEmail));
+                secilenAlicilar.AddRange(tempL.Distinct());
 
-                    if (model.OgrenimTipKods.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => model.OgrenimTipKods.Contains(p.OgrenimTipKod));
-                    if (model.KayitDurumIDs.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => p.MulakatSonuclaris.Any(a => model.KayitDurumIDs.Contains(a.KayitDurumID)));
-                    if (model.MulakatSonucTipIDs.Count > 0) qogrenciEmailList = qogrenciEmailList.Where(p => p.MulakatSonuclaris.Any(a => model.MulakatSonucTipIDs.Contains(a.MulakatSonucTipID)));
-                    var data = qogrenciEmailList.Select(s => new { s.Basvurular.EMail, kEmail = s.Basvurular.EMail }).ToList();
-                    var tempL = new List<string>();
-                    tempL.AddRange(data.Select(s => s.EMail));
-                    tempL.AddRange(data.Select(s => s.kEmail));
-                    secilenAlicilar.AddRange(tempL.Distinct());
-                }
             }
             if (model.IsTopluMail && !model.SecilenTopluAlicilar.IsNullOrWhiteSpace())
             {
@@ -3062,6 +2003,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Mail gönderilirken bir hata oluştu! <br/>Hata:" + msgerr);
                         mmMessage.IsSuccess = false;
                         mmMessage.MessageType = Msgtype.Error;
+                        SistemBilgilendirmeBus.SistemBilgisiKaydet(excpt.ToExceptionMessage(), "Ajax/MailGonderPost<br/><br/>" + excpt.ToExceptionStackTrace(), LogType.Hata);
+
                         try
                         {
                             _entities.GonderilenMaillers.Remove(eklenen);
@@ -3396,7 +2339,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             else SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gönderilirken eklenen dosya eki sistemde bulunamadı!<br/>Dosya Adı:" + item.EkAdi + " <br/>Dosya Yolu:" + ekTamYol, "Ajax/MesajKaydetPost", LogType.Uyarı);
                         }
-                        var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, eMailList, attach);
+
+                        try
+                        {
+                            var snded = MailManager.SendMail(itemE.EnstituKod, mCOntent.Title, mCOntent.HtmlContent, eMailList, attach);
+                        }
+                        catch (Exception e)
+                        {
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet("Mail gonderilirken bir hata oluştu. hata:" + e.ToExceptionMessage(), e.ToExceptionStackTrace(), LogType.Kritik);
+                        }
+
 
                     }
                 }
@@ -3418,7 +2370,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var obsGetData = new ObsGetData();
             var model = new ObsOgrenciSorgulaModel();
-            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc);
+            var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
+            var donemId = donem.BaslangicTarihi.Year + "" + donem.DonemID;
+            if (!tc.IsNullOrWhiteSpace()) model = obsGetData.GetOgrenciBilgi(tc, donemId);
             model.Tc = tc;
             var view = ViewRenderHelper.RenderPartialView("Ajax", "ObsOgrenciSorgula", model);
             return view.ToJsonResult();
@@ -3491,64 +2445,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (raporTipi == RaporTipleri.Basvuru)
-                {
-                    #region BasvuruFormu
-                    var basvId = Request["BasvuruID"].ToIntObj();
-                    var btId = Request["BasvuruTercihID"].ToIntObj();
-                    var otId = Request["OgrenimTipKod"].ToIntObj();
-
-
-                    var gd = Guid.NewGuid().ToString().Substr(0, 5);
-
-                    using (var db = new LisansustuBasvuruSistemiEntities())
-                    {
-                        List<BasvurularTercihleri> terch;
-                        var basvuru = db.Basvurulars.First(p => p.BasvuruID == basvId);
-                        terch = btId.HasValue ? db.BasvurularTercihleris.Where(p => p.BasvuruTercihID == btId).ToList() : db.BasvurularTercihleris.Where(p => p.BasvuruID == basvId).ToList();
-                        rprBasvuruDoktora rprDoktora = null;
-                        rprBasvuruYL rprYl = null;
-
-                        var doktoraTercihleri = terch.Where(p => p.OgrenimTipKod == OgrenimTipi.Doktra).ToList();
-                        if (doktoraTercihleri.Count > 0)
-                        {
-                            foreach (var item in doktoraTercihleri)
-                            {
-                                var _rprDoktora = new rprBasvuruDoktora(item.BasvuruTercihID);
-                                if (rprDoktora == null) rprDoktora = _rprDoktora;
-                                else rprDoktora.Pages.AddRange(_rprDoktora.Pages);
-
-                                rprDoktora.DisplayName = basvuru.Ad + " " + basvuru.Soyad + " DoktoraBF_" + gd;
-                                rprX = rprDoktora;
-                            }
-                        }
-                        var YLTercihleri = terch.Where(p => p.OgrenimTipKod != OgrenimTipi.Doktra).OrderBy(o => o.SiraNo).ToList();
-                        if (YLTercihleri.Count > 0)
-                        {
-                            if (YLTercihleri.Count == 1)
-                            {
-                                var _rprYL = new rprBasvuruYL(YLTercihleri[0].BasvuruTercihID, null);
-                                _rprYL.CreateDocument();
-                                if (rprYl == null) rprYl = _rprYL;
-                                else rprYl.Pages.AddRange(_rprYL.Pages);
-
-                            }
-                            else
-                            {
-                                var _rprYL = new rprBasvuruYL(YLTercihleri[0].BasvuruTercihID, YLTercihleri[1].BasvuruTercihID);
-                                _rprYL.CreateDocument();
-                                if (rprYl == null) rprYl = _rprYL;
-                                else rprYl.Pages.AddRange(_rprYL.Pages);
-                            }
-                            rprYl.DisplayName = basvuru.Ad + " " + basvuru.Soyad + " YüksekLisansBF_" + gd;
-                            rprX = rprYl;
-                        }
-
-
-                    }
-                    #endregion
-                }
-                else if (raporTipi == RaporTipleri.BasvuruOgrenciListesi)
+                if (raporTipi == RaporTipleri.BasvuruOgrenciListesi)
                 {
                     #region BasvuruOgrenciListesi
                     var _BasvuruSurecID = Request["BasvuruSurecID"].ToIntObj();
@@ -3667,7 +2564,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                     ms.SinavaGirmediS,
                                     pr.ProgramKod,
                                     pr.ProgramAdi,
-                                    pr.Ingilizce,
                                     ot.OgrenimTipKod,
                                     ot.OgrenimTipAdi,
                                     at.AlanTipID,
@@ -3738,7 +2634,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             AnabilimDaliAdi = s.AnabilimDaliAdi,
                             ProgramKod = s.ProgramKod,
                             ProgramAdi = s.ProgramAdi,
-                            Ingilizce = s.Ingilizce,
                             OgrenimTipKod = s.OgrenimTipKod,
                             OgrenimTipAdi = s.OgrenimTipAdi,
                             Kota = s.AlanKota,
@@ -3872,389 +2767,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     #endregion
                 }
-                else if (raporTipi == RaporTipleri.BasvuruSonucListesiBolum)
-                {
-                    #region bBSonucListesi 
-                    var _MulakatID = Request["MulakatID"].ToIntObj();
-                    var _AlanTipID = Request["AlanTipID"].ToIntObj();
-                    var _MulakatSonucTipIDstr = Request["MulakatSonucTipID"];
-                    var _PuanlarGozuksun = Request["PuanlarGozuksun"].ToBooleanObj();
-                    var _SadecePuanliListe = Request["SadecePuanliListe"].ToBooleanObj();
-                    var _MulakatSonucTipID = new List<int>();
 
-                    using (var db = new LisansustuBasvuruSistemiEntities())
-                    {
-                        var mulakat = db.Mulakats.Where(p => p.MulakatID == _MulakatID).First();
-                        var data = new List<RprBasvuruSonucModel>();
-                        if (_PuanlarGozuksun.Value)
-                        {
-
-
-                            var q = from s in db.BasvuruSurecs
-                                    join ms in db.MulakatSonuclaris on s.BasvuruSurecID equals ms.BasvuruSurecID
-                                    join t in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumu.Onaylandı) on ms.BasvuruTercihID equals t.BasvuruTercihID
-                                    join kt in db.BasvuruSurecKotalars on new { s.BasvuruSurecID, t.ProgramKod, t.OgrenimTipKod } equals new { kt.BasvuruSurecID, kt.ProgramKod, kt.OgrenimTipKod }
-                                    join bsOt in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == mulakat.BasvuruSurecID) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
-                                    join ot in db.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                    join at in db.AlanTipleris on t.AlanTipID equals at.AlanTipID
-                                    join pr in db.Programlars on t.ProgramKod equals pr.ProgramKod
-                                    join bl in db.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
-                                    join b in db.Basvurulars on t.BasvuruID equals b.BasvuruID
-                                    join bst in db.MulakatSonucTipleris on ms.MulakatSonucTipID equals bst.MulakatSonucTipID
-                                    where ms.MulakatID == _MulakatID && s.BasvuruSurecID == mulakat.BasvuruSurecID
-                                    select new
-                                    {
-                                        s.BasvuruSurecID,
-                                        bl.AnabilimDaliKod,
-                                        bl.AnabilimDaliAdi,
-                                        bsOt.MulakatSurecineGirecek,
-                                        ms.MulakatID,
-                                        AlanKota = kt.OrtakKota ? kt.OrtakKotaSayisi.Value : (t.AlanTipID == AlanTipi.AlanIci ? kt.AlanIciKota : kt.AlanDisiKota),
-                                        ms.SinavaGirmediY,
-                                        ms.SinavaGirmediS,
-                                        pr.ProgramKod,
-                                        pr.ProgramAdi,
-                                        ot.OgrenimTipKod,
-                                        ot.OgrenimTipAdi,
-                                        at.AlanTipID,
-                                        AlanTipAdi = at.AlanTipAdi + (_PuanlarGozuksun.Value ? " Başvuran Öğrenci Sonuç Listesi" : " Başvuran Öğrenci Listesi"),
-                                        AdSoyad = b.Ad + " " + b.Soyad,
-                                        AlesNotu = ms.AlesNotuOrDosyaNotu,
-                                        ms.GirisSinavNotu,
-                                        ms.Agno,
-                                        ms.YaziliNotu,
-                                        ms.SozluNotu,
-                                        SSiraNo = ms.SiraNo,
-                                        ms.GenelBasariNotu,
-                                        ProgramGrupAdi = pr.ProgramAdi + " " + ot.OgrenimTipAdi + " (" + at.AlanTipAdi + ")",
-                                        TSiraNo = t.SiraNo,
-                                        bst.MulakatSonucTipID,
-                                        t.BasvuruTercihID,
-                                        MulakatSonucTipAdi = _SadecePuanliListe.HasValue && _SadecePuanliListe.Value ? "" : bst.MulakatSonucTipAdi,
-                                        kt.IsAlesYerineDosyaNotuIstensin,
-                                        ms.AlesNotuOrDosyaNotu,
-
-                                    };
-                            if (_SadecePuanliListe.HasValue == false || _SadecePuanliListe.Value == false)
-                            {
-                                _MulakatSonucTipIDstr.Split(',').ToList().ForEach((item) => { _MulakatSonucTipID.Add(item.ToInt().Value); });
-                                q = q.Where(p => _MulakatSonucTipID.Contains(p.MulakatSonucTipID));
-                            }
-                            //q = q.Where(p => p.MulakatSurecineGirecek && p.SinavaGirmediY == (p.SinavaGirmediY.HasValue ? false : (bool?)null) && p.SinavaGirmediS == (p.SinavaGirmediS.HasValue ? false : (bool?)null)); 
-                            q = q.OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenByDescending(t => t.AlanTipAdi).ThenByDescending(t => t.GenelBasariNotu);
-                            if (_AlanTipID.HasValue) q = q.Where(p => p.AlanTipID == _AlanTipID.Value);
-
-                            data = q.Select(s => new RprBasvuruSonucModel
-                            {
-                                BasvuruSurecID = s.BasvuruSurecID,
-                                AnabilimDaliKod = s.AnabilimDaliKod,
-                                AnabilimDaliAdi = s.AnabilimDaliAdi,
-                                ProgramKod = s.ProgramKod,
-                                ProgramAdi = s.ProgramAdi,
-                                OgrenimTipKod = s.OgrenimTipKod,
-                                OgrenimTipAdi = s.OgrenimTipAdi,
-                                Kota = s.AlanKota,
-                                AlanTipID = s.AlanTipID,
-                                AlanTipAdi = s.AlanTipAdi,
-                                AdSoyad = s.AdSoyad,
-                                AlesNotu = s.AlesNotu.Value,
-                                YaziliNotu = s.YaziliNotu,
-                                SozluNotu = s.SozluNotu,
-                                GirisSinavNotu = s.GirisSinavNotu,
-                                Agno = s.Agno,
-                                SiraNo = s.SSiraNo ?? 0,
-                                GenelBasariNotu = s.GenelBasariNotu,
-                                ProgramGrupAdi = s.ProgramGrupAdi,
-                                TercihNo = s.TSiraNo,
-                                TercihID = s.BasvuruTercihID,
-                                MulakatSonucTipID = s.MulakatSonucTipID,
-                                MulakatSonucTipAdi = s.MulakatSonucTipAdi,
-                                MulakatID = s.MulakatID,
-                                SinavaGirmediS = s.SinavaGirmediS,
-                                SinavaGirmediY = s.SinavaGirmediY
-                            }).OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenBy(t => t.AlanTipAdi).ThenByDescending(t => t.GenelBasariNotu).ToList();
-
-                        }
-                        else
-                        {
-                            var q = from s in db.BasvuruSurecs
-                                    join b in db.Basvurulars.Where(p => p.BasvuruDurumID == BasvuruDurumu.Onaylandı) on s.BasvuruSurecID equals b.BasvuruSurecID
-                                    join t in db.BasvurularTercihleris.Where(p => p.Basvurular.BasvuruDurumID == BasvuruDurumu.Onaylandı) on b.BasvuruID equals t.BasvuruID
-                                    join ms in db.MulakatSonuclaris on t.BasvuruTercihID equals ms.BasvuruTercihID into defM
-                                    from ms in defM.DefaultIfEmpty()
-                                    join bt in db.BasvurularSinavBilgis.Where(p => p.SinavTipGrupID == SinavTipGrup.Ales_Gree) on b.BasvuruID equals bt.BasvuruID into defBt
-                                    from dBt in defBt.DefaultIfEmpty()
-                                    join bsOt in db.BasvuruSurecOgrenimTipleris.Where(p => p.BasvuruSurecID == mulakat.BasvuruSurecID) on t.OgrenimTipKod equals bsOt.OgrenimTipKod
-                                    join ot in db.OgrenimTipleris on new { s.EnstituKod, t.OgrenimTipKod } equals new { ot.EnstituKod, ot.OgrenimTipKod }
-                                    join at in db.AlanTipleris on t.AlanTipID equals at.AlanTipID
-                                    join pr in db.Programlars on t.ProgramKod equals pr.ProgramKod
-                                    join bl in db.AnabilimDallaris on new { pr.AnabilimDaliKod, s.EnstituKod } equals new { bl.AnabilimDaliKod, bl.EnstituKod }
-                                    join kot in db.BasvuruSurecKotalars.Where(p => p.ProgramKod == mulakat.ProgramKod && p.OgrenimTipKod == mulakat.OgrenimTipKod) on s.BasvuruSurecID equals kot.BasvuruSurecID
-                                    where t.ProgramKod == mulakat.ProgramKod && t.OgrenimTipKod == mulakat.OgrenimTipKod && s.BasvuruSurecID == mulakat.BasvuruSurecID
-                                    select new
-                                    {
-                                        bl.AnabilimDaliKod,
-                                        bl.AnabilimDaliAdi,
-                                        bsOt.MulakatSurecineGirecek,
-                                        Kota = kot.OrtakKota ? kot.OrtakKotaSayisi.Value : (t.AlanTipID == AlanTipi.AlanIci ? kot.AlanIciKota : kot.AlanDisiKota),
-                                        pr.ProgramKod,
-                                        pr.ProgramAdi,
-                                        ot.OgrenimTipKod,
-                                        ot.OgrenimTipAdi,
-                                        pr.AlesTipID,
-                                        pr.AnabilimDallari.EnstituKod,
-                                        pr.AlesNotuYuksekOlanAlinsin,
-                                        dBt.WsXmlData,
-                                        AlesNotu = kot.IsAlesYerineDosyaNotuIstensin == true ? (ms != null ? ms.AlesNotuOrDosyaNotu : null) : dBt.SinavNotu,
-                                        AGNO = b.YLNotSistemID.HasValue ? b.YLMezuniyetNotu100LukSistem : b.LMezuniyetNotu100LukSistem,
-                                        at.AlanTipID,
-                                        AlanTipAdi = at.AlanTipAdi + (_PuanlarGozuksun.Value ? " Başvuran Öğrenci Sonuç Listesi" : " Başvuran Öğrenci Listesi"),
-                                        AdSoyad = b.Ad + " " + b.Soyad,
-                                        ProgramGrupAdi = pr.ProgramAdi + " " + ot.OgrenimTipAdi + " (" + at.AlanTipAdi + ")",
-                                        MSSiraNo = ms.SiraNo,
-                                        TSiraNo = t.SiraNo,
-                                        t.BasvuruTercihID,
-                                        kot.IsAlesYerineDosyaNotuIstensin,
-
-
-                                    };
-                            if (_AlanTipID.HasValue) q = q.Where(p => p.AlanTipID == _AlanTipID.Value);
-                            data = q.Select(s => new RprBasvuruSonucModel
-                            {
-                                AnabilimDaliKod = s.AnabilimDaliKod,
-                                AnabilimDaliAdi = s.AnabilimDaliAdi,
-                                ProgramKod = s.ProgramKod,
-                                ProgramAdi = s.ProgramAdi,
-                                OgrenimTipKod = s.OgrenimTipKod,
-                                OgrenimTipAdi = s.OgrenimTipAdi,
-                                Kota = s.Kota,
-                                Agno = s.AGNO,
-                                WsXmlData = s.WsXmlData,
-                                AlesNotuYuksekOlanAlinsin = s.AlesNotuYuksekOlanAlinsin,
-                                AlesNotu = s.AlesNotu,
-                                AlesTipID = s.AlesTipID,
-                                AlanTipID = s.AlanTipID,
-                                AlanTipAdi = s.AlanTipAdi,
-                                AdSoyad = s.AdSoyad,
-                                ProgramGrupAdi = s.ProgramGrupAdi,
-                                PSiraNo = s.MSSiraNo,
-                                TercihNo = s.TSiraNo,
-                                TercihID = s.BasvuruTercihID,
-                            }).OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.ProgramAdi).ThenBy(t => t.OgrenimTipAdi).ThenByDescending(t => t.AlanTipAdi).OrderBy(t => t.AdSoyad).ToList();
-
-
-                        }
-                        var dataD = data.Select(s => new { s.ProgramKod, s.OgrenimTipKod, s.AlanTipID }).Distinct();
-                        foreach (var item in dataD)
-                        {
-
-                            int inx = 1;
-                            foreach (var item2 in data.Where(p => p.OgrenimTipKod == item.OgrenimTipKod && p.ProgramKod == item.ProgramKod && p.AlanTipID == item.AlanTipID))
-                            {
-
-                                item2.SiraNo = inx;
-                                inx++;
-                            }
-                        }
-                        var qSinavOt = db.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.BasvuruSurecID == mulakat.BasvuruSurecID).ToList();
-
-                        var kotalar = db.BasvuruSurecKotalars.Where(p => p.BasvuruSurecID == mulakat.BasvuruSurecID).ToList();
-                        var bsSinavBilgi = db.BasvuruSurecSinavTipleris.Where(p => p.BasvuruSurecID == mulakat.BasvuruSurecID).ToList();
-
-                        foreach (var item in data)
-                        {
-                            var btercih = db.BasvurularTercihleris.Where(p => p.BasvuruTercihID == item.TercihID).First();
-                            var kota = kotalar.Where(p => p.ProgramKod == btercih.ProgramKod && p.OgrenimTipKod == btercih.OgrenimTipKod).First();
-
-                            var isAlesYerineDosyaNotuIstensin = kota.IsAlesYerineDosyaNotuIstensin == true;
-                            if (!isAlesYerineDosyaNotuIstensin)
-                            {
-                                var sinavBilgi = btercih.Basvurular.BasvurularSinavBilgis.Where(p => p.SinavTipGrupID == SinavTipGrup.Ales_Gree).FirstOrDefault();
-                                var _snvBilgi = bsSinavBilgi.Where(p => p.SinavTipID == (sinavBilgi != null ? sinavBilgi.SinavTipID : -1)).FirstOrDefault();
-                                bool sinavYok = qSinavOt.Where(p => p.OgrenimTipKod == btercih.OgrenimTipKod && p.Ingilizce == kota.Programlar.Ingilizce && p.SinavTipID == (_snvBilgi != null ? _snvBilgi.SinavTipID : p.SinavTipID) && p.SinavTipleri.SinavTipGrupID == SinavTipGrup.Ales_Gree
-                                                 && (p.BasvuruSurecSinavTipleriOTNotAraliklariGecersizProgramlars.Any(a => a.ProgramKod == btercih.ProgramKod) == true || !p.IsGecerli || !p.IsIstensin)).Any();
-                                if (sinavBilgi != null && sinavYok == false)
-                                {
-
-                                    if (_snvBilgi.WebService) // ales notu al
-                                    {
-                                        //var wsxmlNot = sinavBilgi.WsXmlData.toSinavSonucAlesXmlModel();
-                                        //if (btercih.Programlar.AlesNotuYuksekOlanAlinsin && btercih.Programlar.AnabilimDallari.EnstituKod == EnstituKodlari.SosyalBilimleri)
-                                        //{
-                                        //    var maxNot = new Dictionary<int, double>();
-                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sayısal)) maxNot.Add(AlesTipBilgi.Sayısal, wsxmlNot.SAY_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.Sözel)) maxNot.Add(AlesTipBilgi.Sözel, wsxmlNot.SOZ_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        //    if (btercih.Programlar.ProgramlarAlesEslesmeleris.Any(a => a.AlesTipID == AlesTipBilgi.EşitAğırlık)) maxNot.Add(AlesTipBilgi.EşitAğırlık, wsxmlNot.EA_PUAN.ToDouble().Value.ToString("n2").ToDouble().Value);
-                                        //    item.AlesNotu = maxNot.Select(s => s.Value).Max();
-                                        //}
-                                        //else
-                                        //{
-                                        //    if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sayısal)
-                                        //        item.AlesNotu = wsxmlNot.SAY_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.Sözel)
-                                        //        item.AlesNotu = wsxmlNot.SOZ_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        //    else if (btercih.Programlar.AlesTipID == AlesTipBilgi.EşitAğırlık)
-                                        //        item.AlesNotu = wsxmlNot.EA_PUAN.ToDouble().ToString("n2").ToDouble().Value;
-                                        //}
-                                    }
-                                    else
-                                        item.AlesNotu = sinavBilgi.SinavNotu;
-                                }
-                                else item.AlesNotu = null;//sınav istenmediği için ales null olarak eklenir 
-                            }
-
-                        }
-                        var mdl = new RprBasvuruSonucBolumModel();
-                        var firstD = data.FirstOrDefault();
-                        if (firstD != null)
-                        {
-                            mdl.BolumAdi = firstD.AnabilimDaliAdi;
-                            mdl.ProgramAdi = firstD.ProgramAdi + " " + firstD.OgrenimTipAdi;
-                        }
-                        mdl.ProgramB = data;
-                        var juri = db.MulakatJuris.Where(p => p.MulakatID == _MulakatID).Select(s => new RwMulakatJuri
-                        {
-                            MulakatID = s.MulakatID,
-                            MulakatJuriID = s.MulakatJuriID,
-                            JuriAdi = s.JuriAdi,
-                            SiraNo = s.SiraNo,
-                            IsAsil = s.IsAsil,
-                            AsilYedek = s.IsAsil ? "Asil" : "Yedek"
-                        }).OrderByDescending(o => o.IsAsil).ThenBy(t => t.SiraNo).ToList();
-                        mdl.MulakatJuriB = juri;
-
-                        mdl.MulakatDetayB = (from s in db.MulakatDetays.Where(p => p.MulakatID == _MulakatID)
-                                             join mst in db.MulakatSinavTurleris on s.MulakatSinavTurID equals mst.MulakatSinavTurID
-                                             join kmps in db.Kampuslers on s.KampusID equals kmps.KampusID
-                                             join bsst in db.BasvuruSurecMulakatSinavTurleris on new { s.Mulakat.BasvuruSurecID, s.MulakatSinavTurID } equals new { bsst.BasvuruSurecID, bsst.MulakatSinavTurID }
-                                             select new krMulakatDetay
-                                             {
-                                                 MulakatID = s.MulakatID,
-                                                 MulakatSinavTurID = s.MulakatSinavTurID,
-                                                 MulakatSinavTurAdi = mst.MulakatSinavTurAdi,
-                                                 YuzdeOran = bsst.YuzdeOran,
-                                                 YuzdeOranStr = "%" + s.YuzdeOran,
-                                                 SinavTarihi = s.SinavTarihi,
-                                                 KampusAdi = kmps.KampusAdi,
-                                                 KampusID = s.KampusID,
-                                                 YerAdi = s.YerAdi
-                                             }).ToList();
-
-
-                        if (_PuanlarGozuksun.HasValue && _PuanlarGozuksun.Value)
-                        {
-                            rprBasvuruOgrenciPuanList rpr = new rprBasvuruOgrenciPuanList(mulakat.BasvuruSurecID);
-                            rpr.DataSource = mdl;
-                            if (mulakat.BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rpr.DisplayName = "Lisansüstü Başvuru Mülakat Sonuç Puan Listesi";
-                            else rpr.DisplayName = "Lisansüstü Yatay Geçiş Mülakat Sonuç Puan Listesi";
-                            rpr.PrintingSystem.ContinuousPageNumbering = true;
-                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
-
-                            rprX = rpr;
-                        }
-                        else
-                        {
-                            rprBasvuruOgrenciList rpr = new rprBasvuruOgrenciList(mulakat.BasvuruSurecID);
-                            rpr.DataSource = mdl;
-                            if (mulakat.BasvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rpr.DisplayName = "Lisansüstü Başvuru Mülakat Sınav Giriş Listesi";
-                            else rpr.DisplayName = "Lisansüstü Yatay Geçiş Mülakat Sınav Giriş Listesi";
-                            rpr.PrintingSystem.ContinuousPageNumbering = true;
-                            rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
-
-                            rprX = rpr;
-                        }
-                    }
-                    #endregion
-                }
-                else if (raporTipi == RaporTipleri.KesinKayitListesi)
-                {
-                    #region bBSonucListesi
-                    var _BasvuruSurecID = Request["BasvuruSurecID"].ToIntObj();
-                    using (var db = new LisansustuBasvuruSistemiEntities())
-                    {
-                        var imgPath = SistemAyar.KullaniciResimYolu;
-                        var basvuruSurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == _BasvuruSurecID).First();
-                        var kayitOlanlar = basvuruSurec.MulakatSonuclaris.Where(p => p.KayitDurumID.HasValue && p.KayitDurumlari.IsKayitOldu == true).ToList().Select(s => new RprModelKazananList
-                        {
-                            ProgramKodu = s.BasvurularTercihleri.ProgramKod,
-                            ProgramAdi = s.BasvurularTercihleri.Programlar.ProgramAdi + " (" + s.BasvurularTercihleri.ProgramKod + ")",
-                            OgrenciNo = s.Basvurular.Kullanicilar.OgrenciNo,
-                            ResimAdi = System.Web.HttpContext.Current.Server.MapPath("/" + imgPath + "/" + s.Basvurular.ResimAdi),
-                            AdSoyad = s.Basvurular.Ad + " " + s.Basvurular.Soyad
-                        }).OrderBy(o => o.ProgramAdi).ThenBy(t => t.OgrenciNo).ToList();
-
-                        var rpr = new rprKesinKayitResimListesi();
-                        rpr.DataSource = kayitOlanlar;
-                        if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.LisansustuBasvuru) rpr.DisplayName = "Lisansüstü Programlarına Kayıt Olan Öğrenci Listesi";
-                        else if (basvuruSurec.BasvuruSurecTipID == BasvuruSurecTipi.YatayGecisBasvuru) rpr.DisplayName = "Lisansüstü Yatay Geçiş Programlarına Kayıt Olan Öğrenci Listesi";
-                        else rpr.DisplayName = "YTÜ Yeni mezun Lisansüstü Programlarına Kayıt Olan Öğrenci Listesi";
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
-
-                        rprX = rpr;
-
-                    }
-                    #endregion
-                }
-                else if (raporTipi == RaporTipleri.AnabilimdaliProgramListesi)
-                {
-                    #region ABD_ProgramList
-                    var ogrenimTipKods = Request["OgrenimTipKods"].ToStrObj();
-                    var eKod = Request["EKod"].ToStrObj();
-
-                    var _OgrenimTipKods = new List<int>();
-                    ogrenimTipKods.Split(',').ToList().ForEach((item) => { _OgrenimTipKods.Add(item.ToInt().Value); });
-                    using (var db = new LisansustuBasvuruSistemiEntities())
-                    {
-                        var enst = db.Enstitulers.Where(p => p.EnstituKod == eKod).First();
-
-
-
-                        var q = from s in db.AnabilimDallaris.Where(p => p.EnstituKod == eKod)
-                                join pr in db.Programlars on s.AnabilimDaliID equals pr.AnabilimDaliID
-                                join bkot in db.BasvuruSurecKotalars.Where(p => p.BasvuruSurec.EnstituKod == eKod) on pr.ProgramKod equals bkot.ProgramKod
-                                join ot in db.OgrenimTipleris.Where(p => p.EnstituKod == eKod) on bkot.OgrenimTipKod equals ot.OgrenimTipKod
-                                join otl in db.OgrenimTipleris on ot.OgrenimTipID equals otl.OgrenimTipID
-                                select new
-                                {
-
-                                    AnabilimDaliKod = s.AnabilimDaliKod,
-                                    AnabilimDaliAdi = s.AnabilimDaliAdi,
-                                    OgrenimTipKod = ot.OgrenimTipKod,
-                                    OgrenimTipAdi = otl.OgrenimTipAdi,
-                                    ProgramKodu = pr.ProgramKod,
-                                    ProgramAdi = pr.ProgramAdi,
-                                    EgitimDili = pr.Ingilizce ? "İngilizce" : "Türkçe"
-                                };
-                        q = q.Where(p => _OgrenimTipKods.Contains(p.OgrenimTipKod));
-                        var qGroup = from s in q
-                                     group s by new { s.AnabilimDaliKod, s.AnabilimDaliAdi, s.OgrenimTipKod, s.OgrenimTipAdi, s.ProgramKodu, s.ProgramAdi, s.EgitimDili } into g1
-
-                                     select new RprModelBolumProgramList
-                                     {
-
-                                         AnabilimDaliKod = g1.Key.AnabilimDaliKod,
-                                         AnabilimDaliAdi = g1.Key.AnabilimDaliAdi,
-                                         OgrenimTipKod = g1.Key.OgrenimTipKod,
-                                         OgrenimTipAdi = g1.Key.OgrenimTipAdi,
-                                         ProgramKodu = g1.Key.ProgramKodu,
-                                         ProgramAdi = g1.Key.ProgramAdi,
-                                         EgitimDili = g1.Key.EgitimDili
-                                     };
-
-                        var qdata = qGroup.OrderBy(o => o.AnabilimDaliAdi).ThenBy(t => t.OgrenimTipAdi).ThenBy(t => t.ProgramAdi).ToList();
-                        RprBolumProgramListesi rpr = new RprBolumProgramListesi(enst.EnstituAd);
-                        rpr.DataSource = qdata;
-                        rpr.DisplayName = "Anabilim Dalı/Program Listesi";
-                        rpr.PrintingSystem.ContinuousPageNumbering = true;
-                        rpr.ExportOptions.Xlsx.ExportMode = DevExpress.XtraPrinting.XlsxExportMode.SingleFilePageByPage;
-
-                        rprX = rpr;
-
-                    }
-
-                    #endregion
-                }
                 else if (raporTipi == RaporTipleri.BasvuruSonucSayisal)
                 {
                     #region BasvuruSonucSayisal

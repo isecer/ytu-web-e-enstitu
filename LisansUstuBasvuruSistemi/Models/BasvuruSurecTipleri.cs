@@ -18,7 +18,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public BasvuruSurecTipleri()
         {
             this.BasvuruSurecs = new HashSet<BasvuruSurec>();
-            this.Kotalars = new HashSet<Kotalar>();
         }
     
         public int BasvuruSurecTipID { get; set; }
@@ -26,7 +25,5 @@ namespace LisansUstuBasvuruSistemi.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvuruSurec> BasvuruSurecs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Kotalar> Kotalars { get; set; }
     }
 }

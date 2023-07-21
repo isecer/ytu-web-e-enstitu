@@ -6,8 +6,7 @@ using System.Web;
 namespace LisansUstuBasvuruSistemi.Utilities.Enums
 {
     public class RaporTipleri
-    {
-        public const byte Basvuru = 1;
+    { 
         public const byte BasvuruSonucListesi = 2;
         public const byte BasvuruSonucListesiBolum = 3;
         public const byte BasvuruOgrenciListesi = 4;

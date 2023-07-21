@@ -18,6 +18,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public OgrenimTipleri()
         {
             this.MezuniyetSureciOgrenimTipKriterleris = new HashSet<MezuniyetSureciOgrenimTipKriterleri>();
+            this.TijBasvurus = new HashSet<TijBasvuru>();
             this.YeterlikBasvurus = new HashSet<YeterlikBasvuru>();
             this.YeterlikSurecOgrenimTipleris = new HashSet<YeterlikSurecOgrenimTipleri>();
         }
@@ -26,25 +27,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public string EnstituKod { get; set; }
         public int OgrenimTipKod { get; set; }
         public string OgrenimTipAdi { get; set; }
-        public bool GrupGoster { get; set; }
-        public string GrupKodu { get; set; }
-        public string GrupAdi { get; set; }
-        public int Kota { get; set; }
-        public string GBNFormulu { get; set; }
-        public string GBNFormuluAlessiz { get; set; }
-        public string GBNFormuluMulakatsiz { get; set; }
-        public string GBNFormuluD { get; set; }
-        public string GBNFormuluDDosyasiz { get; set; }
-        public string GBNFormuluDMulakatsiz { get; set; }
-        public bool LEgitimBilgisiIste { get; set; }
-        public bool YLEgitimBilgisiIste { get; set; }
-        public bool MulakatSurecineGirecek { get; set; }
-        public bool AlanIciBilimselHazirlik { get; set; }
-        public bool AlanDisiBilimselHazirlik { get; set; }
-        public double BasariNotOrtalamasi { get; set; }
-        public bool YokOgrenciKontroluYap { get; set; }
-        public Nullable<double> IstenecekKatkiPayiTutari { get; set; }
-        public int YedekOgrenciSayisiKotaCarpani { get; set; }
         public bool IsMezuniyetBasvurusuYapabilir { get; set; }
         public string MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
         public Nullable<int> MBasvuruToplamKrediKriteri { get; set; }
@@ -62,6 +44,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Kullanicilar Kullanicilar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MezuniyetSureciOgrenimTipKriterleri> MezuniyetSureciOgrenimTipKriterleris { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TijBasvuru> TijBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YeterlikBasvuru> YeterlikBasvurus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

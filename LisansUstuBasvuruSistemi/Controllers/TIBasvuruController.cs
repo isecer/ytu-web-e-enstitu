@@ -40,30 +40,30 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 bbModel.SistemBasvuruyaAcik = TiAyar.BasvurusuAcikmi.GetAyarTi(enstituKod, "false").ToBoolean(false);
 
-                if (model.KullaniciID.HasValue && !RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent()) model.KullaniciID = UserIdentity.Current.Id;
+                if (model.KullaniciID.HasValue) model.KullaniciID = UserIdentity.Current.Id;
                 model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
-                var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(model.KullaniciID.Value);
-                var Kul = _entities.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
+                var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(model.KullaniciID.Value);
+                var kul = _entities.Kullanicilars.First(p => p.KullaniciID == model.KullaniciID);
 
-                if (Kul.YtuOgrencisi)
+                if (kul.YtuOgrencisi)
                 {
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öreğnci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
+                        bbModel.KullaniciTipYetkiYokMsj = "OBS sisteminde aktif öğrenim bilginize rastlanmadı! Hesap bilgilerinizde bulunan YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen.";
                     }
                     else
                     {
-                        if (Kul.OgrenimTipKod.IsDoktora() && Kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
+                        if (kul.OgrenimTipKod.IsDoktora() && kul.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                         {
                             bbModel.KullaniciTipYetki = true;
-                            var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == Kul.KayitDonemID.Value);
+                            var donemBilgi = _entities.Donemlers.FirstOrDefault(p => p.DonemID == kul.KayitDonemID.Value);
                             if (donemBilgi != null)
                             {
-                                bbModel.KayitDonemi = Kul.KayitYilBaslangic + "/" + (Kul.KayitYilBaslangic + 1);
+                                bbModel.KayitDonemi = kul.KayitYilBaslangic + "/" + (kul.KayitYilBaslangic + 1);
                             }
-                            if (Kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + Kul.KayitTarihi.ToFormatDate();
-                            model.AktifOgrenimIcinBasvuruVar = _entities.TIBasvurus.Any(a => a.KullaniciID == Kul.KullaniciID && a.OgrenciNo == Kul.OgrenciNo);
+                            if (kul.KayitTarihi.HasValue) bbModel.KayitDonemi += " " + kul.KayitTarihi.ToFormatDate();
+                            model.AktifOgrenimIcinBasvuruVar = _entities.TIBasvurus.Any(a => a.KullaniciID == kul.KullaniciID && a.OgrenciNo == kul.OgrenciNo);
                         }
                         else
                         {
@@ -73,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         if (bbModel.KullaniciTipYetki)
                         {
-                            if (Kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
+                            if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
                             {
                                 bbModel.KullaniciTipYetki = false;
                                 bbModel.KullaniciTipYetkiYokMsj = "Kayıtlı olduğunuz program ve başvuru yapmaya çalıştığınız enstitü birbiri ile uyuşmamaktadır. Doğru enstitü sayfasından başvuru yaptığınızdan emin olunuz.";
@@ -84,22 +84,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
                     bbModel.KullaniciTipYetki = false;
-                    bbModel.KullaniciTipYetkiYokMsj = "Profil bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerinizi düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                    bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için Tez İzleme başvurusu yapamazsınız. Sağ üst köşeden hesap bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
                 }
                 if (bbModel.KullaniciTipYetki)
                 {
-                    var otb = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == Kul.OgrenimTipKod);
+                    var otb = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kul.OgrenimTipKod);
 
-                    bbModel.OgrenimDurumAdi = Kul.OgrenimDurumlari.OgrenimDurumAdi;
+                    bbModel.OgrenimDurumAdi = kul.OgrenimDurumlari.OgrenimDurumAdi;
                     bbModel.OgrenimTipAdi = otb.OgrenimTipAdi;
-                    bbModel.AnabilimdaliAdi = Kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
-                    bbModel.ProgramAdi = Kul.Programlar.ProgramAdi;
-                    bbModel.OgrenciNo = Kul.OgrenciNo;
+                    bbModel.AnabilimdaliAdi = kul.Programlar.AnabilimDallari.AnabilimDaliAdi;
+                    bbModel.ProgramAdi = kul.Programlar.ProgramAdi;
+                    bbModel.OgrenciNo = kul.OgrenciNo;
                 }
 
 
                 bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
-                bbModel.Kullanici = Kul;
+                bbModel.Kullanici = kul;
             }
             #endregion 
             var nowDate = DateTime.Now;
@@ -174,7 +174,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 kullaniciId = UserIdentity.Current.Id;
             }
-            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullaniciId.Value);
+            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullaniciId.Value);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
 
             var mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(enstituKod, kullaniciId, tiBasvuruId);
@@ -244,7 +244,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (RoleNames.TiGelenBasvuruKayit.InRoleCurrent() == false) { kModel.KullaniciID = UserIdentity.Current.Id; }
             var mmMessage = TezIzlemeBus.GetAktifTezIzlemeSurecKontrol(kModel.EnstituKod, kModel.KullaniciID, kModel.TIBasvuruID.ToNullIntZero());
 
-            var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kModel.KullaniciID);
+            var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
@@ -345,7 +345,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var tiBasvuru = _entities.TIBasvurus.First(p => p.TIBasvuruID == tiBasvuruId);
             var tiBasvuruAraRapor = tiBasvuru.TIBasvuruAraRapors.FirstOrDefault(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
             var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || tiBasvuru.KullaniciID == UserIdentity.Current.Id;
-            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tiBasvuru.KullaniciID);
+            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(tiBasvuru.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == tiBasvuru.KullaniciID);
             if (!degerlendirmeYetki)
             {
@@ -374,7 +374,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var donemBilgi = (tiBasvuruAraRapor?.RaporTarihi ?? DateTime.Now).ToAraRaporDonemBilgi();
 
-                var ogrenciBilgi = KullanicilarBus.StudentControl(kul.TcKimlikNo);
+                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
 
                 if (ogrenciBilgi.Hata)
                 {
@@ -613,7 +613,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var tiBasvuruAraRapor = tiBasvuru.TIBasvuruAraRapors.FirstOrDefault(p => p.TIBasvuruAraRaporID == kModel.TIBasvuruAraRaporID);
             var degerlendirmeYetki = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || tiBasvuru.KullaniciID == UserIdentity.Current.Id;
             var enstituYetki = RoleNames.TiGelenBasvuruKayit.InRole();
-            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(tiBasvuru.KullaniciID);
+            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(tiBasvuru.KullaniciID);
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == tiBasvuru.KullaniciID);
             int? baslangicYil = null;
             int? donemId = null;
@@ -642,7 +642,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 isYeniJo = tiBasvuruAraRapor == null;
                 bool isDegisiklikVar = false;
                 var donemBilgi = (isYeniJo ? DateTime.Now : tiBasvuruAraRapor.RaporTarihi).ToAraRaporDonemBilgi();
-                var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.StudentControl(kul.TcKimlikNo) : new StudentControl();
+                var donemdeVerilenDersBilgileri = isYeniJo ? KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo) : new StudentControl();
                 var kayitYapilacakDersKodlaris = isYeniJo ? TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "").Split(',').Where(p => p.Trim() != "").ToList() : new List<string>();
 
                 if (tiBasvuru.TIBasvuruAraRapors.Any(p => p.TIBasvuruAraRaporID != kModel.TIBasvuruAraRaporID && p.DonemBaslangicYil == donemBilgi.BaslangicYil && p.DonemID == donemBilgi.DonemID))

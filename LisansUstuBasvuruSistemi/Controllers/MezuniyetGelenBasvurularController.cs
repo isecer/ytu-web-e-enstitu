@@ -574,7 +574,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var mBasvur = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == id);
-            var kayitYetki = RoleNames.GelenBasvurularKayit.InRole();
+            var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
 
             if (!kayitYetki)
             {
@@ -705,7 +705,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
-            var kayitYetki = RoleNames.GelenBasvurularKayit.InRole();
+            var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
 
             if (!kayitYetki)
             {
@@ -1152,7 +1152,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             string view = "";
             var mbjo = mb.MezuniyetJuriOneriFormlaris.FirstOrDefault();
-            var ogrenciInfo = KullanicilarBus.StudentControl(mb.TcKimlikNo);
+            var ogrenciInfo = KullanicilarBus.OgrenciKontrol(mb.TcKimlikNo);
 
             if (!RoleNames.MezuniyetGelenBasvurularJuriOneriFormuKayit.InRoleCurrent())
             {

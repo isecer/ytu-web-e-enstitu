@@ -724,7 +724,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kModel.OgrenimDurumID != OgrenimDurum.OzelOgrenci)
                     {
 
-                        var ogrenciBilgi = KullanicilarBus.StudentControl(kModel.TcKimlikNo);
+                        var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kModel.TcKimlikNo);
                         if (ogrenciBilgi.Hata)
                         {
                             mmMessage.Messages.Add("Obs sisteminden öğrenci bilgisi sorgulanırken bir hata oluştu! " + ogrenciBilgi.HataMsj);

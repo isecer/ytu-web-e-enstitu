@@ -72,17 +72,24 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray();
                             var nRols = dbRoller.Select(s => s.RolID).ToList();
-                            var yeni = dbmenu.Rollers.Where(a => !nRols.Contains(a.RolID)).ToList(); 
+                            var yeni = dbmenu.Rollers.Where(a => !nRols.Contains(a.RolID)).ToList();
                             foreach (var dbRole in yeni)
                             {
-                                dbmenu.Rollers.Add(dbRole);
-
+                                dbmenu.Rollers.Add(dbRole); 
                             }
                         }
-                        db.SaveChanges();
                     }
                 }
-             
+
+                var silinenMenuler = dbMenus.Where(p => menuAttrs.All(a => a.MenuID != p.MenuID)).ToList();
+
+                foreach (var menu in silinenMenuler)
+                {
+                    db.Menulers.Remove(menu);
+
+                }
+
+                db.SaveChanges();
             }
         }
     }

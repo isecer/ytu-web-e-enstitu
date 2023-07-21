@@ -12,43 +12,11 @@
     var kayit = RoleNames.KullanicilarKayit.InRoleCurrent();
     var silme = RoleNames.KullanicilarSil.InRoleCurrent();
     var yetkilendirme = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
-    var adinaBasvuru = RoleNames.KullaniciAdinaBasvuruYap.InRoleCurrent();
-    var adinaBasvuruM = RoleNames.KullaniciAdinaMezuniyetBasvurusuYap.InRoleCurrent();
-    var adinaBasvuruTI = RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent();
-    var adinaBasvuruTDO = RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent();
-    var gbKayit = RoleNames.GelenBasvurularKayit.InRoleCurrent();
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var programYetkileri = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent(); 
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     var mailGonder = RoleNames.MailGonder.InRoleCurrent();
-    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
-    var mezuniyetBAcik = new List<string>();
-    var TIBAcik = new List<string>();
-    var TDOBAcik = new List<string>();
-    if (MezuniyetAyar.GetAyarMz(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.FenBilimleri).ToBoolean().Value)
-    {
-        mezuniyetBAcik.Add(EnstituKodlari.FenBilimleri);
-    }
-    if (MezuniyetAyar.GetAyarMz(MezuniyetAyar.MezuniyetBasvurusuAcikmi, EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
-    {
-        mezuniyetBAcik.Add(EnstituKodlari.SosyalBilimleri);
-    }
-    if (TiAyar.BasvurusuAcikmi.GetAyarTdo(EnstituKodlari.FenBilimleri).ToBoolean().Value)
-    {
-        TDOBAcik.Add(EnstituKodlari.FenBilimleri);
-    }
-    if (TiAyar.BasvurusuAcikmi.GetAyarTdo(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
-    {
-        TDOBAcik.Add(EnstituKodlari.SosyalBilimleri);
-    }
-    if (TiAyar.BasvurusuAcikmi.GetAyarTi(EnstituKodlari.SosyalBilimleri).ToBoolean().Value)
-    {
-        TIBAcik.Add(EnstituKodlari.SosyalBilimleri);
-    }
-    if (TiAyar.BasvurusuAcikmi.GetAyarTi(EnstituKodlari.FenBilimleri).ToBoolean().Value)
-    {
-        TIBAcik.Add(EnstituKodlari.FenBilimleri);
-    }
-    var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();   
+    var selectedPrograms = (List<string>)ViewBag.SelectedPrograms;
 }
 
 <div class="row">
@@ -203,9 +171,9 @@
                                     {
                                         <li><span class="label label-primary label-form"><a style="width:54px;color:white;" href="@Url.Action("Kayit")"><i class="fa fa-plus fa-lg"></i> Yeni</a></span></li>
                                     }
-                                    <li><span class="label label-info label-form">Toplam: <b>@IndexModel.Toplam</b></span></li>
-                                    <li><span class="label label-success label-form">Aktif: <b>@IndexModel.Aktif</b></span></li>
-                                    <li><span class="label label-danger label-form">Pasif: <b>@IndexModel.Pasif</b></span></li>
+                                    <li><span class="label label-info label-form">Toplam: <b>@indexModel.Toplam</b></span></li>
+                                    <li><span class="label label-success label-form">Aktif: <b>@indexModel.Aktif</b></span></li>
+                                    <li><span class="label label-danger label-form">Pasif: <b>@indexModel.Pasif</b></span></li>
                                 </ul>
                             </td>
                         </tr>
@@ -372,7 +340,7 @@
 
 
     $(function () {
-        var sProgs = '@Html.Raw(Json.Encode(SelectedPrograms))';
+        var sProgs = '@Html.Raw(Json.Encode(selectedPrograms))';
         var nVal = JSON.parse(sProgs);
 
         setTimeout(function () {

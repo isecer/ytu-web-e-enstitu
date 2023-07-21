@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (!model.KullaniciID.HasValue || !RoleNames.KullaniciAdinaTezIzlemeBasvurusuYap.InRoleCurrent()) model.KullaniciID = UserIdentity.Current.Id;
+                if (!model.KullaniciID.HasValue  ) model.KullaniciID = UserIdentity.Current.Id;
             }
 
             #region bilgiModel
@@ -64,7 +64,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 bbModel.EnstituYetki = kullanici.Programlar.AnabilimDallari.EnstituKod == enstituKod;
                 if (kullanici.OgrenimDurumID == OgrenimDurum.HalenOğrenci)
                 {
-                    var kullKayitB = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullanici.KullaniciID);
+                    var kullKayitB = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullanici.KullaniciID);
                     if (kullanici.KayitTarihi != kullKayitB.KayitTarihi)
                     {
                         kullanici.KayitYilBaslangic = kullKayitB.BaslangicYil;
@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (kullKayitB.KayitVar == false)
                     {
                         bbModel.KullaniciTipYetki = false;
-                        bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Profil bilgilerinizde giriş yaptığınız YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
+                        bbModel.KullaniciTipYetkiYokMsj = "Öğrenim Bilginiz Doğrulanamdı. Hesap bilgilerinizde bulunan YTÜ Lüsansüstü Öğrenci bilgilerinizin doğruluğunu kontrol ediniz lütfen";
                     }
                     else bbModel.KayitDonemi = kullanici.KayitYilBaslangic + "/" + (kullanici.KayitYilBaslangic + 1) + " " + _entities.Donemlers.First(p => p.DonemID == kullanici.KayitDonemID.Value).DonemAdi + " , " + kullanici.KayitTarihi.ToFormatDate();
 
@@ -85,7 +85,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else
             {
                 bbModel.KullaniciTipYetki = false;
-                bbModel.KullaniciTipYetkiYokMsj = "Profil bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için mezuniyet başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
+                bbModel.KullaniciTipYetkiYokMsj = "Hesap bilgilerinizde YTÜ Lisansütü öğrencisi olduğunuza dair bilgiler doldurulmadığı için mezuniyet başvurusu yapamazsınız. Sağ üst köşeden profil bilgilerini düzenle butonuna tıklayıp YTÜ Lisansüstü Öğrencisi Misiniz? sorusunu cevaplayarak öğrenim bilgilerinizi doldurup profilinizi güncelleyerek tekrar başvuru yapmayı deneyiniz.";
             }
             bbModel.Enstitü = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod);
             bbModel.Kullanici = kullanici;
@@ -218,7 +218,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
             var mmMessage = MezuniyetBus.MezuniyetSurecAktifKontrol(model.EnstituKod, kullaniciId, mezuniyetBasvurulariId);
-            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullaniciId.Value);
+            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullaniciId.Value);
             var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kullaniciId);
 
             var danismanBilgi = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kul.DanismanID);
@@ -256,7 +256,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     model = MezuniyetBus.GetMezuniyetBasvuruBilgi(mezuniyetBasvurulariId.Value);
                     model.EnstituKod = enstituKod.IsNullOrWhiteSpace() ? EnstituBus.GetSelectedEnstitu(ekd) : enstituKod;
-                    model.ResimAdi = kul.ResimAdi;  
+                    model.ResimAdi = kul.ResimAdi;
                 }
                 else
                 {
@@ -333,7 +333,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     ClassName = "fa fa-plus",
                     Color = "color:black;"
                 };
-            } 
+            }
             return View(model);
         }
 
@@ -360,7 +360,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.EnstituKod = bsurec.EnstituKod;
             kModel.DonemAdi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + bsurec.Donemler.DonemAdi;
 
-            var studentInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kModel.KullaniciID);
+            var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
             var kul = _entities.Kullanicilars.FirstOrDefault(p => p.KullaniciID == kModel.KullaniciID);
             kModel.OgrenimTipKod = kul.OgrenimTipKod.Value;
             #region Kontrol
@@ -1415,8 +1415,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mBasvuru = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId && p.KullaniciID == (yetkiliKullanici ? p.KullaniciID : UserIdentity.Current.Id));
             var mezuniyetBasvurulariTezTeslimForm = mBasvuru.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault();
             var model = new MezuniyetBasvurulariTezTeslimFormlari();
-            if (mezuniyetBasvurulariTezTeslimForm!=null)
-            { 
+            if (mezuniyetBasvurulariTezTeslimForm != null)
+            {
                 model.MezuniyetBasvurulariID = mezuniyetBasvurulariId;
                 model.MezuniyetBasvurulariTezTeslimFormID = mezuniyetBasvurulariTezTeslimForm.MezuniyetBasvurulariTezTeslimFormID;
                 model.IsTezDiliTr = mBasvuru.IsTezDiliTr == true;
@@ -1455,10 +1455,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 MessageType = Msgtype.Warning
             };
 
-            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent(); 
-            var mezuniyetBasvuru = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID); 
+            var yetkiliK = RoleNames.SrTalepDuzelt.InRoleCurrent();
+            var mezuniyetBasvuru = _entities.MezuniyetBasvurularis.First(f => f.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
             if (mezuniyetBasvuru.KullaniciID != UserIdentity.Current.Id && !yetkiliK)
-            { 
+            {
                 mmMessage.Messages.Add("Başka bir kullanıcı tez teslim formu oluşturmaya yetkili değilsiniz!");
             }
             else if (mezuniyetBasvuru.IsMezunOldu.HasValue)
@@ -1509,23 +1509,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kModel.IslemYapanIP = UserIdentity.Ip;
 
                     var kKayit = _entities.MezuniyetBasvurulariTezTeslimFormlaris.FirstOrDefault(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
-                    if (kKayit==null)
+                    if (kKayit == null)
                     {
                         kModel.RowID = Guid.NewGuid();
                         _entities.MezuniyetBasvurulariTezTeslimFormlaris.Add(kModel);
                     }
                     else
                     {
-                         if (
-                            kKayit.IsTezDiliTr != kModel.IsTezDiliTr ||
-                            kKayit.TezDili != kModel.TezDili ||
-                            kKayit.TezBaslikTr != kModel.TezBaslikTr ||
-                            kKayit.TezBaslikEn != kModel.TezBaslikEn ||
-                            kKayit.TezOzet != kModel.TezOzet ||
-                            kKayit.TezOzetHtml != kModel.TezOzetHtml ||
-                            kKayit.TezAbstract != kModel.TezAbstract ||
-                            kKayit.TezAbstractHtml != kModel.TezAbstractHtml
-                           ) kKayit.RowID = Guid.NewGuid();
+                        if (
+                           kKayit.IsTezDiliTr != kModel.IsTezDiliTr ||
+                           kKayit.TezDili != kModel.TezDili ||
+                           kKayit.TezBaslikTr != kModel.TezBaslikTr ||
+                           kKayit.TezBaslikEn != kModel.TezBaslikEn ||
+                           kKayit.TezOzet != kModel.TezOzet ||
+                           kKayit.TezOzetHtml != kModel.TezOzetHtml ||
+                           kKayit.TezAbstract != kModel.TezAbstract ||
+                           kKayit.TezAbstractHtml != kModel.TezAbstractHtml
+                          ) kKayit.RowID = Guid.NewGuid();
                         kKayit.IsTezDiliTr = kModel.IsTezDiliTr;
                         kKayit.TezDili = kModel.TezDili;
                         kKayit.TezBaslikTr = kModel.TezBaslikTr;
@@ -1613,7 +1613,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else if (belgeDosyasi != null && belgeDosyasi.FileName.Split('.').Last().ToLower() != "pdf")
                 {
                     mMessage.Messages.Add("Yükleyeceğiniz belge 'PDF' türünde olmalıdır.");
-                } 
+                }
             }
             if (mMessage.Messages.Count == 0)
             {
@@ -1874,8 +1874,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         var sendMailLink = false;
                         var sendSonuc = false;
-                        var juri = _entities.MezuniyetJuriOneriFormuJurileris.First(p => p.MezuniyetJuriOneriFormuJuriID == komite.MezuniyetJuriOneriFormuJuriID);
-                        var jForm = juri.MezuniyetJuriOneriFormlari;
+                        var jForm = mBasvuru.MezuniyetJuriOneriFormlaris.First();
                         if (isTezDanismani && mezuniyetSinavDurumId > MezuniyetSinavDurum.SonucGirilmedi && !komite.SRTalepleri.SRTaleplerJuris.Any(a => a.IsLinkGonderildi.HasValue))
                         {
                             sendMailLink = true;
@@ -2022,7 +2021,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [AllowAnonymous]
         public ActionResult GSinavDegerlendir(Guid? uniqueId)
         {
-            
+
             var model = (from s in _entities.SRTalepleris.Where(p => p.SRTaleplerJuris.Any(a2 => a2.UniqueID == uniqueId.Value))
                          join tt in _entities.SRTalepTipleris on s.SRTalepTipID equals tt.SRTalepTipID
                          join mb in _entities.MezuniyetBasvurularis on s.MezuniyetBasvurulariID equals mb.MezuniyetBasvurulariID
@@ -2186,7 +2185,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 Title = "Mezuniyet başvurusu danışman onay işlemi"
             };
             var srTalep = _entities.SRTalepleris.First(p => p.SRTalepID == srTalepId);
-            var kayitYetki = RoleNames.GelenBasvurularKayit.InRole();
+            var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRole();
 
             if (!kayitYetki)
             {

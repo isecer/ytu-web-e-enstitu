@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var isYoneticiYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
                 var isDanismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
                 var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
-                var ogrenciBilgiUpdate= KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(basvuru.KullaniciID);
+                var ogrenciBilgiUpdate= KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
             tekrarYukle:
@@ -239,7 +239,7 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
-                var ogrenciInfo = KullanicilarBus.KullaniciObsOgrenciBilgisiGuncelle(kullaniciId);
+                var ogrenciInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kullaniciId);
 
                 if (ogrenciInfo.DanismanInfo != null)
                 {
@@ -369,7 +369,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     msg.IsSuccess = TdoAyar.BasvurusuAcikmi.GetAyarTdo(enstituKod, "false").ToBoolean().Value;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
-                    else if (kullaniciId != UserIdentity.Current.Id && RoleNames.KullaniciAdinaTezDanismanOnerisiYap.InRoleCurrent() == false && UserIdentity.Current.IsAdmin == false)
+                    else if (kullaniciId != UserIdentity.Current.Id  && UserIdentity.Current.IsAdmin == false)
                     {
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("Başka bir kullanıcıya adına başvuru yapılmak isteniyor! \r\n Başvuru yapılmak istenen Kullanıcı ID:" + kullaniciId + " \r\n İşlem Yapan Kullanıcı ID:" + UserIdentity.Current.Id, "Tez danışmanı önerisi Yap", LogType.Saldırı);
                         kullaniciId = UserIdentity.Current.Id;

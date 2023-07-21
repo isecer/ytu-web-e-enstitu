@@ -154,12 +154,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool IsBelgeYuklemeAktif { get; set; }
     }
     public class BasvuruSinavTipDto : SinavTipleri
-    { 
-        public bool IsWebService { get; set; } 
+    {
+        public bool IsWebService { get; set; }
         public int? SinavDilID { get; set; }
         public string SinavDilAdi { get; set; }
-        public bool IsTaahhutVar { get; set; } 
-        public string GrupAdi { get; set; } 
+        public bool IsTaahhutVar { get; set; }
+        public string GrupAdi { get; set; }
         public int? Yil { get; set; }
         public string DonemAdi { get; set; }
         public DateTime? SinavTarihi { get; set; }
@@ -217,8 +217,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string UyrukAdi { get; set; }
         public string DogumYeriAdi { get; set; }
         public string YasadigiSehirAdi { get; set; }
-        public string NufusIlIcleAdi { get; set; }
-        public bool IsLAgnoOrYLAgnoAlinsin { get; set; }
+        public string NufusIlIcleAdi { get; set; } 
 
         public BasvuruSinavBilgiGrupDto BasvurularSinavBilgi_A { get; set; }
         public BasvuruSinavBilgiGrupDto BasvurularSinavBilgi_D { get; set; }
@@ -240,6 +239,22 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         }
     }
 
+    public class basvuruTercihModel
+    {
+
+        public int BasvuruTercihID { get; set; }
+        public int BasvuruID { get; set; }
+        public Guid UniqueID { get; set; }
+        public int SiraNo { get; set; }
+        public bool YlBilgiIste { get; set; }
+        public int AlanTipID { get; set; }
+        public string AlanTipAdi { get; set; }
+        public int OgrenimTipKod { get; set; }
+        public string ProgramKod { get; set; }
+        public bool IsSecilenTercih { get; set; }
+        public bool IsAsilOrYedek { get; set; }
+        public KontenjanProgramBilgiModel ProgramBilgileri = new KontenjanProgramBilgiModel();
+    }
     public class BasvuruBelgeDto : BasvurularYuklenenBelgeler
     {
         public int SiraNo { get; set; }
