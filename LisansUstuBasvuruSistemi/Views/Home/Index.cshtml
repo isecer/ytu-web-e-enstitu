@@ -259,7 +259,15 @@ else if (isMesajGonder)
     </script>
 }
 <script>
-    $(function () {
-        ShowDuyuru(@DuyuruPopupTipleri.AnaSayfa);
+    $(function ()
+    {
+           var popupSetting = {
+            title:'Duyurular',
+            popupTipId:@DuyuruPopupTipleri.AnaSayfa,
+            btnAdi: '',
+            redirectUrl: '',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
     })
 </script>

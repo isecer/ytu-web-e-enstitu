@@ -20,8 +20,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.BasvurularSinavBilgis = new HashSet<BasvurularSinavBilgi>();
             this.BasvuruSurecSinavTipleriDils = new HashSet<BasvuruSurecSinavTipleriDil>();
             this.BasvuruSurecSinavTipleriDonems = new HashSet<BasvuruSurecSinavTipleriDonem>();
-            this.SinavTipleriDils = new HashSet<SinavTipleriDil>();
-            this.SinavTipleriDonems = new HashSet<SinavTipleriDonem>();
         }
     
         public int SinavDilID { get; set; }
@@ -37,9 +35,5 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<BasvuruSurecSinavTipleriDil> BasvuruSurecSinavTipleriDils { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvuruSurecSinavTipleriDonem> BasvuruSurecSinavTipleriDonems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTipleriDil> SinavTipleriDils { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTipleriDonem> SinavTipleriDonems { get; set; }
     }
 }

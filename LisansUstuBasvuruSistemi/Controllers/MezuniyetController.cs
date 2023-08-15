@@ -36,7 +36,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
-                if (!model.KullaniciID.HasValue  ) model.KullaniciID = UserIdentity.Current.Id;
+                if (!model.KullaniciID.HasValue) model.KullaniciID = UserIdentity.Current.Id;
             }
 
             #region bilgiModel
@@ -280,29 +280,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.IsTezDiliTr = studentInfo.IsTezDiliTr;
                     model.TezBaslikTr = studentInfo.OgrenciTez.TEZ_BASLIK;
                     model.TezBaslikEn = studentInfo.OgrenciTez.TEZ_BASLIK_ENG;
-
-                    //if (!model.IsTezDiliTr.HasValue)
-                    //{
-                    //    mmMessage.Messages.Add("Tez dili bilgisi obs sistemine işlenmeli.");
-                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "IsTezDiliTr" });
-                    //}
-                    //if (model.TezBaslikTr.IsNullOrWhiteSpace())
-                    //{
-                    //    mmMessage.Messages.Add("Tez başlığı türkçe bilgisi obs sistemine işlenmeli.");
-                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TezBaslikTr" });
-                    //}
-                    //if (model.TezBaslikEn.IsNullOrWhiteSpace())
-                    //{
-                    //    mmMessage.Messages.Add("Tez başlığı ingilizce bilgisi obs sistemine işlenmeli.");
-                    //    mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "TezBaslikEn" });
-                    //}
-
-                    //if (mmMessage.Messages.Any())
-                    //{
-                    //    mmMessage.Messages.Insert(0, "Aşağıda bulunan bilgilerin Enstitünüz tarafından (OBS) Öğrenci bilgi sistemine işlenmesi gerekmektedir. Bu durumu enstitü yetkililerine iletiniz.");
-                    //    mmMessage.Title = "Mezuniyet başvurusu için aşağıdaki uyarıları kontrol ediniz.";
-                    //    MessageBox.Show("Uyarı", MessageBox.MessageType.Warning, mmMessage.Messages.ToArray());
-                    //}
                 }
                 var surec = _entities.MezuniyetSurecis.First(p => p.MezuniyetSurecID == model.MezuniyetSurecID);
                 model.DonemAdi = surec.BaslangicYil + "/" + surec.BitisYil + " " + surec.Donemler.DonemAdi;
@@ -312,7 +289,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(true), "Value", "Caption", model.MezuniyetYayinKontrolDurumID);
                 ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", model.TezEsDanismanUnvani);
 
-                ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(model.MezuniyetSurecID, model.KullaniciID, true), "Value", "Caption");
+                ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(model.MezuniyetSurecID, model.KullaniciID, mezuniyetBasvurulariId ?? 0, true), "Value", "Caption");
 
                 ViewBag._MmMessage = mmMessage;
             }
@@ -806,7 +783,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag._MmMessage = mmMessage;
             ViewBag.MezuniyetYayinKontrolDurumID = new SelectList(MezuniyetBus.GetCmbMezuniyetYayinDurum(true), "Value", "Caption", kModel.MezuniyetYayinKontrolDurumID);
             ViewBag.TezEsDanismanUnvani = new SelectList(UnvanlarBus.GetCmbJuriUnvanlar(true), "Value", "Caption", kModel.TezEsDanismanUnvani);
-            ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(kModel.MezuniyetSurecID, kModel.KullaniciID, true), "Value", "Caption");
+            ViewBag.MezuniyetYayinTurID = new SelectList(MezuniyetBus.GetCmbMezuniyetSurecYayinTurleri(kModel.MezuniyetSurecID, kModel.KullaniciID, kModel.MezuniyetBasvurulariID, true), "Value", "Caption");
 
 
             if (kModel.MezuniyetYayinKontrolDurumID > 0)
@@ -2084,10 +2061,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model != null)
             {
                 var sinavJuri = model.SRTaleplerJuris.First();
-                var juriOneriFormuJuri = _entities.MezuniyetJuriOneriFormuJurileris.First(p =>
-                    p.MezuniyetJuriOneriFormuJuriID == sinavJuri.MezuniyetJuriOneriFormuJuriID);
-                var juriOneriFormu = juriOneriFormuJuri.MezuniyetJuriOneriFormlari;
-                var basvuru = juriOneriFormu.MezuniyetBasvurulari;
+
+                var sRjuri = _entities.SRTaleplerJuris.First(f => f.UniqueID == uniqueId);
+                var basvuru = sRjuri.SRTalepleri.MezuniyetBasvurulari;
+                var juriOneriFormu = basvuru.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                 model.IsOncedenUzatmaAlindi =
                     basvuru.SRTalepleris.Any(a =>
                         a.SRTalepID <= model.SRTalepID && a.MezuniyetSinavDurumID == MezuniyetSinavDurum.Uzatma);

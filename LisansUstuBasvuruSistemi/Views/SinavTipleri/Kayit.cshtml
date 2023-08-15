@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
@@ -51,212 +51,10 @@
                                     <input type="text" name="SinavAdi" id="SinavAdi" value="@Model.SinavAdi" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-2 col-xs-3 control-label">Sinav Dilleri</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <select name="SinavDilIDs" multiple class="form-control select">
-                                        @foreach (var item in SinavDilleris)
-                                        {
-                                            bool IsSelected = Model.SinavTipleriDils.Any(a => a.SinavDilID == item.SinavDilID);
-                                            <option value="@item.SinavDilID" @IsSelected.ToSelected()>@item.DilAdi</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="col-md-2 col-xs-3 control-label">Web Servisi</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" onchange="wWebservice(this)" name="WebService" id="WebService" class="toggle" @Model.WebService.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="_WebService form-group @(Model.WebService ? "" : "hide")">
-                                <label class="col-md-2 col-xs-3 control-label">Web Servisi Sınav Kodu</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <input type="text" name="WebServiceKod" id="WebServiceKod" value="@Model.WebServiceKod" class="form-control" maxlength="20" />
-                                </div>
-                            </div>
-                            <div class="_WebService form-group @(Model.WebService ? "" : "hide")">
-                                <label class="col-md-2 col-xs-3 control-label"></label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="panel panel-default" style="padding: 0px; margin: 0px;">
 
-                                        <div class="panel-heading padding-0">
-                                            <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Web Servisi Yıl/Dönem Ekleme</h3>
-                                            <a style="float: right;" onclick="wsDonemsRowClear()" href="javascript:void(0);" class="btn btn-danger"><i class="fa fa-trash">&nbsp;</i>Eklenenleri Kaldır</a>
-                                            <a style="float: right;" onclick="donemEkle()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-2 col-xs-3 control-label">Çekim Tipi</label>
-                                            <div class="col-md-10 col-xs-9">
-                                                @Html.DropDownList("WsSinavCekimTipID", null, new { @class = "form-control", onchange = "getWsCekipTip(this)" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group @(Model.WsSinavCekimTipID.HasValue && WsCekimTipi.Tarih==Model.WsSinavCekimTipID?"hide":"")">
-                                            <label class="col-md-2 col-xs-3 control-label">Baş Yıl/ Bit Yıl</label>
-                                            <div class="col-md-10 col-xs-9">
-                                                <table>
-                                                    <tr>
-                                                        <td><input type="text" class="form-control spinner_default" name="_Yil" id="_Yil" value="@DateTime.Now.Year" maxlength="4" autocomplete="off" /></td>
-                                                        <td><input type="text" class="form-control spinner_default" name="_YilBit" id="_YilBit" value="@DateTime.Now.Year" maxlength="4" autocomplete="off" /></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="form-group hide">
-                                            <label class="col-md-2 col-xs-3 control-label">@(Model.WsSinavCekimTipID.HasValue && Model.WsSinavCekimTipID.Value == WsCekimTipi.Tarih ? "Tarih" : "Dönem")</label>
-                                            <div class="col-md-10 col-xs-9" id="wsSbox">
-                                                @Html.DropDownList("SWsDonemKod", null, new { @class = "form-control selectpicker", id = "SWsDonemKod", multiple = "multiple", data_live_search = "true", data_live_search_placeholder = "Search", data_actions_box = "true" })
-                                            </div>
-                                        </div>
-                                        <div class="panel-body">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th id="wsThYilCapt">@(Model.WsSinavCekimTipID.HasValue && Model.WsSinavCekimTipID.Value == WsCekimTipi.Tarih ? "Dil" : "Yıl")</th>
-                                                        <th class="hide" id="wsThDonemCapt">@(Model.WsSinavCekimTipID.HasValue && Model.WsSinavCekimTipID.Value == WsCekimTipi.Tarih ? "Tarih" : "Dönem")</th>
-                                                        <th width="120" title="Belirlenen dönem için sınav bilgisi açıklanmamış ise, sınav bilgisi açıklandığı zaman enstitüye sınav belgesini teslim edeceğini taahhüt etmesi durumunda sistem seçtiği dönem için açıklanmamış olan sınavı kabul edecektir.">Taahhüt</th>
-                                                        <th width="20"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="_DonemTbody">
 
-                                                    @{
-                                                        if (Model.WebService && Model.WsSinavCekimTipID.HasValue && Model.WsSinavCekimTipID.Value == WsCekimTipi.Tarih)
-                                                        {
-                                                            foreach (var item in Model.SinavTipleriDonems)
-                                                            {
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type="text" class="hide" name="SinavDilID" value="@item.SinavDilID" />
-                                                                        @SinavDilleris.Where(p => p.SinavDilID == item.SinavDilID).First().DilAdi
-                                                                    </td>
-                                                                    <td class="hide">
-                                                                        <input type="text" class="hide" name="WsDonemKod" value="@item.WsDonemKod" />
-                                                                        <input type="text" class="hide" name="WsDonemAd" value="@item.WsDonemAd" />
-                                                                        @item.WsDonemAd
-                                                                    </td>
-                                                                    <td></td>
-                                                                    <td>
-                                                                        <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            //var qGrup = from s in Model.SinavDonemleri.OrderBy(s => s.Yil).ThenBy(t => t.WsDonemKod)
-                                                            //            group new { s.Yil, s.WsDonemAd, s.WsDonemKod } by new { s.Yil } into g1
-                                                            //            select new
-                                                            //            {
-                                                            //                Yil = g1.Key.Yil,
-                                                            //                DonemKods = string.Join(",", g1.Where(p => p.Yil == g1.Key.Yil).Select(sq => sq.WsDonemKod).ToList()),
-                                                            //                DonemAds = string.Join(",", g1.Where(p => p.Yil == g1.Key.Yil).Select(sq => sq.WsDonemAd).ToList()),
-                                                            //            };
-                                                            foreach (var item in Model.SinavTipleriDonems.OrderBy(o => o.Yil))
-                                                            {
-                                                                var thID = "IsTaahhutVar_" + item.Yil + "_" + @item.WsDonemKod;
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type="text" class="hide" name="Yil" value="@item.Yil" />
-                                                                        @item.Yil
-                                                                    </td>
-                                                                    <td class="hide">
-                                                                        <input type="text" class="hide" name="WsDonemKod" value="@item.WsDonemKod" />
-                                                                        <input type="text" class="hide" name="WsDonemAd" value="@item.WsDonemAd" />
-                                                                        @item.WsDonemAd
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="warning" data-off="info">
-                                                                            <input type="checkbox" class="toggle" onchange="IsThChange(this,'@thID')" @item.IsTaahhutVar.ToChecked() />
-                                                                        </div>
-                                                                        <input type="text" class="hide" id="@thID" name="IsTaahhutVar" value="@item.IsTaahhutVar.ToString().ToLower()" />
-                                                                    </td>
-                                                                    <td>
-                                                                        <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                            }
-                                                        }
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div id="_TarihGirisMaxGecmisYil" class="form-group @(Model.OzelTarih==false? "" : "hide")">
-                                <label class="col-md-2 col-xs-3 control-label">Maks Geçmiş Yıl Kabul</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <input type="text" name="TarihGirisMaxGecmisYil" id="TarihGirisMaxGecmisYil" value="@Model.TarihGirisMaxGecmisYil" class="form-control" maxlength="2" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 col-xs-3 control-label">Özel Tarih</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" onchange="wozelTarih(this);" name="OzelTarih" id="OzelTarih" class="toggle" @Model.OzelTarih.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="_OzelTarih" class="form-group @(Model.OzelTarih && !Model.WebService ? "" : "hide")">
-                                <label class="col-md-2 col-xs-3 control-label"></label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="panel panel-default padding-0" style="padding: 0px; margin: 0px;">
-                                        <div class="panel-heading padding-0">
-                                            <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; Özel Tarih Ekleme</h3>
-                                            <a style="float: right;" id="btntarihekle" onclick="tarihEkle()" href="javascript:void(0);" class="btn btn-success @(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID==OzelTarihTip.BelirliTarihler ? "":"hide")"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-2 col-xs-3 control-label">Özel Tarih Tipi</label>
-                                            <div class="col-md-10 col-xs-9">
-                                                @Html.DropDownList("OzelTarihTipID", null, new { @class = "form-control", onchange = "OzelTarihTipKontrol()" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group @(Model.OzelTarih && Model.OzelTarihTipID.HasValue? "" : "hide")" id="grpTarihDiv">
-                                            <label class="col-md-2 col-xs-3 control-label" id="lblTar1Capt">@(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi ? "Başlangıç Tarihi" : "Tarih")</label>
-                                            <div class="col-md-10 col-xs-9">
-                                                <input type="text" class="form-control date-picker" name="Tarih1" id="_SinavTarihi" value="@(Model.Tarih1 == DateTime.MinValue ? "" : Model.Tarih1.ToFormatDateInput())" autocomplete="off" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group @(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi ? "" : "hide")" id="grpTarih2Div">
-                                            <label class="col-md-2 col-xs-3 control-label" id="lblTar2Capt">Bitiş Tarihi</label>
-                                            <div class="col-md-10 col-xs-9">
-                                                <input type="text" class="form-control date-picker" name="Tarih2" id="_SinavTarihi2" value="@(Model.Tarih2 == DateTime.MinValue ? "" : Model.Tarih2.ToFormatDateInput())" autocomplete="off" />
-                                            </div>
-                                        </div>
-                                        <div class="panel-body  @(Model.OzelTarih && Model.OzelTarihTipID.HasValue && Model.OzelTarihTipID == OzelTarihTip.BelirliTarihler ? "" : "hide")" id="belirliTarihList">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tarih</th>
-                                                        <th width="20"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="_TarihTbody">
-                                                    @foreach (var item in Model.SinavTarihleris.OrderByDescending(o => o.SinavTarihi))
-                                                    {
-                                                        <tr>
-                                                            <td>
-                                                                <input type="text" class="hide" name="SinavTarihleriID" value="@item.SinavTarihleriID" />
-                                                                <input type="text" class="hide" name="SinavTarihi" value="@item.SinavTarihi" />
-                                                                @item.SinavTarihi.ToDateString()
-                                                            </td>
-                                                            <td>
-                                                                <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="col-md-2 col-xs-3 control-label">Özel Not</label>
                                 <div class="col-md-10 col-xs-9">
@@ -265,7 +63,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="_OzelNot" class="form-group @(Model.OzelNot && !Model.WebService ? "" : "hide")">
+                            <div id="_OzelNot" class="form-group @(Model.OzelNot ? "" : "hide")">
                                 <label class="col-md-2 col-xs-3 control-label"></label>
                                 <div class="col-md-10 col-xs-9">
                                     <div class="panel panel-default" style="padding: 0px; margin: 0px;">
@@ -342,21 +140,7 @@
                                                         <input type="text" class="form-control" name="_SubSinavMax" id="_SubSinavMax" value="" autocomplete="off" />
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="col-md-2 col-xs-3 control-label">Not Dönüşümü</label>
-                                                    <div class="col-md-10 col-xs-9">
-                                                        <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                                            <input type="checkbox" value="true" name="_NotDonusum" id="_NotDonusum" onchange="sbNotDkontrol()" class="toggle" />
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="form-group" id="sbNtFormulDv">
-                                                    <label class="col-md-2 col-xs-3 control-label">Formül</label>
-                                                    <div class="col-md-10 col-xs-9">
-                                                        <textarea style="min-height:100px;" type="text" class="form-control" name="_SubNotDonusumFormulu" id="_SubNotDonusumFormulu" autocomplete="off"></textarea>
-                                                    </div>
-                                                </div>
 
                                                 <table class="table">
                                                     <thead>
@@ -364,8 +148,6 @@
                                                             <th>Not Aralık Adı</th>
                                                             <th width="80">Not Min</th>
                                                             <th width="80">Not Max</th>
-                                                            <th width="90">Not Dönüşümü</th>
-                                                            <th width="30">Formül</th>
                                                             <th width="20"></th>
                                                         </tr>
                                                     </thead>
@@ -386,17 +168,7 @@
                                                                     <input type="text" class="hide" name="SubSinavMax" value="@item.SubSinavMax" />
                                                                     @item.SubSinavMax
                                                                 </td>
-                                                                <td style="text-align:center;">
-                                                                    <input type="checkbox" value="true" name="SubNotDonusum" class="hide" @item.NotDonusum.ToChecked() />
-                                                                    <span class="label label-@(item.NotDonusum ? "success" : "danger")">@item.NotDonusum.ToEvetHayir()</span>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" class="hide" name="SubNotDonusumFormulu" value="@item.NotDonusumFormulu" />
-                                                                    @if (item.NotDonusum)
-                                                                    {
-                                                                        <img src="~/Images/formul.jpg" style="width:20px;height:20px;cursor:pointer" title="@item.NotDonusumFormulu" />
-                                                                    }
-                                                                </td>
+
                                                                 <td>
                                                                     <a href="javascript:void(0)" onclick="$(this).parents('tr').first().remove();"><i class="fa fa-trash-o tooltips" data-style="blue" data-original-title="Kaldır"></i></a>
                                                                 </td>
@@ -409,26 +181,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group @(Model.WebService?"hide":"")" id="_Taahhut">
-                                <label class="col-md-2 col-xs-3 control-label">Taahhüt</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="warning" data-off="info">
-                                        <input type="checkbox" class="toggle" onchange="IsThChange(this,'GIsTaahhutVar')" @Model.GIsTaahhutVar.ToChecked() />
-                                    </div>
-                                    <input type="text" class="hide" id="GIsTaahhutVar" name="GIsTaahhutVar" value="@Model.GIsTaahhutVar.ToString().ToLower()" />
-                                </div>
-                            </div>
 
-                            <div class="_OzelNot _kusuratB form-group @((Model.OzelNot && Model.OzelNotTipID.HasValue && Model.OzelNotTipID!=OzelNotTip.SeciliNotAraliklari) || Model.WebService ? "hide" : "")">
-                                <label class="col-md-2 col-xs-3 control-label">Küsürat Girişi</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="KusuratVar" class="toggle" @Model.KusuratVar.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="_OzelNot2 form-group @((Model.OzelNot) ? "hide" : "")">
+
+                            <div class="form-group">
                                 <label class="col-md-2 col-xs-3 control-label">Sınavın isteneceği Öğrenim Seviyeleri ve Not Aralıkları / Sınavın gözükmeyeceği programlar</label>
                                 <div class="col-md-10 col-xs-9" id="_OtBilgi">
                                     <table class="table" style="width:100%;table-layout:fixed;">
@@ -531,20 +287,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-2 col-xs-3 control-label">Not Dönüşümü</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <div class="make-switch" data-on-label="Var" data-off-label="Yok" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="NotDonusum" id="NotDonusum" onchange="wozelNotD(this)" class="toggle" @Model.NotDonusum.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group @(Model.NotDonusum ?"":"hide")" id="NtFormulDv">
-                                <label class="col-md-2 col-xs-3 control-label">Formül</label>
-                                <div class="col-md-10 col-xs-9">
-                                    <textarea style="min-height:100px;" type="text" class="form-control" name="NotDonusumFormulu" id="NotDonusumFormulu" autocomplete="off">@Model.NotDonusumFormulu</textarea>
-                                </div>
-                            </div>
+
                             <div class="form-group @(Model.SinavTipID<=0?"hide":"")">
                                 <label class="col-md-2 col-xs-3 control-label">Durum</label>
                                 <div class="col-md-10 col-xs-9">
@@ -576,10 +319,7 @@
         $('#_SubSinavMax').keydown(function (e) {
             myMask(e, this, false, 5, 3, 2);
         });
-        $(".spinner_default").spinner();
-        sbNotDkontrol();
-        notAralikKontrol();
-        getWsCekipTip($("#WsSinavCekimTipID"));
+        $(".spinner_default").spinner(); 
     });
     function NANotGKontrol2(sndr, _elm) {
          if ($(sndr).prop('checked') == true) {
@@ -615,105 +355,8 @@
             $('#chkIsIstensil_' + _elm).parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
         }
     }
-    function wWebservice(sndr) {
-        if ($(sndr).prop('checked') == true) {
-            $('#_Taahhut').addClass('hide');
-            $('._WebService').removeClass('hide');
-            $('#OzelTarih').removeAttr('checked');
-            $('#OzelTarih').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-            $('#OzelNot').removeAttr('checked');
-            $('#OzelNot').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-            $('._WebServiceX').addClass('hide');
 
-            //$('#LocalService').removeAttr('checked');
-            //$('#LocalService').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
 
-        }
-        else {
-            $('#_Taahhut').removeClass('hide');
-            $('._WebService').addClass('hide');
-            $('._WebServiceX').removeClass('hide');
-        }
-        wozelNot($('#OzelNot'));
-        wozelTarih($('#OzelTarih'));
-        wozelNotD($('#NotDonusum'));
-        notAralikKontrol();
-    }
-    //function localservice(){
-    //    $('#WebService').removeAttr('checked');
-    //    $('#WebService').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-    //    $('._WebService').addClass('hide');
-    //}
-    function wozelTarih(sndr) {
-        if ($('#WebService').prop('checked') == false) {
-            if ($(sndr).prop('checked') == true) {
-                $('#_OzelTarih').removeClass('hide');
-                $('#_TarihGirisMaxGecmisYil').addClass('hide');
-                OzelTarihTipKontrol();
-            }
-            else {
-                $('#_OzelTarih').addClass('hide');
-                $('#_TarihGirisMaxGecmisYil').removeClass('hide');
-            }
-        }
-        else {
-            $('#_OzelTarih').addClass('hide');
-            $('#OzelTarih').removeAttr('checked');
-            $('#OzelTarih').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-        }
-    }
-    function OzelTarihTipKontrol() {
-        var tip = $('#OzelTarihTipID').val();
-        if (tip == '@OzelTarihTip.BelirliTarhidenSonrasi' || tip == '@OzelTarihTip.BelirliTarihdenOncesi') {
-            $('#btntarihekle').addClass('hide');
-            $('#grpTarih2Div').addClass('hide');
-            $('#grpTarihDiv').removeClass('hide');
-            $('#belirliTarihList').addClass('hide');
-            $('#lblTar1Capt').html("Tarih");
-        }
-        else if (tip == '@OzelTarihTip.IkiTarihArasi') {
-            $('#btntarihekle').addClass('hide');
-            $('#grpTarih2Div').removeClass('hide');
-            $('#belirliTarihList').addClass('hide');
-            $('#lblTar1Capt').html("Başlangıç Tarihi");
-            $('#grpTarihDiv').removeClass('hide');
-        }
-        else if (tip == '@OzelTarihTip.BelirliTarihler') {
-            $('#btntarihekle').removeClass('hide');
-            $('#grpTarih2Div').addClass('hide');
-            $('#belirliTarihList').removeClass('hide');
-            $('#grpTarihDiv').removeClass('hide');
-            $('#lblTar1Capt').html("Tarih");
-        }
-        else if (tip == '@OzelTarihTip.MaksGecmisYil') {
-            $('#btntarihekle').addClass('hide');
-            $('#grpTarihDiv').addClass('hide');
-            $('#grpTarih2Div').addClass('hide');
-            $('#belirliTarihList').addClass('hide');
-        }
-        else {
-            $('#btntarihekle').addClass('hide');
-            $('#grpTarihDiv').addClass('hide');
-            $('#grpTarih2Div').addClass('hide');
-            $('#belirliTarihList').addClass('hide');
-        }
-    }
-    function sbNotDkontrol() {
-        if ($('#_NotDonusum').prop('checked') == true) {
-            $('#sbNtFormulDv').removeClass("hide");
-        }
-        else {
-            $('#sbNtFormulDv').addClass("hide");
-        }
-    }
-    function kusuratBKontrol() {
-        if ($('#WebService').prop('checked') || ($('#OzelNot').prop('checked') && $('#OzelNotTipID').val() == '@OzelNotTip.SeciliNotlar')) {
-            $('._kusuratB').addClass('hide');
-        }
-        else {
-            $('._kusuratB').removeClass('hide');
-        }
-    }
     function OzelNotTipKontrol() {
             var tip = $('#OzelNotTipID').val();
             if (tip == '@OzelNotTip.SeciliNotlar') {
@@ -730,99 +373,28 @@
                 $('#dvBelliNotAraliklari').addClass('hide');
                 $('#dvBelliNotlar').addClass('hide');
             }
-        sbNotDkontrol();
-        kusuratBKontrol();
     }
 
-    function notAralikKontrol() {
-        var _SinavTipGrupID = $('#SinavTipGrupID').val();
-        var _OzelNot = $('#OzelNot').prop('checked');
-        var _WebServisi = $('#WebService').prop('checked');
-        $('#_ozelNotRow').find('tr').each(function (inx, inptx) {
-            var valNaI = $(inptx).find('input[name=NAIsIstensin]').val();
-            var valminP = $(inptx).find('input[name=NAMin]').parent();
-            var valmaxP = $(inptx).find('input[name=NAMax]').parent();
-            //if (valNaI == "1") {
-            //    $(valminP).removeClass("hide");
-            //    $(valmaxP).removeClass("hide");
-
-            //}
-            //else {
-            //    $(valminP).addClass("hide");
-            //    $(valmaxP).addClass("hide");
-            //}
-        })
-
-            $('._OzelNot2').removeClass('hide');
-
-        //if (_OzelNot) {
-        //    $('.NANotG').addClass("hide");
-
-        //} else {
-        //    $('.NANotG').removeClass('hide');
-        //}
-        kusuratBKontrol();
-
-    }
+ 
     function wozelNot() {
         var _SinavTipGrupID = $('#SinavTipGrupID').val();
         var sndr = $('#OzelNot');
-        if ($('#WebService').prop('checked') == false) {
-
-            if ($(sndr).prop('checked') == true) {
-                //$('#_OzelNot').removeClass('hide');
-                //$('._OzelNot').addClass('hide');
+        if ($(sndr).prop('checked') == true) {
+                $('#_OzelNot').removeClass('hide');
                 OzelNotTipKontrol();
             }
             else {
                 if (_SinavTipGrupID == '@SinavTipGrup.DilSinavlari' || _SinavTipGrupID=='@SinavTipGrup.Tomer') {
-                    $('._OzelNot').addClass('hide');
-                    $('._OzelNot2').removeClass('hide');
+                    $('#_OzelNot').addClass('hide');
                 }
                 else {
 
-                    $('._OzelNot2').addClass('hide');
-                    $('._OzelNot').removeClass('hide');
+                    $('#_OzelNot').removeClass('hide');
                 }
-                $('#_OzelNot').addClass('hide');
 
-            }
-        }
-        else {
-            $('#_OzelNot').addClass('hide');
-            if (_SinavTipGrupID == '@SinavTipGrup.DilSinavlari' || _SinavTipGrupID == '@SinavTipGrup.Ales_Gree') {
-                $('._OzelNot').addClass('hide');
-                $('._OzelNot2').removeClass('hide');
-            }
-            else {
-
-                $('._OzelNot2').addClass('hide');
-                $('._OzelNot').removeClass('hide');
-            }
-            $('#OzelNot').removeAttr('checked');
-            $('#OzelNot').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
-
-        }
-
-        wozelNotD($('#NotDonusum'));
-        notAralikKontrol();
+            } 
     }
-    function wozelNotD(sndr) {
-        if ($('#WebService').prop('checked') == false && $('#OzelNot').prop('checked') == false) {
-            if ($(sndr).prop('checked') == true) {
-                $('#NtFormulDv').removeClass('hide');
-            }
-            else {
-                $('#NtFormulDv').addClass('hide');
-            }
-        }
-        else {
-            $('#NtFormulDv').addClass('hide');
-            $('#NotDonusum').removeAttr('checked');
-            $('#NotDonusum').parents('.switch-animate').first().removeClass('switch-on').addClass('switch-off');
 
-        }
-    }
     function tarihEkle() {
         var _SinavTarihi = $('#_SinavTarihi').val();
         var _rowEkle = true;
@@ -883,14 +455,12 @@
             var sbSinavAralikAdi = $('#_SubSinavAralikAdi').val();
             var _min = $('#_SubSinavMin').val();
             var _max = $('#_SubSinavMax').val();
-            var _formul = $('#_SubNotDonusumFormulu').val();
-            var _notDonusum = $('#_NotDonusum').prop('checked');
+
             var _rowEkle = true;
-            if (sbSinavAralikAdi == "" || _min == "" || _max == "" || (_notDonusum && _formul == "")) {
+            if (sbSinavAralikAdi == "" || _min == "" || _max == "") {
                 _rowEkle = false
-                showMessage("warning", "Uyarı", "Eklemek işlemini yapabilmek için sınav not aralığı adı, min " + ((_notDonusum && _formul == "" ? ", maks ve formül" : " ve maks")) + " değerlerini girmeniz gerekmektedir!");
+                showMessage("warning", "Uyarı", "Eklemek işlemini yapabilmek için sınav not aralığı adı, min , maks değerlerini girmeniz gerekmektedir!");
             }
-            if (_notDonusum == false) _formul = "";
             $('#_NotSubAralikTbody').find("tr").each(function (inx, trx) {
                 var _subAad = $(trx).find("input[name=SubSinavAralikAdi]").val();
                 if (_subAad.toLowerCase() == sbSinavAralikAdi.toLowerCase()) {
@@ -904,15 +474,12 @@
                              "<td><input type='text' class='hide' name='SubSinavAralikID' value='' /><input type='text' class='hide' name='SubSinavAralikAdi' value='" + sbSinavAralikAdi + "' />" + sbSinavAralikAdi + "</td>" +
                              "<td><input type='text' class='hide' name='SubSinavMin' value='" + _min + "' />" + _min + "</td>" +
                              "<td><input type='text' class='hide' name='SubSinavMax' value='" + _max + "' />" + _max + "</td>" +
-                             "<td style='text-align:center;'><input type='checkbox' value='true' name='SubNotDonusum' class='hide' " + (_notDonusum ? " checked=checked" : "") + " /><span class='label label-" + (_notDonusum ? "success" : "danger") + "'>" + (_notDonusum ? "Evet" : "Hayır") + "</span></td>" +
-                             "<td><input type='text' class='hide' name='SubNotDonusumFormulu' value='" + _formul + "' />" + (_notDonusum ? ("<img src='@Url.Content("~/Images/formul.jpg")' style='width:20px;height:20px;cursor:pointer' title=" + _formul + "/>") : "") + "</td>" +
-                             "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
+                                    "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
                         "</tr>";
                 $('#_NotSubAralikTbody').append(_rw);
                 $('#_SubSinavAralikAdi').val("");
                 $('#_SubSinavMin').val("");
                 $('#_SubSinavMax').val("");
-                $('#_SubNotDonusumFormulu').val("");
                 $('.tooltips').tooltip();
 
             }
@@ -920,126 +487,12 @@
         }
 
     }
-    function donemEkle() {
-        var _Yil = $('#_Yil').val();
-        var _YilBit = $('#_YilBit').val();
 
-        if (_Yil != "" && _YilBit != "") {
-
-            var Yil1 = parseInt(_Yil);
-            var Yil2 = parseInt(_YilBit);
-            for (var i = Yil1; (Yil1 <= Yil2 ? i <= Yil2 : i >= Yil2); (Yil1 <= Yil2 ? (i += 1) : (i -= 1))) {
-
-                var addRow = true;
-                var _dKod = i;
-                $('#_DonemTbody').find("tr").each(function (inx, trx) {
-                    var _sntYil = $(trx).find("input[name=Yil]").val();
-
-
-                    if (addRow && (_sntYil == i)) {
-                        addRow = false;
-                    }
-                });
-                if (addRow) {
-                    var swid = "swtch_" + i + "_" + _dKod;
-                    var thID = "IsTaahhutVar_" + i + "_" + _dKod;
-                    // var donemAdi = _dKod == "S1" ? "Bahar Yarıyılı" : "Güz Yarıyılı";
-                    var _rw = "<tr>" +
-                        "<td><input type='text' class='hide' name='SinavTipDonemID' value='' /><input type='text' class='hide' name='Yil' value='" + i + "' />" + i + "<input type='text' class='hide' name='SinavDilID' value='' /></td>" +
-                        "<td class='hide'><input type='text' class='hide' name='WsDonemKod' value='' />" + "" + "</td>" +
-                        "<td><div class='make-switch " + swid + "' data-on-label='Var' data-off-label='Yok' data-on='warning' data-off='info'><input type='checkbox' class='toggle' onchange=IsThChange(this,'" + thID + "')></div><input type='text' class='hide' id='" + thID + "' name='IsTaahhutVar' value='false' /></td>" +
-                        "<td><a href='javascript:void(0)' onclick=$(this).parents('tr').first().remove();><i class='fa fa-trash-o tooltips' data-style='blue' data-original-title='Kaldır'></i></a></td>" +
-                        "</tr>";
-                    $('#_DonemTbody').append(_rw);
-                    $('.' + swid)['bootstrapSwitch']();
-                }
-
-            }
-        }
-        else {
-            showMessage("warning", "Uyarı", "Eklemek işlemini yapabilmek için Yıl bilgilerini girmeniz gerekmektedir!");
-        }
-    }
-    function IsThChange(sndr, ID) {
-        if ($(sndr).prop('checked')) $('#' + ID).val('true');
-        else $('#' + ID).val('false');
-    }
-    function TIsThChange(sndr, ID) {
-        if ($(sndr).prop('checked')) $('#' + ID).val('true');
-        else $('#' + ID).val('false');
-    }
     $(function () {
         var model = '@Html.Raw(Json.Encode(MmMessage))';
         validateControl(model);
     });
-    function getWsCekipTip(sndr) {
-        var sndrVal = $(sndr).val();
-        var snvTipKod = $('#SinavTipKod').val();
-        if (sndrVal == '@WsCekimTipi.Tarih') {
-            $('#WsYilBilgi').addClass("hide");
-            $('#wsThYilCapt').text("Dil");
-            $('#wsThDonemCapt').text("Tarih");
-        }
-        else {
-            $('#WsYilBilgi').removeClass("hide");
-            $('#wsThYilCapt').text("Yıl");
-            $('#wsThDonemCapt').text("Dönem");
-        }
-        if (sndrVal != null && sndrVal != "") {
-            $.ajax({
-                url: '@Url.Action("GetWsCekimTipDetay", "SinavTipleri")',
-                data: { 'WsSinavCekimTipID': sndrVal, 'SinavTipKod': snvTipKod },
-                success: function (result) {
-                    $('#SWsDonemKod').empty();
-                    var opt = "";
-                    for (var i = 0; i < result.length; i++) {
-                        var valR = result[i].Value;
-                        var _value = "";
-                        if (valR != null) {
-                            _value = valR;
-                        }
-                        opt += "<option value=" + _value + ">" + result[i].Caption + "</option>"
-                    }
-                    $('#SWsDonemKod').append(opt);
-                    $('.selectpicker').selectpicker("refresh");
-                },
-                error: function (err) {
-                    alert(err.responseText);
 
-                }
-            });
-        }
-        else {
-            $('#ProgramKod').empty();
-            $('.selectpicker').selectpicker("refresh");
-        }
-    }
-
-    function wsDonemsRowClear() {
-        if ($('#_DonemTbody').find('tr').length > 0) {
-            var mdlx = bootbox.dialog({
-                message: "Eklenen kayıtlar kaldırılsın mı?",
-                buttons: {
-                    success: {
-                        label: '<i class="fa fa-trash"></i> Eklenenleri Kaldır',
-                        className: "btn-danger",
-                        callback: function () {
-                            $('#_DonemTbody').find('tr').remove();
-                        }
-
-                    },
-                    danger: {
-                        label: 'Vazgeç',
-                        className: "btn-primary",
-                        callback: function () {
-                        }
-
-                    }
-
-                }
-            });
-        }
-    }
     function getOtBilgi(sndr) {
         var enstituKod = $(sndr).val();
         var sinavTipID=@Model.SinavTipID;

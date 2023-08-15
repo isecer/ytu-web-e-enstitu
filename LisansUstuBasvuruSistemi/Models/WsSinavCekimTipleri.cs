@@ -18,7 +18,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public WsSinavCekimTipleri()
         {
             this.BasvuruSurecSinavTipleris = new HashSet<BasvuruSurecSinavTipleri>();
-            this.SinavTipleris = new HashSet<SinavTipleri>();
         }
     
         public int WsSinavCekimTipID { get; set; }
@@ -27,7 +26,5 @@ namespace LisansUstuBasvuruSistemi.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasvuruSurecSinavTipleri> BasvuruSurecSinavTipleris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTipleri> SinavTipleris { get; set; }
     }
 }

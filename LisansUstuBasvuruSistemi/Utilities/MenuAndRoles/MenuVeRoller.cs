@@ -190,13 +190,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
 
         [Menu(BagliMenuID = 83300, MenuAdi = "Jüri Önerisi", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOneri/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
-        public const string TiJuriOneriBasvuru = "Tik Önerisi";
-        [Menu(BagliMenuID = 83300, MenuAdi = "Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
-        [Role(GorunurAdi = "Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TiJuriOneriBasvuru = "Tij Önerisi";
+        [Menu(BagliMenuID = 83300, MenuAdi = "Gelen Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
+        [Role(GorunurAdi = "Gelen Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TiJuriOnerileriGb = "Tez İzleme Jüri Önerisileri";
         [Role(GorunurAdi = "Jüri Önerileri Kayıt", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TiJuriOnerileriKayit = "Tez İzleme Önerisi Başvuru Kayıt";
-
+        [Role(GorunurAdi = "Jüri Önerisi Silme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TiJuriOnerileriSil = "Tez İzleme Önerisi Silme Yetkisi";
+        [Role(GorunurAdi = "Jüri Önerisi Eyk ya Gönderme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TiJuriOnerileriEykYaGonder = "Jüri Önerisi Eyk ya Gönderme Yetkisi";
+        [Role(GorunurAdi = "Jüri Önerisi Eyk da Onay Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TiJuriOnerileriEykDaOnay = "Jüri Önerisi Eyk da Onay Yetkisi";
+        [Role(GorunurAdi = "Jüri Önerisini Öğrenci Adına Yap", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
+        public const string TiJuriOnerileriOgrenciAdina = "Jüri Önerisini Öğrenci Adına Yap";
 
 
         [Menu(BagliMenuID = 83300, MenuAdi = "Ara Rapor Giriş", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TIBasvuru/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 15)]

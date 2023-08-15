@@ -44,7 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.SiraNo,
                         s.MezuniyetSurecID,
                         s.BaslangicTarihi,
-                        s.BitisTarihi, 
+                        s.BitisTarihi,
                         s.IsAktif,
                         s.IslemTarihi,
                         s.IslemYapanID,
@@ -121,7 +121,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         item.MezuniyetSurecOtoMailID = bsm.MezuniyetSurecOtoMailID;
                         item.Gonderildi = bsm.Gonderildi;
                         item.GonderilenCount = bsm.GonderilenCount;
-                    } 
+                    }
                 }
                 model.MezuniyetSurecID = id.Value;
                 model.EnstituKod = data.EnstituKod;
@@ -173,6 +173,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ogrenimTipId = kModel.OgrenimTipID.Select((s, inx) => new { Inx = inx, OgrenimTipID = s }).ToList();
             var ogrenimTipKod = kModel.OgrenimTipKod.Select((s, inx) => new { Inx = inx, OgrenimTipKod = s }).ToList();
             var mBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Select((s, inx) => new { Inx = inx, MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s }).ToList();
+            var mBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruEtikNotKriteri = s }).ToList();
             var mBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri.Select((s, inx) => new { Inx = inx, MBasvuruToplamKrediKriteri = s }).ToList();
             var mBasvuruAgnoKriteri = kModel.MBasvuruAGNOKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAGNOKriteri = s }).ToList();
             var mBasvuruAktsKriteri = kModel.MBasvuruAKTSKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAKTSKriteri = s }).ToList();
@@ -185,6 +186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join ot in ogrenimTipId on kr.Inx equals ot.Inx
                                                        join otk in ogrenimTipKod on kr.Inx equals otk.Inx
                                                        join dk in mBasvuruSonDonemKaydiKontrolEdilecekDersKodlari on kr.Inx equals dk.Inx
+                                                       join enk in mBasvuruEtikNotKriteri on kr.Inx equals enk.Inx
                                                        join kk in mBasvuruToplamKrediKriteri on kr.Inx equals kk.Inx
                                                        join agk in mBasvuruAgnoKriteri on kr.Inx equals agk.Inx
                                                        join akts in mBasvuruAktsKriteri on kr.Inx equals akts.Inx
@@ -199,6 +201,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            ot.OgrenimTipID,
                                                            otk.OgrenimTipKod,
                                                            dk.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
+                                                           enk.MBasvuruEtikNotKriteri,
                                                            kk.MBasvuruToplamKrediKriteri,
                                                            agk.MBasvuruAGNOKriteri,
                                                            akts.MBasvuruAKTSKriteri,
@@ -392,6 +395,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     OgrenimTipID = s.OgrenimTipID.Value,
                     OgrenimTipKod = s.OgrenimTipKod.Value,
                     MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
+                    MBasvuruEtikNotKriteri = s.MBasvuruEtikNotKriteri,
                     MBasvuruToplamKrediKriteri = s.MBasvuruToplamKrediKriteri.Value,
                     MBasvuruAGNOKriteri = s.MBasvuruAGNOKriteri.Value,
                     MBasvuruAKTSKriteri = s.MBasvuruAKTSKriteri.Value,
@@ -419,6 +423,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             foreach (var item in kModel.OgrenimTipModel.OgrenimTipKriterList)
             {
                 var sItem = mezuniyetSureciOgrenimTipKriterleri.First(p => p.OgrenimTipID == item.OgrenimTipID);
+
                 item.MBasvuruToplamKrediKriteri = sItem.MBasvuruToplamKrediKriteri ?? 0;
                 item.MBasvuruAGNOKriteri = sItem.MBasvuruAGNOKriteri ?? 0;
                 item.MBasvuruAKTSKriteri = sItem.MBasvuruAKTSKriteri ?? 0;
@@ -642,9 +647,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return true.ToJsonResult();
         }
-        public ActionResult GetFilterKullanici(string term)
+        public ActionResult GetFilterKullanici(string term, string ekd)
         {
-            return KullanicilarBus.GetFilterKullaniciJsonResult(term);
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+
+            return KullanicilarBus.GetFilterOgrenciJsonResult(term, enstituKod);
         }
 
 
@@ -731,7 +738,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             _entities.SaveChanges();
-        } 
+        }
         [Authorize(Roles = RoleNames.MezuniyetSureciSil)]
         public ActionResult Sil(int id)
         {

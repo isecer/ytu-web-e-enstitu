@@ -15,6 +15,7 @@
                 <tr>
                     <th>Öğrenim Tipleri</th>
                     <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
+                    <th width="60" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
                     <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
                     <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
                     <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
@@ -40,6 +41,11 @@
                         <div class="form-group">
 
                             <input type="text" class="form-control" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownList("MBasvuruEtikNotKriteri", item.SlistEtikNots,"",new {@class="form-control"}) 
                         </div>
                     </td>
                     <td>

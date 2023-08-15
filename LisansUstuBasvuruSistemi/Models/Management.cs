@@ -25,6 +25,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Web;
 using System.Xml;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -447,39 +448,7 @@ namespace LisansUstuBasvuruSistemi.Models
         }
 
 
-
-        public static List<CmbIntDto> cmbGetWsSinavCekimTipleri(bool bosSecimVar = false, int? FilterCekimTip = null)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var qdata = db.WsSinavCekimTipleris.AsQueryable();
-                if (FilterCekimTip.HasValue) qdata = qdata.Where(p => p.WsSinavCekimTipID == FilterCekimTip.Value);
-                var data = qdata.OrderBy(o => o.WsSinavCekimTipAdi).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.WsSinavCekimTipID, Caption = item.WsSinavCekimTipAdi });
-                }
-            }
-            return dct;
-
-        }
-        public static List<CmbStringDto> cmbGetWsSinavCekimTipDetay(int WsSinavCekimTipID, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.WsSinavCekipTipDetays.Where(p => p.WsSinavCekimTipID == WsSinavCekimTipID).OrderBy(o => o.WsSinavCekimKod).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbStringDto { Value = item.WsSinavCekimKod, Caption = item.WsSinavCekimAd });
-                }
-            }
-            return dct;
-
-        }
+          
 
         public static List<CmbIntDto> cmbGetAktifUniversiteler(bool bosSecimVar = false)
         {
@@ -650,22 +619,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        }
-        public static List<CmbIntDto> cmbGetOzelTarihTipleri(bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.OzelTarihTipleris.OrderBy(o => o.OzelTarihTipID).ToList();
-                foreach (var item in data)
-                {
-                    dct.Add(new CmbIntDto { Value = item.OzelTarihTipID, Caption = item.OzelTarihTipAdi });
-                }
-            }
-            return dct;
-
-        }
+        } 
         public static List<CmbIntDto> cmbGetOzelNotTipleri(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -1528,6 +1482,36 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     var id = DataID[0].Value;
                     var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(id);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.ExportOptions.Pdf.Compressed = true;
+                    ms = new MemoryStream();
+                    rpr.ExportToPdf(ms);
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                    attc.ContentDisposition.ModificationDate = DateTime.Now;
+                    mdl.Add(attc);
+                }
+                else if (raporTipID == RaporTipleri.TezIzlemeJuriOneriFormu)
+                {
+                    var id = DataID[0].Value; 
+
+                    var rpr = new RprTijOneriFormu_FR0306(id);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.ExportOptions.Pdf.Compressed = true;
+                    ms = new MemoryStream();
+                    rpr.ExportToPdf(ms);
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                    attc.ContentDisposition.ModificationDate = DateTime.Now;
+                    mdl.Add(attc);
+                }
+                else if (raporTipID == RaporTipleri.TezIzlemeJuriDegisiklikFormu)
+                {
+                    var id = DataID[0].Value;
+
+                    var rpr = new RprTijDegisiklikFormu_FR1460(id);
                     rpr.CreateDocument();
                     rpr.DisplayName = rpr.DisplayName + ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;

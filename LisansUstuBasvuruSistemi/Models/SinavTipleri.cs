@@ -22,9 +22,6 @@ namespace LisansUstuBasvuruSistemi.Models
             this.BasvuruSurecSinavTipleriOT_SNA = new HashSet<BasvuruSurecSinavTipleriOT_SNA>();
             this.BasvuruSurecSinavTipleriOTNotAraliklaris = new HashSet<BasvuruSurecSinavTipleriOTNotAraliklari>();
             this.SinavNotlaris = new HashSet<SinavNotlari>();
-            this.SinavTarihleris = new HashSet<SinavTarihleri>();
-            this.SinavTipleriDils = new HashSet<SinavTipleriDil>();
-            this.SinavTipleriDonems = new HashSet<SinavTipleriDonem>();
             this.SinavTipleriOT_SNA = new HashSet<SinavTipleriOT_SNA>();
             this.SinavTipleriOTNotAraliklaris = new HashSet<SinavTipleriOTNotAraliklari>();
             this.SinavTiplerSubSinavAraliks = new HashSet<SinavTiplerSubSinavAralik>();
@@ -35,22 +32,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public string EnstituKod { get; set; }
         public int SinavTipGrupID { get; set; }
         public int SinavTipKod { get; set; }
-        public bool WebService { get; set; }
-        public string WebServiceKod { get; set; }
-        public Nullable<int> WsSinavCekimTipID { get; set; }
-        public bool OzelTarih { get; set; }
-        public Nullable<int> OzelTarihTipID { get; set; }
-        public Nullable<System.DateTime> Tarih1 { get; set; }
-        public Nullable<System.DateTime> Tarih2 { get; set; }
-        public Nullable<int> TarihGirisMaxGecmisYil { get; set; }
         public bool OzelNot { get; set; }
         public Nullable<int> OzelNotTipID { get; set; }
-        public bool NotDonusum { get; set; }
-        public string NotDonusumFormulu { get; set; }
-        public bool KusuratVar { get; set; }
-        public Nullable<double> Min { get; set; }
-        public Nullable<double> Max { get; set; }
-        public bool GIsTaahhutVar { get; set; }
         public string SinavAdi { get; set; }
         public bool IsAktif { get; set; }
         public System.DateTime IslemTarihi { get; set; }
@@ -68,17 +51,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OzelNotTipleri OzelNotTipleri { get; set; }
-        public virtual OzelTarihTipleri OzelTarihTipleri { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SinavNotlari> SinavNotlaris { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTarihleri> SinavTarihleris { get; set; }
         public virtual SinavTipGruplari SinavTipGruplari { get; set; }
-        public virtual WsSinavCekimTipleri WsSinavCekimTipleri { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTipleriDil> SinavTipleriDils { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SinavTipleriDonem> SinavTipleriDonems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SinavTipleriOT_SNA> SinavTipleriOT_SNA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

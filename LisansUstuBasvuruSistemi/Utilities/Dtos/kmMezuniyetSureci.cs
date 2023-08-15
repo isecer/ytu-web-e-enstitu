@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
@@ -21,6 +22,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int?> OgrenimTipID { get; set; }
         public List<int?> OgrenimTipKod { get; set; }
         public List<string> MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
+        public List<string> MBasvuruEtikNotKriteri { get; set; }
+        
         public List<int?> MBasvuruToplamKrediKriteri { get; set; }
         public List<double?> MBasvuruAGNOKriteri { get; set; }
         public List<int?> MBasvuruAKTSKriteri { get; set; }
@@ -58,6 +61,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     public class kmMezuniyetSureciOgrenimTipKriterleri : MezuniyetSureciOgrenimTipKriterleri
     {
         public int? SelectedOgrenimTipID { get; set; }
+
+        public SelectList SlistEtikNots { get; set; }
         public bool OrjinalVeri { get; set; }
         public string OgrenimTipAdi { get; set; }
     }

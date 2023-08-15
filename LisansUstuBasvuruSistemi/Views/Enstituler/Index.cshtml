@@ -16,6 +16,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Enstitü Listesi</h3>
                     <ul class="panel-controls">
+                        <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Enstitü Ekle</span></li>
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
                         <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
@@ -30,8 +31,7 @@
                                 <th class="sirala" field="EnstituAd">Enstitü Adı</th>
                                 <th class="sirala" field="IsAktif" width="150">Web Adresi</th>
                                 <th class="sirala" field="IsAktif" width="70">Durum</th>
-                                <th width="50">
-                                    <a href="@Url.Action("Kayit")" class="btn btn-xs btn-success tooltips" style="width:100%;" data-style="blue" data-original-title="Yeni"><i class="fa fa-plus"></i></a>
+                                <th width="50"> 
                                 </th>
                             </tr>
                         </thead>

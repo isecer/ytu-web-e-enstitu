@@ -46,123 +46,8 @@
                                         <label class="col-md-4 col-sm-5 control-label">Sınav Tip Kodu</label>
                                         <div class="col-md-8 col-sm-7">@Model.SinavTipKod</div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 col-sm-5 control-label">Web servisi</label>
-                                        <div class="col-md-8 col-sm-7">
-                                            <span class="label label-@(Model.WebService ? "success" : "danger")">@Model.WebService.ToEvetHayir()</span>
-                                        </div>
-                                    </div>
-                                    @if (Model.WebService)
-                                    {
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-sm-5 control-label">Web servisi kodu</label>
-                                            <div class="col-md-8 col-sm-7">
-                                                @Model.WebServiceKod
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-sm-5 control-label">Web servisi dönemler</label>
-                                            <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
-                                                <table class="table" style="width:100%;table-layout:fixed;">
-                                                    @if (Model.KrSinavTipleriDonems.Count == 0)
-                                                    {
-                                                        <tr>
-                                                            <td colspan="3" style="color:red;">Dönem Tanımlaması Yapılmamış! <br /> Lütfen Dönem Tanımlamas Yapınız!</td>
-                                                        </tr>
-                                                    }
-                                                    else
-                                                    {
-                                                        <tr>
-                                                            <th>Yıl</th> 
-                                                            <th width="110"></th>
-                                                        </tr>
-                                                        foreach (var kt in Model.KrSinavTipleriDonems.OrderBy(o => o.Yil).ThenBy(t => t.WsDonemKod))
-                                                        {
-                                                            <tr>
-                                                                <td>@kt.Yil</td> 
-                                                                <td>@(kt.IsTaahhutVar ? "Taahhüt Var" : "Taahhüt Yok")</td>
-                                                            </tr>
-
-                                                        }
-                                                    }
-                                                </table>
-                                            </div>
-                                        </div>
-                                    }
-                                    @if (Model.TarihGirisMaxGecmisYil.HasValue)
-                                    {
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-sm-5 control-label">Alınabilecek maksimum geçmiş yıl</label>
-                                            <div class="col-md-8 col-sm-7">
-                                                @Model.TarihGirisMaxGecmisYil
-                                            </div>
-                                        </div>
-
-                                    }
-                                    <div class="form-group">
-                                        <label class="col-md-4 col-sm-5 control-label">Özel Tarih</label>
-                                        <div class="col-md-8 col-sm-7">
-                                            <span class="label label-@(Model.OzelTarih ? "success" : "danger")">@Model.OzelTarih.ToEvetHayir()</span>
-                                        </div>
-                                    </div>
-
-                                    @if (Model.OzelTarih)
-                                    {
-
-                                        <div class="form-group">
-                                            @if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarihler)
-                                            {
-                                                <label class="col-md-4 col-sm-5 control-label">Tanımlanan Özel Tarihler</label>
-                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
-                                                    <table class="table" style="width:100%;table-layout:fixed;">
-                                                        @if (Model.SinavTarihleris.Count == 0)
-                                                        {
-                                                            <tr>
-                                                                <td style="color:red;">Sınav Tarihi Tanımlaması Yapılmamış! <br /> Lütfen Sınav Tarihi Tanımlamas Yapınız!</td>
-                                                            </tr>
-                                                        }
-                                                        else
-                                                        {
-                                                            <tr>
-                                                                <th>Tarih</th>
-                                                            </tr>
-
-                                                            foreach (var kt in Model.SinavTarihleris.OrderByDescending(o => o.SinavTarihi))
-                                                            {
-                                                                <tr>
-                                                                    <td>@kt.SinavTarihi.ToDateString()</td>
-                                                                </tr>
-
-                                                            }
-                                                        }
-                                                    </table>
-                                                </div>
-                                            }
-                                            else if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarihdenOncesi)
-                                            {
-                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
-                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
-                                                    @Model.Tarih1.ToDateString() tarihi ve önceki sınavlar
-                                                </div>
-                                            }
-                                            else if (Model.OzelTarihTipID == OzelTarihTip.BelirliTarhidenSonrasi)
-                                            {
-                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
-                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
-                                                    @Model.Tarih1.ToDateString() tarihi ve sonraki sınavlar
-                                                </div>
-                                            }
-                                            else if (Model.OzelTarihTipID == OzelTarihTip.IkiTarihArasi)
-                                            {
-                                                <label class="col-md-4 col-sm-5 control-label">Tarih kriteri</label>
-                                                <div class="col-md-8 col-sm-7" style="max-height: 150px; overflow: auto;">
-                                                    Başlangıç tarihi @Model.Tarih1.ToDateString()  ile Bitiş tarihi @Model.Tarih2.ToDateString() aralığındaki sınavlar
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-
-
+                                   
+                                  
                                     <div class="form-group">
                                         <label class="col-md-4 col-sm-5 control-label">Özel Not</label>
                                         <div class="col-md-8 col-sm-7">
@@ -196,18 +81,14 @@
                                                         <tr>
                                                             <th>Not Aralık Adı </th>
                                                             <th width="80">Min</th>
-                                                            <th width="80">Max</th>
-                                                            <th width="120">Dönüşüm formülü</th>
+                                                            <th width="80">Max</th> 
                                                         </tr>
                                                         foreach (var kt in Model.SinavTiplerSubSinavAraliks.OrderBy(o => o.SubSinavAralikAdi))
                                                         {
                                                             <tr>
                                                                 <td>@kt.SubSinavAralikAdi</td>
                                                                 <td>@kt.SubSinavMin</td>
-                                                                <td>@kt.SubSinavMax</td>
-                                                                <td>
-                                                                    <img src="~/Images/formul.jpg" style="width:20px;height:20px;cursor:pointer" title="@kt.NotDonusumFormulu" />
-                                                                </td>
+                                                                <td>@kt.SubSinavMax</td> 
                                                             </tr>
 
                                                         }
@@ -216,16 +97,7 @@
                                             </div>
                                         </div>
                                     }
-                                    else
-                                    {
-                                        <div class="form-group">
-                                            <label class="col-md-4 col-sm-5 control-label">Küsürat Girişi</label>
-                                            <div class="col-md-8 col-sm-7">
-                                                <span class="label label-@(Model.KusuratVar ? "success" : "danger")">@Model.KusuratVar.ToEvetHayir()</span>
-                                            </div>
-                                        </div>
-
-                                    }
+                                  
 
                                     <div class="form-group">
                                         <label class="col-md-4 col-sm-5 control-label">Sınavın isteneceği Öğrenim Seviyeleri ve Not Aralıkları / Sınavın gözükmeyeceği programlar</label>
@@ -312,16 +184,7 @@
                                         </div>
                                     </div>
  
-                                    <div class="form-group">
-                                        <label class="col-md-4 col-sm-5 control-label">Not Dönüşümü</label>
-                                        <div class="col-md-8 col-sm-7">
-                                            <span class="label label-@(Model.NotDonusum ? "success" : "danger")">@Model.NotDonusum.ToEvetHayir()</span>
-                                            @if (Model.NotDonusum)
-                                            {
-                                                <span> Formül: @Model.NotDonusumFormulu </span>
-                                            }
-                                        </div>
-                                    </div> 
+                                   
                                     
                                     <div class="form-group">
                                         <label class="col-md-4 col-sm-5 control-label">İşlem Yapan</label>

@@ -220,7 +220,14 @@
     function YeniBasvuruDuyuruKontrol(KullaniciID) {
         var url = '@Url.Action("BasvuruYap")';
         if (KullaniciID != undefined && KullaniciID != null) url += "?KullaniciID=" + KullaniciID;
-        ShowDuyuru(@DuyuruPopupTipleri.MezuniyetBasvuru, url);
+        var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.MezuniyetBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: url,
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
     }
 
 
@@ -318,7 +325,7 @@
                         success: {
                             label: 'Kaydet',
                             className: "btn-success MezSrTalep_" + SRTalepID,
-                            callback: function (event) { 
+                            callback: function (event) {
                                 $('.MezSrTalep_' + SRTalepID).addClass('disabled');
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                 PanelRefresh(pnlx, false);
@@ -366,7 +373,7 @@
             }
         });
     }
- 
+
     function showSRBCiltDialog(MezuniyetBasvurulariID, isYeni) {
         $.ajax({
             url: '@Url.Action("TezTeslimFormu", "Mezuniyet")',
@@ -395,12 +402,12 @@
                                         else {
                                             getMsg(result);
                                             return false;
-                                        }  
+                                        }
                                     },
                                     complete: function (cmp) {
                                         $('.MezBezkayitBtn_' + MezuniyetBasvurulariID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
-                                    } 
+                                    }
 
                                 });
                                 $('#MezuniyetTezTeslimForm').submit();

@@ -394,7 +394,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
             }
 
-
+            if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
+            {
+                var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                mMessage.Messages.AddRange(msgs);
+               
+            }
 
             if (!mMessage.Messages.Any())
             {
@@ -507,7 +512,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
             var formYetki = RoleNames.TdoFormOlusturmaYetkisi.InRoleCurrent();
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
-            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
+            var ogrenciObsBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -711,6 +716,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
+            if (!mMessage.Messages.Any() && kModel.TDOBasvuruDanismanID <= 0)
+            {
+                var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                mMessage.Messages.AddRange(msgs);
+            }
 
 
 
@@ -842,6 +852,23 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
                 }
+            }
+            else
+            {
+
+                if (!mMessage.Messages.Any())
+                {
+                    var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                    mMessage.Messages.AddRange(msgs);
+                 
+                }
+            }
+
+            if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
+            {
+                var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                mMessage.Messages.AddRange(msgs);
+               
             }
             if (!mMessage.Messages.Any())
             {
@@ -1202,6 +1229,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
             }
+
+            if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
+            {
+                var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                mMessage.Messages.AddRange(msgs); 
+            }
             if (!mMessage.Messages.Any())
             {
                 var isNew = tdoBasvuruDanismanId <= 0;
@@ -1548,6 +1581,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (tdoBasvuruDanismanId > 0 && tdoBas.TDOBasvuruDanisman.DanismanOnayladi == true)
             {
                 mMessage.Messages.Add("Tez danışmanı tarafından onaylanan danışman öneri formları düzeltilemez.");
+            }
+            if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
+            {
+                var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
+                mMessage.Messages.AddRange(msgs);
             }
             if (!mMessage.Messages.Any())
             {

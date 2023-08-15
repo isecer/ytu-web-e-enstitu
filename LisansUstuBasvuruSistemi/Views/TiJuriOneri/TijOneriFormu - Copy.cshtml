@@ -12,25 +12,21 @@
 <div class="widget widget-default" style="margin:0px;padding:4px;">
     <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
         <div class="panel-heading padding-0">
-            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i><span class="myCaptionTd"> Tez İzleme Komite Öneri Formu</span> </h3>
+            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i><span class="myCaptionTd"> Tez İzleme Jüri Öneri Formu</span> </h3>
         </div>
         <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
 
 
-            @using (Ajax.BeginForm("TikOneriFormuPost", "TikOneri", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTikOneriFormu" }))
+            @using (Ajax.BeginForm("TijOneriFormuPost", "TiJuriOneri", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTijOneriFormu" }))
             {
-                @Html.HiddenFor(p => p.TikBasvuruID);
-                @Html.HiddenFor(p => p.TikBasvuruOneriID);
+                @Html.HiddenFor(p => p.TijBasvuruID);
+                @Html.HiddenFor(p => p.KullaniciId);
+                @Html.HiddenFor(p => p.TijBasvuruOneriID);
                 @Html.HiddenFor(p => p.IsTezDiliTr);
                 @Html.Hidden("PostDetayTabAdi", "tab-TezDanismani");
-                @Html.Hidden("SaveData", (Model.TikBasvuruOneriID > 0 ? "true" : "false"));
+                @Html.Hidden("SaveData", (Model.TijBasvuruOneriID > 0 ? "true" : "false"));
+              
                 <div class="panel-body form-group-separated">
-                    <div class="form-group">
-                        <label class="col-md-3 col-xs-2 control-label">Anabilimdalı</label>
-                        <div class="col-md-9 col-xs-10">
-                            @Model.OgrenciAnabilimdaliProgramAdi
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label class="col-md-3 col-xs-2 control-label">Adı ve Soyadı - Numarası</label>
                         <div class="col-md-9 col-xs-10">
@@ -55,7 +51,100 @@
                             @Model.TezBaslikEn
                         </div>
                     </div>
+                    @if (!Model.IsTezDiliTr && Model.TezDanismanID == UserIdentity.Current.Id)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-3 col-xs-2 control-label" style="color:maroon">Tahhüt</label>
+                            <div class="col-md-9 col-xs-10" style="color:maroon">
+                                Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-4">
+                    <div class="panel-body list-group">
+                        <a href="#" class="list-group-item active"><span class="fa fa-user"></span> Profile</a>
+                        <a href="#" class="list-group-item"><span class="fa fa-cog"></span> Settings</a>
+                        <a href="#" class="list-group-item"><span class="fa fa-bar-chart-o"></span> Activity</a>
+                        <a href="#" class="list-group-item"><span class="fa fa-sign-out"></span> Logoff</a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="widget widget-default" style="padding:3px;margin:0px;">
+                        <div class="panel panel-default form-horizontal">
+                            <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
+                                <h3 class="panel-title" style="font-size:9pt;">Tez Danışmanı Verisi için Aşağıdaki Bilgileri Eksiksizce Doldurunuz Lütfen.</h3>
+                            </div>
+                            <div class="panel-body form-group-separated" style="padding:5px;">
 
+                                <div class="form-group">
+                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                        Adı Soyadı (*)
+                                    </label>
+                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                        <input type="hidden" name="JuriTipAdi" value="TezDanismani" />
+                                        <input type="hidden" name="AnaTabAdi" value="tab-TezDanismani" />
+                                        <input type="hidden" name="DetayTabAdi" value="tab-TezDanismani" />
+                                        <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AdSoyad : "")" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                        Unvanı (*)
+                                    </label>
+                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                        <input type="text" class="form-control upperCase hide" name="xUnvanAdi" maxlength="128" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.UnvanAdi : "")" style="width: 100%;color:black;" />
+
+                                        @Html.DropDownList("UnvanAdi", tezDanismaniBilgi.SlistUnvanAdi, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUnvanAdi" })
+
+                                        @if (!string.IsNullOrEmpty(tezDanismaniBilgi.UnvanAdi))
+                                        {
+                                            <script>
+                                                            $(function () {
+                                                                $('#TezDanismaniUnvanAdi').val('@Html.Raw(tezDanismaniBilgi.UnvanAdi)');
+                                                            })
+                                            </script>
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                        E-Posta Adresi (*)
+                                    </label>
+                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                        <input type="text" class="form-control" maxlength="128" name="EMail" value="@tezDanismaniBilgi.EMail.Trim()" style="width: 100%;" id="TezDanismaniEMail" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                        Üniversitesi (*)
+                                    </label>
+                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                        @Html.DropDownList("UniversiteID", tezDanismaniBilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUniversiteID" })
+                                        @if (tezDanismaniBilgi.UniversiteID.HasValue)
+                                        {
+                                            <script>
+                                                $(function () {
+                                                    $('#TezDanismaniUniversiteID').val('67');
+                                                })
+                                            </script>
+                                        }
+                                        @*<input type="text" class="form-control" maxlength="128" name="UniversiteAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.UniversiteAdi : "")" style="width: 100%;" id="TezDanismaniUniversiteAdi" />*@
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0">
+                                        Anabilimdalı (*)
+                                    </label>
+                                    <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
+                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliAdi" value="@tezDanismaniBilgi.AnabilimdaliAdi" style="width: 100%;" id="TezDanismaniAnabilimdaliAdi" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="panel panel-primary" style="margin:0px;margin-top:0px;">
                     <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
@@ -67,12 +156,12 @@
                             </li>
                             <li>
                                 <a href="#tab-YtuIciJuri" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">YTÜ İçinden Komite Önerisi</span>
+                                    <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">YTÜ İçinden Jüri  Önerisi</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab-YtuDisiJuri" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">YTÜ Dışından Komite Önerisi</span>
+                                    <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">YTÜ Dışından Jüri Önerisi</span>
                                 </a>
                             </li>
                         </ul>
@@ -121,7 +210,7 @@
                                                     E-Posta Adresi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@Model.Danisman.EMail.Trim()" style="width: 100%;" id="TezDanismaniEMail" />
+                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@tezDanismaniBilgi.EMail.Trim()" style="width: 100%;" id="TezDanismaniEMail" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -146,7 +235,7 @@
                                                     Anabilimdalı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" maxlength="256" name="AnabilimDaliAdi" value="@tezDanismaniBilgi.AnabilimDaliAdi" style="width: 100%;" id="AnabilimDaliAdi" />
+                                                    <input type="text" class="form-control" maxlength="256" name="AnabilimdaliAdi" value="@tezDanismaniBilgi.AnabilimdaliAdi" style="width: 100%;" id="TezDanismaniAnabilimdaliAdi" />
                                                 </div>
                                             </div>
 
@@ -160,18 +249,18 @@
 
                                     <div class="tabs">
                                         <ul class="nav nav-tabs">
-                                            @for (int i = 1; i <= 4; i++)
+                                            @for (int i = 1; i <= 3; i++)
                                             {
                                                 var ActiveCls = i == 1 ? "active" : "";
                                                 <li class="@ActiveCls">
                                                     <a href="#tab-YtuIciJuri-@(i)" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                        <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">@i - Üye Önerisi @(i == 3 ? "" : "(*)")</span>
                                                     </a>
                                                 </li>
                                             }
                                         </ul>
                                         <div class="panel-body tab-content" style="padding:0px;">
-                                            @for (int i = 1; i <= 4; i++)
+                                            @for (int i = 1; i <= 3; i++)
                                             {
                                                 var activeCls = i == 1 ? "active" : "";
                                                 var rowData = Model.JoFormJuriList.FirstOrDefault(p => p.JuriTipAdi == "YtuIciJuri" + i);
@@ -180,7 +269,7 @@
                                                         <div class="panel panel-default form-horizontal">
                                                             <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
                                                                 <h3 class="panel-title" style="font-size:9pt;">
-                                                                    @(i + ".Yıldız Teknik Üniversitesi İçinden Komite Önerileri") @(i == 3 ? ("(Zorunlu Değil)") : "")
+                                                                    @(i + ".Yıldız Teknik Üniversitesi İçinden Jüri Önerileri") @(i == 3 ? ("(Zorunlu Değil)") : "")
                                                                 </h3>
                                                             </div>
                                                             <div class="panel-body form-group-separated" style="padding:5px;">
@@ -255,7 +344,7 @@
                                                                         Anabilimdalı (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimDaliAdi" value="@(rowData != null ? rowData.AnabilimDaliAdi : "")" style="width: 100%;color:black;" id="YtuIciJuri@(i)AnabilimDaliAdi" />
+                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%;color:black;" id="YtuIciJuri@(i)AnabilimdaliAdi" />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -275,12 +364,12 @@
 
                                     <div class="tabs">
                                         <ul class="nav nav-tabs">
-                                            @for (int i = 1; i <= 4; i++)
+                                            @for (int i = 1; i <= 3; i++)
                                             {
                                                 var activeCls = i == 1 ? "active" : "";
                                                 <li class="@activeCls">
                                                     <a href="#tab-YtuDisiJuri-@(i)" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                        <i class="fa fa-user myCaptionTd"></i><span style="font-size:8pt;">@i - Üye Önerisi @(i == 3 ? "" : "(*)")</span>
                                                     </a>
                                                 </li>
                                             }
@@ -296,7 +385,7 @@
                                                         <div class="panel panel-default form-horizontal">
                                                             <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
                                                                 <h3 class="panel-title" style="font-size:9pt;">
-                                                                    @(i + ". Yıldız Teknik Üniversitesi Dışından Tik Önerileri") @(i == 3 ? ("(Zorunlu Değil)") : "")
+                                                                    @(i + ". Yıldız Teknik Üniversitesi Dışından Jüri Önerileri") @(i == 3 ? ("(Zorunlu Değil)") : "")
                                                                 </h3>
                                                             </div>
                                                             <div class="panel-body form-group-separated" style="padding:5px;">
@@ -357,7 +446,7 @@
                                                                         Anabilimdalı (*)
                                                                     </label>
                                                                     <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimDaliAdi" value="@(rowData != null ? rowData.AnabilimDaliAdi : "")" style="width: 100%;" id="YtuDisiJuri@(i)AnabilimDaliAdi" />
+                                                                        <input type="text" class="form-control" maxlength="256" name="AnabilimdaliAdi" value="@(rowData != null ? rowData.AnabilimdaliAdi : "")" style="width: 100%;" id="YtuDisiJuri@(i)AnabilimdaliAdi" />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -378,11 +467,11 @@
         </div>
     </div>
 </div>
-@if (Model.TikBasvuruOneriID > 0)
+@if (Model.TijBasvuruOneriID > 0)
 {
 
     <script>
-        setTimeout(function () {
+        setTimeout(function () { 
             $('.btnKaydet').removeClass("btn-primary").addClass("btn-info");
             $('.btnKaydet').text("Kaydet");
         }, 200);
@@ -445,7 +534,7 @@
             $('#' + mID + 'AdSoyadVal').val(e.added == undefined ? "" : e.added.AdSoyad);
             $('#' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);
             $('#' + mID + 'EMail').val(e.added == undefined ? "" : e.added.EMail);
-            $('#' + mID + 'AnabilimDaliAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
+            $('#' + mID + 'AnabilimdaliAdi').val(e.added == undefined ? "" : e.added.BolumAdi);
             $('#' + mID + 'UniversiteID').val(e.added == undefined ? "" : e.added.UniversiteID);
             $('#x' + mID + 'UniversiteID').val(e.added == undefined ? "" : e.added.UniversiteID);
             $('#x' + mID + 'UnvanAdi').val(e.added == undefined ? "" : e.added.UnvanAdi);

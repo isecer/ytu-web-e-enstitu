@@ -216,11 +216,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı ve sözlü yüzde toplamları 100 e eşit olmalıdır.");
                 }
-                if (yeterlikSureciOgrenimTipKriterleri.Any(a =>!a.SozluGecerNot.HasValue || !a.YaziliGecerNot.HasValue || !a.OrtalamaGecerNot.HasValue))
+                if (yeterlikSureciOgrenimTipKriterleri.Any(a => !a.SozluGecerNot.HasValue || !a.YaziliGecerNot.HasValue || !a.OrtalamaGecerNot.HasValue))
                 {
                     mmMessage.Messages.Add("her bir öğrenim seviyesindeki yazılı,sözlü sınav geçer not kriteri ve ortalama geçer not kriteri boş olmamalıdır.");
                 }
-                
+
             }
             if (mmMessage.Messages.Count == 0)
             {
@@ -385,9 +385,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             return true.ToJsonResult();
         }
-        public ActionResult GetFilterKullanici(string term)
-        {  
-            return KullanicilarBus.GetFilterKullaniciJsonResult(term);
+        public ActionResult GetFilterKullanici(string term, string ekd)
+        {
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+
+            return KullanicilarBus.GetFilterOgrenciJsonResult(term, enstituKod);
         }
 
 

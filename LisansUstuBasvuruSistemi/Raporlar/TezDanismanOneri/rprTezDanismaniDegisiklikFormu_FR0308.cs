@@ -74,7 +74,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 
                 cellFormKodu.Text = "Form Kodu: " + q.FormKodu;
                 xrQRCode.ImageUrl = q.urlAdd;
-                xrQRCode.Image = q.urlAdd.CreateQrCode(360, 360);
+                xrQRCode.Image = q.urlAdd.CreateQrCode();
                 cellOgrenciNo.Text = q.OgrenciNo;
                 cellOgrenciAdSoyad.Text = q.AdSoyad;
                 cellOgrenciEnstituAdi.Text = q.EnstituAd;

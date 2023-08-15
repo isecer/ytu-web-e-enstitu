@@ -73,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
 
 
                 this.xrQRCode.ImageUrl = q.urlAdd;
-                this.xrQRCode.Image = q.urlAdd.CreateQrCode(360, 360);
+                this.xrQRCode.Image = q.urlAdd.CreateQrCode();
                 this.cellOgrenciNo.Text = q.OgrenciNo;
                 this.cellOgrenciAdSoyad.Text = q.AdSoyad;
                 this.cellOgrenciEnstituAdi.Text = q.EnstituAd;

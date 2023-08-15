@@ -24,25 +24,36 @@ namespace LisansUstuBasvuruSistemi.Models
         public int TijBasvuruID { get; set; }
         public System.Guid UniqueID { get; set; }
         public string FormKodu { get; set; }
-        public bool IsDegisiklik { get; set; }
+        public int TijFormTipID { get; set; }
+        public Nullable<int> TijDegisiklikTipID { get; set; }
+        public bool IsObsData { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
+        public int DonemBaslangicYil { get; set; }
+        public int DonemID { get; set; }
         public System.DateTime SozluSinavBasariTarihi { get; set; }
         public bool IsTezDiliTr { get; set; }
         public string TezBaslikTr { get; set; }
         public string TezBaslikEn { get; set; }
         public Nullable<bool> IsDilTaahhutuOnaylandi { get; set; }
+        public Nullable<int> TezDanismanID { get; set; }
         public Nullable<bool> DanismanOnayladi { get; set; }
         public Nullable<System.DateTime> DanismanOnayTarihi { get; set; }
+        public string DanismanOnaylanmamaAciklamasi { get; set; }
         public Nullable<bool> EYKYaGonderildi { get; set; }
         public Nullable<int> EYKYaGonderildiIslemYapanID { get; set; }
         public Nullable<System.DateTime> EYKYaGonderildiIslemTarihi { get; set; }
         public string EYKYaGonderimDurumAciklamasi { get; set; }
         public Nullable<bool> EYKDaOnaylandi { get; set; }
         public Nullable<int> EYKDaOnaylandiIslemYapanID { get; set; }
-        public Nullable<System.DateTime> EYKDaOnaylandiOnayTarihi { get; set; }
+        public Nullable<System.DateTime> EYKTarihi { get; set; }
+        public Nullable<System.DateTime> EYKDaOnaylandiIslemTarihi { get; set; }
         public string EYKDaOnaylanmadiDurumAciklamasi { get; set; }
     
+        public virtual Donemler Donemler { get; set; }
+        public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual TijBasvuru TijBasvuru { get; set; }
+        public virtual TijDegisiklikTipleri TijDegisiklikTipleri { get; set; }
+        public virtual TijFormTipleri TijFormTipleri { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TijBasvuruOneriJuriler> TijBasvuruOneriJurilers { get; set; }
     }

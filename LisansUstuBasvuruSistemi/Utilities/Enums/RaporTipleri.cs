@@ -44,6 +44,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public const byte YeterlikDoktoraSinavSonucFormu = 50;
 
+        public const byte TezIzlemeJuriOneriFormu = 60;
+        public const byte TezIzlemeJuriDegisiklikFormu = 61;
+
 
     }
 }

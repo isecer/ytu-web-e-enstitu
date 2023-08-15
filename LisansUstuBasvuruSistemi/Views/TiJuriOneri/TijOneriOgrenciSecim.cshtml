@@ -1,0 +1,132 @@
+﻿@model LisansUstuBasvuruSistemi.Models.MezuniyetSureci
+@{
+    Layout = null;
+}
+<div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;" id="tijOgrenciSecimPnl">
+    <table style="width: 100%;">
+        <tr>
+            <td style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Tez izleme jüri önerisi oluşturma işlemi</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 10px; text-align: left;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td width="90">Öğrenci Seçiniz</td>
+                        <td width="5">:</td>
+                        <td><input type="text" id="SelectOgrenci" value="" style="width: 100%;" /></td>
+
+                    </tr>
+                    <tr id="rwTijBasvuruBtn" class="hide">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <br />
+                            <button class="btn btn-info btn-sm" id="yeniJoFormBtn"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Jüri Önerisi Oluştur</button>
+                            <br />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    $(function () {
+        $("#SelectOgrenci").select2({
+            tags: true,
+            tokenSeparators: [",", " "],
+            minimumInputLength: 0,
+            maximumSelectionSize: 1,
+            ajax: {
+                url: '@Url.Action("GetTijOngerciSeciOgrenci")',
+                dataType: "json",
+                data: function (term, page) {
+                    return {
+                        term: term
+                    };
+                },
+                results: function (data, page) {
+                    return {
+                        results: data
+                    };
+                }
+            },
+            formatResult: function (result) {
+                var src = result.Images.toString();
+                var cont2 = "<table class='table table-striped' style='width:100%; margin:0px;'>" +
+                    "<tbody>" +
+                    "<tr>" +
+                    "<td style='vertical-align:middle;' width='40'>" +
+                    "<span class='user' style='width: 40px;height:40px;margin-right:5px;'> " +
+                    "<img style='width:40px;height:40px;' src='" + src + "' class='pull-left' alt='" + result.AdSoyad + "'>" +
+                    "</span> " +
+                    "</td>" +
+                    "<td style='vertical-align:middle;'>" +
+                    "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
+                    "<tbody>" +
+                    "<tr> " +
+                    "<td>" + result.text + "</td> " +
+                    "</tr>  " +
+                    "<tr> " +
+                    "<td>" + result.ProgramAdi + "</td> " +
+                    "</tr>" +
+                    "</tbody> " +
+                    "</table> " +
+                    "</td>" +
+                    "</tr> " +
+                    "</tbody>" +
+                    "</table>";
+                return cont2;
+            }
+        });
+        $("#SelectOgrenci").on("change", function () {
+            // Seçilen değeri al
+            var selectedValue = $(this).val();
+
+            if (selectedValue != "") {
+                $('#rwTijBasvuruBtn').removeClass('hide');
+            }
+            else {
+                $('#rwTijBasvuruBtn').addClass('hide');
+            }
+        });
+    });
+    $(document).ready(function () {
+        var myElement = $("#yeniJoFormBtn");
+        myElement.on("click", function (event) {
+            if (event.originalEvent.detail > 1) {
+                event.preventDefault();
+                return false;
+            }
+            else {
+                TijBasvuruKontrol();
+            }
+        });
+    });
+    function TijBasvuruKontrol() {
+        var kullaniciId = $("#SelectOgrenci").val();
+        var _panel = $('#tijOgrenciSecimPnl').parents('.modal-content').first();
+        PanelRefresh(_panel, false); 
+        $.ajax({
+            url: '@Url.Action("OgrenciBasvuruKontrol", "TiJuriOneri")',
+            data: { kullaniciId },
+            success: function (result) {
+                debugger
+                if (!result.IsSuccess) {
+                    getMsg(result.mMessage);
+                }
+                else {
+                    GetTiJuriOneriForm(kullaniciId, result.basvuruUniqueId, '',true)
+                }
+               setTimeout(function(){ PanelRefresh(_panel, true)},600);
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+</script>
+
+
+

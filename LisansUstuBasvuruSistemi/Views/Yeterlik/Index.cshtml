@@ -212,7 +212,14 @@ else if (Model.Data.Any())
     }, 200);
     function YeniBasvuruDuyuruKontrol()
     {
-        ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
+        var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.YeterlikBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap")',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
     }
     function BasvuruSil(sndr, uniqueId, tarih) {
         Swal.fire({
@@ -261,12 +268,19 @@ else if (Model.Data.Any())
         if (unTogled) GetDetail(id);
 
     }
-    </script>
+</script>
 
 }
 <script>
-     function YeniBasvuruDuyuruKontrol() {
-        ShowDuyuru(@DuyuruPopupTipleri.YeterlikBasvuru, '@Url.Action("BasvuruYap")');
+    function YeniBasvuruDuyuruKontrol() {
+           var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.YeterlikBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap")',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
     }
     var isDegerlendirme = '@(Model.isDegerlendirme.HasValue?Model.isDegerlendirme.ToString().ToLower():"")';
     var isKomiteOrJuri='@(Model.IsKomiteOrJuri.HasValue?Model.IsKomiteOrJuri.ToString().ToLower():"")';

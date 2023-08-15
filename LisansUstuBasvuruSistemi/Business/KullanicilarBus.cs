@@ -83,12 +83,12 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kayitBilgi;
             }
         }
-      
-        public static JsonResult GetFilterKullaniciJsonResult(string term)
+
+        public static JsonResult GetFilterOgrenciJsonResult(string term, string enstituKod)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var ogrenciList = db.Kullanicilars.Where(p => p.YtuOgrencisi && (p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term)).Select(s => new
+                var ogrenciList = db.Kullanicilars.Where(p => p.YtuOgrencisi && p.Programlar.AnabilimDallari.EnstituKod == enstituKod && ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) || p.TcKimlikNo.StartsWith(term))).Select(s => new
                 {
                     s.KullaniciID,
                     s.Ad,

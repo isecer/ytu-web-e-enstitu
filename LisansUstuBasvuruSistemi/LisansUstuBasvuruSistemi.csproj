@@ -104,6 +104,11 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.3.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.3\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.0.0\lib\net452\RestSharp.dll</HintPath>
     </Reference>
@@ -204,6 +209,7 @@
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -662,19 +668,10 @@
     <Compile Include="Models\SinavNotlari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SinavTarihleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SinavTipGruplari.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SinavTipleri.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SinavTipleriDil.cs">
-      <DependentUpon>LubsDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SinavTipleriDonem.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SinavTipleriOTNotAraliklari.cs">
@@ -809,6 +806,12 @@
     <Compile Include="Models\TijBasvuruOneriJuriler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TijDegisiklikTipleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TijFormTipleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Universiteler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -866,6 +869,18 @@
     <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.Designer.cs">
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
     </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijDegisiklikFormu_FR1460.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijDegisiklikFormu_FR1460.Designer.cs">
+      <DependentUpon>RprTijDegisiklikFormu_FR1460.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijOneriFormu_FR0306.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijOneriFormu_FR0306.Designer.cs">
+      <DependentUpon>RprTijOneriFormu_FR0306.cs</DependentUpon>
+    </Compile>
     <Compile Include="Raporlar\Yeterlik\RprDrYeterlikSinavDegerlendirmeFormu_FR1227.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -874,7 +889,8 @@
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
-    <Compile Include="Utilities\Dtos\TikOneriDtos.cs" />
+    <Compile Include="Utilities\Dtos\TijBasvuruDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\TijOneriDtos.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikSureciDto.cs" />
     <Compile Include="Utilities\Dtos\KmYeterlikSureciDto.cs" />
@@ -929,6 +945,7 @@
     <Compile Include="Utilities\Dtos\KmYeterlikBasvuruDto.cs" />
     <Compile Include="Utilities\Enums\Msgtype.cs" />
     <Compile Include="Utilities\Enums\TdoDanismanTalepTip.cs" />
+    <Compile Include="Utilities\Enums\TijEnums.cs" />
     <Compile Include="Utilities\Enums\YeterlikBasvuruFilterEnum.cs" />
     <Compile Include="Utilities\Extensions\IconExtension.cs" />
     <Compile Include="Utilities\Logs\RequestLogger.cs" />
@@ -3292,8 +3309,6 @@
     <Content Include="Views\Anketler\SoruSecenekEkle.cshtml" />
     <Content Include="Views\Anketler\DetaySablon2.cshtml" />
     <Content Include="Views\Ajax\GetAnket.cshtml" />
-    <Content Include="Views\OnlineOdeme\Index.cshtml" />
-    <Content Include="Views\OnlineOdeme\getPRdetay.cshtml" />
     <Content Include="Views\Ajax\PaymentResponse.cshtml" />
     <Content Include="Views\Mesajlar\GetMesajDetay.cshtml" />
     <Content Include="Views\Ajax\GetImageUpload.cshtml" />
@@ -3302,7 +3317,6 @@
     <Content Include="Views\Mezuniyet\RezervasyonAl.cshtml" />
     <Content Include="Views\Mezuniyet\TezTeslimFormu.cshtml" />
     <Content Include="Views\Ajax\GetDxReport.cshtml" />
-    <Content Include="Views\OnlineOdeme\getOgrenciDetay.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\JuriOneriFormu.cshtml" />
     <Content Include="Views\Ajax\GetChkList.cshtml" />
     <Content Include="Views\MezuniyetGelenBasvurular\GetTutanakRaporu.cshtml" />
@@ -3381,7 +3395,11 @@
     <Content Include="Views\TikDegisiklikGb\Index.cshtml" />
     <Content Include="Views\TiJuriOneri\Index.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\Index.cshtml" />
-    <Content Include="Views\TiJuriOneri\TikOneriFormu.cshtml" />
+    <Content Include="Views\TiJuriOneri\TijOneriFormu.cshtml" />
+    <Content Include="Views\Ajax\GetDetailTijBasvuru.cshtml" />
+    <Content Include="Views\TiJuriOneri\TijOneriOgrenciSecim.cshtml" />
+    <Content Include="Views\TiJuriOneri\BasvuruDurumView.cshtml" />
+    <Content Include="Views\TiJuriOneri\TijOneriFormu - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3408,6 +3426,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>
@@ -3489,6 +3508,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezDanismaniDegisiklikFormu_FR0308.resx">
       <DependentUpon>RprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\TezIzlemeJuriOneri\RprTijDegisiklikFormu_FR1460.resx">
+      <DependentUpon>RprTijDegisiklikFormu_FR1460.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\TezIzlemeJuriOneri\RprTijOneriFormu_FR0306.resx">
+      <DependentUpon>RprTijOneriFormu_FR0306.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezIzleme\RprTiDegerlendirmeFormuDetay_FR0307.resx">
       <DependentUpon>RprTiDegerlendirmeFormuDetay_FR0307.cs</DependentUpon>

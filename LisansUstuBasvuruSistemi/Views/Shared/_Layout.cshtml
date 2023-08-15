@@ -1008,7 +1008,7 @@
             month = month.length > 1 ? month : '0' + month;
             var day = date.getDate().toString();
             day = day.length > 1 ? day : '0' + day;
-            return day + "." + month + "." + year;
+            return year + "-" + month + "-" + day;
         }
         function tabchangeSet(tabName, tSiraNo) {
             for (var i = 1; i < 10; i++) {
@@ -1291,7 +1291,7 @@
         </script>
 
     }
-    <script>
+<script>
 
         $('.selectpicker').selectpicker();
 
@@ -1323,67 +1323,49 @@
                 newWindow.focus();
             }
         }
-        function ShowDuyuru(PopupTipID, redirectUrl) {
+        function ShowDuyuru(popupSetting) {
+        var buttons = [];
+        if (popupSetting.btnAdi != "") {
+            buttons.push({
+                label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
+                className: "btn-success",
+                callback: function () {
+                    if (popupSetting.redirectUrl != "")
+                        window.location.href = popupSetting.redirectUrl;
+                    else if (popupSetting.callbackFnc != "")
+                        popupSetting.callbackFnc();
+                }
+            });
+        }
+
+            buttons.push({
+                label: 'Vazgeç',
+                className: "btn-primary",
+                callback: function () {
+                    // Vazgeç butonuna tıklandığında yapılacak işlemler
+                }
+            });
+
+
             $.ajax({
                 url: '@Url.Action("GetDuyuruJson", "KDuyurular")',
                 type: 'POST',
                 enctype: "multipart/form-data",
                 cache: false,
                 dataType: "json",
-                data: { 'PopupTipID': PopupTipID },
+                data: { 'PopupTipID': popupSetting.popupTipId },
                 success: function (result) {
                     if (result.ShowMessage) {
-                        if(PopupTipID=='@DuyuruPopupTipleri.AnaSayfa'){
-                            var mdlx = bootbox.dialog({
-                                title:"Duyurular",
-                                message: result.HtmlMessage,
-                                buttons: {
-                                    danger: {
-                                        label: 'Kapat',
-                                        className: "btn-primary",
-                                        callback: function() {
-                                            if (redirectUrl != "" && redirectUrl != null) window.location.href = redirectUrl;
-                                        }
-
-                                    }
-                                }
-                            });
-
-                            $(mdlx).find('.modal-dialog').addClass('modal-lg');
-                            $(mdlx).find('.modal-body').addClass('padding-5');
-                        }
-                        else {
-                            var btnTitle = PopupTipID == '@DuyuruPopupTipleri.TalepYap' ? 'Yeni Talep Yap' : 'Yeni Başvuru Yap';
-                            var mdlx = bootbox.dialog({
-                                message: result.HtmlMessage,
-                                buttons: {
-                                    success: {
-                                        label: '<i class="fa fa-plus tooltips"></i> ' + btnTitle,
-                                        className: "btn-success",
-                                        callback: function() {
-                                            if (redirectUrl != "" && redirectUrl != null) window.location.href = redirectUrl;
-                                        }
-
-                                    },
-                                    danger: {
-                                        label: 'Vazgeç',
-                                        className: "btn-primary",
-                                        callback: function() {
-                                        }
-
-                                    }
-
-                                }
-                            });
-
-                            $(mdlx).find('.modal-dialog').addClass('modal-lg');
-                            $(mdlx).find('.modal-body').addClass('padding-5');
-                        }
-
-
+                        var mdlx = bootbox.dialog({
+                            title: popupSetting.title,
+                            message: result.HtmlMessage,
+                            buttons: buttons
+                        });
                     }
                     else {
-                        if (redirectUrl != "" && redirectUrl != null) window.location.href = redirectUrl;
+                        if (popupSetting.redirectUrl != "") window.location.href = popupSetting.redirectUrl;
+                        else if (popupSetting.callbackFnc != "")
+                            popupSetting.callbackFnc();
                     }
                 },
                 error: function (err) {
@@ -1391,7 +1373,7 @@
 
                 }
             });
-        }
+    }
 
         var frameLoad = false;
         function loadedFrame()

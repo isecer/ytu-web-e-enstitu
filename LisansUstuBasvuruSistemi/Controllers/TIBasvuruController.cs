@@ -203,6 +203,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = basvuru.EnstituKod;
                     model.TIBasvuruID = basvuru.TIBasvuruID;
                     model.BasvuruTarihi = DateTime.Now;
+                    model.Ad = kul.Ad;
+                    model.Soyad = kul.Soyad;
                     model.KullaniciID = basvuru.KullaniciID;
                     model.OgrenciNo = basvuru.OgrenciNo;
                     model.OgrenimTipKod = basvuru.OgrenimTipKod;
@@ -215,6 +217,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.EnstituKod = enstituKod;
                     model.BasvuruTarihi = DateTime.Now;
                     model.KullaniciID = kullaniciId.Value;
+                    model.Ad = kul.Ad;
+                    model.Soyad = kul.Soyad;
                     model.OgrenciNo = kul.OgrenciNo;
                     model.OgrenimTipKod = kul.OgrenimTipKod.Value;
 
@@ -1030,18 +1034,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuruAraRapor.TICalismaRaporDosyaAdi = dosyaAdi;
                                 tiBasvuruAraRapor.TICalismaRaporDosyaYolu = dosyaYolu;
                             }
-
+                            tiBasvuruAraRapor.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
+                            tiBasvuruAraRapor.DonemID = (donemId ?? donemBilgi.DonemID);
                             if (isYeniJo)
                             {
                                 var td = _entities.Kullanicilars.First(p => p.KullaniciID == kul.DanismanID);
                                 tiBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "");
                                 tiBasvuru.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.TezDanismanID = td.KullaniciID;
-                                tiBasvuruAraRapor.RaporTarihi = DateTime.Now;
-                                tiBasvuruAraRapor.DonemBaslangicYil = (baslangicYil ?? donemBilgi.BaslangicYil);
+                                tiBasvuruAraRapor.RaporTarihi = DateTime.Now; 
                                 tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirilmedi;
                                 tiBasvuruAraRapor = _entities.TIBasvuruAraRapors.Add(tiBasvuruAraRapor);
                             }
+                           
 
                             _entities.SaveChanges();
                             LogIslemleri.LogEkle("TIBasvuruAraRapor", isYeniJo ? IslemTipi.Insert : IslemTipi.Update, tiBasvuruAraRapor.ToJson());

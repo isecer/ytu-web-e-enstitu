@@ -406,7 +406,14 @@
 </div>
 <script type="text/javascript">
     function YeniBasvuruDuyuruKontrol() {
-        ShowDuyuru(@DuyuruPopupTipleri.TalepYap, '@Url.Action("TalepYap")');
+        var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.TalepYap,
+            btnAdi: 'Talep Yap',
+            redirectUrl: '@Url.Action("TalepYap")',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting);
     }
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);

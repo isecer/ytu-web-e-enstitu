@@ -1,0 +1,738 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model TijBasvuruDetayDto
+@{
+
+    //Model.DegerlendirenUniqueID = new Guid("60b7a378-df50-4bb3-aa3d-0b164a795c9e");
+    Layout = null;
+
+    var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
+    var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
+    var silmeYetki = isDanismani || isOgrenci || RoleNames.TiJuriOnerileriSil.InRoleCurrent();
+    var kayitYetki = isDanismani || isOgrenci || RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
+    var tiJuriOnerileriEykYaGonre = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
+    var tiJuriOnerileriEykDaOnay = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent();
+    bool formOlusturmaYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() || isOgrenci;
+
+}
+<style>
+
+    .CaptionTd {
+        font-weight: bold;
+        font-size: 9pt;
+        margin: 0px;
+    }
+
+    .ValueTd {
+        font-size: 9pt;
+        margin: 0px;
+        text-align: left;
+    }
+</style>
+<div class="panel" style="border:none;" id="bsvrDet_@Model.UniqueID">
+    <div>
+
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-id-card-o fa-lg"></i> Öğrenci Bilgileri</td>
+                    <td width="100" style="font-weight:bold;font-size:15pt; border-bottom:1px solid; text-align:right;">
+                        <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID')" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <td style="padding-left:10px;text-align:left;">
+
+                        <table style="width:100%;">
+                            <tr>
+                                <td class="CaptionTd" width="140">Ad Soyad</td>
+                                <td class="CaptionTd" width="10">:</td>
+                                <td class="ValueTd">
+                                    @Model.Ad @Model.Soyad (@Model.OgrenciNo)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="CaptionTd">Öğrenim Seviyesi</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">@Model.OgrenimTipAdi</td>
+                            </tr>
+                            <tr>
+                                <td class="CaptionTd">Program</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
+                            </tr>
+                            <tr>
+                                <td class="CaptionTd">Kayıt Tarihi</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                            </tr>
+                          
+                        </table>
+                    </td>
+                    <td width="100" style="text-align:center;">
+                        <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Jüri Öneri / Değişiklik İşlemleri</td>
+                    <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
+                        @if (Model.IsYeniBasvuruYapilabilir && formOlusturmaYetki)
+                        {
+                            <span class="label label-info" id="YeniRaporBtn_@Model.TijBasvuruID" style="cursor:pointer;" onclick="GetTiJuriOneriForm(@Model.KullaniciID,'@Model.UniqueID');"><i class="fa fa-plus"></i> Jüri Değişiklik Formu Oluştur</span>
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-left:10px;text-align:left;">
+                        @if (Model.TijBasvuruOneriList.Any() == false)
+                        {
+                            <table style="width:100%;table-layout:fixed;">
+                                <tr>
+                                    <td style="color:maroon;font-size:13pt; text-align:center;height:250px;">Herhangi bir Rapor girişi bulunamadı</td>
+                                </tr>
+                            </table>
+                        }
+                        else
+                        {
+                            int inxRw = 0;
+                            <table class="table">
+                                <tr>
+                                    <th width="40"></th>
+                                    <th width="150">Öneri Tipi</th>
+                                    <th width="160">Dönem / Öneri Tarihi</th>
+                                    <th>Öneri Durumu</th>
+                                    <th width="120"></th>
+                                </tr>
+                                @foreach (var item in Model.TijBasvuruOneriList)
+                                {
+                                    inxRw++;
+                                    bool showRow = inxRw == 1;
+                                    <tr>
+                                        <td>
+                                            <ul class="panel-controls">
+                                                <li id="iShow_Rpr_@item.TijBasvuruOneriID" onclick="showDetailY('Rpr_@item.TijBasvuruOneriID')">
+                                                    <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "down" : "up")"></span> </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        <td>@item.TijFormTipAdi <br />@(item.TijDegisiklikTipID.HasValue?item.TijDegisiklikTipAdi:"Yeni Jüri Önerisi")</td>
+                                        <td>
+                                            @if (item.IsObsData)
+                                            {
+                                                @("OBS de doğrulandı")
+                                            }
+                                            else
+                                            {
+                                                @item.DonemAdi <br />@item.BasvuruTarihi.ToFormatDateAndTime()
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @if (item.IsObsData)
+                                            {
+                                                @("OBS de doğrulandı")
+                                            }
+                                            else
+                                            {
+                                                @item.ToTijBasvuruDurumView()
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.IsSonBasvuru && !item.EYKYaGonderildi.HasValue)
+                                            {
+                                                if (!item.IsObsData && kayitYetki)
+                                                {
+                                            <a href="javascript:void(0)" onclick="GetTiJuriOneriForm(@Model.KullaniciID,'@Model.UniqueID','@item.UniqueID')"><i style="font-size: 11pt;" class="fa fa-edit"></i> Öneriyi Düzelt</a>
+                                                    <br />
+                                                }
+                                                if (silmeYetki)
+                                                {
+                                                    <a href="javascript:void(0)" onclick="SilDetay('@Model.UniqueID','@item.UniqueID','@Model.Ad @Model.Soyad','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash"></i> Öneriyi Sil</a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="MainRow2 cls-Rpr_@item.TijBasvuruOneriID" style="@(showRow ? "" : "display:none;")">
+                                        <td></td>
+                                        <td colspan="5">
+
+                                            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+                                                <table style="width:100%;">
+                                                    <tr>
+                                                        <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-book fa-lg"></i> Tez Bilgileri</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="CaptionTd" width="160">Yeterlik Sözlü Sınav Tarihi</td>
+                                                        <td class="CaptionTd" width="10">:</td>
+                                                        <td class="ValueTd">@(item.SozluSinavBasariTarihi.ToFormatDate())</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="CaptionTd" width="160">Tez Dili</td>
+                                                        <td class="CaptionTd" width="10">:</td>
+                                                        <td class="ValueTd">@(item.IsTezDiliTr ? "Türkçe" : "İngilizce")</td>
+                                                    </tr>
+                                                    @if (!item.TezBaslikTr.IsNullOrWhiteSpace())
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd">Tez Başlığı Türkçe</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">@item.TezBaslikTr</td>
+                                                        </tr>
+                                                    }
+                                                    @if (!item.TezBaslikEn.IsNullOrWhiteSpace())
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd">Tez Başlığı İngilizce</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">@item.TezBaslikEn</td>
+                                                        </tr>
+                                                    }
+                                                    @if (item.TezDanismanID.HasValue)
+                                                    { <tr>
+                                                        <td class="CaptionTd">
+                                                            Danışman
+                                                        </td>
+                                                        <td class="CaptionTd">:</td>
+                                                        <td class="ValueTd"> 
+                                                            <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @item.DanismanAdi</a> 
+                                                        </td> 
+                                                    </tr>
+                                                    }
+                                                    @if (!item.IsObsData && item.DanismanOnayladi == true)
+                                                    {
+                                                        var title = (item.TijFormTipID == TijFormTipi.YeniForm ? "FR-0306 Doktora Tez İzleme Komitesi Öneri Formu" : "FR-1460 Doktora Tez İzleme Komitesi Değişikliği Formu");
+                                                        var title2 = title + "nu";
+                                                        <tr>
+                                                            <td class="CaptionTd">Form Kodu</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">@item.FormKodu</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="CaptionTd">Form</td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, '@title','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezIzlemeJuriOneriFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <i class="fa fa-print"></i> @title2 İndir
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+
+                                            <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+                                                <table class="table" style="width:100%;margin:0px;">
+                                                    <tr>
+                                                        <td colspan="5" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(item.IsObsData? "Jüri Öneri İşlemi (OBS de doğrulandı)" : item.TijDegisiklikTipAdi)</td>
+                                                    </tr>
+
+                                                    <tr class="info">
+                                                        <th width="35"></th>
+                                                        <th width="100">Unvanı</th>
+                                                        <th>Ad Soyad</th>
+                                                        <th width="90" style="text-align: center;">Asil Seçim</th>
+                                                    </tr>
+                                                    <tbody>
+
+                                                        @foreach (var itemJr in item.TijBasvuruOneriJurilers)
+                                                        {
+                                                            <tr>
+                                                                <td>
+
+                                                                    <ul class="panel-controls">
+                                                                        <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="showDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
+                                                                            <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </td>
+                                                                <td>
+                                                                    @itemJr.UnvanAdi
+                                                                    <br />
+                                                                    @(itemJr.IsTezDanismani ? "Tez Danışmanı" : "Jüri Üyesi")
+                                                                </td>
+                                                                <td>
+                                                                    @itemJr.AdSoyad
+                                                                    <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    @if (item.IsSonBasvuru && !item.IsObsData && !itemJr.IsTezDanismani && item.EYKYaGonderildi == true && !item.EYKDaOnaylandi.HasValue)
+                                                                    {
+                                                                        <select class="form-control" id="IsAsil_@itemJr.TijBasvuruOneriJuriID" name="IsAsil" onchange="SetAsilOrYedek(this,'@Model.UniqueID',@itemJr.TijBasvuruOneriJuriID)" style="text-align-last: center">
+                                                                            <option value=""></option>
+                                                                            <option value="true" @(itemJr.IsAsil == true ? "selected" : "")>Asil</option>
+                                                                        </select>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <b>@(itemJr.IsAsil == true?"Asil":"")</b>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="MainRow2 cls-Jo_@itemJr.TijBasvuruOneriJuriID" style="display:none">
+                                                                <td id="cls-Jo_@itemJr.TijBasvuruOneriJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                        <table style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="CaptionTd" width="150">E-Posta Adresi</td>
+                                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                                    <td class="ValueTd">@itemJr.EMail</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="CaptionTd">Üniversitesi</td>
+                                                                                    <td class="CaptionTd">:</td>
+                                                                                    <td class="ValueTd">@itemJr.UniversiteAdi</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="CaptionTd">Anabilim Dalı</td>
+                                                                                    <td class="CaptionTd">:</td>
+                                                                                    <td class="ValueTd">@itemJr.AnabilimdaliAdi</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            @if (!item.IsObsData)
+                                            {
+                                                <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 60px;">
+                                                    <table style="width: 100%;">
+                                                        <tr>
+                                                            <td colspan="3" style="font-weight: bold; font-size: 11pt; border-bottom: 1px solid;"><i class="fa fa-check-square-o"></i> Danışman Onay İşlemi</td>
+                                                        </tr>
+
+                                                        @if (item.IsSonBasvuru && !item.EYKYaGonderildi.HasValue && (isDanismani || tiJuriOnerileriEykDaOnay || tiJuriOnerileriEykYaGonre))
+                                                        {
+
+                                                            <tr class="form-group">
+                                                                <td class="CaptionTd" width="200">Onay Durumu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <select id="DanismanOnayladi_@item.UniqueID" class="form-control" onchange="DanismanOnayDurumAcklmVisible(this,'@item.UniqueID');">
+                                                                                    <option></option>
+                                                                                    <option value="true" @(item.DanismanOnayladi == true ? "selected" : "")>Jüri Önerisi Başvurusunu Onaylıyorum </option>
+                                                                                    <option value="false" @(item.DanismanOnayladi == false ? "selected" : "")>Jüri Önerisi Başvurusunu Reddediyorum</option>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <label class="btn btn-primary btn-sm" onclick="DanismanOnayDurumKayit('@Model.UniqueID', '@item.UniqueID');"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="DanismanOnaylanmaTaahhutRow1_@item.UniqueID" style="color: @(item.DanismanOnayladi==true?"green":"maroon");" class="@(item.DanismanOnayladi == true ? "" : "hide")">
+                                                                <td class="CaptionTd">Taahhüt 1</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="DanismanOnaylanmaTaahhutRow2_@item.UniqueID" style="color: @(item.DanismanOnayladi==true?"green":"maroon");" class="@(item.DanismanOnayladi == true ? "" : "hide")">
+                                                                <td class="CaptionTd">Taahhüt 2</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                </td>
+
+                                                            </tr>
+
+                                                            <tr id="DanismanOnaylanmamaAciklamasiAckRow_@item.UniqueID" class="form-group @(item.DanismanOnayladi == false ? "" : "hide")">
+                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    <textarea class="form-control" style="min-height: 100px;" id="DanismanOnaylanmamaAciklamasi_@item.UniqueID" maxlength="512">@item.DanismanOnaylanmamaAciklamasi</textarea>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <tr class="form-group">
+                                                                <td class="CaptionTd" width="200">Onay Durumu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+                                                                    @if (!item.DanismanOnayladi.HasValue)
+                                                                    {
+
+                                                                        <span aria-hidden="true" style="font-size: 9pt;"><i class="fa fa-clock-o" style="font-size: 12pt;" aria-hidden="true"></i>Onay Bekleniyor.</span>
+                                                                    }
+                                                                    else if (item.DanismanOnayladi == true)
+                                                                    {
+
+                                                                        <span style="color: green; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size: 12pt;" aria-hidden="true"></i>Onaylandı. (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span style="color: maroon; font-size: 10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size: 12pt;" aria-hidden="true"></i>Onaylanmadı. (@item.DanismanOnayTarihi.ToFormatDateAndTime())</span>
+
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                            if (item.DanismanOnayladi == true)
+                                                            {
+                                                                <tr style="color: green;">
+                                                                    <td class="CaptionTd">Taahhüt 1</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        Önerilen tez izleme komite üyeleri arasında eş danışman bulunmadığını kabul ediyorum.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="color: green;">
+                                                                    <td class="CaptionTd">Taahhüt 2</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        Seçilen jüri üyeleri için ‘Yükseköğretim kurumlarında yabancı dil öğretimi ve yabancı dille öğretim yapılmasında uyulacak esaslara ilişkin yönetmeliğe göre dil şartını sağlamaktadır’ tahhütünü kabul ediyorum.
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            if (item.DanismanOnayladi == false)
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        @item.DanismanOnaylanmamaAciklamasi
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            }
+                                            @if (!item.IsObsData && item.DanismanOnayladi == true)
+                                            {
+
+                                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
+                                                    <table style="width:100%;">
+                                                        <tr>
+                                                            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-check-square-o"></i> EYK Onay Durumu</td>
+                                                        </tr>
+                                                        @if (item.IsSonBasvuru && item.DanismanOnayladi == true && !item.EYKDaOnaylandi.HasValue && tiJuriOnerileriEykYaGonre)
+                                                        {
+                                                            <tr>
+                                                                <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td>
+                                                                                @Html.DropDownList("EYKYaGonderildi", item.SelectEykYaGonderildi, new { id = "EYKYaGonderildi_" + item.UniqueID, @class = "form-control", onchange = "EYKYaOnayChange('" + item.UniqueID + "')" })
+
+                                                                            </td>
+                                                                            <td>
+                                                                                <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID ','@item.UniqueID', false)"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="EYKYaGonderimAciklamaRow_@item.UniqueID" class="form-group @(item.EYKYaGonderildi == false ? "" : "hide")">
+                                                                <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                <td class="CaptionTd">:</td>
+                                                                <td class="ValueTd">
+                                                                    <textarea class="form-control" style="min-height:100px;" id="EYKYaGonderimOnaylanmadiDurumAciklamasi_@item.UniqueID" maxlength="512">@item.EYKYaGonderimDurumAciklamasi</textarea>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td class="CaptionTd" width="200">EYK'ya Gönderim Durumu</td>
+                                                                <td class="CaptionTd" width="10">:</td>
+                                                                <td class="ValueTd">
+                                                                    @if (!item.EYKYaGonderildi.HasValue)
+                                                                    {
+
+                                                                        <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderim Onayı Bekleniyor.</span>
+                                                                    }
+                                                                    else if (item.EYKYaGonderildi == true)
+                                                                    {
+                                                                        if (item.IsObsData)
+                                                                        {
+                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (OBS'de doğrulandı)</span>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylandı. (@item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'ya Gönderimi Onaylanmadı. (@item.EYKYaGonderildiIslemTarihi.ToFormatDateAndTime())</span>
+
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                            if (item.EYKYaGonderildi == false && !item.EYKYaGonderimDurumAciklamasi.IsNullOrWhiteSpace())
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        @item.EYKYaGonderimDurumAciklamasi
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+
+                                                        @if (item.EYKYaGonderildi == true)
+                                                        {
+                                                            if (item.IsSonBasvuru && item.EYKYaGonderildi == true && tiJuriOnerileriEykDaOnay)
+                                                            {
+                                                                <tr class="@(item.EYKYaGonderildi == true ? "" : "hide")">
+                                                                    <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                    <td class="ValueTd">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    @Html.DropDownList("EYKDaOnaylandi", item.SelectEykDaOnaylandi, new { id = "EYKDaOnaylandi_" + item.UniqueID, onchange = "EykOnayDurumAcklmVisible(this,'" + item.UniqueID + "')", @class = "form-control" })
+                                                                                </td>
+                                                                                <td class="form-group">
+                                                                                    <input type="text" class="form-control tarihB @(item.EYKDaOnaylandi==true?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    <label class="btn btn-primary btn-sm" onclick="JoFormDurumKayit('@Model.UniqueID', '@item.UniqueID',true);"><i class="fa fa-save" aria-hidden="true">&nbsp;</i>Kaydet</label>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr id="jOneriFormOnayAckRow_@item.UniqueID" class="form-group @(item.EYKDaOnaylandi == false ? "" : "hide")">
+                                                                    <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                    <td class="CaptionTd">:</td>
+                                                                    <td class="ValueTd">
+                                                                        <textarea class="form-control" style="min-height:100px;" id="EYKDaOnaylanmadiDurumAciklamasi_@item.UniqueID" maxlength="512">@item.EYKDaOnaylanmadiDurumAciklamasi</textarea>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
+                                                                    <td class="CaptionTd" width="10">:</td>
+                                                                    <td class="ValueTd">
+                                                                        @if (!item.EYKDaOnaylandi.HasValue)
+                                                                        {
+
+                                                                            <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;" aria-hidden="true"></i> EYK'da onay işlemi Bekleniyor.</span>
+                                                                        }
+                                                                        else if (item.EYKDaOnaylandi == true)
+                                                                        {
+                                                                            if (item.IsObsData)
+                                                                            {
+                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (OBS'de doğrulandı)</span>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylandı. (@item.EYKTarihi.ToFormatDate())</span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span style="color:maroon;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;" aria-hidden="true"></i> EYK'da Onaylanmadı. (@item.EYKTarihi.ToFormatDate())</span>
+
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                                if (item.EYKDaOnaylandi == false)
+                                                                {
+                                                                    <tr>
+                                                                        <td class="CaptionTd">Onaylanmama Açıklaması</td>
+                                                                        <td class="CaptionTd">:</td>
+                                                                        <td class="ValueTd">
+                                                                            @item.EYKDaOnaylanmadiDurumAciklamasi
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+
+                        }
+                    </td>
+
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.tooltips').tooltip();
+        jQuery('._popover').popover({ trigger: 'hover' });
+        $('.tarihB').datetimepicker({
+            lang: 'tr',
+            timepicker: false,
+            format: 'Y-m-d'
+        });
+
+    });
+    function DanismanOnayDurumAcklmVisible(sndr, tijBasvuruOneriUniqueId) {
+
+            var value = $(sndr).val();
+            if (value.toLowerCase() == "false") {
+                $('#DanismanOnaylanmamaAciklamasiAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
+            }
+            else {
+
+                $('#DanismanOnaylanmamaAciklamasiAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
+        }
+
+        if (value == "true") {
+            $('#DanismanOnaylanmaTaahhutRow1_' + tijBasvuruOneriUniqueId).removeClass("hide");
+            $('#DanismanOnaylanmaTaahhutRow2_' + tijBasvuruOneriUniqueId).removeClass("hide");
+        }
+        else {
+            $('#DanismanOnaylanmaTaahhutRow1_' + tijBasvuruOneriUniqueId).addClass("hide");
+            $('#DanismanOnaylanmaTaahhutRow2_' + tijBasvuruOneriUniqueId).addClass("hide");
+            }
+    }
+    function DanismanOnayDurumKayit(basvuruUniqueId, tijBasvuruOneriUniqueId) {
+            var _panel = $('#bsvrDet_' + basvuruUniqueId);
+            var IsDanismanOnay = $('#DanismanOnayladi_' + tijBasvuruOneriUniqueId).val();
+            var DanismanOnaylanmamaAciklamasi = $('#DanismanOnaylanmamaAciklamasi_' + tijBasvuruOneriUniqueId).val();
+
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("DanismanOnayKayit", "TiJuriOneri")',
+                data: { tijBasvuruOneriUniqueId, IsDanismanOnay, DanismanOnaylanmamaAciklamasi },
+                success: function (result) {
+                    getMsg(result.Messages);
+                    if (result.Messages.IsSuccess == true) {
+                        GetDetail(basvuruUniqueId);
+                    }
+
+                    PanelRefresh(_panel, true);
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+            });
+        }
+        function EykOnayDurumAcklmVisible(sndr, tijBasvuruOneriUniqueId) {
+            var val = $(sndr).val().toLowerCase();
+            if (val == 'false') {
+                $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).removeClass("hide");
+            }
+            else {
+                $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
+            }
+            if (val == 'true') {
+                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
+
+            }
+            else {
+                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
+            }
+        }
+        function EYKYaOnayChange(id) {
+            var val = $('#EYKYaGonderildi_' + id).val().toLowerCase();
+            if (val == 'false') {
+                $('#EYKYaGonderimAciklamaRow_' + id).removeClass('hide');
+            }
+            else {
+                $('#EYKYaGonderimAciklamaRow_' + id).addClass('hide');
+            }
+        }
+        function JoFormDurumKayit(basvuruUniqueId, tijBasvuruOneriUniqueId, eYKDaOnayOrEYKYaGonderim) {
+            var _panel = $('#bsvrDet_' + basvuruUniqueId);
+            PanelRefresh(_panel, false);
+            var $sndr = eYKDaOnayOrEYKYaGonderim ? $('#EYKDaOnaylandi_' + tijBasvuruOneriUniqueId) : $('#EYKYaGonderildi_' + tijBasvuruOneriUniqueId);
+            var SenderVal = $sndr.val().toLowerCase();
+            var EYKDaOnaylanmadiDurumAciklamasi = "";
+            var eYKDaOnaylandiOnayTarihi = $('#EYKTarihi_' + tijBasvuruOneriUniqueId).val();
+            if (senderVal = "false")
+                EYKDaOnaylanmadiDurumAciklamasi = eYKDaOnayOrEYKYaGonderim ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val() : $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
+            $.ajax({
+                url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "TiJuriOneri")',
+                data: {
+                    tijBasvuruOneriUniqueId,
+                    eYKDaOnayOrEYKYaGonderim,
+                    'Onaylandi': SenderVal,
+                    'Aciklama':EYKDaOnaylanmadiDurumAciklamasi,
+                    'OnayTarihi':eYKDaOnaylandiOnayTarihi
+                },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    if (result.IsSuccess) {
+                        GetDetail(basvuruUniqueId);
+
+                    }
+                    showMmMessage(result.Messages, 'Tamam');
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            });
+        }
+        function SetAsilOrYedek(sndr, tijBasvuruUniqueId, tijBasvuruOneriJuriId) {
+            var _panel = $('#bsvrDet_' + tijBasvuruUniqueId);
+            PanelRefresh(_panel, false);
+            var $sndr = $(sndr);
+            var SenderVal = $sndr.val().toLowerCase();
+            $.ajax({
+                url: '@Url.Action("JuriAsilYedekDurumKayit", "TiJuriOneri")',
+                data: {
+                    'tijBasvuruOneriJuriId': tijBasvuruOneriJuriId,
+                    'IsAsil': SenderVal,
+                },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    if (!result.IsSuccess) {
+                        GetDetail(tijBasvuruUniqueId);
+                        showMmMessage(result.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            });
+        }
+</script>

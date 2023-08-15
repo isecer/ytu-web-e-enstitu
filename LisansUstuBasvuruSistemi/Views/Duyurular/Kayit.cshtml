@@ -76,6 +76,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Tez İzleme Jüri Önerisi Yaparken Popup Açılsın</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="TijBasvuruPopupAc" class="toggle" @Model.TijBasvuruPopupAc.ToChecked() />
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Tez İzleme Başvuru Yaparken Popup Açılsın</label>
                                 <div class="col-md-9 col-xs-8">
                                     <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">

@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 msg.Messages.Add(otsAdi +
                                                  " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
                             }
-                            else if ( kullaniciId != UserIdentity.Current.Id && 
+                            else if (kullaniciId != UserIdentity.Current.Id &&
                                      kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
                                      (kul.KayitTarihi > Convert.ToDateTime("31-03-2016") && MezuniyetBus
                                          .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
@@ -236,7 +236,10 @@ namespace LisansUstuBasvuruSistemi.Business
                                                   ogrenciBilgi.AktifDonemDers.ToplamKredi);
 
                                     }
-
+                                    if (!basvuruKriterleri.MBasvuruEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+                                    {
+                                        bkMsg.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+                                    }
                                     if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
                                     {
                                         bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
@@ -882,7 +885,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 return db.MezuniyetSureciYonetmelikleris.Any(p => p.MezuniyetSurecID == mezuniyetSurecId && p.MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == kul.OgrenimTipKod && a.IsGecerli));
             }
         }
-        public static MezuniyetSureciYonetmelikleri GetMezuniyetAktifYonetmelik(int mezuniyetSurecId, int kullaniciId, int? mezuniyetBasvurulariId)
+        public static MezuniyetSureciYonetmelikleri GetMezuniyetAktifYonetmelik(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
@@ -913,12 +916,24 @@ namespace LisansUstuBasvuruSistemi.Business
                 return kriter;
             }
         }
-        public static List<MezuniyetSureciYonetmelikleriOT> GetMezuniyetAktifOgrenimTipiYayinBilgileri(int mezuniyetSurecId, int kullaniciId)
+        public static List<MezuniyetSureciYonetmelikleriOT> GetMezuniyetAktifOgrenimTipiYayinBilgileri(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-                var baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
+                decimal baslangic = 0;
+                int ogrenimTipKod = 0;
+                if (mezuniyetBasvurulariId > 0)
+                {
+                    var mBasvuru = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                    baslangic = Convert.ToDecimal(mBasvuru.KayitOgretimYiliBaslangic + "," + mBasvuru.KayitOgretimYiliDonemID.Value);
+                    ogrenimTipKod = mBasvuru.OgrenimTipKod;
+                }
+                else
+                {
+                    var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
+                    baslangic = Convert.ToDecimal(kul.KayitYilBaslangic + "," + kul.KayitDonemID.Value);
+                    ogrenimTipKod = kul.OgrenimTipKod.Value;
+                }
                 var kriter = db.MezuniyetSureciYonetmelikleris.Where(p => p.MezuniyetSurecID == mezuniyetSurecId).ToList().First(f =>
                     f.TarihKriterID == TarihKriterSecim.SecilenTarihVeOncesi ?
                         (Convert.ToDecimal(f.BaslangicYil + "," + f.DonemID) >= baslangic)
@@ -932,7 +947,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         )
 
                 );
-                var ots = kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == kul.OgrenimTipKod).ToList();
+                var ots = kriter.MezuniyetSureciYonetmelikleriOTs.Where(p => p.OgrenimTipKod == ogrenimTipKod).ToList();
                 return ots;
             }
         }
@@ -1078,6 +1093,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                   OgrenimTipKod = o.OgrenimTipKod,
                                                   OgrenimTipID = o.OgrenimTipID,
                                                   MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = defS != null ? defS.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari : o.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
+                                                  MBasvuruEtikNotKriteri = defS != null ? defS.MBasvuruEtikNotKriteri : o.MBasvuruEtikNotKriteri,
                                                   MBasvuruToplamKrediKriteri = defS != null ? defS.MBasvuruToplamKrediKriteri : o.MBasvuruToplamKrediKriteri.Value,
                                                   MBasvuruAGNOKriteri = defS != null ? defS.MBasvuruAGNOKriteri : o.MBasvuruAGNOKriteri.Value,
                                                   MBasvuruAKTSKriteri = defS != null ? defS.MBasvuruAKTSKriteri : o.MBasvuruAKTSKriteri.Value,
@@ -1086,6 +1102,11 @@ namespace LisansUstuBasvuruSistemi.Business
                                                   MBSRTalebiKacGunSonraAlabilir = defS != null ? defS.MBSRTalebiKacGunSonraAlabilir : o.MBSRTalebiKacGunSonraAlabilir.Value,
                                                   OgrenimTipAdi = ot.OgrenimTipAdi
                                               }).ToList();
+
+                foreach (var item in model.OgrenimTipKriterList)
+                {
+                    item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruEtikNotKriteri); 
+                }
             }
             return model;
         }
@@ -1434,13 +1455,13 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 0, Caption = "Mezun Olamadı" });
             return dct;
         }
-        public static List<CmbIntDto> GetCmbMezuniyetSurecYayinTurleri(int mezuniyetSurecId, int kullaniciId, bool bosSecimVar = false)
+        public static List<CmbIntDto> GetCmbMezuniyetSurecYayinTurleri(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var kriter = MezuniyetBus.GetMezuniyetAktifOgrenimTipiYayinBilgileri(mezuniyetSurecId, kullaniciId);
+                var kriter = MezuniyetBus.GetMezuniyetAktifOgrenimTipiYayinBilgileri(mezuniyetSurecId, kullaniciId, mezuniyetBasvurulariId);
                 var mezuniyetYayinTurIDs = kriter.Where(p => p.IsGecerli).Select(s => s.MezuniyetYayinTurID).Distinct().ToList();
 
                 var qdata = db.MezuniyetYayinTurleris.AsQueryable();
@@ -1559,7 +1580,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var jof = mb.MezuniyetJuriOneriFormlaris.First();
 
 
-
+                   
                     if (isLinkOrSonuc)
                     {
 

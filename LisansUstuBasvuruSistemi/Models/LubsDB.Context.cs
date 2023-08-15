@@ -141,11 +141,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<SikcaSorulanSorular> SikcaSorulanSorulars { get; set; }
         public virtual DbSet<SinavDilleri> SinavDilleris { get; set; }
         public virtual DbSet<SinavNotlari> SinavNotlaris { get; set; }
-        public virtual DbSet<SinavTarihleri> SinavTarihleris { get; set; }
         public virtual DbSet<SinavTipGruplari> SinavTipGruplaris { get; set; }
         public virtual DbSet<SinavTipleri> SinavTipleris { get; set; }
-        public virtual DbSet<SinavTipleriDil> SinavTipleriDils { get; set; }
-        public virtual DbSet<SinavTipleriDonem> SinavTipleriDonems { get; set; }
         public virtual DbSet<SinavTipleriOT_SNA> SinavTipleriOT_SNA { get; set; }
         public virtual DbSet<SinavTipleriOT_SNA_OT> SinavTipleriOT_SNA_OT { get; set; }
         public virtual DbSet<SinavTipleriOT_SNA_PR> SinavTipleriOT_SNA_PR { get; set; }
@@ -190,6 +187,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<TijBasvuru> TijBasvurus { get; set; }
         public virtual DbSet<TijBasvuruOneri> TijBasvuruOneris { get; set; }
         public virtual DbSet<TijBasvuruOneriJuriler> TijBasvuruOneriJurilers { get; set; }
+        public virtual DbSet<TijDegisiklikTipleri> TijDegisiklikTipleris { get; set; }
+        public virtual DbSet<TijFormTipleri> TijFormTipleris { get; set; }
         public virtual DbSet<Universiteler> Universitelers { get; set; }
         public virtual DbSet<Unvanlar> Unvanlars { get; set; }
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }

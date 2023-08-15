@@ -26,6 +26,7 @@ using LisansUstuBasvuruSistemi.Raporlar.Genel;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -570,13 +571,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  select new BasvuruSinavTipDto
                                  {
                                      EnstituKod = basvuruSurec.EnstituKod,
-                                     IsWebService = bs.WebService,
-                                     TarihGirisMaxGecmisYil = bs.TarihGirisMaxGecmisYil,
+                                     IsWebService = bs.WebService, 
                                      SinavTipKod = st.SinavTipKod,
                                      SinavTipID = s.SinavTipID,
                                      SinavTipGrupID = s.SinavTipGrupID,
-                                     GrupAdi = stg.SinavTipGrupAdi,
-                                     GIsTaahhutVar = bs.GIsTaahhutVar,
+                                     GrupAdi = stg.SinavTipGrupAdi, 
                                      IsTaahhutVar = s.IsTaahhutVar ?? false,
                                      SinavAdi = stl.SinavAdi,
                                      Yil = s.WsSinavYil,
@@ -1118,6 +1117,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             return View(model);
+        }
+        [Authorize]
+        [HttpGet]
+        public ActionResult GetDetailTijBasvuru(Guid basvuruUniqueId)
+        {
+            var model = TezIzlemeJuriOneriBus.GetSecilenBasvuruTijDetay(basvuruUniqueId);
+             return View(model);
         }
         [HttpGet]
         public ActionResult GetDetailTiBasvuru(int id, Guid? uniqueId)
@@ -2138,14 +2144,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult MesajKaydet(string dlgid, string groupId, string ekd)
         {
             var model = new Mesajlar();
-            var mmMessage = new MmMessage();
-            mmMessage.IsDialog = !dlgid.IsNullOrWhiteSpace();
-            mmMessage.DialogID = dlgid;
+            var mmMessage = new MmMessage
+            {
+                IsDialog = !dlgid.IsNullOrWhiteSpace(),
+                DialogID = dlgid
+            };
             ViewBag.MmMessage = mmMessage;
             string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             if (groupId.IsNullOrWhiteSpace() == false)
             {
-                model = _entities.Mesajlars.Where(p => p.GroupID == groupId).First();
+                model = _entities.Mesajlars.First(p => p.GroupID == groupId);
                 if (UserIdentity.Current.IsAuthenticated)
                 {
                     if (model.KullaniciID != UserIdentity.Current.Id)
@@ -2161,7 +2169,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 model.AdSoyad = UserIdentity.Current.NameSurname;
                 model.Email = UserIdentity.Current.Description;
             }
-            ViewBag.EnstituAdi = _entities.Enstitulers.Where(p => p.EnstituKod == enstituKod).First().EnstituAd;
+            ViewBag.EnstituAdi = _entities.Enstitulers.First(p => p.EnstituKod == enstituKod).EnstituAd;
             ViewBag.MesajKategoriID = new SelectList(MesajlarBus.CmbGetMesajKategorileri(enstituKod, true, model != null), "Value", "Caption", model.MesajKategoriID);
 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(false), "Value", "Caption", enstituKod);
@@ -3197,6 +3205,33 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     rpr.CreateDocument();
                     rpr.DisplayName = rapor.Kullanicilar.Ad + " " + rapor.Kullanicilar.Soyad + " " + rpr.DisplayName;
                     rprX = rpr;
+                }
+                else if (raporTipi == RaporTipleri.TezIzlemeJuriOneriFormu)
+                {
+                    var id = Request["UniqueID"].ToString();
+                    var uniqueId = new Guid(id);
+                    var rapor = _entities.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == uniqueId);
+                    var kul = rapor.TijBasvuru.Kullanicilar;
+
+                    if (rapor.TijFormTipID == TijFormTipi.YeniForm)
+                    {
+                        var rpr = new RprTijOneriFormu_FR0306(rapor.TijBasvuruOneriID);
+                        rpr.CreateDocument();
+                        rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
+
+                        rprX = rpr;
+
+                    }
+                    else
+                    {
+                        var rpr = new RprTijDegisiklikFormu_FR1460(rapor.TijBasvuruOneriID);
+                        rpr.CreateDocument();
+                        rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
+
+                        rprX = rpr;
+                    }
+
+                     
                 }
             }
             if (isPdfStream)

@@ -1,7 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using LisansUstuBasvuruSistemi.Utilities.Enums 
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTdoBasvuruDto
@@ -116,11 +116,11 @@
                         <tbody>
 
                             @if (Model.RowCount > 0)
-                            { 
-                                int rowIndex = Model.StartRowIndex;  
+                            {
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.TdoBasvuruDtos)
                                 {
-                                    rowIndex++; 
+                                    rowIndex++;
                                     <tr style="color:@item.DurumColor;">
                                         <td>
                                             <table>
@@ -148,7 +148,7 @@
                                             @item.AktifDonemAdi
                                         </td>
                                         <td>
-                                            @item.ToBasvuruDurumView() 
+                                            @item.ToBasvuruDurumView()
                                         </td>
 
                                         <td>
@@ -224,8 +224,15 @@
         toggleByClass(rwID, cls, unTogled);
     }
     function YeniBasvuruDuyuruKontrol() {
-        ShowDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
-    } 
+          var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.TDOBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting);
+    }
     function ShowDetail(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
@@ -237,14 +244,14 @@
     function GetDetail(id) {
 
         var _panel = $('#bsvrDet_' + id);
-        PanelRefresh(_panel, false); 
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("GetDetailTdoBasvuru", "Ajax")',
             data: { id: id },
-            success: function (result) { 
+            success: function (result) {
                 $('#cls-' + id).html(result);
                 Resized(window.innerWidth);
-                PanelRefresh(_panel, true); 
+                PanelRefresh(_panel, true);
                 var $YnBtn = $('#YeniRaporBtn_' + id);
                 if ($YnBtn.length > 0) {
                     $YnBtn.pulsate({

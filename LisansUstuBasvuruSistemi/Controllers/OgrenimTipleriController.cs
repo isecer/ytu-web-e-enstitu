@@ -44,6 +44,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         IsMezuniyetBasvurusuYapabilir = s.IsMezuniyetBasvurusuYapabilir,
                         MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
+                        MBasvuruEtikNotKriteri = s.MBasvuruEtikNotKriteri,
                         MBasvuruToplamKrediKriteri = s.MBasvuruToplamKrediKriteri,
                         MBasvuruAGNOKriteri = s.MBasvuruAGNOKriteri,
                         MBasvuruAKTSKriteri = s.MBasvuruAKTSKriteri,
@@ -86,6 +87,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
 
+            ViewBag.MBasvuruEtikNotKriteri = new SelectList(YeterlikBus.NotDegerleri, model.MBasvuruEtikNotKriteri);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
             return View(model);
         }
@@ -201,6 +203,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir,
                         MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
+                        MBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri,
                         MBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri,
                         MBasvuruAGNOKriteri = kModel.MBasvuruAGNOKriteri,
                         MBasvuruAKTSKriteri = kModel.MBasvuruAKTSKriteri,
@@ -224,6 +227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     kayit.OgrenimTipAdi = kModel.OgrenimTipAdi;
                     kayit.IsMezuniyetBasvurusuYapabilir = kModel.IsMezuniyetBasvurusuYapabilir;
                     kayit.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari;
+                    kayit.MBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri;
                     kayit.MBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri;
                     kayit.MBasvuruAGNOKriteri = kModel.MBasvuruAGNOKriteri;
                     kayit.MBasvuruAKTSKriteri = kModel.MBasvuruAKTSKriteri;
@@ -244,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
 
 
-
+            ViewBag.MBasvuruEtikNotKriteri = new SelectList(YeterlikBus.NotDegerleri, kModel.MBasvuruEtikNotKriteri);
             ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             return View(kModel);

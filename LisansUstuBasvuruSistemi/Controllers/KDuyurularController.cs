@@ -108,6 +108,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.AnaSayfaPopupAc,
                         s.BasvuruPopupAc,
                         s.TDOBasvuruPopupAc,
+                        s.TijBasvuruPopupAc,
                         s.TIBasvuruPopupAc,
                         s.YeterlikBasvuruPopupAc,
                         s.MezuniyetBasvuruPopupAc,
@@ -118,6 +119,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (popupTipId == DuyuruPopupTipleri.AnaSayfa) q = q.Where(p => p.AnaSayfaPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.LisansustuBasvuru) q = q.Where(p => p.BasvuruPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.TalepYap) q = q.Where(p => p.TalepYaparkenPopupAc);
+            else if (popupTipId == DuyuruPopupTipleri.TijOneri) q = q.Where(p => p.TijBasvuruPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
             else if (popupTipId == DuyuruPopupTipleri.YeterlikBasvuru) q = q.Where(p => p.YeterlikBasvuruPopupAc);
@@ -135,12 +137,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemYapanIP = s.IslemYapanIP,
                 EkSayisi = s.EkSayisi,
                 DuyuruEkleris = s.Ekler,
-                AnaSayfadaGozuksun = s.AnaSayfadaGozuksun,
-                AnaSayfaPopupAc = s.AnaSayfaPopupAc,
-                BasvuruPopupAc = s.BasvuruPopupAc,
-                MezuniyetBasvuruPopupAc = s.MezuniyetBasvuruPopupAc,
-                TalepYaparkenPopupAc = s.TalepYaparkenPopupAc,
-                YeterlikBasvuruPopupAc = s.YeterlikBasvuruPopupAc,
                 YayinSonTarih = s.YayinSonTarih
             }).OrderByDescending(o => o.Tarih).ToList();
 

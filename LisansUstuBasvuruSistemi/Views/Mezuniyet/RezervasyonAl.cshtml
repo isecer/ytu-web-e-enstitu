@@ -55,20 +55,22 @@
                                     onSelectDate: function () {
                                         getSaatler();
                                     },
-                                    onChangeMonth: function (sndr) {
-                                        var date = new Date(sndr);
-                                        var qdate = getFormattedDate(date);
-                                        $('#Tarih').val(qdate); getSaatler();
-                                    },
-                                    onChangeYear: function (sndr) {
+                                    onChangeMonth: function (sndr) { 
                                         var date = new Date(sndr);
                                         var qdate = getFormattedDate(date);
                                         $('#Tarih').val(qdate);
                                         getSaatler();
                                     },
+                                    onChangeYear: function (sndr) {
+                                        var date = new Date(sndr);
+                                        var qdate = getFormattedDate(date); 
+                                        $('#Tarih').val(qdate);
+                                        getSaatler();
+                                    },
                                 });
+
                             });
-                            function getSaatler(date) {
+                            function getSaatler() {
                                 var tarih = $('#Tarih').val();
                                 var salon = $('#SRSalonID').val();
                                 if (salon != "" && salon != null) {
@@ -77,7 +79,7 @@
                                 else {
                                     $('.srTarih').addClass('hide');
                                 }
-                                if (tarih != null && salon != null && tarih != "" && salon != "") {
+                                if (tarih != "" && salon != "") { 
                                     $('#saatLstContnt').css("display", "block");
                                     var _panel = $('.pnlRfrsh');
                                     PanelRefresh(_panel, false);

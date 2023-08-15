@@ -19,7 +19,7 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class YeterlikBus
     {
-        private static readonly List<string> NotDegerleri = new List<string>
+        public static List<string> NotDegerleri = new List<string>
         {
             "F0",
             "FF",

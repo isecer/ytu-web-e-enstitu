@@ -29,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public string OgrenimTipAdi { get; set; }
         public bool IsMezuniyetBasvurusuYapabilir { get; set; }
         public string MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
+        public string MBasvuruEtikNotKriteri { get; set; }
         public Nullable<int> MBasvuruToplamKrediKriteri { get; set; }
         public Nullable<double> MBasvuruAGNOKriteri { get; set; }
         public Nullable<int> MBasvuruAKTSKriteri { get; set; }

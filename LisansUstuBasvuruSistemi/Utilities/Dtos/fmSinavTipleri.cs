@@ -11,11 +11,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string EnstituKod { get; set; }
         public string SinavAdi { get; set; }
-        public int? SinavTipGrupID { get; set; }
-        public bool? WebService { get; set; }
-        public bool? OzelTarih { get; set; }
-        public bool? OzelNot { get; set; }
-        public bool? KusuratVar { get; set; }
+        public int? SinavTipGrupID { get; set; }  
+        public bool? OzelNot { get; set; } 
         public bool? IsAktif { get; set; }
         public IEnumerable<FrSinavTipleri> FrSinavTipleris { get; set; }
 
@@ -28,8 +25,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string WsSinavCekimTipAdi { get; set; }
         public string IslemYapan { get; set; }
 
-        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
-        public List<KrSinavTipleriDonem> KrSinavTipleriDonems { get; set; }
+        public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; } 
 
         public List<FrSinavTipleriSpa> FrSinavTipleriSpa { get; set; }
 
@@ -49,8 +45,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<KrSinavTipleriOtNotAraliklari> SinavTipleriOtNotAraliklariList { get; set; }
     }
 
-    public class KrSinavTipleriDonem : SinavTipleriDonem
+    public class KrSinavTipleriDonem
     {
+        public int SinavTipID { get; set; }
+        public int SinavTipDonemID { get; set; }
+        public int? SinavDilID { get; set; }
+        public int Yil   { get; set; }
+        public string WsDonemKod { get; set; }
+        public string WsDonemAd { get; set; }
+        public bool IsTaahhutVar { get; set; }
         public string DonemAdi { get; set; }
     }
     public class KrSinavTipleri : BasvuruSurecSinavTipleri

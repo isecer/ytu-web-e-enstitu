@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int TijBasvuruID { get; set; }
         public System.Guid UniqueID { get; set; }
         public string EnstituKod { get; set; }
-        public string BasvuruSonDonemSecilecekDersKodlari { get; set; }
+        public bool IsYeniBasvuruYapilabilir { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
         public int KullaniciID { get; set; }
         public string OgrenciNo { get; set; }
@@ -32,13 +32,14 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> KayitOgretimYiliBaslangic { get; set; }
         public Nullable<int> KayitOgretimYiliDonemID { get; set; }
         public Nullable<System.DateTime> KayitTarihi { get; set; }
-        public int TezDanismanID { get; set; }
+        public Nullable<int> TezDanismanID { get; set; }
         public System.DateTime YeterlikSozluSinavTarihi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }
     
         public virtual Donemler Donemler { get; set; }
+        public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
         public virtual OgrenimTipleri OgrenimTipleri { get; set; }
         public virtual Programlar Programlar { get; set; }

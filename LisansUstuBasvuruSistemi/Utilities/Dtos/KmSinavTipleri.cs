@@ -7,8 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class KmSinavTipleri : SinavTipleri
-    {
-        public List<int> SinavDilIDs { get; set; }
+    { 
 
         public List<int> SinavTarihleriID { get; set; }
         public List<DateTime> SinavTarihi { get; set; }
@@ -21,14 +20,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int> SubSinavAralikID { get; set; }
         public List<string> SubSinavAralikAdi { get; set; }
         public List<double> SubSinavMin { get; set; }
-        public List<double> SubSinavMax { get; set; }
-        public List<bool> SubNotDonusum { get; set; }
-        public List<string> SubNotDonusumFormulu { get; set; }
+        public List<double> SubSinavMax { get; set; } 
 
         public List<int> SinavTipDonemID { get; set; }
-        public List<int> Yil { get; set; }
-        public List<string> WsDonemKod { get; set; }
-        public List<bool> IsTaahhutVar { get; set; }
+        public List<int> Yil { get; set; }  
 
         public List<int> NAOgrenimTipKod { get; set; }
         public List<bool> NAIngilizce { get; set; }
@@ -40,14 +35,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
         public KmSinavTipleri()
         {
-            IPProgramKod = new List<string>();
-            SinavDilIDs = new List<int>();
-            IsTaahhutVar = new List<bool>();
+            IPProgramKod = new List<string>();  
 
 
             SinavTipDonemID = new List<int>();
-            Yil = new List<int>();
-            WsDonemKod = new List<string>();
+            Yil = new List<int>(); 
 
             SinavTarihleriID = new List<int>();
             SinavTarihi = new List<DateTime>();
@@ -58,9 +50,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             SubSinavAralikID = new List<int>();
             SubSinavAralikAdi = new List<string>();
             SubSinavMin = new List<double>();
-            SubSinavMax = new List<double>();
-            SubNotDonusum = new List<bool>();
-            SubNotDonusumFormulu = new List<string>();
+            SubSinavMax = new List<double>(); 
         }
     }
 }

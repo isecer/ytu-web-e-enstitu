@@ -165,8 +165,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
 
         public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiDanismana = 287;
         public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiOgrenciye = 288;
-        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink = 289; 
+        public static int Yeterlik_SozluSinavKatilmadiGirisiYapildiJurilereLink = 289;
 
-         
+
+        public static int TijFormuOlusturulduDanismana = 300;
+        public static int TijOneriFormuDanismanTarafindanOnaylandiDanismana = 301;
+        public static int TijOneriFormuDanismanTarafindanRetEdildiDanismana = 302;
+        public static int TijOneriFormuEykyaGonderimiRetEdildiDanismana = 303;
+        public static int TijOneriFormuEykdaOnaylanmadiEdildiDanismana = 304;
+        public static int TijOneriFormuEykdaOnaylandiEdildiDanismana = 305;
+        public static int TijOneriFormuDanismanTarafindanOnaylandiOgrenciye = 306;
+        public static int TijOneriFormuDanismanTarafindanRetEdildiOgrenciye = 307;
+        public static int TijOneriFormuEykyaGonderimiRetEdildiOgrenciye = 308;
+        public static int TijOneriFormuEykdaOnaylanmadiEdildiOgrenciye = 309;
+        public static int TijOneriFormuEykdaOnaylandiEdildiOgrenciye = 310;
+
     }
 }

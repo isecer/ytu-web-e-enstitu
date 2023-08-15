@@ -16,15 +16,18 @@ namespace LisansUstuBasvuruSistemi.Models
     {
         public int TijBasvuruOneriJuriID { get; set; }
         public int TijBasvuruOneriID { get; set; }
-        public string JuriTipAdi { get; set; }
+        public int RowNum { get; set; }
+        public bool IsTezDanismani { get; set; }
+        public bool IsYtuIciJuri { get; set; }
         public string UnvanAdi { get; set; }
         public string AdSoyad { get; set; }
         public string EMail { get; set; }
         public Nullable<int> UniversiteID { get; set; }
         public string UniversiteAdi { get; set; }
-        public string AnabilimDaliAdi { get; set; }
-        public Nullable<bool> IsAsilOrYedek { get; set; }
+        public string AnabilimdaliAdi { get; set; }
+        public Nullable<bool> IsAsil { get; set; }
     
         public virtual TijBasvuruOneri TijBasvuruOneri { get; set; }
+        public virtual Universiteler Universiteler { get; set; }
     }
 }

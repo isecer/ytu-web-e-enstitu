@@ -1,3 +1,470 @@
-﻿
-@{ 
-} 
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model  FmTijBasvuru
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var tiJuriOnerileriSil = RoleNames.TiJuriOnerileriSil.InRoleCurrent();
+    var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "TiJuriOnerileriGb", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+
+                        @if (Model.RowCount > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+                        }
+
+                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Dönem</td>
+                                            <td>
+                                                @Html.DropDownList("AktifTijDonemId", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Öneri Tipi</td>
+                                            <td>
+                                                @Html.DropDownList("IsDegisiklik", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Anabilim Dalı</td>
+                                            <td>
+                                                @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Öneri Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width: 100%; table-layout: fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Jüri Önerlileri</h3>
+                    <ul class="panel-controls">
+                        @if (tiJuriOnerileriOgrenciAdina)
+                        {
+                            <li><span class="label label-info label-form" style="cursor: pointer;" id="btnYeniBasvuru"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Jüri Önerisi Oluştur</span></li>
+                        }
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th>Ad Soyad</th>
+                                <th width="180">Son Öneri Dönemi / Tarihi</th>
+                                <th width="280">Son Öneri Durumu</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr style="color:@item.DurumColor;" id="mainRw_@item.UniqueID">
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.OgrenciNo</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @if (item.SonBasvuru != null)
+                                            {
+                                                if (!item.SonBasvuru.IsObsData)
+                                                {
+                                                    @item.SonBasvuru.DonemAdi<br />
+                                                    @item.SonBasvuru.BasvuruTarihi.ToFormatDateAndTime()
+                                                }
+                                                else
+                                                {
+                                                    @("OBS de doğrulandı")
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @("Henüz Öneri Yok")
+                                            }
+
+
+                                        </td>
+                                        <td>
+                                            @if (item.SonBasvuru?.IsObsData == true)
+                                            {
+                                                @("OBS de doğrulandı")
+                                            }
+                                            else
+                                            {
+                                                @item.SonBasvuru.ToTijBasvuruDurumView()
+                                            }
+                                        </td>
+
+                                    </tr>
+                                    <tr class="cls-@item.UniqueID" style="display:none">
+                                        <td id="cls-@item.UniqueID" colspan="4" style="padding: 1px 1px 1px 1px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+
+    function YeniBasvuruDuyuruKontrol() {
+        var popupSetting = {
+            title:'',
+            popupTipId:@DuyuruPopupTipleri.TijOneri,
+            btnAdi: 'Jüri Önerisi Yap',
+            redirectUrl:'',
+            callbackFnc: tijOneriOgrenciSecim
+        }
+        ShowDuyuru(popupSetting);
+    }
+    $(document).ready(function () {
+        var myElement = $("#btnYeniBasvuru");
+        myElement.on("click", function (event) {
+            if (event.originalEvent.detail > 1) {
+                event.preventDefault();
+                return false;
+            }
+            else {
+                   YeniBasvuruDuyuruKontrol();
+                }
+        });
+    });
+    function tijOneriOgrenciSecim(basvuruUniqueId) {
+        var _panel = $('#bsvrDet_' + basvuruUniqueId);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("TijOneriOgrenciSecim", "TiJuriOneri")',
+            data: {  },
+            success: function (result) {
+                bootbox.dialog({
+                    message: result,
+                    title: "||",
+                    buttons: {
+                        danger: {
+                            label: 'Vazgeç',
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        }
+                    }
+                }); 
+                PanelRefresh(_panel, true);
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+            }
+        });
+    }
+
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+
+
+    function ShowDetail(basvuruUniqueId) {
+        var rwID = $('#iShow_' + basvuruUniqueId);
+        var cls = 'cls-' + basvuruUniqueId;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(basvuruUniqueId);
+
+    }
+    function GetDetail(basvuruUniqueId) {
+
+        var _panel = $('#bsvrDet_' + basvuruUniqueId);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailTijBasvuru", "Ajax")',
+            data: { basvuruUniqueId: basvuruUniqueId},
+            success: function (result) {
+                $('#cls-' + basvuruUniqueId).html(result); 
+                PanelRefresh(_panel, true);
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(_panel, true);
+            }
+        });
+
+    }
+</script>
+@if (tiJuriOnerileriSil || tiJuriOnerileriOgrenciAdina)
+{
+    <script>
+
+    function SilDetay(tijBasvuruUniqueId, tijBasvuruOneriUniqueId, adSoyad, tarih)
+        {
+        bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait "+tarih+" tarihli jüri önerisini silmek istiyor musunuz?</td></tr></table>",
+            title: "Jüri Önerisi Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Jüri Önerisini Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("SilDetay", "TiJuriOneri")',
+                            data: { tijBasvuruOneriUniqueId: tijBasvuruOneriUniqueId },
+                            success: function (result) {
+
+                                if (result.removedAllData) {
+                                    if (result.IsSuccess) {
+                                        $('#mainRw_' + tijBasvuruUniqueId).closest("tr").remove();
+                                        $(".cls-" + tijBasvuruUniqueId).remove();
+                                    }
+                                }
+                                else if (result.IsSuccess) {
+                                    GetDetail(tijBasvuruUniqueId);
+                                }
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+        }
+    </script>
+}
+@if (tiJuriOnerileriOgrenciAdina)
+{
+    <script>
+        function GetTiJuriOneriForm(kullaniciId, basvuruUniqueId, basvuruJuriOneriUniqueId,refreshIndex) {
+        var _panel = $('#bsvrDet_' + basvuruUniqueId);
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("GetTijOneriFormu", "TiJuriOneri")',
+                data: {
+                    'kullaniciId': kullaniciId,
+                    'basvuruUniqueId': basvuruUniqueId,
+                    'basvuruJuriOneriUniqueId': basvuruJuriOneriUniqueId
+                },
+                success: function (resultG) {
+                    PanelRefresh(_panel, true);
+                    if (resultG.IsSuccess) {
+                        var btbxxFS = bootbox.dialog({
+                            message: resultG.Content,
+                            title: "||",
+                            buttons: {
+
+                                success: {
+                                    label: 'Kaydet',
+                                    className: "btn-info btnKaydet",
+                                    callback: function (event) {
+                                        var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                        PanelRefresh(pnlx, false);
+                                        $('#FrmTijOneriFormu').ajaxForm({
+                                            success: function (result) { 
+                                                PanelRefresh(pnlx, true); 
+                                                if (result.mMessage.IsSuccess) { 
+                                                    var _clsBtn = $('.bootbox-close-button').first();
+                                                    $(_clsBtn).click();
+                                                    if (refreshIndex) window.location.href = '@Url.Action("Index")?SelectedBasvuruUniqueId=' + basvuruUniqueId;
+                                                    else  GetDetail(basvuruUniqueId);
+                                                }
+                                                else {
+                                                    if (result.selectedJuriNum > 0) {
+                                                        ShowContent(result.selectedJuriNum);
+                                                    }
+                                                    if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
+                                                    return false;
+                                                }
+                                            },
+                                            complete: function (cmp) {
+                                                PanelRefresh(pnlx, true);
+                                            },
+                                            error: function (err) {
+                                                PanelRefresh(pnlx, true);
+                                            }
+
+                                        });
+                                        $('#FrmTijOneriFormu').submit();
+                                        return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Vazgeç',
+                                    className: "btn-primary",
+                                    callback: function () {
+                                    }
+                                }
+                            }
+                        });
+
+                        $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
+                        if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
+
+                    }
+                    else {
+                        showMmMessage(resultG.Messages, 'Tamam');
+                    }
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            })
+        }
+
+
+    </script>
+}
+
+@if (Model.SelectedBasvuruUniqueId.HasValue)
+{
+    <script>
+      setTimeout(function(){  ShowDetail('@Model.SelectedBasvuruUniqueId')},200);
+    </script>
+
+}

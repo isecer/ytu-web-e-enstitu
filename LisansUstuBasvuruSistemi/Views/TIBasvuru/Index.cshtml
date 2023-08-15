@@ -264,7 +264,14 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
         toggleByClass(rwID, cls, unTogled);
     }
     function YeniBasvuruDuyuruKontrol() {
-        ShowDuyuru(@DuyuruPopupTipleri.TDOBasvuru, '@Url.Action("BasvuruYap",new { KullaniciID=Model.KullaniciID})');
+           var popupSetting = {
+            title:'||',
+            popupTipId:@DuyuruPopupTipleri.TIBasvuru,
+            btnAdi: 'Başvuru Yap',
+            redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
+            callbackFnc: ''
+        }
+        ShowDuyuru(popupSetting); 
     }
 
 

@@ -6,27 +6,22 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using QRCoder;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static  class ImageHelper
     {
-        public static Image CreateQrCode(this string kod, int width = 360, int height = 360)
+        public static Image CreateQrCode(this string kod)
         {
-            var url = string.Format("http://chart.apis.google.com/chart?cht=qr&chs={1}x{2}&chl={0}", kod, width, height);
-            WebResponse response = default(WebResponse);
-            Stream remoteStream = default(Stream);
-            StreamReader readStream = default(StreamReader);
-            WebRequest request = WebRequest.Create(url);
-            response = request.GetResponse();
-            remoteStream = response.GetResponseStream();
-            readStream = new StreamReader(remoteStream);
-            System.Drawing.Image img = System.Drawing.Image.FromStream(remoteStream);
+           
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(kod, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(10); // QR kod boyutu belirleme (10 ile çarpılarak boyut arttırılabilir)
+            return qrCodeImage;
 
-            response.Close();
-            remoteStream.Close();
-            readStream.Close();
-            return img;
+             
         }
 
         public static Image ResizeImage(this Image imgToResize, Size size)

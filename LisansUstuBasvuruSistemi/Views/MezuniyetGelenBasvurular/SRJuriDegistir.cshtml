@@ -2,15 +2,15 @@
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @model SRTalepleri
 @{
-    var Jurilers = Model.MezuniyetBasvurulari.MezuniyetJuriOneriFormlaris.First().MezuniyetJuriOneriFormuJurileris;
-    var SRJurilers = Model.SRTaleplerJuris.ToList();
-    var Danisman = SRJurilers.Where(p => p.JuriTipAdi == "TezDanismani").First();
-    var Tik1= SRJurilers.Where(p => p.JuriTipAdi == "TikUyesi1").FirstOrDefault();
-    var Tik2 = SRJurilers.Where(p => p.JuriTipAdi == "TikUyesi2").FirstOrDefault();
-    var YtuIciJuris = Jurilers.Where(p => p.JuriTipAdi != "TezDanismani" && p.JuriTipAdi.Contains("YtuIci") && p.IsAsilOrYedek.HasValue).ToList();
-    var YtuDisiJuris = Jurilers.Where(p => p.JuriTipAdi != "TezDanismani" && p.JuriTipAdi.Contains("YtuDisi") && p.IsAsilOrYedek.HasValue).ToList();
-    var YtuIciJuri = SRJurilers.Where(p => p.JuriTipAdi.Contains("YtuIci")).First();
-    var YtuDisiJuri = SRJurilers.Where(p => p.JuriTipAdi.Contains("YtuDisi")).First();
+    var jurilers = Model.MezuniyetBasvurulari.MezuniyetJuriOneriFormlaris.First().MezuniyetJuriOneriFormuJurileris;
+    var srJurilers = Model.SRTaleplerJuris.ToList();
+    var danisman = srJurilers.First(p => p.JuriTipAdi == "TezDanismani");
+    var tik1= srJurilers.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi1");
+    var tik2 = srJurilers.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi2");
+    var ytuIciJuris = jurilers.Where(p => p.JuriTipAdi != "TezDanismani" && p.JuriTipAdi.Contains("YtuIci") && p.IsAsilOrYedek.HasValue).ToList();
+    var ytuDisiJuris = jurilers.Where(p => p.JuriTipAdi != "TezDanismani" && p.JuriTipAdi.Contains("YtuDisi") && p.IsAsilOrYedek.HasValue).ToList();
+    var ytuIciJuri = srJurilers.First(p => p.JuriTipAdi.Contains("YtuIci"));
+    var ytuDisiJuri = srJurilers.First(p => p.JuriTipAdi.Contains("YtuDisi"));
     Layout = null;
 }
 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
@@ -20,50 +20,50 @@
             <tr>
                 <td width="90">Danışman</td>
                 <td width="10">:</td>
-                <td>@Danisman.UnvanAdi @Danisman.JuriAdi</td>
+                <td>@danisman.UnvanAdi @danisman.JuriAdi</td>
             </tr>
-            @if (Tik1 != null)
+            @if (tik1 != null)
             {
                 <tr>
                     <td width="90">Tik Üyesi</td>
                     <td width="10">:</td>
-                    <td>@Tik1.UnvanAdi @Tik1.JuriAdi</td>
+                    <td>@tik1.UnvanAdi @tik1.JuriAdi</td>
                 </tr>
             }
-            @if (Tik2 != null)
+            @if (tik2 != null)
             {
                 <tr>
                     <td width="90">Tik Üyesi</td>
                     <td width="10">:</td>
-                    <td>@Tik2.UnvanAdi @Tik2.JuriAdi</td>
+                    <td>@tik2.UnvanAdi @tik2.JuriAdi</td>
                 </tr>
             }
-            @if (!(YtuIciJuri.MezuniyetSinavDurumID>MezuniyetSinavDurum.SonucGirilmedi))
+            @if (!(ytuIciJuri.MezuniyetSinavDurumID>MezuniyetSinavDurum.SonucGirilmedi))
             {
                 <tr>
                     <td width="90">YTÜ İçi Jüri</td>
                     <td width="10">:</td>
                     <td>
                         <select class="form-control" id="YtuIciJuri_@Model.UniqueID">
-                            @foreach (var item in YtuIciJuris)
+                            @foreach (var item in ytuIciJuris)
                             {
-                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== YtuIciJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
+                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== ytuIciJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
                             }
 
                         </select>
                     </td>
                 </tr>
             }
-            @if (!(YtuDisiJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi))
+            @if (!(ytuDisiJuri.MezuniyetSinavDurumID > MezuniyetSinavDurum.SonucGirilmedi))
             {
                 <tr>
                     <td width="90">YTÜ Dışı Jüri</td>
                     <td width="10">:</td>
                     <td>
                         <select class="form-control" id="YtuDisiJuri_@Model.UniqueID">
-                            @foreach (var item in YtuDisiJuris)
+                            @foreach (var item in ytuDisiJuris)
                             {
-                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== YtuDisiJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
+                                <option value="@item.MezuniyetJuriOneriFormuJuriID" @(item.AdSoyad.ToLower()== ytuDisiJuri.JuriAdi.ToLower()?"selected":"")>@item.UnvanAdi @item.AdSoyad (@(item.IsAsilOrYedek == true ? "Asil" : "Yedek"))</option>
                             }
 
                         </select>
