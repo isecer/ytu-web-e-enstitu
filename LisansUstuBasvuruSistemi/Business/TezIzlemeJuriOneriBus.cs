@@ -128,15 +128,20 @@ namespace LisansUstuBasvuruSistemi.Business
             dct.Add(new CmbIntDto { Value = 9, Caption = "EYK'Da Onaylanmadı" });
             return dct;
         }
-        public static List<CmbBoolDto> CmbTijOneriTipListe(bool bosSecimVar = false)
+        public static List<CmbIntDto> CmbTijOneriTipListe(bool bosSecimVar = false)
         {
-            var dct = new List<CmbBoolDto>();
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+                
+                var tips = db.TijFormTipleris
+                    .Select(s => new { s.TijFormTipID, s.TikFormTipAdi }).Select(
+                        s =>
+                            new CmbIntDto { Value = s.TijFormTipID, Caption = s.TikFormTipAdi }
+                    ).ToList();
+                if (bosSecimVar) tips.Insert(0, new CmbIntDto { Value = null, Caption = "" });
 
-            if (bosSecimVar) dct.Add(new CmbBoolDto { Value = null, Caption = "" });
-
-            dct.Add(new CmbBoolDto { Value = false, Caption = "Yeni Jüri Önerisi" });
-            dct.Add(new CmbBoolDto { Value = true, Caption = "Jüri Önerisi Değişikliği" });
-            return dct;
+                return tips;
+            }
         }
         public static IHtmlString ToTijBasvuruDurumView(this TijBasvuruOneriDetayDto model)
         {
@@ -401,8 +406,8 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 int? danismanId = null;
                 var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
-                var tiJuriOnerileriKayit = RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
-                if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriKayit)
+                var tiJuriOnerileriYetkili = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent() || RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
+                if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriYetkili)
                     danismanId = UserIdentity.Current.Id;
                 var basvuru = db.TijBasvurus.First(p => p.UniqueID == uniqueId);
 
@@ -479,7 +484,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
-        public static MmMessage GetTijBasvuruDetaySilKontrol(Guid tijBasvuruOneriUniqueId)
+        public static MmMessage GetTijBasvuruDetayIslemKontrol(Guid tijBasvuruOneriUniqueId)
         {
             var msg = new MmMessage
             {
@@ -487,32 +492,44 @@ namespace LisansUstuBasvuruSistemi.Business
             };
 
             using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var silmeYetkisi = RoleNames.TiJuriOnerileriSil.InRoleCurrent();
+            { 
                 var basvuru = db.TijBasvuruOneris.FirstOrDefault(p => p.UniqueID == tijBasvuruOneriUniqueId);
                 if (basvuru == null)
                 {
                     msg.IsSuccess = false;
-                    msg.Messages.Add("Silinmek istenen jüri önerisi sistemde bulunamadı.");
+                    msg.Messages.Add("İşlem yapmak istenen jüri önerisi sistemde bulunamadı.");
                 }
                 else
                 {
-                    if (silmeYetkisi)
+                    if (UserIdentity.Current.IsYetkiliTij)
                     {
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.TijBasvuru.EnstituKod))
                         {
                             msg.IsSuccess = false;
-                            msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
+                            msg.Messages.Add("Bu enstitüye ait jüri önerileri üstünde işlem yapmaya yetkili değilsiniz!");
                         }
                     }
                     else
                     {
 
-                        if (basvuru.DanismanOnayladi.HasValue)
+                        var isOgrenci = basvuru.TijBasvuru.KullaniciID == UserIdentity.Current.Id;
+
+                        if (isOgrenci)
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Danışman tarafından onaylanan bir jüri önerisi silinemez!");
+                            if (basvuru.DanismanOnayladi.HasValue)
+                            {
+                                msg.IsSuccess = false;
+                                msg.Messages.Add("Danışman tarafından onaylanan bir jüri önerisi için işlem yapılamaz!");
+                            }
                         }
+                        else
+                        {
+                            if (basvuru.EYKYaGonderildi.HasValue)
+                            {
+                                msg.IsSuccess = false;
+                                msg.Messages.Add("Eyk ya gönderilen bir jüri önerisi için işlem yapılamaz!");
+                            }
+                        } 
                     }
                 }
             }
@@ -659,7 +676,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             kModel.EnstituKod = enstituL.EnstituKod;
                             kModel.MesajID = null;
                             kModel.IslemTarihi = DateTime.Now;
-                            kModel.Konu = mCOntent.Title + " (" + item.AdSoyad + ")"; 
+                            kModel.Konu = mCOntent.Title + " (" + item.AdSoyad + ")";
                             kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
                             kModel.IslemYapanIP = UserIdentity.Ip;
                             kModel.Aciklama = item.Sablon.Sablon ?? "";
@@ -784,7 +801,11 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
 
                         if (item.SablonParametreleri.Any(a => a == "@RetAciklamasi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "RetAciklamasi", Value = tijBasvuruOneri.DanismanOnaylanmamaAciklamasi });
+                            paramereDegerleri.Add(new MailReplaceParameterDto
+                            {
+                                Key = "RetAciklamasi",
+                                Value = eykDaOnayOrEykYaGonderim? tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi: tijBasvuruOneri.EYKYaGonderimDurumAciklamasi
+                            });
 
                         var attachs = new List<System.Net.Mail.Attachment>();
 
@@ -897,7 +918,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             kModel.EnstituKod = enstituL.EnstituKod;
                             kModel.MesajID = null;
                             kModel.IslemTarihi = DateTime.Now;
-                            kModel.Konu = mCOntent.Title + " (" + item.AdSoyad + ")"; 
+                            kModel.Konu = mCOntent.Title + " (" + item.AdSoyad + ")";
                             kModel.IslemYapanID = UserIdentity.Current == null || !UserIdentity.Current.IsAuthenticated ? 1 : UserIdentity.Current.Id;
                             kModel.IslemYapanIP = UserIdentity.Ip;
                             kModel.Aciklama = item.Sablon.Sablon ?? "";

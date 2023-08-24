@@ -2344,7 +2344,7 @@
             this.xrQRCode,
             this.xrTableFK,
             this.xrPictureBox1});
-            this.TopMargin.HeightF = 95F;
+            this.TopMargin.HeightF = 98F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -2380,7 +2380,7 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(677F, 19.5759F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(677F, 20F);
             this.xrQRCode.Name = "xrQRCode";
             this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
@@ -2390,7 +2390,7 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(555.0695F, 69.62498F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(566.5524F, 77.70833F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
@@ -2426,7 +2426,7 @@
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(1.097382F, 24.91666F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -4213,7 +4213,7 @@
             this.DetailReport,
             this.DetailReport1,
             this.DetailReport2});
-            this.Margins = new System.Drawing.Printing.Margins(39, 36, 95, 44);
+            this.Margins = new System.Drawing.Printing.Margins(39, 36, 98, 44);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

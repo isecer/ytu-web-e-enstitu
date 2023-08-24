@@ -1291,15 +1291,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (RoleNames.KullanicilarKayit.InRoleCurrent() == false) kullaniciId = UserIdentity.Current.Id;
             var user = _entities.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
             string folname = SistemAyar.KullaniciResimYolu;
-            if ((kullaniciId == UserIdentity.Current.Id) && user.ResimAdi.IsNullOrWhiteSpace() == false)
+            if (user.ResimAdi.IsNullOrWhiteSpace() == false)
             {
                 var imgPath = folname + "/" + user.ResimAdi;
                 string pth = Server.MapPath(Management.getRoot() + imgPath);
 
                 using (Image img = Image.FromFile(pth))
                 {
-                    img.RotateFlip(leftOrRight.Value ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
-                    //  var format = (System.Drawing.Imaging.ImageFormat)img.RawFormat;
+                    img.RotateFlip(leftOrRight.Value ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone); 
                     img.Save(pth, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 

@@ -104,8 +104,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             int? danismanId = null;
             var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
-            var tiJuriOnerileriKayit = RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
-            if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriKayit)
+            if (tiJuriOnerileriOgrenciAdina && !UserIdentity.Current.IsYetkiliTij)
                 danismanId = UserIdentity.Current.Id;
 
             var jsonResult = TezIzlemeJuriOneriBus.GetFilterOgrenciJsonResult(term, enstituKod, danismanId);
@@ -128,9 +127,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             int? danismanId = null;
-            var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
-            var tiJuriOnerileriKayit = RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
-            if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriKayit)
+            var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent(); 
+            if (tiJuriOnerileriOgrenciAdina && !UserIdentity.Current.IsYetkiliTij)
                 danismanId = UserIdentity.Current.Id;
             if (!isBasvuruAcik)
             {
@@ -388,15 +386,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var tijBasvuru = _entities.TijBasvurus.FirstOrDefault(p => p.TijBasvuruID == kModel.TijBasvuruID);
             var isAnaBasvuruVar = tijBasvuru != null;
-            var isDegisiklikOrYeni = tijBasvuru?.TijBasvuruOneris.Any() ?? true;
 
             var kayitYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() ||
                              kul.KullaniciID == UserIdentity.Current.Id;
             int? danismanId = null;
-            var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
-            var tiJuriOnerileriKayit = RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
-            if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriKayit)
+            var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent(); 
+            if (tiJuriOnerileriOgrenciAdina && !UserIdentity.Current.IsYetkiliTij)
                 danismanId = UserIdentity.Current.Id;
+
+
             if (!kayitYetki)
             {
                 mMessage.Messages.Add("Jür öneri formu kayıt işlemi için yetkili değilsiniz.");
@@ -411,6 +409,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else
             {
+                var tijBasvuruOneri = tijBasvuru?.TijBasvuruOneris.FirstOrDefault(f => f.TijBasvuruOneriID == kModel.TijBasvuruOneriID);
+
                 if (kModel.TijBasvuruOneriID <= 0)
                 {
 
@@ -419,9 +419,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mMessage.Messages.Add("Seçilen öğrencinin devam eden bir jüri öneri işlemi bulunmaktadır. Jüri öneri işlemi tamamlanmadan yeni bir öneri yapılamaz.");
                     }
                 }
+                else
+                {
+                    var messages = TezIzlemeJuriOneriBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneri.UniqueID);
+                    mMessage.Messages.AddRange(messages.Messages);
+                }
 
 
-                var tijBasvuruOneri = tijBasvuru?.TijBasvuruOneris.FirstOrDefault(f => f.TijBasvuruOneriID == kModel.TijBasvuruOneriID);
 
 
                 if (tijBasvuruOneri != null)
@@ -737,10 +741,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             };
 
             var tijBasvuruOneri = _entities.TijBasvuruOneris.First(p => p.UniqueID == tijBasvuruOneriUniqueId);
-            var eykYaGonreimYetkisi = RoleNames.TiJuriOnerileriEykYaGonder.InRole();
-            var eykDaOnayYetkisi = RoleNames.TiJuriOnerileriEykDaOnay.InRole();
-
-            if (!eykYaGonreimYetkisi && !eykDaOnayYetkisi)
+          
+            if (!UserIdentity.Current.IsYetkiliTij)
             {
                 if (tijBasvuruOneri.TezDanismanID != UserIdentity.Current.Id)
                 {
@@ -928,9 +930,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (eykDaOnayOrEykYaGonderim)
                 {
                     tijBasvuruOneri.TijBasvuru.IsYeniBasvuruYapilabilir = onaylandi.HasValue;
-                    isDegisiklikVar = tijBasvuruOneri.EYKDaOnaylandi != onaylandi || aciklama != tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi;
+                    isDegisiklikVar = tijBasvuruOneri.EYKDaOnaylandi != onaylandi || aciklama != tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi || tijBasvuruOneri.EYKTarihi != onayTarihi;
                     tijBasvuruOneri.EYKDaOnaylandi = onaylandi;
-                    if (onaylandi == true) tijBasvuruOneri.EYKTarihi = onayTarihi;
+                    if (onaylandi.HasValue) { tijBasvuruOneri.EYKTarihi = onayTarihi; }
                     tijBasvuruOneri.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                     tijBasvuruOneri.EYKDaOnaylandiIslemTarihi = DateTime.Now;
                     tijBasvuruOneri.EYKDaOnaylanmadiDurumAciklamasi = onaylandi == false ? aciklama : "";
@@ -966,14 +968,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return new
             {
                 mmMessage.IsSuccess,
-                Messages = strView
+                Messages = strView,
+                mmMessage
             }.ToJsonResult();
         }
 
 
         public ActionResult SilDetay(Guid tijBasvuruOneriUniqueId)
         {
-            var mmMessage = TezIzlemeJuriOneriBus.GetTijBasvuruDetaySilKontrol(tijBasvuruOneriUniqueId);
+            var mmMessage = TezIzlemeJuriOneriBus.GetTijBasvuruDetayIslemKontrol(tijBasvuruOneriUniqueId);
             var removedAllData = false;
             if (mmMessage.IsSuccess)
             {

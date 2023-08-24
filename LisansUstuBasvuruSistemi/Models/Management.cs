@@ -1,31 +1,23 @@
 ﻿
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OsymWebServiceClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.ServiceModel;
-using System.Text;
 using System.Web;
-using System.Xml;
-using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -35,69 +27,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public static string Tuz = "@BİSKAmcumu";
         public static int UniversiteYtuKod { get; } = 67;
 
-        #region YokData
-        public static YokStudentControl yokStudentControl(long TcKimlikNo)
-        {
-            var model = new YokStudentControl();
-            try
-            {
-                var KullaniciAdi = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciAdi);
-                var Sifre = SistemAyar.GetAyar(SistemAyar.AyarYokwsKullaniciSifre);
-                System.Net.ServicePointManager.Expect100Continue = false;
-
-                BasicHttpBinding basicAuthBinding = new BasicHttpBinding(BasicHttpSecurityMode.TransportCredentialOnly);
-
-                basicAuthBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
-                EndpointAddress basicAuthEndpoint = new EndpointAddress("http://servisler.yok.gov.tr/ws/yuksekogretim/egitim?wsdl");
-                Ws_YokOgrenciSorgula.YuksekOgretimEgitimBilgisiPortClient clnt = new Ws_YokOgrenciSorgula.YuksekOgretimEgitimBilgisiPortClient(basicAuthBinding, basicAuthEndpoint);
-
-
-                clnt.ClientCredentials.UserName.UserName = KullaniciAdi;
-                clnt.ClientCredentials.UserName.Password = Sifre;
-                var ebORtype = new Ws_YokOgrenciSorgula.EgitimBilgisiRequestType { TcKimlikNo = TcKimlikNo };
-                var deger = clnt.EgitimBilgisi(ebORtype);
-                if (deger.Sonuc.SonucKod == 1)
-                {
-                    var BirimKods = GetBirimTurKods();
-                    var UniKods = GetUniversiteTurKods();
-                    var OtKods = MailSablonTipleriBus.GetOgrenimTurKods();
-                    var OStatuKods = new List<int> { 1, 10 }; // aktif ve pasif
-
-                    var EgitimBilg = deger.EgitimBilgisiKayit.Where(p => p != null
-                                                                         && p.OgrencilikBilgi != null
-                                                                         && OStatuKods.Contains(p.OgrencilikBilgi.OgrencilikStatusu.Kod)
-                                                                         && BirimKods.Contains(p.BirimBilgi.BirimTuru.Kod)
-                                                                         && UniKods.Contains(p.BirimBilgi.UniversiteTuru.Kod)
-                                                                         && OtKods.Contains(p.BirimBilgi.OgrenimTuru.Kod)
-                    ).ToList();
-
-                    foreach (var item in EgitimBilg)
-                    {
-                        model.AktifOgrenimListesi.Add(item.BirimBilgi.BirimAdi);
-                    }
-                    model.KayitVar = EgitimBilg.Any();
-
-                }
-                else
-                {
-                    model.Hata = true;
-                    model.KayitVar = false;
-                    model.Mesaj = "Yök öğrenci sorgulama servisinden sorgulanan öğrenci için sonuç bilgisi başarılı dönmemektedir." + " \r\n\r\nSonuç Kod:" + deger.Sonuc.SonucKod + "\r\nSonucMesaj:" + deger.Sonuc.SonucMesaj;
-                    model.Mesaj += "\r\n\r\n" + JsonConvert.SerializeObject(deger);
-                    SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl", LogType.Kritik);
-
-                }
-            }
-            catch (Exception ex)
-            {
-                model.KayitVar = false;
-                model.Hata = true;
-                model.Mesaj = "YÖK Servisinden Öğrenci Bilgisi kontrol edilirken bir hata oluştu.Hata:" + ex.ToExceptionMessage();
-                SistemBilgilendirmeBus.SistemBilgisiKaydet(model.Mesaj, "Management/yokStudentControl \r\n" + ex.ToExceptionStackTrace(), LogType.Kritik);
-            }
-
-            return model;
-        }
+        #region YokData 
 
         public static List<int> GetUniversiteTurKods()
         {
@@ -783,26 +713,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        }
-        public static List<CmbStringDto> cmbGetYetkiliProgramAnabilimDallari(bool bosSecimVar = false, string EnstituKod = "")
-        {
-            var EnstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
-            var dct = new List<CmbStringDto>();
-            if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
-            var userPkod = UserBus.GetUserProgramKods(UserIdentity.Current.Id, EnstituKod);
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var data = db.AnabilimDallaris.Where(p => EnstKods.Contains(p.EnstituKod) && p.EnstituKod == EnstituKod && p.Programlars.Any(a => userPkod.Contains(a.ProgramKod)));
-                if (EnstituKod.IsNullOrWhiteSpace() == false) data = data.Where(p => p.EnstituKod == EnstituKod);
-                var data2 = data.OrderBy(o => o.AnabilimDaliAdi).ToList();
-                foreach (var item in data2)
-                {
-                    dct.Add(new CmbStringDto { Value = item.AnabilimDaliKod, Caption = item.AnabilimDaliAdi });
-                }
-            }
-            return dct;
-
-        }
+        } 
         public static List<CmbStringDto> cmbGetAktifProgramlar(bool bosSecimVar = false, int? AnabilimDaliID = 0)
         {
 
@@ -921,10 +832,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         }
 
-
-        public static DateTime EkSureBasTar { get { return new DateTime(2021, 2, 1, 13, 00, 0); } }
-        public static DateTime EkSureBitTar { get { return new DateTime(2021, 2, 5, 16, 0, 0); } }
-
+         
         public static List<CmbIntDto> cmbGetAktifOgrenimTipleri(int BasvuruSurecID, bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
@@ -950,41 +858,7 @@ namespace LisansUstuBasvuruSistemi.Models
             }
             return dct;
 
-        }
-        public static List<CmbIntDto> cmbGetAktifSubOgrenimTipleri(int BasvuruSurecID, string Kod, bool bosSecimVar = false)
-        {
-            var dct = new List<CmbIntDto>();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                int? OgrenimnTipKod = null;
-                if (new List<int> { 1066, 1065 }.Contains(BasvuruSurecID) && DateTime.Now > EkSureBasTar && DateTime.Now <= EkSureBitTar)
-                {
-                    OgrenimnTipKod = OgrenimTipi.TezsizYuksekLisans;
-                }
-
-                var ots = (from bs in db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID)
-                           join s in db.BasvuruSurecOgrenimTipleris.Where(p => p.IsAktif) on bs.BasvuruSurecID equals s.BasvuruSurecID
-                           where s.IsAktif && s.GrupGoster && s.GrupKodu == Kod && s.OgrenimTipKod == (OgrenimnTipKod ?? s.OgrenimTipKod)
-                           select s.OgrenimTipKod).ToList();
-                bool IsSubOT = ots.Count > 0;
-                if (IsSubOT)
-                {
-                    if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-                    var bsurec = db.BasvuruSurecs.Where(p => p.BasvuruSurecID == BasvuruSurecID).First();
-                    var data = db.OgrenimTipleris.Where(p => p.EnstituKod == bsurec.EnstituKod && ots.Contains(p.OgrenimTipKod)).ToList();
-                    foreach (var item in data)
-                    {
-                        dct.Add(new CmbIntDto
-                        {
-                            Value = item.OgrenimTipKod,
-                            Caption = item.OgrenimTipAdi
-                        });
-                    }
-                }
-            }
-            return dct;
-
-        }
+        } 
 
 
 
@@ -1050,180 +924,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
         #region Data
 
-
-
-        public static SinavBilgiModel getSinavBilgisi(int BasvuruSurecID, int SinavTipID, List<int> OgrenimTipKods, List<string> ProgramKods, List<bool> Ingilizces)
-        {
-            var mdl = new SinavBilgiModel();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-
-
-
-
-                mdl = (from s in db.BasvuruSurecSinavTipleris.Where(p => p.BasvuruSurecID == BasvuruSurecID && p.SinavTipID == SinavTipID)
-                       join sd in db.SinavTipleris on new { s.SinavTipID } equals new { sd.SinavTipID }
-                       select new SinavBilgiModel
-                       {
-                           SinavAdi = sd.SinavAdi,
-                           BasvuruSurecSinavTipID = s.BasvuruSurecSinavTipID,
-                           BasvuruSurecID = s.BasvuruSurecID,
-
-                           SinavTipID = s.SinavTipID,
-                           EnstituKod = s.EnstituKod,
-                           //LocalService = s.LocalService,
-                           SinavTipGrupID = s.SinavTipGrupID,
-                           SinavTipKod = s.SinavTipKod,
-                           TarihGirisMaxGecmisYil = s.TarihGirisMaxGecmisYil,
-                           WebService = s.WebService,
-                           WebServiceKod = s.WebServiceKod,
-                           WsSinavCekimTipID = s.WsSinavCekimTipID,
-                           OzelTarih = s.OzelTarih,
-                           OzelNot = s.OzelNot,
-                           OzelNotTipID = s.OzelNotTipID,
-                           OzelTarihTipID = s.OzelTarihTipID,
-                           NotDonusum = s.NotDonusum,
-                           NotDonusumFormulu = s.NotDonusumFormulu,
-                           Tarih1 = s.Tarih1,
-                           Tarih2 = s.Tarih2,
-                           KusuratVar = s.KusuratVar,
-                           Min = s.Min,
-                           Max = s.Max,
-                           GIsTaahhutVar = s.GIsTaahhutVar,
-                           IsAktif = s.IsAktif,
-
-                           BasvuruSurecSinavTarihleris = s.BasvuruSurecSinavTarihleris.ToList(),
-                           BasvuruSurecSinavNotlaris = s.BasvuruSurecSinavNotlaris.ToList()
-                       }).First();
-                if (mdl.WebService && mdl.WsSinavCekimTipID.HasValue && mdl.WsSinavCekimTipID.Value == WsCekimTipi.Tarih)
-                {
-                    mdl.SinavTipleriDonems = (from sq in db.BasvuruSurecSinavTipleriDonems.Where(p => p.BasvuruSurecSinavTipID == mdl.BasvuruSurecSinavTipID)
-                                              select new KrSinavTipleriDonem
-                                              {
-                                                  SinavTipID = sq.BasvuruSurecSinavTipID,
-                                                  SinavTipDonemID = sq.BasvuruSurecSinavTipDonemID,
-                                                  Yil = sq.Yil,
-                                                  SinavDilID = sq.SinavDilID,
-                                                  WsDonemKod = sq.WsDonemKod,
-                                                  WsDonemAd = sq.WsDonemAd
-                                              }).ToList();
-                    //var sinavDiller = db.SinavDilleris.ToList();
-                    //foreach (var item in mdl.SinavTipleriDonems)
-                    //{
-                    //    item.WsDonemAd = item.WsDonemKod + " " + sinavDiller.Where(p => p.SinavDilID == item.SinavDilID).First().DilAdi;
-                    //}
-                }
-                else
-                {
-
-                    mdl.SinavTipleriDonems = (from sq in db.BasvuruSurecSinavTipleriDonems.Where(p => p.BasvuruSurecSinavTipID == mdl.BasvuruSurecSinavTipID)
-                                              select new KrSinavTipleriDonem
-                                              {
-                                                  SinavTipID = sq.BasvuruSurecSinavTipID,
-                                                  SinavTipDonemID = sq.BasvuruSurecSinavTipDonemID,
-                                                  Yil = sq.Yil,
-                                                  SinavDilID = sq.SinavDilID,
-                                                  WsDonemKod = sq.WsDonemKod,
-                                                  WsDonemAd = sq.WsDonemAd,
-                                                  IsTaahhutVar = sq.IsTaahhutVar
-                                              }).ToList();
-
-                }
-                mdl.BasvuruSurecSinavTiplerSubSinavAraliks = new List<BasvuruSurecSinavTiplerSubSinavAralik>();
-                var SubSdata = db.BasvuruSurecSinavTiplerSubSinavAraliks.Where(p => p.BasvuruSurecSinavTipleri.BasvuruSurecID == BasvuruSurecID && p.BasvuruSurecSinavTipleri.SinavTipID == SinavTipID).ToList();
-                foreach (var item in SubSdata)
-                {
-                    item.SubSinavAralikAdi = item.SubSinavAralikAdi;
-                    mdl.BasvuruSurecSinavTiplerSubSinavAraliks.Add(item);
-                }
-                var bsDilIds = db.BasvuruSurecSinavTipleriDils.Where(p => p.BasvuruSurecSinavTipID == mdl.BasvuruSurecSinavTipID).Select(s => s.SinavDilID).ToList();
-
-                var qOgrenimTipKods = OgrenimTipKods.Select((s, inx) => new { s = s, Index = inx }).ToList();
-                var qProgramKods = ProgramKods.Select((s, inx) => new { s = s, Index = inx }).ToList();
-                var qIngilizces = Ingilizces.Select((s, inx) => new { s = s, Index = inx }).ToList();
-                var qtercihler = (from s in qOgrenimTipKods
-                                  join p in qProgramKods on s.Index equals p.Index
-                                  join pr in db.Programlars on p.s equals pr.ProgramKod
-                                  join qi in qIngilizces on s.Index equals qi.Index
-                                  select new { ProgramKod = p.s, OgrenimTipKod = s.s, Ingilizce = qi.s }).ToList();
-
-
-
-                var prOzelTanim = new List<BasvuruSurecSinavTipleriOT_SNA_OT>();
-                foreach (var item in qtercihler)
-                {
-
-                    var pKriter = (from s in db.BasvuruSurecSinavTipleriOT_SNA
-                                   join ot in db.BasvuruSurecSinavTipleriOT_SNA_OT on s.BasvuruSurecSinavTipleriOT_SNAID equals ot.BasvuruSurecSinavTipleriOT_SNAID
-                                   join pr in db.BasvuruSurecSinavTipleriOT_SNA_PR on s.BasvuruSurecSinavTipleriOT_SNAID equals pr.BasvuruSurecSinavTipleriOT_SNAID
-                                   where s.BasvuruSurecID == BasvuruSurecID && s.SinavTipID == SinavTipID && ot.OgrenimTipKod == item.OgrenimTipKod && ot.Ingilizce == item.Ingilizce && pr.ProgramKod == item.ProgramKod
-
-                                   select new
-                                   {
-                                       ot.BasvuruSurecSinavTipleriOT_SNA_OTID,
-                                       ot.BasvuruSurecSinavTipleriOT_SNAID,
-                                       ot.OgrenimTipKod,
-                                       ot.Ingilizce,
-                                       ot.IsGecerli,
-                                       ot.IsIstensin,
-                                       ot.IsOzelNotAralik,
-                                       ot.Min,
-                                       ot.Max,
-                                       prID = pr.BasvuruSurecSinavTipleriOT_SNA_PRID
-
-                                   }).FirstOrDefault();
-                    if (pKriter != null)
-                        prOzelTanim.Add(new BasvuruSurecSinavTipleriOT_SNA_OT
-                        {
-                            BasvuruSurecSinavTipleriOT_SNA_OTID = pKriter.BasvuruSurecSinavTipleriOT_SNA_OTID,
-                            BasvuruSurecSinavTipleriOT_SNAID = pKriter.BasvuruSurecSinavTipleriOT_SNAID,
-                            OgrenimTipKod = pKriter.OgrenimTipKod,
-                            Ingilizce = pKriter.Ingilizce,
-                            IsGecerli = pKriter.IsGecerli,
-                            IsIstensin = pKriter.IsIstensin,
-                            IsOzelNotAralik = pKriter.IsOzelNotAralik,
-                            Min = pKriter.Min,
-                            Max = pKriter.Max
-                        });
-                    else
-                    {
-                        var StandartOtNotAralik = db.BasvuruSurecSinavTipleriOTNotAraliklaris.Where(p => p.IsOzelNotAralik && p.SinavTipID == SinavTipID && p.BasvuruSurecID == BasvuruSurecID).ToList();
-                        var qqQT = StandartOtNotAralik.Where(p => qtercihler.Any(a => a.OgrenimTipKod == p.OgrenimTipKod && a.Ingilizce == p.Ingilizce)).OrderByDescending(o => o.Min).FirstOrDefault();
-                        if (qqQT != null)
-                        {
-
-                            prOzelTanim.Add(new BasvuruSurecSinavTipleriOT_SNA_OT
-                            {
-                                Min = qqQT.Min,
-                                Max = qqQT.Max
-                            });
-                        }
-                    }
-
-                }
-                mdl.Min = prOzelTanim.Select(s => s.Min).Max();
-                mdl.Max = prOzelTanim.Select(s => s.Max).Max();
-                if (mdl.OzelNotTipID == OzelNotTip.SeciliNotlar)
-                {
-                    mdl.MinNotAdi = mdl.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotDeger).Select(s => s.SinavNotAdi).First();
-                    mdl.MaxNotAdi = mdl.BasvuruSurecSinavNotlaris.OrderByDescending(o => o.SinavNotDeger).Select(s => s.SinavNotAdi).First();
-                }
-                else if (mdl.Min.HasValue)
-                {
-
-                    mdl.MinNotAdi = mdl.Min.Value.ToString();
-                    mdl.MaxNotAdi = mdl.Max.Value.ToString();
-                }
-
-
-
-                mdl.BsSinavDilleri = db.SinavDilleris.Where(p => bsDilIds.Contains(p.SinavDilID)).ToList();
-                mdl.SinavDilleriStr = string.Join(", ", mdl.BsSinavDilleri.Select(s => s.DilAdi).ToList());
-            }
-            return mdl;
-        }
-
-
+         
 
         public static PersisWsDataModel getWsPersisOE(string term)
         {

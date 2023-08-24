@@ -273,6 +273,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                     var img1 = Image.FromFile(resimYolu);
                     var prop = img1.PropertyItems.FirstOrDefault(p => p.Id == 0x0112);
+
                     if (prop != null)
                     {
                         int orientationValue = img1.GetPropertyItem(prop.Id).Value[0];

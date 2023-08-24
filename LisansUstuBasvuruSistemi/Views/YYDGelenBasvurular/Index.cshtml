@@ -7,12 +7,11 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmBasvurularDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var mailYetki = RoleNames.MailGonder.InRoleCurrent();
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
-    
-    var SelectedPrograms = (List<string>)ViewBag.SelectedPrograms;
+
+    var selectedPrograms = (List<string>)ViewBag.SelectedPrograms;
     var mKids = (List<int>)ViewBag.kIds;
 }
 
@@ -22,8 +21,8 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info @(Model.Expand?"":"panel-toggled")" id="pnlFltr">
-                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+            <div class="panel panel-info" id="pnlFltr">
+                <input class="hide" name="Expand" id="Expand" />
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -41,8 +40,7 @@
                             <li>
                                 <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
                             </li>
-                        }
-                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                        } 
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -178,7 +176,7 @@
         <script type="text/javascript">
 
             $(function () {
-                var sProgs = '@Html.Raw(Json.Encode(SelectedPrograms))';
+                var sProgs = '@Html.Raw(Json.Encode(selectedPrograms))';
                 var nVal = JSON.parse(sProgs);
                 setTimeout(function () {
                     $('#ProgramKod').selectpicker('val', nVal);
@@ -195,7 +193,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvuru Listesi</h3>
                     <ul class="panel-controls">
-                        @foreach (var item in IndexModel.ListB)
+                        @foreach (var item in indexModel.ListB)
                         {
                             <li style="color:@item.Color;">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
@@ -237,7 +235,7 @@
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.BasvuruID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BasvuruID')">
-                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
                                                     </td>

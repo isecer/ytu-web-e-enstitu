@@ -907,7 +907,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 24.99256F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -942,7 +942,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675.0001F, 24.99256F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 20F);
             this.xrQRCode.Name = "xrQRCode";
             this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
@@ -952,11 +952,11 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(534.1177F, 71.70088F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(556.1837F, 77.70999F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
-            this.xrTableFK.SizeF = new System.Drawing.SizeF(133.6879F, 17.29167F);
+            this.xrTableFK.SizeF = new System.Drawing.SizeF(118.8163F, 17.29167F);
             this.xrTableFK.StylePriority.UseBorders = false;
             this.xrTableFK.StylePriority.UseFont = false;
             this.xrTableFK.StylePriority.UseTextAlignment = false;

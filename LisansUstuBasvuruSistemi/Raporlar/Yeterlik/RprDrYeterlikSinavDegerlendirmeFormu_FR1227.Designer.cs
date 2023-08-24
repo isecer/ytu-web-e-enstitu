@@ -3715,7 +3715,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.lblEnstituAdi,
             this.xrLabel1,
             this.xrQRCode});
-            this.TopMargin.HeightF = 91F;
+            this.TopMargin.HeightF = 98F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -3727,7 +3727,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 24.99256F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143.75F, 62.99999F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -3762,9 +3762,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(684.8056F, 22.99255F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 20F);
             this.xrQRCode.Name = "xrQRCode";
-            this.xrQRCode.SizeF = new System.Drawing.SizeF(65F, 65F);
+            this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
             this.xrQRCode.StylePriority.UseBorders = false;
             // 
@@ -3858,7 +3858,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.detRepGenelSonuc,
             this.DetailReport2});
             this.Borders = DevExpress.XtraPrinting.BorderSide.Left;
-            this.Margins = new System.Drawing.Printing.Margins(40, 36, 91, 32);
+            this.Margins = new System.Drawing.Printing.Margins(40, 36, 98, 32);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

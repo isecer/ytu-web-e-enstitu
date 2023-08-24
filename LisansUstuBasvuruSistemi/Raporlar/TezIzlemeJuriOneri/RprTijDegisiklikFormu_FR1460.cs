@@ -2,6 +2,7 @@
 using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
@@ -40,6 +41,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                                 s.TezBaslikTr,
                                 s.TezBaslikEn,
                                 Danisman = s.Kullanicilar,
+                                s.DanismanOnayTarihi,
                                 Juriler = s.TijBasvuruOneriJurilers.ToList(),
                                 urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TIJF_" + s.TijBasvuruOneriID + "_" + s.UniqueID
                             }).First();
@@ -160,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 chkGerekceDanismanTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipi.DanismanVeTezKonusuDegisikligi;
 
                 cellDanismanUnvanAdSoyad.Text = data.Danisman.Unvanlar.UnvanAdi + "\r\n" + data.Danisman.Ad + " " + data.Danisman.Soyad;
-
+                cellDanismanImza.Text = data.DanismanOnayTarihi.ToFormatDate()+" "+ "Tarihinde Danışman tarafından elektronik olarak onaylanmıştır";
                 cellFormKodu.Text = "Form Kodu: " + data.FormKodu;
                 xrQRCode.ImageUrl = data.urlAdd;
                 xrQRCode.Image = data.urlAdd.CreateQrCode();

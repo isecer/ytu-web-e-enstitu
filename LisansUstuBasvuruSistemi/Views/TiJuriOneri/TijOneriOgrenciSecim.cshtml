@@ -110,8 +110,7 @@
         $.ajax({
             url: '@Url.Action("OgrenciBasvuruKontrol", "TiJuriOneri")',
             data: { kullaniciId },
-            success: function (result) {
-                debugger
+            success: function (result) { 
                 if (!result.IsSuccess) {
                     getMsg(result.mMessage);
                 }

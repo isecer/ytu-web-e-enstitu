@@ -1953,7 +1953,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675.0002F, 25F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 20F);
             this.xrQRCode.Name = "xrQRCode";
             this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
@@ -1963,7 +1963,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(535.3124F, 73.70088F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(541.3121F, 77.70833F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
@@ -1999,7 +1999,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 24.99256F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 

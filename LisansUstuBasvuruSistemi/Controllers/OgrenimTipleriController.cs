@@ -82,9 +82,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (id.HasValue)
             {
                 model = _entities.OgrenimTipleris.First(p => p.OgrenimTipID == id);
-                if (!UserIdentity.Current.EnstituKods.Contains(model.EnstituKod)) model = new OgrenimTipleri();
-
-
+                if (!UserIdentity.Current.EnstituKods.Contains(model.EnstituKod)) model = new OgrenimTipleri(); 
             }
 
             ViewBag.MBasvuruEtikNotKriteri = new SelectList(YeterlikBus.NotDegerleri, model.MBasvuruEtikNotKriteri);
@@ -256,11 +254,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult Sil(int? id)
         {
             var kayit = _entities.OgrenimTipleris.FirstOrDefault(p => p.OgrenimTipID == id);
-            var ogrenimTipleri = _entities.OgrenimTipleris.FirstOrDefault(p => p.OgrenimTipID == kayit.OgrenimTipID);
             string message = "";
             bool success = true;
             if (kayit != null)
-            {
+            {  
+                var ogrenimTipleri = _entities.OgrenimTipleris.First(p => p.OgrenimTipID == kayit.OgrenimTipID);
+         
 
                 try
                 {

@@ -12,7 +12,8 @@ using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [Authorize(Roles = RoleNames.TiJuriOnerileriGb)]
     public class TiJuriOnerileriGbController : Controller
     {
         // GET: TikOneriGb
@@ -65,15 +66,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     };
             int? danismanId = null;
             var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
-            var tiJuriOnerileriKayit = RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
-            if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriKayit)
+            var tiJuriOnerileriYetkili = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
+            if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriYetkili)
                 danismanId = UserIdentity.Current.Id;
             if (danismanId.HasValue)
             {
                 q = q.Where(p =>  p.TezDanismanIds.Contains(danismanId));
             }
-            //if (model.IsDegisiklik.HasValue)
-            //    q = q.Where(p => p.SonBasvuru != null && p.SonBasvuru.IsDegisiklik == model.IsDegisiklik);
+            if (model.TijFormTipID.HasValue)
+                q = q.Where(p => p.SonBasvuru != null && p.SonBasvuru.TijFormTipID == model.TijFormTipID);
             if (model.AnabilimDaliID.HasValue)
                 q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
             if (!model.AktifTijDonemId.IsNullOrWhiteSpace())
@@ -117,7 +118,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AktifTijDonemId = new SelectList(TezIzlemeJuriOneriBus.CmbTiDonemListe(model.EnstituKod, true), "Value", "Caption", model.AktifTijDonemId);
             ViewBag.AnabilimDaliID = new SelectList(TezIzlemeJuriOneriBus.GetCmbFilterTiAnabilimDallari(model.EnstituKod, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.AktifDurumID = new SelectList(TezIzlemeJuriOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
-            ViewBag.IsDegisiklik = new SelectList(TezIzlemeJuriOneriBus.CmbTijOneriTipListe(true), "Value", "Caption", model.IsDegisiklik);
+            ViewBag.TijFormTipID = new SelectList(TezIzlemeJuriOneriBus.CmbTijOneriTipListe(true), "Value", "Caption", model.TijFormTipID);
 
             return View(model);
 

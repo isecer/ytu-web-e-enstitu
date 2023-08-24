@@ -7,8 +7,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model  FmTijBasvuru
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var tiJuriOnerileriSil = RoleNames.TiJuriOnerileriSil.InRoleCurrent();
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
     var tiJuriOnerileriOgrenciAdina = RoleNames.TiJuriOnerileriOgrenciAdina.InRoleCurrent();
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
@@ -33,9 +32,7 @@
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
 
-                        }
-
-                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                        } 
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -59,7 +56,7 @@
                                         <tr>
                                             <td width="160">Öneri Tipi</td>
                                             <td>
-                                                @Html.DropDownList("IsDegisiklik", null, new { @class = "form-control" })
+                                                @Html.DropDownList("TijFormTipID", null, new { @class = "form-control" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -167,7 +164,7 @@
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
-                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
                                                     </td>
@@ -328,7 +325,7 @@
 
     }
 </script>
-@if (tiJuriOnerileriSil || tiJuriOnerileriOgrenciAdina)
+@if (UserIdentity.Current.IsYetkiliTij || tiJuriOnerileriOgrenciAdina)
 {
     <script>
 

@@ -144,14 +144,14 @@ function toggleByClass(sndr, targetClss, scrollToThisRow) {
                 $(targetClass).width($(tblx).width());
         }
         else $(targetClass).css('display', 'table-row');
-        $(sndr).find('span').first().removeClass("fa-angle-up");
-        $(sndr).find('span').first().addClass("fa-angle-down");
+        $(sndr).find('span').first().removeClass("fa-angle-down");
+        $(sndr).find('span').first().addClass("fa-angle-up");
 
     }
     else {
         $(targetClass).css("display", "none");
-        $(sndr).find('span').first().removeClass("fa-angle-down");
-        $(sndr).find('span').first().addClass("fa-angle-up");
+        $(sndr).find('span').first().removeClass("fa-angle-up");
+        $(sndr).find('span').first().addClass("fa-angle-down");
     }
     if (scrollToThisRow == true) {
         //if ($(targetClass).first().css("display") != "none") {

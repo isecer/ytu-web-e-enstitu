@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(MenuID = 80000, MenuAdi = "Lisansüstü Başvuru", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = false, YetkiliEnstituler = "010,020", SiraNo = 7)]
         public const string BasvuruIslemleri = "Başvuru İşlemleri";
 
-       
+
 
         [Menu(MenuID = 82300, MenuAdi = "Tez Danışmanı Öneri", MenuCssClass = "fa fa-graduation-cap", MenuUrl = "", YetkisizErisim = true, YetkiliEnstituler = "010,020,030", SiraNo = 12)]
         public const string TdoIslemleri = "Tez danışmanı öneri İşlemleri";
@@ -136,13 +136,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
         [Menu(BagliMenuID = 80000, MenuAdi = "Lisansüstü Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "GelenBasvurular/Index", SiraNo = 3)]
         [Role(GorunurAdi = "Lisansüstü Başvurular", Kategori = "Lisansüstü Başvuru", Aciklama = "")]
-        public const string GelenBasvurular = "Gelen Başvurular";  
+        public const string GelenBasvurular = "Gelen Başvurular";
         [Menu(BagliMenuID = 80000, MenuAdi = "Yatay Geçiş Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YYDGelenBasvurular/Index", SiraNo = 6)]
         [Role(GorunurAdi = "Yatay Geçiş Başvurular", Kategori = "Lisansüstü Başvuru", Aciklama = "")]
-        public const string YydGelenBasvurular = "YYD Gelen Başvurular"; 
+        public const string YydGelenBasvurular = "YYD Gelen Başvurular";
         [Menu(BagliMenuID = 80000, MenuAdi = "Yeni Mezun Başvurular", MenuCssClass = "fa fa-file-text-o", MenuUrl = "YGGelenBasvurular/Index", SiraNo = 10)]
         [Role(GorunurAdi = "Yeni Mezun Başvurular", Kategori = "Lisansüstü Başvuru", Aciklama = "")]
-        public const string YgGelenBasvurular = "YG Gelen Başvurular"; 
+        public const string YgGelenBasvurular = "YG Gelen Başvurular";
 
 
         [Menu(BagliMenuID = 82500, MenuAdi = "Başvuru", MenuCssClass = "fa fa-file-text-o", MenuUrl = "Yeterlik/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
@@ -194,10 +194,6 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Menu(BagliMenuID = 83300, MenuAdi = "Gelen Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
         [Role(GorunurAdi = "Gelen Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TiJuriOnerileriGb = "Tez İzleme Jüri Önerisileri";
-        [Role(GorunurAdi = "Jüri Önerileri Kayıt", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TiJuriOnerileriKayit = "Tez İzleme Önerisi Başvuru Kayıt";
-        [Role(GorunurAdi = "Jüri Önerisi Silme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
-        public const string TiJuriOnerileriSil = "Tez İzleme Önerisi Silme Yetkisi";
         [Role(GorunurAdi = "Jüri Önerisi Eyk ya Gönderme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TiJuriOnerileriEykYaGonder = "Jüri Önerisi Eyk ya Gönderme Yetkisi";
         [Role(GorunurAdi = "Jüri Önerisi Eyk da Onay Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
@@ -298,9 +294,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Kullanıcılar Enstitü Yetkileri", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
         public const string KullanicilarEnstituYetkileri = "Kullanıcılar Enstitü Yetkileri";
         [Role(GorunurAdi = "Kullanıcılar Program Yetkileri", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
-        public const string KullanicilarProgramYetkileri = "Kullanıcılar Program Yetkileri"; 
+        public const string KullanicilarProgramYetkileri = "Kullanıcılar Program Yetkileri";
         [Role(GorunurAdi = "Kullanıcılar Kayıt", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
-        public const string KullanicilarKayit = "Kullanıcılar Kayıt"; 
+        public const string KullanicilarKayit = "Kullanıcılar Kayıt";
         [Role(GorunurAdi = "Kullanıcılar Sil", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
         public const string KullanicilarSil = "Kullanıcı Sil";
         [Role(GorunurAdi = "Online Kullanıcıları Gör", Kategori = "Kullanıcı İşlemleri", Aciklama = "")]
@@ -346,7 +342,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Programlar", Kategori = "Tanımlamalar", Aciklama = "")]
         public const string Programlar = "Programlar";
 
-       
+
 
         [Menu(BagliMenuID = 90000, MenuAdi = "Sınav Tipleri", MenuCssClass = "fa fa-gear", MenuUrl = "SinavTipleri/Index", SiraNo = 28)]
         [Role(GorunurAdi = "Sınav Tipleri", Kategori = "Tanımlamalar", Aciklama = "")]
@@ -363,7 +359,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         [Role(GorunurAdi = "Gelen Mesajlar Sil", Kategori = "Sistem", Aciklama = "")]
         public const string MesajlarSil = "Gelen Mesajlar Sil";
 
-        [Menu(BagliMenuID = 100000, MenuAdi = "Mail İşlemleri", MenuCssClass = "fa fa-envelope", MenuUrl = "MailIslemleri/Index", SiraNo = 7)]
+        [Menu(BagliMenuID = 100000, MenuAdi = "Gönderilen Mailler", MenuCssClass = "fa fa-envelope", MenuUrl = "MailIslemleri/Index", SiraNo = 7)]
         [Role(GorunurAdi = "Mail İşlemleri", Kategori = "Sistem", Aciklama = "")]
         public const string MailIslemleri = "Mail İşlemleri";
 
@@ -395,7 +391,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 
         [Menu(BagliMenuID = 100000, MenuAdi = "Sistem Bilgilendirme", MenuCssClass = "fa fa-envelope", MenuUrl = "SistemBilgilendirme/Index", SiraNo = 25)]
         [Role(GorunurAdi = "Sistem Bilgilendirme", Kategori = "Sistem", Aciklama = "")]
-        public const string SistemBilgilendirme = "Sistem Bilgilendirme"; 
+        public const string SistemBilgilendirme = "Sistem Bilgilendirme";
 
 
     }

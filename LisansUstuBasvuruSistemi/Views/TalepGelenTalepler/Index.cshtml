@@ -22,8 +22,8 @@
         <div class="col-md-12">
             @Html.Hidden("export", false)
             <!-- START SIMPLE DATATABLE -->
-            <div class="panel panel-info @(Model.Expand?"":"panel-toggled" )" id="pnlFltr">
-                <input class="hide" name="Expand" value="@Model.Expand.ToString().ToLower()" id="Expand" />
+            <div class="panel panel-info" id="pnlFltr">
+                <input class="hide" name="Expand" value="true" id="Expand" />
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
@@ -101,8 +101,7 @@
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmTalepGelenTalepler').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
 
-                        }
-                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                        } 
                     </ul>
 
                 </div>
@@ -239,7 +238,7 @@
                                                     <td>
                                                         <ul class="panel-controls">
                                                             <li id="iShow_@item.TalepGelenTalepID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TalepGelenTalepID')">
-                                                                <a href="javascript:void(0)"><span class="fa fa-angle-up"></span></a>
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
                                                     </td>

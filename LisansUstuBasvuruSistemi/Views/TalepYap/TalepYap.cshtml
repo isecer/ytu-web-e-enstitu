@@ -51,8 +51,7 @@
                                                         'TalepSurecID':@Model.TalepSurecID,
                                                         'KullaniciID':@Model.KullaniciID
                                                     },
-                                                    success: function (result) {
-                                                        debugger
+                                                    success: function (result) { 
                                                         var classEk = result.IsDoktora ? "Dr" : "YL";
                                                          $('.AllGroup').addClass('hide');
                                                         if (result.TalepTipID == '@TalepTipi.LisansustuSureUzatmaTalebi') {

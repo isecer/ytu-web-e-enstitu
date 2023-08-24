@@ -3872,7 +3872,7 @@
             this.xrQRCode,
             this.xrLabel1,
             this.lblEnstituAdi});
-            this.TopMargin.HeightF = 97.99255F;
+            this.TopMargin.HeightF = 98F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -3892,7 +3892,7 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(542.8094F, 69.70833F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(545.51F, 77.71F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
@@ -3924,7 +3924,7 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 22.99255F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 20F);
             this.xrQRCode.Name = "xrQRCode";
             this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;

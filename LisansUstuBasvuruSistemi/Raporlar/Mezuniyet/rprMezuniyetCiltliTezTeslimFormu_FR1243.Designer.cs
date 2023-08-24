@@ -1724,7 +1724,7 @@
             this.xrLabel1,
             this.lblEnstituAdi,
             this.xrPictureBox1});
-            this.TopMargin.HeightF = 95F;
+            this.TopMargin.HeightF = 98F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -1742,7 +1742,7 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(529.5343F, 73.12499F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(541.3123F, 77.70833F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
@@ -1808,7 +1808,7 @@
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 24.41667F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -1847,7 +1847,7 @@
             this.Detail,
             this.TopMargin,
             this.BottomMargin});
-            this.Margins = new System.Drawing.Printing.Margins(40, 37, 95, 32);
+            this.Margins = new System.Drawing.Printing.Margins(40, 37, 98, 32);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

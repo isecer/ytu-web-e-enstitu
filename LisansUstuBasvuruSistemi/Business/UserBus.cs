@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Web;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -367,7 +368,8 @@ namespace LisansUstuBasvuruSistemi.Business
                 //ui.Domain = "";
                 HasToChahgePassword = kull.SifresiniDegistirsin,
                 IsActiveDirectoryImpersonateWorking = false,
-                IsActiveDirectoryUser = kull.IsActiveDirectoryUser
+                IsActiveDirectoryUser = kull.IsActiveDirectoryUser,
+
             };
 
             ui.Roles.AddRange(roller.TumRoller.Select(s => s.RolAdi).ToArray());
@@ -385,6 +387,11 @@ namespace LisansUstuBasvuruSistemi.Business
 
             ui.EnstituKods = UserBus.GetUserEnstituKods(kull.KullaniciID);
             ui.SeciliEnstituKodu = kull.EnstituKod;
+
+
+            ui.IsYetkiliTij = ui.Roles.Any(a =>
+                a == RoleNames.TiJuriOnerileriEykYaGonder || a == RoleNames.TiJuriOnerileriEykDaOnay);
+
             #region Last Logon Information
             UserBus.SetLastLogon();
             #endregion

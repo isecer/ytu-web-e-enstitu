@@ -17,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AktifTijDonemId { get; set; }
         public int? AnabilimDaliID { get; set; }
         public int? AktifDurumID { get; set; }
-        public  bool? IsDegisiklik { get; set; }
+        public  int? TijFormTipID { get; set; }
         public int? KullaniciID { get; set; }
         public string AdSoyad { get; set; }
         public IEnumerable<FrTijBasvuru> Data { get; set; }
@@ -83,6 +83,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             UniversiteID = new List<int?>();
             AnabilimdaliAdi = new List<string>(); 
             JoFormJuriList = new List<KrTijOneriFormuJurileri>();
+
+
         }
     }
     public class KrTijOneriFormuJurileri : TijBasvuruOneriJuriler

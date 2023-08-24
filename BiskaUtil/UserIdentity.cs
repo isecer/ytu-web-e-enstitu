@@ -39,15 +39,10 @@ namespace BiskaUtil
         public string NameSurname { get; set; }
         public string Description { get; set; }
         public bool IsActiveDirectoryUser { get; set; }
-        public bool? IsActiveDirectoryImpersonateWorking { get; set; }
-        public string Theme { get; set; }
-        public string ImagePath { get; set; }
-        public string CurrentModule { get; set; }
-        public GenderType Gender { get; set; }
+        public bool? IsActiveDirectoryImpersonateWorking { get; set; } 
+        public string ImagePath { get; set; } 
         public string Domain { get; set; }
-        public string Password { get; set; }
-        public int PersonelTipID { get; set; }
-        public string SeciliSDilKodu { get; set; }
+        public string Password { get; set; }  
         public string SeciliEnstituKodu { get; set; }
         public List<string> EnstituKods { get; set; }
         public int KullaniciTipID { get; set; }
@@ -223,6 +218,11 @@ namespace BiskaUtil
                 }
             }
         }
+
+
+
+        public bool IsYetkiliTij { get; set; }
+
 
         public static UserIdentity Current
         {

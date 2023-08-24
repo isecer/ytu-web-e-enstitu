@@ -3426,7 +3426,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>

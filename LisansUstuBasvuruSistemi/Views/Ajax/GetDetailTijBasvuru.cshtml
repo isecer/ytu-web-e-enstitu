@@ -13,8 +13,6 @@
 
     var isDanismani = Model.TezDanismanID == UserIdentity.Current.Id;
     var isOgrenci = Model.KullaniciID == UserIdentity.Current.Id;
-    var silmeYetki = isDanismani || isOgrenci || RoleNames.TiJuriOnerileriSil.InRoleCurrent();
-    var kayitYetki = isDanismani || isOgrenci || RoleNames.TiJuriOnerileriKayit.InRoleCurrent();
     var tiJuriOnerileriEykYaGonre = RoleNames.TiJuriOnerileriEykYaGonder.InRoleCurrent();
     var tiJuriOnerileriEykDaOnay = RoleNames.TiJuriOnerileriEykDaOnay.InRoleCurrent();
     bool formOlusturmaYetki = RoleNames.TiJuriOnerileriOgrenciAdina.InRole() || isOgrenci;
@@ -73,7 +71,7 @@
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
                             </tr>
-                          
+
                         </table>
                     </td>
                     <td width="100" style="text-align:center;">
@@ -111,7 +109,7 @@
                             <table class="table">
                                 <tr>
                                     <th width="40"></th>
-                                    <th width="150">Öneri Tipi</th>
+                                    <th width="240">Öneri Tipi</th>
                                     <th width="160">Dönem / Öneri Tarihi</th>
                                     <th>Öneri Durumu</th>
                                     <th width="120"></th>
@@ -120,11 +118,12 @@
                                 {
                                     inxRw++;
                                     bool showRow = inxRw == 1;
+                                    var kayitYetki = isDanismani || (isOgrenci && !item.DanismanOnayladi.HasValue) || UserIdentity.Current.IsYetkiliTij;
                                     <tr>
                                         <td>
                                             <ul class="panel-controls">
                                                 <li id="iShow_Rpr_@item.TijBasvuruOneriID" onclick="showDetailY('Rpr_@item.TijBasvuruOneriID')">
-                                                    <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "down" : "up")"></span> </a>
+                                                    <a href="javascript:void(0)"><span class="fa fa-angle-@(showRow ? "up" : "down")"></span> </a>
                                                 </li>
                                             </ul>
                                         </td>
@@ -151,17 +150,16 @@
                                             }
                                         </td>
                                         <td>
-                                            @if (item.IsSonBasvuru && !item.EYKYaGonderildi.HasValue)
+                                            @if (item.IsSonBasvuru && !item.EYKYaGonderildi.HasValue && kayitYetki)
                                             {
-                                                if (!item.IsObsData && kayitYetki)
+                                                if (!item.IsObsData)
                                                 {
-                                            <a href="javascript:void(0)" onclick="GetTiJuriOneriForm(@Model.KullaniciID,'@Model.UniqueID','@item.UniqueID')"><i style="font-size: 11pt;" class="fa fa-edit"></i> Öneriyi Düzelt</a>
+                                                    <a href="javascript:void(0)" onclick="GetTiJuriOneriForm(@Model.KullaniciID,'@Model.UniqueID','@item.UniqueID')"><i style="font-size: 11pt;" class="fa fa-edit"></i> Öneriyi Düzelt</a>
                                                     <br />
                                                 }
-                                                if (silmeYetki)
-                                                {
-                                                    <a href="javascript:void(0)" onclick="SilDetay('@Model.UniqueID','@item.UniqueID','@Model.Ad @Model.Soyad','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash"></i> Öneriyi Sil</a>
-                                                }
+
+                                                <a href="javascript:void(0)" onclick="SilDetay('@Model.UniqueID','@item.UniqueID','@Model.Ad @Model.Soyad','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size: 11pt;" class="glyphicon glyphicon-trash"></i> Öneriyi Sil</a>
+
                                             }
                                         </td>
                                     </tr>
@@ -202,15 +200,16 @@
                                                         </tr>
                                                     }
                                                     @if (item.TezDanismanID.HasValue)
-                                                    { <tr>
-                                                        <td class="CaptionTd">
-                                                            Danışman
-                                                        </td>
-                                                        <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd"> 
-                                                            <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @item.DanismanAdi</a> 
-                                                        </td> 
-                                                    </tr>
+                                                    {
+                                                        <tr>
+                                                            <td class="CaptionTd">
+                                                                Danışman
+                                                            </td>
+                                                            <td class="CaptionTd">:</td>
+                                                            <td class="ValueTd">
+                                                                <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @item.DanismanAdi</a>
+                                                            </td>
+                                                        </tr>
                                                     }
                                                     @if (!item.IsObsData && item.DanismanOnayladi == true)
                                                     {
@@ -255,7 +254,7 @@
 
                                                                     <ul class="panel-controls">
                                                                         <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="showDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
-                                                                            <a href="javascript:void(0)"><span class="fa fa-angle-up"></span> </a>
+                                                                            <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
                                                                         </li>
                                                                     </ul>
                                                                 </td>
@@ -506,7 +505,7 @@
                                                         {
                                                             if (item.IsSonBasvuru && item.EYKYaGonderildi == true && tiJuriOnerileriEykDaOnay)
                                                             {
-                                                                <tr class="@(item.EYKYaGonderildi == true ? "" : "hide")">
+                                                                <tr>
                                                                     <td class="CaptionTd" width="200">EYK'da Onay Durumu</td>
                                                                     <td class="CaptionTd" width="10">:</td>
                                                                     <td class="ValueTd">
@@ -516,7 +515,7 @@
                                                                                     @Html.DropDownList("EYKDaOnaylandi", item.SelectEykDaOnaylandi, new { id = "EYKDaOnaylandi_" + item.UniqueID, onchange = "EykOnayDurumAcklmVisible(this,'" + item.UniqueID + "')", @class = "form-control" })
                                                                                 </td>
                                                                                 <td class="form-group">
-                                                                                    <input type="text" class="form-control tarihB @(item.EYKDaOnaylandi==true?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
+                                                                                    <input type="text" class="form-control tarihB @(item.EYKDaOnaylandi.HasValue?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKTarihi_@item.UniqueID" value="@item.EYKTarihi.ToFormatDateInput()" />
 
                                                                                 </td>
                                                                                 <td>
@@ -637,10 +636,11 @@
                 url: '@Url.Action("DanismanOnayKayit", "TiJuriOneri")',
                 data: { tijBasvuruOneriUniqueId, IsDanismanOnay, DanismanOnaylanmamaAciklamasi },
                 success: function (result) {
-                    getMsg(result.Messages);
                     if (result.Messages.IsSuccess == true) {
+                        toastr["success"](result.Messages.Messages[0], result.Messages.Title);
                         GetDetail(basvuruUniqueId);
                     }
+                    else  getMsg(result.Messages);
 
                     PanelRefresh(_panel, true);
                 },
@@ -658,12 +658,12 @@
             else {
                 $('#jOneriFormOnayAckRow_' + tijBasvuruOneriUniqueId).addClass("hide");
             }
-            if (val == 'true') {
-                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
+            if (val == '') {
+                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
 
             }
             else {
-                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).addClass("hide");
+                $('#EYKTarihi_' + tijBasvuruOneriUniqueId).removeClass("hide");
             }
         }
         function EYKYaOnayChange(id) {
@@ -696,10 +696,11 @@
                 success: function (result) {
                     PanelRefresh(_panel, true);
                     if (result.IsSuccess) {
+                        toastr["success"](result.mmMessage.Messages[0], result.mmMessage.Title);
                         GetDetail(basvuruUniqueId);
 
                     }
-                    showMmMessage(result.Messages, 'Tamam');
+                    else  showMmMessage(result.Messages, 'Tamam');
 
                 },
                 error: function (err) {

@@ -21,7 +21,7 @@
         tabAdi = "Jüri Önerisi Henüz Yapıldı";
         tabIconClass = "fa fa-list-alt fa-lg";
         durumIconClass = "fa fa-clock-o";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Devamı İçin Jüri Önerisi Yapılmaı.";
 
     }
@@ -29,7 +29,7 @@
     {
         tabAdi = "Jüri Önerisi Yapıldı";
         tabIconClass = "fa fa-clock-o"; 
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Devamı İçin Danışman Onayı Gerekmekte.";
     }
     else if (Model.DanismanOnayladi == true && !Model.EYKYaGonderildi.HasValue)
@@ -37,7 +37,7 @@
         tabAdi = "Danışman Tarafından Onayladı";
         tabIconClass = "fa fa-thumbs-o-up fa-lg";
         durumColor = "green";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Devamı İçin Eyk'ya gönderim bekleniyor.";
     }
     else if (Model.DanismanOnayladi == false)
@@ -45,7 +45,7 @@
         tabAdi = "Danışman Tarafından Onaylamanmadı";
         tabIconClass = "fa fa-thumbs-o-down fa-lg";
         durumColor = "maroon";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Jüri önerisi danışman tarafından reddedildi.";
         aciklamaDetay = Model.DanismanOnaylanmamaAciklamasi;
     }
@@ -54,7 +54,7 @@
         tabAdi = "EYK'ya Gönderimi Onaylandı";
         tabIconClass = "fa fa-thumbs-o-up fa-lg";
         durumColor = "green";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Devamı İçin Eyk'da onay işlemi bekleniyor.";
     }
     else if (Model.EYKYaGonderildi == false)
@@ -63,7 +63,7 @@
         tabAdi = "EYK'ya Gönderimi Onaylanmadı";
         tabIconClass = "fa fa-thumbs-o-down fa-lg";
         durumColor = "maroon";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç enstitü tarafından reddedildi.";
         aciklamaDetay = Model.EYKYaGonderimDurumAciklamasi;
     }
@@ -72,7 +72,7 @@
         tabAdi = "EYK'da Onaylandı";
         tabIconClass = "fa fa-thumbs-o-up fa-lg";
         durumColor = "green";
-        durumDetayIconClass = "fa fa-exclamation-triangle"; 
+        durumDetayIconClass = "fa fa-comments-o"; 
         durumDetay = "Süreç Tamamlandı";
     }
     else if (Model.EYKDaOnaylandi == false)
@@ -80,7 +80,7 @@
         tabAdi = "EYK'da Onaylanmadı";
         tabIconClass = "fa fa-thumbs-o-down fa-lg";
         durumColor = "maroon";
-        durumDetayIconClass = "fa fa-exclamation-triangle";
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç eyk tarafından onaylanmadı.";
         aciklamaDetay = Model.EYKDaOnaylanmadiDurumAciklamasi;
     }

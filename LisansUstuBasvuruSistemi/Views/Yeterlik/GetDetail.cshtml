@@ -196,14 +196,14 @@
 </div>
 <script>
     function ContentShowDt(id,name) {
-        var isShow = $('#' + name+'_shower_' + id).hasClass('fa-angle-up')
+        var isShow = $('#' + name+'_shower_' + id).hasClass('fa-angle-down')
         if (isShow) {
             $('#'+ name+'Content_' + id).removeClass('hide');
-            $('#'+ name+'_shower_' + id).removeClass('fa-angle-up').addClass('fa-angle-down');
+            $('#' + name + '_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
         }
         else {
             $('#'+ name+'Content_' + id).addClass('hide');
-            $('#'+ name+'_shower_' + id).removeClass('fa-angle-down').addClass('fa-angle-up');
+            $('#' + name + '_shower_' + id).removeClass('fa-angle-up').addClass('fa-angle-down');
         }
     }
     function KomiteJuriOnayKayit(id, uniqueID) {

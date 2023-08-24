@@ -3543,12 +3543,12 @@
             // xrTable25
             // 
             this.xrTable25.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable25.LocationFloat = new DevExpress.Utils.PointFloat(43.01154F, 2.861023E-05F);
+            this.xrTable25.LocationFloat = new DevExpress.Utils.PointFloat(22.22443F, 1.907349E-06F);
             this.xrTable25.Name = "xrTable25";
             this.xrTable25.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow66,
             this.xrTableRow67});
-            this.xrTable25.SizeF = new System.Drawing.SizeF(129.0105F, 26.95288F);
+            this.xrTable25.SizeF = new System.Drawing.SizeF(173.1318F, 26.95288F);
             this.xrTable25.StylePriority.UseBorders = false;
             this.xrTable25.StylePriority.UseTextAlignment = false;
             this.xrTable25.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
@@ -3566,7 +3566,7 @@
             this.xrTableCell70.Name = "xrTableCell70";
             this.xrTableCell70.StylePriority.UseFont = false;
             this.xrTableCell70.StylePriority.UseTextAlignment = false;
-            this.xrTableCell70.Text = "Tarih & İmza";
+            this.xrTableCell70.Text = "Tarih & Onay Durumu";
             this.xrTableCell70.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell70.Weight = 1D;
             // 
@@ -3583,7 +3583,7 @@
             this.xrTableCell71.Name = "xrTableCell71";
             this.xrTableCell71.StylePriority.UseFont = false;
             this.xrTableCell71.StylePriority.UseTextAlignment = false;
-            this.xrTableCell71.Text = "Date & Signature";
+            this.xrTableCell71.Text = "Date & Confirmation Status";
             this.xrTableCell71.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell71.Weight = 1D;
             // 
@@ -3654,7 +3654,7 @@
             this.xrTableCell19.Name = "xrTableCell19";
             this.xrTableCell19.StylePriority.UseFont = false;
             this.xrTableCell19.StylePriority.UseTextAlignment = false;
-            this.xrTableCell19.Text = "Taahhüt";
+            this.xrTableCell19.Text = "Danışman Taahhüt";
             this.xrTableCell19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell19.Weight = 1D;
             // 
@@ -4011,7 +4011,7 @@
             this.xrPictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("xrPictureBox1.ImageSource"));
             this.xrPictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0.0003178914F, 25F);
             this.xrPictureBox1.Name = "xrPictureBox1";
-            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 62F);
+            this.xrPictureBox1.SizeF = new System.Drawing.SizeF(143F, 61F);
             this.xrPictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.StretchImage;
             this.xrPictureBox1.StylePriority.UseBorders = false;
             // 
@@ -4019,7 +4019,7 @@
             // 
             this.xrTableFK.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableFK.Font = new System.Drawing.Font("Times New Roman", 8F);
-            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(542.8094F, 69.70833F);
+            this.xrTableFK.LocationFloat = new DevExpress.Utils.PointFloat(545.5101F, 77.70833F);
             this.xrTableFK.Name = "xrTableFK";
             this.xrTableFK.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.xrTableRow93});
@@ -4051,7 +4051,7 @@
             // xrQRCode
             // 
             this.xrQRCode.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 22.99255F);
+            this.xrQRCode.LocationFloat = new DevExpress.Utils.PointFloat(675F, 20F);
             this.xrQRCode.Name = "xrQRCode";
             this.xrQRCode.SizeF = new System.Drawing.SizeF(75F, 75F);
             this.xrQRCode.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;

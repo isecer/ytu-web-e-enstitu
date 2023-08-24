@@ -307,6 +307,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                      {
                                                          SiraNo = inx + 1,
                                                          EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
+                                                         EYKTarihi=s.EYKDaOnaylandiOnayTarihi,
                                                          s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
                                                          OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
                                                          OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
@@ -318,7 +319,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                          EsDanismanKurumAdi = s.UniversiteAdi
 
                                                      }
-                    ).OrderBy(o => o.DanismanAnabilimDali).ThenBy(t => t.OgrenciAdSoyad).ThenBy(t => t.OgrenciAdSoyad).ToList();
+                    ).OrderBy(o=>o.EYKTarihi).ToList();
                 var gv = new GridView();
                 gv.DataSource = dataEsList;
                 gv.DataBind();
@@ -384,7 +385,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
                         .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
                                                                  a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
-                        .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ToList();
+                        .OrderByDescending(o => o.EYKDaOnaylandiOnayTarihi).ToList();
 
                     var raporListData = new List<RprTdoEykDto>();
                     var inx = 0;
