@@ -174,6 +174,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var ogrenimTipKod = kModel.OgrenimTipKod.Select((s, inx) => new { Inx = inx, OgrenimTipKod = s }).ToList();
             var mBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = kModel.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Select((s, inx) => new { Inx = inx, MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s }).ToList();
             var mBasvuruEtikNotKriteri = kModel.MBasvuruEtikNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruEtikNotKriteri = s }).ToList();
+            var mBasvuruSeminerNotKriteri = kModel.MBasvuruSeminerNotKriteri.Select((s, inx) => new { Inx = inx, MBasvuruSeminerNotKriteri = s }).ToList();
             var mBasvuruToplamKrediKriteri = kModel.MBasvuruToplamKrediKriteri.Select((s, inx) => new { Inx = inx, MBasvuruToplamKrediKriteri = s }).ToList();
             var mBasvuruAgnoKriteri = kModel.MBasvuruAGNOKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAGNOKriteri = s }).ToList();
             var mBasvuruAktsKriteri = kModel.MBasvuruAKTSKriteri.Select((s, inx) => new { Inx = inx, MBasvuruAKTSKriteri = s }).ToList();
@@ -187,6 +188,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                        join otk in ogrenimTipKod on kr.Inx equals otk.Inx
                                                        join dk in mBasvuruSonDonemKaydiKontrolEdilecekDersKodlari on kr.Inx equals dk.Inx
                                                        join enk in mBasvuruEtikNotKriteri on kr.Inx equals enk.Inx
+                                                       join snk in mBasvuruSeminerNotKriteri on kr.Inx equals snk.Inx
                                                        join kk in mBasvuruToplamKrediKriteri on kr.Inx equals kk.Inx
                                                        join agk in mBasvuruAgnoKriteri on kr.Inx equals agk.Inx
                                                        join akts in mBasvuruAktsKriteri on kr.Inx equals akts.Inx
@@ -202,6 +204,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                            otk.OgrenimTipKod,
                                                            dk.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
                                                            enk.MBasvuruEtikNotKriteri,
+                                                           snk.MBasvuruSeminerNotKriteri,
                                                            kk.MBasvuruToplamKrediKriteri,
                                                            agk.MBasvuruAGNOKriteri,
                                                            akts.MBasvuruAKTSKriteri,
@@ -396,6 +399,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     OgrenimTipKod = s.OgrenimTipKod.Value,
                     MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = s.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
                     MBasvuruEtikNotKriteri = s.MBasvuruEtikNotKriteri,
+                    MBasvuruSeminerNotKriteri=s.MBasvuruSeminerNotKriteri,
                     MBasvuruToplamKrediKriteri = s.MBasvuruToplamKrediKriteri.Value,
                     MBasvuruAGNOKriteri = s.MBasvuruAGNOKriteri.Value,
                     MBasvuruAKTSKriteri = s.MBasvuruAKTSKriteri.Value,

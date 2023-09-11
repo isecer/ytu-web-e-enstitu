@@ -42,7 +42,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DuyuruYapan = k.Ad + " " + k.Soyad,
                         s.IslemYapanIP,
                         EkSayisi = s.DuyuruEkleris.Count,
-                        Ekler = s.DuyuruEkleris
+                        Ekler = s.DuyuruEkleris,
+                        s.IsEnUsteSabitle,
                     };
 
             if (!model.EnstituKod.IsNullOrWhiteSpace()) q = q.Where(p => p.EnstituKod == model.EnstituKod); 
@@ -57,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             }
             model.RowCount = q.Count();
-            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.Tarih);
+            q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.IsEnUsteSabitle ? 1 : 2).ThenByDescending(o => o.Tarih);
             model.DuyurularDtos = q.Skip(model.StartRowIndex).Take(model.PageSize).Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,
@@ -70,8 +71,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 DuyuruYapan = s.DuyuruYapan,
                 IslemYapanIP = s.IslemYapanIP,
                 EkSayisi = s.EkSayisi,
-                DuyuruEkleris = s.Ekler
-            }).ToList();
+                DuyuruEkleris = s.Ekler,
+                IsEnUsteSabitle = s.IsEnUsteSabitle
+            }).ToList(); 
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbAktifEnstituler(true), "Value", "Caption", model.EnstituKod); 
             return View(model);
         }
@@ -113,6 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.YeterlikBasvuruPopupAc,
                         s.MezuniyetBasvuruPopupAc,
                         s.TalepYaparkenPopupAc,
+                        s.IsEnUsteSabitle,
                         s.YayinSonTarih,
                         s.IsAktif
                     };
@@ -137,8 +140,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemYapanIP = s.IslemYapanIP,
                 EkSayisi = s.EkSayisi,
                 DuyuruEkleris = s.Ekler,
-                YayinSonTarih = s.YayinSonTarih
-            }).OrderByDescending(o => o.Tarih).ToList();
+                YayinSonTarih = s.YayinSonTarih,
+                IsEnUsteSabitle = s.IsEnUsteSabitle,
+            }).OrderBy(o => o.IsEnUsteSabitle ? 1 : 2).ThenByDescending(o => o.Tarih).ToList();
 
             string htmlDuyuru = ViewRenderHelper.RenderPartialView("KDuyurular", "DuyuruHtml", fModel);
             return Json(new { ShowMessage = fModel.DuyurularDtos.Any(), HtmlMessage = htmlDuyuru });

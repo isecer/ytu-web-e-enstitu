@@ -247,7 +247,7 @@
                     className: "btn-danger",
                     callback: function () {
                     $.ajax({
-                        url: '@Url.Action("SilDetay", "TiJuriOneri")',
+                        url: '@Url.Action("SilDetay", "TiJuriOnerileriGb")',
                         data: { tijBasvuruOneriUniqueId: tijBasvuruOneriUniqueId },
                         success: function (result) {
 
@@ -284,7 +284,7 @@
         var _panel = $('#bsvrDet_' + basvuruUniqueId);
             PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("GetTijOneriFormu", "TiJuriOneri")',
+            url: '@Url.Action("GetTijOneriFormu", "TiJuriOnerileriGb")',
             data: {
                 'kullaniciId': kullaniciId,
                 'basvuruUniqueId': basvuruUniqueId,

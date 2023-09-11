@@ -289,7 +289,7 @@
     <Compile Include="Controllers\TalepSureciController.cs" />
     <Compile Include="Controllers\TalepYapController.cs" />
     <Compile Include="Controllers\TiGelenBasvurularController.cs" />
-    <Compile Include="Controllers\TiJuriOneriController.cs" />
+    <Compile Include="Controllers\TiJuriOneri_X_Controller.cs" />
     <Compile Include="Controllers\TiJuriOnerileriGbController.cs" />
     <Compile Include="Controllers\UniversitelerController.cs" />
     <Compile Include="Controllers\UnvanlarController.cs" />
@@ -868,6 +868,12 @@
     </Compile>
     <Compile Include="Raporlar\TezDanismanOneri\RprTezDanismaniOneriFormu_FR0347.Designer.cs">
       <DependentUpon>RprTezDanismaniOneriFormu_FR0347.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijTutanak.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijTutanak.Designer.cs">
+      <DependentUpon>RprTijTutanak.cs</DependentUpon>
     </Compile>
     <Compile Include="Raporlar\TezIzlemeJuriOneri\RprTijDegisiklikFormu_FR1460.cs">
       <SubType>Component</SubType>
@@ -3400,6 +3406,10 @@
     <Content Include="Views\TiJuriOneri\TijOneriOgrenciSecim.cshtml" />
     <Content Include="Views\TiJuriOneri\BasvuruDurumView.cshtml" />
     <Content Include="Views\TiJuriOneri\TijOneriFormu - Copy.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\BasvuruDurumView.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\TijOneriFormu.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\TijOneriOgrenciSecim.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\GetTutanakRaporu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3507,6 +3517,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezDanismanOneri\RprTezDanismaniDegisiklikFormu_FR0308.resx">
       <DependentUpon>RprTezDanismaniDegisiklikFormu_FR0308.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Raporlar\TezIzlemeJuriOneri\RprTijTutanak.resx">
+      <DependentUpon>RprTijTutanak.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Raporlar\TezIzlemeJuriOneri\RprTijDegisiklikFormu_FR1460.resx">
       <DependentUpon>RprTijDegisiklikFormu_FR1460.cs</DependentUpon>

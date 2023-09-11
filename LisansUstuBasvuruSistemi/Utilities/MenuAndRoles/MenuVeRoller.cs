@@ -189,9 +189,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
         public const string TdoAyarlari = "TDO Ayarları";
 
 
-        [Menu(BagliMenuID = 83300, MenuAdi = "Jüri Önerisi", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOneri/Index", YetkisizErisim = true, AuthenticationControl = "authenticatedControl(this)", SiraNo = 1)]
-        public const string TiJuriOneriBasvuru = "Tij Önerisi";
-        [Menu(BagliMenuID = 83300, MenuAdi = "Gelen Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
+       
+        [Menu(BagliMenuID = 83300, MenuAdi = "Jüri Önerileri", MenuCssClass = "fa fa-file-text-o", MenuUrl = "TiJuriOnerileriGb/Index", SiraNo = 3)]
         [Role(GorunurAdi = "Gelen Jüri Önerileri", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]
         public const string TiJuriOnerileriGb = "Tez İzleme Jüri Önerisileri";
         [Role(GorunurAdi = "Jüri Önerisi Eyk ya Gönderme Yetkisi", Kategori = "Tez İzleme İşlemleri", Aciklama = "")]

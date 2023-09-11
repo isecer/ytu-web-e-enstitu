@@ -11,7 +11,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string TutanakAdi { get; set; }
         public string Sayi { get; set; }
         public string Aciklama { get; set; }
-
+        public bool? IsNewOrEdit { get; set; }
         public List<RprTutanakRowModel> DetayData { get; set; }
         public RprTutanakModel()
         {

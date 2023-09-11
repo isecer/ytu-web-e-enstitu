@@ -92,4 +92,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public SelectList SlistUnvanAdi { get; set; }
         public SelectList SListUniversiteID { get; set; }
     }
+
+    
+    public class RprTijTutanakModel
+    { 
+        public string TutanakAdi { get; set; }
+        public string Sayi { get; set; }
+        public string Aciklama { get; set; }
+        public List<RprTijTutanakRowModel> DetayData { get; set; }
+        public RprTijTutanakModel()
+        {
+            DetayData = new List<RprTijTutanakRowModel>();
+        }
+    }
+    public class RprTijTutanakRowModel
+    {
+        public bool? IsNewOrEdit { get; set; }
+        public string OgrenciBilgi { get; set; }
+        public string DanismanAdSoyad { get; set; }
+        public string DanismanUni { get; set; }
+        public string AsilUye1 { get; set; }
+        public string AsilUye1Uni { get; set; }
+        public string AsilUye2 { get; set; }
+        public string AsilUye2Uni { get; set; }
+        public string TezKonusu { get; set; }
+
+    }
 }

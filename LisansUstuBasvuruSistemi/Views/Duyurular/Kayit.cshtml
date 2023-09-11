@@ -30,7 +30,7 @@
                                     @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;" })
                                 </div>
                             </div>
-                             
+
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Duyuru Tarihi</label>
                                 <div class="col-md-9 col-xs-8">
@@ -41,6 +41,14 @@
                                 <label class="col-md-3 col-xs-4 control-label">Duyurunun Yayınlanacağı Son Tarih</label>
                                 <div class="col-md-9 col-xs-8">
                                     <input class="form-control form-control-inline input-medium" autocomplete="off" size="16" type="text" value="@Model.YayinSonTarih.ToFormatDateAndTimeInput()" name="YayinSonTarih" id="YayinSonTarih">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-4 control-label">Duyuruyu En Üste Sabitle</label>
+                                <div class="col-md-9 col-xs-8">
+                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                        <input type="checkbox" value="true" name="IsEnUsteSabitle" class="toggle" @Model.IsEnUsteSabitle.ToChecked() />
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -82,7 +90,7 @@
                                         <input type="checkbox" value="true" name="TijBasvuruPopupAc" class="toggle" @Model.TijBasvuruPopupAc.ToChecked() />
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Tez İzleme Başvuru Yaparken Popup Açılsın</label>
                                 <div class="col-md-9 col-xs-8">
@@ -90,7 +98,7 @@
                                         <input type="checkbox" value="true" name="TIBasvuruPopupAc" class="toggle" @Model.TIBasvuruPopupAc.ToChecked() />
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Yeterlik Başvuru Yaparken Popup Açılsın</label>
                                 <div class="col-md-9 col-xs-8">
@@ -98,7 +106,7 @@
                                         <input type="checkbox" value="true" name="YeterlikBasvuruPopupAc" class="toggle" @Model.YeterlikBasvuruPopupAc.ToChecked() />
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Mezuniyet Başvuru Yaparken Popup Açılsın</label>
                                 <div class="col-md-9 col-xs-8">

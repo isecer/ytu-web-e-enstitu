@@ -240,6 +240,10 @@ namespace LisansUstuBasvuruSistemi.Business
                                     {
                                         bkMsg.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
                                     }
+                                    if (!basvuruKriterleri.MBasvuruSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                                    {
+                                        bkMsg.Add("Seminer dersi için ders notu " + basvuruKriterleri.MBasvuruSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+                                    }
                                     if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
                                     {
                                         bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
@@ -1094,6 +1098,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                                   OgrenimTipID = o.OgrenimTipID,
                                                   MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = defS != null ? defS.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari : o.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari,
                                                   MBasvuruEtikNotKriteri = defS != null ? defS.MBasvuruEtikNotKriteri : o.MBasvuruEtikNotKriteri,
+                                                  MBasvuruSeminerNotKriteri = defS != null ? defS.MBasvuruSeminerNotKriteri : o.MBasvuruSeminerNotKriteri,
                                                   MBasvuruToplamKrediKriteri = defS != null ? defS.MBasvuruToplamKrediKriteri : o.MBasvuruToplamKrediKriteri.Value,
                                                   MBasvuruAGNOKriteri = defS != null ? defS.MBasvuruAGNOKriteri : o.MBasvuruAGNOKriteri.Value,
                                                   MBasvuruAKTSKriteri = defS != null ? defS.MBasvuruAKTSKriteri : o.MBasvuruAKTSKriteri.Value,
@@ -1106,6 +1111,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 foreach (var item in model.OgrenimTipKriterList)
                 {
                     item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruEtikNotKriteri); 
+                    item.SlistSeminerNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruSeminerNotKriteri);
                 }
             }
             return model;

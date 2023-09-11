@@ -23,7 +23,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<int?> OgrenimTipKod { get; set; }
         public List<string> MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
         public List<string> MBasvuruEtikNotKriteri { get; set; }
-        
+        public List<string> MBasvuruSeminerNotKriteri { get; set; }
+
         public List<int?> MBasvuruToplamKrediKriteri { get; set; }
         public List<double?> MBasvuruAGNOKriteri { get; set; }
         public List<int?> MBasvuruAKTSKriteri { get; set; }
@@ -48,6 +49,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari = new List<string>();
             MBasvuruAGNOKriteri = new List<double?>();
             MBasvuruAKTSKriteri = new List<int?>();
+            MBasvuruSeminerNotKriteri = new List<string>();
+            MBasvuruEtikNotKriteri = new List<string>();
             MBSinavUzatmaSuresiGun = new List<int?>();
             MBTezTeslimSuresiGun = new List<int?>();
             MBSRTalebiKacGunSonraAlabilir = new List<int?>();
@@ -63,6 +66,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int? SelectedOgrenimTipID { get; set; }
 
         public SelectList SlistEtikNots { get; set; }
+        public SelectList SlistSeminerNots { get; set; }
         public bool OrjinalVeri { get; set; }
         public string OgrenimTipAdi { get; set; }
     }

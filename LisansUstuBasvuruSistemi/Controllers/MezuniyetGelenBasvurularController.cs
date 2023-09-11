@@ -2293,7 +2293,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var prgl = itemO.Programlar;
                         var abdl = itemO.Programlar.AnabilimDallari;
                         var sinav = itemO.SRTalepleris.First(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurum.Basarili);
-                        var tezSonBilgi = itemO.MezuniyetBasvurulariTezTeslimFormlaris.First();
                         var danismanBilgi = "";
                         var joForm = itemO.MezuniyetJuriOneriFormlaris.FirstOrDefault();
                         if (joForm != null)
@@ -2305,11 +2304,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             danismanBilgi = sinav.SRTaleplerJuris.First().JuriAdi.ToUpper();
                         }
+                        var baslikTr = sinav.IsTezBasligiDegisti!=true?( joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikTr : joForm.MezuniyetBasvurulari.TezBaslikTr):sinav.YeniTezBaslikTr;
+                        var baslikEn = sinav.IsTezBasligiDegisti != true ? (joForm.IsTezBasligiDegisti == true ? joForm.YeniTezBaslikEn : joForm.MezuniyetBasvurulari.TezBaslikEn): sinav.YeniTezBaslikEn;
+                        var tezBaslik = joForm.MezuniyetBasvurulari.IsTezDiliTr == true ? baslikTr : baslikEn;
                         row.Konu = itemO.Ad + " " + itemO.Soyad + " 'DOKTORA DERECESİ' alması Hk.";
                         row.Aciklama1 = "Enstitümüz " + abdl.AnabilimDaliAdi + " Anabilim Dalı " + prgl.ProgramAdi + " doktora programı öğrencisi <b>" + itemO.OgrenciNo + "</b> no’lu <b>" + itemO.Ad + " " + itemO.Soyad + ";</b> "
                                         + "21/12/2016 gün ve  29925 sayılı Resmi Gazete’de yayımlanarak yürürlüğe giren 'YTÜ Lisansüstü Eğitim - Öğretim Yönetmeliği’nin 24.maddesi uyarınca, "
                                         + "doktora eğitimi ile ilgili tüm koşullarını yerine getirdiğinden " + sinav.Tarih.Date.ToFormatDate() + " tarihinde yapılan doktora tez sınavında <b>" + danismanBilgi + "</b> danışmanlığında hazırladığı "
-                                        + "<b>“" + tezSonBilgi.TezBaslikTr + "”</b> başlıklı tezi başarılı bulunmuştur.";
+                                        + "<b>“" + tezBaslik + "”</b> başlıklı tezi başarılı bulunmuştur.";
                         row.Aciklama2 = "1 Mart 2017 tarih ve 29994 sayılı Yüksek Öğretim Kurulu Lisansüstü Eğitim ve Öğretim Yönetmeliğinde Değişiklik Yapılmasına Dair Yönetmelik:<b> Madde 2- “Mezuniyet Tarihi tezin sınav "
                             + "jüri komisyonu tarafından imzalı nüshasının teslim edildiği tarihtir.”</b> gereğince <b>" + itemO.MezuniyetTarihi.Value.Date.ToFormatDate() + "</b> tarihinde tezini Enstitümüze teslim eden İlgili öğrencinin, tezinin kabul edildiğini ve kendisine "
                             + "<b>'DOKTORA DERECESİ'</b> verildiğini bildiren jüri ortak raporunun <b>" + raporTarihi.ToDate().Value.ToFormatDate() + "</b> tarihi itibariyle onanmasına ve Üniversite Senatosu'na sunulmak üzere Rektörlüğe arzına </b>oybirliğiyle</b> karar verildi.";

@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int OgrenimTipKod { get; set; }
         public string MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari { get; set; }
         public string MBasvuruEtikNotKriteri { get; set; }
+        public string MBasvuruSeminerNotKriteri { get; set; }
         public int MBasvuruToplamKrediKriteri { get; set; }
         public double MBasvuruAGNOKriteri { get; set; }
         public int MBasvuruAKTSKriteri { get; set; }

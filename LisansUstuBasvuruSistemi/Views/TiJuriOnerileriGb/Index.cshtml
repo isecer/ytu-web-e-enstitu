@@ -25,14 +25,88 @@
                         <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
                     </h3>
                     <ul class="panel-controls">
+                        @if (UserIdentity.Current.IsYetkiliTij)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="showDialogTutanakRpr()" title="Tutanak Raporu Oluştur"><i class="fa fa-file-text-o"></i></a>
+                                <script>
+                                    function showDialogTutanakRpr() {
+                                        var _panel = $('#pnlFltr');
 
+                                        PanelRefresh(_panel, false);
+                                        $.ajax({
+                                            url: '@Url.Action("GetTutanakRaporu", "TiJuriOnerileriGb")',
+                                            data: {},
+                                            success: function (result) {
+                                                PanelRefresh(_panel, true);
+                                                var btbxxFS = bootbox.dialog({
+                                                    message: result,
+                                                    title: "<i class='fa fa-bar-chart-o'></i> Tutanak Çıktısı Oluşturma İşlemi",
+                                                    buttons: {
+                                                        success: {
+                                                            label: 'Çıktı Al',
+                                                            className: "btn btn-info",
+                                                            callback: function (event) {
+                                                                toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
+                                                                var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                                                PanelRefresh(pnlx, false);
+                                                                $('#TutanakRprForm').ajaxForm({
+                                                                    success: function (result) {
+
+                                                                        PanelRefresh(pnlx, true);
+                                                                            if (result.IsSuccess) {
+                                                                                  
+                                                                                var _Bastar = $('#BasTar').val();
+                                                                                var _Bittar = $('#BitTar').val();
+                                                                                var _RaporTarihi = $('#BitTar').val();
+                                                                                var _ExportWordOrExcel = $('#exportWordOrExcel').val(); 
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar  + '&ExportWordOrExcel=' + _ExportWordOrExcel;
+
+                                                                            }
+                                                                            else {
+                                                                                getMsg(result);
+                                                                            }
+
+
+                                                                    },
+                                                                    complete: function (cmp) {
+                                                                        PanelRefresh(pnlx, true);
+                                                                    },
+                                                                    error: function (err) {
+                                                                        PanelRefresh(pnlx, true);
+                                                                    }
+
+                                                                });
+                                                                $('#TutanakRprForm').submit();
+                                                                return false;
+                                                            }
+                                                        },
+                                                        danger: {
+                                                            label: 'Kapat',
+                                                            className: "btn-primary",
+                                                            callback: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            },
+                                            error: function (err) {
+                                                alert(err.responseText);
+                                                PanelRefresh(_panel, true);
+                                            }
+                                        });
+
+                                    }
+                                </script>
+                            </li>
+                        }
                         @if (Model.RowCount > 0)
                         {
                             <li>
                                 <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
                             </li>
 
-                        } 
+                        }
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -266,7 +340,7 @@
         var _panel = $('#bsvrDet_' + basvuruUniqueId);
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("TijOneriOgrenciSecim", "TiJuriOneri")',
+            url: '@Url.Action("TijOneriOgrenciSecim", "TiJuriOnerileriGb")',
             data: {  },
             success: function (result) {
                 bootbox.dialog({
@@ -340,7 +414,7 @@
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("SilDetay", "TiJuriOneri")',
+                            url: '@Url.Action("SilDetay", "TiJuriOnerileriGb")',
                             data: { tijBasvuruOneriUniqueId: tijBasvuruOneriUniqueId },
                             success: function (result) {
 
@@ -374,12 +448,12 @@
 }
 @if (tiJuriOnerileriOgrenciAdina)
 {
-    <script>
+<script>
         function GetTiJuriOneriForm(kullaniciId, basvuruUniqueId, basvuruJuriOneriUniqueId,refreshIndex) {
         var _panel = $('#bsvrDet_' + basvuruUniqueId);
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("GetTijOneriFormu", "TiJuriOneri")',
+                url: '@Url.Action("GetTijOneriFormu", "TiJuriOnerileriGb")',
                 data: {
                     'kullaniciId': kullaniciId,
                     'basvuruUniqueId': basvuruUniqueId,
@@ -400,12 +474,15 @@
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         PanelRefresh(pnlx, false);
                                         $('#FrmTijOneriFormu').ajaxForm({
-                                            success: function (result) { 
-                                                PanelRefresh(pnlx, true); 
-                                                if (result.mMessage.IsSuccess) { 
+                                            success: function (result) {
+                                                PanelRefresh(pnlx, true);
+                                                if (result.mMessage.IsSuccess) {
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    if (refreshIndex) window.location.href = '@Url.Action("Index")?SelectedBasvuruUniqueId=' + basvuruUniqueId;
+                                                    if (refreshIndex) {
+                                                        
+                                                        window.location.href = '@Url.Action("Index")?SelectedBasvuruUniqueId=' + basvuruUniqueId;;
+                                                       }
                                                     else  GetDetail(basvuruUniqueId);
                                                 }
                                                 else {
@@ -455,7 +532,7 @@
         }
 
 
-    </script>
+</script>
 }
 
 @if (Model.SelectedBasvuruUniqueId.HasValue)

@@ -46,6 +46,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.AnaSayfaPopupAc,
                         s.BasvuruPopupAc,
                         s.YayinSonTarih,
+                        s.IsEnUsteSabitle,
                         s.IsAktif
                     };
 
@@ -65,8 +66,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 AnaSayfadaGozuksun = s.AnaSayfadaGozuksun,
                 AnaSayfaPopupAc = s.AnaSayfaPopupAc,
                 BasvuruPopupAc = s.BasvuruPopupAc,
-                YayinSonTarih = s.YayinSonTarih
-            }).OrderByDescending(o => o.Tarih).ToList();
+                YayinSonTarih = s.YayinSonTarih,
+                IsEnUsteSabitle = s.IsEnUsteSabitle,
+            }).OrderBy(o =>o.IsEnUsteSabitle?1:2).ThenByDescending(o => o.Tarih).ToList();
             ViewBag.Duyurular = data;
             #endregion
 

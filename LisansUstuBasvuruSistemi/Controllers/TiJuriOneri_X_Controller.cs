@@ -19,8 +19,8 @@ using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 namespace LisansUstuBasvuruSistemi.Controllers
 {
     [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
-    [Authorize]
-    public class TiJuriOneriController : Controller
+    [Authorize(Roles = "yok")]
+    public class TiJuriOneri_X_Controller : Controller
     {
         // GET: TikOneri
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -353,7 +353,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
 
 
-                view = ViewRenderHelper.RenderPartialView("TiJuriOneri", "TijOneriFormu", model);
+                view = ViewRenderHelper.RenderPartialView("TiJuriOnerileriGb", "TijOneriFormu", model);
             }
             else { mMessage.IsSuccess = false; mMessage.MessageType = Msgtype.Warning; }
             var strView = ViewRenderHelper.RenderPartialView("Ajax", "getMessage", mMessage);

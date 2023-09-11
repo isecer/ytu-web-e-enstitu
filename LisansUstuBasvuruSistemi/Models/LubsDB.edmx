@@ -813,6 +813,7 @@
           </Key>
           <Property Name="DuyuruID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EnstituKod" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsEnUsteSabitle" Type="bit" Nullable="false" />
           <Property Name="AnaSayfadaGozuksun" Type="bit" Nullable="false" />
           <Property Name="AnaSayfaPopupAc" Type="bit" Nullable="false" />
           <Property Name="BasvuruPopupAc" Type="bit" Nullable="false" />
@@ -1397,6 +1398,7 @@
           <Property Name="OgrenimTipKod" Type="int" Nullable="false" />
           <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="MBasvuruEtikNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="MBasvuruSeminerNotKriteri" Type="nvarchar" MaxLength="64" Nullable="false" />
           <Property Name="MBasvuruToplamKrediKriteri" Type="int" Nullable="false" />
           <Property Name="MBasvuruAGNOKriteri" Type="float" Nullable="false" />
           <Property Name="MBasvuruAKTSKriteri" Type="int" Nullable="false" />
@@ -1739,6 +1741,7 @@
           <Property Name="IsMezuniyetBasvurusuYapabilir" Type="bit" Nullable="false" />
           <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="nvarchar" MaxLength="256" />
           <Property Name="MBasvuruEtikNotKriteri" Type="nvarchar" MaxLength="64" />
+          <Property Name="MBasvuruSeminerNotKriteri" Type="nvarchar" MaxLength="64" />
           <Property Name="MBasvuruToplamKrediKriteri" Type="int" />
           <Property Name="MBasvuruAGNOKriteri" Type="float" />
           <Property Name="MBasvuruAKTSKriteri" Type="int" />
@@ -10614,6 +10617,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="DuyuruID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EnstituKod" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsEnUsteSabitle" Type="Boolean" Nullable="false" />
           <Property Name="AnaSayfadaGozuksun" Type="Boolean" Nullable="false" />
           <Property Name="AnaSayfaPopupAc" Type="Boolean" Nullable="false" />
           <Property Name="BasvuruPopupAc" Type="Boolean" Nullable="false" />
@@ -11359,6 +11363,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="OgrenimTipKod" Type="Int32" Nullable="false" />
           <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="MBasvuruEtikNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="MBasvuruSeminerNotKriteri" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="MBasvuruToplamKrediKriteri" Type="Int32" Nullable="false" />
           <Property Name="MBasvuruAGNOKriteri" Type="Double" Nullable="false" />
           <Property Name="MBasvuruAKTSKriteri" Type="Int32" Nullable="false" />
@@ -11761,6 +11766,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="IsMezuniyetBasvurusuYapabilir" Type="Boolean" Nullable="false" />
           <Property Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="MBasvuruEtikNotKriteri" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="MBasvuruSeminerNotKriteri" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="MBasvuruToplamKrediKriteri" Type="Int32" />
           <Property Name="MBasvuruAGNOKriteri" Type="Double" />
           <Property Name="MBasvuruAKTSKriteri" Type="Int32" />
@@ -17810,6 +17816,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="BasvuruPopupAc" ColumnName="BasvuruPopupAc" />
                 <ScalarProperty Name="AnaSayfaPopupAc" ColumnName="AnaSayfaPopupAc" />
                 <ScalarProperty Name="AnaSayfadaGozuksun" ColumnName="AnaSayfadaGozuksun" />
+                <ScalarProperty Name="IsEnUsteSabitle" ColumnName="IsEnUsteSabitle" />
                 <ScalarProperty Name="EnstituKod" ColumnName="EnstituKod" />
                 <ScalarProperty Name="DuyuruID" ColumnName="DuyuruID" />
               </MappingFragment>
@@ -18395,6 +18402,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="MBasvuruAKTSKriteri" ColumnName="MBasvuruAKTSKriteri" />
                 <ScalarProperty Name="MBasvuruAGNOKriteri" ColumnName="MBasvuruAGNOKriteri" />
                 <ScalarProperty Name="MBasvuruToplamKrediKriteri" ColumnName="MBasvuruToplamKrediKriteri" />
+                <ScalarProperty Name="MBasvuruSeminerNotKriteri" ColumnName="MBasvuruSeminerNotKriteri" />
                 <ScalarProperty Name="MBasvuruEtikNotKriteri" ColumnName="MBasvuruEtikNotKriteri" />
                 <ScalarProperty Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" ColumnName="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
                 <ScalarProperty Name="OgrenimTipKod" ColumnName="OgrenimTipKod" />
@@ -18760,6 +18768,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="MBasvuruAKTSKriteri" ColumnName="MBasvuruAKTSKriteri" />
                 <ScalarProperty Name="MBasvuruAGNOKriteri" ColumnName="MBasvuruAGNOKriteri" />
                 <ScalarProperty Name="MBasvuruToplamKrediKriteri" ColumnName="MBasvuruToplamKrediKriteri" />
+                <ScalarProperty Name="MBasvuruSeminerNotKriteri" ColumnName="MBasvuruSeminerNotKriteri" />
                 <ScalarProperty Name="MBasvuruEtikNotKriteri" ColumnName="MBasvuruEtikNotKriteri" />
                 <ScalarProperty Name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" ColumnName="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
                 <ScalarProperty Name="IsMezuniyetBasvurusuYapabilir" ColumnName="IsMezuniyetBasvurusuYapabilir" />

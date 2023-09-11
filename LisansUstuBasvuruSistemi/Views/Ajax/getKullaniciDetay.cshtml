@@ -95,7 +95,7 @@
                                     <td>Kullanıcı Adı</td>
                                     <td>:</td>
                                     <td>
-                                        @Model.KullaniciAdi  @if (UserIdentity.Current.IsAdmin)
+                                        @Model.KullaniciAdi  @if (kYetki)
                                         {
                                             <a href="@Url.Action("SetLogin","Kullanicilar", new { Model.KullaniciID })" target="_blank"><i class="fa fa-arrow-circle-o-left"></i> Hesaba Geç</a>
                                         }

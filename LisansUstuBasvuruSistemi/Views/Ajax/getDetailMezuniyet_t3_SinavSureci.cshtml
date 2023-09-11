@@ -409,7 +409,7 @@
                                                                                     <tr>
                                                                                         <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg" aria-hidden="true"></i> Jüri Üyeleri Değerlendirme Bilgileri</td>
                                                                                         <td width="40" style=" border-bottom:1px solid;">
-                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && !a.MezuniyetSinavDurumID.HasValue))
+                                                                                            @if (kayitYetki && !isJuriSonucGirildi && !isEnstituSonucuGirdi && item.SRTaleplerJuris.Any(a => (a.JuriTipAdi.Contains("YtuIci") || a.JuriTipAdi.Contains("YtuDisi")) && (!a.MezuniyetSinavDurumID.HasValue || a.MezuniyetSinavDurumID==1)))
                                                                                             {
                                                                                                 <span class="label label-info" style="cursor:pointer;font-size:8pt;" onclick="SrJuriDegistir(@Model.MezuniyetBasvurulariID,'@item.UniqueID')"><i class="fa fa-group"></i> Jüri Değiştir</span>
                                                                                             }

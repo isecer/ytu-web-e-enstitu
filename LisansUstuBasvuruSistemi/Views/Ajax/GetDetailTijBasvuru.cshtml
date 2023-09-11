@@ -633,7 +633,7 @@
 
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("DanismanOnayKayit", "TiJuriOneri")',
+                url: '@Url.Action("DanismanOnayKayit", "TiJuriOnerileriGb")',
                 data: { tijBasvuruOneriUniqueId, IsDanismanOnay, DanismanOnaylanmamaAciklamasi },
                 success: function (result) {
                     if (result.Messages.IsSuccess == true) {
@@ -685,7 +685,7 @@
             if (senderVal = "false")
                 EYKDaOnaylanmadiDurumAciklamasi = eYKDaOnayOrEYKYaGonderim ? $('#EYKDaOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val() : $('#EYKYaGonderimOnaylanmadiDurumAciklamasi_' + tijBasvuruOneriUniqueId).val();
             $.ajax({
-                url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "TiJuriOneri")',
+                url: '@Url.Action("JuriOneriFormuOnayDurumKayit", "TiJuriOnerileriGb")',
                 data: {
                     tijBasvuruOneriUniqueId,
                     eYKDaOnayOrEYKYaGonderim,
@@ -716,7 +716,7 @@
             var $sndr = $(sndr);
             var SenderVal = $sndr.val().toLowerCase();
             $.ajax({
-                url: '@Url.Action("JuriAsilYedekDurumKayit", "TiJuriOneri")',
+                url: '@Url.Action("JuriAsilYedekDurumKayit", "TiJuriOnerileriGb")',
                 data: {
                     'tijBasvuruOneriJuriId': tijBasvuruOneriJuriId,
                     'IsAsil': SenderVal,

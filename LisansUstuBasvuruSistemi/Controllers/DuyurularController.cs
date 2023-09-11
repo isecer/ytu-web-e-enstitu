@@ -47,6 +47,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EkSayisi = s.DuyuruEkleris.Count,
                         Ekler = s.DuyuruEkleris,
                         s.IsAktif,
+                        s.IsEnUsteSabitle,
                         s.AnaSayfadaGozuksun,
                         s.AnaSayfaPopupAc,
                         s.YeterlikBasvuruPopupAc,
@@ -89,6 +90,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 EkSayisi = s.EkSayisi,
                 DuyuruEkleris = s.Ekler,
                 IsAktif = s.IsAktif,
+                IsEnUsteSabitle = s.IsEnUsteSabitle,
                 AnaSayfadaGozuksun = s.AnaSayfadaGozuksun,
                 AnaSayfaPopupAc = s.AnaSayfaPopupAc,
                 BasvuruPopupAc = s.BasvuruPopupAc,
@@ -182,8 +184,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (kModel.Aciklama.IsNullOrWhiteSpace() && kModel.AciklamaHtml.IsNullOrWhiteSpace())
             { 
                 mmMessage.Messages.Add("Aciklama Giriniz.");
-            }
-
+            } 
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
@@ -216,6 +217,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.Aciklama = kModel.Aciklama;
                     data.AciklamaHtml = kModel.AciklamaHtml;
                     data.Tarih = kModel.Tarih;
+                    data.IsEnUsteSabitle = kModel.IsEnUsteSabitle;
                     data.YayinSonTarih = kModel.YayinSonTarih;
                     data.AnaSayfadaGozuksun = kModel.AnaSayfadaGozuksun;
                     data.AnaSayfaPopupAc = kModel.AnaSayfaPopupAc;
@@ -225,6 +227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.TalepYaparkenPopupAc = kModel.TalepYaparkenPopupAc;
                     data.TDOBasvuruPopupAc = kModel.TDOBasvuruPopupAc;
                     data.TIBasvuruPopupAc = kModel.TIBasvuruPopupAc;
+                    data.TijBasvuruPopupAc = kModel.TijBasvuruPopupAc;
                     data.IsAktif = kModel.IsAktif;
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = kModel.IslemYapanID;

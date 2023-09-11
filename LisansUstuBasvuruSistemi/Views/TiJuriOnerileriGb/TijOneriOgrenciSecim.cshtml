@@ -25,6 +25,16 @@
                             <br />
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="3">
+                            <br />
+                            <b>Not:</b> Jüri önerisi yapacağınız öğrenciyi yukarıdaki kutucktan seçebilir ya da arayabilirsiniz.
+                            <br />* Lisansüstü sisteminde aktif olarak danışmanlığını yürüttüğünüz öğrenciler en üst sırada gelecektir.
+                            <br />* Danışmanı olduğunuz halde öğrenciniz en üst sıralarda görünmüyorsa isminden ya da numarasından arama yaparak bulabilirsiniz.
+                            <br />* Öğrencinizi seçtikten sonra Yeni Jüri Önerisi Yap butonuna tıklayarak jüri önerinizi yapabilirsiniz.
+                            <br />
+                        </td>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -65,7 +75,7 @@
                     "<table class='table table-striped' style='margin:0px;border-top:none;font-size:8pt;'> " +
                     "<tbody>" +
                     "<tr> " +
-                    "<td>" + result.text + "</td> " +
+                    "<td>" + result.text + " "+(result.IsDanismanOgrenci?"(Danışmanısınız)":"")+"</td> " +
                     "</tr>  " +
                     "<tr> " +
                     "<td>" + result.ProgramAdi + "</td> " +
@@ -106,11 +116,11 @@
     function TijBasvuruKontrol() {
         var kullaniciId = $("#SelectOgrenci").val();
         var _panel = $('#tijOgrenciSecimPnl').parents('.modal-content').first();
-        PanelRefresh(_panel, false); 
+        PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("OgrenciBasvuruKontrol", "TiJuriOnerileriGb")',
             data: { kullaniciId },
-            success: function (result) { 
+            success: function (result) {
                 if (!result.IsSuccess) {
                     getMsg(result.mMessage);
                 }

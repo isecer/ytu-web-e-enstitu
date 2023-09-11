@@ -16,6 +16,7 @@
                     <th>Öğrenim Tipleri</th>
                     <th width="120" title="Son Dönem Kayıt Yaptırması Gereken Ders Kodları">K.Y.D.K</th>
                     <th width="60" title="Etik dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Etik Not</th>
+                    <th width="60" title="Seminer dersi notu belirlenen nottan düşük ise başvuru yapamayacak. (Not kriteri belirlenmezse öğrenci bu kontrole tabi tutulmaz)">Smnr Not</th>
                     <th width="60" title="Tüm Dönem Toplam Kredi Kriteri">Min Kredi</th>
                     <th width="60" title="Genel AGNO Kriteri">Min AGNO</th>
                     <th width="60" title="Genel AKTS Kriteri">Min AKTS</th>
@@ -28,57 +29,62 @@
                 @foreach (var item in Model.OgrenimTipKriterList.OrderBy(t => t.OgrenimTipAdi))
                 {
 
-                <tr class="rw_bst">
-                    <td>
-                        <div class="form-group">
-                            <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
-                            <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
-                            <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
-                            @item.OgrenimTipAdi
+                    <tr class="rw_bst">
+                        <td>
+                            <div class="form-group">
+                                <input type="text" name="MezuniyetSureciOgrenimTipKriterID" value="@item.MezuniyetSureciOgrenimTipKriterID" class="hide">
+                                <input type="text" name="OgrenimTipID" value="@item.OgrenimTipID" class="hide" />
+                                <input type="text" name="OgrenimTipKod" value="@item.OgrenimTipKod" class="hide" />
+                                @item.OgrenimTipAdi
 
-                        </div>
-                    <td>
-                        <div class="form-group">
+                            </div>
+                        <td>
+                            <div class="form-group">
 
-                            <input type="text" class="form-control" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            @Html.DropDownList("MBasvuruEtikNotKriteri", item.SlistEtikNots,"",new {@class="form-control"}) 
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBasvuruToplamKrediKriteri" value="@item.MBasvuruToplamKrediKriteri">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBasvuruAGNOKriteri" value="@item.MBasvuruAGNOKriteri">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBasvuruAKTSKriteri" value="@item.MBasvuruAKTSKriteri">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBSinavUzatmaSuresiGun" value="@item.MBSinavUzatmaSuresiGun">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBTezTeslimSuresiGun" value="@item.MBTezTeslimSuresiGun">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="MBSRTalebiKacGunSonraAlabilir" value="@item.MBSRTalebiKacGunSonraAlabilir">
-                        </div>
-                    </td>
-                </tr>
+                                <input type="text" class="form-control" name="MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" value="@item.MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownList("MBasvuruEtikNotKriteri", item.SlistEtikNots, "", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownList("MBasvuruSeminerNotKriteri", item.SlistSeminerNots, "", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBasvuruToplamKrediKriteri" value="@item.MBasvuruToplamKrediKriteri">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBasvuruAGNOKriteri" value="@item.MBasvuruAGNOKriteri">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBasvuruAKTSKriteri" value="@item.MBasvuruAKTSKriteri">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBSinavUzatmaSuresiGun" value="@item.MBSinavUzatmaSuresiGun">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBTezTeslimSuresiGun" value="@item.MBTezTeslimSuresiGun">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="MBSRTalebiKacGunSonraAlabilir" value="@item.MBSRTalebiKacGunSonraAlabilir">
+                            </div>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

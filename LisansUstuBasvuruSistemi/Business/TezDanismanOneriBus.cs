@@ -1335,7 +1335,10 @@ namespace LisansUstuBasvuruSistemi.Business
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniEsDanismanUnvanAdi", Value = esDanisman.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@YeniEsDanismanAdSoyad"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YeniEsDanismanUnvanAdi", Value = esDanisman.AdSoyad });
-
+                        if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
+                        {
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = esDanisman.EYKDaOnaylandiOnayTarihi.ToFormatDate() });
+                        }
 
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = tdoBasvuruDanisman.TezBaslikTr });

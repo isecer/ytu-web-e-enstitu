@@ -22,6 +22,7 @@ namespace LisansUstuBasvuruSistemi.Models
     
         public int DuyuruID { get; set; }
         public string EnstituKod { get; set; }
+        public bool IsEnUsteSabitle { get; set; }
         public bool AnaSayfadaGozuksun { get; set; }
         public bool AnaSayfaPopupAc { get; set; }
         public bool BasvuruPopupAc { get; set; }
