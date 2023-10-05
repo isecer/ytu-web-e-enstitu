@@ -214,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             }
             return returnSonuc;
         }
-
+       
 
         public static string ToKullaniciResim(this string resimAdi)
         {

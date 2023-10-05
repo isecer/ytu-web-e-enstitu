@@ -209,12 +209,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 Title = sablonAdi,
                 HtmlContent = sablonHtml
             };
-            foreach (var itemRp in rpModel)
-            {
-                itemRp.Value = itemRp.Value ?? "";
-                model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
-                model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
-            }
+        
             model.Title = model.Title.Replace("{{", "{{_removeRw_");
             var titleStrList = model.Title.Split(new[] { "{{", "}}" }, StringSplitOptions.None).ToList();
 
@@ -234,7 +229,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 contentStrList = contentStrList.Where(p => (p.Contains("@" + itemRp.Key) && p.Contains("_removeRw_")) == false).ToList();
             }
             model.HtmlContent = string.Join("", contentStrList);
-
+            foreach (var itemRp in rpModel.Where(p => !p.Value.IsNullOrWhiteSpace()))
+            {
+                itemRp.Value = itemRp.Value ?? "";
+                model.Title = model.Title.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+                model.HtmlContent = model.HtmlContent.Replace("@" + itemRp.Key, (itemRp.IsLink ? "<a href='" + itemRp.Value + "' target='_blank'>" + itemRp.Value + "</a>" : itemRp.Value));
+            }
             var mmmC = new MailMainContentDto
             {
                 UniversiteAdi = "Yıldız Teknik Üniversitesi",

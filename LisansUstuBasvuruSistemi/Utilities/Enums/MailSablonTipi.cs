@@ -177,5 +177,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int TijOneriFormuEykdaOnaylandiOgrenciye = 310;
         public static int TijOneriFormuEykdaOnaylandiJuriUyelerine = 311;
 
+
+        public static int Tos_BaslatildiOgrenci = 350;
+        public static int Tos_BaslatildiDanisman = 351;
+        public static int Tos_ToplantiBilgiOgrenci = 352;
+        public static int Tos_ToplantiBilgiKomite = 353;
+        public static int Tos_DegerlendirmeLinkGonderimKomite = 354;
+        public static int Tos_DegerlendirmeSonucGonderimDanisman = 355;
+        public static int Tos_DegerlendirmeSonucGonderimOgrenci = 356;
+
     }
 }

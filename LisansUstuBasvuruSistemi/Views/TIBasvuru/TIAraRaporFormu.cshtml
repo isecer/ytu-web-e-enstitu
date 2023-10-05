@@ -103,12 +103,12 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-md-3 col-xs-4 control-label">Tez Başlığının İngilizce (*)</label>
+                                                <label class="col-md-3 col-xs-4 control-label">Tez Başlığı İngilizce (*)</label>
                                                 <div class="col-md-9 col-xs-8">
                                                     <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="512" value="@Model.TezBaslikEn" class="form-control" style="color: black;" />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            @*<div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Dili Değişecek mi?</label>
                                                 <div class="col-md-9 col-xs-8">
                                                     <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
@@ -149,7 +149,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="text" class="form-control" autocomplete="off" maxlength="4" name="SinavYili" value="@Model.SinavYili" style="width: 100%;" id="SinavYili" />
                                                 </div>
-                                            </div>
+                                            </div>*@
                                             <div class="form-group">
                                                 <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Değişecek mi?</label>
                                                 <div class="col-md-9 col-xs-8">
@@ -238,7 +238,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TezDanismani" />
                                                     <input type="hidden" name="TabID" value="2" />
-                                                    <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.AdSoyad : "")" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
+                                                    <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.AdSoyad : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -247,7 +247,7 @@
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
 
-                                                    <input type="text" autocomplete="off" class="form-control upperCase" name="UnvanAdi" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.UnvanAdi : "")" style="width: 100%;color:black;" id="TezDanismaniUnvanAdi" />
+                                                    <input type="text" autocomplete="off" class="form-control upperCase" name="UnvanAdi" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.UnvanAdi : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniUnvanAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -334,7 +334,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TikUyesi1" />
                                                     <input type="hidden" name="TabID" value="3" />
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
 
                                                 </div>
                                             </div>
@@ -343,7 +343,7 @@
                                                     Unvanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.UnvanAdi.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi1UnvanAdi" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1UnvanAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -431,7 +431,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TikUyesi2" />
                                                     <input type="hidden" name="TabID" value="4" />
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -439,7 +439,7 @@
                                                     Unvanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.UnvanAdi.ToUpper() : "")" style="width: 100%;color:black;" id="TikUyesi2UnvanAdi" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2UnvanAdi" />
 
                                                 </div>
                                             </div>

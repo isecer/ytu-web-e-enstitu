@@ -189,6 +189,10 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<TijBasvuruOneriJuriler> TijBasvuruOneriJurilers { get; set; }
         public virtual DbSet<TijDegisiklikTipleri> TijDegisiklikTipleris { get; set; }
         public virtual DbSet<TijFormTipleri> TijFormTipleris { get; set; }
+        public virtual DbSet<ToBasvuru> ToBasvurus { get; set; }
+        public virtual DbSet<ToBasvuruSavunma> ToBasvuruSavunmas { get; set; }
+        public virtual DbSet<ToBasvuruSavunmaDurumlari> ToBasvuruSavunmaDurumlaris { get; set; }
+        public virtual DbSet<ToBasvuruSavunmaKomite> ToBasvuruSavunmaKomites { get; set; }
         public virtual DbSet<Universiteler> Universitelers { get; set; }
         public virtual DbSet<Unvanlar> Unvanlars { get; set; }
         public virtual DbSet<Uyruklar> Uyruklars { get; set; }

@@ -231,6 +231,7 @@
     <Compile Include="Business\TezIzlemeBus.cs" />
     <Compile Include="Business\KullanicilarBus.cs" />
     <Compile Include="Business\TezIzlemeJuriOneriBus.cs" />
+    <Compile Include="Business\TezOneriSavunmaBus.cs" />
     <Compile Include="Business\UnvanlarBus.cs" />
     <Compile Include="Business\UserBus.cs" />
     <Compile Include="Business\YeterlikBus.cs" />
@@ -289,8 +290,8 @@
     <Compile Include="Controllers\TalepSureciController.cs" />
     <Compile Include="Controllers\TalepYapController.cs" />
     <Compile Include="Controllers\TiGelenBasvurularController.cs" />
-    <Compile Include="Controllers\TiJuriOneri_X_Controller.cs" />
     <Compile Include="Controllers\TiJuriOnerileriGbController.cs" />
+    <Compile Include="Controllers\TosBasvuruController.cs" />
     <Compile Include="Controllers\UniversitelerController.cs" />
     <Compile Include="Controllers\UnvanlarController.cs" />
     <Compile Include="Controllers\UyruklarController.cs" />
@@ -812,6 +813,18 @@
     <Compile Include="Models\TijFormTipleri.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ToBasvuru.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ToBasvuruSavunma.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ToBasvuruSavunmaDurumlari.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ToBasvuruSavunmaKomite.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Universiteler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -945,6 +958,7 @@
     <Compile Include="Utilities\Dtos\TdoDanismanFiltreModel.cs" />
     <Compile Include="Utilities\Dtos\TercihRowModel.cs" />
     <Compile Include="Utilities\Dtos\TiAraRaporFormuModel.cs" />
+    <Compile Include="Utilities\Dtos\TosDtos.cs" />
     <Compile Include="Utilities\Dtos\UrlInfoModel.cs" />
     <Compile Include="Utilities\Dtos\UserRoleDto.cs" />
     <Compile Include="Utilities\Dtos\MezuniyetBasvurulariYayinDto.cs" />
@@ -2653,7 +2667,6 @@
     <Content Include="Content\preloader\preloader.css" />
     <Content Include="Content\preloader\prloader.js" />
     <Content Include="EbisIco.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Attachment.png" />
     <Content Include="Images\Email.png" />
@@ -3399,20 +3412,24 @@
     <Content Include="Views\TIBasvuru\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\TikDegisiklik\Index.cshtml" />
     <Content Include="Views\TikDegisiklikGb\Index.cshtml" />
-    <Content Include="Views\TiJuriOneri\Index.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\Index.cshtml" />
-    <Content Include="Views\TiJuriOneri\TijOneriFormu.cshtml" />
     <Content Include="Views\Ajax\GetDetailTijBasvuru.cshtml" />
-    <Content Include="Views\TiJuriOneri\TijOneriOgrenciSecim.cshtml" />
-    <Content Include="Views\TiJuriOneri\BasvuruDurumView.cshtml" />
-    <Content Include="Views\TiJuriOneri\TijOneriFormu - Copy.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\BasvuruDurumView.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\TijOneriFormu.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\TijOneriOgrenciSecim.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\GetTutanakRaporu.cshtml" />
+    <Content Include="Views\TosBasvuru\Index.cshtml" />
+    <Content Include="Views\Ajax\GetDetailTosBasvuru.cshtml" />
+    <Content Include="Views\TosBasvuru\ToSavunmaFormu.cshtml" />
+    <Content Include="Views\TosBasvuru\RezervasyonAl.cshtml" />
+    <Content Include="Views\TosBasvuru\BasvuruDurumView.cshtml" />
+    <Content Include="Views\TosBasvuru\DegerlendirmeLinkView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="BasvuruDosyalari\MezuniyetBelgeleri\" />
+    <Folder Include="BasvuruDosyalari\TezIzlemeBelgeleri\" />
+    <Folder Include="BasvuruDosyalari\TezOneriSavunmaBelgeleri\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 1\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 2\folder 1\" />
     <Folder Include="Content\assets\uploads\Welcome\folder 2\folder 2\" />
@@ -3426,11 +3443,6 @@
     <Folder Include="Content\js\plugins\fileinput\fileinput\" />
     <Folder Include="Content\js\plugins\slidingmenu\" />
     <Folder Include="Images\KullaniciResimleri\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -3596,7 +3608,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57350/</IISUrl>
+          <IISUrl>http://localhost:57352/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

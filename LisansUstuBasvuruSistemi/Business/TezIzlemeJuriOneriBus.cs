@@ -552,12 +552,16 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var qKul = db.Kullanicilars.Where(p => p.YtuOgrencisi && p.EnstituKod == enstituKod && p.OgrenimDurumID == OgrenimDurum.HalenOğrenci && p.DanismanID.HasValue).AsQueryable();
-
+                 
                 if (!term.IsNullOrWhiteSpace())
-                {
+                { 
                     qKul = qKul.Where(p =>
                         ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) ||
                          p.TcKimlikNo.StartsWith(term)));
+                }
+                else if(danismanId.HasValue)
+                {
+                    qKul = qKul.Where(p =>p.DanismanID== danismanId);
                 }
 
                 if (danismanId.HasValue) qKul = qKul.OrderBy(p => p.DanismanID == danismanId ? 1 : 2).ThenBy(t => t.Ad).ThenBy(t => t.Soyad);
@@ -571,7 +575,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     s.OgrenciNo,
                     s.ResimAdi,
                     s.Programlar.ProgramAdi
-                }).Take(danismanId.HasValue ? int.MaxValue : 30).ToList().Select(s => new
+                }).Take(50).ToList().Select(s => new
                 {
                     id = s.KullaniciID,
                     s.ProgramAdi,

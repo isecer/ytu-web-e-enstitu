@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RprAnket));
+            DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
@@ -62,7 +63,6 @@
             this.xrTableRow5 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell11 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell10 = new DevExpress.XtraReports.UI.XRTableCell();
-            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             this.DetailReport1 = new DevExpress.XtraReports.UI.DetailReportBand();
             this.Detail2 = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable4 = new DevExpress.XtraReports.UI.XRTable();
@@ -72,12 +72,13 @@
             this.xrTableCell9 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell5 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCell6 = new DevExpress.XtraReports.UI.XRTableCell();
+            this.objectDataSource1 = new DevExpress.DataAccess.ObjectBinding.ObjectDataSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -263,7 +264,7 @@
             this.DetailReport.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail1,
             this.DetailReport2});
-            this.DetailReport.DataMember = "SecenekDetay";
+            this.DetailReport.DataMember = "AnketSeceneklerDetays";
             this.DetailReport.DataSource = this.objectDataSource1;
             this.DetailReport.Level = 0;
             this.DetailReport.Name = "DetailReport";
@@ -330,7 +331,7 @@
             // 
             this.DetailReport2.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail3});
-            this.DetailReport2.DataMember = "SecenekDetay.EkAciklama";
+            this.DetailReport2.DataMember = "AnketSeceneklerDetays.EkAciklamas";
             this.DetailReport2.DataSource = this.objectDataSource1;
             this.DetailReport2.Level = 0;
             this.DetailReport2.Name = "DetailReport2";
@@ -364,31 +365,29 @@
             // xrTableCell11
             // 
             this.xrTableCell11.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Key]")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", ""),
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "sumRecordNumber()")});
             this.xrTableCell11.Name = "xrTableCell11";
             this.xrTableCell11.StylePriority.UseTextAlignment = false;
+            xrSummary1.Running = DevExpress.XtraReports.UI.SummaryRunning.Report;
+            this.xrTableCell11.Summary = xrSummary1;
             this.xrTableCell11.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell11.Weight = 0.65806709664744212D;
             // 
             // xrTableCell10
             // 
             this.xrTableCell10.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Value]")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[EkAciklama]")});
             this.xrTableCell10.Name = "xrTableCell10";
             this.xrTableCell10.StylePriority.UseTextAlignment = false;
             this.xrTableCell10.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell10.Weight = 7.0819329033525591D;
             // 
-            // objectDataSource1
-            // 
-            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.FrAnketDetayDto);
-            this.objectDataSource1.Name = "objectDataSource1";
-            // 
             // DetailReport1
             // 
             this.DetailReport1.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail2});
-            this.DetailReport1.DataMember = "TableDetay";
+            this.DetailReport1.DataMember = "AnketTableDetays";
             this.DetailReport1.DataSource = this.objectDataSource1;
             this.DetailReport1.Level = 1;
             this.DetailReport1.Name = "DetailReport1";
@@ -471,6 +470,11 @@
             this.xrTableCell6.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             this.xrTableCell6.Weight = 1.1379431986495971D;
             // 
+            // objectDataSource1
+            // 
+            this.objectDataSource1.DataSource = typeof(LisansUstuBasvuruSistemi.Utilities.Dtos.FrAnketDetayDto);
+            this.objectDataSource1.Name = "objectDataSource1";
+            // 
             // RprAnket
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -494,8 +498,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }

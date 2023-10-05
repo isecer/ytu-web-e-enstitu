@@ -1,10 +1,9 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
 @using CaptchaMvc.HtmlHelpers
 @{
-    var hata = (string)ViewBag.Hata;
-    var MmMessage = (MmMessage)ViewBag.MmMessage;
+    var hata = (string)ViewBag.Hata; 
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ReturnUrl = (string)ViewBag.ReturnUrl;
+    var returnUrl = (string)ViewBag.ReturnUrl;
 
 }
 
@@ -28,7 +27,7 @@
     {
 
         @Html.AntiForgeryToken()
-        @Html.Hidden("ReturnUrl", ReturnUrl)
+        @Html.Hidden("ReturnUrl", returnUrl)
         //var reqCode = Guid.NewGuid().ToString();
         if (hata != null)
         {

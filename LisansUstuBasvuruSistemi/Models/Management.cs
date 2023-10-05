@@ -1164,6 +1164,21 @@ namespace LisansUstuBasvuruSistemi.Models
                     attc.ContentDisposition.ModificationDate = DateTime.Now;
                     mdl.Add(attc);
                 }
+                else if (raporTipID == RaporTipleri.TezDanismanDegisiklikFormu)
+                {
+                    var ID = DataID[0].Value;
+                    var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(ID);
+
+                    rpr.CreateDocument();
+                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.ExportOptions.Pdf.Compressed = true;
+                    ms = new MemoryStream();
+                    rpr.ExportToPdf(ms);
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                    attc.ContentDisposition.ModificationDate = DateTime.Now;
+                    mdl.Add(attc);
+                }
                 else if (raporTipID == RaporTipleri.TezEsDanismanOneriFormu)
                 {
                     var ID = DataID[0].Value; // tdo es danisman id

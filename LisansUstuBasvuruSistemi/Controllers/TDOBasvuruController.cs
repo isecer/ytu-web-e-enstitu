@@ -886,9 +886,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     model.TezDanismanID = 0;
                     model.TDAnabilimDaliID = null;
                     model.TDProgramKod = null;
+                    model.TezBaslikTr = tdoBd.TezBaslikTr;
+                    model.TezBaslikEn = tdoBd.TezBaslikEn;
                 }
                 else
                 {
+                    model.TezBaslikTr = tdoBd.TezBaslikTr;
+                    model.TezBaslikEn = tdoBd.TezBaslikEn;
                     model.TDOBasvuruDanismanID = tdoBasvuruDanismanId;
                     model.SinavTipID = tdoBd.SinavTipID;
                     model.SinavPuani = tdoBd.SinavPuani;
@@ -971,6 +975,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
+                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+
+
                 if (kModel.TezDanismanID <= 0)
                 {
                     mMessage.Messages.Add("Yeni Tez danışmanınızı seçiniz.");
@@ -1104,8 +1120,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.VarolanTDAnabilimDaliAdi = oncekiBasvuru.TDAnabilimDaliAdi;
                 kModel.VarolanTDProgramAdi = oncekiBasvuru.TDProgramAdi;
                 kModel.IsTezDiliTr = isTezDiliTr;
-                kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
-                kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
+                //kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
+                //kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
                 kModel.YeniTezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
                 kModel.YeniTezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
                 kModel.SinavTipID = oncekiBasvuru.SinavTipID;
@@ -1325,6 +1341,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
+                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+
 
                 if (yenTezDiliDegisecekmi)
                 {
@@ -1448,17 +1475,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.TDODanismanTalepTipID = TdoDanismanTalepTip.TezBasligiDegisikligi;
                 kModel.TezDanismanID = oncekiBasvuru.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
-                if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
-                    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
-                {
-                    kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
-                    kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
-                }
-                else
-                {
-                    kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
-                    kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
-                }
+                //if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
+                //    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                //{
+                //    kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
+                //    kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
+                //}
+                //else
+                //{
+                //    kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
+                //    kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
+                //}
 
                 kModel.TDAnabilimDaliID = oncekiBasvuru.TDAnabilimDaliID;
                 kModel.TDAnabilimDaliAdi = oncekiBasvuru.TDAnabilimDaliAdi;
@@ -1692,6 +1719,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             if (!mMessage.Messages.Any())
             {
+                if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını türkçe olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
+                if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
+                {
+                    mMessage.Messages.Add("Varolan Tez başlığını ingilizce olarak giriniz.");
+                }
+                mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
+
                 if (yenTezDiliDegisecekmi)
                 {
                     if (!kModel.IsYeniTezDiliTr.HasValue)
@@ -1903,17 +1941,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.VarolanTDProgramAdi = oncekiBasvuru.TDProgramAdi;
                 kModel.TezDanismanID = kModel.TezDanismanID;
                 kModel.IsTezDiliTr = isOncekiTezDiliTr;
-                if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
-                    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
-                {
-                    kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
-                    kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
-                }
-                else
-                {
-                    kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
-                    kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
-                }
+
+                //if (oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi ||
+                //    oncekiBasvuru.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi)
+                //{
+                //    kModel.TezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
+                //    kModel.TezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
+                //}
+                //else
+                //{
+                //    kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
+                //    kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
+                //}
 
 
 

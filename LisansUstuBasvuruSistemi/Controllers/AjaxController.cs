@@ -571,11 +571,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                  select new BasvuruSinavTipDto
                                  {
                                      EnstituKod = basvuruSurec.EnstituKod,
-                                     IsWebService = bs.WebService, 
+                                     IsWebService = bs.WebService,
                                      SinavTipKod = st.SinavTipKod,
                                      SinavTipID = s.SinavTipID,
                                      SinavTipGrupID = s.SinavTipGrupID,
-                                     GrupAdi = stg.SinavTipGrupAdi, 
+                                     GrupAdi = stg.SinavTipGrupAdi,
                                      IsTaahhutVar = s.IsTaahhutVar ?? false,
                                      SinavAdi = stl.SinavAdi,
                                      Yil = s.WsSinavYil,
@@ -1123,12 +1123,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetDetailTijBasvuru(Guid basvuruUniqueId)
         {
             var model = TezIzlemeJuriOneriBus.GetSecilenBasvuruTijDetay(basvuruUniqueId);
-             return View(model);
+            return View(model);
         }
         [HttpGet]
         public ActionResult GetDetailTiBasvuru(int id, Guid? uniqueId)
         {
             var model = TezIzlemeBus.GetSecilenBasvuruTiDetay(id, uniqueId);
+            return View(model);
+        }
+        [HttpGet]
+        public ActionResult GetDetailTosBasvuru(int id, Guid? uniqueId)
+        {
+            var model = TezOneriSavunmaBus.GetSecilenBasvuruDetay(id, uniqueId);
             return View(model);
         }
         [Authorize]
@@ -1298,7 +1304,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 using (Image img = Image.FromFile(pth))
                 {
-                    img.RotateFlip(leftOrRight.Value ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone); 
+                    img.RotateFlip(leftOrRight.Value ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone);
                     img.Save(pth, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 
@@ -2192,10 +2198,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var mmMessage = new MmMessage();
             mmMessage.Title = "Dilek/Öneri/Şikayet gönderme işlemi";
-            string _EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
+            string enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
 
-            dosyaEki = dosyaEki == null ? new List<HttpPostedFileBase>() : dosyaEki;
-            dosyaEkiAdi = dosyaEkiAdi == null ? new List<string>() : dosyaEkiAdi;
+            dosyaEki = dosyaEki ?? new List<HttpPostedFileBase>();
+            dosyaEkiAdi = dosyaEkiAdi ?? new List<string>();
 
             var qDosyaEkAdi = dosyaEkiAdi.Select((s, inx) => new { s, inx }).ToList();
             var qDosyaEki = dosyaEki.Select((s, inx) => new { s, inx }).ToList();
@@ -2269,7 +2275,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var kul = _entities.Kullanicilars.Where(p => p.KullaniciID == UserIdentity.Current.Id).First();
+                    var kul = _entities.Kullanicilars.First(p => p.KullaniciID == UserIdentity.Current.Id);
                     kModel.AdSoyad = kul.Ad + " " + kul.Soyad;
                     kModel.Email = kul.EMail;
                     kModel.KullaniciID = UserIdentity.Current.Id;
@@ -2280,7 +2286,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.Tarih = DateTime.Now;
                 kModel.SonMesajTarihi = kModel.Tarih;
                 kModel.ToplamEkSayisi = 0;
-                kModel.EnstituKod = _EnstituKod;
+                kModel.EnstituKod = enstituKod;
                 kModel.IslemTarihi = DateTime.Now;
                 kModel.Konu = konu;
                 kModel.IslemYapanIP = UserIdentity.Ip;
@@ -2303,9 +2309,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 _entities.SaveChanges();
                 if (eklenen.UstMesajID.HasValue)
                 {
-                    var UstMesaj = eklenen.Mesajlar2;
-                    UstMesaj.ToplamEkSayisi = (UstMesaj.MesajEkleris.Count + UstMesaj.Mesajlar1.Sum(s => s.MesajEkleris.Count) + UstMesaj.GonderilenMaillers.Sum(s => s.GonderilenMailEkleris.Count));
-                    UstMesaj.SonMesajTarihi = eklenen.Tarih;
+                    var ustMesaj = eklenen.Mesajlar2;
+                    ustMesaj.ToplamEkSayisi = (ustMesaj.MesajEkleris.Count + ustMesaj.Mesajlar1.Sum(s => s.MesajEkleris.Count) + ustMesaj.GonderilenMaillers.Sum(s => s.GonderilenMailEkleris.Count));
+                    ustMesaj.SonMesajTarihi = eklenen.Tarih;
                 }
                 else
                 {
@@ -2317,7 +2323,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (mesajId <= 0 && groupId.IsNullOrWhiteSpace())
                 {
-                    var sablon = _entities.MailSablonlaris.Where(p => p.EnstituKod == _EnstituKod && p.MailSablonTipID == MailSablonTipi.GelenIlkMesajOtoCvpMaili && p.IsAktif == true).FirstOrDefault();
+                    var sablon = _entities.MailSablonlaris.FirstOrDefault(p => p.EnstituKod == enstituKod && p.MailSablonTipID == MailSablonTipi.GelenIlkMesajOtoCvpMaili && p.IsAktif == true);
                     if (sablon != null)
                     {
                         var itemE = sablon.Enstituler;
@@ -2996,7 +3002,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                      SecenekAdi = ss.SecenekAdi,
                                                                      IsEkAciklamaGir = ss.IsEkAciklamaGir,
                                                                      Count = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).Count(),
-                                                                     AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList()
+                                                                     AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList(),
+                                                                     
                                                                  }
                                                                ).OrderBy(o => o.SiraNo).ToList(),
                                           AnketCevaplaris = cevaplar.Where(p => p.AnketSoruID == sa.AnketSoruID).ToList()
@@ -3035,23 +3042,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 }
                             }
                             else
-                            {
-                                var tblRw = new AnketTableDetayDto();
+                            { 
                                 foreach (var item2 in item.FrAnketSecenekDetay)
-                                {
-                                    var ekAciklamalar = "";
-
-                                    var _ekAciklama = new Dictionary<int, string>();
-                                    if (item2.IsEkAciklamaGir)
-                                        foreach (var itemx in item2.AnketCevaplaris.Select((s, inx) => new { s = s, inx = inx }))
-                                        {
-                                            _ekAciklama.Add(itemx.inx + 1, itemx.s.EkAciklama);
-                                        }
+                                { 
+                                    
                                     item.AnketSeceneklerDetays.Add(new AnketSeceneklerDetayDto
                                     {
-                                        EkAciklama = _ekAciklama,
+                                        EkAciklamas = item2.AnketCevaplaris.Where(p=>!p.EkAciklama.IsNullOrWhiteSpace()).ToList(),
                                         SiraNo = item2.SiraNo,
-                                        SecenekAdi = item2.SecenekAdi + " " + ekAciklamalar,
+                                        SecenekAdi = item2.SecenekAdi,
                                         Count = item2.Count,
                                     });
                                 }
@@ -3059,8 +3058,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         var t2 = DateTime.Now;
                         var TS = (t2 - t1).TotalSeconds;
-
-                        SistemBilgilendirmeBus.SistemBilgisiKaydet("'" + anket.AnketAdi + "' Anket Raporu Oluşturuldu. Oluşturulma Süresi: " + TS + " Sn.", "Ajax/GetDxReport", LogType.Bilgi);
                         RprAnket rpr = new RprAnket(enstitu.EnstituAd, anket.AnketAdi, basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki anket sonuçları");
                         rpr.DataSource = qModel;
                         rpr.DisplayName = basTar.ToFormatDate() + " - " + bitTar.ToFormatDate() + " Tarih aralığındaki " + anket.AnketAdi + " anket sonuçları";
@@ -3230,7 +3227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         rprX = rpr;
                     }
 
-                     
+
                 }
             }
             if (isPdfStream)

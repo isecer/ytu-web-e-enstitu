@@ -132,7 +132,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTIBasvuruAraRaporID = s.AktifTIBasvuruAraRaporID,
-                        TIAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        TiAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         TIAraRaporRaporDurumAdi = ard == null ? "Rapor Girişi Yapılmadı" : ard.TIBasvuruAraRaporDurumlari.TIBasvuruAraRaporDurumAdi,
                         AraRaporSayisi = ard == null ? (int?)null : ard.AraRaporSayisi,
                         TIAraRaporAktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
@@ -674,10 +674,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (kModel.TezBaslikTr.IsNullOrWhiteSpace())
                         mMessage.Messages.Add("Tez Başlığı Bilgisi Boş Bırakılamaz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezOrjinalBasligi" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikTr" });
                     if (kModel.TezBaslikEn.IsNullOrWhiteSpace())
                         mMessage.Messages.Add("Tez Başlığı Çevirisi Bilgisi Boş Bırakılamaz.");
-                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezOrjinalBasligiCevirisi" });
+                    mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.TezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "TezBaslikEn" });
                     if (kModel.IsTezDiliDegisecek)
                     {
                         if (!kModel.YeniTezDiliTr.HasValue) mMessage.Messages.Add("Yeni Tez Dili Bilgisi Boş Bırakılamaz.");
@@ -749,8 +749,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             mMessage.Messages.Add("Yeni Tez Başlığı Çevirisi Bilgisi Boş Bırakılamaz.");
                         }
-                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBasligi" });
-                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBasligiCevirisi" });
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikTr.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikTr" });
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = (!kModel.YeniTezBaslikEn.IsNullOrWhiteSpace() ? Msgtype.Success : Msgtype.Warning), PropertyName = "YeniTezBaslikEn" });
 
                         if (kModel.TezBasligiDegisimGerekcesi.IsNullOrWhiteSpace())
                         {

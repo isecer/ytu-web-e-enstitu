@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using BiskaUtil
 @model KmTDOBasvuruDanisman
 @{
     Layout = null;
@@ -15,6 +15,20 @@
             <tbody>
                 <tr>
                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Tez Bilgileri</td>
+                </tr>
+                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                    <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
+                    <td class="CaptionTd" width="10">:</td>
+                    <td class="ValueTd form-group">
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                    </td>
+                </tr>
+                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                    <td class="CaptionTd">Tez Başlığı İngilizce</td>
+                    <td class="CaptionTd">:</td>
+                    <td class="ValueTd form-group">
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                    </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd" width="150">Tez Dil Değişecek Mi?</td>
@@ -123,7 +137,7 @@
                     <td class="ValueTd form-group">
                         @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
                     </td>
-                </tr> 
+                </tr>
                 <tr class="dilRow">
                     <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Yeni Danışman Dil Yeterlilik Bilgileri</td>
                 </tr>
@@ -183,7 +197,7 @@
             if ($('#TDSinavTipID').val() == '-1')
             {
                 $('.TdSinavUni').removeClass('hide');
-                $('.TdSp').addClass('hide'); 
+                $('.TdSp').addClass('hide');
             }
             else
             {

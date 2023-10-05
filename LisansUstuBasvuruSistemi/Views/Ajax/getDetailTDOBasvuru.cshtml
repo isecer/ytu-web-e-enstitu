@@ -155,7 +155,17 @@
                                             </ul>
                                         }
                                     </td>
-                                    <td>@item.DonemAdi <br />@item.BasvuruTarihi</td>
+                                    <td>
+                                        @if (!item.IsObsData)
+                                        {
+                                            @item.DonemAdi <br />@item.BasvuruTarihi
+                                        }
+                                        else
+                                        {
+                                            @("OBS'de doğrulandı") <br />@item.BasvuruTarihi
+                                        }
+
+                                    </td>
                                     <td>@item.TalepTipAdi</td>
                                     <td>
                                         @if (!item.EYKYaGonderildi.HasValue)

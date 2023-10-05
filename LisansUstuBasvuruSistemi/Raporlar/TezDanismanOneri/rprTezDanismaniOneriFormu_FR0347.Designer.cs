@@ -3183,7 +3183,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrLabel1,
             this.xrQRCode,
             this.xrTableFK});
-            this.TopMargin.HeightF = 97.99255F;
+            this.TopMargin.HeightF = 98F;
             this.TopMargin.Name = "TopMargin";
             this.TopMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.TopMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;

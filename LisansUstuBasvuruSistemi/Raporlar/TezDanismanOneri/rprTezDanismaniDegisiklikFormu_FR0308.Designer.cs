@@ -265,7 +265,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             this.xrTableRow3 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell3 = new DevExpress.XtraReports.UI.XRTableCell();
             this.DetailReport4 = new DevExpress.XtraReports.UI.DetailReportBand();
-            this.Detail5 = new DevExpress.XtraReports.UI.DetailBand();
+            this.dgYabanciDilBilgi = new DevExpress.XtraReports.UI.DetailBand();
             this.xrTable18 = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow46 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell70 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -3331,19 +3331,18 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
             // DetailReport4
             // 
             this.DetailReport4.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
-            this.Detail5});
-            this.DetailReport4.Expanded = false;
+            this.dgYabanciDilBilgi});
             this.DetailReport4.Level = 4;
             this.DetailReport4.Name = "DetailReport4";
             // 
-            // Detail5
+            // dgYabanciDilBilgi
             // 
-            this.Detail5.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.dgYabanciDilBilgi.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable18,
             this.xrTable17});
-            this.Detail5.HeightF = 112.4579F;
-            this.Detail5.Name = "Detail5";
-            this.Detail5.Visible = false;
+            this.dgYabanciDilBilgi.HeightF = 112.4579F;
+            this.dgYabanciDilBilgi.Name = "dgYabanciDilBilgi";
+            this.dgYabanciDilBilgi.Visible = false;
             // 
             // xrTable18
             // 
@@ -6591,7 +6590,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow3;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
         private DevExpress.XtraReports.UI.DetailReportBand DetailReport4;
-        private DevExpress.XtraReports.UI.DetailBand Detail5;
+        private DevExpress.XtraReports.UI.DetailBand dgYabanciDilBilgi;
         private DevExpress.XtraReports.UI.XRTable xrTable18;
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow46;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell70;

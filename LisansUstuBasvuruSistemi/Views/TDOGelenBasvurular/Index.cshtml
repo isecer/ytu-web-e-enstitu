@@ -124,11 +124,15 @@
                                                                             if (result.IsSuccess) { 
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
-                                                                                var _RaporTarihi = $('#RaporTarihi').val();
-                                                                                var _Sayi = $('#Sayi').val();
+                                                                                //var _RaporTarihi = $('#RaporTarihi').val();
+                                                                                //var _Sayi = $('#Sayi').val();
                                                                                 var _tutanakTipId = $('#tutanakTipId').val();
-
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar + '&RaporTarihi=' + _RaporTarihi + '&Sayi=' + _Sayi + '&tutanakTipId=' + _tutanakTipId;
+                                                                                var isEykdaOnayOrGonderim = $('#isEykdaOnayOrGonderim').val();
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TDOGelenBasvurular")?BasTar=' + _Bastar + '&BitTar=' + _Bittar
+                                                                                    //+ '&RaporTarihi=' + _RaporTarihi
+                                                                                    //+ '&Sayi=' + _Sayi
+                                                                                    + '&tutanakTipId=' + _tutanakTipId
+                                                                                    + '&isEykdaOnayOrGonderim=' + isEykdaOnayOrGonderim;
 
                                                                                 toastr["success"]('Tutanak oluşturuluyor lütfen bekleyiniz...', 'Tutanak Oluşturma İşlemi');
                                                                             }

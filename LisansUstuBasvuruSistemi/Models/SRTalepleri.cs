@@ -24,8 +24,9 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<System.Guid> UniqueID { get; set; }
         public string EnstituKod { get; set; }
         public Nullable<int> TIBasvuruAraRaporID { get; set; }
-        public bool IsOnline { get; set; }
         public Nullable<int> MezuniyetBasvurulariID { get; set; }
+        public Nullable<int> ToBasvuruSavunmaID { get; set; }
+        public bool IsOnline { get; set; }
         public int SRTalepTipID { get; set; }
         public int TalepYapanID { get; set; }
         public Nullable<int> SRSalonID { get; set; }
@@ -71,6 +72,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual SRSalonlar SRSalonlar { get; set; }
         public virtual SRTalepTipleri SRTalepTipleri { get; set; }
         public virtual TIBasvuruAraRapor TIBasvuruAraRapor { get; set; }
+        public virtual ToBasvuruSavunma ToBasvuruSavunma { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SRTaleplerJuri> SRTaleplerJuris { get; set; }
     }

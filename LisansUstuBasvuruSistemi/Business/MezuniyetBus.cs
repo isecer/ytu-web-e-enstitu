@@ -76,7 +76,7 @@ namespace LisansUstuBasvuruSistemi.Business
         }
         public static MmMessage MezuniyetSurecAktifKontrol(string enstituKod, int? kullaniciId, int? mezuniyetBasvurulariId = null)
         {
-            var msg = new MmMessage
+            var messageModel = new MmMessage
             {
                 IsSuccess = true
             };
@@ -94,9 +94,9 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 if (basvuruVar)
                 {
-                    msg.IsSuccess = false;
-                    msg.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
-                    return msg;
+                    messageModel.IsSuccess = false;
+                    messageModel.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
+                    return messageModel;
 
                 }
                 if (mezuniyetBasvurulariId.HasValue)
@@ -104,8 +104,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
                     if (basvuru == null)
                     {
-                        msg.IsSuccess = false;
-                        msg.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
+                        messageModel.IsSuccess = false;
+                        messageModel.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
                     }
                     else
                     {
@@ -117,24 +117,24 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
+                            messageModel.IsSuccess = false;
+                            messageModel.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
                         }
                         else if (!GetMezuniyetAktifSurecId(enstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+                            messageModel.IsSuccess = false;
+                            messageModel.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
 
                         }
                         if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
+                            messageModel.IsSuccess = false;
+                            messageModel.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
                         }
                         else if (kayitYetki == false && (basvuru.IsDanismanOnay == true))
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
+                            messageModel.IsSuccess = false;
+                            messageModel.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
                         }
 
                     }
@@ -142,20 +142,20 @@ namespace LisansUstuBasvuruSistemi.Business
                 else
                 {
                     int? mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
-                    msg.IsSuccess = mezuniyetSurecId.HasValue;
+                    messageModel.IsSuccess = mezuniyetSurecId.HasValue;
                     if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
                     else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
                     {
                         kullaniciId = UserIdentity.Current.Id;
                     }
-                    if (msg.IsSuccess == false)
+                    if (messageModel.IsSuccess == false)
                     {
-                        msg.Messages.Add("Başvuru Süreci Kapalı");
+                        messageModel.Messages.Add("Başvuru Süreci Kapalı");
                     }
                     else if (!(kul.KullaniciTipleri.BasvuruYapabilir))
                     {
-                        msg.IsSuccess = false;
-                        msg.Messages.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
+                        messageModel.IsSuccess = false;
+                        messageModel.Messages.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
                     }
                     else
                     {
@@ -163,21 +163,21 @@ namespace LisansUstuBasvuruSistemi.Business
                         {
                             if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
                             {
-                                msg.IsSuccess = false;
-                                msg.Messages.Add(
+                                messageModel.IsSuccess = false;
+                                messageModel.Messages.Add(
                                     "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
                             }
                             else if (kul.KayitDonemID.HasValue == false)
                             {
-                                msg.IsSuccess = false;
-                                msg.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
+                                messageModel.IsSuccess = false;
+                                messageModel.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
                             }
                             else if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
 
                             {
-                                msg.IsSuccess = false;
-                                msg.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
-                                return msg;
+                                messageModel.IsSuccess = false;
+                                messageModel.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
+                                return messageModel;
                             }
 
 
@@ -185,8 +185,8 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
                                     .OgrenimTipAdi;
-                                msg.IsSuccess = false;
-                                msg.Messages.Add(otsAdi +
+                                messageModel.IsSuccess = false;
+                                messageModel.Messages.Add(otsAdi +
                                                  " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
                             }
                             else if (kullaniciId != UserIdentity.Current.Id &&
@@ -197,8 +197,8 @@ namespace LisansUstuBasvuruSistemi.Business
                             {
                                 var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
                                     .OgrenimTipAdi;
-                                msg.IsSuccess = false;
-                                msg.Messages.Add(otsAdi +
+                                messageModel.IsSuccess = false;
+                                messageModel.Messages.Add(otsAdi +
                                                  " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
                             }
                             else
@@ -266,10 +266,10 @@ namespace LisansUstuBasvuruSistemi.Business
                                         var otsAdi = db.OgrenimTipleris
                                             .First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
                                             .OgrenimTipAdi;
-                                        msg.Messages.Add(otsAdi +
+                                        messageModel.Messages.Add(otsAdi +
                                                          " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
-                                        msg.Messages.AddRange(bkMsg);
-                                        msg.IsSuccess = false;
+                                        messageModel.Messages.AddRange(bkMsg);
+                                        messageModel.IsSuccess = false;
                                     }
                                 }
                             }
@@ -277,14 +277,14 @@ namespace LisansUstuBasvuruSistemi.Business
                         }
                         else
                         {
-                            msg.IsSuccess = false;
-                            msg.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
+                            messageModel.IsSuccess = false;
+                            messageModel.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
                         }
                     }
                 }
 
             }
-            return msg;
+            return messageModel;
 
         }
         public static KmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)

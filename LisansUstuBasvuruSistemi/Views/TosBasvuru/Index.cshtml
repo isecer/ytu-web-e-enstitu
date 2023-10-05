@@ -1,7 +1,10 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
-@model  FmTiBasvuru
+@model  FmTosBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
@@ -66,7 +69,7 @@
                             <tr>
                                 <td>Not</td>
                                 <td>:</td>
-                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez izleme başvurunuz bulunmaktadır. Yeni rapor oluşturmak için aşağıda bulunan Yeni Rapor Oluştur isimli mavi butona tıklayınız </td>
+                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez Öneri Savunma başvurunuz bulunmaktadır. Yeni rapor oluşturmak için aşağıda bulunan Yeni Rapor Oluştur isimli mavi butona tıklayınız </td>
                             </tr>
                         }
                         else
@@ -120,11 +123,11 @@
             {
                 if (Model.RowCount > 0)
                 {
-                    <div id="cls-@Model.Data.First().TIBasvuruID"></div>
+                    <div id="cls-@Model.Data.First().ToBasvuruID"></div>
                 }
                 else
                 {
-                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;font-size:12pt;color:maroon;"> Değerlendirme yapılabilecek herhangi bir tez izleme raporu bulunamadı!</div>
+                    <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;font-size:12pt;color:maroon;"> Değerlendirme yapılabilecek herhangi bir tez öneri savunma bilgisi bulunamadı!</div>
                 }
 
             }
@@ -136,14 +139,13 @@
                         <ul class="panel-controls"></ul>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-hover" style="width:100%;">
+                        <table class="table table-hover" style="width:100%;table-layout:fixed;">
                             <thead>
                                 <tr>
                                     <th width="75"></th>
                                     <th>Ad Soyad</th>
-                                    <th width="180">Son Rapor Dönemi</th>
-                                    <th width="180">Son Rapor Durumu</th>
-                                    <th width="45"></th>
+                                    <th width="140">Son Savunma Dönemi</th>
+                                    <th>Son Savunma Durumu</th> 
                                 </tr>
 
                             </thead>
@@ -152,18 +154,18 @@
                                 @if (Model.RowCount > 0)
                                 {
 
-                                    int rowIndex = Model.StartRowIndex; 
+                                    int rowIndex = Model.StartRowIndex;
                                     foreach (var item in Model.Data)
                                     {
-                                        rowIndex++; 
-                                        <tr style="color:@item.DurumColor;">
+                                        rowIndex++;
+                                        <tr>
                                             <td>
                                                 <table>
                                                     <tr>
                                                         <td style="width: 30px;">@rowIndex</td>
                                                         <td>
                                                             <ul class="panel-controls">
-                                                                <li id="iShow_@item.TIBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.TIBasvuruID')">
+                                                                <li id="iShow_@item.ToBasvuruID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.ToBasvuruID')">
                                                                     <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                                 </li>
                                                             </ul>
@@ -180,18 +182,13 @@
                                                 </table>
                                             </td>
                                             <td>
-                                                @item.TiAraRaporAktifDonemAdi<br />@(item.AraRaporSayisi.HasValue ? item.AraRaporSayisi + ". Rapor" : "")
+                                                @item.AktifDonemAdi<br />1. Savunma
                                             </td>
-                                            <td>
-                                                @item.TIAraRaporRaporDurumAdi <br />@ValueConverterExtension.ToTiDegerlendirmeSonucu(item.IsOyBirligiOrCoklugu, item.IsBasariliOrBasarisiz)
-                                            </td>
-                                            <td>
-                                                <a href="@Url.Action("BasvuruYap", "TIBasvuru", new { item.TIBasvuruID })"><i style="font-size:11pt;color:@item.DurumColor;" class="fa fa-edit tooltips" data-style="blue" data-original-title="Düzelt"></i></a>
-                                                <a href="javascript:void(0)" onclick="BasvuruSil(this,'@item.TIBasvuruID','@item.BasvuruTarihi.ToFormatDateAndTime()')"><i style="font-size:11pt;color:@item.DurumColor;" class="glyphicon glyphicon-trash tooltips" data-style="blue" data-original-title="Sil"></i></a>
-                                            </td>
+                                            <td> @item.DurumModel.TosBasvuruDurumView()</td>
+                                            
                                         </tr>
-                                        <tr class="cls-@item.TIBasvuruID" style="display:none">
-                                            <td id="cls-@item.TIBasvuruID" class="clspTd" colspan="5" style="padding: 1px 1px 2px 75px;"></td>
+                                        <tr class="cls-@item.ToBasvuruID" style="display:none">
+                                            <td id="cls-@item.ToBasvuruID" class="clspTd" colspan="4" style="padding: 1px 1px 2px 75px;"></td>
                                         </tr>
 
                                     }
@@ -199,7 +196,7 @@
                                 else
                                 {
                                     <tr>
-                                        <td colspan="5" class="clspTd" style="text-align: center;">
+                                        <td colspan="4" class="clspTd" style="text-align: center;">
                                             Listelenen Kayıt Yok
                                         </td>
                                     </tr>
@@ -220,16 +217,16 @@
 {
     <script>
         $(function () {
-            GetDetail('@Model.Data.First().TIBasvuruID');
+            GetDetail('@Model.Data.First().ToBasvuruID');
         },200)
     </script>
 }
-else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
+else if (Model.ToBasvuruID.HasValue || Model.RowCount > 0)
 {
     <script>
         $(function () {
-            ShowDetail('@(Model.TIBasvuruID ?? Model.Data.First().TIBasvuruID)');
-            if ('@(Model.TIBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTIAraRaporFormu(@Model.TIBasvuruID); }, 250);
+            ShowDetail('@(Model.ToBasvuruID ?? Model.Data.First().ToBasvuruID)');
+            if ('@(Model.ToBasvuruID.HasValue.ToString().ToLower())' == 'true') setTimeout(function () { GetTIAraRaporFormu(@Model.ToBasvuruID); }, 250);
 
         },200)
     </script>
@@ -237,25 +234,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
 
 <script type="text/javascript">
-    $(function () {
-        Resized(window.innerWidth);
-    })
-    function Resized(screenwidth) {
-        if (screenwidth <= 800) {
-            $('.clsHide').addClass('hide');
-            $('.clspTd').attr("colspan", "4");
-            $('.ctWidth').removeAttr('width');
-        }
-        else {
-            $('.clsHide').removeClass('hide');
-            $('.clspTd').attr("colspan", "5");
-            $('.ctWidth').attr('width', '280');
-
-        }
-    }
-    window.addEventListener('resize', function (event) {
-        Resized(window.innerWidth);
-    });
+   
     function showDetailY(id) {
         var rwID = $('#iShow_' + id);
         var cls = 'cls-' + id;
@@ -270,7 +249,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
             callbackFnc: ''
         }
-        ShowDuyuru(popupSetting); 
+        ShowDuyuru(popupSetting);
     }
 
 
@@ -286,11 +265,10 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("GetDetailTiBasvuru", "Ajax")',
+            url: '@Url.Action("GetDetailTosBasvuru", "Ajax")',
             data: { id: id, UniqueID: '@Model.IsDegerlendirme' },
             success: function (result) {
-                $('#cls-' + id).html(result);
-                Resized(window.innerWidth);
+                $('#cls-' + id).html(result); 
                 PanelRefresh(_panel, true);
                 var $YnBtn = $('#YeniRaporBtn_' + id);
                 if ($YnBtn.length > 0) {
@@ -321,7 +299,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("Sil", "TIBasvuru")',
+                            url: '@Url.Action("Sil", "TosBasvuru")',
                             data: { id: id },
                             success: function (result) {
                                 if (result.IsSuccess) {
@@ -345,7 +323,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             }
         });
     }
-    function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
+    function silDetay(sndr, id, ToBasvuruSavunmaID, RaporNo) {
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
         var btbx = bootbox.dialog({
@@ -357,8 +335,8 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                     className: "btn-danger",
                     callback: function () {
                         $.ajax({
-                            url: '@Url.Action("DetaySil", "TIBasvuru")',
-                            data: { id: id, TIBasvuruAraRaporID: TIBasvuruAraRaporID },
+                            url: '@Url.Action("DetaySil", "TosBasvuru")',
+                            data: { id: id, ToBasvuruSavunmaID: ToBasvuruSavunmaID },
                             success: function (result) {
                                 if (result.IsSuccess) {
                                     GetDetail(id);
@@ -389,31 +367,31 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
         $('.tooltips').tooltip();
     });
 
-    function showSRDialog(TIBasvuruID,TIBasvuruAraRaporID, SRTalepID) {
-        var _panel = $('#bsvrDet_' + TIBasvuruID);
+    function showSRDialog(ToBasvuruID,ToBasvuruSavunmaID, SRTalepID) {
+        var _panel = $('#bsvrDet_' + ToBasvuruID);
         PanelRefresh(_panel, false);
         $.ajax({
-            url: '@Url.Action("RezervasyonAl", "TIBasvuru")',
-            data: { 'TIBasvuruAraRaporID': TIBasvuruAraRaporID, 'SRTalepID': SRTalepID },
+            url: '@Url.Action("RezervasyonAl", "TosBasvuru")',
+            data: { 'ToBasvuruSavunmaID': ToBasvuruSavunmaID, 'SRTalepID': SRTalepID },
             success: function (result) {
 
                 PanelRefresh(_panel, true);
                 var btbxxFS = bootbox.dialog({
                     message: result,
-                    title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez İzleme Toplantı Bilgi Girişi' : 'Tez İzleme Toplantı Bilgileri Düzenleme'),
+                    title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez Öneri Savunma Toplantı Bilgi Girişi' : 'Tez Öneri Savunma Toplantı Bilgileri Düzenleme'),
                     buttons: {
                         success: {
                             label: "Kaydet",
-                            className: "btn-primary btnSrKayit_"+TIBasvuruAraRaporID,
+                            className: "btn-primary btnSrKayit_"+ToBasvuruSavunmaID,
                             callback: function (event) {
                                 var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                $('.btnSrKayit_' + TIBasvuruAraRaporID).addClass('disabled');
+                                $('.btnSrKayit_' + ToBasvuruSavunmaID).addClass('disabled');
                                  PanelRefresh(pnlx, false);
                                 $('#TIAraRaporSrForm').ajaxForm({
                                     success: function (result) {
                                         if (result.IsSuccess) {
                                             toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                            GetDetail(TIBasvuruID);
+                                            GetDetail(ToBasvuruID);
                                             var _clsBtn = $('.modal-header').find('button').first();
                                             $(_clsBtn).click();
                                         }
@@ -425,7 +403,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
 
                                     },
                                     complete: function (cmp) {
-                                        $('.btnSrKayit_' + TIBasvuruAraRaporID).removeClass('disabled');
+                                        $('.btnSrKayit_' + ToBasvuruSavunmaID).removeClass('disabled');
                                         PanelRefresh(pnlx, true);
                                     },
                                     error: function (err) {
@@ -453,58 +431,41 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             }
         });
     }
-      function GetTIAraRaporFormu(TIBasvuruID, TIBasvuruAraRaporID) {
-          var _panel = $('#bsvrDet_' + TIBasvuruID);
+      function GetToSavunmaFormu(ToBasvuruID, ToBasvuruSavunmaID) {
+          var _panel = $('#bsvrDet_' + ToBasvuruID);
             PanelRefresh(_panel, false);
             $.ajax({
-                url: '@Url.Action("GetTiAraRaporFormu", "TIBasvuru")',
+                url: '@Url.Action("GetToSavunmaFormu", "TosBasvuru")',
                 data: {
-                    'TIBasvuruID': TIBasvuruID,
-                    'TIBasvuruAraRaporID': TIBasvuruAraRaporID
+                    'ToBasvuruID': ToBasvuruID,
+                    'ToBasvuruSavunmaID': ToBasvuruSavunmaID
                 },
                 success: function (resultG) {
                     PanelRefresh(_panel, true);
                     if (resultG.IsSuccess) {
                         var btbxxFS = bootbox.dialog({
                             message: resultG.Content,
-                            //title: "<i class='fa fa-pencil'></i> Anket Sorusu Ekleme İşlemi",
+                            title: "||",
                             buttons: {
-
                                 success: {
-                                    label: 'İleri',
+                                    label: 'Kaydet',
                                     className: "btn-info btnKaydet",
                                     callback: function (event) {
                                         var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                         PanelRefresh(pnlx, false);
-                                        $('#FrmTIAraRaporFormu').ajaxForm({
+                                        $('#FrmToSavunmaFormu').ajaxForm({
                                             success: function (result) {
-                                                if (result.mMessage.IsSuccess && result.SaveData) {
+                                                if (result.mMessage.IsSuccess) {
                                                     if (result.mMessage.Messages.length > 0) toastr["success"](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
                                                     var _clsBtn = $('.bootbox-close-button').first();
                                                     $(_clsBtn).click();
-                                                    GetDetail(TIBasvuruID);
+                                                    GetDetail(ToBasvuruID);
 
                                                 }
                                                 else {
-                                                    $('#SelectedTabID').val(result.SelectedTabID);
-
-                                                    if (result.SelectedTabID == "4" || !result.IsYeniJO) {
-
-                                                        $('.btnKaydet').removeClass("btn-info").addClass("btn-primary");
-                                                        $('.btnKaydet').text('Kaydet');
-                                                        $('#SaveData').val("true");
-
-                                                    }
-                                                    else {
-                                                        $('.btnKaydet').addClass("btn-info").removeClass("btn-primary");
-                                                        $('.btnKaydet').text('İleri');
-                                                        $('#SaveData').val("false");
-                                                    }
-                                                    $("[href='#tab-" + result.SelectedTabID + "']").first().click();
                                                     if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
                                                     return false;
                                                 }
-                                                PanelRefresh(pnlx, true);
                                             },
                                             complete: function (cmp) {
                                                 PanelRefresh(pnlx, true);
@@ -514,13 +475,18 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                                             }
 
                                         });
-                                        $('#FrmTIAraRaporFormu').submit();
+                                        $('#FrmToSavunmaFormu').submit();
                                         return false;
+                                    }
+                                },
+                                danger: {
+                                    label: 'Vazgeç',
+                                    className: "btn-primary",
+                                    callback: function () {
                                     }
                                 }
                             }
                         });
-
                         $(btbxxFS).find('.modal-dialog').first().addClass('modal-lg');
                         if (resultG.Messages.trim()!="") showMmMessage(resultG.Messages, 'Tamam');
 
@@ -538,19 +504,18 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             })
         }
 </script>
-@if (Model.IsDegerlendirme.HasValue && Model.RowCount > 0)
+@if (true)
 {
     <script>
 
-        function AraRaporDegerlendir(UniqueID, IsDrBurs,TIBasvuruID) {
-            var IsTezIzlemeRaporuTezOnerisiUygun = $('#IsTezIzlemeRaporuTezOnerisiUygun_' + UniqueID).val();
-            var IsTezIzlemeRaporuAltAlanUygun = $('#IsTezIzlemeRaporuAltAlanUygun_' + UniqueID).val();
-            var IsBasarili = $('#IsBasarili_' + UniqueID).val();
+        function TosDegerlendirmeKaydet(UniqueID,ToBasvuruID) {
+            var ToBasvuruSavunmaDurumID = $('#ToBasvuruSavunmaDurumID_' + UniqueID).val();
+            var IsCalismaRaporuAltAlanUygun = $('#IsCalismaRaporuAltAlanUygun_' + UniqueID).val();
             var Aciklama = $('#Aciklama_' + UniqueID).val();
-            var _panel = $('#bsvrDet_' + TIBasvuruID);
+            var _panel = $('#bsvrDet_' + ToBasvuruID);
             bootbox.dialog({
-                message: "Tez izleme rapor değerlendirmenizi kaydetmek istediğinize emin misiniz?",
-                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez İzleme Raporu Değerlendirmesi",
+                message: "Tez öneri savunması değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Öneri Savunma Değerlendirmesi",
                 buttons: {
                     success: {
                         label: "Evet",
@@ -558,20 +523,18 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
                         callback: function (event) {
                             PanelRefresh(_panel, false);
                             $.ajax({
-                                url: '@Url.Action("AraRaporDegerlendi", "TIBasvuru")',
+                                url: '@Url.Action("TosDegerlendir", "TosBasvuru")',
                                 data: {
-                                    'UniqueID': UniqueID,
-                                    'IsTezIzlemeRaporuTezOnerisiUygun': IsTezIzlemeRaporuTezOnerisiUygun,
-                                    'IsDrBurs': IsDrBurs,
-                                    'IsTezIzlemeRaporuAltAlanUygun': IsTezIzlemeRaporuAltAlanUygun,
-                                    'IsBasarili': IsBasarili,
-                                    'Aciklama': Aciklama
+                                    UniqueID,
+                                    IsCalismaRaporuAltAlanUygun,
+                                    ToBasvuruSavunmaDurumID,
+                                    Aciklama
 
                                 },
                                 success: function (result) {
                                     PanelRefresh(_panel, true);
                                     if (result.IsSuccess || result.IsRefresh) {
-                                        GetDetail(TIBasvuruID);
+                                        GetDetail(ToBasvuruID);
 
                                     }
                                     showMmMessage(result.Messages, 'Tamam');
@@ -595,6 +558,75 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
             });
         }
 
+        function showDLinkGonder(toBasvuruID, toBasvuruSavunmaID,UniqueID) {
+            var _panel = $('#bsvrDet_' + toBasvuruID);
+             PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("DegerlendirmeLinkView", "TosBasvuru")',
+                data: {
+                    'UniqueID': UniqueID,
+                },
+                success: function (result) {
+                    PanelRefresh(_panel, true);
+                    var btbxxFS = bootbox.dialog({
+                        message: result,
+                        title: "<i class='fa fa-envelope fa-lg'></i> Yeni Değerlendirme Linki Gönderme İşlemi",
+                        buttons: {
+                            success: {
+                                label: "Gönder",
+                                className: "btn-info",
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    PanelRefresh(pnlx, false);
+                                    var EMail = $('#EMail_' + UniqueID).val();
+                                    var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val();
+                                    $.ajax({
+                                        url: '@Url.Action("DegerlendirmeLinkiGonder", "TosBasvuru")',
+                                        data: {
+                                            'toBasvuruSavunmaID': toBasvuruSavunmaID,
+                                            'UniqueID': UniqueID,
+                                            'EMail': EMail,
+                                            'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin
+                                        },
+                                        success: function (result) {
+                                            PanelRefresh(pnlx, true);
+                                            if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                            GetDetail(toBasvuruID);
+                                            showMmMessage(result.MessageView, 'Tamam');
+                                            var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
+                                            $(_clsBtn).click();
+
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                            alert(err.responseText);
+
+                                        }
+                                    });
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                    PanelRefresh(_panel, true);
+                                }
+                            }
+                        }
+                    });
+
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+
+                }
+            });
+
+
+
+        }
     </script>
 
 }

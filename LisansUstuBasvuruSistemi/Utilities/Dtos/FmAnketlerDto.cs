@@ -40,9 +40,10 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public int SiraNo { get; set; }
         public string SecenekAdi { get; set; }
-        public Dictionary<int, string> EkAciklama { get; set; }
+        public List<AnketCevaplari> EkAciklamas { get; set; }
         public int Count { get; set; }
     }
+    
     public class FrAnketSecenekDetayDto : AnketSoruSecenek
     {
         public int Count { get; set; }

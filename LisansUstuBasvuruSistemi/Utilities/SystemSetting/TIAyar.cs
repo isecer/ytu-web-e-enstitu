@@ -10,7 +10,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     public static class TiAyar
     {
         public const string TikOneriAlimiAcik = "Tik Öneri Alımı Açık";
-        public const string TikOneriDegisiklikAlimiAcik = "Tik Öneri Değişikliği Alımı Açık"; 
+        public const string TikOneriDegisiklikAlimiAcik = "Tik Öneri Değişikliği Alımı Açık";
+        public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez Öneri Savunması Başvuru Alımı Açık"; 
 
         public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
         public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son Dönem Kayıt Olunması Gereken Ders Kodları";

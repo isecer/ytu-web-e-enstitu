@@ -3,6 +3,7 @@ using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using System.Drawing;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
 {
@@ -66,6 +67,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                              s.TDSinavAdi,
                              s.TDSinavYili,
                              s.TDSinavPuani,
+                             s.TDUniversiteAdi,
                              s.DanismanOnayTarihi
 
                          }).First();
@@ -86,6 +88,21 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 cellTezDili.Text = q.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)";
                 cellTezBaslikTr.Text = q.TezBaslikTr;
                 cellTezBaslikEn.Text = q.TezBaslikEn;
+
+
+                if (q.IsYeniTezDiliTr.HasValue ? q.IsYeniTezDiliTr == false : !q.IsTezDiliTr)
+                {
+                    dgYabanciDilBilgi.Visible = true;
+                    this.cellOgrenciYabanciDilBilgi.Text = q.SinavAdi + " / " + q.SinavYili;
+                    this.cellOgrenciYabanciDilPuan.Text = (q.SinavPuani ?? "").ToString();
+                    this.cellDanismanYabanciDilBilgi.Text = q.TDSinavAdi + " / " +
+                                                            (q.TDSinavYili.HasValue
+                                                                ? q.TDSinavYili.ToString()
+                                                                : q.TDUniversiteAdi);
+                    this.cellDanismanYabanciDilPuan.Text = q.TDSinavTipID != -1 ? (q.TDSinavPuani ?? "").ToString() : "";
+                }
+
+
 
                 chkDanismanDegisecekEvet.Checked = q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || q.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
                 chkDanismanDegisecekHayir.Checked = !chkDanismanDegisecekEvet.Checked;
@@ -126,24 +143,24 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 chkTezDiliDegisecekHayir.Checked = !chkTezDiliDegisecekEvet.Checked;
                 if (chkTezDiliDegisecekEvet.Checked)
                 {
-                    cellYeniTezDili.Text = q.IsYeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)"; 
+                    cellYeniTezDili.Text = q.IsYeniTezDiliTr == true ? "Türkçe (Turkish)" : "İngilizce (English)";
                 }
                 detGrupDanismanDegisiklik.Visible = chkDanismanDegisecekEvet.Checked;
                 rwOnerilenTdBaslikEn.Visible = detGrupDanismanDegisiklik.Visible;
                 rwOnerilenTdBaslikTr.Visible = detGrupDanismanDegisiklik.Visible;
                 rwOnerilenTdDetayBaslik.Visible = detGrupDanismanDegisiklik.Visible;
-                rwOnerilenTdDetayBilgileri.Visible= detGrupDanismanDegisiklik.Visible;
+                rwOnerilenTdDetayBilgileri.Visible = detGrupDanismanDegisiklik.Visible;
                 detGrupTezBaslikDegisiklik.Visible = chkTezBasligiDegisecekEvet.Checked;
                 detGrupTezDiliDr.Visible = chkTezDiliDegisecekEvet.Checked;
                 rwTezOneriTarihDr.Visible = q.OgrenimTipKod.IsDoktora();
                 rwTezOneriYapildiDr.Visible = q.OgrenimTipKod.IsDoktora();
                 rwTezSayisiDr.Visible = q.OgrenimTipKod.IsDoktora();
 
-             
+
 
                 cellImzaOgrenciAdSoyad.Text = q.AdSoyad;
-                 
-               
+
+
 
             }
         }

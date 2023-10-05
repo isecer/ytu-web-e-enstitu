@@ -70,12 +70,11 @@ namespace LisansUstuBasvuruSistemi.Business
                         dbmenu.SiraNo = attr.SiraNo;
                         if (attr.BagliRoller != null && attr.BagliRoller.Length > 0)
                         {
-                            var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray();
-                            var nRols = dbRoller.Select(s => s.RolID).ToList();
-                            var yeni = dbmenu.Rollers.Where(a => !nRols.Contains(a.RolID)).ToList();
-                            foreach (var dbRole in yeni)
+                            var dbRoller = db.Rollers.Where(p => attr.BagliRoller.Contains(p.RolAdi)).ToArray(); 
+                            var yeni = dbRoller.Where(p => !dbmenu.Rollers.Any(a => a.RolID == p.RolID)).ToList();
+                            foreach (var yeniRol in yeni)
                             {
-                                dbmenu.Rollers.Add(dbRole); 
+                                dbmenu.Rollers.Add(yeniRol);
                             }
                         }
                     }

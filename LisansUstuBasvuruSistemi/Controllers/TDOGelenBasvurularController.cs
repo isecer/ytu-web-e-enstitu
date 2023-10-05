@@ -113,7 +113,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id || p.VarolanTezDanismanID == UserIdentity.Current.Id);
             }
-            q = q.Where(p => p.EnstituKod == enstituKod);
+            q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             if (!model.AktifDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AktifDonemID == model.AktifDonemID);
             if (model.TDODanismanTalepTipID.HasValue) q = q.Where(p => p.TDODanismanTalepTipID == model.TDODanismanTalepTipID);
             if (model.AktifDurumID.HasValue)
@@ -229,7 +229,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             return View();
         }
-        public ActionResult GetTutanakRaporuKontrolu(List<int> ogrenimTipKods, DateTime? basTar, DateTime? bitTar, string raporTarihi, int? sayi)
+        public ActionResult GetTutanakRaporuKontrolu(DateTime? basTar, DateTime? bitTar)
         {
             var mMessage = new MmMessage
             {
@@ -266,18 +266,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
 
-            if (raporTarihi.IsNullOrWhiteSpace())
-            {
-                mMessage.IsSuccess = false;
-                mMessage.Messages.Add("Rapor tarihi giriniz.");
-            }
-            mMessage.MessagesDialog.Add(new MrMessage { MessageType = raporTarihi.IsNullOrWhiteSpace() ? Msgtype.Warning : Msgtype.Success, PropertyName = "RaporTarihi" });
-            if (!sayi.HasValue)
-            {
-                mMessage.IsSuccess = false;
-                mMessage.Messages.Add("Rapor sayısı giriniz.");
-            }
-            mMessage.MessagesDialog.Add(new MrMessage { MessageType = !sayi.HasValue ? Msgtype.Warning : Msgtype.Success, PropertyName = "Sayi" });
+            //if (raporTarihi.IsNullOrWhiteSpace())
+            //{
+            //    mMessage.IsSuccess = false;
+            //    mMessage.Messages.Add("Rapor tarihi giriniz.");
+            //}
+            //mMessage.MessagesDialog.Add(new MrMessage { MessageType = raporTarihi.IsNullOrWhiteSpace() ? Msgtype.Warning : Msgtype.Success, PropertyName = "RaporTarihi" });
+            //if (!sayi.HasValue)
+            //{
+            //    mMessage.IsSuccess = false;
+            //    mMessage.Messages.Add("Rapor sayısı giriniz.");
+            //}
+            //mMessage.MessagesDialog.Add(new MrMessage { MessageType = !sayi.HasValue ? Msgtype.Warning : Msgtype.Success, PropertyName = "Sayi" });
 
             if (!mMessage.IsSuccess)
             {
@@ -291,39 +291,70 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-        public ActionResult GetTutanakRaporuExport(int tutanakTipId, string basTar, string bitTar, string raporTarihi, int sayi, string ekd)
+        public ActionResult GetTutanakRaporuExport(int tutanakTipId, bool isEykdaOnayOrGonderim, string basTar, string bitTar, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var baslangicTarihi = basTar.ToDate().Value;
-            var bitisTarihi = bitTar.ToDate().Value;
+            var bitisTarihi = bitTar.ToDate().Value.AddDays(1).AddMilliseconds(-1);
             var raporAdi = "";
 
             if (tutanakTipId == 4)
             {
+                var qes = _entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.EnstituKod == enstituKod);
 
-                var dataEsList = _entities.TDOBasvuruEsDanismen.Where(p => p.TDOBasvuruDanisman.TDOBasvuru.EnstituKod == enstituKod && p.EYKDaOnaylandi == true && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
-                                                     p.EYKDaOnaylandiOnayTarihi <= bitisTarihi)).OrderByDescending(o => o.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod).ToList().Select((s, inx) => new
-                                                     {
-                                                         SiraNo = inx + 1,
-                                                         EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
-                                                         EYKTarihi=s.EYKDaOnaylandiOnayTarihi,
-                                                         s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
-                                                         OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
-                                                         OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
-                                                         YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
-                                                         DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
-                                                         DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
-                                                         EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
-                                                         EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
-                                                         EsDanismanKurumAdi = s.UniversiteAdi
-
-                                                     }
-                    ).OrderBy(o=>o.EYKTarihi).ToList();
                 var gv = new GridView();
-                gv.DataSource = dataEsList;
+                if (isEykdaOnayOrGonderim)
+                {
+                    var dataEsList = qes.Where(p => p.EYKDaOnaylandi == true && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi
+                                                                             && p.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
+                           .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
+                           {
+                               SiraNo = inx + 1,
+                               EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
+                               EykYaGonderimTarihi = s.EYKYaGonderildiIslemTarihi,
+                               EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
+                               s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
+                               OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
+                               OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
+                               YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                               DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
+                               DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
+                               EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
+                               EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
+                               EsDanismanKurumAdi = s.UniversiteAdi
+
+                           }
+                     ).ToList();
+
+                    gv.DataSource = dataEsList;
+                }
+                else
+                {
+                    var dataEsList = qes.Where(p => p.EYKYaGonderildi == true && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi
+                                                                            && p.EYKYaGonderildiIslemTarihi <= bitisTarihi))
+                         .OrderBy(o => o.EYKYaGonderildiIslemTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
+                         {
+                             SiraNo = inx + 1,
+                             EsDanismanOnerisi_EsDanısmanDegisikligi = s.IsDegisiklikTalebi ? "Eş Danışman Değişikliği" : "Eş Danışman Önerisi",
+                             EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
+                             s.TDOBasvuruDanisman.TDOBasvuru.OgrenciNo,
+                             OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
+                             OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
+                             YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                             DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
+                             DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
+                             EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
+                             EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
+                             EsDanismanKurumAdi = s.UniversiteAdi
+
+                         }
+                     ).ToList();
+                    gv.DataSource = dataEsList;
+                }
+
                 gv.DataBind();
-                raporAdi = $"TEZ EŞ DANIŞMAN ATAMALARI {raporTarihi}/{sayi} GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU.xls";
+                raporAdi = $"{(isEykdaOnayOrGonderim ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN")} TEZ EŞ DANIŞMAN ATAMALARI ENSTİTÜ YÖNETİM KURULU.xls";
                 Response.ContentType = "application/ms-excel";
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
                 Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
@@ -337,36 +368,64 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 if (tutanakTipId == 1)
                 {
-                    var qData = _entities.TDOBasvurus.Where(p => p.EnstituKod == enstituKod && p.TDOBasvuruDanismen.Any(
-                           a =>
-                               a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
-                                                            a.EYKDaOnaylandiOnayTarihi <= bitisTarihi)))
-                       .OrderByDescending(o => o.OgrenimTipKod);
-                    var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
-                        .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
-                                                                 a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
-                        .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ToList();
-                    var dataSource = data.Select((s, inx) => new
-                    {
-                        SiraNo = inx + 1,
-                        s.TDODanismanTalepTipleri.TalepTipAdi,
-                        s.TDOBasvuru.OgrenciNo, 
-                        OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
-                        OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
-                                                     s.TDOBasvuru.Programlar.ProgramAdi,
-                        YL_DR = s.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
-                        DanismanAdSoyad = s.TDUnvanAdi + " " + s.TDAdSoyad,
-                        DanismanAnabilimDali = s.TDAnabilimDaliAdi,
-                        TezBaslikTr = s.TezBaslikTr.ToUpper(),
-                        TezBaslikEn = s.TezBaslikEn.Replace("i", "ı").ToUpper(),
-                        TezDili = s.IsTezDiliTr ? "Türkçe" : "İngilizce",
-                        DanismanYukYlDrSayi = (s.TDOgrenciSayisiDR ?? 0) + (s.TDOgrenciSayisiYL ?? 0),
-                        MezunSayisi = (s.TDTezSayisiDR ?? 0) + (s.TDTezSayisiYL ?? 0),
-                    }).ToList();
                     var gv = new GridView();
-                    gv.DataSource = dataSource;
+                    if (isEykdaOnayOrGonderim)
+                    {
+                        var qData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
+                        && p.EYKDaOnaylandi == true
+                        && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && p.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
+                          .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
+                          {
+                              SiraNo = inx + 1,
+                              s.TDODanismanTalepTipleri.TalepTipAdi, 
+                              EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
+                              s.TDOBasvuru.OgrenciNo,
+                              OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
+                              OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
+                                                       s.TDOBasvuru.Programlar.ProgramAdi,
+                              YL_DR = s.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                              DanismanAdSoyad = s.TDUnvanAdi + " " + s.TDAdSoyad,
+                              DanismanAnabilimDali = s.TDAnabilimDaliAdi,
+                              TezBaslikTr = s.TezBaslikTr.ToUpper(),
+                              TezBaslikEn = s.TezBaslikEn.Replace("i", "ı").ToUpper(),
+                              TezDili = s.IsTezDiliTr ? "Türkçe" : "İngilizce",
+                              DanismanYukYlDrSayi = (s.TDOgrenciSayisiDR ?? 0) + (s.TDOgrenciSayisiYL ?? 0),
+                              MezunSayisi = (s.TDTezSayisiDR ?? 0) + (s.TDTezSayisiYL ?? 0),
+                          }).ToList();
+                        gv.DataSource = qData;
+                    }
+                    else
+                    {
+                        var qData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
+                       && p.EYKYaGonderildi == true
+                       && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi && p.EYKYaGonderildiIslemTarihi <= bitisTarihi))
+                         .OrderBy(o => o.EYKYaGonderildiIslemTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
+                         {
+                             SiraNo = inx + 1,
+                             s.TDODanismanTalepTipleri.TalepTipAdi,
+                             EykYaGonderimTarihi = s.EYKYaGonderildiIslemTarihi,
+                             EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
+                             s.TDOBasvuru.OgrenciNo,
+                             OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
+                             OgrenciAnabilimdaliProgram = s.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " +
+                                                      s.TDOBasvuru.Programlar.ProgramAdi,
+                             YL_DR = s.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
+                             DanismanAdSoyad = s.TDUnvanAdi + " " + s.TDAdSoyad,
+                             DanismanAnabilimDali = s.TDAnabilimDaliAdi,
+                             TezBaslikTr = s.TezBaslikTr.ToUpper(),
+                             TezBaslikEn = s.TezBaslikEn.Replace("i", "ı").ToUpper(),
+                             TezDili = s.IsTezDiliTr ? "Türkçe" : "İngilizce",
+                             DanismanYukYlDrSayi = (s.TDOgrenciSayisiDR ?? 0) + (s.TDOgrenciSayisiYL ?? 0),
+                             MezunSayisi = (s.TDTezSayisiDR ?? 0) + (s.TDTezSayisiYL ?? 0),
+                         }).ToList();
+                        gv.DataSource = qData;
+                    }
+
+
+
+
                     gv.DataBind();
-                    raporAdi = $"TEZ DANIŞMAN ATAMALARI {raporTarihi}/{sayi} GÜN VE SAYILI ENSTİTÜ YÖNETİM KURULU.xls";
+                    raporAdi = $"{(isEykdaOnayOrGonderim ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN")} TEZ DANIŞMAN ATAMALARI ENSTİTÜ YÖNETİM KURULU.xls";
                     Response.ContentType = "application/ms-excel";
                     Response.ContentEncoding = System.Text.Encoding.UTF8;
                     Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
@@ -377,19 +436,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var qData = _entities.TDOBasvurus.Where(p => p.EnstituKod == enstituKod && p.TDOBasvuruDanismen.Any(
-                           a =>
-                             a.TDODanismanTalepTipID != TdoDanismanTalepTip.TezDanismaniOnerisi && a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
-                                                            a.EYKDaOnaylandiOnayTarihi <= bitisTarihi)))
-                       .OrderByDescending(o => o.OgrenimTipKod);
-                    var data = qData.SelectMany(s => s.TDOBasvuruDanismen)
-                        .Where(a => a.EYKDaOnaylandi == true && (a.EYKDaOnaylandiOnayTarihi >= baslangicTarihi &&
-                                                                 a.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
-                        .OrderByDescending(o => o.EYKDaOnaylandiOnayTarihi).ToList();
+
+                    List<TDOBasvuruDanisman> raporData;
+                    if (isEykdaOnayOrGonderim)
+                    {
+                        raporData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
+                        && p.EYKDaOnaylandi == true
+                        && (p.EYKDaOnaylandiOnayTarihi >= baslangicTarihi && p.EYKDaOnaylandiOnayTarihi <= bitisTarihi))
+                          .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ThenBy(t => t.IslemTarihi).ToList();
+
+                    }
+                    else
+                    {
+                        raporData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
+                      && p.EYKYaGonderildi == true
+                      && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi && p.EYKYaGonderildiIslemTarihi <= bitisTarihi))
+                        .OrderBy(o => o.EYKYaGonderildiIslemTarihi).ThenBy(t => t.IslemTarihi).ToList();
+                    }
 
                     var raporListData = new List<RprTdoEykDto>();
                     var inx = 0;
-                    foreach (var item in data)
+                    foreach (var item in raporData)
                     {
                         inx++;
                         var degisiklikTipId = 0;
@@ -398,7 +465,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var aciklama = "";
                         var isDoktora = item.TDOBasvuru.OgrenimTipKod.IsDoktora();
                         var isDoktoraStr = isDoktora ? "doktora" : "yüksek lisans";
-                     
+
                         if (item.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi)
                         {
                             danismanAdi = item.VarolanTDUnvanAdi + " " + item.VarolanTDAdSoyad;
@@ -427,7 +494,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             new RprTdoEykDto
                             {
                                 SiraNo = inx + 1,
-                                Title = isDoktora? "DOKTORA DEĞİŞİKLİKLERİ:" : "YÜKSEK LİSANS DEĞİŞİKLİKLERİ:",
+                                Title = isDoktora ? "DOKTORA DEĞİŞİKLİKLERİ:" : "YÜKSEK LİSANS DEĞİŞİKLİKLERİ:",
                                 IsDoktora = item.TDOBasvuru.OgrenimTipKod.IsDoktora(),
                                 DegisiklikTipID = degisiklikTipId,
                                 TDODanismanTalepTipID = item.TDODanismanTalepTipID,
@@ -445,12 +512,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 YeniTezBaslikEn = (item.YeniTezBaslikEn ?? "").Replace("i", "ı").ToUpper()
                             });
 
-                    } 
+                    }
 
                     var rpr = new RprTdoTutanak();
                     rpr.DataSource = raporListData;
-                    rpr.CreateDocument(); 
-                    var displayName = "Tez dil_konu_danışman değişiklikleri EYK raporu";
+                    rpr.CreateDocument();
+                    var displayName = $"{(isEykdaOnayOrGonderim ? "EYKda ONAYLANAN" : "EYKya GÖNDERİLEN")} Tez_dil_konu_danışman değişiklikleri Tutanağı";
                     var html = "";
                     using (MemoryStream ms = new MemoryStream())
                     {
@@ -468,9 +535,6 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
         }
-
-
-
 
         [Authorize(Roles = RoleNames.TdoeyKdaOnayYetkisi)]
         public ActionResult EYKGonderimOnay(string aktifDonemId)

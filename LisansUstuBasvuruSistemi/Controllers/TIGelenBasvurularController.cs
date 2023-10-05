@@ -77,7 +77,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifTIBasvuruAraRaporID = s.AktifTIBasvuruAraRaporID,
                         AraRaporDanismanID = ard == null ? null : ard.TezDanismanID,
-                        TIAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        TiAraRaporAktifDonemAdi = ard == null ? "Rapor Girişi Yapılmadı" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         TIAraRaporRaporDurumAdi = ard == null ? "Rapor Girişi Yapılmadı" : ard.TIBasvuruAraRaporDurumlari.TIBasvuruAraRaporDurumAdi,
                         AraRaporSayisi = ard != null ? ard.AraRaporSayisi : (int?)null,
                         TIAraRaporAktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
@@ -100,7 +100,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             var q2 = q;
-            q = q.Where(p => p.EnstituKod == enstituKod);
+            q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
             if (baslangicYil.HasValue) q = q.Where(p => p.AraRaporDanismanID.HasValue);
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TIAraRaporAktifDonemID == model.AktifTIAraRaporDonemID);
             if (model.AktifTIAraRaporRaporDurumID.HasValue)
@@ -157,7 +157,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     s.AnabilimdaliAdi,
                     s.ProgramAdi,
                     s.AraRaporDanismanID,
-                    DonemAdi = s.TIAraRaporAktifDonemAdi,
+                    DonemAdi = s.TiAraRaporAktifDonemAdi,
                     s.ToplantiTarihi,
                     s.ToplantiSaati,
                     s.TIAraRaporRaporDurumAdi

@@ -1,0 +1,185 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model ToSavunmaSaveModel
+@{
+    Layout = null;
+    var enstituKayitYetki = RoleNames.TiGelenBasvuruKayit.InRole();
+}
+<div class="widget widget-default" style="margin:0px;padding:4px;">
+    <div class="panel panel-info panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+        <div class="panel-heading padding-0">
+            <h3 class="panel-title"><i class="fa fa-book "></i> @Model.OgrenciAdSoyad Tez Öneri Savunması Formu</h3>
+            <ul class="panel-controls"></ul>
+        </div>
+        <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
+
+
+            @using (Ajax.BeginForm("ToSavunmaFormuPost", "TosBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmToSavunmaFormu" }))
+            {
+                @Html.HiddenFor(p => p.ToBasvuruID);
+                @Html.HiddenFor(p => p.ToBasvuruSavunmaID);
+                @Html.HiddenFor(p => p.IsTezDiliTr);
+                <div class="panel-body form-group-separated">
+
+                    @if (enstituKayitYetki)
+                    {
+                        <div class="form-group">
+                            <label class="col-md-3 col-xs-4 control-label">Dönem (*)</label>
+                            <div class="col-md-9 col-xs-8">
+                                @Html.DropDownList("DonemSecim", Model.SListDonemSecim, new { @class = "form-control", @style = "width:100%;color:black;", id = "DonemSecim" })
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-4 control-label">Tez Dili</label>
+                        <div class="col-md-9 col-xs-8">
+                            @(Model.IsTezDiliTr ? "Türkçe" : "İngilizce")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-4 control-label">Tez Konusu Türkçe (*)</label>
+                        <div class="col-md-9 col-xs-8">
+                            <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="512" value="@Model.TezBaslikTr" class="form-control" style="color: black;" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-4 control-label">Tez Konusu İngilizce (*)</label>
+                        <div class="col-md-9 col-xs-8">
+                            <input type="text" name="TezBaslikEn" autocomplete="off" id="TezBaslikEn" maxlength="512" value="@Model.TezBaslikEn" class="form-control" style="color: black;" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-4 control-label">Tez Başlığı Değişecek mi?</label>
+                        <div class="col-md-9 col-xs-8">
+                            <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                <input type="checkbox" value="true" name="IsTezBasligiDegisti" class="toggle" onchange="if ($(this).prop('checked')) { $('.YeniTez').removeClass('hide'); } else {$('.YeniTez').addClass('hide'); }" @Model.IsTezBasligiDegisti.ToChecked() />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
+                        <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı Türkçe(*)</label>
+                        <div class="col-md-9 col-xs-8">
+                            <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group YeniTez @(Model.IsTezBasligiDegisti ? "" : "hide")">
+                        <label class="col-md-3 col-xs-4 control-label">Yeni Tez Başlığı İngilizce (*)</label>
+                        <div class="col-md-9 col-xs-8">
+                            <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group TTB">
+                        <label class="col-md-3 col-xs-4 control-label">Çalışma Raporu Dosyası (*) <i class="fa fa-file-pdf-o" style="font-size: 12pt;"></i></label>
+                        <div class="col-md-9 col-xs-8">
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="file" class="fileinput" accept="application/pdf" name="Dosya" id="Dosya" title="Belge Seç (Belge PDF türünde olmalıdır)" />
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @if (Model.CalismaRaporDosyaAdi != null)
+                                        {
+                                            <input type="text" class="hide" name="CalismaRaporDosyaYolu" id="CalismaRaporDosyaYolu" value="@Model.CalismaRaporDosyaAdi" />
+                                            <span>Yüklenen Belge: <a href="@Url.Content(Model.CalismaRaporDosyaYolu)" target="_blank" style="color: green; font-weight: bold;">@Model.CalismaRaporDosyaAdi</a></span>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" class="hide" name="CalismaRaporDosyaYolu" id="CalismaRaporDosyaYolu" value="" />
+                                        }
+                                    </td>
+
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 col-xs-4 control-label">100/2000 YÖK Bursiyeri (*)</label>
+                        <div class="col-md-9 col-xs-8">
+                            <select class="form-control" name="IsYokDrBursiyeriVar" onchange="if ($(this).val()=='true') { $('.YokB').removeClass('hide'); } else { $('.YokB').addClass('hide'); }">
+                                <option></option>
+                                <option value="true" @(Model.IsYokDrBursiyeriVar == true ? "selected" : "")>Evet</option>
+                                <option value="false" @(Model.IsYokDrBursiyeriVar == false ? "selected" : "")>Hayır</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group YokB @(Model.IsYokDrBursiyeriVar == true ? "" : "hide")">
+                        <label class="col-md-3 col-xs-4 control-label">Öncelikli Alt Alan Adı</label>
+                        <div class="col-md-9 col-xs-8">
+                            <input type="text" id="YokDrOncelikliAlan" autocomplete="off" name="YokDrOncelikliAlan" value="@Model.YokDrOncelikliAlan" maxlength="128" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="panel panel-info panel-default form-horizontal" style="margin:0px;margin-top:5px;">
+                                <div class="panel-heading padding-0">
+                                    <h3 class="panel-title"><span class="fa fa-group"></span> Tez Öneri Savunması Komite Üyeleri</h3>
+                                    <ul class="panel-controls"></ul>
+                                </div>
+                                <div class="panel-body list-group jMenuItems">
+                                    <table class="table">
+                                        <tr>
+                                            <th width="80">Komite</th>
+                                            <th>Ad Soyad</th>
+                                            <th>E-Posta</th>
+                                            <th>Üniversite</th>
+                                            <th>Anabilim Dalı</th>
+                                        </tr>
+                                        @foreach (var item in Model.ToBasvuruSavunmaKomites)
+                                        {
+
+                                            <tr>
+                                                <td> @(item.IsTezDanismani ? "T.Danışmanı" : "Tik Üyesi")</td>
+                                                <td>@item.UnvanAdi @item.AdSoyad</td>
+                                                <td>
+                                                    <input type="hidden" name="TikNums" value="@item.TikNum" />
+                                                    <input type="hidden" name="IsTezDanismanis" value="@item.IsTezDanismani.ToString().ToLower()" />
+                                                    <input type="hidden" name="UnvanAdis" value="@item.UnvanAdi" />
+                                                    <input type="hidden" name="AdSoyads" value="@item.AdSoyad" />
+                                                    <div class="form-group">
+                                                        <input class="form-control input input-sm" name="EMails" value="@item.EMail" id="EMail_@item.TikNum" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <input class="form-control input input-sm upperCase" name="UniversiteAdis" value="@item.UniversiteAdi" id="UniversiteAdi_@item.TikNum" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <input class="form-control input input-sm upperCase" name="AnabilimdaliAdis" value="@item.AnabilimdaliAdi" id="AnabilimdaliAdi_@item.TikNum" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('.make-switch')['bootstrapSwitch']();
+    $(function () {
+        $('.upperCase').each(function (ix, inx) {
+            $(inx).attr('autocomplete', 'off');
+            $(inx).bind('keyup', function (e) {
+                var vl = $(inx).val();
+                $(inx).val(vl.replaceAll("i", "İ").toUpperCase());
+            });
+        });
+    });
+
+</script>

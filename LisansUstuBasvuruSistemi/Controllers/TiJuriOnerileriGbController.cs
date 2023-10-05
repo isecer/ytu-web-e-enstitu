@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             model.EnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             model.KullaniciID = model.KullaniciID ?? UserIdentity.Current.Id;
             TezIzlemeJuriOneriBus.TezIzlemeJuriOneriSenkronizasyon(model.KullaniciID.Value);
-            var q = from s in _entities.TijBasvurus.Where(p => p.EnstituKod == model.EnstituKod)
+            var q = from s in _entities.TijBasvurus.Where(p => p.EnstituKod == model.EnstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod))
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
                     select new
                     {
@@ -73,6 +73,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             EYKDaOnaylandi = s2.EYKDaOnaylandi,
 
                         }).OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault(),
+
                         KayitVar = s.TijBasvuruOneris.Any()
 
                     };

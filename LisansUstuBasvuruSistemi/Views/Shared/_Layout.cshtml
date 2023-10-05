@@ -502,7 +502,7 @@
                         </li>
                     }
                     <!-- LOGIN BLOCk -->
-                    @if (!BiskaUtil.UserIdentity.Current.IsAuthenticated && !urlInfo.LastPath.ToLower().Contains("account/login"))
+                    @if (!BiskaUtil.UserIdentity.Current.IsAuthenticated)
                     {
                         <li class="xn-icon-button pull-right" id="loginPanel">
                             <a href="javascript:void(0);" onclick="$('#UserName').focus()"><span class="fa fa-lock"></span></a>

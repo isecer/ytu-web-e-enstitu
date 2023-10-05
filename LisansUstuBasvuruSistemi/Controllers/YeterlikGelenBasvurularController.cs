@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         {
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             var q = from yeterlikBasvuru in _entities.YeterlikBasvurus
-                    join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
+                    join yeterlikSureci in _entities.YeterlikSurecis.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)) on yeterlikBasvuru.YeterlikSurecID equals yeterlikSureci.YeterlikSurecID
                     join kullanicilar in _entities.Kullanicilars on yeterlikBasvuru.KullaniciID equals kullanicilar.KullaniciID
                     join programlar in _entities.Programlars on yeterlikBasvuru.ProgramKod equals programlar.ProgramKod
                     join ogrenimTipleri in _entities.OgrenimTipleris on yeterlikBasvuru.OgrenimTipID equals ogrenimTipleri.OgrenimTipID

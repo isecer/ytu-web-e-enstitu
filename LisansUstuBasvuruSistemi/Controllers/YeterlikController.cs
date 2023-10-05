@@ -798,8 +798,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         yeterlikBasvuru.IsYaziliSinavBasarili = false;
                     }
-
-
+                     
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");

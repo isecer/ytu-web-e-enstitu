@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil
 @model KmTDOBasvuruDanisman
 @{
     Layout = null;
@@ -7,76 +8,90 @@
 @using (Ajax.BeginForm("TdoDanismanDegisiklikFormuPost", "TDOBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmTdoFormu" }))
 {
     @Html.HiddenFor(p => p.TDOBasvuruID);
-    @Html.HiddenFor(p => p.TDOBasvuruDanismanID);   
+    @Html.HiddenFor(p => p.TDOBasvuruDanismanID);
     <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
         <table style="width:100%;">
             <tbody>
-            <tr>
-                <td class="CaptionTd" width="140">Yeni Danışman</td>
-                <td class="CaptionTd" width="10">:</td>
-                <td class="ValueTd form-group">
-                    <input type="text" class="form-control" value="" style="width: 100%; color: black;" name="TezDanismanID" id="TezDanismanID"/>
-                    @if (Model.TezDanismanID > 0)
-                    {
-                        <script>
+                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                    <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
+                    <td class="CaptionTd" width="10">:</td>
+                    <td class="ValueTd form-group">
+                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                    </td>
+                </tr>
+                <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                    <td class="CaptionTd">Tez Başlığı İngilizce</td>
+                    <td class="CaptionTd">:</td>
+                    <td class="ValueTd form-group">
+                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="CaptionTd" width="140">Yeni Danışman</td>
+                    <td class="CaptionTd" width="10">:</td>
+                    <td class="ValueTd form-group">
+                        <input type="text" class="form-control" value="" style="width: 100%; color: black;" name="TezDanismanID" id="TezDanismanID" />
+                        @if (Model.TezDanismanID > 0)
+                        {
+                            <script>
                                     setTimeout(function () {
                                         var secilen =  @Html.Raw(Json.Encode(new { id = Model.TezDanismanID, text = Model.TDAdSoyad }));
                                         $("#TezDanismanID").select2('data', secilen);
 
                                     }, 1200);
                             </script>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <td class="CaptionTd">Anabilim Dalı</td>
-                <td class="CaptionTd">:</td>
-                <td class="ValueTd form-group">
-                    @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" })
-                </td>
-            </tr>
-            <tr>
-                <td class="CaptionTd">Programı</td>
-                <td class="CaptionTd">:</td>
-                <td class="ValueTd form-group">
-                    @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
-                </td>
-            </tr>
-            @if (Model.IsTezDiliTr == false)
-            {
-                <tr>
-                    <td class="CaptionTd">Dil Yeterliliği</td>
-                    <td class="CaptionTd">:</td>
-                    <td class="ValueTd">
-                        <table>
-                            <tr>
-                                <td>Sınav Adı</td>
-                                <td class="TdSinavUni @(Model.TDSinavTipID == -1 ? "" : "hide")">Üniversite Adı</td>
-                                <td class="TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")">Sınav Yılı</td>
-                                <td class="TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")">Sınav Puanı</td>
-                            </tr>
-                            <tr>
-                                <td class="form-group">
-                                    @Html.DropDownList("TDSinavTipID", Model.SListTDSinav, new { @class = "form-control", @style = "width:147px;color:black;", id = "TDSinavTipID", onchange = "SinavTipKontrol(this,'TDSinavPuani','TdSpInp');" })
-                                </td>
-                                <td class="form-group TdSinavUni @(Model.TDSinavTipID == -1 ? "" : "hide")"> <input type="text" name="TDUniversiteAdi" id="TDUniversiteAdi" maxlength="256" autocomplete="off" value="@Model.TDUniversiteAdi" class="form-control" style="color: black;"/></td>
-                                <td class="form-group TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")"> <input type="text" name="TDSinavYili" id="TDSinavYili" maxlength="4" autocomplete="off" value="@Model.TDSinavYili" class="form-control" style="color: black;"/></td>
-                                <td class="form-group TdSp TdSpInp @(Model.TDSinavTipID == -1 ? "hide" : "")">
-                                    @if (Model.SListTDSinavNot == null)
-                                    {
-                                        <input type="text" name="TDSinavPuani" id="TDSinavPuani" maxlength="64" autocomplete="off" value="@Model.TDSinavPuani" class="form-control" style="color: black;"/>
-                                    }
-                                    else
-                                    {
-                                        @Html.DropDownList("TDSinavPuani", Model.SListTDSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
-                                    }
-                                </td>
-
-                            </tr>
-                        </table>
+                        }
                     </td>
                 </tr>
-            }
+                <tr>
+                    <td class="CaptionTd">Anabilim Dalı</td>
+                    <td class="CaptionTd">:</td>
+                    <td class="ValueTd form-group">
+                        @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" })
+                    </td>
+                </tr>
+                <tr>
+                    <td class="CaptionTd">Programı</td>
+                    <td class="CaptionTd">:</td>
+                    <td class="ValueTd form-group">
+                        @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
+                    </td>
+                </tr>
+                @if (Model.IsTezDiliTr == false)
+                {
+                    <tr>
+                        <td class="CaptionTd">Dil Yeterliliği</td>
+                        <td class="CaptionTd">:</td>
+                        <td class="ValueTd">
+                            <table>
+                                <tr>
+                                    <td>Sınav Adı</td>
+                                    <td class="TdSinavUni @(Model.TDSinavTipID == -1 ? "" : "hide")">Üniversite Adı</td>
+                                    <td class="TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")">Sınav Yılı</td>
+                                    <td class="TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")">Sınav Puanı</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-group">
+                                        @Html.DropDownList("TDSinavTipID", Model.SListTDSinav, new { @class = "form-control", @style = "width:147px;color:black;", id = "TDSinavTipID", onchange = "SinavTipKontrol(this,'TDSinavPuani','TdSpInp');" })
+                                    </td>
+                                    <td class="form-group TdSinavUni @(Model.TDSinavTipID == -1 ? "" : "hide")"> <input type="text" name="TDUniversiteAdi" id="TDUniversiteAdi" maxlength="256" autocomplete="off" value="@Model.TDUniversiteAdi" class="form-control" style="color: black;" /></td>
+                                    <td class="form-group TdSp @(Model.TDSinavTipID == -1 ? "hide" : "")"> <input type="text" name="TDSinavYili" id="TDSinavYili" maxlength="4" autocomplete="off" value="@Model.TDSinavYili" class="form-control" style="color: black;" /></td>
+                                    <td class="form-group TdSp TdSpInp @(Model.TDSinavTipID == -1 ? "hide" : "")">
+                                        @if (Model.SListTDSinavNot == null)
+                                        {
+                                            <input type="text" name="TDSinavPuani" id="TDSinavPuani" maxlength="64" autocomplete="off" value="@Model.TDSinavPuani" class="form-control" style="color: black;" />
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownList("TDSinavPuani", Model.SListTDSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
+                                        }
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

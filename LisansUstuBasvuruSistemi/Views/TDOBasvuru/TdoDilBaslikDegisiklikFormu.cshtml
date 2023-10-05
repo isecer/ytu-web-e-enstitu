@@ -1,5 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil
 @model KmTDOBasvuruDanisman
 @{
     Layout = null;
@@ -12,44 +13,58 @@
 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
     <table style="width:100%;">
         <tbody>
-        <tr>
-            <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Tez Bilgileri</td>
-        </tr>
-        <tr>
-            <td class="CaptionTd" width="150">Tez Dil Değişecek Mi?</td>
-            <td class="CaptionTd" width="10">:</td>
-            <td class="ValueTd form-group">
-                <select id="YenTezDiliDegisecekmi" name="YenTezDiliDegisecekmi" class="form-control" onchange="if ($(this).val() == 'true') { $('.IsYeniTezDiliTr').removeClass('hide'); } else { $('.IsYeniTezDiliTr').addClass('hide'); TezDiliKontrol();}">
-                    <option value="true" @(Model.IsYeniTezDiliTr.HasValue ? "selected" : "")>Evet</option>
-                    <option value="false" @(!Model.IsYeniTezDiliTr.HasValue ? "selected" : "")>Hayır</option>
-                </select>
-            </td>
-        </tr>
-        <tr class="IsYeniTezDiliTr @(Model.IsYeniTezDiliTr.HasValue ?"":"hide")">
-            <td class="CaptionTd">Yeni Tez Dili</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd form-group">
-                <select name="IsYeniTezDiliTr" id="IsYeniTezDiliTr" class="form-control" onchange="TezDiliKontrol();">
-                    <option value="" @(Model.IsYeniTezDiliTr.HasValue == false ? "selected" : "")></option>
-                    <option value="true" @(Model.IsYeniTezDiliTr == true ? "selected" : "")>Türkçe</option>
-                    <option value="false" @(Model.IsYeniTezDiliTr == false ? "selected" : "")>İngilizce</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd form-group">
-                <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control " style="color:black;" />
-            </td>
-        </tr>
-        <tr>
-            <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
-            <td class="CaptionTd">:</td>
-            <td class="ValueTd form-group">
-                <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control " style="color:black;" />
-            </td>
-        </tr>
+            <tr>
+                <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">Tez Bilgileri</td>
+            </tr>
+            <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <td class="CaptionTd" width="150">Tez Başlığı Türkçe</td>
+                <td class="CaptionTd" width="10">:</td>
+                <td class="ValueTd form-group">
+                    <input type="text" name="TezBaslikTr" id="TezBaslikTr" autocomplete="off" maxlength="512" value="@Model.TezBaslikTr" @(Model.TezBaslikTr.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                </td>
+            </tr>
+            <tr class="@(Model.TezBaslikTr.IsNullOrWhiteSpace() || Model.TezBaslikEn.IsNullOrWhiteSpace()?"":"hide")">
+                <td class="CaptionTd">Tez Başlığı İngilizce</td>
+                <td class="CaptionTd">:</td>
+                <td class="ValueTd form-group">
+                    <input type="text" name="TezBaslikEn" id="TezBaslikEn" autocomplete="off" maxlength="512" value="@Model.TezBaslikEn" @(Model.TezBaslikEn.IsNullOrWhiteSpace() ? "" : "readonly") class="form-control " style="color:black;" />
+                </td>
+            </tr>
+            <tr>
+                <td class="CaptionTd" width="150">Tez Dil Değişecek Mi?</td>
+                <td class="CaptionTd" width="10">:</td>
+                <td class="ValueTd form-group">
+                    <select id="YenTezDiliDegisecekmi" name="YenTezDiliDegisecekmi" class="form-control" onchange="if ($(this).val() == 'true') { $('.IsYeniTezDiliTr').removeClass('hide'); } else { $('.IsYeniTezDiliTr').addClass('hide'); TezDiliKontrol();}">
+                        <option value="true" @(Model.IsYeniTezDiliTr.HasValue ? "selected" : "")>Evet</option>
+                        <option value="false" @(!Model.IsYeniTezDiliTr.HasValue ? "selected" : "")>Hayır</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="IsYeniTezDiliTr @(Model.IsYeniTezDiliTr.HasValue ?"":"hide")">
+                <td class="CaptionTd">Yeni Tez Dili</td>
+                <td class="CaptionTd">:</td>
+                <td class="ValueTd form-group">
+                    <select name="IsYeniTezDiliTr" id="IsYeniTezDiliTr" class="form-control" onchange="TezDiliKontrol();">
+                        <option value="" @(Model.IsYeniTezDiliTr.HasValue == false ? "selected" : "")></option>
+                        <option value="true" @(Model.IsYeniTezDiliTr == true ? "selected" : "")>Türkçe</option>
+                        <option value="false" @(Model.IsYeniTezDiliTr == false ? "selected" : "")>İngilizce</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="CaptionTd">Yeni Tez Başlığı Türkçe</td>
+                <td class="CaptionTd">:</td>
+                <td class="ValueTd form-group">
+                    <input type="text" name="YeniTezBaslikTr" id="YeniTezBaslikTr" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikTr" class="form-control " style="color:black;" />
+                </td>
+            </tr>
+            <tr>
+                <td class="CaptionTd">Yeni Tez Başlığı İngilizce</td>
+                <td class="CaptionTd">:</td>
+                <td class="ValueTd form-group">
+                    <input type="text" name="YeniTezBaslikEn" id="YeniTezBaslikEn" autocomplete="off" maxlength="512" value="@Model.YeniTezBaslikEn" class="form-control " style="color:black;" />
+                </td>
+            </tr>
         </tbody>
     </table>
     

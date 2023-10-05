@@ -1,0 +1,103 @@
+﻿@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model KmSRTalep
+@{ 
+    Layout = null;
+
+    var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+}
+@if (Model.YetkisizErisim)
+{
+    <table>
+        <tr>
+            <td style="font-size:12pt;height:120px;">Toplantı kaydı yapmaya yetkili değilsiniz.</td>
+        </tr>
+    </table>
+}
+else
+{
+    using (Ajax.BeginForm("RezervasyonAlPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TIAraRaporSrForm" }))
+    {
+        @Html.HiddenFor(p => p.SRTalepID)
+        @Html.HiddenFor(p => p.TalepYapanID)
+        @Html.HiddenFor(p => p.ToBasvuruSavunmaID)
+        <div class="panel panel-info" style="margin: 0px; padding: 0px;">
+            <div class="panel-body" style="padding: 0px;">
+                <div class="panel panel-default form-horizontal" id="_PnpEADP">
+                    <div class="panel-body form-group-separated">
+                        <div class="form-group">
+                            <label class="col-md-3 col-xs-3 control-label">Toplantı Şekli</label>
+                            <div class="col-md-9 col-xs-9">
+                                <select class="form-control" name="IsOnline" id="IsOnline" onchange="TSekiSecim()">
+                                    <option value="true" @(Model.IsOnline ? "selected=selected" : "")>Çevrim İçi</option>
+                                    <option value="false" @(!Model.IsOnline ? "selected=selected" : "")>Yüz Yüze</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group Online">
+                            <label class="col-md-3 col-xs-3 control-label">Toplantı Tarih/Saat</label>
+                            <div class="col-md-9 col-xs-9">
+                                <input class="form-control input-medium" autocomplete="off" size="16" type="text" value="@Model.Tarih.ToFormatDateAndTimeInput()" name="Tarih" id="Tarih">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-md-3 col-xs-3 control-label TCapt">@(Model.IsOnline ? "Toplantı Katılım Linki" : "Toplantı Yeri")</label>
+                            <div class="col-md-9 col-xs-9">
+                                <input type="text" id="SalonAdi" name="SalonAdi" value="@Model.SalonAdi" maxlength="160" class="form-control" />
+                            </div>
+                        </div>
+                        @if (tiTezDegerlendirmeDuzeltme && Model.SRTalepID > 0)
+                        {
+                            <div class="form-group">
+                                <label class="col-md-3 col-xs-3 control-label">E-Posta Gönderim</label>
+                                <div class="col-md-9 col-xs-9">
+                                    <select class="form-control" name="IsSendMail">
+                                        <option value="true">Toplantı bilgileri Komite üyelerine ve Öğrenciye E-Posta olarak gönderilsin</option>
+                                        <option value="false" selected="selected">Toplantı bilgileri E-Postası gönderilmesin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+<script type="text/javascript">
+    $(function () {
+        TSekiSecim();
+    })
+
+    function TSekiSecim() {
+        if ($('#IsOnline').val() == 'true') {
+            $('.TCapt').html("Toplantı Katılım Linki");
+        }
+        else {
+            $('.TCapt').html("Toplantı Yeri");
+        }
+        var _times = [];
+        for (var i = 8; i <= 23; i++) {
+            var _saat = i;
+            if (i < 10) _saat = "0" + i;
+            for (var i2 = 0; i2 <= 30; i2 += 30) {
+                var _dkk = i2;
+                if (i2 == 0) _dkk = "00";
+                _times.push(_saat + ":" + _dkk);
+            }
+        }
+        $('#Tarih').datetimepicker({
+            inline: false,
+            allowTimes: _times,
+            step: 30,
+            timepicker: true,
+            format: 'Y-m-d H:i'
+        });
+        $.datetimepicker.setLocale('tr');
+    }
+     
+</script>
