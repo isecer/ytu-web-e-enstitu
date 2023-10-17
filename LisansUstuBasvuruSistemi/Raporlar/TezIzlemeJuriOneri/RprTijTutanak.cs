@@ -4,10 +4,7 @@
     {
         public RprTijTutanak()
         {
-            InitializeComponent();
-
-            
- 
+            InitializeComponent(); 
         }
 
     }

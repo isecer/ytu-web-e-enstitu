@@ -2596,6 +2596,7 @@
           </Key>
           <Property Name="TijBasvuruOneriJuriID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TijBasvuruOneriID" Type="int" Nullable="false" />
+          <Property Name="IsYeniOrOnceki" Type="bit" Nullable="false" />
           <Property Name="RowNum" Type="int" Nullable="false" />
           <Property Name="IsTezDanismani" Type="bit" Nullable="false" />
           <Property Name="IsYtuIciJuri" Type="bit" Nullable="false" />
@@ -2639,6 +2640,7 @@
           <Property Name="KayitTarihi" Type="datetime" />
           <Property Name="TezDanismanID" Type="int" />
           <Property Name="YeterlikSozluSinavTarihi" Type="date" Nullable="false" />
+          <Property Name="BasarisizSavunmaSayisi" Type="int" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -2653,7 +2655,7 @@
           <Property Name="SavunmaNo" Type="int" Nullable="false" />
           <Property Name="FormKodu" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="TezDanismanID" Type="int" />
-          <Property Name="RaporTarihi" Type="datetime" Nullable="false" />
+          <Property Name="SavunmaBasvuruTarihi" Type="datetime" Nullable="false" />
           <Property Name="DonemBaslangicYil" Type="int" Nullable="false" />
           <Property Name="DonemID" Type="int" Nullable="false" />
           <Property Name="IsTezDiliTr" Type="bit" Nullable="false" />
@@ -13137,6 +13139,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           </Key>
           <Property Name="TijBasvuruOneriJuriID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TijBasvuruOneriID" Type="Int32" Nullable="false" />
+          <Property Name="IsYeniOrOnceki" Type="Boolean" Nullable="false" />
           <Property Name="RowNum" Type="Int32" Nullable="false" />
           <Property Name="IsTezDanismani" Type="Boolean" Nullable="false" />
           <Property Name="IsYtuIciJuri" Type="Boolean" Nullable="false" />
@@ -13184,6 +13187,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
           <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="YeterlikSozluSinavTarihi" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="BasarisizSavunmaSayisi" Type="Int32" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -13203,7 +13207,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="SavunmaNo" Type="Int32" Nullable="false" />
           <Property Name="FormKodu" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="TezDanismanID" Type="Int32" />
-          <Property Name="RaporTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SavunmaBasvuruTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DonemBaslangicYil" Type="Int32" Nullable="false" />
           <Property Name="DonemID" Type="Int32" Nullable="false" />
           <Property Name="IsTezDiliTr" Type="Boolean" Nullable="false" />
@@ -20275,6 +20279,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsYtuIciJuri" ColumnName="IsYtuIciJuri" />
                 <ScalarProperty Name="IsTezDanismani" ColumnName="IsTezDanismani" />
                 <ScalarProperty Name="RowNum" ColumnName="RowNum" />
+                <ScalarProperty Name="IsYeniOrOnceki" ColumnName="IsYeniOrOnceki" />
                 <ScalarProperty Name="TijBasvuruOneriID" ColumnName="TijBasvuruOneriID" />
                 <ScalarProperty Name="TijBasvuruOneriJuriID" ColumnName="TijBasvuruOneriJuriID" />
               </MappingFragment>
@@ -20303,6 +20308,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="BasarisizSavunmaSayisi" ColumnName="BasarisizSavunmaSayisi" />
                 <ScalarProperty Name="YeterlikSozluSinavTarihi" ColumnName="YeterlikSozluSinavTarihi" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
@@ -20342,7 +20348,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsTezDiliTr" ColumnName="IsTezDiliTr" />
                 <ScalarProperty Name="DonemID" ColumnName="DonemID" />
                 <ScalarProperty Name="DonemBaslangicYil" ColumnName="DonemBaslangicYil" />
-                <ScalarProperty Name="RaporTarihi" ColumnName="RaporTarihi" />
+                <ScalarProperty Name="SavunmaBasvuruTarihi" ColumnName="SavunmaBasvuruTarihi" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="FormKodu" ColumnName="FormKodu" />
                 <ScalarProperty Name="SavunmaNo" ColumnName="SavunmaNo" />

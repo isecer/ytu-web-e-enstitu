@@ -735,7 +735,7 @@ namespace LisansUstuBasvuruSistemi.Models
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Programlars.Where(p => p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
+                var data = db.Programlars.Where(p =>  p.IsAktif).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     dct.Add(new CmbStringDto { Value = item.ProgramKod, Caption = item.ProgramAdi });
@@ -749,7 +749,7 @@ namespace LisansUstuBasvuruSistemi.Models
             if (bosSecimVar) dct.Add(new CmbStringDto { Value = "", Caption = "" });
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
-                var data = db.Programlars.Where(p => p.IsAktif && p.AnabilimDallari.EnstituKod == EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
+                var data = db.Programlars.Where(p =>p.AnabilimDallari.IsAktif && p.IsAktif && p.AnabilimDallari.EnstituKod == EnstituKod).OrderBy(o => o.ProgramAdi).ToList();
                 foreach (var item in data)
                 {
                     if (IsAbdShow)

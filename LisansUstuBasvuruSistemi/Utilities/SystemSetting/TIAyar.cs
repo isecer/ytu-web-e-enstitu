@@ -11,8 +11,12 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
     {
         public const string TikOneriAlimiAcik = "Tik Öneri Alımı Açık";
         public const string TikOneriDegisiklikAlimiAcik = "Tik Öneri Değişikliği Alımı Açık";
-        public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez Öneri Savunması Başvuru Alımı Açık"; 
-
+        public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez Öneri Savunması Başvuru Alımı Açık";
+        public const string TezOneriToplamSavunmaSavunmaHak = "Toplam başarısız Tez Öneri Savunma hakkı";
+        public const string TezOneriToplamBasarisizTezOneriSavunmaHak = "Toplam başarısız Tez Öneri Savunma hakkı";
+        public const string TezOneriIlkSavunmaHakkiAyKriter= "İlk savunma hakkı yeterlik başarı tarihi itibari ile kaç ay içinde yapılmalı";
+        public const string TezOneriIkinciSavunmaHakkiAyKriter = "İkinci savunma hakkı ilk hak bitiş tarihi itibari ile en geç kaç ay içinde yapılmalı";
+        
         public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
         public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son Dönem Kayıt Olunması Gereken Ders Kodları";
         public const string UyelerMinSinavPuan = "Üyeler için Dil Sınavı Kabulü Min Puan";

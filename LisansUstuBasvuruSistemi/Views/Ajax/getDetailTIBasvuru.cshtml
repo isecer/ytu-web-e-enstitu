@@ -34,8 +34,7 @@
     }
 </style>
 <div class="panel" style="border:none;" id="bsvrDet_@Model.TIBasvuruID">
-    <div>
-
+   
         @if (Model.DegerlendirenUniqueID.HasValue)
         {
             var item = Model.TIBasvuruAraRaporList.First(p => p.TIBasvuruAraRaporKomites.Any(a => a.UniqueID == Model.DegerlendirenUniqueID));
@@ -617,7 +616,7 @@
                                                                                     <span aria-hidden="true" style="font-size:9pt;"><i class="fa fa-clock-o" style="font-size:12pt;"></i> Değerlendirme Yapması Bekleniyor.</span>
                                                                                     if (!isKomiteTezDanismani && itemJr.IsLinkGonderildi == true)
                                                                                     {
-                                                                                        <br /><span style="color:green;font-size:8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString()  @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm")  Saatinde Değerlendirme Linki Gönderildi.</span>
+                                                                                        <br /><span style="color:green;font-size:8pt;">@itemJr.LinkGonderimTarihi.Value.ToLongDateString()  @itemJr.LinkGonderimTarihi.Value.ToString("HH:mm")  Tarihinde Değerlendirme Linki Gönderildi.</span>
                                                                                     }
                                                                                 }
                                                                             }
@@ -934,10 +933,7 @@
 
                 </table>
             </div>
-        }
-
-
-    </div>
+        } 
 </div>
 <script>
     $(function () {

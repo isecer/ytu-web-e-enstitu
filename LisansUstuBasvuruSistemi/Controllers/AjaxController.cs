@@ -1132,9 +1132,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return View(model);
         }
         [HttpGet]
-        public ActionResult GetDetailTosBasvuru(int id, Guid? uniqueId)
+        public ActionResult GetDetailTosBasvuru(Guid toUniqueId, Guid? tosKomiteUniqueId)
         {
-            var model = TezOneriSavunmaBus.GetSecilenBasvuruDetay(id, uniqueId);
+            var model = TezOneriSavunmaBus.GetSecilenBasvuruDetay(toUniqueId, tosKomiteUniqueId);
             return View(model);
         }
         [Authorize]

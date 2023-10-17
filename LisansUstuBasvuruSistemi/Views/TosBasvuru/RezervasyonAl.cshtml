@@ -4,7 +4,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model KmSRTalep
-@{ 
+@{
     Layout = null;
 
     var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
@@ -24,6 +24,7 @@ else
         @Html.HiddenFor(p => p.SRTalepID)
         @Html.HiddenFor(p => p.TalepYapanID)
         @Html.HiddenFor(p => p.ToBasvuruSavunmaID)
+        @Html.HiddenFor(p => p.UniqueID)
         <div class="panel panel-info" style="margin: 0px; padding: 0px;">
             <div class="panel-body" style="padding: 0px;">
                 <div class="panel panel-default form-horizontal" id="_PnpEADP">
@@ -99,5 +100,5 @@ else
         });
         $.datetimepicker.setLocale('tr');
     }
-     
+
 </script>

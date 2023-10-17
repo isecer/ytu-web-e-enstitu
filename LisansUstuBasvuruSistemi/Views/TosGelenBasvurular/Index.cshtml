@@ -1,0 +1,317 @@
+﻿@using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@model  FmTosBasvuru
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
+    var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
+    var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
+    var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+    var toplantiTalepYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
+    var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
+    var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
+}
+
+<div class="row">
+    @using (Html.BeginForm("Index", "TosGelenBasvurular", FormMethod.Post, new { id = "frmGBasvurular" }))
+    {
+        <div class="col-md-12">
+            @Html.Hidden("export", false)
+            <!-- START SIMPLE DATATABLE -->
+            <div class="panel panel-info" id="pnlFltr">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title">
+                        <i class="glyphicon glyphicon-filter"></i> Filtre İşlemi
+                    </h3>
+                    <ul class="panel-controls">
+
+                        @if (!Model.AktifDonemID.IsNullOrWhiteSpace() && Model.RowCount > 0)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" onclick="$('#export').val('true'); $('#frmGBasvurular').submit(); $('#export').val('false');" title="Listelenen kaydı excel e aktar"><i class="fa fa-download"></i></a>
+                            </li>
+
+                        }
+                        @if (RoleNames.TosGelenBasvuruKayit.InRole())
+                        {
+                            if (filteredOgrenciIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredOgrenciIds)',true,false)" title="Listelenen Başvurular için @filteredOgrenciIds.Count Öğrenciye Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> Ö</i></a>
+                                </li>
+                            }
+                            if (filteredDanismanIds.Any())
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",filteredDanismanIds)',true,false)" title="Listelenen Başvurular için @filteredDanismanIds.Count Danışmana Mail Gönder"><i class="fa fa-envelope" aria-hidden="true"> D</i></a>
+                                </li>
+                            }
+
+
+                        }
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <tr>
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Savunma Dönemi</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDonemID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Anabilim Dalı</td>
+                                            <td>
+                                                @Html.DropDownList("AnabilimDaliID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                                <table style="width:100%;table-layout:fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Savunma Durumu</td>
+                                            <td>
+                                                @Html.DropDownList("AktifDurumID", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Savunma Numarası</td>
+                                            <td>
+                                                @Html.DropDownList("SavunmaNo", null, new { @class = "form-control" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="padding-left:10px;">
+                            </td>
+                            <td style="padding-left: 10px; vertical-align: top;">
+
+                                <table style="width: 100%; table-layout: fixed;">
+                                    <tbody>
+                                        <tr>
+                                            <td width="160">Aranacak Kelime</td>
+                                            <td>
+
+                                                <table style="width: 100%; table-layout: fixed;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td> <input name="AdSoyad" id="AdSoyad" type="text" value="@Model.AdSoyad" onkeypress="if (event.which == 13) { $('#frmGBasvurular').submit(); }" class="form-control" /></td>
+                                                            <td width="110">
+                                                                <a href="javascript:void(0);" onclick="$('#frmGBasvurular').submit();" class="btn btn-info" style="width: 110px;"><i class="glyphicon glyphicon-filter"> Filtrele</i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-heading padding-0">
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                    <ul class="panel-controls"></ul>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" style="width:100%;table-layout:fixed;">
+                        <thead>
+                            <tr>
+                                <th width="75"></th>
+                                <th>Ad Soyad</th>
+                                <th width="180">Son Savunma Dönemi</th>
+                                <th>Son Savunma Durumu</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @if (Model.RowCount > 0)
+                            {
+
+                                int rowIndex = Model.StartRowIndex;
+                                foreach (var item in Model.Data)
+                                {
+                                    rowIndex++;
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 30px;">@rowIndex</td>
+                                                    <td>
+                                                        <ul class="panel-controls">
+                                                            <li id="iShow_@item.UniqueID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.UniqueID')">
+                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table" style="padding:0px;margin:0px;border:none;table-layout:fixed;">
+                                                <tr>
+                                                    <td class="clsHide" style="margin:0px;border:none;" width="40"> <img src="@item.ResimAdi.ToKullaniciResim()" style="width:40px;height:40px;cursor:pointer;" onclick="detayGor(@item.KullaniciID)" class="img-circle img-thumbnail"></td>
+                                                    <td style="margin:0px;border:none;"> @item.AdSoyad <br /> @item.OgrenciNo</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            @item.AktifDonemAdi<br />@(item.AktifSavunmaNo.HasValue?item.AktifSavunmaNo+". Savunma":"----")
+                                        </td>
+                                        <td>@item.DurumModel.TosBasvuruDurumView()</td>
+
+                                    </tr>
+                                    <tr class="cls-@item.UniqueID" style="display:none">
+                                        <td id="cls-@item.UniqueID" class="clspTd" colspan="4" style="padding: 1px 1px 2px 75px;"></td>
+                                    </tr>
+
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="clspTd" style="text-align: center;">
+                                        Listelenen Kayıt Yok
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ToPagerString()
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+
+    function showDetailY(id) {
+        var rwID = $('#iShow_' + id);
+        var cls = 'cls-' + id;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+    }
+
+
+
+    function ShowDetail(toUniqueId) {
+        var rwID = $('#iShow_' + toUniqueId);
+        var cls = 'cls-' + toUniqueId;
+        var unTogled = ($('.' + cls).css("display") == "none");
+        toggleByClass(rwID, cls, unTogled);
+        if (unTogled) GetDetail(toUniqueId);
+
+    }
+    function GetDetail(toUniqueId) {
+        var _panel = $('#bsvrDet_' + toUniqueId);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("GetDetailTosBasvuru", "Ajax")',
+            data: { toUniqueId, tosKomiteUniqueId: '@Model.IsDegerlendirme' },
+            success: function (result) {
+                $('#cls-' + toUniqueId).html(result);
+                PanelRefresh(_panel, true);
+                var $YnBtn = $('#YeniRaporBtn_' + toUniqueId);
+                if ($YnBtn.length > 0) {
+                    $YnBtn.pulsate({
+                        color: "#fdbe41",
+                        reach: 60,
+                        repeat: 24,
+                        speed: 300,
+                        glow: true
+                    });
+                }
+            },
+            error: function (err) {
+                alert(err.responseText);
+                PanelRefresh(_panel, true);
+            }
+        });
+
+    }
+    $(function () {
+        $('.tooltips').tooltip();
+    });
+
+    function SilDetay(toUniqueId, tosUniqueId, adSoyad, tarih,isSilmeyeUygun) {
+        var notMsg = '';
+        if (isSilmeyeUygun!="true" && '@UserIdentity.Current.IsAdmin.ToString().ToLower()'=='true') {
+            notMsg=" <br/><b>Not: Silme işlemini onaylarsanız Değerlendirme süreci başladığı halde Tez Öneri Savunma Sınavı Silinecektir!</b>"
+        }
+        bootbox.dialog({
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait " + tarih + " tarihli Tez Öneri Savunma Sınavını silmek istiyor musunuz? " + notMsg +"</td></tr></table>",
+            title: "Tez Öneris Savunması Silme İşlemi",
+            buttons: {
+                success: {
+                    label: 'Tez Önerisi Savunmasını Sil',
+                    className: "btn-danger",
+                    callback: function () {
+                        $.ajax({
+                            url: '@Url.Action("SilDetay", "TosBasvuru")',
+                            data: { tosUniqueId },
+                            success: function (result) {
+                                GetDetail(toUniqueId);
+                                showMmMessage(result.Messages, 'Tamam');
+                            },
+                            error: function (err) {
+                                alert(err.responseText);
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: 'Vazgeç',
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                }
+            }
+        });
+    }
+</script>
+

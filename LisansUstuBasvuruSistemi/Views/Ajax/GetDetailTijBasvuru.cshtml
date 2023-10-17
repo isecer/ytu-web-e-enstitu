@@ -233,21 +233,102 @@
                                                 </table>
                                             </div>
 
+                                            @if (item.TijFormTipID != TijFormTipi.YeniForm)
+                                            {
+                                                <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
+                                                    <table class="table" style="width:100%;margin:0px;">
+                                                        <tr>
+                                                            <td colspan="5" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> Varolan Jüriler</td>
+                                                        </tr>
+
+                                                        <tr class="info">
+                                                            <th width="35"></th>
+                                                            <th width="100">Unvanı</th>
+                                                            <th>Ad Soyad</th> 
+                                                        </tr>
+                                                        <tbody>
+
+                                                            @foreach (var itemJr in item.TijBasvuruOneriJurilers.Where(p => !p.IsYeniOrOnceki))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+
+                                                                        <ul class="panel-controls">
+                                                                            <li id="iShow_Jo_@itemJr.TijBasvuruOneriJuriID" onclick="showDetailY('Jo_@itemJr.TijBasvuruOneriJuriID')">
+                                                                                <a href="javascript:void(0)"><span class="fa fa-angle-down"></span> </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.UnvanAdi
+                                                                        <br />
+                                                                        @(itemJr.IsTezDanismani ? "Tez Danışmanı" : "Jüri Üyesi")
+                                                                    </td>
+                                                                    <td>
+                                                                        @itemJr.AdSoyad
+                                                                        <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
+                                                                    </td> 
+                                                                </tr>
+                                                                <tr class="MainRow2 cls-Jo_@itemJr.TijBasvuruOneriJuriID" style="display:none">
+                                                                    <td id="cls-Jo_@itemJr.TijBasvuruOneriJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
+                                                                        <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
+                                                                            <table style="table-layout:fixed; font-size:9pt;margin:0px;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd" width="150">E-Posta Adresi</td>
+                                                                                        <td class="CaptionTd" width="10">:</td>
+                                                                                        <td class="ValueTd">@itemJr.EMail</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd">Üniversitesi</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">@itemJr.UniversiteAdi</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd">Anabilim Dalı</td>
+                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="ValueTd">@itemJr.AnabilimdaliAdi</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
                                                 <table class="table" style="width:100%;margin:0px;">
                                                     <tr>
-                                                        <td colspan="5" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-group fa-lg"></i> @(item.IsObsData? "Jüriler (OBS de doğrulandı)" : "Jüriler")</td>
+                                                        <td colspan="5" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">
+                                                            <i class="fa fa-group fa-lg"></i>
+                                                            @if (item.TijFormTipID != TijFormTipi.YeniForm)
+                                                            {
+                                                                @("Önerilen Jüriler")
+                                                            }
+                                                            else
+                                                            {
+                                                                @(item.IsObsData? "Jüriler (OBS de doğrulandı)" : "Önerilen Jüriler")
+                                                            }
+
+                                                        </td>
                                                     </tr>
 
                                                     <tr class="info">
                                                         <th width="35"></th>
                                                         <th width="100">Unvanı</th>
                                                         <th>Ad Soyad</th>
-                                                        <th width="90" style="text-align: center;">Asil Seçim</th>
+                                                        <th width="90" style="text-align: center;">
+                                                            Asil Seçim
+                                                        </th>
                                                     </tr>
                                                     <tbody>
 
-                                                        @foreach (var itemJr in item.TijBasvuruOneriJurilers)
+                                                        @foreach (var itemJr in item.TijBasvuruOneriJurilers.Where(p=>p.IsYeniOrOnceki))
                                                         {
                                                             <tr>
                                                                 <td>

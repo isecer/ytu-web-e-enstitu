@@ -52,7 +52,7 @@
                             }
 
 
-                        } 
+                        }
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -433,7 +433,7 @@
                 }
             });
         }
-    function showDLinkGonder(TIBasvuruID, TIBasvuruAraRaporID,UniqueID) { 
+    function showDLinkGonder(TIBasvuruID, TIBasvuruAraRaporID,UniqueID) {
             var _panel = $('#bsvrDet_' + TIBasvuruID);
              PanelRefresh(_panel, false);
              $.ajax({
@@ -454,7 +454,7 @@
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
                                      var EMail = $('#EMail_' + UniqueID).val();
-                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val(); 
+                                     var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + UniqueID).val();
                                      $.ajax({
                                          url: '@Url.Action("DegerlendirmeLinkiGonder", "TiBasvuru")',
                                          data: {
@@ -462,7 +462,7 @@
                                              'TIBasvuruAraRaporID': TIBasvuruAraRaporID,
                                              'UniqueID': UniqueID,
                                              'EMail': EMail,
-                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin 
+                                             'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin
                                          },
                                          success: function (result) {
                                              PanelRefresh(pnlx, true);
@@ -502,7 +502,7 @@
 
 
 
-        } 
+        }
         function silDetay(sndr, id, TIBasvuruAraRaporID, RaporNo) {
         var _panel = $('#bsvrDet_' + id);
         PanelRefresh(_panel, false);
@@ -673,3 +673,4 @@
         }
     </script>
 }
+

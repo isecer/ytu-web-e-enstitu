@@ -50,8 +50,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join pr in _entities.Programlars on s.ProgramKod equals pr.ProgramKod
                     join ab in _entities.AnabilimDallaris on pr.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
-                      let ard =
-                        s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
+                    let ard =
+                      s.TIBasvuruAraRapors.FirstOrDefault(p => baslangicYil.HasValue ? (p.TIBasvuruID == s.TIBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil) : p.TIBasvuruAraRaporID == s.AktifTIBasvuruAraRaporID)
 
 
                     select new frTIBasvuru
@@ -71,7 +71,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         CepTel = k.CepTel,
                         TcKimlikNo = k.TcKimlikNo,
                         OgrenciNo = s.OgrenciNo,
-                        ResimAdi = k.ResimAdi, 
+                        ResimAdi = k.ResimAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
@@ -96,11 +96,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         IsBasariliOrBasarisiz = ard != null ? ard.IsBasariliOrBasarisiz : (bool?)null
 
-                    };
+                    }; 
 
-
-            var q2 = q;
             q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
+            var q2 = q;
             if (baslangicYil.HasValue) q = q.Where(p => p.AraRaporDanismanID.HasValue);
             if (!model.AktifTIAraRaporDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.TIAraRaporAktifDonemID == model.AktifTIAraRaporDonemID);
             if (model.AktifTIAraRaporRaporDurumID.HasValue)
@@ -125,9 +124,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>
                     p.AdSoyad.Contains(model.AdSoyad)
-                    || p.OgrenciNo.Contains(model.AdSoyad) 
+                    || p.OgrenciNo.Contains(model.AdSoyad)
                     || p.TcKimlikNo.Contains(model.AdSoyad)
-                    || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Any(ak=>ak.Contains(model.AdSoyad))));
+                    || p.tIAraraporFiltreModels.Any(a => a.FormKodu == model.AdSoyad || a.KomiteUyeleri.Any(ak => ak.Contains(model.AdSoyad))));
 
             var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
             var mbGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();

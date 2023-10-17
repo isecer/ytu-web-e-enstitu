@@ -16,6 +16,7 @@ namespace LisansUstuBasvuruSistemi.Models
     {
         public int TijBasvuruOneriJuriID { get; set; }
         public int TijBasvuruOneriID { get; set; }
+        public bool IsYeniOrOnceki { get; set; }
         public int RowNum { get; set; }
         public bool IsTezDanismani { get; set; }
         public bool IsYtuIciJuri { get; set; }

@@ -10,7 +10,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class FmTosBasvuru : PagerOption
     {
-        public int? ToBasvuruID { get; set; }
+         
+        public Guid? UniqueId { get; set; }
         public int? KullaniciID { get; set; }
         public int? AnabilimDaliID { get; set; }
         public string Kod { get; set; }
@@ -28,6 +29,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string DonemID { get; set; }
         public int? AktifDurumID { get; set; }
         public int? DurumID { get; set; }
+        public int? SavunmaNo { get; set; }
 
         public IEnumerable<FrTosBasvuru> Data { get; set; }
     }
@@ -49,6 +51,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EMail { get; set; }
         public string IslemYapan { get; set; }
         public string FormNo { get; set; }
+        public int? AktifSavunmaNo { get; set; }
         public int? DurumID { get; set; }
         public string DurumAdi { get; set; }
         public bool? IsOyBirligiOrCoklugu { get; set; }
@@ -63,6 +66,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     public class TosBasvuruDetayDto : ToBasvuru
     {
+    
         public bool GelenBasvuru { get; set; }
         public string EnstituAdi { get; set; }
         public string ResimAdi { get; set; }
@@ -73,17 +77,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string KayitDonemi { get; set; }
-        public string TezDanismanBilgiEslesen { get; set; }
+        public string TezDanismanBilgiEslesen { get; set; } 
+        public int? ToplamBasarisizTezOneriSavunmaHak { get; set; }
+        public int KalanTezOneriSavunmaHakki =>
+              (this.ToplamBasarisizTezOneriSavunmaHak.HasValue
+                ? (this.ToplamBasarisizTezOneriSavunmaHak.Value - BasarisizSavunmaSayisi)
+                : 0);
 
+
+        public int? IlkSavunmaHakkiAyKriter { get; set; }
+        public int? IkinciSavunmaHakkiAyKriter { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
     }
     public class ToBasvuruSavunmaDto : ToBasvuruSavunma
     {
         public string DonemAdi { get; set; }
-        public string DurumAdi { get; set; }
+        public string DurumAdi { get; set; } 
         public TosDurumDto DurumModel { get; set; }
         public FrTalepler SRModel { get; set; }
+    }
+
+    public class ToBasvuruSavunmaKomiteDto : ToBasvuruSavunmaKomite
+    {
+        public string DurumAdi { get; set; }
     }
 
 

@@ -291,6 +291,7 @@
     <Compile Include="Controllers\TalepYapController.cs" />
     <Compile Include="Controllers\TiGelenBasvurularController.cs" />
     <Compile Include="Controllers\TiJuriOnerileriGbController.cs" />
+    <Compile Include="Controllers\TosGelenBasvurularController.cs" />
     <Compile Include="Controllers\TosBasvuruController.cs" />
     <Compile Include="Controllers\UniversitelerController.cs" />
     <Compile Include="Controllers\UnvanlarController.cs" />
@@ -3424,6 +3425,7 @@
     <Content Include="Views\TosBasvuru\RezervasyonAl.cshtml" />
     <Content Include="Views\TosBasvuru\BasvuruDurumView.cshtml" />
     <Content Include="Views\TosBasvuru\DegerlendirmeLinkView.cshtml" />
+    <Content Include="Views\TosGelenBasvurular\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

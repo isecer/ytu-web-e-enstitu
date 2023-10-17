@@ -65,13 +65,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 var oncekibasvuru = db.TijBasvuruOneris.Where(p => p.TijBasvuruOneriID != id &&
                     p.TijBasvuru.KullaniciID == data.KullaniciID &&
                     (p.IsObsData || p.EYKDaOnaylandi == true)).OrderByDescending(o => o.TijBasvuruOneriID).First();
-                var oncekiJuriler = oncekibasvuru.TijBasvuruOneriJurilers.ToList();
+                var oncekiJuriler = data.Juriler.Where(p => !p.IsYeniOrOnceki).ToList();
 
 
-                var oncekiTd = oncekiJuriler.First(f => f.IsTezDanismani);
-                var varolanTikler = oncekiJuriler.Where(f => !f.IsTezDanismani).ToList(); 
+                var oncekiTd = db.Kullanicilars.First(f => f.KullaniciID == oncekibasvuru.TezDanismanID);
+                var varolanTikler = oncekiJuriler.Where(f => !f.IsTezDanismani).ToList();
 
-                cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.UnvanAdi + " " + oncekiTd.AdSoyad;
+                cellMevcutUyeTdUnvanAdSoyad.Text = oncekiTd.Unvanlar.UnvanAdi + " " + oncekiTd.Ad+" "+oncekiTd.Soyad;
                 cellVarolanTik1TrCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTÜ TİK Üyesi" : "YTU DIŞI TİK Üyesi ";
                 cellVarolanTik1EnCapt.Text = varolanTikler[0].IsYtuIciJuri ? "YTU TMC Member" : "Non-YTU TMC Member";
 
@@ -82,7 +82,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 cellVarolanTik2UnvanAdSoyad.Text = varolanTikler[1].UnvanAdi + " " + varolanTikler[1].AdSoyad;
 
 
-                var yeniJuriler = data.Juriler;
+                var yeniJuriler = data.Juriler.Where(p => p.IsYeniOrOnceki).ToList();
                 if (data.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciDegisiklik ||
                     data.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik)
                 {
@@ -162,7 +162,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri
                 chkGerekceDanismanTezKonuDegisikligi.Checked = data.TijFormTipID == TijFormTipi.DanismanVeTezKonusuDegisikligi;
 
                 cellDanismanUnvanAdSoyad.Text = data.Danisman.Unvanlar.UnvanAdi + "\r\n" + data.Danisman.Ad + " " + data.Danisman.Soyad;
-                cellDanismanImza.Text = data.DanismanOnayTarihi.ToFormatDate()+" "+ "Tarihinde Danışman tarafından elektronik olarak onaylanmıştır";
+                cellDanismanImza.Text = data.DanismanOnayTarihi.ToFormatDate() + " " + "Tarihinde Danışman tarafından elektronik olarak onaylanmıştır";
                 cellFormKodu.Text = "Form Kodu: " + data.FormKodu;
                 xrQRCode.ImageUrl = data.urlAdd;
                 xrQRCode.Image = data.urlAdd.CreateQrCode();

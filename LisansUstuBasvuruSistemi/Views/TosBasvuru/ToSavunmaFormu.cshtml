@@ -11,7 +11,7 @@
 <div class="widget widget-default" style="margin:0px;padding:4px;">
     <div class="panel panel-info panel-default form-horizontal" style="margin:0px;margin-top:5px;">
         <div class="panel-heading padding-0">
-            <h3 class="panel-title"><i class="fa fa-book "></i> @Model.OgrenciAdSoyad Tez Öneri Savunması Formu</h3>
+            <h3 class="panel-title"><i class="fa fa-book "></i> @Model.OgrenciAdSoyad Tez Öneri Savunma Sınavı Formu</h3>
             <ul class="panel-controls"></ul>
         </div>
         <div class="panel-body" style="padding:0px;padding-left:2px;padding-right:2px;">
@@ -20,6 +20,7 @@
             @using (Ajax.BeginForm("ToSavunmaFormuPost", "TosBasvuru", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "FrmToSavunmaFormu" }))
             {
                 @Html.HiddenFor(p => p.ToBasvuruID);
+                @Html.HiddenFor(p => p.UniqueID);
                 @Html.HiddenFor(p => p.ToBasvuruSavunmaID);
                 @Html.HiddenFor(p => p.IsTezDiliTr);
                 <div class="panel-body form-group-separated">
@@ -37,6 +38,7 @@
                         <label class="col-md-3 col-xs-4 control-label">Tez Dili</label>
                         <div class="col-md-9 col-xs-8">
                             @(Model.IsTezDiliTr ? "Türkçe" : "İngilizce")
+                            <br/><b>Not:</b> Tez dilinde değişiklik yapılmak istenirse <a href="@Url.Action("Index","TdoBasvuru")" target="_blank">"tez danışmanı/dili/başlığı değişikliği"</a> modülü kullanılıp önce dil değişikliği yapılmalıdır.
                         </div>
                     </div>
                     <div class="form-group">
@@ -117,7 +119,7 @@
                         <div class="col-md-12">
                             <div class="panel panel-info panel-default form-horizontal" style="margin:0px;margin-top:5px;">
                                 <div class="panel-heading padding-0">
-                                    <h3 class="panel-title"><span class="fa fa-group"></span> Tez Öneri Savunması Komite Üyeleri</h3>
+                                    <h3 class="panel-title"><span class="fa fa-group"></span> Tez Öneri Savunma Sınavı Komite Üyeleri</h3>
                                     <ul class="panel-controls"></ul>
                                 </div>
                                 <div class="panel-body list-group jMenuItems">

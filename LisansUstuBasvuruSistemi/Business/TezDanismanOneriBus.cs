@@ -44,17 +44,26 @@ namespace LisansUstuBasvuruSistemi.Business
             }
         }
         public static TdoBasvuruDetayDto GetSecilenBasvuruTdoDetay(int tdoBasvuruId, Guid? uniqueId)
-        {   
+        {
             tekrarYukle:
-            var model = new TdoBasvuruDetayDto() { TDOBasvuruID = tdoBasvuruId };  
-        
+            var model = new TdoBasvuruDetayDto() { TDOBasvuruID = tdoBasvuruId };
+
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var isYoneticiYetki = RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
                 var isDanismanOnayYetki = RoleNames.TdoDanismanOnayYetkisi.InRoleCurrent();
-              
+
                 var basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
                 var ogrenciBilgiUpdate = KullanicilarBus.OgrenciBilgisiGuncelleObs(basvuru.KullaniciID);
+
+                var ogrenci = basvuru.Kullanicilar;
+                if (ogrenci.YtuOgrencisi && basvuru.ProgramKod == ogrenci.ProgramKod && basvuru.OgrenimTipKod == ogrenci.OgrenimTipKod && basvuru.OgrenciNo != ogrenci.OgrenciNo)
+                {
+                    basvuru.OgrenciNo = ogrenci.OgrenciNo;
+                    db.SaveChanges();
+                    basvuru = db.TDOBasvurus.First(p => p.TDOBasvuruID == tdoBasvuruId);
+                }
+
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
                 var showAllRow = basvuru.KullaniciID == UserIdentity.Current.Id || RoleNames.TdoeyKyaGonderimYetkisi.InRoleCurrent() || RoleNames.TdoeyKdaOnayYetkisi.InRoleCurrent();
 
@@ -217,14 +226,14 @@ namespace LisansUstuBasvuruSistemi.Business
                 {
                     var firstRow = model.TDOBasvuruDanismanList.First();
                     firstRow.VarolanDanismanGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi;
-                    firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki && firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
+                    firstRow.VarolanDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.VarolanTezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && !firstRow.DanismanOnayladi.HasValue;
                     if (firstRow.VarolanDanismanGozuksun)
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+                        firstRow.YeniDanismanOnayIslemiAcik = firstRow.VarolanDanismanOnayladi == true && (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
                     }
                     else
                     {
-                        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki && firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
+                        firstRow.YeniDanismanOnayIslemiAcik = (isDanismanOnayYetki || firstRow.TezDanismanID == UserIdentity.Current.Id || isYoneticiYetki) && !firstRow.IsObsData && firstRow.EYKYaGonderildi != true;
 
                     }
                     firstRow.IsYeniTezBasligiGozuksun = firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezDanismaniVeBaslikDegisikligi || firstRow.TDODanismanTalepTipID == TdoDanismanTalepTip.TezBasligiDegisikligi;

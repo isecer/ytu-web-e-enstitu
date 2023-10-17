@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using BiskaUtil;
@@ -256,21 +257,89 @@ namespace LisansUstuBasvuruSistemi.Business
                     var obsOgrenci = KullanicilarBus.OgrenciKontrol(kul.OgrenciNo);
                     if (!obsOgrenci.Hata)
                     {
-                        var ogrenciYeterlikBilgi =
-                            obsOgrenci.OgrenciYeters.FirstOrDefault(p => p.DR_YET_GNL_SNV_DURUM == "Başarılı" && p.DR_YET_SOZ_SNV_DURUM == "Başarılı");
                         var juriler = obsOgrenci.TezIzlJuriBilgileri.ToList();
-
-                        if (juriler.Count > 0)
+                        var juriDbDtoList = new List<TijBasvuruOneriJuriler>();
+                        foreach (var juri in juriler)
                         {
-                            if (juriler.Count < 3)
+                            int? universiteId = Management.UniversiteYtuKod;
+                            var isTezDanismani = false;
+                            var isYtuIciJuri = false;
+                            if (juri.TEZ_DANISMAN == "1") isTezDanismani = true;
+
+                            if (juri.TEZ_IZLEME_JURI_UNIVER.Contains("Yıldız Teknik"))
                             {
-                                msg.Add("OBS sisteminde tanımlı tez izleme jürilerinizin eksik tanımlandığı tespit edilmiştir. Jüri önerisi yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                                isYtuIciJuri = true;
                             }
-                            else if (juriler.All(a => a.TEZ_DANISMAN != "1"))
+                            else
                             {
-                                msg.Add("OBS sisteminde tanımlı tez izleme jüri bilgilerinizde Tez danışmanı bilgisi tanımlı gözükmemektedir. Jüri önerisi yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.");
+                                universiteId = null;
+                            }
+
+                            juriDbDtoList.Add(new TijBasvuruOneriJuriler
+                            {
+                                IsYeniOrOnceki = true,
+                                RowNum = isTezDanismani ? 0 : 1,
+                                IsYtuIciJuri = isYtuIciJuri,
+                                IsTezDanismani = isTezDanismani,
+                                UnvanAdi = juri.TEZ_IZLEME_JURI_UNVAN.ToJuriUnvanAdi(),
+                                AdSoyad = juri.TEZ_IZLEME_JURI_ADSOY,
+                                EMail = juri.TEZ_IZLEME_JURI_EPOSTA,
+                                IsAsil = true,
+                                UniversiteID = universiteId,
+                                UniversiteAdi = juri.TEZ_IZLEME_JURI_UNIVER,
+                                AnabilimdaliAdi = juri.TEZ_IZLEME_JURI_ANABLMDAL
+                            });
+                        }
+
+                        var isTezDanismanVar = juriDbDtoList.Any(p => p.IsTezDanismani);
+                        var isYtuIcijuriVar = juriDbDtoList.Any(p => p.IsYtuIciJuri);
+                        var isYtuDisiJuriVar = juriDbDtoList.Any(p => !p.IsYtuIciJuri);
+                        if (!isTezDanismanVar || !isYtuIcijuriVar || !isYtuDisiJuriVar)
+                        {
+                            msg.Add(kul.Ad + " " + kul.Soyad + " öğrencisine ait OBS sisteminde tanımlı Tez İzleme Jüri bilgilerinde");
+
+                            if (!isTezDanismanVar)
+                            {
+                                msg.Add("Tez Danışmanı bilgisi bulunmamaktadır.");
+                            }
+                            if (!isYtuIcijuriVar)
+                            {
+                                msg.Add("Ytu İçi Jüri bilgisi bulunmamaktadır.");
+                            }
+                            if (!isYtuDisiJuriVar)
+                            {
+                                msg.Add("Ytu Dışı Jüri bilgisi bulunmamaktadır.");
+                            }
+                            msg.Add("<b>Jüri önerisi yapabilmeniz için bu durumu enstitü yetkililerine iletiniz.</b>");
+                            if (juriDbDtoList.Any())
+                            {
+                                StringBuilder htmlTable = new StringBuilder();
+                                htmlTable.Append("<table class='table' style='width:100%;'>");
+                                htmlTable.Append("<tr class='danger'>");
+                                htmlTable.Append(
+                                    "<th colspan='3' style='text-align:center';>OBS Sisteminde gözüken jüri bilgileriniz aşağıdaki gibidir</th>");
+                                htmlTable.Append("</tr>");
+                                htmlTable.Append("<tr class='info'>");
+                                htmlTable.Append("<th></th>");
+                                htmlTable.Append("<th>Jüri Ad Soyad</th>");
+                                htmlTable.Append("<th>Üniversite</th>");
+                                htmlTable.Append("</tr>");
+                                foreach (var juri in juriDbDtoList.OrderBy(o =>
+                                             o.IsTezDanismani ? 1 : (o.IsYtuIciJuri ? 2 : 3)))
+                                {
+                                    htmlTable.Append("<tr>");
+                                    htmlTable.Append("<td>" + (juri.IsTezDanismani ? "Danışman" : "Jüri Üyesi") +
+                                                     "</td>");
+                                    htmlTable.Append("<td>" + juri.UnvanAdi + " " + juri.AdSoyad + "</td>");
+                                    htmlTable.Append("<td>" + juri.UniversiteAdi + "</td>");
+                                    htmlTable.Append("</tr>");
+                                }
+
+                                htmlTable.Append("</table>");
+                                msg.Add(htmlTable.ToString());
                             }
                         }
+
 
                     }
                     else
@@ -357,6 +426,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                     var isTezDanismani = false;
                                     var isYtuIciJuri = false;
                                     if (juri.TEZ_DANISMAN == "1") isTezDanismani = true;
+
                                     if (juri.TEZ_IZLEME_JURI_UNIVER.Contains("Yıldız Teknik"))
                                     {
                                         isYtuIciJuri = true;
@@ -368,15 +438,17 @@ namespace LisansUstuBasvuruSistemi.Business
 
                                     tijOneri.TijBasvuruOneriJurilers.Add(new TijBasvuruOneriJuriler
                                     {
+                                        IsYeniOrOnceki = true,
+                                        RowNum = isTezDanismani ? 0 : 1,
                                         IsYtuIciJuri = isYtuIciJuri,
                                         IsTezDanismani = isTezDanismani,
                                         UnvanAdi = juri.TEZ_IZLEME_JURI_UNVAN.ToJuriUnvanAdi(),
-                                        AdSoyad = juri.TEZ_IZLEME_JURI_ADSOY,
+                                        AdSoyad = juri.TEZ_IZLEME_JURI_ADSOY.ToUpper(),
                                         EMail = juri.TEZ_IZLEME_JURI_EPOSTA,
                                         IsAsil = true,
                                         UniversiteID = universiteId,
-                                        UniversiteAdi = juri.TEZ_IZLEME_JURI_UNIVER,
-                                        AnabilimdaliAdi = juri.TEZ_IZLEME_JURI_ANABLMDAL
+                                        UniversiteAdi = juri.TEZ_IZLEME_JURI_UNIVER.ToUpper(),
+                                        AnabilimdaliAdi = juri.TEZ_IZLEME_JURI_ANABLMDAL.ToUpper()
                                     });
                                 }
 
@@ -552,16 +624,16 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var qKul = db.Kullanicilars.Where(p => p.YtuOgrencisi && p.EnstituKod == enstituKod && p.OgrenimDurumID == OgrenimDurum.HalenOğrenci && p.DanismanID.HasValue).AsQueryable();
-                 
+
                 if (!term.IsNullOrWhiteSpace())
-                { 
+                {
                     qKul = qKul.Where(p =>
                         ((p.Ad + " " + p.Soyad).Contains(term) || p.OgrenciNo.StartsWith(term) ||
                          p.TcKimlikNo.StartsWith(term)));
                 }
-                else if(danismanId.HasValue)
+                else if (danismanId.HasValue)
                 {
-                    qKul = qKul.Where(p =>p.DanismanID== danismanId);
+                    qKul = qKul.Where(p => p.DanismanID == danismanId);
                 }
 
                 if (danismanId.HasValue) qKul = qKul.OrderBy(p => p.DanismanID == danismanId ? 1 : 2).ThenBy(t => t.Ad).ThenBy(t => t.Soyad);
@@ -732,7 +804,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                     { new MailSendList { EMail = ogrenci.EMail, ToOrBcc = true } },
                                 MailSablonTipID = MailSablonTipi.TijOneriFormuEykdaOnaylandiOgrenciye
                             });
-                            var jurler = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsAsil == true && !p.IsTezDanismani).OrderBy(o => o.RowNum).ToList();
+                            var jurler = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki && p.IsAsil == true && !p.IsTezDanismani).OrderBy(o => o.RowNum).ToList();
                             foreach (var item in jurler)
                             {
 
@@ -778,7 +850,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     List<TijBasvuruOneriJuriler> juriUyeleri = null;
 
                     if (mModel.Any(a => a.MailSablonTipID == MailSablonTipi.TijOneriFormuEykdaOnaylandiJuriUyelerine))
-                        juriUyeleri = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsAsil == true).OrderBy(o => o.RowNum).ToList();
+                        juriUyeleri = tijBasvuruOneri.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki && p.IsAsil == true).OrderBy(o => o.RowNum).ToList();
 
                     foreach (var item in mModel)
                     {

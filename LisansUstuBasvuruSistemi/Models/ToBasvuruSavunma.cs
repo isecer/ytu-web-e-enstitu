@@ -27,7 +27,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public int SavunmaNo { get; set; }
         public string FormKodu { get; set; }
         public Nullable<int> TezDanismanID { get; set; }
-        public System.DateTime RaporTarihi { get; set; }
+        public System.DateTime SavunmaBasvuruTarihi { get; set; }
         public int DonemBaslangicYil { get; set; }
         public int DonemID { get; set; }
         public bool IsTezDiliTr { get; set; }

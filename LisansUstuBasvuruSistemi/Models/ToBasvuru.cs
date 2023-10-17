@@ -33,6 +33,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<System.DateTime> KayitTarihi { get; set; }
         public Nullable<int> TezDanismanID { get; set; }
         public System.DateTime YeterlikSozluSinavTarihi { get; set; }
+        public int BasarisizSavunmaSayisi { get; set; }
         public System.DateTime IslemTarihi { get; set; }
         public int IslemYapanID { get; set; }
         public string IslemYapanIP { get; set; }

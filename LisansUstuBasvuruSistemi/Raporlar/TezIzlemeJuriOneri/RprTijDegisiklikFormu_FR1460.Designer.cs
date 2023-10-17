@@ -3889,6 +3889,7 @@
             this.xrTable15});
             this.SubBand4.HeightF = 112.0791F;
             this.SubBand4.Name = "SubBand4";
+            this.SubBand4.PageBreak = DevExpress.XtraReports.UI.PageBreak.BeforeBand;
             // 
             // xrRichText1
             // 
@@ -4116,7 +4117,7 @@
             this.lblFormNo.SizeF = new System.Drawing.SizeF(650.7846F, 18.83333F);
             this.lblFormNo.StylePriority.UseBorders = false;
             this.lblFormNo.StylePriority.UseFont = false;
-            this.lblFormNo.Text = "(Form No: FR-0306)";
+            this.lblFormNo.Text = "(Form No: FR-1460)";
             // 
             // RprTijDegisiklikFormu_FR1460
             // 

@@ -424,10 +424,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 JuriTipAdi = juritip.s,
                                 AdSoyad = ad.s,
                                 UnvanAdi = unvan.s,
-                                EMail = email.s,
+                                EMail = email.s.IsNullOrWhiteSpace() ? "" : email.s.Trim(),
                                 IsYtuIciOrDisi = juritip.s.Contains("YtuIci") || juritip.s == "TezDanismani",
                                 IsAsilOrYedek = isAsil.s,
-                                isSuccess = !ad.s.IsNullOrWhiteSpace() && uni.s.HasValue && !abd.s.IsNullOrWhiteSpace() && !unvan.s.IsNullOrWhiteSpace() && !email.s.ToIsValidEmail()
+                                isSuccess = !ad.s.IsNullOrWhiteSpace() && uni.s.HasValue && !abd.s.IsNullOrWhiteSpace() && !unvan.s.IsNullOrWhiteSpace() && !(email.s ?? "").Trim().ToIsValidEmail()
                             }).ToList();
 
             foreach (var item in juriData)
@@ -798,7 +798,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         yeterlikBasvuru.IsYaziliSinavBasarili = false;
                     }
-                     
+
                     _entities.SaveChanges();
                     LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");

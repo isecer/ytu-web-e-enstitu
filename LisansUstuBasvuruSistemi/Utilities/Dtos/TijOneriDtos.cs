@@ -115,6 +115,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AsilUye1Uni { get; set; }
         public string AsilUye2 { get; set; }
         public string AsilUye2Uni { get; set; }
+
+        public string YeniDanismanAdSoyad { get; set; }
+        public string YeniDanismanUni { get; set; }
+        public string YeniAsilUye1 { get; set; }
+        public string YeniAsilUye1Uni { get; set; }
+        public string YeniAsilUye2 { get; set; }
+        public string YeniAsilUye2Uni { get; set; }
         public string TezKonusu { get; set; }
 
     }

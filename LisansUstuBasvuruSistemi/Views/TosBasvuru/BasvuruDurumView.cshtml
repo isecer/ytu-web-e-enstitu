@@ -24,14 +24,14 @@
     else if (!Model.DegerlendirmeBasladi)
     {
         AnaDurumAdi = "Toplantı Bilgileri Girildi";
-        AnaDurumIconName = "fa fa-clock-o";
+        AnaDurumIconName = "fa fa-calendar fa-lg";
         DetayDurumIconName = "fa fa-comments-o";
         DetayDurumAdi = "Sonuç İçin Komite Üyeleri Değerlendirme Yapmalı.";
     }
     else if (!Model.ToBasvuruSavunmaDurumID.HasValue)
     {
         AnaDurumAdi = "Değerlendirme Süreci Başladı";
-        AnaDurumIconName = "fa fa-clock-o"; 
+        AnaDurumIconName = "fa fa-edit fa-lg"; 
         DetayDurumIconName = "fa fa-comments-o";
         DetayDurumAdi = "Sonuç İçin Tüm Komite Üyelerinin Değerlendirmelerini Tamamlamalı.";
     }

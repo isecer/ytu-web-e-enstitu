@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using LisansUstuBasvuruSistemi.Models; 
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.App_Start
@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.App_Start
         {
             //var Enstitulers = Management.GetEnstituler();
             //values = Enstitulers.Where(p => p.IsAktif).Select(s => s.EnstituKisaAd.ToLower()).ToArray();
-            values = new List<string> { "fbe", "sbe" }.ToArray();
+            values = new List<string> { "fbe", "sbe", "tet" }.ToArray();
             this._values = values;
         }
 
@@ -59,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.App_Start
 
     //    public bool Match(HttpContextBase httpContext,
     //        Route route,
-           
+
     //        RouteValueDictionary values,
     //        RouteDirection routeDirection)
     //    {
