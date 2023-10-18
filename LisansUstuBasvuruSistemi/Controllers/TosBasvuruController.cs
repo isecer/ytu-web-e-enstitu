@@ -115,7 +115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
                     let ard = _entities.ToBasvuruSavunmas.Where(p => p.ToBasvuruID == s.ToBasvuruID).OrderByDescending(ot => ot.ToBasvuruSavunmaID).FirstOrDefault()
-                    //where s.EnstituKod == enstituKod && s.KullaniciID == (model.IsDegerlendirme.HasValue ? s.KullaniciID : model.KullaniciID.Value)
+                    where s.EnstituKod == enstituKod && s.KullaniciID == (model.IsDegerlendirme.HasValue ? s.KullaniciID : model.KullaniciID.Value)
                     select new FrTosBasvuru()
                     {
                         UniqueID = s.UniqueID,
@@ -136,7 +136,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
                         AktifSavunmaNo = ard != null ? ard.SavunmaNo : (int?)null,
-                        AktifDonemAdi = ard == null ? "Tez Öneri Savunma Sınavı Yok" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        AktifDonemAdi = ard == null ? "----" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
                         DurumID = ard == null ? 0 : ard.ToBasvuruSavunmaDurumID,
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
@@ -241,6 +241,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (toBasvuru.BasarisizSavunmaSayisi >= tezOneriToplamSavunmaSavunmaHak)
                     {
                         mMessage.Messages.Add("Tez Önerisi Savunması için verilen toplam savunma hakkı sayısını aştığınız için yeni Tez Önerisi Savunması yapamazsınız.");
+                    }
+                    else
+                    {
+                        if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                        {
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        }
+                        else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        {
+                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        }
                     }
 
                 }
@@ -462,6 +473,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (toBasvuru.BasarisizSavunmaSayisi >= tezOneriToplamSavunmaSavunmaHak)
                     {
                         mMessage.Messages.Add("Tez Önerisi Savunması için verilen toplam savunma hakkı sayısını aştığınız için yeni Tez Önerisi Savunması yapamazsınız.");
+                    }
+                    else
+                    {
+                        if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
+                        {
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        }
+                        else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
+                        {
+                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                        }
                     }
                 }
 
@@ -752,6 +774,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 else
                 {
 
+                    model.EnstituKod = toBasvuruSavunma.ToBasvuru.EnstituKod;
                     model.SRTalepTipID = 4;
                     model.TalepYapanID = toBasvuruSavunma.ToBasvuru.KullaniciID;
                     model.Tarih = DateTime.Now.Date;

@@ -42,6 +42,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramAdi { get; set; }
         public int DonemID { get; set; }
         public string DonemAdi { get; set; }
+        public bool IsSinavBilgisiGirildi { get; set; }
+        public bool IsDegerlendirmeSuvecinde { get; set; }
         public DateTime BasTar { get; set; }
         public DateTime BitTar { get; set; }
         public string ResimAdi { get; set; }
@@ -51,6 +53,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string EMail { get; set; }
         public string IslemYapan { get; set; }
         public string FormNo { get; set; }
+        public DateTime? SavunmaBasvuruTarihi { get; set; }
         public int? AktifSavunmaNo { get; set; }
         public int? DurumID { get; set; }
         public string DurumAdi { get; set; }
@@ -68,6 +71,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
     
         public bool GelenBasvuru { get; set; }
+        public string DonemHtmlString { get; set; }
+        public string DurumHtmlString { get; set; }
         public string EnstituAdi { get; set; }
         public string ResimAdi { get; set; }
         public string TcKimlikNo { get; set; }
@@ -125,6 +130,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class TosDurumDto
     {
+        public bool IsTezOnerisiVar { get; set; } 
         public bool? IsOyBirligiOrCoklugu { get; set; }
         public int? ToBasvuruSavunmaDurumID { get; set; }
         public bool IsSrTalebiYapildi { get; set; }

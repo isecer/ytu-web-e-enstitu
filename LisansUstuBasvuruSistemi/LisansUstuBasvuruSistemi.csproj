@@ -3426,6 +3426,8 @@
     <Content Include="Views\TosBasvuru\BasvuruDurumView.cshtml" />
     <Content Include="Views\TosBasvuru\DegerlendirmeLinkView.cshtml" />
     <Content Include="Views\TosGelenBasvurular\Index.cshtml" />
+    <Content Include="Views\TiJuriOnerileriGb\BasvuruDonemView.cshtml" />
+    <Content Include="Views\TosBasvuru\BasvuruDonemView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

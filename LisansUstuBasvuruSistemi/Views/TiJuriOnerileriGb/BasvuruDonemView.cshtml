@@ -1,0 +1,33 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.TijBasvuruOneriDetayDto
+@{
+    Layout = null;
+
+}
+@{
+    if (Model != null && Model.TijBasvuruOneriID > 0)
+    {
+        if (!Model.IsObsData)
+        {
+            @Model.DonemAdi
+            <br />
+            @Model.BasvuruTarihi.ToFormatDateAndTime()
+        }
+        else
+        {
+            @("OBS de doğrulandı")
+        }
+    }
+    else
+    {
+        @("Henüz Öneri Yok")
+    }
+}
+
+
+
+
+
+
+

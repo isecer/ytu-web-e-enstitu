@@ -23,6 +23,11 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("TosBasvuru", "BasvuruDurumView");
             return pagerString;
         }
+        public static IHtmlString TosBasvuruDonemView(this ToBasvuruSavunmaDto model)
+        {
+            var pagerString = model.ToRenderPartialViewHtml("TosBasvuru", "BasvuruDonemView");
+            return pagerString;
+        }
         public static bool BasvuruOlustur(int kullaniciId)
         {
 
@@ -103,7 +108,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var toBasvuru = entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
 
-                var tosbasvurus = toBasvuru.ToBasvuruSavunmas.Where(p =>  p.UniqueID != tosUniqueId)
+                var tosbasvurus = toBasvuru.ToBasvuruSavunmas.Where(p => p.UniqueID != tosUniqueId)
                     .Select(s => new { s.ToBasvuruSavunmaID, s.SavunmaNo, s.ToBasvuruSavunmaDurumID }).ToList();
                 var sonBasvuru = tosbasvurus.OrderByDescending(o => o.ToBasvuruSavunmaID).FirstOrDefault();
                 if (!tosbasvurus.Any()) return 1;
@@ -119,7 +124,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var toBasvuru = entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
 
-                var qTosbasvurus = toBasvuru.ToBasvuruSavunmas.Where(p=>p.ToBasvuruSavunmaDurumID.HasValue).OrderBy(s => s.ToBasvuruSavunmaID).AsQueryable();
+                var qTosbasvurus = toBasvuru.ToBasvuruSavunmas.Where(p => p.ToBasvuruSavunmaDurumID.HasValue).OrderBy(s => s.ToBasvuruSavunmaID).AsQueryable();
 
 
                 var lastRecordWithDurumId = qTosbasvurus.LastOrDefault(s => s.ToBasvuruSavunmaDurumID == 1);
@@ -198,72 +203,82 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 model.UniqueID = basvuru.UniqueID;
 
-                model.ToBasvuruSavunmaList = basvuru.ToBasvuruSavunmas.Where(p => !tosKomiteUniqueId.HasValue || p.ToBasvuruSavunmaKomites.Any(a => a.UniqueID == tosKomiteUniqueId)).Select(s => new ToBasvuruSavunmaDto
-                {
-                    UniqueID = s.UniqueID,
-                    FormKodu = s.FormKodu,
-                    ToBasvuruSavunmaID = s.ToBasvuruSavunmaID,
-                    ToBasvuruID = s.ToBasvuruID,
-                    SavunmaBasvuruTarihi = s.SavunmaBasvuruTarihi,
-                    SavunmaNo = s.SavunmaNo,
-                    IsTezDiliTr = s.IsTezDiliTr,
-                    TezBaslikTr = s.TezBaslikTr,
-                    TezBaslikEn = s.TezBaslikEn,
-                    IsTezBasligiDegisti = s.IsTezBasligiDegisti,
-                    YeniTezBaslikTr = s.YeniTezBaslikTr,
-                    YeniTezBaslikEn = s.YeniTezBaslikEn,
-                    CalismaRaporDosyaAdi = s.CalismaRaporDosyaAdi,
-                    CalismaRaporDosyaYolu = s.CalismaRaporDosyaYolu,
-                    DonemAdi = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + (s.DonemID == 1 ? "Güz" : "Bahar"),
-                    IsYokDrBursiyeriVar = s.IsYokDrBursiyeriVar,
-                    YokDrOncelikliAlan = s.YokDrOncelikliAlan,
-                    IslemTarihi = s.IslemTarihi,
-                    IslemYapanID = s.IslemYapanID,
-                    IslemYapanIP = s.IslemYapanIP,
-                    ToBasvuruSavunmaDurumID = s.ToBasvuruSavunmaDurumID,
-                    DurumAdi = s.ToBasvuruSavunmaDurumID.HasValue ? s.ToBasvuruSavunmaDurumlari.DurumAdi : "Henüz Değerlendirme Tamamlanmadı",
-                    IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu,
-                    DegerlendirmeSonucMailTarihi = s.DegerlendirmeSonucMailTarihi,
-                    ToplantiBilgiGonderimTarihi = s.ToplantiBilgiGonderimTarihi,
-                    ToSavunmaBaslatildiMailGonderimTarihi = s.ToSavunmaBaslatildiMailGonderimTarihi,
-                    DurumModel = new TosDurumDto
+                model.ToBasvuruSavunmaList = basvuru.ToBasvuruSavunmas.Where(p => !tosKomiteUniqueId.HasValue || p.ToBasvuruSavunmaKomites.Any(a => a.UniqueID == tosKomiteUniqueId))
+                    .Select(s => new ToBasvuruSavunmaDto
                     {
+                        UniqueID = s.UniqueID,
+                        FormKodu = s.FormKodu,
+                        ToBasvuruSavunmaID = s.ToBasvuruSavunmaID,
+                        ToBasvuruID = s.ToBasvuruID,
+                        SavunmaBasvuruTarihi = s.SavunmaBasvuruTarihi,
+                        SavunmaNo = s.SavunmaNo,
+                        IsTezDiliTr = s.IsTezDiliTr,
+                        TezBaslikTr = s.TezBaslikTr,
+                        TezBaslikEn = s.TezBaslikEn,
+                        IsTezBasligiDegisti = s.IsTezBasligiDegisti,
+                        YeniTezBaslikTr = s.YeniTezBaslikTr,
+                        YeniTezBaslikEn = s.YeniTezBaslikEn,
+                        CalismaRaporDosyaAdi = s.CalismaRaporDosyaAdi,
+                        CalismaRaporDosyaYolu = s.CalismaRaporDosyaYolu,
+                        DonemAdi = s.DonemBaslangicYil + "/" + (s.DonemBaslangicYil + 1) + " " + (s.DonemID == 1 ? "Güz" : "Bahar"),
+                        IsYokDrBursiyeriVar = s.IsYokDrBursiyeriVar,
+                        YokDrOncelikliAlan = s.YokDrOncelikliAlan,
+                        IslemTarihi = s.IslemTarihi,
+                        IslemYapanID = s.IslemYapanID,
+                        IslemYapanIP = s.IslemYapanIP,
                         ToBasvuruSavunmaDurumID = s.ToBasvuruSavunmaDurumID,
-                        IsSrTalebiYapildi = s.SRTalepleris.Any(),
-                        DegerlendirmeBasladi = s.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue),
-                        IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu
-                    },
-                    ToBasvuruSavunmaKomites = db.ToBasvuruSavunmaKomites.Where(p => p.ToBasvuruSavunmaID == s.ToBasvuruSavunmaID).Include("ToBasvuruSavunmaDurumlari").ToList(),
-                    //ToBasvuruSavunmaKomites = s.ToBasvuruSavunmaKomites.AsQueryable().Include("ToBasvuruSavunmaDurumlari").ToList(),
-                    SRModel = (from sR in s.SRTalepleris
-                               join tt in db.SRTalepTipleris on sR.SRTalepTipID equals tt.SRTalepTipID
-                               join hg in db.HaftaGunleris on sR.HaftaGunID equals hg.HaftaGunID
-                               join d in db.SRDurumlaris on sR.SRDurumID equals d.SRDurumID
-                               select new FrTalepler
-                               {
-                                   SRTalepID = sR.SRTalepID,
-                                   TalepYapanID = sR.TalepYapanID,
-                                   TalepTipAdi = tt.TalepTipAdi,
-                                   SRTalepTipID = sR.SRTalepTipID,
-                                   SRSalonID = sR.SRSalonID,
-                                   IsOnline = sR.IsOnline,
-                                   SalonAdi = sR.SalonAdi,
-                                   Tarih = sR.Tarih,
-                                   HaftaGunID = sR.HaftaGunID,
-                                   HaftaGunAdi = hg.HaftaGunAdi,
-                                   BasSaat = sR.BasSaat,
-                                   BitSaat = sR.BitSaat,
-                                   SRDurumID = sR.SRDurumID,
-                                   DurumAdi = d.DurumAdi,
-                                   DurumListeAdi = d.DurumAdi,
-                                   ClassName = d.ClassName,
-                                   Color = d.Color,
-                                   SRDurumAciklamasi = sR.SRDurumAciklamasi,
-                                   IslemTarihi = s.IslemTarihi,
-                                   IslemYapanID = s.IslemYapanID,
-                                   IslemYapanIP = s.IslemYapanIP
-                               }).FirstOrDefault()
-                }).OrderByDescending(o => o.SavunmaBasvuruTarihi).ToList();
+                        DurumAdi = s.ToBasvuruSavunmaDurumID.HasValue ? s.ToBasvuruSavunmaDurumlari.DurumAdi : "Henüz Değerlendirme Tamamlanmadı",
+                        IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu,
+                        DegerlendirmeSonucMailTarihi = s.DegerlendirmeSonucMailTarihi,
+                        ToplantiBilgiGonderimTarihi = s.ToplantiBilgiGonderimTarihi,
+                        ToSavunmaBaslatildiMailGonderimTarihi = s.ToSavunmaBaslatildiMailGonderimTarihi,
+                        DurumModel = new TosDurumDto
+                        {
+                            IsTezOnerisiVar = true,
+                            ToBasvuruSavunmaDurumID = s.ToBasvuruSavunmaDurumID,
+                            IsSrTalebiYapildi = s.SRTalepleris.Any(),
+                            DegerlendirmeBasladi = s.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue),
+                            IsOyBirligiOrCoklugu = s.IsOyBirligiOrCoklugu
+                        },
+
+                        ToBasvuruSavunmaKomites = db.ToBasvuruSavunmaKomites.Where(p => p.ToBasvuruSavunmaID == s.ToBasvuruSavunmaID).Include("ToBasvuruSavunmaDurumlari").ToList(),
+                        //ToBasvuruSavunmaKomites = s.ToBasvuruSavunmaKomites.AsQueryable().Include("ToBasvuruSavunmaDurumlari").ToList(),
+                        SRModel = (from sR in s.SRTalepleris
+                                   join tt in db.SRTalepTipleris on sR.SRTalepTipID equals tt.SRTalepTipID
+                                   join hg in db.HaftaGunleris on sR.HaftaGunID equals hg.HaftaGunID
+                                   join d in db.SRDurumlaris on sR.SRDurumID equals d.SRDurumID
+                                   select new FrTalepler
+                                   {
+                                       SRTalepID = sR.SRTalepID,
+                                       TalepYapanID = sR.TalepYapanID,
+                                       TalepTipAdi = tt.TalepTipAdi,
+                                       SRTalepTipID = sR.SRTalepTipID,
+                                       SRSalonID = sR.SRSalonID,
+                                       IsOnline = sR.IsOnline,
+                                       SalonAdi = sR.SalonAdi,
+                                       Tarih = sR.Tarih,
+                                       HaftaGunID = sR.HaftaGunID,
+                                       HaftaGunAdi = hg.HaftaGunAdi,
+                                       BasSaat = sR.BasSaat,
+                                       BitSaat = sR.BitSaat,
+                                       SRDurumID = sR.SRDurumID,
+                                       DurumAdi = d.DurumAdi,
+                                       DurumListeAdi = d.DurumAdi,
+                                       ClassName = d.ClassName,
+                                       Color = d.Color,
+                                       SRDurumAciklamasi = sR.SRDurumAciklamasi,
+                                       IslemTarihi = s.IslemTarihi,
+                                       IslemYapanID = s.IslemYapanID,
+                                       IslemYapanIP = s.IslemYapanIP
+                                   }).FirstOrDefault()
+                    }).OrderByDescending(o => o.SavunmaBasvuruTarihi).ToList();
+
+                var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
+                model.DurumHtmlString = (
+                                            sonTos != null ? sonTos.DurumModel : new TosDurumDto()
+                                        ).TosBasvuruDurumView().ToString();
+                model.DonemHtmlString = (sonTos ?? new ToBasvuruSavunmaDto()).TosBasvuruDonemView().ToString();
+
 
 
 
@@ -769,19 +784,32 @@ namespace LisansUstuBasvuruSistemi.Business
         }
 
 
+        public static List<CmbIntDto> CmbTosNumarasi(bool bosSecimVar = false)
+        {
+            var dct = new List<CmbIntDto>();
+            if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
+            for (int i = 1; i <= 2; i++)
+            {
+                dct.Add(new CmbIntDto { Value = i, Caption = i + ". Savunma" });
+            }
 
+            return dct;
+
+        }
         public static List<CmbIntDto> CmbTosDurumListe(bool bosSecimVar = false)
         {
             var dct = new List<CmbIntDto>();
 
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var arDurums = db.ToBasvuruSavunmaDurumlaris.Select(s => new CmbIntDto { Value = s.ToBasvuruSavunmaDurumID, Caption = s.DurumAdi }).ToList();
-                dct.AddRange(arDurums);
-            }
-            dct.Add(new CmbIntDto { Value = 1000, Caption = "Başarılı Olanlar" });
-            dct.Add(new CmbIntDto { Value = 1001, Caption = "Başarısız Olanlar" });
+
+
+            dct.Add(new CmbIntDto { Value = 1000, Caption = "Sınav Bilgisi Girilmeyenler" });
+            dct.Add(new CmbIntDto { Value = 1001, Caption = "Sınav Bilgisi Girilenler" });
+            dct.Add(new CmbIntDto { Value = 1002, Caption = "Değerlendirme Sürecinde Olanlar" });
+            dct.Add(new CmbIntDto { Value = 1003, Caption = "Değerlendirme Sürecinde Tamamlananlar" });
+            dct.Add(new CmbIntDto { Value = 1, Caption = "Başarılı Olanlar" });
+            dct.Add(new CmbIntDto { Value = 2, Caption = "Başarısız Olanlar" });
+            dct.Add(new CmbIntDto { Value = 3, Caption = "Uzatma Alanlar" });
             return dct;
         }
 

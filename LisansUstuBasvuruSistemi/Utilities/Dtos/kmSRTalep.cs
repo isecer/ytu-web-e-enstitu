@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class KmSRTalep : SRTalepleri
-    {
+    { 
         public bool YetkisizErisim { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenciNo { get; set; }

@@ -253,7 +253,7 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>
+                                        <td id="tijDonemContent_@item.TijBasvuruID">
                                             @if (item.SonBasvuru != null)
                                             {
                                                 if (!item.SonBasvuru.IsObsData)
@@ -280,7 +280,7 @@
                                             }
                                             else
                                             {
-                                                @item.SonBasvuru.ToTijBasvuruDurumView()
+                                                <span id="tijDurumContent_@item.TijBasvuruID">@item.SonBasvuru.ToTijBasvuruDurumView()</span>
                                             }
                                         </td>
 

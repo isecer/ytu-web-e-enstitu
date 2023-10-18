@@ -8,7 +8,6 @@
 @model  FmTosBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
     var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
     var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
@@ -37,7 +36,7 @@
                             </li>
 
                         }
-                        @if (RoleNames.TosGelenBasvuruKayit.InRole())
+                        @if (kyetki)
                         {
                             if (filteredOgrenciIds.Any())
                             {
@@ -194,10 +193,10 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>
+                                        <td id="tosDonemContent_@item.ToBasvuruID">
                                             @item.AktifDonemAdi<br />@(item.AktifSavunmaNo.HasValue?item.AktifSavunmaNo+". Savunma":"----")
                                         </td>
-                                        <td>@item.DurumModel.TosBasvuruDurumView()</td>
+                                        <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
                                     </tr>
                                     <tr class="cls-@item.UniqueID" style="display:none">

@@ -1,21 +1,24 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.TosDurumDto
 @{
-    Layout = null;
-
+    Layout = null; 
 }
-@{
-
+@{ 
     var AnaDurumAdi = "";
     var AnaDurumIconName = "";
     var AnaDurumColor = "";
     var DetayDurumAdi = "";
-    var DetayDurumIconName = "";
-
-
-    if (!Model.IsSrTalebiYapildi)
+    var DetayDurumIconName = ""; 
+    if (!Model.IsTezOnerisiVar)
     {
-        AnaDurumAdi = "Tez Öneri Savunma Formu Oluşturuldu.";
+        AnaDurumAdi = "Tez Öneri Savunma Sınavı Formu Oluşturulmadı.";
+        AnaDurumIconName = "fa fa-clock-o fa-lg";
+        DetayDurumIconName = "fa fa-comments-o";
+        DetayDurumAdi = "Süreç Devamı İçin Tez Öneri Savunma Sınavı Formu Oluşturulmalı.";
+    }
+    else if (!Model.IsSrTalebiYapildi)
+    {
+        AnaDurumAdi = "Tez Öneri Savunma Sınavı Formu Oluşturuldu.";
         AnaDurumIconName = "fa fa-list-alt fa-lg";
         DetayDurumIconName = "fa fa-comments-o";
         DetayDurumAdi = "Süreç Devamı İçin Danışman Tarafından Toplantı Bilgileri Girilmeli.";
@@ -61,13 +64,8 @@
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Düzeltme Talep Edildi";
 
         }
-    }
-
-
-
-}
-
-
+    } 
+} 
 <table style="color:@AnaDurumColor">
     <tbody>
         <tr >
@@ -85,7 +83,4 @@
             </td>
         </tr>
     </tbody>
-</table>
-
-
-
+</table> 

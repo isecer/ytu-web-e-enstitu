@@ -45,7 +45,7 @@
             {
                 <table style="width:100%;">
                     <tr>
-                        <td style="font-weight:bold;font-size:11pt;"><i class="fa fa-check fa-lg"></i> Tez Öneri Savunma Değerlendirme İşlemi</td>
+                        <td style="font-weight:bold;font-size:11pt;"><i class="fa fa-check fa-lg"></i> Tez Öneri Savunma Sınavı Değerlendirme İşlemi</td>
                         <td class="clsHide" width="100" style="font-weight:bold;font-size:15pt; text-align:right;">
                             <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID')" title="Ekranı Yenile" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                         </td>
@@ -346,6 +346,19 @@
                                 </tr>
                             }
                             <tr>
+                                <td class="CaptionTd">
+                                    Danışman
+                                </td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">
+                                    @if (Model.TezDanismanID.HasValue)
+                                    {
+                                        <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
+                                    }
+                                </td>
+
+                            </tr>
+                            <tr>
                                 <td class="CaptionTd">Yeterlik Başarı Tarihi</td>
                                 <td class="CaptionTd">:</td>
                                 <td class="ValueTd">@Model.YeterlikSozluSinavTarihi.ToDateString()</td>
@@ -372,7 +385,7 @@
                     <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                         @if (formOlusturmaYetki)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetToSavunmaFormu('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Sınavı Yap</span>
+                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetToSavunmaFormu('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Başvurusu Yap</span>
                         }
                     </td>
 
@@ -508,7 +521,7 @@
                                                         <th width="35"></th>
                                                         <th width="100" class="clsHide">Unvanı</th>
                                                         <th width="220">Ad Soyad</th>
-                                                        <th>Tez Öneri Savunma Değerlendirmesi</th>
+                                                        <th>Komite Değerlendirmesi</th>
                                                         <th width="25"></th>
                                                     </tr>
                                                     <tbody>
@@ -539,7 +552,7 @@
                                                                     <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                 </td>
                                                                 <td>
-                                                                    @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                     {
                                                                         if (!srTalebiYapildi)
                                                                         {
@@ -617,12 +630,12 @@
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
-                                                                    @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                    @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                     {
                                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                             <table style="width:100%;">
                                                                                 <tr>
-                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Öneri Savunma Değerlendirmesi</td>
+                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Öneri Savunma Sınavı Değerlendirmesi</td>
                                                                                 </tr>
                                                                                 @if (item.IsYokDrBursiyeriVar && isKomiteTezDanismani)
                                                                                 {
@@ -799,6 +812,15 @@
 
 </script>
 
+<script>
+        $(function () {
+            var htmlDurum = @Html.Raw(Json.Encode(Model.DurumHtmlString));
+            $('#tosDurumContent_@Model.ToBasvuruID').html(htmlDurum);
+            var htmDonem = @Html.Raw(Json.Encode(Model.DonemHtmlString));
+            $('#tosDonemContent_@Model.ToBasvuruID').html(htmDonem);
+        })
+</script>
+
 @if (degerlendirmeDuzeltmeYetki || degerlendirmeYetki || Model.DegerlendirenUniqueID.HasValue)
 {
     <script>
@@ -810,7 +832,7 @@
             var _panel = $('#bsvrDet_' + toUniqueId);
             bootbox.dialog({
                 message: "Tez Öneri Savunma Sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
-                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Öneri Savunma Değerlendirmesi",
+                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Öneri Savunma Sınavı Değerlendirmesi",
                 buttons: {
                     success: {
                         label: "Evet",
@@ -951,14 +973,14 @@
                                  callback: function (event) {
                                      var pnlx = $(btbxxFS).find('.modal-dialog').first();
                                      PanelRefresh(pnlx, false);
-                                     var EMail = $('#EMail_' + tosKomiteUniqueId).val();
+                                     var eMail = $('#EMail_' + tosKomiteUniqueId).val();
                                      var IsJuriEmailGuncellensin = $('#IsJuriEmailGuncellensin_' + tosKomiteUniqueId).val();
                                      $.ajax({
                                          url: '@Url.Action("DegerlendirmeLinkiGonder", "TosBasvuru")',
                                          data: {
                                              'tosUniqueId': tosUniqueId,
                                              'tosKomiteUniqueId': tosKomiteUniqueId,
-                                             'EMail': EMail,
+                                             'eMail': eMail,
                                              'IsJuriEmailGuncellensin': IsJuriEmailGuncellensin
                                          },
                                          success: function (result) {

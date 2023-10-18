@@ -11,6 +11,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
 
         public bool GelenBasvuru { get; set; }
+        public string DurumHtmlString { get; set; }
+        public string DonemHtmlString { get; set; }
         public string EnstituAdi { get; set; }
         public string ResimAdi { get; set; }
         public string TcKimlikNo { get; set; }

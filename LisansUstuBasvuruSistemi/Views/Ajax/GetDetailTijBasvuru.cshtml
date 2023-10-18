@@ -818,3 +818,12 @@
             });
         }
 </script>
+<script>
+        $(function () {
+            var htmlDurum = @Html.Raw(Json.Encode(Model.DurumHtmlString));
+            $('#tijDurumContent_@Model.TijBasvuruID').html(htmlDurum);
+
+            var htmlDonem = @Html.Raw(Json.Encode(Model.DonemHtmlString));
+            $('#tijDonemContent_@Model.TijBasvuruID').html(htmlDonem);
+        })
+</script>

@@ -1,13 +1,16 @@
-﻿@using LisansUstuBasvuruSistemi.Business
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
+@using LisansUstuBasvuruSistemi.Utilities.SystemSetting
 @model KmSRTalep
 @{
     Layout = null;
 
-    var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+    var tosDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
+    var tosSinavOnlineYapilabilsin = TiAyar.TezOneriSavunmaSinaviOnlineYapilabilsin.GetAyarTi(Model.EnstituKod).ToBoolean(false);
 }
 @if (Model.YetkisizErisim)
 {
@@ -33,7 +36,10 @@ else
                             <label class="col-md-3 col-xs-3 control-label">Toplantı Şekli</label>
                             <div class="col-md-9 col-xs-9">
                                 <select class="form-control" name="IsOnline" id="IsOnline" onchange="TSekiSecim()">
-                                    <option value="true" @(Model.IsOnline ? "selected=selected" : "")>Çevrim İçi</option>
+                                    @if (tosSinavOnlineYapilabilsin)
+                                    {
+                                        <option value="true" @(Model.IsOnline ? "selected=selected" : "")>Çevrim İçi</option>
+                                    }
                                     <option value="false" @(!Model.IsOnline ? "selected=selected" : "")>Yüz Yüze</option>
                                 </select>
                             </div>
@@ -50,7 +56,7 @@ else
                                 <input type="text" id="SalonAdi" name="SalonAdi" value="@Model.SalonAdi" maxlength="160" class="form-control" />
                             </div>
                         </div>
-                        @if (tiTezDegerlendirmeDuzeltme && Model.SRTalepID > 0)
+                        @if (tosDegerlendirmeDuzeltme && Model.SRTalepID > 0)
                         {
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-3 control-label">E-Posta Gönderim</label>

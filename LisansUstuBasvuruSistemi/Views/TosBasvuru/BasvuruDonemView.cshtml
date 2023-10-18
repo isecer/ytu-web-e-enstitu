@@ -1,0 +1,10 @@
+﻿@using LisansUstuBasvuruSistemi.Utilities.Enums
+@model LisansUstuBasvuruSistemi.Utilities.Dtos.ToBasvuruSavunmaDto
+@{
+    Layout = null;
+}
+@{
+    @(Model.SavunmaNo > 0 ? Model.DonemAdi: "----")
+    <br />
+    @(Model.SavunmaNo>0?Model.SavunmaNo+". Savunma":"----")
+}  

@@ -475,7 +475,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             catch (Exception ex)
             {
-                var message = "";
+                var message = "Mail gönderilirken bir hata oluştu";
                 //message = isLinkOrSonuc ? "Yeterlik Jüri üyeleri onayı için Komite üyelerine onay davet linki mail olarak gönderilirken bir hata oluştu!" : "Yeterlik Jüri üyeleri onayı  davet linki  Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
                 //SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "Management/sendMailTIDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 ////mmMessage.Title = "Hata";

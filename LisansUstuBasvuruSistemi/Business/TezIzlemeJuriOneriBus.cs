@@ -149,7 +149,11 @@ namespace LisansUstuBasvuruSistemi.Business
             var pagerString = model.ToRenderPartialViewHtml("TiJuriOnerileriGb", "BasvuruDurumView");
             return pagerString;
         }
-
+        public static IHtmlString ToTijBasvuruDonemView(this TijBasvuruOneriDetayDto model)
+        {
+            var pagerString = model.ToRenderPartialViewHtml("TiJuriOnerileriGb", "BasvuruDonemView");
+            return pagerString;
+        }
         public static FmTijBasvuru BasvuruBilgi(FmTijBasvuru model)
         {
             using (var entities = new LisansustuBasvuruSistemiEntities())
@@ -469,8 +473,6 @@ namespace LisansUstuBasvuruSistemi.Business
             }
 
         }
-
-
         public static TijBasvuruDetayDto GetSecilenBasvuruTijDetay(Guid uniqueId)
         {
             var model = new TijBasvuruDetayDto();
@@ -525,6 +527,10 @@ namespace LisansUstuBasvuruSistemi.Business
                     SelectEykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", s.EYKDaOnaylandi),
                     TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.ToList()
                 }).OrderByDescending(o => o.BasvuruTarihi).ToList();
+
+                var sonTij = model.TijBasvuruOneriList.FirstOrDefault();
+                model.DurumHtmlString = (sonTij ?? new TijBasvuruOneriDetayDto()).ToTijBasvuruDurumView().ToString();
+                model.DonemHtmlString = (sonTij ?? new TijBasvuruOneriDetayDto()).ToTijBasvuruDonemView().ToString();
                 model.IsYeniBasvuruYapilabilir = basvuru.IsYeniBasvuruYapilabilir;
                 model.UniqueID = basvuru.UniqueID;
                 model.TezDanismanID = basvuru.TezDanismanID;

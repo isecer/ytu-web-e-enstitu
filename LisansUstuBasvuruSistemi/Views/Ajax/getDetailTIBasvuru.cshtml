@@ -581,7 +581,7 @@
                                                                         <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
                                                                     </td>
                                                                     <td>
-                                                                        @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                        @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                         {
                                                                             if (!srTalebiYapildi)
                                                                             {
@@ -689,7 +689,7 @@
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
-                                                                        @if (!isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
+                                                                        @if (isOgrenci || degerlendirmeYetki || degerlendirmeDuzeltmeYetki)
                                                                         {
                                                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                                 <table style="width:100%;">

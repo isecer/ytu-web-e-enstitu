@@ -1113,8 +1113,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
 
-        public ActionResult RezervasyonAl(int tiBasvuruAraRaporId)
-        {
+        public ActionResult RezervasyonAl(int tiBasvuruAraRaporId )
+        { 
             var toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
             var tiAraRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
             var model = new KmSRTalep();
@@ -1126,7 +1126,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var srTalep = tiAraRapor.SRTalepleris.First();
                     var tarih = model.IsSalonSecilsin ? srTalep.Tarih : (srTalep.Tarih.AddHours(srTalep.BasSaat.Hours).AddMinutes(srTalep.BasSaat.Minutes));
-
+                     
                     model.IsSalonSecilsin = srTalep.SRSalonID.HasValue;
                     model.IsOnline = srTalep.IsOnline;
                     model.SRTalepID = srTalep.SRTalepID;
@@ -1153,7 +1153,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-
+                    model.EnstituKod = tiAraRapor.TIBasvuru.EnstituKod;
                     model.SRTalepTipID = 3;
                     model.TalepYapanID = tiAraRapor.TIBasvuru.KullaniciID;
                     model.Tarih = DateTime.Now.Date;
@@ -1161,7 +1161,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-
+             
             return View(model);
         }
         [Authorize]

@@ -174,10 +174,10 @@
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td>
+                                            <td id="tosDonemContent_@item.ToBasvuruID">
                                                 @item.AktifDonemAdi<br />@(item.AktifSavunmaNo.HasValue?item.AktifSavunmaNo+". Savunma":"----")
                                             </td>
-                                            <td>@item.DurumModel.TosBasvuruDurumView()</td>
+                                            <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
                                         </tr>
                                         <tr class="cls-@item.UniqueID" style="display:none">

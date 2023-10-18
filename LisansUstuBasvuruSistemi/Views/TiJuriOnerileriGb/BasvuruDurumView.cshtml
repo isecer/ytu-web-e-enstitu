@@ -4,7 +4,7 @@
     Layout = null;
 
 }
-@{ 
+@{
 
     var tabAdi = "";
     var tabIconClass = "";
@@ -16,7 +16,7 @@
     var durumDetayIconClass = "";
     var aciklamaDetay = "";
 
-    if (Model == null)
+    if (Model == null || Model.TijBasvuruOneriID <= 0)
     {
         tabAdi = "Jüri Önerisi Henüz Yapıldı";
         tabIconClass = "fa fa-list-alt fa-lg";
@@ -28,7 +28,7 @@
     else if (!Model.DanismanOnayladi.HasValue)
     {
         tabAdi = "Jüri Önerisi Yapıldı";
-        tabIconClass = "fa fa-clock-o"; 
+        tabIconClass = "fa fa-clock-o";
         durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Devamı İçin Danışman Onayı Gerekmekte.";
     }
@@ -58,7 +58,7 @@
         durumDetay = "Süreç Devamı İçin Eyk'da onay işlemi bekleniyor.";
     }
     else if (Model.EYKYaGonderildi == false)
-    { 
+    {
 
         tabAdi = "EYK'ya Gönderimi Onaylanmadı";
         tabIconClass = "fa fa-thumbs-o-down fa-lg";
@@ -72,7 +72,7 @@
         tabAdi = "EYK'da Onaylandı";
         tabIconClass = "fa fa-thumbs-o-up fa-lg";
         durumColor = "green";
-        durumDetayIconClass = "fa fa-comments-o"; 
+        durumDetayIconClass = "fa fa-comments-o";
         durumDetay = "Süreç Tamamlandı";
     }
     else if (Model.EYKDaOnaylandi == false)
@@ -108,6 +108,3 @@
         </tr>
     </tbody>
 </table>
-
-
-

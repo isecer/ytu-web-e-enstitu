@@ -1,19 +1,12 @@
 ﻿using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Models.ObsService;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.Logs;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -39,7 +32,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 donemId = model.AktifDonemID.Substring(4, 1).ToInt(0);
             }
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-             
+
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
@@ -47,8 +40,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     join pr in _entities.Programlars on k.ProgramKod equals pr.ProgramKod
                     join ab in _entities.AnabilimDallaris on k.Programlar.AnabilimDaliKod equals ab.AnabilimDaliKod
                     join en in _entities.Enstitulers on e.EnstituKod equals en.EnstituKod
-                    let ard = _entities.ToBasvuruSavunmas.Where(p => p.ToBasvuruID == s.ToBasvuruID).OrderByDescending(ot => ot.ToBasvuruSavunmaID).FirstOrDefault()
-                     where s.EnstituKod == enstituKod 
+                    let ard = _entities.ToBasvuruSavunmas.Where(p => (!baslangicYil.HasValue || (p.ToBasvuruID == s.ToBasvuruID && p.DonemID == donemId && p.DonemBaslangicYil == baslangicYil)) && p.ToBasvuruID == s.ToBasvuruID).OrderByDescending(ot => ot.ToBasvuruSavunmaID).FirstOrDefault()
                     select new FrTosBasvuru()
                     {
                         UniqueID = s.UniqueID,
@@ -68,13 +60,17 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
                         KayitOgretimYiliDonemID = s.KayitOgretimYiliDonemID,
-                        AktifSavunmaNo = ard != null ? ard.SavunmaNo : (int?)null,
-                        AktifDonemAdi = ard == null ? "Tez Öneri Savunma Sınavı Yok" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
+                        SavunmaBasvuruTarihi = ard == null ? (DateTime?)null : ard.SavunmaBasvuruTarihi,
+                        IsSinavBilgisiGirildi = ard != null && ard.SRTalepleris.Any(),
+                        IsDegerlendirmeSuvecinde = ard != null && ard.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue),
+                        AktifSavunmaNo = ard == null ? (int?)null : ard.SavunmaNo,
+                        AktifDonemAdi = ard == null ? "----" : (ard.DonemBaslangicYil + " / " + (ard.DonemBaslangicYil + 1) + " " + (ard.DonemID == 1 ? "Güz" : "Bahar")),
                         AktifDonemID = ard == null ? null : (ard.DonemBaslangicYil + "" + ard.DonemID),
-                        DurumID = ard == null ? 0 : ard.ToBasvuruSavunmaDurumID,
+                        DurumID = ard == null ? null : ard.ToBasvuruSavunmaDurumID,
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         DurumModel = new TosDurumDto
                         {
+                            IsTezOnerisiVar = ard != null,
                             ToBasvuruSavunmaDurumID = ard.ToBasvuruSavunmaDurumID,
                             IsSrTalebiYapildi = ard != null && ard.SRTalepleris.Any(),
                             DegerlendirmeBasladi = ard != null && ard.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue),
@@ -84,47 +80,68 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
             var q2 = q;
-            var isFiltered = !Equals(q, q2);
-            //if (baslangicYil.HasValue) q = q.Where(p => p.AraRaporDanismanID.HasValue);
+            q = q.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod));
+            if (baslangicYil.HasValue) q = q.Where(p => p.AktifSavunmaNo.HasValue);
             if (!model.AktifDonemID.IsNullOrWhiteSpace()) q = q.Where(p => p.AktifDonemID == model.AktifDonemID);
-           
-            // if (model.AktifAraRaporSayisi.HasValue) q = q.Where(p => p.AraRaporSayisi == model.AktifAraRaporSayisi);
-            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
 
+            if (model.SavunmaNo.HasValue) q = q.Where(p => p.AktifSavunmaNo == model.SavunmaNo);
+            if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
+            if (model.AktifDurumID.HasValue)
+            {
+                q = q.Where(p => p.DurumModel.IsTezOnerisiVar);
+                if (model.AktifDurumID == 1000)
+                {
+                    q = q.Where(p => !p.IsSinavBilgisiGirildi);
+                }
+                else if (model.AktifDurumID == 1001)
+                {
+                    q = q.Where(p => p.IsSinavBilgisiGirildi && !p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
+                }
+                else if (model.AktifDurumID == 1002)
+                {
+                    q = q.Where(p => p.IsSinavBilgisiGirildi && p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
+                }
+                else if (model.AktifDurumID == 1003)
+                {
+                    q = q.Where(p => p.DurumID.HasValue);
+                }
+                else q = q.Where(p => p.DurumID == model.AktifDurumID);
+            }
             if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>
                     p.AdSoyad.Contains(model.AdSoyad)
                     || p.OgrenciNo.Contains(model.AdSoyad)
                     || p.TcKimlikNo.Contains(model.AdSoyad));
 
-            var tezDegerlendirme = RoleNames.TiTezDegerlendirmeYap.InRoleCurrent();
-            var mbGelenBKayitYetki = RoleNames.TiGelenBasvuruKayit.InRoleCurrent();
-            //if (tezDegerlendirme && !mbGelenBKayitYetki)
-            //{
-            //    q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
-            //    q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.TIAraRaporRaporDurumID ?? 999).ThenByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
-            //}
-            //else
-            //{
-            //    q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.RaporTarihi ?? o.BasvuruTarihi);
-            //}
+            var tezDegerlendirme = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
+            var mbGelenBKayitYetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
+            if (tezDegerlendirme && !mbGelenBKayitYetki)
+            {
+                q = q.Where(p => p.TezDanismanID == UserIdentity.Current.Id);
+                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderBy(o => o.DurumID ?? 999).ThenByDescending(o => o.SavunmaBasvuruTarihi ?? o.BasvuruTarihi);
+            }
+            else
+            {
+                q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.SavunmaBasvuruTarihi ?? o.BasvuruTarihi);
+            }
 
+            var isFiltered = !Equals(q, q2);
             model.RowCount = q.Count();
             var indexModel = new MIndexBilgi();
             q = !model.Sort.IsNullOrWhiteSpace() ? q.OrderBy(model.Sort) : q.OrderByDescending(o => o.BasvuruTarihi);
             model.Data = q.Skip(model.StartRowIndex).Take(model.PageSize).ToList();
             ViewBag.filteredOgrenciIds = isFiltered && !model.AktifDonemID.IsNullOrWhiteSpace() ? q.Select(s => s.KullaniciID).ToList() : new List<int>();
-            ViewBag.filteredDanismanIds = isFiltered && !model.AktifDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.DanismanID.HasValue).Select(s => s.DanismanID.Value).Distinct().ToList() : new List<int>();
+            ViewBag.filteredDanismanIds = isFiltered && !model.AktifDonemID.IsNullOrWhiteSpace() ? q.Where(p => p.TezDanismanID.HasValue).Select(s => s.TezDanismanID.Value).Distinct().ToList() : new List<int>();
 
-            ViewBag.AktifDonemID = new SelectList(TezIzlemeBus.CmbTiDonemListe(enstituKod, true), "Value", "Caption", model.AktifDonemID);
-            ViewBag.AktifDurumID = new SelectList(TezIzlemeBus.CmbTiAraRaporDurumListe(true), "Value", "Caption", model.AktifDurumID); 
-            ViewBag.AnabilimDaliID = new SelectList(TezIzlemeBus.GetCmbFilterTiAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
-            ViewBag.SavunmaNo = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.SavunmaNo); 
+            ViewBag.AktifDonemID = new SelectList(TezOneriSavunmaBus.CmbDonemListe(true), "Value", "Caption", model.AktifDonemID);
+            ViewBag.AktifDurumID = new SelectList(TezOneriSavunmaBus.CmbTosDurumListe(true), "Value", "Caption", model.AktifDurumID);
+            ViewBag.AnabilimDaliID = new SelectList(TezOneriSavunmaBus.GetCmbFilterAnabilimDallari(enstituKod, true), "Value", "Caption", model.AnabilimDaliID);
+            ViewBag.SavunmaNo = new SelectList(TezOneriSavunmaBus.CmbTosNumarasi(true), "Value", "Caption", model.SavunmaNo);
 
-            ViewBag.IndexModel = indexModel; 
+            ViewBag.IndexModel = indexModel;
             return View(model);
         }
- 
+
 
     }
 }
