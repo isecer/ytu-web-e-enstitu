@@ -177,7 +177,7 @@
             // lblEnstituAdi
             // 
             this.lblEnstituAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.lblEnstituAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblEnstituAdi.ForeColor = System.Drawing.Color.Maroon;
             this.lblEnstituAdi.LocationFloat = new DevExpress.Utils.PointFloat(119.7916F, 55.83515F);
             this.lblEnstituAdi.Multiline = true;
@@ -194,7 +194,7 @@
             // lblUniAdi
             // 
             this.lblUniAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblUniAdi.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold);
+            this.lblUniAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblUniAdi.ForeColor = System.Drawing.Color.Maroon;
             this.lblUniAdi.LocationFloat = new DevExpress.Utils.PointFloat(119.7916F, 0F);
             this.lblUniAdi.Multiline = true;
@@ -211,7 +211,7 @@
             // lblAlanTip
             // 
             this.lblAlanTip.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblAlanTip.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.lblAlanTip.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblAlanTip.ForeColor = System.Drawing.Color.Maroon;
             this.lblAlanTip.LocationFloat = new DevExpress.Utils.PointFloat(97.50001F, 87.54346F);
             this.lblAlanTip.Name = "lblAlanTip";
@@ -390,10 +390,10 @@
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.objectDataSource1});
             this.DataSource = this.objectDataSource1;
-            this.Margins = new System.Drawing.Printing.Margins(34, 28, 136, 31);
+            this.Margins = new DevExpress.Drawing.DXMargins(34, 28, 136, 31);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.Version = "17.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();

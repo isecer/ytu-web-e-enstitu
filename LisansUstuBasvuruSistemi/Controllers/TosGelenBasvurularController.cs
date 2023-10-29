@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -31,8 +32,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 baslangicYil = model.AktifDonemID.Substring(0, 4).ToInt(0);
                 donemId = model.AktifDonemID.Substring(4, 1).ToInt(0);
             }
-            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
-
+            var enstituKod = EnstituBus.GetSelectedEnstitu(ekd); 
             var q = from s in _entities.ToBasvurus.Where(p => !model.IsDegerlendirme.HasValue || p.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaKomites.Any(a2 => a2.UniqueID == model.IsDegerlendirme)))
                     join e in _entities.Enstitulers on s.EnstituKod equals e.EnstituKod
                     join k in _entities.Kullanicilars on s.KullaniciID equals k.KullaniciID
@@ -69,7 +69,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         DurumID = ard == null ? null : ard.ToBasvuruSavunmaDurumID,
                         IsOyBirligiOrCoklugu = ard != null ? ard.IsOyBirligiOrCoklugu : (bool?)null,
                         DurumModel = new TosDurumDto
-                        {
+                        { 
                             IsTezOnerisiVar = ard != null,
                             ToBasvuruSavunmaDurumID = ard.ToBasvuruSavunmaDurumID,
                             IsSrTalebiYapildi = ard != null && ard.SRTalepleris.Any(),

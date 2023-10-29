@@ -243,7 +243,7 @@
             // lbllblDonemBilgi
             // 
             this.lbllblDonemBilgi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lbllblDonemBilgi.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.lbllblDonemBilgi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lbllblDonemBilgi.ForeColor = System.Drawing.Color.Maroon;
             this.lbllblDonemBilgi.LocationFloat = new DevExpress.Utils.PointFloat(111.4583F, 55.83512F);
             this.lbllblDonemBilgi.Name = "lbllblDonemBilgi";
@@ -259,7 +259,7 @@
             // lblUniAdi
             // 
             this.lblUniAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblUniAdi.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold);
+            this.lblUniAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblUniAdi.ForeColor = System.Drawing.Color.Maroon;
             this.lblUniAdi.LocationFloat = new DevExpress.Utils.PointFloat(139.5833F, 0F);
             this.lblUniAdi.Multiline = true;
@@ -296,7 +296,7 @@
             this.xrLabel1.BorderWidth = 2F;
             this.xrLabel1.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "AnabilimDaliAdi")});
-            this.xrLabel1.Font = new System.Drawing.Font("Times New Roman", 12.75F);
+            this.xrLabel1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12.75F);
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 4.333305F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 2, 0, 0, 100F);
@@ -332,7 +332,7 @@
             this.xrLabel2.BorderWidth = 2F;
             this.xrLabel2.DataBindings.AddRange(new DevExpress.XtraReports.UI.XRBinding[] {
             new DevExpress.XtraReports.UI.XRBinding("Text", null, "ProgramGrupAdi")});
-            this.xrLabel2.Font = new System.Drawing.Font("Times New Roman", 10.75F);
+            this.xrLabel2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10.75F);
             this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(0.9736023F, 7.000015F);
             this.xrLabel2.Name = "xrLabel2";
             this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 2, 0, 0, 100F);
@@ -459,7 +459,7 @@
             this.xrLabel3.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Top | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrLabel3.BorderWidth = 2F;
-            this.xrLabel3.Font = new System.Drawing.Font("Times New Roman", 10.75F);
+            this.xrLabel3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10.75F);
             this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(0.9736061F, 0F);
             this.xrLabel3.Name = "xrLabel3";
             this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -505,10 +505,10 @@
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.objectDataSource1});
             this.DataSource = this.objectDataSource1;
-            this.Margins = new System.Drawing.Printing.Margins(39, 36, 113, 23);
+            this.Margins = new DevExpress.Drawing.DXMargins(39, 36, 113, 23);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.StyleSheet.AddRange(new DevExpress.XtraReports.UI.XRControlStyle[] {
             this.odd,
             this.even});

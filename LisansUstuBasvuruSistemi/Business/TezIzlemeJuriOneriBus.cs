@@ -455,7 +455,6 @@ namespace LisansUstuBasvuruSistemi.Business
                                         AnabilimdaliAdi = juri.TEZ_IZLEME_JURI_ANABLMDAL.ToUpper()
                                     });
                                 }
-
                                 tijOneri.TijBasvuruOneriJurilers = tijOneri.TijBasvuruOneriJurilers.OrderBy(o =>
                                         (o.IsTezDanismani
                                             ? 1
@@ -466,12 +465,10 @@ namespace LisansUstuBasvuruSistemi.Business
                                 entities.SaveChanges();
                             }
                         }
-
                     }
                 }
                 return basvuruUniqueId;
             }
-
         }
         public static TijBasvuruDetayDto GetSecilenBasvuruTijDetay(Guid uniqueId)
         {
@@ -484,7 +481,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (tiJuriOnerileriOgrenciAdina && !tiJuriOnerileriYetkili)
                     danismanId = UserIdentity.Current.Id;
                 var basvuru = db.TijBasvurus.First(p => p.UniqueID == uniqueId);
-
                 var enstitu = db.Enstitulers.First(p => p.EnstituKod == basvuru.EnstituKod);
 
                 var sonTijBasvuruOneri = basvuru.TijBasvuruOneris.OrderByDescending(o => o.TijBasvuruOneriID).FirstOrDefault();
@@ -525,7 +521,10 @@ namespace LisansUstuBasvuruSistemi.Business
                     EYKDaOnaylanmadiDurumAciklamasi = s.EYKDaOnaylanmadiDurumAciklamasi,
                     SelectEykYaGonderildi = new SelectList(ComboData.GetCmbEykGonderimDurumData(true, s.EYKYaGonderildi == true ? s.EYKYaGonderildiIslemTarihi : null), "Value", "Caption", s.EYKYaGonderildi),
                     SelectEykDaOnaylandi = new SelectList(ComboData.GetCmbEykOnayDurumData(true), "Value", "Caption", s.EYKDaOnaylandi),
-                    TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.ToList()
+                    TijBasvuruOneriJurilers = s.TijBasvuruOneriJurilers.OrderBy(o=>o.IsYeniOrOnceki?1:2)
+                                                                       .ThenBy(t => t.IsTezDanismani ? 1 : 2) 
+                                                                       .ThenBy(o => o.IsYtuIciJuri ? 1 : 2)
+                                                                       .ThenBy(t => t.RowNum).ToList()
                 }).OrderByDescending(o => o.BasvuruTarihi).ToList();
 
                 var sonTij = model.TijBasvuruOneriList.FirstOrDefault();
@@ -560,8 +559,6 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return model;
         }
-
-
         public static MmMessage GetTijBasvuruDetayIslemKontrol(Guid tijBasvuruOneriUniqueId)
         {
             var msg = new MmMessage

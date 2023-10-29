@@ -1,14 +1,14 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Enums
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.TosDurumDto
 @{
-    Layout = null; 
+    Layout = null;
 }
-@{ 
+@{
     var AnaDurumAdi = "";
     var AnaDurumIconName = "";
     var AnaDurumColor = "";
     var DetayDurumAdi = "";
-    var DetayDurumIconName = ""; 
+    var DetayDurumIconName = "";
     if (!Model.IsTezOnerisiVar)
     {
         AnaDurumAdi = "Tez Öneri Savunma Sınavı Formu Oluşturulmadı.";
@@ -34,7 +34,7 @@
     else if (!Model.ToBasvuruSavunmaDurumID.HasValue)
     {
         AnaDurumAdi = "Değerlendirme Süreci Başladı";
-        AnaDurumIconName = "fa fa-edit fa-lg"; 
+        AnaDurumIconName = "fa fa-edit fa-lg";
         DetayDurumIconName = "fa fa-comments-o";
         DetayDurumAdi = "Sonuç İçin Tüm Komite Üyelerinin Değerlendirmelerini Tamamlamalı.";
     }
@@ -42,35 +42,35 @@
     {
         AnaDurumAdi = "Değerlendirme Süreci Tamamlandı";
         AnaDurumIconName = "glyphicon glyphicon-list-alt";
-        var isOyBirligiOrCokluguTxt = (Model.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle"); 
+        var isOyBirligiOrCokluguTxt = (Model.IsOyBirligiOrCoklugu == true ? "Oy Birliği İle" : "Oy Çokluğu İle");
 
-        if (Model.ToBasvuruSavunmaDurumID == 1)
+        if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi)
         {
             AnaDurumColor = "green";
             DetayDurumIconName = "fa fa-thumbs-o-up";
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Kabul Edildi";
         }
-        else if (Model.ToBasvuruSavunmaDurumID == 2)
+        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi)
         {
             AnaDurumColor = "maroon";
             DetayDurumIconName = "fa fa-thumbs-o-down";
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Ret Edildi";
 
         }
-        else if (Model.ToBasvuruSavunmaDurumID == 3)
+        else if (Model.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
         {
             AnaDurumColor = "maroon";
             DetayDurumIconName = "fa fa-calendar";
             DetayDurumAdi = isOyBirligiOrCokluguTxt + " Düzeltme Talep Edildi";
 
         }
-    } 
-} 
+    }
+}
 <table style="color:@AnaDurumColor">
     <tbody>
-        <tr >
+        <tr>
             <td>
-                <i class="@AnaDurumIconName" aria-hidden="true"></i> <span style="font-size:8pt;margin:0px;"> @AnaDurumAdi</span> 
+                <i class="@AnaDurumIconName" aria-hidden="true"></i> <span style="font-size:8pt;margin:0px;"> @AnaDurumAdi</span>
             </td>
         </tr>
         <tr>

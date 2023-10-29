@@ -22,7 +22,7 @@
 }
 else
 {
-    using (Ajax.BeginForm("RezervasyonAlPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TIAraRaporSrForm" }))
+    using (Ajax.BeginForm("RezervasyonAlPost", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = "TosSrForm" }))
     {
         @Html.HiddenFor(p => p.SRTalepID)
         @Html.HiddenFor(p => p.TalepYapanID)

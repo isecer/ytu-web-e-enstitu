@@ -94,7 +94,7 @@
             // 
             this.xrTable1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(106)))), ((int)(((byte)(151)))));
             this.xrTable1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable1.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTable1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTable1.ForeColor = System.Drawing.Color.White;
             this.xrTable1.LocationFloat = new DevExpress.Utils.PointFloat(9.536743E-05F, 0F);
             this.xrTable1.Name = "xrTable1";
@@ -177,7 +177,7 @@
             // 
             // lblUniAdi
             // 
-            this.lblUniAdi.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold);
+            this.lblUniAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 14F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblUniAdi.ForeColor = System.Drawing.Color.Maroon;
             this.lblUniAdi.LocationFloat = new DevExpress.Utils.PointFloat(97.49999F, 4.081774F);
             this.lblUniAdi.Name = "lblUniAdi";
@@ -191,7 +191,7 @@
             // 
             // lblEnstituAdi
             // 
-            this.lblEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Bold);
+            this.lblEnstituAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblEnstituAdi.ForeColor = System.Drawing.Color.White;
             this.lblEnstituAdi.LocationFloat = new DevExpress.Utils.PointFloat(97.50001F, 31.16515F);
             this.lblEnstituAdi.Name = "lblEnstituAdi";
@@ -205,7 +205,7 @@
             // 
             // lblRaporAdi
             // 
-            this.lblRaporAdi.Font = new System.Drawing.Font("Times New Roman", 14F);
+            this.lblRaporAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 14F);
             this.lblRaporAdi.ForeColor = System.Drawing.Color.White;
             this.lblRaporAdi.LocationFloat = new DevExpress.Utils.PointFloat(97.50001F, 58.24846F);
             this.lblRaporAdi.Name = "lblRaporAdi";
@@ -222,7 +222,7 @@
             this.xrTable3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable3.Font = new System.Drawing.Font("Times New Roman", 9F);
+            this.xrTable3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9F);
             this.xrTable3.LocationFloat = new DevExpress.Utils.PointFloat(348.9585F, 89.99999F);
             this.xrTable3.Name = "xrTable3";
             this.xrTable3.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
@@ -280,7 +280,7 @@
             // xrTable2
             // 
             this.xrTable2.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable2.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTable2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTable2.LocationFloat = new DevExpress.Utils.PointFloat(57.29176F, 0F);
             this.xrTable2.Name = "xrTable2";
             this.xrTable2.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -314,7 +314,7 @@
             this.xrTableCell4.BorderColor = System.Drawing.Color.Empty;
             this.xrTableCell4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Count]")});
-            this.xrTableCell4.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell4.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(106)))), ((int)(((byte)(151)))));
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 5, 0, 0, 100F);
@@ -403,7 +403,7 @@
             // xrTable4
             // 
             this.xrTable4.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable4.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTable4.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTable4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(106)))), ((int)(((byte)(151)))));
             this.xrTable4.LocationFloat = new DevExpress.Utils.PointFloat(57.29176F, 0F);
             this.xrTable4.Name = "xrTable4";
@@ -487,13 +487,13 @@
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.objectDataSource1});
             this.DataSource = this.objectDataSource1;
-            this.Margins = new System.Drawing.Printing.Margins(27, 26, 15, 46);
+            this.Margins = new DevExpress.Drawing.DXMargins(27, 26, 15, 46);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.ScriptsSource = resources.GetString("$this.ScriptsSource");
             this.Version = "19.2";
-            this.BeforePrint += new System.Drawing.Printing.PrintEventHandler(this.rprAnket_BeforePrint);
+            this.BeforePrint += new DevExpress.XtraReports.UI.BeforePrintEventHandler(this.rprAnket_BeforePrint);
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).EndInit();

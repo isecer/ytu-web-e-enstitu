@@ -235,7 +235,7 @@
             // 
             this.xrRichText1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Html", "[Aciklama]")});
-            this.xrRichText1.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrRichText1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrRichText1.Name = "xrRichText1";
             this.xrRichText1.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -286,7 +286,7 @@
             // xrTable6
             // 
             this.xrTable6.BorderWidth = 0F;
-            this.xrTable6.Font = new System.Drawing.Font("Arial", 11F);
+            this.xrTable6.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
             this.xrTable6.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable6.Name = "xrTable6";
             this.xrTable6.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -311,7 +311,7 @@
             // 
             this.xrTableCell149.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenciBilgi]")});
-            this.xrTableCell149.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+            this.xrTableCell149.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Underline))));
             this.xrTableCell149.Name = "xrTableCell149";
             this.xrTableCell149.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell149.StylePriority.UseFont = false;
@@ -329,7 +329,7 @@
             // 
             // xrTableCell151
             // 
-            this.xrTableCell151.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell151.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell151.Name = "xrTableCell151";
             this.xrTableCell151.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell151.StylePriority.UseFont = false;
@@ -339,7 +339,7 @@
             // 
             // xrTableCell152
             // 
-            this.xrTableCell152.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell152.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell152.Name = "xrTableCell152";
             this.xrTableCell152.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell152.StylePriority.UseFont = false;
@@ -351,7 +351,7 @@
             // 
             this.xrTableCell153.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanDanismanAdSoyad]")});
-            this.xrTableCell153.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell153.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell153.Multiline = true;
             this.xrTableCell153.Name = "xrTableCell153";
             this.xrTableCell153.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -371,7 +371,7 @@
             // 
             // xrTableCell155
             // 
-            this.xrTableCell155.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell155.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell155.Name = "xrTableCell155";
             this.xrTableCell155.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell155.StylePriority.UseFont = false;
@@ -381,7 +381,7 @@
             // 
             // xrTableCell156
             // 
-            this.xrTableCell156.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell156.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell156.Name = "xrTableCell156";
             this.xrTableCell156.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell156.StylePriority.UseFont = false;
@@ -393,7 +393,7 @@
             // 
             this.xrTableCell157.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezDanismaniAdSoyad]")});
-            this.xrTableCell157.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell157.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell157.Multiline = true;
             this.xrTableCell157.Name = "xrTableCell157";
             this.xrTableCell157.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -413,7 +413,7 @@
             // 
             // xrTableCell159
             // 
-            this.xrTableCell159.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell159.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell159.Name = "xrTableCell159";
             this.xrTableCell159.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell159.StylePriority.UseFont = false;
@@ -423,7 +423,7 @@
             // 
             // xrTableCell160
             // 
-            this.xrTableCell160.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell160.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell160.Name = "xrTableCell160";
             this.xrTableCell160.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell160.StylePriority.UseFont = false;
@@ -435,7 +435,7 @@
             // 
             this.xrTableCell161.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezDili]")});
-            this.xrTableCell161.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell161.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell161.Multiline = true;
             this.xrTableCell161.Name = "xrTableCell161";
             this.xrTableCell161.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -455,7 +455,7 @@
             // 
             // xrTableCell167
             // 
-            this.xrTableCell167.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell167.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell167.Name = "xrTableCell167";
             this.xrTableCell167.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell167.StylePriority.UseFont = false;
@@ -465,7 +465,7 @@
             // 
             // xrTableCell168
             // 
-            this.xrTableCell168.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell168.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell168.Name = "xrTableCell168";
             this.xrTableCell168.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell168.StylePriority.UseFont = false;
@@ -477,7 +477,7 @@
             // 
             this.xrTableCell169.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikTr]")});
-            this.xrTableCell169.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell169.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell169.Multiline = true;
             this.xrTableCell169.Name = "xrTableCell169";
             this.xrTableCell169.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -497,7 +497,7 @@
             // 
             // xrTableCell171
             // 
-            this.xrTableCell171.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell171.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell171.Name = "xrTableCell171";
             this.xrTableCell171.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell171.StylePriority.UseFont = false;
@@ -507,7 +507,7 @@
             // 
             // xrTableCell172
             // 
-            this.xrTableCell172.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell172.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell172.Name = "xrTableCell172";
             this.xrTableCell172.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell172.StylePriority.UseFont = false;
@@ -519,7 +519,7 @@
             // 
             this.xrTableCell173.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikEn]")});
-            this.xrTableCell173.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell173.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell173.Multiline = true;
             this.xrTableCell173.Name = "xrTableCell173";
             this.xrTableCell173.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -603,7 +603,7 @@
             // xrTable2
             // 
             this.xrTable2.BorderWidth = 0F;
-            this.xrTable2.Font = new System.Drawing.Font("Arial", 11F);
+            this.xrTable2.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
             this.xrTable2.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable2.Name = "xrTable2";
             this.xrTable2.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -629,7 +629,7 @@
             // 
             this.xrTableCell4.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenciBilgi]")});
-            this.xrTableCell4.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+            this.xrTableCell4.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Underline))));
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell4.StylePriority.UseFont = false;
@@ -647,7 +647,7 @@
             // 
             // xrTableCell6
             // 
-            this.xrTableCell6.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell6.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell6.Name = "xrTableCell6";
             this.xrTableCell6.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell6.StylePriority.UseFont = false;
@@ -657,7 +657,7 @@
             // 
             // xrTableCell7
             // 
-            this.xrTableCell7.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell7.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell7.Name = "xrTableCell7";
             this.xrTableCell7.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell7.StylePriority.UseFont = false;
@@ -669,7 +669,7 @@
             // 
             this.xrTableCell8.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanDanismanAdSoyad]")});
-            this.xrTableCell8.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell8.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell8.Multiline = true;
             this.xrTableCell8.Name = "xrTableCell8";
             this.xrTableCell8.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -689,7 +689,7 @@
             // 
             // xrTableCell14
             // 
-            this.xrTableCell14.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell14.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell14.Name = "xrTableCell14";
             this.xrTableCell14.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell14.StylePriority.UseFont = false;
@@ -699,7 +699,7 @@
             // 
             // xrTableCell15
             // 
-            this.xrTableCell15.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell15.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell15.Name = "xrTableCell15";
             this.xrTableCell15.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell15.StylePriority.UseFont = false;
@@ -711,7 +711,7 @@
             // 
             this.xrTableCell16.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezDili]")});
-            this.xrTableCell16.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell16.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell16.Multiline = true;
             this.xrTableCell16.Name = "xrTableCell16";
             this.xrTableCell16.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -731,7 +731,7 @@
             // 
             // xrTableCell22
             // 
-            this.xrTableCell22.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell22.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell22.Name = "xrTableCell22";
             this.xrTableCell22.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell22.StylePriority.UseFont = false;
@@ -741,7 +741,7 @@
             // 
             // xrTableCell23
             // 
-            this.xrTableCell23.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell23.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell23.Name = "xrTableCell23";
             this.xrTableCell23.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell23.StylePriority.UseFont = false;
@@ -753,7 +753,7 @@
             // 
             this.xrTableCell24.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikTr]")});
-            this.xrTableCell24.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell24.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell24.Multiline = true;
             this.xrTableCell24.Name = "xrTableCell24";
             this.xrTableCell24.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -773,7 +773,7 @@
             // 
             // xrTableCell26
             // 
-            this.xrTableCell26.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell26.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell26.Name = "xrTableCell26";
             this.xrTableCell26.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell26.StylePriority.UseFont = false;
@@ -783,7 +783,7 @@
             // 
             // xrTableCell27
             // 
-            this.xrTableCell27.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell27.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell27.Name = "xrTableCell27";
             this.xrTableCell27.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell27.StylePriority.UseFont = false;
@@ -795,7 +795,7 @@
             // 
             this.xrTableCell28.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikEn]")});
-            this.xrTableCell28.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell28.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell28.Multiline = true;
             this.xrTableCell28.Name = "xrTableCell28";
             this.xrTableCell28.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -815,7 +815,7 @@
             // 
             // xrTableCell30
             // 
-            this.xrTableCell30.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell30.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell30.Name = "xrTableCell30";
             this.xrTableCell30.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell30.StylePriority.UseFont = false;
@@ -825,7 +825,7 @@
             // 
             // xrTableCell31
             // 
-            this.xrTableCell31.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell31.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell31.Name = "xrTableCell31";
             this.xrTableCell31.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell31.StylePriority.UseFont = false;
@@ -837,7 +837,7 @@
             // 
             this.xrTableCell32.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikTr]")});
-            this.xrTableCell32.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell32.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell32.Multiline = true;
             this.xrTableCell32.Name = "xrTableCell32";
             this.xrTableCell32.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -857,7 +857,7 @@
             // 
             // xrTableCell34
             // 
-            this.xrTableCell34.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell34.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell34.Name = "xrTableCell34";
             this.xrTableCell34.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell34.StylePriority.UseFont = false;
@@ -867,7 +867,7 @@
             // 
             // xrTableCell35
             // 
-            this.xrTableCell35.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell35.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell35.Name = "xrTableCell35";
             this.xrTableCell35.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell35.StylePriority.UseFont = false;
@@ -879,7 +879,7 @@
             // 
             this.xrTableCell36.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikEn]")});
-            this.xrTableCell36.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell36.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell36.Multiline = true;
             this.xrTableCell36.Name = "xrTableCell36";
             this.xrTableCell36.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -891,7 +891,7 @@
             // xrTable7
             // 
             this.xrTable7.BorderWidth = 0F;
-            this.xrTable7.Font = new System.Drawing.Font("Arial", 11F);
+            this.xrTable7.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
             this.xrTable7.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable7.Name = "xrTable7";
             this.xrTable7.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -918,7 +918,7 @@
             // 
             this.xrTableCell3.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenciBilgi]")});
-            this.xrTableCell3.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+            this.xrTableCell3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Underline))));
             this.xrTableCell3.Name = "xrTableCell3";
             this.xrTableCell3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell3.StylePriority.UseFont = false;
@@ -936,7 +936,7 @@
             // 
             // xrTableCell5
             // 
-            this.xrTableCell5.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell5.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell5.Name = "xrTableCell5";
             this.xrTableCell5.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell5.StylePriority.UseFont = false;
@@ -946,7 +946,7 @@
             // 
             // xrTableCell9
             // 
-            this.xrTableCell9.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell9.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell9.Name = "xrTableCell9";
             this.xrTableCell9.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell9.StylePriority.UseFont = false;
@@ -958,7 +958,7 @@
             // 
             this.xrTableCell10.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanDanismanAdSoyad]")});
-            this.xrTableCell10.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell10.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell10.Multiline = true;
             this.xrTableCell10.Name = "xrTableCell10";
             this.xrTableCell10.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -978,7 +978,7 @@
             // 
             // xrTableCell49
             // 
-            this.xrTableCell49.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell49.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell49.Multiline = true;
             this.xrTableCell49.Name = "xrTableCell49";
             this.xrTableCell49.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -989,7 +989,7 @@
             // 
             // xrTableCell53
             // 
-            this.xrTableCell53.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell53.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell53.Multiline = true;
             this.xrTableCell53.Name = "xrTableCell53";
             this.xrTableCell53.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1002,7 +1002,7 @@
             // 
             this.xrTableCell54.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezDanismaniAdSoyad]")});
-            this.xrTableCell54.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell54.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell54.Multiline = true;
             this.xrTableCell54.Name = "xrTableCell54";
             this.xrTableCell54.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1022,7 +1022,7 @@
             // 
             // xrTableCell11
             // 
-            this.xrTableCell11.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell11.Name = "xrTableCell11";
             this.xrTableCell11.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell11.StylePriority.UseFont = false;
@@ -1032,7 +1032,7 @@
             // 
             // xrTableCell12
             // 
-            this.xrTableCell12.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell12.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell12.Name = "xrTableCell12";
             this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell12.StylePriority.UseFont = false;
@@ -1044,7 +1044,7 @@
             // 
             this.xrTableCell13.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezDili]")});
-            this.xrTableCell13.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell13.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell13.Multiline = true;
             this.xrTableCell13.Name = "xrTableCell13";
             this.xrTableCell13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1064,7 +1064,7 @@
             // 
             // xrTableCell20
             // 
-            this.xrTableCell20.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell20.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell20.Name = "xrTableCell20";
             this.xrTableCell20.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell20.StylePriority.UseFont = false;
@@ -1074,7 +1074,7 @@
             // 
             // xrTableCell21
             // 
-            this.xrTableCell21.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell21.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell21.Name = "xrTableCell21";
             this.xrTableCell21.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell21.StylePriority.UseFont = false;
@@ -1086,7 +1086,7 @@
             // 
             this.xrTableCell25.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikTr]")});
-            this.xrTableCell25.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell25.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell25.Multiline = true;
             this.xrTableCell25.Name = "xrTableCell25";
             this.xrTableCell25.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1106,7 +1106,7 @@
             // 
             // xrTableCell29
             // 
-            this.xrTableCell29.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell29.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell29.Name = "xrTableCell29";
             this.xrTableCell29.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell29.StylePriority.UseFont = false;
@@ -1116,7 +1116,7 @@
             // 
             // xrTableCell33
             // 
-            this.xrTableCell33.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell33.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell33.Name = "xrTableCell33";
             this.xrTableCell33.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell33.StylePriority.UseFont = false;
@@ -1128,7 +1128,7 @@
             // 
             this.xrTableCell37.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikEn]")});
-            this.xrTableCell37.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell37.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell37.Multiline = true;
             this.xrTableCell37.Name = "xrTableCell37";
             this.xrTableCell37.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1148,7 +1148,7 @@
             // 
             // xrTableCell39
             // 
-            this.xrTableCell39.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell39.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell39.Name = "xrTableCell39";
             this.xrTableCell39.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell39.StylePriority.UseFont = false;
@@ -1158,7 +1158,7 @@
             // 
             // xrTableCell41
             // 
-            this.xrTableCell41.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell41.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell41.Name = "xrTableCell41";
             this.xrTableCell41.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell41.StylePriority.UseFont = false;
@@ -1170,7 +1170,7 @@
             // 
             this.xrTableCell45.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikTr]")});
-            this.xrTableCell45.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell45.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell45.Multiline = true;
             this.xrTableCell45.Name = "xrTableCell45";
             this.xrTableCell45.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1190,7 +1190,7 @@
             // 
             // xrTableCell46
             // 
-            this.xrTableCell46.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell46.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell46.Name = "xrTableCell46";
             this.xrTableCell46.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell46.StylePriority.UseFont = false;
@@ -1200,7 +1200,7 @@
             // 
             // xrTableCell47
             // 
-            this.xrTableCell47.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell47.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell47.Name = "xrTableCell47";
             this.xrTableCell47.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell47.StylePriority.UseFont = false;
@@ -1212,7 +1212,7 @@
             // 
             this.xrTableCell48.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikEn]")});
-            this.xrTableCell48.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell48.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell48.Multiline = true;
             this.xrTableCell48.Name = "xrTableCell48";
             this.xrTableCell48.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1224,7 +1224,7 @@
             // xrTable5
             // 
             this.xrTable5.BorderWidth = 0F;
-            this.xrTable5.Font = new System.Drawing.Font("Arial", 11F);
+            this.xrTable5.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
             this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable5.Name = "xrTable5";
             this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -1251,7 +1251,7 @@
             // 
             this.xrTableCell113.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenciBilgi]")});
-            this.xrTableCell113.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+            this.xrTableCell113.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Underline))));
             this.xrTableCell113.Name = "xrTableCell113";
             this.xrTableCell113.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell113.StylePriority.UseFont = false;
@@ -1269,7 +1269,7 @@
             // 
             // xrTableCell119
             // 
-            this.xrTableCell119.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell119.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell119.Name = "xrTableCell119";
             this.xrTableCell119.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell119.StylePriority.UseFont = false;
@@ -1279,7 +1279,7 @@
             // 
             // xrTableCell120
             // 
-            this.xrTableCell120.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell120.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell120.Name = "xrTableCell120";
             this.xrTableCell120.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell120.StylePriority.UseFont = false;
@@ -1291,7 +1291,7 @@
             // 
             this.xrTableCell121.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanDanismanAdSoyad]")});
-            this.xrTableCell121.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell121.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell121.Multiline = true;
             this.xrTableCell121.Name = "xrTableCell121";
             this.xrTableCell121.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1311,7 +1311,7 @@
             // 
             // xrTableCell123
             // 
-            this.xrTableCell123.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell123.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell123.Name = "xrTableCell123";
             this.xrTableCell123.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell123.StylePriority.UseFont = false;
@@ -1321,7 +1321,7 @@
             // 
             // xrTableCell124
             // 
-            this.xrTableCell124.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell124.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell124.Name = "xrTableCell124";
             this.xrTableCell124.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell124.StylePriority.UseFont = false;
@@ -1333,7 +1333,7 @@
             // 
             this.xrTableCell125.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezDili]")});
-            this.xrTableCell125.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell125.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell125.Multiline = true;
             this.xrTableCell125.Name = "xrTableCell125";
             this.xrTableCell125.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1353,7 +1353,7 @@
             // 
             // xrTableCell127
             // 
-            this.xrTableCell127.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell127.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell127.Name = "xrTableCell127";
             this.xrTableCell127.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell127.StylePriority.UseFont = false;
@@ -1363,7 +1363,7 @@
             // 
             // xrTableCell128
             // 
-            this.xrTableCell128.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell128.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell128.Name = "xrTableCell128";
             this.xrTableCell128.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell128.StylePriority.UseFont = false;
@@ -1375,7 +1375,7 @@
             // 
             this.xrTableCell129.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezDili]")});
-            this.xrTableCell129.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell129.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell129.Multiline = true;
             this.xrTableCell129.Name = "xrTableCell129";
             this.xrTableCell129.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1395,7 +1395,7 @@
             // 
             // xrTableCell131
             // 
-            this.xrTableCell131.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell131.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell131.Name = "xrTableCell131";
             this.xrTableCell131.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell131.StylePriority.UseFont = false;
@@ -1405,7 +1405,7 @@
             // 
             // xrTableCell132
             // 
-            this.xrTableCell132.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell132.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell132.Name = "xrTableCell132";
             this.xrTableCell132.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell132.StylePriority.UseFont = false;
@@ -1417,7 +1417,7 @@
             // 
             this.xrTableCell133.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikTr]")});
-            this.xrTableCell133.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell133.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell133.Multiline = true;
             this.xrTableCell133.Name = "xrTableCell133";
             this.xrTableCell133.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1437,7 +1437,7 @@
             // 
             // xrTableCell135
             // 
-            this.xrTableCell135.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell135.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell135.Name = "xrTableCell135";
             this.xrTableCell135.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell135.StylePriority.UseFont = false;
@@ -1447,7 +1447,7 @@
             // 
             // xrTableCell136
             // 
-            this.xrTableCell136.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell136.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell136.Name = "xrTableCell136";
             this.xrTableCell136.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell136.StylePriority.UseFont = false;
@@ -1459,7 +1459,7 @@
             // 
             this.xrTableCell137.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikEn]")});
-            this.xrTableCell137.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell137.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell137.Multiline = true;
             this.xrTableCell137.Name = "xrTableCell137";
             this.xrTableCell137.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1479,7 +1479,7 @@
             // 
             // xrTableCell139
             // 
-            this.xrTableCell139.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell139.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell139.Name = "xrTableCell139";
             this.xrTableCell139.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell139.StylePriority.UseFont = false;
@@ -1489,7 +1489,7 @@
             // 
             // xrTableCell140
             // 
-            this.xrTableCell140.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell140.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell140.Name = "xrTableCell140";
             this.xrTableCell140.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell140.StylePriority.UseFont = false;
@@ -1501,7 +1501,7 @@
             // 
             this.xrTableCell141.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikTr]")});
-            this.xrTableCell141.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell141.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell141.Multiline = true;
             this.xrTableCell141.Name = "xrTableCell141";
             this.xrTableCell141.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1521,7 +1521,7 @@
             // 
             // xrTableCell143
             // 
-            this.xrTableCell143.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell143.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell143.Name = "xrTableCell143";
             this.xrTableCell143.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell143.StylePriority.UseFont = false;
@@ -1531,7 +1531,7 @@
             // 
             // xrTableCell144
             // 
-            this.xrTableCell144.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell144.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell144.Name = "xrTableCell144";
             this.xrTableCell144.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell144.StylePriority.UseFont = false;
@@ -1543,7 +1543,7 @@
             // 
             this.xrTableCell145.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikEn]")});
-            this.xrTableCell145.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell145.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell145.Multiline = true;
             this.xrTableCell145.Name = "xrTableCell145";
             this.xrTableCell145.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1555,7 +1555,7 @@
             // xrTable1
             // 
             this.xrTable1.BorderWidth = 0F;
-            this.xrTable1.Font = new System.Drawing.Font("Arial", 11F);
+            this.xrTable1.Font = new DevExpress.Drawing.DXFont("Arial", 11F);
             this.xrTable1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable1.Name = "xrTable1";
             this.xrTable1.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -1583,7 +1583,7 @@
             // 
             this.xrTableCell77.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OgrenciBilgi]")});
-            this.xrTableCell77.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+            this.xrTableCell77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Underline))));
             this.xrTableCell77.Name = "xrTableCell77";
             this.xrTableCell77.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell77.StylePriority.UseFont = false;
@@ -1601,7 +1601,7 @@
             // 
             // xrTableCell79
             // 
-            this.xrTableCell79.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell79.Name = "xrTableCell79";
             this.xrTableCell79.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell79.StylePriority.UseFont = false;
@@ -1611,7 +1611,7 @@
             // 
             // xrTableCell80
             // 
-            this.xrTableCell80.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell80.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell80.Name = "xrTableCell80";
             this.xrTableCell80.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell80.StylePriority.UseFont = false;
@@ -1623,7 +1623,7 @@
             // 
             this.xrTableCell81.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanDanismanAdSoyad]")});
-            this.xrTableCell81.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell81.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell81.Multiline = true;
             this.xrTableCell81.Name = "xrTableCell81";
             this.xrTableCell81.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1643,7 +1643,7 @@
             // 
             // xrTableCell83
             // 
-            this.xrTableCell83.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell83.Name = "xrTableCell83";
             this.xrTableCell83.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell83.StylePriority.UseFont = false;
@@ -1653,7 +1653,7 @@
             // 
             // xrTableCell84
             // 
-            this.xrTableCell84.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell84.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell84.Name = "xrTableCell84";
             this.xrTableCell84.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell84.StylePriority.UseFont = false;
@@ -1665,7 +1665,7 @@
             // 
             this.xrTableCell85.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezDanismaniAdSoyad]")});
-            this.xrTableCell85.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell85.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell85.Multiline = true;
             this.xrTableCell85.Name = "xrTableCell85";
             this.xrTableCell85.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1685,7 +1685,7 @@
             // 
             // xrTableCell87
             // 
-            this.xrTableCell87.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell87.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell87.Name = "xrTableCell87";
             this.xrTableCell87.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell87.StylePriority.UseFont = false;
@@ -1695,7 +1695,7 @@
             // 
             // xrTableCell88
             // 
-            this.xrTableCell88.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell88.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell88.Name = "xrTableCell88";
             this.xrTableCell88.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell88.StylePriority.UseFont = false;
@@ -1707,7 +1707,7 @@
             // 
             this.xrTableCell89.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezDili]")});
-            this.xrTableCell89.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell89.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell89.Multiline = true;
             this.xrTableCell89.Name = "xrTableCell89";
             this.xrTableCell89.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1727,7 +1727,7 @@
             // 
             // xrTableCell91
             // 
-            this.xrTableCell91.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell91.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell91.Name = "xrTableCell91";
             this.xrTableCell91.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell91.StylePriority.UseFont = false;
@@ -1737,7 +1737,7 @@
             // 
             // xrTableCell92
             // 
-            this.xrTableCell92.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell92.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell92.Name = "xrTableCell92";
             this.xrTableCell92.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell92.StylePriority.UseFont = false;
@@ -1749,7 +1749,7 @@
             // 
             this.xrTableCell93.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezDili]")});
-            this.xrTableCell93.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell93.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell93.Multiline = true;
             this.xrTableCell93.Name = "xrTableCell93";
             this.xrTableCell93.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1769,7 +1769,7 @@
             // 
             // xrTableCell95
             // 
-            this.xrTableCell95.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell95.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell95.Name = "xrTableCell95";
             this.xrTableCell95.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell95.StylePriority.UseFont = false;
@@ -1779,7 +1779,7 @@
             // 
             // xrTableCell96
             // 
-            this.xrTableCell96.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell96.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell96.Name = "xrTableCell96";
             this.xrTableCell96.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell96.StylePriority.UseFont = false;
@@ -1791,7 +1791,7 @@
             // 
             this.xrTableCell97.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikTr]")});
-            this.xrTableCell97.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell97.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell97.Multiline = true;
             this.xrTableCell97.Name = "xrTableCell97";
             this.xrTableCell97.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1811,7 +1811,7 @@
             // 
             // xrTableCell99
             // 
-            this.xrTableCell99.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell99.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell99.Name = "xrTableCell99";
             this.xrTableCell99.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell99.StylePriority.UseFont = false;
@@ -1821,7 +1821,7 @@
             // 
             // xrTableCell100
             // 
-            this.xrTableCell100.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell100.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell100.Name = "xrTableCell100";
             this.xrTableCell100.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell100.StylePriority.UseFont = false;
@@ -1833,7 +1833,7 @@
             // 
             this.xrTableCell101.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[VarolanTezBaslikEn]")});
-            this.xrTableCell101.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell101.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell101.Multiline = true;
             this.xrTableCell101.Name = "xrTableCell101";
             this.xrTableCell101.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1853,7 +1853,7 @@
             // 
             // xrTableCell103
             // 
-            this.xrTableCell103.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell103.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell103.Name = "xrTableCell103";
             this.xrTableCell103.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell103.StylePriority.UseFont = false;
@@ -1863,7 +1863,7 @@
             // 
             // xrTableCell104
             // 
-            this.xrTableCell104.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell104.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell104.Name = "xrTableCell104";
             this.xrTableCell104.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell104.StylePriority.UseFont = false;
@@ -1875,7 +1875,7 @@
             // 
             this.xrTableCell105.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikTr]")});
-            this.xrTableCell105.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell105.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell105.Multiline = true;
             this.xrTableCell105.Name = "xrTableCell105";
             this.xrTableCell105.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1895,7 +1895,7 @@
             // 
             // xrTableCell107
             // 
-            this.xrTableCell107.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell107.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell107.Name = "xrTableCell107";
             this.xrTableCell107.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell107.StylePriority.UseFont = false;
@@ -1905,7 +1905,7 @@
             // 
             // xrTableCell108
             // 
-            this.xrTableCell108.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell108.Font = new DevExpress.Drawing.DXFont("Calibri", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell108.Name = "xrTableCell108";
             this.xrTableCell108.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell108.StylePriority.UseFont = false;
@@ -1917,7 +1917,7 @@
             // 
             this.xrTableCell109.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[YeniTezBaslikEn]")});
-            this.xrTableCell109.Font = new System.Drawing.Font("Times New Roman", 9.75F);
+            this.xrTableCell109.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F);
             this.xrTableCell109.Multiline = true;
             this.xrTableCell109.Name = "xrTableCell109";
             this.xrTableCell109.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
@@ -1941,7 +1941,7 @@
             // 
             this.xrLabel1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[Title]")});
-            this.xrLabel1.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Bold);
+            this.xrLabel1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(7.947286E-06F, 0F);
             this.xrLabel1.Multiline = true;
             this.xrLabel1.Name = "xrLabel1";
@@ -1973,10 +1973,10 @@
             this.objectDataSource1,
             this.objectDataSource2});
             this.DataSource = this.objectDataSource2;
-            this.Margins = new System.Drawing.Printing.Margins(24, 29, 27, 21);
+            this.Margins = new DevExpress.Drawing.DXMargins(24, 29, 27, 21);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.Version = "19.2";
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).EndInit();

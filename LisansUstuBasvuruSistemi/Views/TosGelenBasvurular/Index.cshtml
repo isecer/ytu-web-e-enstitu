@@ -220,8 +220,7 @@
                 <div class="panel-footer">
                     @Model.ToPagerString()
                 </div>
-            </div>
-
+            </div> 
         </div>
     }
 </div>
@@ -278,39 +277,42 @@
     });
 
     function SilDetay(toUniqueId, tosUniqueId, adSoyad, tarih,isSilmeyeUygun) {
-        var notMsg = '';
-        if (isSilmeyeUygun!="true" && '@UserIdentity.Current.IsAdmin.ToString().ToLower()'=='true') {
-            notMsg=" <br/><b>Not: Silme işlemini onaylarsanız Değerlendirme süreci başladığı halde Tez Öneri Savunma Sınavı Silinecektir!</b>"
-        }
-        bootbox.dialog({
-            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait " + tarih + " tarihli Tez Öneri Savunma Sınavını silmek istiyor musunuz? " + notMsg +"</td></tr></table>",
-            title: "Tez Öneris Savunması Silme İşlemi",
-            buttons: {
-                success: {
-                    label: 'Tez Önerisi Savunmasını Sil',
-                    className: "btn-danger",
-                    callback: function () {
-                        $.ajax({
+        Swal.fire({
+            html: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait " + tarih + " tarihli Tez Öneri Savunma Sınavını silmek istiyor musunuz?</td></tr></table>",
+            type: 'warning',
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: 'Tez Önerisi Savunmasını Sil',
+            confirmButtonColor: "maroon",
+            cancelButtonText: 'Vazgeç',
+            showLoaderOnConfirm: true,
+            backdrop: true,
+            padding: '2em',
+            backdrop: true,
+            allowOutsideClick: false,
+            preConfirm: function () {
+                $('.swal2-cancel').first().text("Siliniyor...");
+                return new Promise(function (resolve) {
+                     $.ajax({
                             url: '@Url.Action("SilDetay", "TosBasvuru")',
                             data: { tosUniqueId },
                             success: function (result) {
                                 GetDetail(toUniqueId);
-                                showMmMessage(result.Messages, 'Tamam');
+                                swal.fire({
+                                    html: result.messageView,
+                                    icon: (result.IsSuccess ? "success" : "error"),
+                                    type: (result.IsSuccess ? "success" : "error"),
+                                    confirmButtonText: 'tamam',
+                                    padding: '2em'
+                                }); 
                             },
                             error: function (err) {
                                 alert(err.responseText);
                             }
-                        });
-                    }
-                },
-                danger: {
-                    label: 'Vazgeç',
-                    className: "btn-primary",
-                    callback: function () {
-                    }
-                }
+                        }); 
+                });
             }
-        });
+        }); 
     }
 </script>
 

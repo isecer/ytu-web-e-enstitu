@@ -10,22 +10,24 @@
 @{
     var urlInfo = Request.Url.ToUrlInfo();
 
-    bool FixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value : false;
-    bool FixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value : false;
-    bool ScrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") ? UserIdentity.Current.Informations["ScrollSidebar"].ToBooleanObj().Value : false;
-    bool RightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") ? UserIdentity.Current.Informations["RightSidebar"].ToBooleanObj().Value : false;
-    bool CustomNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "CustomNavigation") ? UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value : true;
-    bool ToggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") ? UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value : false;
-    bool BoxedOrFullWidth = UserIdentity.Current.Informations.Any(p => p.Key == "BoxedOrFullWidth") ? UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value : true;
-    string ThemeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
-    string BackgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
-    if (BoxedOrFullWidth)
+    bool fixedHeader = UserIdentity.Current.Informations.Any(p => p.Key == "FixedHeader") ? UserIdentity.Current.Informations["FixedHeader"].ToBooleanObj().Value : false;
+    bool fixedSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "FixedSidebar") ? UserIdentity.Current.Informations["FixedSidebar"].ToBooleanObj().Value : false;
+    bool scrollSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "ScrollSidebar") ? UserIdentity.Current.Informations["ScrollSidebar"].ToBooleanObj().Value : false;
+    bool rightSidebar = UserIdentity.Current.Informations.Any(p => p.Key == "RightSidebar") ? UserIdentity.Current.Informations["RightSidebar"].ToBooleanObj().Value : false;
+    bool customNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "CustomNavigation") ? UserIdentity.Current.Informations["CustomNavigation"].ToBooleanObj().Value : true;
+    bool toggledNavigation = UserIdentity.Current.Informations.Any(p => p.Key == "ToggledNavigation") ? UserIdentity.Current.Informations["ToggledNavigation"].ToBooleanObj().Value : false;
+    bool boxedOrFullWidth = UserIdentity.Current.Informations.Any(p => p.Key == "BoxedOrFullWidth") ? UserIdentity.Current.Informations["BoxedOrFullWidth"].ToBooleanObj().Value : true;
+    string themeName = UserIdentity.Current.Informations.Any(p => p.Key == "ThemeName") ? UserIdentity.Current.Informations["ThemeName"].ToString() : "/Content/css/theme-forest.css";
+    string backgroundImage = UserIdentity.Current.Informations.Any(p => p.Key == "BackgroundImage") ? UserIdentity.Current.Informations["BackgroundImage"].ToString() : "wall_2";
+    if (boxedOrFullWidth)
     {
-        FixedHeader = false;
-        FixedSidebar = false;
+        fixedHeader = false;
+        fixedSidebar = false;
     }
 
-    var Enstituler = EnstituBus.GetEnstituler();
+    var enstituler = EnstituBus.GetEnstituler();
+    var selectedEnstitu = enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
+    var isEnstituYetkisiVar = UserIdentity.Current.IsAuthenticated && UserIdentity.Current.EnstituKods.Contains(selectedEnstitu.EnstituKod);
     var lImage = "/Content/assets/images/ytu_logo_tr.gif";
 }
 
@@ -39,6 +41,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=x-mac-turkish" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Yıldız Teknik Üniversitesi @selectedEnstitu.EnstituAd Online Başvuru Sistemi. Sıkça Sorulan Sorular, Tez Danışman Öneri / Konu / Başlık Değişiklik işlemleri, Yeterlik İşlemleri, Tez izleme işlemleri ve Mezuniyet işlemleri için web sitesini ziyarete edin.">
+
 
     <link rel="icon" href="@(urlInfo.Root)EbisIco.ico" type="image/x-icon" />
     <!-- END META SECTION -->
@@ -50,7 +54,7 @@
 
     <!-- CSS INCLUDE -->
     @* <link rel="stylesheet" type="text/css" id="theme" href="~/Content/css/theme-default.css" />*@
-    <link rel="stylesheet" type="text/css" id="theme" href="@ThemeName" />
+    <link rel="stylesheet" type="text/css" id="theme" href="@themeName" />
     <link href="~/Content/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css" rel="stylesheet" />
     <!-- EOF CSS INCLUDE -->
     <!-- START PLUGINS -->
@@ -106,12 +110,17 @@
     <link href="~/Content/assets/plugins/select2/select2_conquer.css" rel="stylesheet" />
     <script type="text/javascript" src="~/Content/assets/plugins/select2/select2.js"></script>
     <script type="text/javascript" src="~/Content/assets/plugins/select2/select2_locale_tr.js"></script>
-    <script src="https://kit.fontawesome.com/a182ee65d6.js" crossorigin="anonymous"></script>
     <script src="~/Content/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
     <link href="~/Content/assets/plugins/sweetalert/sweetalert2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
+    @* <script src="https://kit.fontawesome.com/a182ee65d6.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
+        <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
+    *@
+     
+    <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />  
+    <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" /> 
+
     <!-- END SCRIPTS -->
     <style>
         .popover {
@@ -121,16 +130,16 @@
         }
     </style>
 </head>
-<body class="@(BoxedOrFullWidth?("page-container-boxed "+BackgroundImage):"") ">
+<body class="@(boxedOrFullWidth?("page-container-boxed "+backgroundImage):"") ">
     <div class="js">
         <div id="preloader"></div>
         <!-- START PAGE CONTAINER -->
-        <div class="page-container @(FixedHeader?" page-navigation-top-fixed":"") @(RightSidebar?"page-mode-rtl":"") @(ToggledNavigation?"page-navigation-toggled page-container-wide":"")">
+        <div class="page-container @(fixedHeader?" page-navigation-top-fixed":"") @(rightSidebar?"page-mode-rtl":"") @(toggledNavigation?"page-navigation-toggled page-container-wide":"")">
 
             <!-- START PAGE SIDEBAR -->
-            <div class="page-sidebar @(BoxedOrFullWidth ? "" : "page-sidebar-fixed") @(FixedSidebar ? "page-sidebar-fixed" : "") @(FixedSidebar && !BoxedOrFullWidth ? "scroll mCustomScrollbar _mCS_1 mCS-autoHide" : "")">
+            <div class="page-sidebar @(boxedOrFullWidth ? "" : "page-sidebar-fixed") @(fixedSidebar ? "page-sidebar-fixed" : "") @(fixedSidebar && !boxedOrFullWidth ? "scroll mCustomScrollbar _mCS_1 mCS-autoHide" : "")">
                 <!-- START X-NAVIGATION -->
-                <ul class="x-navigation  @(CustomNavigation ? "x-navigation-custom" : "") @(ToggledNavigation ? "x-navigation-minimized" : "")">
+                <ul class="x-navigation  @(customNavigation ? "x-navigation-custom" : "") @(toggledNavigation ? "x-navigation-minimized" : "")">
                     <li class="xn-logo">
                         <a href="javascript:void(0);">YTÜ</a>
                         <a href="javascript:void(0);" class="x-navigation-control"></a>
@@ -155,13 +164,13 @@
                                         <li style="cursor: pointer;" class="active">
                                             <a href="javasscript:void(0); " style="text-align: center; font-size: 11pt; color: #ffd559; padding: 0px;">
                                                 @{
-                                                    var enst2 = Enstituler.First(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd));
-                                                    <span>@enst2.EnstituAd</span>
+
+                                                    <span>@selectedEnstitu.EnstituAd</span>
                                                 }
                                             </a>
                                             <ul class="xn-drop-left xn-drop-white animated zoomIn">
                                                 <li style="padding: 0px; margin: 0px;">
-                                                    @foreach (var itm in Enstituler.Where(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd) == false))
+                                                    @foreach (var itm in enstituler.Where(p => p.EnstituKisaAd.ToLower().Contains(urlInfo.EnstituKisaAd) == false))
                                                     {
                                                         <a href="@(urlInfo.Root + itm.EnstituKisaAd.ToLower() +  "/" + urlInfo.LastPath+urlInfo.Query)" style="text-align:center;padding:0px;margin:0px;">
                                                             @itm.EnstituAd'ne geç
@@ -223,6 +232,15 @@
                     <li class="xn-icon-button">
                         <a href="javascript:void(0);" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
 
+                    </li>
+                    <li style="height: 50px; display: flex; flex-direction: column; justify-content: center;">
+                        <span style="font-size: 11pt; color: #ffd559; line-height: 1;">
+                            @selectedEnstitu.EnstituAd.ToUpper()
+                        </span>
+                        @if (UserIdentity.Current.IsAuthenticated && !isEnstituYetkisiVar)
+                        {
+                            <div style="color: #B64645; font-size: 7.5pt;">Bu Enstitü İçin Yetkiniz Yok!!!</div>
+                        }
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
 
@@ -310,21 +328,21 @@
                     @if (UserIdentity.Current.IsAuthenticated && RoleNames.Mesajlar.InRoleCurrent())
                     {
                         var enstituKod = EnstituBus.GetSelectedEnstitu(urlInfo.EnstituKisaAd);
-                        var MsjModel = MesajlarBus.GetCevaplanmamisMesajCount(enstituKod);
+                        var msjModel = MesajlarBus.GetCevaplanmamisMesajCount(enstituKod);
                         <li class="xn-icon-button pull-right" id="_msgCountLi">
                             <a href="javascript:void(0);"><span class="fa fa fa-envelope fa-lg"></span></a>
-                            <div id="_msjCount" class="informer informer-@(MsjModel.Value>0?"warning":"success")">@MsjModel.Value</div>
+                            <div id="_msjCount" class="informer informer-@(msjModel.Value>0?"warning":"success")">@msjModel.Value</div>
                             <div id="_msgContent" class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging ui-draggable" style="z-index: 999;">
                                 <div class="panel-heading ui-draggable-handle padding-0">
-                                    <h3 class="panel-title"><span class="fa fa fa-envelope fa-lg"></span> Gelen Mesajlar @(MsjModel.Value > 20 ? "(Son 20)" : "")</h3>
+                                    <h3 class="panel-title"><span class="fa fa fa-envelope fa-lg"></span> Gelen Mesajlar @(msjModel.Value > 20 ? "(Son 20)" : "")</h3>
                                     <div class="pull-right">
-                                        <span id="_msjCount2" class="label label-@(MsjModel.Value>0?"warning":"success")">@MsjModel.Value Açık Msj</span>
+                                        <span id="_msjCount2" class="label label-@(msjModel.Value>0?"warning":"success")">@msjModel.Value Açık Msj</span>
                                     </div>
                                 </div>
                                 <div class="panel-body list-group list-group-contacts _mCS_2" style="max-height: 200px;">
                                     <div id="mCSB_2" class="scrolkikkoxMsj" tabindex="0">
                                         <div id="mCSB_2_container" style="position: relative; top: 0px; left: 0px;" dir="ltr">
-                                            @Html.Raw(MsjModel.Caption)
+                                            @Html.Raw(msjModel.Caption)
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +352,7 @@
                             </div>
                             <script>
                             $(function () {
-                                if (@MsjModel.Value>0) {
+                                if (@msjModel.Value>0) {
                                     MessageCntPulsate();
                                     $('.scrolkikkoxMsj').slimScroll({
                                         color: 'red',
@@ -1291,7 +1309,7 @@
         </script>
 
     }
-<script>
+    <script>
 
         $('.selectpicker').selectpicker();
 
@@ -1877,15 +1895,15 @@
             settings_block.className = "theme-settings";
             settings_block.innerHTML = site_settings;
             document.body.appendChild(settings_block);
-            var st_head_fixed=@Convert.ToInt32(FixedHeader);
-            var st_sb_fixed=@Convert.ToInt32(FixedSidebar);
-            var st_sb_scroll= @Convert.ToInt32(ScrollSidebar);
-            var st_sb_right= @Convert.ToInt32(RightSidebar);
-            var st_sb_custom= @Convert.ToInt32(CustomNavigation);
-            var st_sb_toggled= @Convert.ToInt32(ToggledNavigation);
-            var st_layout_boxed= @Convert.ToInt32(BoxedOrFullWidth);
-            var _BackgroundImage= '@BackgroundImage';
-            var _ThemeName='@ThemeName';
+            var st_head_fixed=@Convert.ToInt32(fixedHeader);
+            var st_sb_fixed=@Convert.ToInt32(fixedSidebar);
+            var st_sb_scroll= @Convert.ToInt32(scrollSidebar);
+            var st_sb_right= @Convert.ToInt32(rightSidebar);
+            var st_sb_custom= @Convert.ToInt32(customNavigation);
+            var st_sb_toggled= @Convert.ToInt32(toggledNavigation);
+            var st_layout_boxed= @Convert.ToInt32(boxedOrFullWidth);
+            var _BackgroundImage= '@backgroundImage';
+            var _ThemeName='@themeName';
 
             set_settings_checkbox("st_layout_boxed",st_layout_boxed);
             set_settings_checkbox("st_sb_scroll",st_sb_scroll);

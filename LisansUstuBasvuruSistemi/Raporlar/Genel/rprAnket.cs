@@ -11,7 +11,7 @@
           
         }
 
-        private void rprAnket_BeforePrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        private void rprAnket_BeforePrint(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //System.Reflection.PropertyInfo pi = DetailReport.GetType().GetProperty("DisplayableRowCount", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             //int displayableRowCount = Convert.ToInt32(pi.GetValue(DetailReport, null));

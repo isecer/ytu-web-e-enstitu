@@ -24,14 +24,14 @@
             <tr>
                 <td>Gönderilecek E-Posta</td>
                 <td>:</td>
-                <td>
+                <td class="form-group">
                     <input type="text" class="form-control" id="EMail_@Model.UniqueID" value="@Model.EMail" />
                 </td>
             </tr>
             <tr>
                 <td>Jüri E-Postası Düzeltilsin Mi?</td>
                 <td>:</td>
-                <td>
+                <td class="form-group">
                     <select class="form-control" id="IsJuriEmailGuncellensin_@Model.UniqueID" onchange="EpostaGuncellemeDrmChange(this)">
                         <option value="true" selected>Evet</option>
                         <option value="false">Hayır</option>

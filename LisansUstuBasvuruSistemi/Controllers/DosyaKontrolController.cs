@@ -10,6 +10,7 @@ using LisansUstuBasvuruSistemi.Raporlar;
 using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 
@@ -111,6 +112,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (tiAraRaporBasvurusu != null)
                     {
                         var rpr = new RprTiDegerlendirmeFormu_FR0307(tiAraRaporBasvurusu.TIBasvuruAraRaporID);
+                        rpr.CreateDocument();
+                        rpr.DisplayName += ".pdf";
+                        rprX = rpr;
+                    }
+
+                    break;
+                }
+                case "TOSF":
+                {
+                    var toBasvuruSavunmas = _entities.ToBasvuruSavunmas.FirstOrDefault(p => p.UniqueID == rowId);
+                    if (toBasvuruSavunmas != null)
+                    {
+                        var rpr = new RprToSavunmaFormu_FR0348(toBasvuruSavunmas.ToBasvuruSavunmaID);
                         rpr.CreateDocument();
                         rpr.DisplayName += ".pdf";
                         rprX = rpr;

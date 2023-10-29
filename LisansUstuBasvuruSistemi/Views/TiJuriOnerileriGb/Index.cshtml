@@ -130,7 +130,7 @@
                                         <tr>
                                             <td width="160">Öneri Tipi</td>
                                             <td>
-                                                @Html.DropDownList("TijFormTipID", null, new { @class = "form-control" })
+                                                @Html.DropDownList("TijFormTipID", null, new { @class = "form-control",id="FTijFormTipID" })
                                             </td>
                                         </tr>
                                     </tbody>
@@ -488,7 +488,7 @@
                                                 else {
                                                     if (result.selectedJuriNum > 0) {
                                                         ShowContent(result.selectedJuriNum);
-                                                    }
+                                                    } 
                                                     if (result.mMessage.Messages.length > 0) getMsg(result.mMessage);
                                                     return false;
                                                 }

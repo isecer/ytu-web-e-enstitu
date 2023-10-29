@@ -77,7 +77,7 @@
                                                         success: function (result) {
                                                             $('.swal2-cancel').first().text("Vazgeç");
                                                             swal.fire({
-                                                                text: result.message,
+                                                                html: result.message,
                                                                 icon: (result.success ? "success" : "error"),
                                                                 type: (result.success ? "success" : "error"),
                                                                 confirmButtonText: 'tamam',

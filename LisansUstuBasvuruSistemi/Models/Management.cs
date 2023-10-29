@@ -5,10 +5,12 @@ using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
+using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using Newtonsoft.Json;
 using System;
@@ -18,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Web;
+using System.Xml;
 
 namespace LisansUstuBasvuruSistemi.Models
 {
@@ -1017,7 +1020,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     var MBID = DataID[0].Value;
                     var IlkOrIkinci = DataID[1].Value;
-                    var MB = db.MezuniyetBasvurularis.Where(p => p.MezuniyetBasvurulariID == MBID).First();
+                    var MB = db.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == MBID);
                     var rpr = new RprMezuniyetTezTeslimFormu_FR0338(MB.RowID, IlkOrIkinci == 1);
 
                     rpr.CreateDocument();
@@ -1137,6 +1140,29 @@ namespace LisansUstuBasvuruSistemi.Models
                     if (IsSwhoRaporDetay)
                     {
                         var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(ID);
+                        rpr2.CreateDocument();
+                        rpr2.DisplayName = rpr2.DisplayName + ".pdf";
+                        rpr.Pages.AddRange(rpr2.Pages);
+                    }
+                    rpr.ExportOptions.Pdf.Compressed = true;
+                    ms = new MemoryStream();
+                    rpr.ExportToPdf(ms);
+                    ms.Seek(0, System.IO.SeekOrigin.Begin);
+                    var attc = new System.Net.Mail.Attachment(ms, rpr.DisplayName, "application/pdf");
+                    attc.ContentDisposition.ModificationDate = DateTime.Now;
+                    mdl.Add(attc);
+                }
+                else if (raporTipID == RaporTipleri.TezOneriSavunmaFormu)
+                {
+                    var ID = DataID[0].Value;  
+                    var rpr = new RprToSavunmaFormu_FR0348(ID);
+                    rpr.CreateDocument(); 
+                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    var isSwhoRaporDetay = false;
+                    if (DataID.Count > 1) isSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
+                    if (isSwhoRaporDetay)
+                    {
+                        var rpr2 = new RprToSavunmaFormuDetay_FR0348(ID);
                         rpr2.CreateDocument();
                         rpr2.DisplayName = rpr2.DisplayName + ".pdf";
                         rpr.Pages.AddRange(rpr2.Pages);

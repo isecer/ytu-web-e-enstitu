@@ -3,8 +3,7 @@
     if (model != null) data = $.parseJSON(model);
     else data = parseDData;
     if (data.MessagesDialog.length == 0) return;
-    for (var i = 0; i < data.MessagesDialog.length; i++) {
-
+    for (var i = 0; i < data.MessagesDialog.length; i++) { 
         var item = data.MessagesDialog[i];
         var Message = item.Message;
         var MessageType = item.MessageType;

@@ -373,7 +373,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTable10,
             this.xrTable9,
             this.xrTable25});
-            this.Detail.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Italic);
+            this.Detail.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Italic);
             this.Detail.HeightF = 399.8008F;
             this.Detail.Name = "Detail";
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
@@ -408,7 +408,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.cellYaziliAltBaslikSinavNotuTr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellYaziliAltBaslikSinavNotuTr.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellYaziliAltBaslikSinavNotuTr.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.cellYaziliAltBaslikSinavNotuTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellYaziliAltBaslikSinavNotuTr.Multiline = true;
             this.cellYaziliAltBaslikSinavNotuTr.Name = "cellYaziliAltBaslikSinavNotuTr";
             this.cellYaziliAltBaslikSinavNotuTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -433,7 +433,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.cellYaziliAltBaslikSinavNotuEn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellYaziliAltBaslikSinavNotuEn.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellYaziliAltBaslikSinavNotuEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellYaziliAltBaslikSinavNotuEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellYaziliAltBaslikSinavNotuEn.Multiline = true;
             this.cellYaziliAltBaslikSinavNotuEn.Name = "cellYaziliAltBaslikSinavNotuEn";
             this.cellYaziliAltBaslikSinavNotuEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -452,7 +452,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTable5.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable5.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable5.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable5.LocationFloat = new DevExpress.Utils.PointFloat(0F, 206.5129F);
             this.xrTable5.Name = "xrTable5";
             this.xrTable5.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -475,7 +475,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell17.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell17.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell17.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell17.Name = "xrTableCell17";
             this.xrTableCell17.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell17.StylePriority.UseBorders = false;
@@ -489,7 +489,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell19
             // 
             this.xrTableCell19.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Top | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell19.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell19.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell19.Name = "xrTableCell19";
             this.xrTableCell19.StylePriority.UseBorders = false;
             this.xrTableCell19.StylePriority.UseFont = false;
@@ -500,7 +500,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellDanismanAdSoyad
             // 
-            this.cellDanismanAdSoyad.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellDanismanAdSoyad.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellDanismanAdSoyad.Name = "cellDanismanAdSoyad";
             this.cellDanismanAdSoyad.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellDanismanAdSoyad.StylePriority.UseBorders = false;
@@ -523,7 +523,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell21
             // 
             this.xrTableCell21.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell21.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell21.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell21.Name = "xrTableCell21";
             this.xrTableCell21.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 2, 2, 100F);
             this.xrTableCell21.StylePriority.UseBorders = false;
@@ -537,7 +537,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell23
             // 
             this.xrTableCell23.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell23.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell23.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell23.Name = "xrTableCell23";
             this.xrTableCell23.StylePriority.UseBorders = false;
             this.xrTableCell23.StylePriority.UseFont = false;
@@ -548,7 +548,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellDanismanAnabilimDaliAdi
             // 
-            this.cellDanismanAnabilimDaliAdi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellDanismanAnabilimDaliAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellDanismanAnabilimDaliAdi.Name = "cellDanismanAnabilimDaliAdi";
             this.cellDanismanAnabilimDaliAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellDanismanAnabilimDaliAdi.StylePriority.UseFont = false;
@@ -586,7 +586,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell10.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell10.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell10.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell10.Multiline = true;
             this.xrTableCell10.Name = "xrTableCell10";
             this.xrTableCell10.StylePriority.UseBackColor = false;
@@ -608,7 +608,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell13.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell13.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell13.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell13.Multiline = true;
             this.xrTableCell13.Name = "xrTableCell13";
             this.xrTableCell13.StylePriority.UseBackColor = false;
@@ -624,7 +624,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTable10.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable10.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable10.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable10.LocationFloat = new DevExpress.Utils.PointFloat(0F, 280.761F);
             this.xrTable10.Name = "xrTable10";
             this.xrTable10.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -652,7 +652,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell29.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable6});
-            this.xrTableCell29.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell29.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell29.Name = "xrTableCell29";
             this.xrTableCell29.StylePriority.UseBorders = false;
             this.xrTableCell29.StylePriority.UseFont = false;
@@ -684,7 +684,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell26
             // 
-            this.xrTableCell26.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell26.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell26.Multiline = true;
             this.xrTableCell26.Name = "xrTableCell26";
             this.xrTableCell26.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -703,7 +703,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell27
             // 
             this.xrTableCell27.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell27.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell27.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell27.Multiline = true;
             this.xrTableCell27.Name = "xrTableCell27";
             this.xrTableCell27.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -719,7 +719,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xtracell3443.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.checkboxx});
-            this.xtracell3443.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xtracell3443.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xtracell3443.Name = "xtracell3443";
             this.xtracell3443.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xtracell3443.StylePriority.UseBorders = false;
@@ -745,7 +745,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell28.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable7});
-            this.xrTableCell28.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell28.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell28.Multiline = true;
             this.xrTableCell28.Name = "xrTableCell28";
             this.xrTableCell28.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -780,7 +780,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell33
             // 
-            this.xrTableCell33.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell33.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell33.Multiline = true;
             this.xrTableCell33.Name = "xrTableCell33";
             this.xrTableCell33.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -799,7 +799,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell34
             // 
             this.xrTableCell34.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell34.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell34.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell34.Multiline = true;
             this.xrTableCell34.Name = "xrTableCell34";
             this.xrTableCell34.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -813,7 +813,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellYaziliSinavTarih
             // 
-            this.cellYaziliSinavTarih.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellYaziliSinavTarih.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellYaziliSinavTarih.Multiline = true;
             this.cellYaziliSinavTarih.Name = "cellYaziliSinavTarih";
             this.cellYaziliSinavTarih.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -828,7 +828,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell30.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable8});
-            this.xrTableCell30.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell30.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell30.Multiline = true;
             this.xrTableCell30.Name = "xrTableCell30";
             this.xrTableCell30.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -863,7 +863,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell35
             // 
-            this.xrTableCell35.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell35.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell35.Multiline = true;
             this.xrTableCell35.Name = "xrTableCell35";
             this.xrTableCell35.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -882,7 +882,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell36
             // 
             this.xrTableCell36.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell36.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell36.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell36.Multiline = true;
             this.xrTableCell36.Name = "xrTableCell36";
             this.xrTableCell36.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -896,7 +896,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellYaziliSinavYeri
             // 
-            this.cellYaziliSinavYeri.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellYaziliSinavYeri.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellYaziliSinavYeri.Multiline = true;
             this.cellYaziliSinavYeri.Name = "cellYaziliSinavYeri";
             this.cellYaziliSinavYeri.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -924,7 +924,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell39.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell39.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable11});
-            this.xrTableCell39.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell39.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell39.Name = "xrTableCell39";
             this.xrTableCell39.StylePriority.UseBorders = false;
             this.xrTableCell39.StylePriority.UseFont = false;
@@ -957,7 +957,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell37
             // 
             this.xrTableCell37.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell37.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell37.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell37.Multiline = true;
             this.xrTableCell37.Name = "xrTableCell37";
             this.xrTableCell37.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -977,7 +977,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell38
             // 
             this.xrTableCell38.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell38.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell38.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell38.Multiline = true;
             this.xrTableCell38.Name = "xrTableCell38";
             this.xrTableCell38.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -993,7 +993,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.cell23432432.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable12});
-            this.cell23432432.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cell23432432.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cell23432432.Name = "cell23432432";
             this.cell23432432.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cell23432432.StylePriority.UseFont = false;
@@ -1026,7 +1026,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell41
             // 
-            this.xrTableCell41.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell41.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell41.Multiline = true;
             this.xrTableCell41.Name = "xrTableCell41";
             this.xrTableCell41.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1045,7 +1045,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell42
             // 
             this.xrTableCell42.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell42.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell42.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell42.Multiline = true;
             this.xrTableCell42.Name = "xrTableCell42";
             this.xrTableCell42.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1061,7 +1061,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell40.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable13});
-            this.xrTableCell40.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell40.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell40.Multiline = true;
             this.xrTableCell40.Name = "xrTableCell40";
             this.xrTableCell40.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -1095,7 +1095,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellYaziliYuzlukNotTr
             // 
-            this.cellYaziliYuzlukNotTr.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.cellYaziliYuzlukNotTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellYaziliYuzlukNotTr.Multiline = true;
             this.cellYaziliYuzlukNotTr.Name = "cellYaziliYuzlukNotTr";
             this.cellYaziliYuzlukNotTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1113,7 +1113,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellYaziliYuzlukNotEn
             // 
             this.cellYaziliYuzlukNotEn.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.cellYaziliYuzlukNotEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellYaziliYuzlukNotEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellYaziliYuzlukNotEn.Multiline = true;
             this.cellYaziliYuzlukNotEn.Name = "cellYaziliYuzlukNotEn";
             this.cellYaziliYuzlukNotEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1128,7 +1128,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell43.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable43});
-            this.xrTableCell43.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell43.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell43.Multiline = true;
             this.xrTableCell43.Name = "xrTableCell43";
             this.xrTableCell43.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -1163,7 +1163,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell109
             // 
-            this.xrTableCell109.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell109.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell109.Name = "xrTableCell109";
             this.xrTableCell109.StylePriority.UseFont = false;
             this.xrTableCell109.StylePriority.UseTextAlignment = false;
@@ -1173,7 +1173,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell110
             // 
-            this.xrTableCell110.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell110.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell110.Name = "xrTableCell110";
             this.xrTableCell110.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell110.StylePriority.UseFont = false;
@@ -1187,7 +1187,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell46.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkYaziliBasarili});
-            this.xrTableCell46.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell46.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell46.Multiline = true;
             this.xrTableCell46.Name = "xrTableCell46";
             this.xrTableCell46.StylePriority.UseFont = false;
@@ -1215,7 +1215,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xxxcccaaa
             // 
-            this.xxxcccaaa.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xxxcccaaa.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xxxcccaaa.Name = "xxxcccaaa";
             this.xxxcccaaa.StylePriority.UseFont = false;
             this.xxxcccaaa.StylePriority.UseTextAlignment = false;
@@ -1225,7 +1225,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xxxcelld
             // 
-            this.xxxcelld.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xxxcelld.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xxxcelld.Name = "xxxcelld";
             this.xxxcelld.StylePriority.UseFont = false;
             this.xxxcelld.StylePriority.UseTextAlignment = false;
@@ -1237,7 +1237,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell47.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkYaziliBasarisiz});
-            this.xrTableCell47.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell47.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell47.Multiline = true;
             this.xrTableCell47.Name = "xrTableCell47";
             this.xrTableCell47.StylePriority.UseFont = false;
@@ -1282,7 +1282,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell22.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell22.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell22.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell22.Multiline = true;
             this.xrTableCell22.Name = "xrTableCell22";
             this.xrTableCell22.StylePriority.UseBackColor = false;
@@ -1304,7 +1304,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell25.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell25.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell25.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell25.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell25.Multiline = true;
             this.xrTableCell25.Name = "xrTableCell25";
             this.xrTableCell25.StylePriority.UseBackColor = false;
@@ -1372,7 +1372,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell1.Angle = 90F;
             this.xrTableCell1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell1.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell1.Multiline = true;
             this.xrTableCell1.Name = "xrTableCell1";
             this.xrTableCell1.StylePriority.UseBackColor = false;
@@ -1388,7 +1388,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell7.Angle = 90F;
             this.xrTableCell7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell7.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell7.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell7.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell7.Multiline = true;
             this.xrTableCell7.Name = "xrTableCell7";
             this.xrTableCell7.StylePriority.UseBackColor = false;
@@ -1413,7 +1413,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTable2
             // 
             this.xrTable2.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTable2.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable2.LocationFloat = new DevExpress.Utils.PointFloat(0.02342978F, 0.4568219F);
             this.xrTable2.Name = "xrTable2";
             this.xrTable2.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -1442,7 +1442,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell4
             // 
             this.xrTableCell4.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell4.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell4.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.StylePriority.UseBorders = false;
             this.xrTableCell4.StylePriority.UseFont = false;
@@ -1454,7 +1454,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell3
             // 
             this.xrTableCell3.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell3.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell3.Multiline = true;
             this.xrTableCell3.Name = "xrTableCell3";
             this.xrTableCell3.StylePriority.UseBorders = false;
@@ -1467,7 +1467,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciNo
             // 
             this.cellOgrenciNo.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciNo.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciNo.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciNo.Name = "cellOgrenciNo";
             this.cellOgrenciNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellOgrenciNo.StylePriority.UseBorders = false;
@@ -1490,7 +1490,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell5
             // 
             this.xrTableCell5.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell5.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell5.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell5.Name = "xrTableCell5";
             this.xrTableCell5.StylePriority.UseBorders = false;
             this.xrTableCell5.StylePriority.UseFont = false;
@@ -1502,7 +1502,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell6
             // 
             this.xrTableCell6.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell6.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell6.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell6.Name = "xrTableCell6";
             this.xrTableCell6.StylePriority.UseBorders = false;
             this.xrTableCell6.StylePriority.UseFont = false;
@@ -1514,7 +1514,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciAdSoyad
             // 
             this.cellOgrenciAdSoyad.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciAdSoyad.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciAdSoyad.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciAdSoyad.Name = "cellOgrenciAdSoyad";
             this.cellOgrenciAdSoyad.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellOgrenciAdSoyad.StylePriority.UseBorders = false;
@@ -1537,7 +1537,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell8
             // 
             this.xrTableCell8.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell8.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell8.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell8.Name = "xrTableCell8";
             this.xrTableCell8.StylePriority.UseBorders = false;
             this.xrTableCell8.StylePriority.UseFont = false;
@@ -1549,7 +1549,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell14
             // 
             this.xrTableCell14.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell14.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell14.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell14.Name = "xrTableCell14";
             this.xrTableCell14.StylePriority.UseBorders = false;
             this.xrTableCell14.StylePriority.UseFont = false;
@@ -1561,7 +1561,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciEnstituAdi
             // 
             this.cellOgrenciEnstituAdi.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciEnstituAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciEnstituAdi.Name = "cellOgrenciEnstituAdi";
             this.cellOgrenciEnstituAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellOgrenciEnstituAdi.StylePriority.UseBorders = false;
@@ -1584,7 +1584,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell16
             // 
             this.xrTableCell16.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell16.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell16.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell16.Name = "xrTableCell16";
             this.xrTableCell16.StylePriority.UseBorders = false;
             this.xrTableCell16.StylePriority.UseFont = false;
@@ -1596,7 +1596,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell18
             // 
             this.xrTableCell18.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell18.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell18.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell18.Name = "xrTableCell18";
             this.xrTableCell18.StylePriority.UseBorders = false;
             this.xrTableCell18.StylePriority.UseFont = false;
@@ -1608,7 +1608,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciAnabilimDaliAdi
             // 
             this.cellOgrenciAnabilimDaliAdi.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciAnabilimDaliAdi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciAnabilimDaliAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciAnabilimDaliAdi.Name = "cellOgrenciAnabilimDaliAdi";
             this.cellOgrenciAnabilimDaliAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellOgrenciAnabilimDaliAdi.StylePriority.UseBorders = false;
@@ -1631,7 +1631,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell68
             // 
             this.xrTableCell68.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell68.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell68.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell68.Name = "xrTableCell68";
             this.xrTableCell68.StylePriority.UseBorders = false;
             this.xrTableCell68.StylePriority.UseFont = false;
@@ -1643,7 +1643,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell75
             // 
             this.xrTableCell75.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell75.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell75.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell75.Name = "xrTableCell75";
             this.xrTableCell75.StylePriority.UseBorders = false;
             this.xrTableCell75.StylePriority.UseFont = false;
@@ -1655,7 +1655,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciProgramAdi
             // 
             this.cellOgrenciProgramAdi.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciProgramAdi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciProgramAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciProgramAdi.Name = "cellOgrenciProgramAdi";
             this.cellOgrenciProgramAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.cellOgrenciProgramAdi.StylePriority.UseBorders = false;
@@ -1678,7 +1678,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell2
             // 
             this.xrTableCell2.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell2.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell2.Multiline = true;
             this.xrTableCell2.Name = "xrTableCell2";
             this.xrTableCell2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 0, 0, 0, 100F);
@@ -1693,7 +1693,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell9
             // 
             this.xrTableCell9.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell9.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell9.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell9.Multiline = true;
             this.xrTableCell9.Name = "xrTableCell9";
             this.xrTableCell9.StylePriority.UseBorders = false;
@@ -1706,7 +1706,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciOgrenimSeviyesi
             // 
             this.cellOgrenciOgrenimSeviyesi.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.cellOgrenciOgrenimSeviyesi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciOgrenimSeviyesi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciOgrenimSeviyesi.Multiline = true;
             this.cellOgrenciOgrenimSeviyesi.Name = "cellOgrenciOgrenimSeviyesi";
             this.cellOgrenciOgrenimSeviyesi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -1731,7 +1731,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell11.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.xrTableCell11.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable3});
-            this.xrTableCell11.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell11.Multiline = true;
             this.xrTableCell11.Name = "xrTableCell11";
             this.xrTableCell11.StylePriority.UseBorders = false;
@@ -1763,7 +1763,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell12
             // 
-            this.xrTableCell12.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell12.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell12.Multiline = true;
             this.xrTableCell12.Name = "xrTableCell12";
             this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1782,7 +1782,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell15
             // 
             this.xrTableCell15.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell15.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell15.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell15.Multiline = true;
             this.xrTableCell15.Name = "xrTableCell15";
             this.xrTableCell15.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -1797,7 +1797,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellOgrenciKayitDonemi
             // 
             this.cellOgrenciKayitDonemi.Borders = DevExpress.XtraPrinting.BorderSide.Left;
-            this.cellOgrenciKayitDonemi.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellOgrenciKayitDonemi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellOgrenciKayitDonemi.Multiline = true;
             this.cellOgrenciKayitDonemi.Name = "cellOgrenciKayitDonemi";
             this.cellOgrenciKayitDonemi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -1833,7 +1833,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell102.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell102.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.xrTableCell102.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, ((DevExpress.Drawing.DXFontStyle)((DevExpress.Drawing.DXFontStyle.Bold | DevExpress.Drawing.DXFontStyle.Italic))));
             this.xrTableCell102.Name = "xrTableCell102";
             this.xrTableCell102.StylePriority.UseBackColor = false;
             this.xrTableCell102.StylePriority.UseBorders = false;
@@ -1872,7 +1872,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // tblJuris
             // 
             this.tblJuris.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.tblJuris.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.tblJuris.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.tblJuris.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.tblJuris.Name = "tblJuris";
             this.tblJuris.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -1901,7 +1901,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell76.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
             this.xrTableCell76.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable36});
-            this.xrTableCell76.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell76.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9.75F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell76.Name = "xrTableCell76";
             this.xrTableCell76.StylePriority.UseBackColor = false;
             this.xrTableCell76.StylePriority.UseBorders = false;
@@ -1933,7 +1933,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell77
             // 
-            this.xrTableCell77.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell77.Name = "xrTableCell77";
             this.xrTableCell77.StylePriority.UseFont = false;
             this.xrTableCell77.StylePriority.UseTextAlignment = false;
@@ -1950,7 +1950,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell78
             // 
-            this.xrTableCell78.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell78.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell78.Name = "xrTableCell78";
             this.xrTableCell78.StylePriority.UseFont = false;
             this.xrTableCell78.StylePriority.UseTextAlignment = false;
@@ -1965,7 +1965,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell79.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable38});
-            this.xrTableCell79.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell79.Name = "xrTableCell79";
             this.xrTableCell79.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
             this.xrTableCell79.StylePriority.UseBackColor = false;
@@ -1999,7 +1999,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell80
             // 
-            this.xrTableCell80.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell80.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell80.Name = "xrTableCell80";
             this.xrTableCell80.StylePriority.UseFont = false;
             this.xrTableCell80.StylePriority.UseTextAlignment = false;
@@ -2016,7 +2016,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell81
             // 
-            this.xrTableCell81.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell81.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell81.Name = "xrTableCell81";
             this.xrTableCell81.StylePriority.UseFont = false;
             this.xrTableCell81.StylePriority.UseTextAlignment = false;
@@ -2031,7 +2031,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell82.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable39});
-            this.xrTableCell82.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell82.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell82.Multiline = true;
             this.xrTableCell82.Name = "xrTableCell82";
             this.xrTableCell82.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 0, 0, 0, 100F);
@@ -2066,7 +2066,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell83
             // 
-            this.xrTableCell83.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.xrTableCell83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold, DevExpress.Drawing.DXGraphicsUnit.Point, new DevExpress.Drawing.DXFontAdditionalProperty[] {new DevExpress.Drawing.DXFontAdditionalProperty("GdiCharSet", ((byte)(162)))});
             this.xrTableCell83.Name = "xrTableCell83";
             this.xrTableCell83.StylePriority.UseFont = false;
             this.xrTableCell83.StylePriority.UseTextAlignment = false;
@@ -2083,7 +2083,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell92
             // 
-            this.xrTableCell92.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell92.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell92.Name = "xrTableCell92";
             this.xrTableCell92.StylePriority.UseFont = false;
             this.xrTableCell92.StylePriority.UseTextAlignment = false;
@@ -2104,7 +2104,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell74.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell74.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell74.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell74.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell74.Multiline = true;
             this.xrTableCell74.Name = "xrTableCell74";
             this.xrTableCell74.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2121,7 +2121,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell94.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell94.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell94.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell94.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell94.Multiline = true;
             this.xrTableCell94.Name = "xrTableCell94";
             this.xrTableCell94.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2138,7 +2138,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell104.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell104.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell104.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell104.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell104.Multiline = true;
             this.xrTableCell104.Name = "xrTableCell104";
             this.xrTableCell104.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2163,7 +2163,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell105.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell105.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell105.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell105.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell105.Multiline = true;
             this.xrTableCell105.Name = "xrTableCell105";
             this.xrTableCell105.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2180,7 +2180,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell106.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell106.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell106.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell106.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell106.Multiline = true;
             this.xrTableCell106.Name = "xrTableCell106";
             this.xrTableCell106.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2197,7 +2197,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell107.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell107.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell107.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell107.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell107.Multiline = true;
             this.xrTableCell107.Name = "xrTableCell107";
             this.xrTableCell107.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2222,7 +2222,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell116.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell116.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell116.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell116.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell116.Multiline = true;
             this.xrTableCell116.Name = "xrTableCell116";
             this.xrTableCell116.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2239,7 +2239,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell117.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell117.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell117.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell117.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell117.Multiline = true;
             this.xrTableCell117.Name = "xrTableCell117";
             this.xrTableCell117.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2256,7 +2256,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell118.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell118.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell118.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell118.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell118.Multiline = true;
             this.xrTableCell118.Name = "xrTableCell118";
             this.xrTableCell118.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2281,7 +2281,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell108.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell108.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell108.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell108.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell108.Multiline = true;
             this.xrTableCell108.Name = "xrTableCell108";
             this.xrTableCell108.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2298,7 +2298,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell111.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell111.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell111.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell111.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell111.Multiline = true;
             this.xrTableCell111.Name = "xrTableCell111";
             this.xrTableCell111.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2315,7 +2315,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell112.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell112.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell112.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell112.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell112.Multiline = true;
             this.xrTableCell112.Name = "xrTableCell112";
             this.xrTableCell112.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2340,7 +2340,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell113.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell113.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrTableCell113.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell113.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell113.Multiline = true;
             this.xrTableCell113.Name = "xrTableCell113";
             this.xrTableCell113.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2357,7 +2357,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell114.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell114.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell114.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell114.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell114.Multiline = true;
             this.xrTableCell114.Name = "xrTableCell114";
             this.xrTableCell114.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2374,7 +2374,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell115.BackColor = System.Drawing.Color.Empty;
             this.xrTableCell115.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell115.Font = new System.Drawing.Font("Times New Roman", 7.5F);
+            this.xrTableCell115.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F);
             this.xrTableCell115.Multiline = true;
             this.xrTableCell115.Name = "xrTableCell115";
             this.xrTableCell115.Padding = new DevExpress.XtraPrinting.PaddingInfo(5, 5, 5, 5, 100F);
@@ -2414,7 +2414,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell63.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell63.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell63.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell63.Multiline = true;
             this.xrTableCell63.Name = "xrTableCell63";
             this.xrTableCell63.StylePriority.UseBackColor = false;
@@ -2437,7 +2437,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell64.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell64.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell64.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell64.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell64.Multiline = true;
             this.xrTableCell64.Name = "xrTableCell64";
             this.xrTableCell64.StylePriority.UseBackColor = false;
@@ -2476,7 +2476,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.cellSonucAltBaslikSinavNotuTr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellSonucAltBaslikSinavNotuTr.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellSonucAltBaslikSinavNotuTr.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.cellSonucAltBaslikSinavNotuTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellSonucAltBaslikSinavNotuTr.Multiline = true;
             this.cellSonucAltBaslikSinavNotuTr.Name = "cellSonucAltBaslikSinavNotuTr";
             this.cellSonucAltBaslikSinavNotuTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -2501,7 +2501,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.cellSonucAltBaslikSinavNotuEn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellSonucAltBaslikSinavNotuEn.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellSonucAltBaslikSinavNotuEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellSonucAltBaslikSinavNotuEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellSonucAltBaslikSinavNotuEn.Multiline = true;
             this.cellSonucAltBaslikSinavNotuEn.Name = "cellSonucAltBaslikSinavNotuEn";
             this.cellSonucAltBaslikSinavNotuEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -2521,7 +2521,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTable27.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable27.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable27.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable27.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77777F);
             this.xrTable27.Name = "xrTable27";
             this.xrTable27.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -2546,7 +2546,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell84.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable31});
-            this.xrTableCell84.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell84.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell84.Name = "xrTableCell84";
             this.xrTableCell84.StylePriority.UseBorders = false;
             this.xrTableCell84.StylePriority.UseFont = false;
@@ -2579,7 +2579,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell85
             // 
             this.xrTableCell85.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell85.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell85.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell85.Multiline = true;
             this.xrTableCell85.Name = "xrTableCell85";
             this.xrTableCell85.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2599,7 +2599,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell87
             // 
             this.xrTableCell87.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell87.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell87.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell87.Multiline = true;
             this.xrTableCell87.Name = "xrTableCell87";
             this.xrTableCell87.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2615,7 +2615,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell88.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable32});
-            this.xrTableCell88.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell88.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell88.Name = "xrTableCell88";
             this.xrTableCell88.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell88.StylePriority.UseFont = false;
@@ -2648,7 +2648,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell89
             // 
-            this.xrTableCell89.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell89.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell89.Multiline = true;
             this.xrTableCell89.Name = "xrTableCell89";
             this.xrTableCell89.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2667,7 +2667,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell90
             // 
             this.xrTableCell90.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell90.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell90.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell90.Multiline = true;
             this.xrTableCell90.Name = "xrTableCell90";
             this.xrTableCell90.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2683,7 +2683,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell91.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable33});
-            this.xrTableCell91.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell91.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell91.Multiline = true;
             this.xrTableCell91.Name = "xrTableCell91";
             this.xrTableCell91.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -2717,7 +2717,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellSonucYuzlukNotTr
             // 
-            this.cellSonucYuzlukNotTr.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.cellSonucYuzlukNotTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellSonucYuzlukNotTr.Multiline = true;
             this.cellSonucYuzlukNotTr.Name = "cellSonucYuzlukNotTr";
             this.cellSonucYuzlukNotTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2735,7 +2735,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellSonucYuzlukNotEn
             // 
             this.cellSonucYuzlukNotEn.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.cellSonucYuzlukNotEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellSonucYuzlukNotEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellSonucYuzlukNotEn.Multiline = true;
             this.cellSonucYuzlukNotEn.Name = "cellSonucYuzlukNotEn";
             this.cellSonucYuzlukNotEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -2750,7 +2750,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell95.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable34});
-            this.xrTableCell95.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell95.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell95.Multiline = true;
             this.xrTableCell95.Name = "xrTableCell95";
             this.xrTableCell95.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -2785,7 +2785,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell96
             // 
-            this.xrTableCell96.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell96.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell96.Name = "xrTableCell96";
             this.xrTableCell96.StylePriority.UseFont = false;
             this.xrTableCell96.StylePriority.UseTextAlignment = false;
@@ -2795,7 +2795,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell97
             // 
-            this.xrTableCell97.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell97.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell97.Name = "xrTableCell97";
             this.xrTableCell97.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell97.StylePriority.UseFont = false;
@@ -2809,7 +2809,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell98.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkGenelBasarili});
-            this.xrTableCell98.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell98.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell98.Multiline = true;
             this.xrTableCell98.Name = "xrTableCell98";
             this.xrTableCell98.StylePriority.UseFont = false;
@@ -2837,7 +2837,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell99
             // 
-            this.xrTableCell99.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell99.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell99.Name = "xrTableCell99";
             this.xrTableCell99.StylePriority.UseFont = false;
             this.xrTableCell99.StylePriority.UseTextAlignment = false;
@@ -2847,7 +2847,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell100
             // 
-            this.xrTableCell100.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell100.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell100.Name = "xrTableCell100";
             this.xrTableCell100.StylePriority.UseFont = false;
             this.xrTableCell100.StylePriority.UseTextAlignment = false;
@@ -2859,7 +2859,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell101.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkGenelBasarisiz});
-            this.xrTableCell101.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell101.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell101.Multiline = true;
             this.xrTableCell101.Name = "xrTableCell101";
             this.xrTableCell101.StylePriority.UseFont = false;
@@ -2904,7 +2904,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell51.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell51.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell51.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell51.Multiline = true;
             this.xrTableCell51.Name = "xrTableCell51";
             this.xrTableCell51.StylePriority.UseBackColor = false;
@@ -2926,7 +2926,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell55.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell55.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell55.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell55.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell55.Multiline = true;
             this.xrTableCell55.Name = "xrTableCell55";
             this.xrTableCell55.StylePriority.UseBackColor = false;
@@ -2965,7 +2965,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.cellSozluAltBaslikSinavNotuTr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellSozluAltBaslikSinavNotuTr.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellSozluAltBaslikSinavNotuTr.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.cellSozluAltBaslikSinavNotuTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellSozluAltBaslikSinavNotuTr.Multiline = true;
             this.cellSozluAltBaslikSinavNotuTr.Name = "cellSozluAltBaslikSinavNotuTr";
             this.cellSozluAltBaslikSinavNotuTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -2990,7 +2990,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.cellSozluAltBaslikSinavNotuEn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(228)))), ((int)(((byte)(213)))));
             this.cellSozluAltBaslikSinavNotuEn.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.cellSozluAltBaslikSinavNotuEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellSozluAltBaslikSinavNotuEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellSozluAltBaslikSinavNotuEn.Multiline = true;
             this.cellSozluAltBaslikSinavNotuEn.Name = "cellSozluAltBaslikSinavNotuEn";
             this.cellSozluAltBaslikSinavNotuEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(50, 2, 0, 0, 100F);
@@ -3009,7 +3009,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTable16.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable16.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable16.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable16.LocationFloat = new DevExpress.Utils.PointFloat(0F, 27.77775F);
             this.xrTable16.Name = "xrTable16";
             this.xrTable16.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -3037,7 +3037,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell31.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable17});
-            this.xrTableCell31.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell31.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell31.Name = "xrTableCell31";
             this.xrTableCell31.StylePriority.UseBorders = false;
             this.xrTableCell31.StylePriority.UseFont = false;
@@ -3069,7 +3069,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell32
             // 
-            this.xrTableCell32.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell32.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell32.Multiline = true;
             this.xrTableCell32.Name = "xrTableCell32";
             this.xrTableCell32.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3088,7 +3088,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell44
             // 
             this.xrTableCell44.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell44.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell44.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell44.Multiline = true;
             this.xrTableCell44.Name = "xrTableCell44";
             this.xrTableCell44.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3105,7 +3105,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell45.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkSozluSinavOnline,
             this.chkSozluSinavYuzYuze});
-            this.xrTableCell45.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell45.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell45.Name = "xrTableCell45";
             this.xrTableCell45.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell45.StylePriority.UseBorders = false;
@@ -3140,7 +3140,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell48.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable18});
-            this.xrTableCell48.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell48.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell48.Multiline = true;
             this.xrTableCell48.Name = "xrTableCell48";
             this.xrTableCell48.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3175,7 +3175,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell49
             // 
-            this.xrTableCell49.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell49.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell49.Multiline = true;
             this.xrTableCell49.Name = "xrTableCell49";
             this.xrTableCell49.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3194,7 +3194,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell50
             // 
             this.xrTableCell50.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell50.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell50.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell50.Multiline = true;
             this.xrTableCell50.Name = "xrTableCell50";
             this.xrTableCell50.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3208,7 +3208,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellSozluSinavTarih
             // 
-            this.cellSozluSinavTarih.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellSozluSinavTarih.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellSozluSinavTarih.Multiline = true;
             this.cellSozluSinavTarih.Name = "cellSozluSinavTarih";
             this.cellSozluSinavTarih.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3223,7 +3223,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell52.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable19});
-            this.xrTableCell52.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell52.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell52.Multiline = true;
             this.xrTableCell52.Name = "xrTableCell52";
             this.xrTableCell52.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3258,7 +3258,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell53
             // 
-            this.xrTableCell53.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell53.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell53.Multiline = true;
             this.xrTableCell53.Name = "xrTableCell53";
             this.xrTableCell53.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3277,7 +3277,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell54
             // 
             this.xrTableCell54.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell54.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell54.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell54.Multiline = true;
             this.xrTableCell54.Name = "xrTableCell54";
             this.xrTableCell54.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3291,7 +3291,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellSozluSinavYeri
             // 
-            this.cellSozluSinavYeri.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.cellSozluSinavYeri.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.cellSozluSinavYeri.Multiline = true;
             this.cellSozluSinavYeri.Name = "cellSozluSinavYeri";
             this.cellSozluSinavYeri.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3317,7 +3317,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell56.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Bottom)));
             this.xrTableCell56.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable20});
-            this.xrTableCell56.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell56.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell56.Name = "xrTableCell56";
             this.xrTableCell56.StylePriority.UseBorders = false;
             this.xrTableCell56.StylePriority.UseFont = false;
@@ -3350,7 +3350,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell57
             // 
             this.xrTableCell57.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell57.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell57.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell57.Multiline = true;
             this.xrTableCell57.Name = "xrTableCell57";
             this.xrTableCell57.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3370,7 +3370,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell58
             // 
             this.xrTableCell58.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell58.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell58.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell58.Multiline = true;
             this.xrTableCell58.Name = "xrTableCell58";
             this.xrTableCell58.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3386,7 +3386,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell59.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable21});
-            this.xrTableCell59.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell59.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell59.Name = "xrTableCell59";
             this.xrTableCell59.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell59.StylePriority.UseFont = false;
@@ -3419,7 +3419,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell60
             // 
-            this.xrTableCell60.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell60.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell60.Multiline = true;
             this.xrTableCell60.Name = "xrTableCell60";
             this.xrTableCell60.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3438,7 +3438,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrTableCell61
             // 
             this.xrTableCell61.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrTableCell61.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell61.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell61.Multiline = true;
             this.xrTableCell61.Name = "xrTableCell61";
             this.xrTableCell61.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3454,7 +3454,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell62.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable22});
-            this.xrTableCell62.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell62.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell62.Multiline = true;
             this.xrTableCell62.Name = "xrTableCell62";
             this.xrTableCell62.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3488,7 +3488,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // cellSozluYuzlukNotTr
             // 
-            this.cellSozluYuzlukNotTr.Font = new System.Drawing.Font("Times New Roman", 8F, System.Drawing.FontStyle.Bold);
+            this.cellSozluYuzlukNotTr.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F, DevExpress.Drawing.DXFontStyle.Bold);
             this.cellSozluYuzlukNotTr.Multiline = true;
             this.cellSozluYuzlukNotTr.Name = "cellSozluYuzlukNotTr";
             this.cellSozluYuzlukNotTr.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3506,7 +3506,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // cellSozluYuzlukNotEn
             // 
             this.cellSozluYuzlukNotEn.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.cellSozluYuzlukNotEn.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.cellSozluYuzlukNotEn.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.cellSozluYuzlukNotEn.Multiline = true;
             this.cellSozluYuzlukNotEn.Name = "cellSozluYuzlukNotEn";
             this.cellSozluYuzlukNotEn.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3521,7 +3521,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell65.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable23});
-            this.xrTableCell65.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTableCell65.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTableCell65.Multiline = true;
             this.xrTableCell65.Name = "xrTableCell65";
             this.xrTableCell65.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3556,7 +3556,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell66
             // 
-            this.xrTableCell66.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell66.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell66.Name = "xrTableCell66";
             this.xrTableCell66.StylePriority.UseFont = false;
             this.xrTableCell66.StylePriority.UseTextAlignment = false;
@@ -3566,7 +3566,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell67
             // 
-            this.xrTableCell67.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell67.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell67.Name = "xrTableCell67";
             this.xrTableCell67.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell67.StylePriority.UseFont = false;
@@ -3580,7 +3580,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell69.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkSozluBasarili});
-            this.xrTableCell69.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell69.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell69.Multiline = true;
             this.xrTableCell69.Name = "xrTableCell69";
             this.xrTableCell69.StylePriority.UseFont = false;
@@ -3608,7 +3608,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell70
             // 
-            this.xrTableCell70.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell70.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.25F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell70.Name = "xrTableCell70";
             this.xrTableCell70.StylePriority.UseFont = false;
             this.xrTableCell70.StylePriority.UseTextAlignment = false;
@@ -3618,7 +3618,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             // xrTableCell71
             // 
-            this.xrTableCell71.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell71.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell71.Name = "xrTableCell71";
             this.xrTableCell71.StylePriority.UseFont = false;
             this.xrTableCell71.StylePriority.UseTextAlignment = false;
@@ -3630,7 +3630,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell72.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.chkSozluBasarisiz});
-            this.xrTableCell72.Font = new System.Drawing.Font("Times New Roman", 7.5F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell72.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7.5F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell72.Multiline = true;
             this.xrTableCell72.Name = "xrTableCell72";
             this.xrTableCell72.StylePriority.UseFont = false;
@@ -3675,7 +3675,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.xrTableCell20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell20.Borders = ((DevExpress.XtraPrinting.BorderSide)(((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell20.Font = new System.Drawing.Font("Times New Roman", 8.5F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell20.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8.5F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell20.Multiline = true;
             this.xrTableCell20.Name = "xrTableCell20";
             this.xrTableCell20.StylePriority.UseBackColor = false;
@@ -3697,7 +3697,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // 
             this.xrTableCell24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(202)))), ((int)(((byte)(172)))));
             this.xrTableCell24.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Right)));
-            this.xrTableCell24.Font = new System.Drawing.Font("Times New Roman", 7F, System.Drawing.FontStyle.Italic);
+            this.xrTableCell24.Font = new DevExpress.Drawing.DXFont("Times New Roman", 7F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrTableCell24.Multiline = true;
             this.xrTableCell24.Name = "xrTableCell24";
             this.xrTableCell24.StylePriority.UseBackColor = false;
@@ -3734,7 +3734,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // lblEnstituAdi
             // 
             this.lblEnstituAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Bold);
+            this.lblEnstituAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblEnstituAdi.LocationFloat = new DevExpress.Utils.PointFloat(143.75F, 25F);
             this.lblEnstituAdi.Name = "lblEnstituAdi";
             this.lblEnstituAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3748,7 +3748,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // xrLabel1
             // 
             this.xrLabel1.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrLabel1.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Italic);
+            this.xrLabel1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 9F, DevExpress.Drawing.DXFontStyle.Italic);
             this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(143.75F, 50F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3781,7 +3781,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             // lblFormNo
             // 
             this.lblFormNo.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblFormNo.Font = new System.Drawing.Font("Arial", 8F, System.Drawing.FontStyle.Italic);
+            this.lblFormNo.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Italic);
             this.lblFormNo.LocationFloat = new DevExpress.Utils.PointFloat(1.589457E-05F, 0F);
             this.lblFormNo.Name = "lblFormNo";
             this.lblFormNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -3858,10 +3858,10 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Yeterlik
             this.detRepGenelSonuc,
             this.DetailReport2});
             this.Borders = DevExpress.XtraPrinting.BorderSide.Left;
-            this.Margins = new System.Drawing.Printing.Margins(40, 36, 98, 32);
+            this.Margins = new DevExpress.Drawing.DXMargins(40, 36, 98, 32);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.Version = "21.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).EndInit();

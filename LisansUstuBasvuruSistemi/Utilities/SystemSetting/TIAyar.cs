@@ -9,21 +9,20 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
 
     public static class TiAyar
     {
-        public const string TikOneriAlimiAcik = "Tik Öneri Alımı Açık";
-        public const string TikOneriDegisiklikAlimiAcik = "Tik Öneri Değişikliği Alımı Açık";
-        public const string TiAraRaporSinaviOnlineYapilabilsin = "Tez İzleme Ara Rapor Sınavı Online Yapılabilsin";
-        public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez Öneri Savunması Başvuru Alımı Açık";
-        public const string TezOneriSavunmaSinaviOnlineYapilabilsin= "Tez Öneri Savunma Sınavı Online Yapılabilsin";
-        public const string TezOneriToplamSavunmaSavunmaHak = "Toplam başarısız Tez Öneri Savunma hakkı";
-        public const string TezOneriToplamBasarisizTezOneriSavunmaHak = "Toplam başarısız Tez Öneri Savunma hakkı";
-        public const string TezOneriIlkSavunmaHakkiAyKriter= "İlk savunma hakkı yeterlik başarı tarihi itibari ile kaç ay içinde yapılmalı";
-        public const string TezOneriIkinciSavunmaHakkiAyKriter = "İkinci savunma hakkı ilk hak bitiş tarihi itibari ile en geç kaç ay içinde yapılmalı";
+        public const string TikOneriAlimiAcik = "Tik öneri alımı açık"; 
+        public const string TiAraRaporSinaviOnlineYapilabilsin = "Tez izleme ara rapor sınavı online yapılabilsin";
+        public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez öneri savunma sınavı başvuru alımı açık";
+        public const string TezOneriSavunmaSinaviOnlineYapilabilsin= "Tez öneri savunma sınavı online yapılabilsin"; 
+        public const string TezOneriToplamBasarisizTezOneriSavunmaHak = "Toplam başarısız tez öneri savunma sınavı hakkı";
+        public const string TezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter = "Düzeltme alan öğrenci yeni sınavı kaç gün içinde amalı";
+        public const string TezOneriIlkSavunmaHakkiGunKriter= "ilk başvuru için 1. Savunma kaç gün içinde yapılmalı";
+        public const string TezOneriIkinciSavunmaHakkiGunKriter = "ilk başvuru için 2. Savunma kaç gün içinde yapılmalı";
         
-        public const string BasvurusuAcikmi = "Başvuru Alımı Açık";
-        public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son Dönem Kayıt Olunması Gereken Ders Kodları";
-        public const string UyelerMinSinavPuan = "Üyeler için Dil Sınavı Kabulü Min Puan";
-        public const string OgrenciMinSinavPuan = "Öğrenci için Dil Sınavı Kabulü Min Puan";
-        public const string SinavPuanGirisKontroluYapilsin = "Sınav Puan Giriş Kontrolü Yapılsın";
+        public const string BasvurusuAcikmi = "Başvuru alımı açık";
+        public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları";
+        public const string UyelerMinSinavPuan = "Üyeler için dil sınavı kabulü min puan";
+        public const string OgrenciMinSinavPuan = "Öğrenci için dil sınavı kabulü min puan";
+        public const string SinavPuanGirisKontroluYapilsin = "Sınav puan giriş kontrolü yapılsın";
 
         public static void SetAyarTi(string ayarAdi, string ayarDegeri, string enstituKod)
         {

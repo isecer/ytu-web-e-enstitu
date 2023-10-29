@@ -48,5 +48,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public const byte TezIzlemeJuriDegisiklikFormu = 61;
 
 
+        public const byte TezOneriSavunmaFormu = 70;
+
+
     }
 }

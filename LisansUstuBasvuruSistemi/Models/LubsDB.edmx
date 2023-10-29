@@ -2427,7 +2427,7 @@
           <Property Name="InpType" Type="nvarchar" MaxLength="50" />
           <Property Name="SItems" Type="nvarchar(max)" />
           <Property Name="Kategori" Type="nvarchar" MaxLength="255" />
-          <Property Name="Aciklama" Type="nvarchar" MaxLength="255" />
+          <Property Name="Aciklama" Type="nvarchar(max)" />
           <Property Name="Varsayilanlar" Type="nvarchar" MaxLength="4000" />
           <Property Name="SiraNo" Type="int" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
@@ -2640,7 +2640,6 @@
           <Property Name="KayitTarihi" Type="datetime" />
           <Property Name="TezDanismanID" Type="int" />
           <Property Name="YeterlikSozluSinavTarihi" Type="date" Nullable="false" />
-          <Property Name="BasarisizSavunmaSayisi" Type="int" Nullable="false" />
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
@@ -12942,7 +12941,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="InpType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SItems" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Kategori" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Aciklama" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Aciklama" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Varsayilanlar" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="SiraNo" Type="Int32" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
@@ -13187,7 +13186,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
           <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="YeterlikSozluSinavTarihi" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="BasarisizSavunmaSayisi" Type="Int32" Nullable="false" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -20308,7 +20306,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
-                <ScalarProperty Name="BasarisizSavunmaSayisi" ColumnName="BasarisizSavunmaSayisi" />
                 <ScalarProperty Name="YeterlikSozluSinavTarihi" ColumnName="YeterlikSozluSinavTarihi" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />

@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class FmTosBasvuru : PagerOption
     {
-         
+
         public Guid? UniqueId { get; set; }
         public int? KullaniciID { get; set; }
         public int? AnabilimDaliID { get; set; }
@@ -69,10 +69,14 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 
     public class TosBasvuruDetayDto : ToBasvuru
     {
-    
+
         public bool GelenBasvuru { get; set; }
+        public bool IsSinavYapildi { get; set; }
         public string DonemHtmlString { get; set; }
         public string DurumHtmlString { get; set; }
+        public bool SavunmaBasvuruKriterlerIcindeYapildi { get; set; }
+        public int SavunmaBasvurusuYapmaSureGunBilgisi { get; set; }
+        public string SavunmaBasvurusuYapmaSureBilgisiInfo { get; set; }
         public string EnstituAdi { get; set; }
         public string ResimAdi { get; set; }
         public string TcKimlikNo { get; set; }
@@ -82,23 +86,24 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AnabilimdaliAdi { get; set; }
         public string ProgramAdi { get; set; }
         public string KayitDonemi { get; set; }
-        public string TezDanismanBilgiEslesen { get; set; } 
+        public string TezDanismanBilgiEslesen { get; set; }
         public int? ToplamBasarisizTezOneriSavunmaHak { get; set; }
+        public int BasarisizTezOneriSavunmaSayisi { get; set; }
         public int KalanTezOneriSavunmaHakki =>
               (this.ToplamBasarisizTezOneriSavunmaHak.HasValue
-                ? (this.ToplamBasarisizTezOneriSavunmaHak.Value - BasarisizSavunmaSayisi)
+                ? (this.ToplamBasarisizTezOneriSavunmaHak.Value - (BasarisizTezOneriSavunmaSayisi + this.ToBasvuruSavunmaList.Count(a => a.SRModel != null)))
                 : 0);
 
 
-        public int? IlkSavunmaHakkiAyKriter { get; set; }
-        public int? IkinciSavunmaHakkiAyKriter { get; set; }
+        public int? IlkSavunmaHakkiGunKriter { get; set; }
+        public int? IkinciSavunmaHakkiGunKriter { get; set; }
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
     }
     public class ToBasvuruSavunmaDto : ToBasvuruSavunma
     {
         public string DonemAdi { get; set; }
-        public string DurumAdi { get; set; } 
+        public string DurumAdi { get; set; }
         public TosDurumDto DurumModel { get; set; }
         public FrTalepler SRModel { get; set; }
     }
@@ -130,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     }
     public class TosDurumDto
     {
-        public bool IsTezOnerisiVar { get; set; } 
+        public bool IsTezOnerisiVar { get; set; }
         public bool? IsOyBirligiOrCoklugu { get; set; }
         public int? ToBasvuruSavunmaDurumID { get; set; }
         public bool IsSrTalebiYapildi { get; set; }

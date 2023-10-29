@@ -574,7 +574,7 @@
             this.xrTable3.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable3.Font = new System.Drawing.Font("Times New Roman", 8F);
+            this.xrTable3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 8F);
             this.xrTable3.KeepTogether = true;
             this.xrTable3.LocationFloat = new DevExpress.Utils.PointFloat(0F, 1898F);
             this.xrTable3.Name = "xrTable3";
@@ -602,7 +602,7 @@
             // 
             // xrTableCell106
             // 
-            this.xrTableCell106.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell106.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell106.Name = "xrTableCell106";
             this.xrTableCell106.StylePriority.UseFont = false;
             this.xrTableCell106.StylePriority.UseTextAlignment = false;
@@ -621,7 +621,7 @@
             // 
             // xrTableCell107
             // 
-            this.xrTableCell107.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell107.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell107.Name = "xrTableCell107";
             this.xrTableCell107.StylePriority.UseBorders = false;
             this.xrTableCell107.StylePriority.UseFont = false;
@@ -630,7 +630,7 @@
             // 
             // xrCellJuriAdSoyad
             // 
-            this.xrCellJuriAdSoyad.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellJuriAdSoyad.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellJuriAdSoyad.Name = "xrCellJuriAdSoyad";
             this.xrCellJuriAdSoyad.StylePriority.UseFont = false;
             this.xrCellJuriAdSoyad.Text = "xrCellJuriAdSoyad";
@@ -649,7 +649,7 @@
             // xrLabel36
             // 
             this.xrLabel36.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrLabel36.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrLabel36.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel36.LocationFloat = new DevExpress.Utils.PointFloat(3.145726F, 0.3332774F);
             this.xrLabel36.Name = "xrLabel36";
             this.xrLabel36.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
@@ -672,7 +672,7 @@
             // 
             // xrTableCell109
             // 
-            this.xrTableCell109.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell109.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell109.Name = "xrTableCell109";
             this.xrTableCell109.StylePriority.UseBorders = false;
             this.xrTableCell109.StylePriority.UseFont = false;
@@ -681,7 +681,7 @@
             // 
             // xrCellJuriUniversiteAdi
             // 
-            this.xrCellJuriUniversiteAdi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellJuriUniversiteAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellJuriUniversiteAdi.Name = "xrCellJuriUniversiteAdi";
             this.xrCellJuriUniversiteAdi.StylePriority.UseFont = false;
             this.xrCellJuriUniversiteAdi.Text = "xrCellJuriUniversiteAdi";
@@ -703,7 +703,7 @@
             // 
             // xrTableCell111
             // 
-            this.xrTableCell111.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell111.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell111.Name = "xrTableCell111";
             this.xrTableCell111.StylePriority.UseBorders = false;
             this.xrTableCell111.StylePriority.UseFont = false;
@@ -712,7 +712,7 @@
             // 
             // xrCellJuriTelefon
             // 
-            this.xrCellJuriTelefon.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellJuriTelefon.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellJuriTelefon.Name = "xrCellJuriTelefon";
             this.xrCellJuriTelefon.StylePriority.UseFont = false;
             this.xrCellJuriTelefon.Text = "xrCellJuriTelefon";
@@ -731,7 +731,7 @@
             // xrLabel38
             // 
             this.xrLabel38.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrLabel38.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrLabel38.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel38.LocationFloat = new DevExpress.Utils.PointFloat(3.145726F, 0.3749847F);
             this.xrLabel38.Name = "xrLabel38";
             this.xrLabel38.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
@@ -754,7 +754,7 @@
             // 
             // xrTableCell113
             // 
-            this.xrTableCell113.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell113.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell113.Name = "xrTableCell113";
             this.xrTableCell113.StylePriority.UseBorders = false;
             this.xrTableCell113.StylePriority.UseFont = false;
@@ -763,7 +763,7 @@
             // 
             // xrCellJuriFaks
             // 
-            this.xrCellJuriFaks.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellJuriFaks.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellJuriFaks.Name = "xrCellJuriFaks";
             this.xrCellJuriFaks.StylePriority.UseFont = false;
             this.xrCellJuriFaks.Text = "xrCellJuriFaks";
@@ -788,7 +788,7 @@
             // 
             // xrTableCell115
             // 
-            this.xrTableCell115.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell115.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell115.Name = "xrTableCell115";
             this.xrTableCell115.StylePriority.UseBorders = false;
             this.xrTableCell115.StylePriority.UseFont = false;
@@ -797,7 +797,7 @@
             // 
             // xrCellJuriEPosta
             // 
-            this.xrCellJuriEPosta.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellJuriEPosta.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellJuriEPosta.Name = "xrCellJuriEPosta";
             this.xrCellJuriEPosta.StylePriority.UseFont = false;
             this.xrCellJuriEPosta.Text = "xrCellJuriEPosta";
@@ -813,7 +813,7 @@
             this.xrTable1.Borders = ((DevExpress.XtraPrinting.BorderSide)((((DevExpress.XtraPrinting.BorderSide.Left | DevExpress.XtraPrinting.BorderSide.Top) 
             | DevExpress.XtraPrinting.BorderSide.Right) 
             | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTable1.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTable1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTable1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.xrTable1.Name = "xrTable1";
             this.xrTable1.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
@@ -894,7 +894,7 @@
             // 
             // xrTableCell3
             // 
-            this.xrTableCell3.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell3.Name = "xrTableCell3";
             this.xrTableCell3.Padding = new DevExpress.XtraPrinting.PaddingInfo(10, 0, 0, 0, 100F);
             this.xrTableCell3.StylePriority.UseFont = false;
@@ -914,7 +914,7 @@
             // 
             // xrTableCell1
             // 
-            this.xrTableCell1.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell1.Name = "xrTableCell1";
             this.xrTableCell1.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell1.StylePriority.UseBorders = false;
@@ -926,7 +926,7 @@
             // 
             // xrCellEnstituAdi
             // 
-            this.xrCellEnstituAdi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellEnstituAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellEnstituAdi.Name = "xrCellEnstituAdi";
             this.xrCellEnstituAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellEnstituAdi.StylePriority.UseBorders = false;
@@ -946,7 +946,7 @@
             // 
             // xrTableCell2
             // 
-            this.xrTableCell2.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell2.Name = "xrTableCell2";
             this.xrTableCell2.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell2.StylePriority.UseBorders = false;
@@ -958,7 +958,7 @@
             // 
             // xrCellAnabilimdaliAdi
             // 
-            this.xrCellAnabilimdaliAdi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellAnabilimdaliAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellAnabilimdaliAdi.Name = "xrCellAnabilimdaliAdi";
             this.xrCellAnabilimdaliAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellAnabilimdaliAdi.StylePriority.UseBorders = false;
@@ -978,7 +978,7 @@
             // 
             // xrTableCell4
             // 
-            this.xrTableCell4.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell4.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell4.Name = "xrTableCell4";
             this.xrTableCell4.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell4.StylePriority.UseBorders = false;
@@ -990,7 +990,7 @@
             // 
             // xrCellProgramAdi
             // 
-            this.xrCellProgramAdi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellProgramAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellProgramAdi.Name = "xrCellProgramAdi";
             this.xrCellProgramAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellProgramAdi.StylePriority.UseBorders = false;
@@ -1010,7 +1010,7 @@
             // 
             // xrTableCell8
             // 
-            this.xrTableCell8.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell8.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell8.Name = "xrTableCell8";
             this.xrTableCell8.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell8.StylePriority.UseFont = false;
@@ -1020,7 +1020,7 @@
             // 
             // xrCellNumarasi
             // 
-            this.xrCellNumarasi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellNumarasi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellNumarasi.Name = "xrCellNumarasi";
             this.xrCellNumarasi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellNumarasi.StylePriority.UseFont = false;
@@ -1038,7 +1038,7 @@
             // 
             // xrTableCell6
             // 
-            this.xrTableCell6.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell6.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell6.Name = "xrTableCell6";
             this.xrTableCell6.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell6.StylePriority.UseBorders = false;
@@ -1050,7 +1050,7 @@
             // 
             // xrCellOgrenciAdSoyad
             // 
-            this.xrCellOgrenciAdSoyad.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellOgrenciAdSoyad.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellOgrenciAdSoyad.Name = "xrCellOgrenciAdSoyad";
             this.xrCellOgrenciAdSoyad.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellOgrenciAdSoyad.StylePriority.UseBorders = false;
@@ -1070,7 +1070,7 @@
             // 
             // xrTableCell5
             // 
-            this.xrTableCell5.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell5.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell5.Name = "xrTableCell5";
             this.xrTableCell5.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell5.StylePriority.UseFont = false;
@@ -1080,7 +1080,7 @@
             // 
             // xrCellTezDanismanBilgi
             // 
-            this.xrCellTezDanismanBilgi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellTezDanismanBilgi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellTezDanismanBilgi.Name = "xrCellTezDanismanBilgi";
             this.xrCellTezDanismanBilgi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellTezDanismanBilgi.StylePriority.UseFont = false;
@@ -1098,7 +1098,7 @@
             // 
             // xrTableCell9
             // 
-            this.xrTableCell9.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell9.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell9.Name = "xrTableCell9";
             this.xrTableCell9.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell9.StylePriority.UseFont = false;
@@ -1108,7 +1108,7 @@
             // 
             // xrCellTezEsDanismanBilgi
             // 
-            this.xrCellTezEsDanismanBilgi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellTezEsDanismanBilgi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellTezEsDanismanBilgi.Name = "xrCellTezEsDanismanBilgi";
             this.xrCellTezEsDanismanBilgi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellTezEsDanismanBilgi.StylePriority.UseFont = false;
@@ -1125,7 +1125,7 @@
             // 
             // xrTableCell7
             // 
-            this.xrTableCell7.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell7.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell7.Name = "xrTableCell7";
             this.xrTableCell7.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell7.StylePriority.UseFont = false;
@@ -1135,7 +1135,7 @@
             // 
             // xrCellTezinBasligi
             // 
-            this.xrCellTezinBasligi.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrCellTezinBasligi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrCellTezinBasligi.Name = "xrCellTezinBasligi";
             this.xrCellTezinBasligi.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrCellTezinBasligi.StylePriority.UseFont = false;
@@ -1152,7 +1152,7 @@
             // 
             // xrTableCell10
             // 
-            this.xrTableCell10.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell10.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell10.Name = "xrTableCell10";
             this.xrTableCell10.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell10.StylePriority.UseFont = false;
@@ -1172,7 +1172,7 @@
             // 
             // xrTableCell16
             // 
-            this.xrTableCell16.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell16.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell16.Name = "xrTableCell16";
             this.xrTableCell16.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell16.StylePriority.UseFont = false;
@@ -1185,7 +1185,7 @@
             // 
             this.xrTableCell17.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable4});
-            this.xrTableCell17.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell17.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell17.Name = "xrTableCell17";
             this.xrTableCell17.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell17.StylePriority.UseFont = false;
@@ -1247,7 +1247,7 @@
             // 
             // xrTableCell220
             // 
-            this.xrTableCell220.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell220.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell220.Name = "xrTableCell220";
             this.xrTableCell220.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell220.StylePriority.UseFont = false;
@@ -1259,7 +1259,7 @@
             // 
             // xrTableCell221
             // 
-            this.xrTableCell221.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell221.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell221.Name = "xrTableCell221";
             this.xrTableCell221.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell221.StylePriority.UseFont = false;
@@ -1278,7 +1278,7 @@
             // 
             // xrTableCell11
             // 
-            this.xrTableCell11.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell11.Name = "xrTableCell11";
             this.xrTableCell11.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell11.StylePriority.UseFont = false;
@@ -1292,7 +1292,7 @@
             // 
             this.xrTableCell12.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable2});
-            this.xrTableCell12.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell12.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell12.Name = "xrTableCell12";
             this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell12.StylePriority.UseFont = false;
@@ -1334,7 +1334,7 @@
             // xrCheckBox106
             // 
             this.xrCheckBox106.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox106.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox106.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox106.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox106.Name = "xrCheckBox106";
             this.xrCheckBox106.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1357,7 +1357,7 @@
             // xrCheckBox107
             // 
             this.xrCheckBox107.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox107.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox107.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox107.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox107.Name = "xrCheckBox107";
             this.xrCheckBox107.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1380,7 +1380,7 @@
             // xrCheckBox108
             // 
             this.xrCheckBox108.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox108.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox108.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox108.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox108.Name = "xrCheckBox108";
             this.xrCheckBox108.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1400,7 +1400,7 @@
             // 
             // xrTableCell18
             // 
-            this.xrTableCell18.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell18.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell18.Name = "xrTableCell18";
             this.xrTableCell18.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell18.StylePriority.UseFont = false;
@@ -1414,7 +1414,7 @@
             // 
             this.xrTableCell19.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable5});
-            this.xrTableCell19.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell19.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell19.Name = "xrTableCell19";
             this.xrTableCell19.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell19.StylePriority.UseFont = false;
@@ -1456,7 +1456,7 @@
             // xrCheckBox7
             // 
             this.xrCheckBox7.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox7.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox7.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox7.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox7.Name = "xrCheckBox7";
             this.xrCheckBox7.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1479,7 +1479,7 @@
             // xrCheckBox8
             // 
             this.xrCheckBox8.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox8.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox8.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox8.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox8.Name = "xrCheckBox8";
             this.xrCheckBox8.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1502,7 +1502,7 @@
             // xrCheckBox9
             // 
             this.xrCheckBox9.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox9.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox9.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox9.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox9.Name = "xrCheckBox9";
             this.xrCheckBox9.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1522,7 +1522,7 @@
             // 
             // xrTableCell20
             // 
-            this.xrTableCell20.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell20.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell20.Multiline = true;
             this.xrTableCell20.Name = "xrTableCell20";
             this.xrTableCell20.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -1537,7 +1537,7 @@
             // 
             this.xrTableCell21.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable6});
-            this.xrTableCell21.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell21.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell21.Name = "xrTableCell21";
             this.xrTableCell21.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell21.StylePriority.UseFont = false;
@@ -1579,7 +1579,7 @@
             // xrCheckBox10
             // 
             this.xrCheckBox10.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox10.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox10.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox10.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox10.Name = "xrCheckBox10";
             this.xrCheckBox10.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1602,7 +1602,7 @@
             // xrCheckBox11
             // 
             this.xrCheckBox11.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox11.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox11.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox11.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox11.Name = "xrCheckBox11";
             this.xrCheckBox11.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1625,7 +1625,7 @@
             // xrCheckBox12
             // 
             this.xrCheckBox12.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox12.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox12.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox12.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox12.Name = "xrCheckBox12";
             this.xrCheckBox12.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1645,7 +1645,7 @@
             // 
             // xrTableCell22
             // 
-            this.xrTableCell22.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell22.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell22.Name = "xrTableCell22";
             this.xrTableCell22.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell22.StylePriority.UseFont = false;
@@ -1659,7 +1659,7 @@
             // 
             this.xrTableCell23.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable7});
-            this.xrTableCell23.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell23.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell23.Name = "xrTableCell23";
             this.xrTableCell23.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell23.StylePriority.UseFont = false;
@@ -1701,7 +1701,7 @@
             // xrCheckBox13
             // 
             this.xrCheckBox13.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox13.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox13.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox13.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox13.Name = "xrCheckBox13";
             this.xrCheckBox13.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1724,7 +1724,7 @@
             // xrCheckBox14
             // 
             this.xrCheckBox14.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox14.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox14.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox14.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox14.Name = "xrCheckBox14";
             this.xrCheckBox14.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1747,7 +1747,7 @@
             // xrCheckBox15
             // 
             this.xrCheckBox15.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox15.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox15.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox15.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox15.Name = "xrCheckBox15";
             this.xrCheckBox15.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1767,7 +1767,7 @@
             // 
             // xrTableCell24
             // 
-            this.xrTableCell24.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell24.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell24.Name = "xrTableCell24";
             this.xrTableCell24.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell24.StylePriority.UseFont = false;
@@ -1779,7 +1779,7 @@
             // 
             // xrTableCell25
             // 
-            this.xrTableCell25.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell25.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell25.Name = "xrTableCell25";
             this.xrTableCell25.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell25.StylePriority.UseFont = false;
@@ -1798,7 +1798,7 @@
             // 
             // xrTableCell26
             // 
-            this.xrTableCell26.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell26.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell26.Name = "xrTableCell26";
             this.xrTableCell26.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell26.StylePriority.UseFont = false;
@@ -1812,7 +1812,7 @@
             // 
             this.xrTableCell27.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable8});
-            this.xrTableCell27.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell27.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell27.Name = "xrTableCell27";
             this.xrTableCell27.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell27.StylePriority.UseFont = false;
@@ -1854,7 +1854,7 @@
             // xrCheckBox16
             // 
             this.xrCheckBox16.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox16.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox16.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox16.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox16.Name = "xrCheckBox16";
             this.xrCheckBox16.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1877,7 +1877,7 @@
             // xrCheckBox17
             // 
             this.xrCheckBox17.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox17.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox17.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox17.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox17.Name = "xrCheckBox17";
             this.xrCheckBox17.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1900,7 +1900,7 @@
             // xrCheckBox18
             // 
             this.xrCheckBox18.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox18.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox18.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox18.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox18.Name = "xrCheckBox18";
             this.xrCheckBox18.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1920,7 +1920,7 @@
             // 
             // xrTableCell28
             // 
-            this.xrTableCell28.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell28.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell28.Name = "xrTableCell28";
             this.xrTableCell28.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell28.StylePriority.UseFont = false;
@@ -1934,7 +1934,7 @@
             // 
             this.xrTableCell29.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable9});
-            this.xrTableCell29.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell29.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell29.Name = "xrTableCell29";
             this.xrTableCell29.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell29.StylePriority.UseFont = false;
@@ -1976,7 +1976,7 @@
             // xrCheckBox19
             // 
             this.xrCheckBox19.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox19.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox19.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox19.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox19.Name = "xrCheckBox19";
             this.xrCheckBox19.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -1999,7 +1999,7 @@
             // xrCheckBox20
             // 
             this.xrCheckBox20.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox20.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox20.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox20.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox20.Name = "xrCheckBox20";
             this.xrCheckBox20.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2022,7 +2022,7 @@
             // xrCheckBox21
             // 
             this.xrCheckBox21.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox21.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox21.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox21.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox21.Name = "xrCheckBox21";
             this.xrCheckBox21.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2042,7 +2042,7 @@
             // 
             // xrTableCell30
             // 
-            this.xrTableCell30.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell30.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell30.Name = "xrTableCell30";
             this.xrTableCell30.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell30.StylePriority.UseFont = false;
@@ -2056,7 +2056,7 @@
             // 
             this.xrTableCell31.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable10});
-            this.xrTableCell31.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell31.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell31.Name = "xrTableCell31";
             this.xrTableCell31.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell31.StylePriority.UseFont = false;
@@ -2098,7 +2098,7 @@
             // xrCheckBox22
             // 
             this.xrCheckBox22.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox22.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox22.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox22.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox22.Name = "xrCheckBox22";
             this.xrCheckBox22.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2121,7 +2121,7 @@
             // xrCheckBox23
             // 
             this.xrCheckBox23.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox23.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox23.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox23.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox23.Name = "xrCheckBox23";
             this.xrCheckBox23.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2144,7 +2144,7 @@
             // xrCheckBox24
             // 
             this.xrCheckBox24.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox24.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox24.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox24.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox24.Name = "xrCheckBox24";
             this.xrCheckBox24.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2164,7 +2164,7 @@
             // 
             // xrTableCell32
             // 
-            this.xrTableCell32.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell32.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell32.Name = "xrTableCell32";
             this.xrTableCell32.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell32.StylePriority.UseFont = false;
@@ -2176,7 +2176,7 @@
             // 
             // xrTableCell33
             // 
-            this.xrTableCell33.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell33.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell33.Name = "xrTableCell33";
             this.xrTableCell33.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell33.StylePriority.UseFont = false;
@@ -2195,7 +2195,7 @@
             // 
             // xrTableCell34
             // 
-            this.xrTableCell34.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell34.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell34.Name = "xrTableCell34";
             this.xrTableCell34.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell34.StylePriority.UseFont = false;
@@ -2209,7 +2209,7 @@
             // 
             this.xrTableCell35.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable11});
-            this.xrTableCell35.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell35.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell35.Name = "xrTableCell35";
             this.xrTableCell35.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell35.StylePriority.UseFont = false;
@@ -2251,7 +2251,7 @@
             // xrCheckBox25
             // 
             this.xrCheckBox25.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox25.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox25.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox25.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox25.Name = "xrCheckBox25";
             this.xrCheckBox25.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2274,7 +2274,7 @@
             // xrCheckBox26
             // 
             this.xrCheckBox26.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox26.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox26.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox26.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox26.Name = "xrCheckBox26";
             this.xrCheckBox26.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2297,7 +2297,7 @@
             // xrCheckBox27
             // 
             this.xrCheckBox27.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox27.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox27.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox27.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox27.Name = "xrCheckBox27";
             this.xrCheckBox27.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2317,7 +2317,7 @@
             // 
             // xrTableCell36
             // 
-            this.xrTableCell36.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell36.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell36.Name = "xrTableCell36";
             this.xrTableCell36.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell36.StylePriority.UseFont = false;
@@ -2331,7 +2331,7 @@
             // 
             this.xrTableCell37.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable12});
-            this.xrTableCell37.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell37.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell37.Name = "xrTableCell37";
             this.xrTableCell37.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell37.StylePriority.UseFont = false;
@@ -2373,7 +2373,7 @@
             // xrCheckBox28
             // 
             this.xrCheckBox28.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox28.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox28.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox28.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox28.Name = "xrCheckBox28";
             this.xrCheckBox28.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2396,7 +2396,7 @@
             // xrCheckBox29
             // 
             this.xrCheckBox29.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox29.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox29.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox29.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox29.Name = "xrCheckBox29";
             this.xrCheckBox29.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2419,7 +2419,7 @@
             // xrCheckBox30
             // 
             this.xrCheckBox30.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox30.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox30.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox30.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox30.Name = "xrCheckBox30";
             this.xrCheckBox30.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2439,7 +2439,7 @@
             // 
             // xrTableCell38
             // 
-            this.xrTableCell38.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell38.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell38.Name = "xrTableCell38";
             this.xrTableCell38.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell38.StylePriority.UseFont = false;
@@ -2451,7 +2451,7 @@
             // 
             // xrTableCell39
             // 
-            this.xrTableCell39.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell39.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell39.Name = "xrTableCell39";
             this.xrTableCell39.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell39.StylePriority.UseFont = false;
@@ -2470,7 +2470,7 @@
             // 
             // xrTableCell40
             // 
-            this.xrTableCell40.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell40.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell40.Name = "xrTableCell40";
             this.xrTableCell40.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell40.StylePriority.UseFont = false;
@@ -2484,7 +2484,7 @@
             // 
             this.xrTableCell41.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable13});
-            this.xrTableCell41.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell41.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell41.Name = "xrTableCell41";
             this.xrTableCell41.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell41.StylePriority.UseFont = false;
@@ -2526,7 +2526,7 @@
             // xrCheckBox31
             // 
             this.xrCheckBox31.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox31.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox31.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox31.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox31.Name = "xrCheckBox31";
             this.xrCheckBox31.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2549,7 +2549,7 @@
             // xrCheckBox32
             // 
             this.xrCheckBox32.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox32.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox32.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox32.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox32.Name = "xrCheckBox32";
             this.xrCheckBox32.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2572,7 +2572,7 @@
             // xrCheckBox33
             // 
             this.xrCheckBox33.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox33.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox33.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox33.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox33.Name = "xrCheckBox33";
             this.xrCheckBox33.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2592,7 +2592,7 @@
             // 
             // xrTableCell42
             // 
-            this.xrTableCell42.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell42.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell42.Name = "xrTableCell42";
             this.xrTableCell42.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell42.StylePriority.UseFont = false;
@@ -2606,7 +2606,7 @@
             // 
             this.xrTableCell43.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable14});
-            this.xrTableCell43.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell43.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell43.Name = "xrTableCell43";
             this.xrTableCell43.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell43.StylePriority.UseFont = false;
@@ -2648,7 +2648,7 @@
             // xrCheckBox34
             // 
             this.xrCheckBox34.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox34.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox34.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox34.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox34.Name = "xrCheckBox34";
             this.xrCheckBox34.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2671,7 +2671,7 @@
             // xrCheckBox35
             // 
             this.xrCheckBox35.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox35.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox35.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox35.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox35.Name = "xrCheckBox35";
             this.xrCheckBox35.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2694,7 +2694,7 @@
             // xrCheckBox36
             // 
             this.xrCheckBox36.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox36.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox36.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox36.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox36.Name = "xrCheckBox36";
             this.xrCheckBox36.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2714,7 +2714,7 @@
             // 
             // xrTableCell44
             // 
-            this.xrTableCell44.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell44.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell44.Name = "xrTableCell44";
             this.xrTableCell44.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell44.StylePriority.UseFont = false;
@@ -2726,7 +2726,7 @@
             // 
             // xrTableCell45
             // 
-            this.xrTableCell45.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell45.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell45.Name = "xrTableCell45";
             this.xrTableCell45.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell45.StylePriority.UseFont = false;
@@ -2745,7 +2745,7 @@
             // 
             // xrTableCell46
             // 
-            this.xrTableCell46.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell46.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell46.Name = "xrTableCell46";
             this.xrTableCell46.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell46.StylePriority.UseFont = false;
@@ -2759,7 +2759,7 @@
             // 
             this.xrTableCell47.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable15});
-            this.xrTableCell47.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell47.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell47.Name = "xrTableCell47";
             this.xrTableCell47.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell47.StylePriority.UseFont = false;
@@ -2801,7 +2801,7 @@
             // xrCheckBox37
             // 
             this.xrCheckBox37.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox37.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox37.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox37.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox37.Name = "xrCheckBox37";
             this.xrCheckBox37.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2824,7 +2824,7 @@
             // xrCheckBox38
             // 
             this.xrCheckBox38.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox38.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox38.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox38.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox38.Name = "xrCheckBox38";
             this.xrCheckBox38.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2847,7 +2847,7 @@
             // xrCheckBox39
             // 
             this.xrCheckBox39.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox39.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox39.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox39.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox39.Name = "xrCheckBox39";
             this.xrCheckBox39.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2867,7 +2867,7 @@
             // 
             // xrTableCell48
             // 
-            this.xrTableCell48.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell48.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell48.Name = "xrTableCell48";
             this.xrTableCell48.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell48.StylePriority.UseFont = false;
@@ -2881,7 +2881,7 @@
             // 
             this.xrTableCell49.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable16});
-            this.xrTableCell49.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell49.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell49.Name = "xrTableCell49";
             this.xrTableCell49.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell49.StylePriority.UseFont = false;
@@ -2923,7 +2923,7 @@
             // xrCheckBox40
             // 
             this.xrCheckBox40.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox40.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox40.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox40.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox40.Name = "xrCheckBox40";
             this.xrCheckBox40.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2946,7 +2946,7 @@
             // xrCheckBox41
             // 
             this.xrCheckBox41.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox41.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox41.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox41.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox41.Name = "xrCheckBox41";
             this.xrCheckBox41.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2969,7 +2969,7 @@
             // xrCheckBox42
             // 
             this.xrCheckBox42.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox42.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox42.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox42.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox42.Name = "xrCheckBox42";
             this.xrCheckBox42.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -2989,7 +2989,7 @@
             // 
             // xrTableCell50
             // 
-            this.xrTableCell50.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell50.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell50.Name = "xrTableCell50";
             this.xrTableCell50.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell50.StylePriority.UseFont = false;
@@ -3003,7 +3003,7 @@
             // 
             this.xrTableCell51.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable17});
-            this.xrTableCell51.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell51.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell51.Name = "xrTableCell51";
             this.xrTableCell51.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell51.StylePriority.UseFont = false;
@@ -3045,7 +3045,7 @@
             // xrCheckBox43
             // 
             this.xrCheckBox43.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox43.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox43.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox43.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox43.Name = "xrCheckBox43";
             this.xrCheckBox43.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3068,7 +3068,7 @@
             // xrCheckBox44
             // 
             this.xrCheckBox44.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox44.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox44.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox44.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox44.Name = "xrCheckBox44";
             this.xrCheckBox44.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3091,7 +3091,7 @@
             // xrCheckBox45
             // 
             this.xrCheckBox45.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox45.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox45.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox45.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox45.Name = "xrCheckBox45";
             this.xrCheckBox45.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3111,7 +3111,7 @@
             // 
             // xrTableCell52
             // 
-            this.xrTableCell52.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell52.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell52.Name = "xrTableCell52";
             this.xrTableCell52.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell52.StylePriority.UseFont = false;
@@ -3125,7 +3125,7 @@
             // 
             this.xrTableCell53.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable18});
-            this.xrTableCell53.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell53.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell53.Name = "xrTableCell53";
             this.xrTableCell53.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell53.StylePriority.UseFont = false;
@@ -3167,7 +3167,7 @@
             // xrCheckBox46
             // 
             this.xrCheckBox46.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox46.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox46.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox46.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox46.Name = "xrCheckBox46";
             this.xrCheckBox46.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3190,7 +3190,7 @@
             // xrCheckBox47
             // 
             this.xrCheckBox47.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox47.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox47.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox47.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox47.Name = "xrCheckBox47";
             this.xrCheckBox47.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3213,7 +3213,7 @@
             // xrCheckBox48
             // 
             this.xrCheckBox48.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox48.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox48.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox48.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox48.Name = "xrCheckBox48";
             this.xrCheckBox48.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3233,7 +3233,7 @@
             // 
             // xrTableCell54
             // 
-            this.xrTableCell54.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell54.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell54.Name = "xrTableCell54";
             this.xrTableCell54.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell54.StylePriority.UseFont = false;
@@ -3247,7 +3247,7 @@
             // 
             this.xrTableCell55.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable19});
-            this.xrTableCell55.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell55.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell55.Name = "xrTableCell55";
             this.xrTableCell55.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell55.StylePriority.UseFont = false;
@@ -3289,7 +3289,7 @@
             // xrCheckBox49
             // 
             this.xrCheckBox49.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox49.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox49.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox49.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox49.Name = "xrCheckBox49";
             this.xrCheckBox49.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3312,7 +3312,7 @@
             // xrCheckBox50
             // 
             this.xrCheckBox50.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox50.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox50.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox50.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox50.Name = "xrCheckBox50";
             this.xrCheckBox50.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3335,7 +3335,7 @@
             // xrCheckBox51
             // 
             this.xrCheckBox51.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox51.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox51.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox51.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox51.Name = "xrCheckBox51";
             this.xrCheckBox51.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3355,7 +3355,7 @@
             // 
             // xrTableCell56
             // 
-            this.xrTableCell56.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell56.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell56.Name = "xrTableCell56";
             this.xrTableCell56.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell56.StylePriority.UseFont = false;
@@ -3367,7 +3367,7 @@
             // 
             // xrTableCell57
             // 
-            this.xrTableCell57.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell57.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell57.Name = "xrTableCell57";
             this.xrTableCell57.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell57.StylePriority.UseFont = false;
@@ -3386,7 +3386,7 @@
             // 
             // xrTableCell58
             // 
-            this.xrTableCell58.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell58.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell58.Name = "xrTableCell58";
             this.xrTableCell58.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell58.StylePriority.UseFont = false;
@@ -3400,7 +3400,7 @@
             // 
             this.xrTableCell59.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable20});
-            this.xrTableCell59.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell59.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell59.Name = "xrTableCell59";
             this.xrTableCell59.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell59.StylePriority.UseFont = false;
@@ -3442,7 +3442,7 @@
             // xrCheckBox52
             // 
             this.xrCheckBox52.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox52.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox52.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox52.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox52.Name = "xrCheckBox52";
             this.xrCheckBox52.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3465,7 +3465,7 @@
             // xrCheckBox53
             // 
             this.xrCheckBox53.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox53.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox53.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox53.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox53.Name = "xrCheckBox53";
             this.xrCheckBox53.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3488,7 +3488,7 @@
             // xrCheckBox54
             // 
             this.xrCheckBox54.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox54.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox54.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox54.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox54.Name = "xrCheckBox54";
             this.xrCheckBox54.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3508,7 +3508,7 @@
             // 
             // xrTableCell60
             // 
-            this.xrTableCell60.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell60.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell60.Name = "xrTableCell60";
             this.xrTableCell60.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell60.StylePriority.UseFont = false;
@@ -3522,7 +3522,7 @@
             // 
             this.xrTableCell61.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable21});
-            this.xrTableCell61.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell61.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell61.Name = "xrTableCell61";
             this.xrTableCell61.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell61.StylePriority.UseFont = false;
@@ -3564,7 +3564,7 @@
             // xrCheckBox55
             // 
             this.xrCheckBox55.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox55.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox55.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox55.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox55.Name = "xrCheckBox55";
             this.xrCheckBox55.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3587,7 +3587,7 @@
             // xrCheckBox56
             // 
             this.xrCheckBox56.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox56.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox56.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox56.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox56.Name = "xrCheckBox56";
             this.xrCheckBox56.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3610,7 +3610,7 @@
             // xrCheckBox57
             // 
             this.xrCheckBox57.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox57.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox57.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox57.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox57.Name = "xrCheckBox57";
             this.xrCheckBox57.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3630,7 +3630,7 @@
             // 
             // xrTableCell62
             // 
-            this.xrTableCell62.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell62.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell62.Name = "xrTableCell62";
             this.xrTableCell62.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell62.StylePriority.UseFont = false;
@@ -3644,7 +3644,7 @@
             // 
             this.xrTableCell63.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable22});
-            this.xrTableCell63.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell63.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell63.Name = "xrTableCell63";
             this.xrTableCell63.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell63.StylePriority.UseFont = false;
@@ -3686,7 +3686,7 @@
             // xrCheckBox58
             // 
             this.xrCheckBox58.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox58.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox58.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox58.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox58.Name = "xrCheckBox58";
             this.xrCheckBox58.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3709,7 +3709,7 @@
             // xrCheckBox59
             // 
             this.xrCheckBox59.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox59.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox59.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox59.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox59.Name = "xrCheckBox59";
             this.xrCheckBox59.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3732,7 +3732,7 @@
             // xrCheckBox60
             // 
             this.xrCheckBox60.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox60.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox60.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox60.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox60.Name = "xrCheckBox60";
             this.xrCheckBox60.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3752,7 +3752,7 @@
             // 
             // xrTableCell64
             // 
-            this.xrTableCell64.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell64.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell64.Name = "xrTableCell64";
             this.xrTableCell64.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell64.StylePriority.UseFont = false;
@@ -3766,7 +3766,7 @@
             // 
             this.xrTableCell65.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable23});
-            this.xrTableCell65.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell65.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell65.Name = "xrTableCell65";
             this.xrTableCell65.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell65.StylePriority.UseFont = false;
@@ -3808,7 +3808,7 @@
             // xrCheckBox61
             // 
             this.xrCheckBox61.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox61.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox61.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox61.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox61.Name = "xrCheckBox61";
             this.xrCheckBox61.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3831,7 +3831,7 @@
             // xrCheckBox62
             // 
             this.xrCheckBox62.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox62.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox62.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox62.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox62.Name = "xrCheckBox62";
             this.xrCheckBox62.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3854,7 +3854,7 @@
             // xrCheckBox63
             // 
             this.xrCheckBox63.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox63.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox63.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox63.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox63.Name = "xrCheckBox63";
             this.xrCheckBox63.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3874,7 +3874,7 @@
             // 
             // xrTableCell66
             // 
-            this.xrTableCell66.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell66.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell66.Multiline = true;
             this.xrTableCell66.Name = "xrTableCell66";
             this.xrTableCell66.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -3889,7 +3889,7 @@
             // 
             this.xrTableCell67.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable24});
-            this.xrTableCell67.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell67.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell67.Name = "xrTableCell67";
             this.xrTableCell67.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell67.StylePriority.UseFont = false;
@@ -3931,7 +3931,7 @@
             // xrCheckBox64
             // 
             this.xrCheckBox64.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox64.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox64.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox64.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox64.Name = "xrCheckBox64";
             this.xrCheckBox64.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3954,7 +3954,7 @@
             // xrCheckBox65
             // 
             this.xrCheckBox65.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox65.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox65.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox65.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox65.Name = "xrCheckBox65";
             this.xrCheckBox65.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3977,7 +3977,7 @@
             // xrCheckBox66
             // 
             this.xrCheckBox66.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox66.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox66.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox66.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox66.Name = "xrCheckBox66";
             this.xrCheckBox66.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -3997,7 +3997,7 @@
             // 
             // xrTableCell68
             // 
-            this.xrTableCell68.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell68.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell68.Name = "xrTableCell68";
             this.xrTableCell68.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell68.StylePriority.UseFont = false;
@@ -4011,7 +4011,7 @@
             // 
             this.xrTableCell69.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable25});
-            this.xrTableCell69.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell69.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell69.Name = "xrTableCell69";
             this.xrTableCell69.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell69.StylePriority.UseFont = false;
@@ -4053,7 +4053,7 @@
             // xrCheckBox67
             // 
             this.xrCheckBox67.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox67.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox67.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox67.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox67.Name = "xrCheckBox67";
             this.xrCheckBox67.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4076,7 +4076,7 @@
             // xrCheckBox68
             // 
             this.xrCheckBox68.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox68.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox68.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox68.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox68.Name = "xrCheckBox68";
             this.xrCheckBox68.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4099,7 +4099,7 @@
             // xrCheckBox69
             // 
             this.xrCheckBox69.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox69.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox69.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox69.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox69.Name = "xrCheckBox69";
             this.xrCheckBox69.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4119,7 +4119,7 @@
             // 
             // xrTableCell70
             // 
-            this.xrTableCell70.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell70.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell70.Name = "xrTableCell70";
             this.xrTableCell70.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell70.StylePriority.UseFont = false;
@@ -4133,7 +4133,7 @@
             // 
             this.xrTableCell71.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable26});
-            this.xrTableCell71.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell71.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell71.Name = "xrTableCell71";
             this.xrTableCell71.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell71.StylePriority.UseFont = false;
@@ -4175,7 +4175,7 @@
             // xrCheckBox70
             // 
             this.xrCheckBox70.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox70.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox70.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox70.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox70.Name = "xrCheckBox70";
             this.xrCheckBox70.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4198,7 +4198,7 @@
             // xrCheckBox71
             // 
             this.xrCheckBox71.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox71.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox71.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox71.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox71.Name = "xrCheckBox71";
             this.xrCheckBox71.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4221,7 +4221,7 @@
             // xrCheckBox72
             // 
             this.xrCheckBox72.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox72.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox72.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox72.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox72.Name = "xrCheckBox72";
             this.xrCheckBox72.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4241,7 +4241,7 @@
             // 
             // xrTableCell72
             // 
-            this.xrTableCell72.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell72.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell72.Name = "xrTableCell72";
             this.xrTableCell72.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell72.StylePriority.UseFont = false;
@@ -4253,7 +4253,7 @@
             // 
             // xrTableCell73
             // 
-            this.xrTableCell73.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell73.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell73.Name = "xrTableCell73";
             this.xrTableCell73.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell73.StylePriority.UseFont = false;
@@ -4272,7 +4272,7 @@
             // 
             // xrTableCell74
             // 
-            this.xrTableCell74.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell74.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell74.Name = "xrTableCell74";
             this.xrTableCell74.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell74.StylePriority.UseFont = false;
@@ -4286,7 +4286,7 @@
             // 
             this.xrTableCell75.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable27});
-            this.xrTableCell75.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell75.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell75.Name = "xrTableCell75";
             this.xrTableCell75.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell75.StylePriority.UseFont = false;
@@ -4328,7 +4328,7 @@
             // xrCheckBox73
             // 
             this.xrCheckBox73.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox73.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox73.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox73.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox73.Name = "xrCheckBox73";
             this.xrCheckBox73.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4351,7 +4351,7 @@
             // xrCheckBox74
             // 
             this.xrCheckBox74.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox74.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox74.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox74.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox74.Name = "xrCheckBox74";
             this.xrCheckBox74.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4374,7 +4374,7 @@
             // xrCheckBox75
             // 
             this.xrCheckBox75.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox75.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox75.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox75.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox75.Name = "xrCheckBox75";
             this.xrCheckBox75.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4394,7 +4394,7 @@
             // 
             // xrTableCell76
             // 
-            this.xrTableCell76.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell76.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell76.Name = "xrTableCell76";
             this.xrTableCell76.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell76.StylePriority.UseFont = false;
@@ -4408,7 +4408,7 @@
             // 
             this.xrTableCell77.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable28});
-            this.xrTableCell77.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell77.Name = "xrTableCell77";
             this.xrTableCell77.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell77.StylePriority.UseFont = false;
@@ -4450,7 +4450,7 @@
             // xrCheckBox76
             // 
             this.xrCheckBox76.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox76.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox76.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox76.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox76.Name = "xrCheckBox76";
             this.xrCheckBox76.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4473,7 +4473,7 @@
             // xrCheckBox77
             // 
             this.xrCheckBox77.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox77.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox77.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox77.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox77.Name = "xrCheckBox77";
             this.xrCheckBox77.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4496,7 +4496,7 @@
             // xrCheckBox78
             // 
             this.xrCheckBox78.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox78.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox78.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox78.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox78.Name = "xrCheckBox78";
             this.xrCheckBox78.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4516,7 +4516,7 @@
             // 
             // xrTableCell78
             // 
-            this.xrTableCell78.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell78.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell78.Name = "xrTableCell78";
             this.xrTableCell78.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell78.StylePriority.UseFont = false;
@@ -4530,7 +4530,7 @@
             // 
             this.xrTableCell79.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable29});
-            this.xrTableCell79.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell79.Name = "xrTableCell79";
             this.xrTableCell79.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell79.StylePriority.UseFont = false;
@@ -4572,7 +4572,7 @@
             // xrCheckBox79
             // 
             this.xrCheckBox79.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox79.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox79.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox79.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox79.Name = "xrCheckBox79";
             this.xrCheckBox79.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4595,7 +4595,7 @@
             // xrCheckBox80
             // 
             this.xrCheckBox80.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox80.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox80.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox80.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox80.Name = "xrCheckBox80";
             this.xrCheckBox80.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4618,7 +4618,7 @@
             // xrCheckBox81
             // 
             this.xrCheckBox81.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox81.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox81.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox81.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox81.Name = "xrCheckBox81";
             this.xrCheckBox81.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4638,7 +4638,7 @@
             // 
             // xrTableCell80
             // 
-            this.xrTableCell80.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell80.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell80.Multiline = true;
             this.xrTableCell80.Name = "xrTableCell80";
             this.xrTableCell80.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
@@ -4653,7 +4653,7 @@
             // 
             this.xrTableCell81.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable30});
-            this.xrTableCell81.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell81.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell81.Name = "xrTableCell81";
             this.xrTableCell81.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell81.StylePriority.UseFont = false;
@@ -4695,7 +4695,7 @@
             // xrCheckBox82
             // 
             this.xrCheckBox82.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox82.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox82.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox82.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox82.Name = "xrCheckBox82";
             this.xrCheckBox82.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4718,7 +4718,7 @@
             // xrCheckBox83
             // 
             this.xrCheckBox83.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox83.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox83.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox83.Name = "xrCheckBox83";
             this.xrCheckBox83.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4741,7 +4741,7 @@
             // xrCheckBox84
             // 
             this.xrCheckBox84.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox84.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox84.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox84.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox84.Name = "xrCheckBox84";
             this.xrCheckBox84.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4761,7 +4761,7 @@
             // 
             // xrTableCell82
             // 
-            this.xrTableCell82.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell82.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell82.Name = "xrTableCell82";
             this.xrTableCell82.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell82.StylePriority.UseFont = false;
@@ -4773,7 +4773,7 @@
             // 
             // xrTableCell83
             // 
-            this.xrTableCell83.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell83.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell83.Name = "xrTableCell83";
             this.xrTableCell83.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell83.StylePriority.UseFont = false;
@@ -4792,7 +4792,7 @@
             // 
             // xrTableCell84
             // 
-            this.xrTableCell84.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell84.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell84.Name = "xrTableCell84";
             this.xrTableCell84.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell84.StylePriority.UseFont = false;
@@ -4806,7 +4806,7 @@
             // 
             this.xrTableCell85.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable31});
-            this.xrTableCell85.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell85.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell85.Name = "xrTableCell85";
             this.xrTableCell85.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell85.StylePriority.UseFont = false;
@@ -4848,7 +4848,7 @@
             // xrCheckBox85
             // 
             this.xrCheckBox85.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox85.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox85.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox85.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox85.Name = "xrCheckBox85";
             this.xrCheckBox85.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4871,7 +4871,7 @@
             // xrCheckBox86
             // 
             this.xrCheckBox86.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox86.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox86.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox86.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox86.Name = "xrCheckBox86";
             this.xrCheckBox86.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4894,7 +4894,7 @@
             // xrCheckBox87
             // 
             this.xrCheckBox87.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox87.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox87.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox87.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox87.Name = "xrCheckBox87";
             this.xrCheckBox87.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4914,7 +4914,7 @@
             // 
             // xrTableCell86
             // 
-            this.xrTableCell86.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell86.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell86.Name = "xrTableCell86";
             this.xrTableCell86.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell86.StylePriority.UseFont = false;
@@ -4928,7 +4928,7 @@
             // 
             this.xrTableCell87.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable32});
-            this.xrTableCell87.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell87.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell87.Name = "xrTableCell87";
             this.xrTableCell87.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell87.StylePriority.UseFont = false;
@@ -4970,7 +4970,7 @@
             // xrCheckBox88
             // 
             this.xrCheckBox88.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox88.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox88.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox88.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox88.Name = "xrCheckBox88";
             this.xrCheckBox88.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -4993,7 +4993,7 @@
             // xrCheckBox89
             // 
             this.xrCheckBox89.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox89.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox89.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox89.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox89.Name = "xrCheckBox89";
             this.xrCheckBox89.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5016,7 +5016,7 @@
             // xrCheckBox90
             // 
             this.xrCheckBox90.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox90.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox90.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox90.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox90.Name = "xrCheckBox90";
             this.xrCheckBox90.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5036,7 +5036,7 @@
             // 
             // xrTableCell88
             // 
-            this.xrTableCell88.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell88.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell88.Name = "xrTableCell88";
             this.xrTableCell88.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell88.StylePriority.UseFont = false;
@@ -5050,7 +5050,7 @@
             // 
             this.xrTableCell89.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable33});
-            this.xrTableCell89.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell89.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell89.Name = "xrTableCell89";
             this.xrTableCell89.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell89.StylePriority.UseFont = false;
@@ -5092,7 +5092,7 @@
             // xrCheckBox91
             // 
             this.xrCheckBox91.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox91.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox91.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox91.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox91.Name = "xrCheckBox91";
             this.xrCheckBox91.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5115,7 +5115,7 @@
             // xrCheckBox92
             // 
             this.xrCheckBox92.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox92.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox92.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox92.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox92.Name = "xrCheckBox92";
             this.xrCheckBox92.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5138,7 +5138,7 @@
             // xrCheckBox93
             // 
             this.xrCheckBox93.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox93.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox93.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox93.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox93.Name = "xrCheckBox93";
             this.xrCheckBox93.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5158,7 +5158,7 @@
             // 
             // xrTableCell90
             // 
-            this.xrTableCell90.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell90.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell90.Name = "xrTableCell90";
             this.xrTableCell90.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell90.StylePriority.UseFont = false;
@@ -5170,7 +5170,7 @@
             // 
             // xrTableCell91
             // 
-            this.xrTableCell91.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell91.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell91.Name = "xrTableCell91";
             this.xrTableCell91.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell91.StylePriority.UseFont = false;
@@ -5189,7 +5189,7 @@
             // 
             // xrTableCell92
             // 
-            this.xrTableCell92.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell92.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell92.Name = "xrTableCell92";
             this.xrTableCell92.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell92.StylePriority.UseFont = false;
@@ -5203,7 +5203,7 @@
             // 
             this.xrTableCell93.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable34});
-            this.xrTableCell93.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell93.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell93.Name = "xrTableCell93";
             this.xrTableCell93.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell93.StylePriority.UseFont = false;
@@ -5245,7 +5245,7 @@
             // xrCheckBox94
             // 
             this.xrCheckBox94.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox94.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox94.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox94.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox94.Name = "xrCheckBox94";
             this.xrCheckBox94.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5268,7 +5268,7 @@
             // xrCheckBox95
             // 
             this.xrCheckBox95.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox95.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox95.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox95.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox95.Name = "xrCheckBox95";
             this.xrCheckBox95.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5291,7 +5291,7 @@
             // xrCheckBox96
             // 
             this.xrCheckBox96.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox96.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox96.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox96.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox96.Name = "xrCheckBox96";
             this.xrCheckBox96.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5311,7 +5311,7 @@
             // 
             // xrTableCell94
             // 
-            this.xrTableCell94.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell94.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell94.Name = "xrTableCell94";
             this.xrTableCell94.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell94.StylePriority.UseFont = false;
@@ -5325,7 +5325,7 @@
             // 
             this.xrTableCell95.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable35});
-            this.xrTableCell95.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell95.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell95.Name = "xrTableCell95";
             this.xrTableCell95.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell95.StylePriority.UseFont = false;
@@ -5367,7 +5367,7 @@
             // xrCheckBox97
             // 
             this.xrCheckBox97.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox97.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox97.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox97.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox97.Name = "xrCheckBox97";
             this.xrCheckBox97.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5390,7 +5390,7 @@
             // xrCheckBox98
             // 
             this.xrCheckBox98.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox98.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox98.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox98.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox98.Name = "xrCheckBox98";
             this.xrCheckBox98.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5413,7 +5413,7 @@
             // xrCheckBox99
             // 
             this.xrCheckBox99.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox99.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox99.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox99.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox99.Name = "xrCheckBox99";
             this.xrCheckBox99.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5433,7 +5433,7 @@
             // 
             // xrTableCell96
             // 
-            this.xrTableCell96.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell96.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell96.Name = "xrTableCell96";
             this.xrTableCell96.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell96.StylePriority.UseFont = false;
@@ -5447,7 +5447,7 @@
             // 
             this.xrTableCell97.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable36});
-            this.xrTableCell97.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell97.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell97.Name = "xrTableCell97";
             this.xrTableCell97.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell97.StylePriority.UseFont = false;
@@ -5489,7 +5489,7 @@
             // xrCheckBox100
             // 
             this.xrCheckBox100.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox100.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox100.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox100.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox100.Name = "xrCheckBox100";
             this.xrCheckBox100.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5512,7 +5512,7 @@
             // xrCheckBox101
             // 
             this.xrCheckBox101.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox101.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox101.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox101.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox101.Name = "xrCheckBox101";
             this.xrCheckBox101.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5535,7 +5535,7 @@
             // xrCheckBox102
             // 
             this.xrCheckBox102.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox102.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox102.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox102.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox102.Name = "xrCheckBox102";
             this.xrCheckBox102.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5555,7 +5555,7 @@
             // 
             // xrTableCell98
             // 
-            this.xrTableCell98.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.xrTableCell98.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
             this.xrTableCell98.Name = "xrTableCell98";
             this.xrTableCell98.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell98.StylePriority.UseFont = false;
@@ -5569,7 +5569,7 @@
             // 
             this.xrTableCell99.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrTable37});
-            this.xrTableCell99.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell99.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell99.Name = "xrTableCell99";
             this.xrTableCell99.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell99.StylePriority.UseFont = false;
@@ -5611,7 +5611,7 @@
             // xrCheckBox103
             // 
             this.xrCheckBox103.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox103.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox103.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox103.LocationFloat = new DevExpress.Utils.PointFloat(50.95135F, 0.1887035F);
             this.xrCheckBox103.Name = "xrCheckBox103";
             this.xrCheckBox103.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5634,7 +5634,7 @@
             // xrCheckBox104
             // 
             this.xrCheckBox104.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox104.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox104.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox104.LocationFloat = new DevExpress.Utils.PointFloat(53.86456F, 0.1886692F);
             this.xrCheckBox104.Name = "xrCheckBox104";
             this.xrCheckBox104.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5657,7 +5657,7 @@
             // xrCheckBox105
             // 
             this.xrCheckBox105.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrCheckBox105.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrCheckBox105.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrCheckBox105.LocationFloat = new DevExpress.Utils.PointFloat(52.30206F, 0.1886692F);
             this.xrCheckBox105.Name = "xrCheckBox105";
             this.xrCheckBox105.RightToLeft = DevExpress.XtraReports.UI.RightToLeft.Yes;
@@ -5678,7 +5678,7 @@
             // 
             // xrTableCell101
             // 
-            this.xrTableCell101.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell101.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell101.Name = "xrTableCell101";
             this.xrTableCell101.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell101.StylePriority.UseFont = false;
@@ -5698,7 +5698,7 @@
             // 
             this.xrTableCell103.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrLabel1});
-            this.xrTableCell103.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell103.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell103.Name = "xrTableCell103";
             this.xrTableCell103.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell103.StylePriority.UseFont = false;
@@ -5729,7 +5729,7 @@
             // 
             // xrTableCell100
             // 
-            this.xrTableCell100.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell100.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell100.Name = "xrTableCell100";
             this.xrTableCell100.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell100.StylePriority.UseFont = false;
@@ -5749,7 +5749,7 @@
             // 
             this.xrTableCell102.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrLabel2});
-            this.xrTableCell102.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell102.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell102.Name = "xrTableCell102";
             this.xrTableCell102.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell102.StylePriority.UseFont = false;
@@ -5762,7 +5762,7 @@
             // xrLabel2
             // 
             this.xrLabel2.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.xrLabel2.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrLabel2.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(3.999996F, 1.999664F);
             this.xrLabel2.Name = "xrLabel2";
             this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -5781,7 +5781,7 @@
             // xrTableCell104
             // 
             this.xrTableCell104.Borders = ((DevExpress.XtraPrinting.BorderSide)((DevExpress.XtraPrinting.BorderSide.Top | DevExpress.XtraPrinting.BorderSide.Bottom)));
-            this.xrTableCell104.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell104.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell104.Name = "xrTableCell104";
             this.xrTableCell104.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell104.StylePriority.UseBorders = false;
@@ -5804,7 +5804,7 @@
             this.xrCheckBox3,
             this.xrCheckBox2,
             this.xrCheckBox1});
-            this.xrTableCell105.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell105.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell105.Name = "xrTableCell105";
             this.xrTableCell105.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell105.StylePriority.UseFont = false;
@@ -5878,7 +5878,7 @@
             // 
             // lblFormNo
             // 
-            this.lblFormNo.Font = new System.Drawing.Font("Arial", 8F, System.Drawing.FontStyle.Italic);
+            this.lblFormNo.Font = new DevExpress.Drawing.DXFont("Arial", 8F, DevExpress.Drawing.DXFontStyle.Italic);
             this.lblFormNo.LocationFloat = new DevExpress.Utils.PointFloat(0F, 7.999929F);
             this.lblFormNo.Name = "lblFormNo";
             this.lblFormNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -5910,7 +5910,7 @@
             // lblOgrenimTipAdi
             // 
             this.lblOgrenimTipAdi.Borders = DevExpress.XtraPrinting.BorderSide.None;
-            this.lblOgrenimTipAdi.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Bold);
+            this.lblOgrenimTipAdi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.lblOgrenimTipAdi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 63.04166F);
             this.lblOgrenimTipAdi.Name = "lblOgrenimTipAdi";
             this.lblOgrenimTipAdi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -5924,7 +5924,7 @@
             // xrLblRaporBasligi
             // 
             this.xrLblRaporBasligi.Borders = DevExpress.XtraPrinting.BorderSide.Bottom;
-            this.xrLblRaporBasligi.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Bold);
+            this.xrLblRaporBasligi.Font = new DevExpress.Drawing.DXFont("Times New Roman", 11F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrLblRaporBasligi.LocationFloat = new DevExpress.Utils.PointFloat(0F, 84.22912F);
             this.xrLblRaporBasligi.Name = "xrLblRaporBasligi";
             this.xrLblRaporBasligi.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -5944,7 +5944,7 @@
             // 
             // xrTableCell117
             // 
-            this.xrTableCell117.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.xrTableCell117.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F, DevExpress.Drawing.DXFontStyle.Bold);
             this.xrTableCell117.Name = "xrTableCell117";
             this.xrTableCell117.Padding = new DevExpress.XtraPrinting.PaddingInfo(3, 0, 0, 0, 100F);
             this.xrTableCell117.StylePriority.UseFont = false;
@@ -5961,10 +5961,10 @@
             this.TopMargin,
             this.BottomMargin,
             this.PageHeader});
-            this.Margins = new System.Drawing.Printing.Margins(39, 36, 10, 32);
+            this.Margins = new DevExpress.Drawing.DXMargins(39, 36, 10, 32);
             this.PageHeight = 1169;
             this.PageWidth = 827;
-            this.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            this.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             this.Version = "17.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();

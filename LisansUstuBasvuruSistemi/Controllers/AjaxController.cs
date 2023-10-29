@@ -27,6 +27,7 @@ using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
 using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
+using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
@@ -3142,7 +3143,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var id = Request["UniqueID"].ToString();
                     var uniqueId = new Guid(id);
-                    var rapor = _entities.TIBasvuruAraRapors.Where(p => p.UniqueID == uniqueId).FirstOrDefault();
+                    var rapor = _entities.TIBasvuruAraRapors.FirstOrDefault(p => p.UniqueID == uniqueId);
                     var kul = rapor.TIBasvuru.Kullanicilar;
 
                     var rpr = new RprTiDegerlendirmeFormu_FR0307(rapor.TIBasvuruAraRaporID);
@@ -3153,6 +3154,27 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (rapor.TIBasvuru.KullaniciID != UserIdentity.Current.Id || RoleNames.TiTezDegerlendirmeYap.InRoleCurrent() || RoleNames.TiTezDegerlendirmeDuzeltme.InRoleCurrent())
                     {
                         var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(rapor.TIBasvuruAraRaporID);
+                        rpr2.CreateDocument();
+                        rpr2.DisplayName = rpr2.DisplayName;
+                        rpr.Pages.AddRange(rpr2.Pages);
+                    }
+                    rprX = rpr;
+                }
+                else if (raporTipi == RaporTipleri.TezOneriSavunmaFormu)
+                {
+                    var id = Request["UniqueID"].ToString();
+                    var uniqueId = new Guid(id);
+                    var rapor = _entities.ToBasvuruSavunmas.FirstOrDefault(p => p.UniqueID == uniqueId);
+                    var kul = rapor.ToBasvuru.Kullanicilar;
+
+                    var rpr = new RprToSavunmaFormu_FR0348(rapor.ToBasvuruSavunmaID);
+                    rpr.CreateDocument();
+                    rpr.DisplayName = kul.Ad + " " + kul.Soyad + " " + rpr.DisplayName;
+
+
+                    if (kul.KullaniciID != UserIdentity.Current.Id || RoleNames.TosDegerlendirmeYap.InRoleCurrent() || RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent())
+                    {
+                        var rpr2 = new RprToSavunmaFormuDetay_FR0348(rapor.ToBasvuruSavunmaID);
                         rpr2.CreateDocument();
                         rpr2.DisplayName = rpr2.DisplayName;
                         rpr.Pages.AddRange(rpr2.Pages);

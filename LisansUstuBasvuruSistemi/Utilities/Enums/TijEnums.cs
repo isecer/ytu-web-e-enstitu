@@ -32,6 +32,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Enums
         public static int TezKonusuDegisikligi = 3;
         public static int DanismanVeTezKonusuDegisikligi = 4;
         public static int Diger = 5;
+        public static int TumDegisiklikler = 1000;
 
     }
 }

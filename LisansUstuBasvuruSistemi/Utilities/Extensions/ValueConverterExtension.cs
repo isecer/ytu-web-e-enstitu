@@ -221,5 +221,30 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             var rsm = resimAdi.IsNullOrWhiteSpace() ? ("/" + SistemAyar.KullaniciDefaultResim) : ("/" + SistemAyar.KullaniciResimYolu + "/" + resimAdi);
             return rsm;
         }
+
+        public static int ToToplamAy(this DateTime baslangicTarihi, DateTime bitisTarihi)
+        { 
+            // İki tarih arasındaki toplam ay süresini hesaplayın
+            int toplamAylar = (bitisTarihi.Year - baslangicTarihi.Year) * 12 + bitisTarihi.Month - baslangicTarihi.Month;
+
+            // Eğer tarihler arasında bir tam aydan fazla bir süre varsa ek ayı ekleyin
+            if ((bitisTarihi.Day - baslangicTarihi.Day) > 0)
+            {
+                toplamAylar++;
+            }
+
+            return toplamAylar;
+
+        }
+        public static int ToToplamGun(this DateTime baslangicTarihi, DateTime bitisTarihi)
+        {
+            // İki tarih arasındaki toplam ay süresini hesaplayın
+            int toplamGun = (int)(bitisTarihi - baslangicTarihi).TotalDays;
+
+             
+            return toplamGun;
+
+        }
+
     }
 }

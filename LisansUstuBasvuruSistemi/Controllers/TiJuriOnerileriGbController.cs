@@ -99,8 +99,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     || p.ProgramAdi.Contains(model.AdSoyad)
                     || p.JuriAdis.Contains(model.AdSoyad)
                     );
+            var tijFormTips = TezIzlemeJuriOneriBus.CmbTijOneriTipListe(true);
+
             if (model.TijFormTipID.HasValue)
-                q = q.Where(p => p.SonBasvuru != null && p.SonBasvuru.TijFormTipID == model.TijFormTipID);
+            {
+                var formTipIds = model.TijFormTipID == TijFormTipi.TumDegisiklikler
+                    ? tijFormTips.Where(p => p.Value != TijFormTipi.YeniForm && p.Value.HasValue).Select(s => s.Value.Value).ToList()
+                    : new List<int> { model.TijFormTipID.Value };
+                q = q.Where(p => p.SonBasvuru != null && formTipIds.Contains(p.SonBasvuru.TijFormTipID));
+            }
             if (model.AnabilimDaliID.HasValue)
                 q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
             if (!model.AktifTijDonemId.IsNullOrWhiteSpace())
@@ -144,7 +151,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.AktifTijDonemId = new SelectList(TezIzlemeJuriOneriBus.CmbTiDonemListe(model.EnstituKod, true), "Value", "Caption", model.AktifTijDonemId);
             ViewBag.AnabilimDaliID = new SelectList(TezIzlemeJuriOneriBus.GetCmbFilterTiAnabilimDallari(model.EnstituKod, true), "Value", "Caption", model.AnabilimDaliID);
             ViewBag.AktifDurumID = new SelectList(TezIzlemeJuriOneriBus.CmbTdoOneriDurumListe(true), "Value", "Caption", model.AktifDurumID);
-            ViewBag.TijFormTipID = new SelectList(TezIzlemeJuriOneriBus.CmbTijOneriTipListe(true), "Value", "Caption", model.TijFormTipID);
+            tijFormTips.Add(new CmbIntDto { Caption = "Tüm Değişenler", Value = 1000 });
+            ViewBag.TijFormTipID = new SelectList(tijFormTips, "Value", "Caption", model.TijFormTipID);
 
             return View(model);
 

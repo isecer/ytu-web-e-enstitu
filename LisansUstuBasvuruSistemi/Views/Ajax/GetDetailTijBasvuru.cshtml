@@ -244,7 +244,8 @@
                                                         <tr class="info">
                                                             <th width="35"></th>
                                                             <th width="100">Unvanı</th>
-                                                            <th>Ad Soyad</th> 
+                                                            <th>Ad Soyad</th>
+                                                            <td width="90"></td>
                                                         </tr>
                                                         <tbody>
 
@@ -267,7 +268,20 @@
                                                                     <td>
                                                                         @itemJr.AdSoyad
                                                                         <br /><span style="font-size:7pt;">@itemJr.UniversiteAdi</span>
-                                                                    </td> 
+                                                                    </td>
+                                                                    <td style="text-align:center;color:@(item.EYKDaOnaylandi==true?"green":"maroon");">
+                                                                        @if (!itemJr.IsTezDanismani)
+                                                                        {
+                                                                            if (itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik))
+                                                                            {
+                                                                                <span><b>@(item.EYKDaOnaylandi==true?"Değişti": "Değişecek")</b></span>
+                                                                            }
+                                                                            else if (!itemJr.IsYtuIciJuri && (item.TijDegisiklikTipID == TijDegisiklikTipi.YtuDisiDegisiklik || item.TijDegisiklikTipID == TijDegisiklikTipi.YtuIciVeDisiDegisiklik))
+                                                                            {
+                                                                                <span><b>@(item.EYKDaOnaylandi==true?"Değişti": "Değişecek")</b></span>
+                                                                            }
+                                                                        }
+                                                                    </td>
                                                                 </tr>
                                                                 <tr class="MainRow2 cls-Jo_@itemJr.TijBasvuruOneriJuriID" style="display:none">
                                                                     <td id="cls-Jo_@itemJr.TijBasvuruOneriJuriID" colspan="5" style="padding: 1px 1px 2px 50px;">
@@ -328,7 +342,7 @@
                                                     </tr>
                                                     <tbody>
 
-                                                        @foreach (var itemJr in item.TijBasvuruOneriJurilers.Where(p=>p.IsYeniOrOnceki))
+                                                        @foreach (var itemJr in item.TijBasvuruOneriJurilers.Where(p => p.IsYeniOrOnceki))
                                                         {
                                                             <tr>
                                                                 <td>

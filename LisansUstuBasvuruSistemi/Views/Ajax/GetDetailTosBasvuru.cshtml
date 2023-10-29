@@ -163,8 +163,7 @@
                                                     <td class="CaptionTd">Savunma No</td>
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd">
-                                                        @(item.SavunmaNo+". Savunma" )
-
+                                                        @(item.SavunmaNo>0? item.SavunmaNo + ". Savunma":"-----")
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -179,6 +178,24 @@
                                                     <td class="CaptionTd">:</td>
                                                     <td class="ValueTd"><a href="javascript:void(0);" onclick="PopupCenter('@item.CalismaRaporDosyaYolu','@item.CalismaRaporDosyaAdi',800,600);"><i class="fa fa-file-pdf-o"></i> @item.CalismaRaporDosyaAdi</a></td>
                                                 </tr>
+
+                                                @if (item.ToBasvuruSavunmaDurumID.HasValue)
+                                                {
+                                                    <tr>
+                                                        <td class="CaptionTd">Form Kodu</td>
+                                                        <td class="CaptionTd">:</td>
+                                                        <td class="ValueTd">@item.FormKodu</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="CaptionTd">Tez Öneri Savunma Formu</td>
+                                                        <td class="CaptionTd">:</td>
+                                                        <td class="ValueTd">
+                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Doktora Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                <i class="fa fa-print"></i> FR-0348 Doktora Tez Öneri Savunma Formunu İndir
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             </table>
                                         </td>
                                     </tr>
@@ -190,7 +207,7 @@
                                 <table style="width:100%;">
                                     <tr>
                                         <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">
-                                            <i style="font-size:16pt;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Komite Üyesi Rapor Değerlendirmesi
+                                            <i style="font-size:16pt;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Komite Üyesi Tez Öneri Savunma Sınavı Değerlendirmesi
                                         </td>
                                     </tr>
                                     <tr>
@@ -198,14 +215,13 @@
                                             <table style="width:100%;">
                                                 @if (item.IsYokDrBursiyeriVar && (degerlendirmeYetki || degerlendirmeDuzeltmeYetki) && itemJr.IsTezDanismani)
                                                 {
-
                                                     <tr>
-                                                        <td class="CaptionTd" width="275">Tez İzleme Raporu ile 100/2000 YÖK Bursu Alt Alan Uyumlu mu?</td>
-                                                        <td class="CaptionTd" width="10">:</td>
+                                                        <td class="CaptionTd ctWidth" width="250">Çalışma Raporu ile Alt Alan Uyumlu mu?</td>
+                                                        <td class="CaptionTd">:</td>
                                                         <td class="ValueTd">
                                                             @if (showDegerlendirme)
                                                             {
-                                                                <select style="width:100px;" id="IsTezIzlemeRaporuAltAlanUygun_@itemJr.UniqueID">
+                                                                <select style="width:90px;" id="IsCalismaRaporuAltAlanUygun_@itemJr.UniqueID">
                                                                     <option></option>
                                                                     <option value="true" @(itemJr.IsCalismaRaporuAltAlanUygun == true ? "selected" : "")>Uyumlu</option>
                                                                     <option value="false" @(itemJr.IsCalismaRaporuAltAlanUygun == false ? "selected" : "")>Uyumlu Değil</option>
@@ -215,23 +231,28 @@
                                                             {
                                                                 var text = (itemJr.IsCalismaRaporuAltAlanUygun.HasValue ? (itemJr.IsCalismaRaporuAltAlanUygun.Value ? "Uyumlu" : "Uyumlu Değil") : "Henüz Değerlendirilmedi");
                                                                 <span style="font-size:10pt;" aria-hidden="true">@text</span>
-
                                                             }
                                                         </td>
                                                     </tr>
 
                                                 }
                                                 <tr>
-                                                    <td class="CaptionTd" width="275">Tez İzleme Raporunun Değerlendirme Sonucu</td>
-                                                    <td class="CaptionTd" width="10">:</td>
+                                                    <td class="CaptionTd ctWidth" width="250">Değerlendirme Sonucu</td>
+                                                    <td class="CaptionTd" width="5">:</td>
                                                     <td class="ValueTd">
                                                         @if (showDegerlendirme)
                                                         {
-                                                            <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.ToBasvuruSavunmaKomiteID').removeClass('hide'); }else{$('.RwJAck_@itemJr.ToBasvuruSavunmaKomiteID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
+                                                            var birOncekiDegerlendirme = Model.ToBasvuruSavunmaList.FirstOrDefault(f => f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
+
+                                                            <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                 <option></option>
                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
                                                                 <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
-                                                                <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
+                                                                @if (birOncekiDegerlendirme?.ToBasvuruSavunmaDurumID != ToBasvuruSavunmaDurumu.Duzeltme || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
+                                                                {
+                                                                    <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
+                                                                }
+
                                                             </select>
                                                         }
                                                         else
@@ -241,32 +262,19 @@
                                                         }
                                                     </td>
                                                 </tr>
-                                                <tr class="RwJAck_@itemJr.ToBasvuruSavunmaKomiteID @(itemJr.ToBasvuruSavunmaDurumID.HasValue && !itemJr.Aciklama.IsNullOrWhiteSpace() ? "" : "hide")">
-                                                    <td colspan="3">
-                                                        <table style="width:100%;margin-top:5px;">
-                                                            <tr>
-                                                                <td class="CaptionTd"></td>
-                                                            </tr>
-                                                            <tr>
-                                                                @if (showDegerlendirme)
-                                                                {
-                                                                    <td class="ValueTd">
-                                                                        <textarea placeholder="Tez İzleme Raporu Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
-
-                                                                    </td>
-
-                                                                }
-                                                                else if (!itemJr.Aciklama.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <td class="CaptionTd" width="275">Açıklama</td>
-                                                                    <td class="CaptionTd" width="10">:</td>
-                                                                    <td>
-                                                                        <span style="font-size:10pt;">@itemJr.Aciklama</span>
-                                                                    </td>
-                                                                }
-                                                            </tr>
-                                                        </table>
-                                                    </td>
+                                                <tr class="RwJAck_@itemJr.UniqueID @(itemJr.ToBasvuruSavunmaDurumID.HasValue && !itemJr.Aciklama.IsNullOrWhiteSpace() ? "" : "hide")">
+                                                    <td class="CaptionTd ctWidth" width="250"></td>
+                                                    <td class="CaptionTd" width="5">:</td>
+                                                    <td class="ValueTd">
+                                                        @if (showDegerlendirme)
+                                                        {
+                                                            <textarea placeholder="Tez Öneri Savunma Sınavı Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
+                                                        }
+                                                        else
+                                                        {
+                                                            @itemJr.Aciklama
+                                                        }
+                                                    </td> 
                                                 </tr>
                                                 @if (showDegerlendirme)
                                                 {
@@ -346,6 +354,11 @@
                                 </tr>
                             }
                             <tr>
+                                <td class="CaptionTd">Yeterlik Başarı Tarihi</td>
+                                <td class="CaptionTd">:</td>
+                                <td class="ValueTd">@Model.YeterlikSozluSinavTarihi.ToDateString()</td>
+                            </tr>
+                            <tr>
                                 <td class="CaptionTd">
                                     Danışman
                                 </td>
@@ -358,34 +371,40 @@
                                 </td>
 
                             </tr>
-                            <tr>
-                                <td class="CaptionTd">Yeterlik Başarı Tarihi</td>
-                                <td class="CaptionTd">:</td>
-                                <td class="ValueTd">@Model.YeterlikSozluSinavTarihi.ToDateString()</td>
-                            </tr>
-                            <tr>
-                                <td class="CaptionTd">Kalan Savunma Hakkı</td>
-                                <td class="CaptionTd">:</td>
-                                <td class="ValueTd">@Model.KalanTezOneriSavunmaHakki</td>
-                            </tr>
                         </table>
                     </td>
                     <td class="clsHide" width="100" style="text-align:center;vertical-align:top;">
                         <img src="@(Model.ResimAdi.ToKullaniciResim())" style="width:90px;height:90px;" class="img-circle img-thumbnail">
                     </td>
                 </tr>
+                @if (!Model.SavunmaBasvurusuYapmaSureBilgisiInfo.IsNullOrWhiteSpace())
+                {
+                    <tr>
+                        <td colspan="2" style="padding-left:10px;text-align:left;">
+                            <table>
+                                <tr>
+                                    <td class="CaptionTd" width="160">Savunma Sınavı Bilgi</td>
+                                    <td class="CaptionTd" width="10">:</td>
+                                    <td class="ValueTd">
+                                        @Html.Raw(Model.SavunmaBasvurusuYapmaSureBilgisiInfo)
+                                    </td>
+                                </tr>
+                            </table>
 
+                        </td>
+                    </tr>
+                }
 
             </table>
         </div>
         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:0px;padding:6px 10px;">
             <table style="width:100%;">
                 <tr>
-                    <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Tez Öneri Savunma Sınavları</td>
+                    <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-list fa-lg"></i> Tez Öneri Savunma Başvuruları</td>
                     <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                         @if (formOlusturmaYetki)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetToSavunmaFormu('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Başvurusu Yap</span>
+                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetToSavunmaFormu('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
                         }
                     </td>
 
@@ -427,13 +446,13 @@
                                                 </ul>
                                             }
                                         </td>
-                                        <td>@(item.SavunmaNo+". Savunma")</td>
+                                        <td>@(item.SavunmaNo>0? item.SavunmaNo + ". Savunma":"-----") </td>
                                         <td>@item.DonemAdi <br />@item.SavunmaBasvuruTarihi</td>
                                         <td>
                                             @item.DurumModel.TosBasvuruDurumView()
                                         </td>
                                         <td>
-                                            @if (inxRw == 1 && formOlusturmaYetki && (!item.ToBasvuruSavunmaDurumID.HasValue || UserIdentity.Current.IsAdmin))
+                                            @if (inxRw == 1 && formOlusturmaYetki && !item.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
                                             {
                                                 <a href="javascript:void(0)" onclick="GetToSavunmaFormu('@Model.UniqueID','@item.UniqueID')"><i style="font-size:11pt;" class="fa fa-edit tooltips" data-original-title="Raporu Düzelt"></i> Düzelt</a>
 
@@ -491,7 +510,6 @@
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd">@(item.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + item.YokDrOncelikliAlan + ")" : "Yok")</td>
                                                     </tr>
-
                                                     @if (item.ToBasvuruSavunmaDurumID.HasValue)
                                                     {
                                                         <tr>
@@ -503,12 +521,13 @@
                                                             <td class="CaptionTd">Tez Öneri Savunma Formu</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">
-                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'Doktora Tez Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezIzlemeDegerlendirmeFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
-                                                                    <i class="fa fa-print"></i> FR-0307 Doktora Tez Öneri Savunma Formunu İndir
+                                                                <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'FR-0348 Doktora Tez Öneri Savunma Formu','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipleri.TezOneriSavunmaFormu&UniqueID=@item.UniqueID' , 'auto', 'modal-dialog modal-lg' )">
+                                                                    <i class="fa fa-print"></i> FR-0348 Doktora Tez Öneri Savunma Formunu İndir
                                                                 </a>
                                                             </td>
                                                         </tr>
                                                     }
+
                                                 </table>
                                             </div>
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;">
@@ -666,11 +685,17 @@
                                                                                     <td class="ValueTd">
                                                                                         @if (openDegerlendirme)
                                                                                         {
+                                                                                            var birOncekiDegerlendirme = Model.ToBasvuruSavunmaList.FirstOrDefault(f => f.ToBasvuruSavunmaID < item.ToBasvuruSavunmaID);
+
                                                                                             <select style="width:150px;" onchange="if($(this).val()!=''){ $('.RwJAck_@itemJr.UniqueID').removeClass('hide'); }else{$('.RwJAck_@itemJr.UniqueID').addClass('hide');}" id="ToBasvuruSavunmaDurumID_@itemJr.UniqueID">
                                                                                                 <option></option>
                                                                                                 <option value="1" @(itemJr.ToBasvuruSavunmaDurumID == 1 ? "selected" : "")>Kabul Edildi</option>
                                                                                                 <option value="2" @(itemJr.ToBasvuruSavunmaDurumID == 2 ? "selected" : "")>Ret Edildi</option>
-                                                                                                <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
+                                                                                                @if (birOncekiDegerlendirme?.ToBasvuruSavunmaDurumID != ToBasvuruSavunmaDurumu.Duzeltme || itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
+                                                                                                {
+                                                                                                    <option value="3" @(itemJr.ToBasvuruSavunmaDurumID == 3 ? "selected" : "")>Düzeltme Yapılsın</option>
+                                                                                                }
+
                                                                                             </select>
                                                                                         }
                                                                                         else
@@ -738,7 +763,7 @@
                                             <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                 <table style="width:100%;margin:0px;">
                                                     <tr>
-                                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg"></i> Toplantı Bilgileri / Değerlendirme Sonucu</td>
+                                                        <td style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="fa fa-calendar fa-lg"></i> Savunma Sınavı Bilgileri / Değerlendirme Sonucu</td>
                                                         <td width="120" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding-bottom:2px;">
                                                             @if (toplantiYetki && !item.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
                                                             {
@@ -830,47 +855,53 @@
             var IsCalismaRaporuAltAlanUygun = $('#IsCalismaRaporuAltAlanUygun_' + tosKomiteUniqueId).val();
             var Aciklama = $('#Aciklama_' + tosKomiteUniqueId).val();
             var _panel = $('#bsvrDet_' + toUniqueId);
-            bootbox.dialog({
-                message: "Tez Öneri Savunma Sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
-                title: "<i class='glyphicon glyphicon-info-sign'></i> Tez Öneri Savunma Sınavı Değerlendirmesi",
-                buttons: {
-                    success: {
-                        label: "Evet",
-                        className: "btn-success",
-                        callback: function (event) {
-                            PanelRefresh(_panel, false);
-                            $.ajax({
-                                url: '@Url.Action("TosDegerlendir", "TosBasvuru")',
-                                data: {
-                                    tosKomiteUniqueId,
-                                    IsCalismaRaporuAltAlanUygun,
-                                    ToBasvuruSavunmaDurumID,
-                                    Aciklama
+            Swal.fire({
+                text: "Tez Öneri Savunma Sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                type: 'warning',
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: 'Evet',
+                confirmButtonColor: "green",
+                cancelButtonText: 'Vazgeç',
+                showLoaderOnConfirm: true,
+                backdrop: true,
+                padding: '2em',
+                backdrop: true,
+                allowOutsideClick: false,
+                preConfirm: function () {
+                    $('.swal2-cancel').first().text("kaydediliyor...");
+                    return new Promise(function (resolve) {
+                        PanelRefresh(_panel, false);
+                        $.ajax({
+                            url: '@Url.Action("TosDegerlendir", "TosBasvuru")',
+                            data: {
+                                tosKomiteUniqueId,
+                                IsCalismaRaporuAltAlanUygun,
+                                ToBasvuruSavunmaDurumID,
+                                Aciklama
 
-                                },
-                                success: function (result) {
-                                    PanelRefresh(_panel, true);
-                                    if (result.IsSuccess || result.IsRefresh) {
-                                        GetDetail(toUniqueId);
-
-                                    }
-                                    showMmMessage(result.Messages, 'Tamam');
-
-                                },
-                                error: function (err) {
-                                    PanelRefresh(_panel, true);
-                                    alert(err.responseText);
-
+                            },
+                            success: function (result) {
+                                PanelRefresh(_panel, true);
+                                if (result.IsSuccess || result.IsRefresh) {
+                                    GetDetail(toUniqueId);
                                 }
-                            });
-                        }
-                    },
-                    danger: {
-                        label: "Hayır",
-                        className: "btn-primary",
-                        callback: function () {
-                        }
-                    }
+                                swal.fire({
+                                    html: result.messageView,
+                                    icon: (result.IsSuccess ? "success" : "error"),
+                                    type: (result.IsSuccess ? "success" : "error"),
+                                    confirmButtonText: 'tamam',
+                                    padding: '2em'
+                                });
+
+                            },
+                            error: function (err) {
+                                PanelRefresh(_panel, true);
+                                alert(err.responseText);
+
+                            }
+                        });
+                    });
                 }
             });
         }
@@ -985,12 +1016,18 @@
                                          },
                                          success: function (result) {
                                              PanelRefresh(pnlx, true);
-                                             if (result.mMessage.Messages.length > 0) toastr[result.MessageType](result.mMessage.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                             GetDetail(toUniqueId);
-                                             showMmMessage(result.MessageView, 'Tamam');
-                                             var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
-                                             $(_clsBtn).click();
-
+                                             swal.fire({
+                                                 html: result.messageView,
+                                                 icon: (result.IsSuccess ? "success" : "error"),
+                                                 type: (result.IsSuccess ? "success" : "error"),
+                                                 confirmButtonText: 'tamam',
+                                                 padding: '2em'
+                                             });
+                                             if (result.IsSuccess) {
+                                                 GetDetail(toUniqueId);
+                                                 var _clsBtn = $(pnlx).find('.bootbox-close-button').first();
+                                                 $(_clsBtn).click();
+                                             }
                                          },
                                          error: function (err) {
                                              PanelRefresh(pnlx, true);
@@ -1024,67 +1061,67 @@
         }
         function ShowSRDialog(toUniqueId, tosUniqueId, SRTalepID) {
             var _panel = $('#bsvrDet_' + toUniqueId);
-        PanelRefresh(_panel, false);
-             $.ajax({
-                 url: '@Url.Action("RezervasyonAl", "TosBasvuru")',
-                 data: { tosUniqueId },
-                 success: function (result) {
+            PanelRefresh(_panel, false);
+            $.ajax({
+                url: '@Url.Action("RezervasyonAl", "TosBasvuru")',
+                data: { tosUniqueId },
+                success: function (result) {
 
-                     PanelRefresh(_panel, true);
-                     var btbxxFS = bootbox.dialog({
-                         message: result,
-                         title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez Öneri Savunma Toplantı Bilgi Girişi' : 'Tez Öneri Savunma Toplantı Bilgilerini Düzenleme'),
-                         buttons: {
-                             success: {
-                                 label: "Kaydet",
-                                 className: "btn-primary btnSrKayit_" + tosUniqueId,
-                                 callback: function (event) {
-                                     var pnlx = $(btbxxFS).find('.modal-dialog').first();
-                                     $('.btnSrKayit_' + tosUniqueId).addClass('disabled');
-                                     PanelRefresh(pnlx, false);
-                                     $('#TIAraRaporSrForm').ajaxForm({
-                                         success: function (result) {
-                                             if (result.IsSuccess) {
-                                                 toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
-                                                 GetDetail(toUniqueId);
-                                                 var _clsBtn = $('.modal-header').find('button').first();
-                                                 $(_clsBtn).click();
-                                             }
-                                             else {
-                                                 getMsg(result);
-                                                 return false;
-                                             }
-                                             PanelRefresh(pnlx, true);
+                    PanelRefresh(_panel, true);
+                    var btbxxFS = bootbox.dialog({
+                        message: result,
+                        title: "<i class='fa fa-calendar fa-lg'></i> " + (SRTalepID <= 0 ? 'Yeni Tez Öneri Savunma Toplantı Bilgi Girişi' : 'Tez Öneri Savunma Toplantı Bilgilerini Düzenleme'),
+                        buttons: {
+                            success: {
+                                label: "Kaydet",
+                                className: "btn-primary btnSrKayit_" + tosUniqueId,
+                                callback: function (event) {
+                                    var pnlx = $(btbxxFS).find('.modal-dialog').first();
+                                    $('.btnSrKayit_' + tosUniqueId).addClass('disabled');
+                                    PanelRefresh(pnlx, false);
+                                    $('#TosSrForm').ajaxForm({
+                                        success: function (result) {
+                                            if (result.IsSuccess) {
+                                                toastr["success"](result.Messages.join('<br/>'), result.Title, { timeOut: 8000 });
+                                                GetDetail(toUniqueId);
+                                                var _clsBtn = $('.modal-header').find('button').first();
+                                                $(_clsBtn).click();
+                                            }
+                                            else {
+                                                getMsg(result);
+                                                return false;
+                                            }
+                                            PanelRefresh(pnlx, true);
 
-                                         },
-                                         complete: function (cmp) {
-                                             $('.btnSrKayit_' + tosUniqueId).removeClass('disabled');
-                                             PanelRefresh(pnlx, true);
-                                         },
-                                         error: function (err) {
-                                             PanelRefresh(pnlx, true);
-                                         }
+                                        },
+                                        complete: function (cmp) {
+                                            $('.btnSrKayit_' + tosUniqueId).removeClass('disabled');
+                                            PanelRefresh(pnlx, true);
+                                        },
+                                        error: function (err) {
+                                            PanelRefresh(pnlx, true);
+                                        }
 
-                                     });
-                                     $('#TIAraRaporSrForm').submit();
+                                    });
+                                    $('#TosSrForm').submit();
 
-                                     return false;
-                                 }
-                             },
-                             danger: {
-                                 label: "Kapat",
-                                 className: "btn-primary",
-                                 callback: function () {
-                                 }
-                             }
-                         }
-                     });
-                 },
-                 error: function (err) {
-                     PanelRefresh(_panel, true);
-                     alert(err.responseText);
-                 }
-             });
+                                    return false;
+                                }
+                            },
+                            danger: {
+                                label: "Kapat",
+                                className: "btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function (err) {
+                    PanelRefresh(_panel, true);
+                    alert(err.responseText);
+                }
+            });
     }
     </script>
 }
