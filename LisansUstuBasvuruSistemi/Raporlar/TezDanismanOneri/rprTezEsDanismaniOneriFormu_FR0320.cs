@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
@@ -35,18 +36,14 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                                  b.KayitOgretimYiliBaslangic,
                                  dn.DonemAdi,
                                  s.TDODanismanTalepTipID,
-                                 s.VarolanTDUnvanAdi,
-                                 s.VarolanTDAdSoyad,
-                                 s.VarolanTDAnabilimDaliAdi,
-                                 s.VarolanTDProgramAdi,
                                  s.TDAdSoyad,
                                  s.TDUnvanAdi,
                                  s.TDAnabilimDaliAdi,
                                  s.TDProgramAdi,
-                                 s.TDOgrenciSayisiDR,
-                                 s.TDOgrenciSayisiYL,
-                                 s.TDTezSayisiDR,
-                                 s.TDTezSayisiYL,
+                                 EdTDAdSoyad = ed.TDAdSoyad,
+                                 EdTDUnvanAdi = ed.TDUnvanAdi,
+                                 EdTDAnabilimDaliAdi = ed.TDAnabilimDaliAdi,
+                                 EdTDProgramAdi = ed.TDProgramAdi,
                                  s.SinavAdi,
                                  s.SinavYili,
                                  s.SinavPuani,
@@ -79,17 +76,25 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri
                 cellAtamaDurum.Text = qData.IsDegisiklikTalebi ? "Değişiklik Talebi" : "Yeni Atama";
 
 
-                cellDanismanAdSoyad.Text = qData.TDUnvanAdi + " " + qData.TDAdSoyad;
-                cellDanismanAnabilimDaliAdi.Text = qData.TDAnabilimDaliAdi;
-                cellDanismanProgramAdi.Text = qData.TDProgramAdi;
+                if (qData.EdTDAdSoyad.IsNullOrWhiteSpace())
+                {
+                    cellDanismanAdSoyad.Text = qData.TDUnvanAdi + " " + qData.TDAdSoyad;
+                    cellDanismanAnabilimDaliAdi.Text = qData.TDAnabilimDaliAdi;
+                    cellDanismanProgramAdi.Text = qData.TDProgramAdi;
 
-
-
+                }
+                else
+                {
+                    cellDanismanAdSoyad.Text = qData.EdTDUnvanAdi + " " + qData.EdTDAdSoyad;
+                    cellDanismanAnabilimDaliAdi.Text = qData.EdTDAnabilimDaliAdi;
+                    cellDanismanProgramAdi.Text = qData.EdTDProgramAdi;
+                }
 
                 cellEsDanismanAdSoyad.Text = qData.EdUnvanAdi + " " + qData.EdAdSoyad;
                 cellEsDanismanAnabilimDaliAdi.Text = qData.EdAnabilimDaliAdi;
                 cellEsDanismanProgramAdi.Text = qData.ProgramAdi;
                 cellEsDanismanUniversiteAdi.Text = qData.EdUniversiteAdi;
+
                 cellEsGerekce.Text = qData.Gerekce;
 
 

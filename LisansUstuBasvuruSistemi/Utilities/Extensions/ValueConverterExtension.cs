@@ -236,13 +236,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return toplamAylar;
 
         }
-        public static int ToToplamGun(this DateTime baslangicTarihi, DateTime bitisTarihi)
+        public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {
             // İki tarih arasındaki toplam ay süresini hesaplayın
-            int toplamGun = (int)(bitisTarihi - baslangicTarihi).TotalDays;
+            var bitisTarihi =  baslangicTarihi.AddMonths(ay);
 
              
-            return toplamGun;
+            return bitisTarihi;
 
         }
 

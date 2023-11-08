@@ -265,7 +265,7 @@ else if (Model.TIBasvuruID.HasValue || Model.RowCount > 0)
     function YeniBasvuruDuyuruKontrol() {
            var popupSetting = {
             title:'||',
-            popupTipId:@DuyuruPopupTipleri.TIBasvuru,
+            popupTipId:@DuyuruPopupTipi.TiBasvuru,
             btnAdi: 'Başvuru Yap',
             redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
             callbackFnc: ''

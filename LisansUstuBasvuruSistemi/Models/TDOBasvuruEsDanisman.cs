@@ -21,6 +21,10 @@ namespace LisansUstuBasvuruSistemi.Models
         public bool IsDegisiklikTalebi { get; set; }
         public string OncekiEsDanismanAdi { get; set; }
         public System.DateTime BasvuruTarihi { get; set; }
+        public string TDAdSoyad { get; set; }
+        public string TDUnvanAdi { get; set; }
+        public string TDAnabilimDaliAdi { get; set; }
+        public string TDProgramAdi { get; set; }
         public string UnvanAdi { get; set; }
         public string AdSoyad { get; set; }
         public string UniversiteAdi { get; set; }

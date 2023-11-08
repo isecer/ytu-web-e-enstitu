@@ -95,8 +95,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
                 : 0);
 
 
-        public int? IlkSavunmaHakkiGunKriter { get; set; }
-        public int? IkinciSavunmaHakkiGunKriter { get; set; }
+        public int? IlkSavunmaHakkiAyKriter { get; set; }
+        public int? IkinciSavunmaHakkiAyKriter { get; set; } 
         public Guid? DegerlendirenUniqueID { get; set; }
         public List<ToBasvuruSavunmaDto> ToBasvuruSavunmaList { get; set; }
     }

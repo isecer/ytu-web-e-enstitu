@@ -904,6 +904,19 @@
 
                                                                                 <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:60px;">
                                                                                     <table style="width:100%;">
+                                                                                        @if (!itemE.TDAdSoyad.IsNullOrWhiteSpace())
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd" width="200">Tez Danışmanı Ad Soyad</td>
+                                                                                                <td class="CaptionTd" width="10">:</td>
+                                                                                                <td class="ValueTd">@itemE.TDUnvanAdi @itemE.TDAdSoyad</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="CaptionTd">Tez Danışmanı Anabilim dalı</td>
+                                                                                                <td class="CaptionTd">:</td>
+                                                                                                <td class="ValueTd">@itemE.TDAnabilimDaliAdi / @itemE.TDProgramAdi</td>
+                                                                                            </tr>
+                                                                                        }
                                                                                         @if (!itemE.OncekiEsDanismanAdi.IsNullOrWhiteSpace())
                                                                                         {
                                                                                             <tr>
@@ -1011,7 +1024,7 @@
                                                                                                                                     </select>
                                                                                                                                 </td>
                                                                                                                                 <td class="form-group">
-                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi==true?"":"hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTimeInput()" />
+                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTimeInput()"/>
 
                                                                                                                                 </td>
                                                                                                                                 <td>

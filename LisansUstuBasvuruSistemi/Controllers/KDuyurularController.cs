@@ -107,26 +107,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EkSayisi = s.DuyuruEkleris.Count,
                         Ekler = s.DuyuruEkleris,
                         s.AnaSayfadaGozuksun,
-                        s.AnaSayfaPopupAc,
-                        s.BasvuruPopupAc,
-                        s.TDOBasvuruPopupAc,
-                        s.TijBasvuruPopupAc,
-                        s.TIBasvuruPopupAc,
-                        s.YeterlikBasvuruPopupAc,
-                        s.MezuniyetBasvuruPopupAc,
-                        s.TalepYaparkenPopupAc,
+                        s.DuyuruPopuplars, 
                         s.IsEnUsteSabitle,
                         s.YayinSonTarih,
                         s.IsAktif
                     };
-            if (popupTipId == DuyuruPopupTipleri.AnaSayfa) q = q.Where(p => p.AnaSayfaPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.LisansustuBasvuru) q = q.Where(p => p.BasvuruPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.TalepYap) q = q.Where(p => p.TalepYaparkenPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.TijOneri) q = q.Where(p => p.TijBasvuruPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.TIBasvuru) q = q.Where(p => p.TIBasvuruPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.TDOBasvuru) q = q.Where(p => p.TDOBasvuruPopupAc);
-            else if (popupTipId == DuyuruPopupTipleri.YeterlikBasvuru) q = q.Where(p => p.YeterlikBasvuruPopupAc);
-            else q = q.Where(p => p.MezuniyetBasvuruPopupAc);
+            q = q.Where(p => p.DuyuruPopuplars.Any(a=>a.DuyuruPopupTipID==popupTipId.Value));
             fModel.DuyurularDtos = q.Select(s => new FrDuyurularDto
             {
                 EnstituAdi = s.EnstituAd,

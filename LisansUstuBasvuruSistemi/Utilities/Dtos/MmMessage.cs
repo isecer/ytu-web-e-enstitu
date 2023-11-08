@@ -20,6 +20,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public int SiraNo { get; set; }
         public List<string> Messages { get; set; }
         public List<MrMessage> MessagesDialog { get; set; }
+        public object Table { get; set; }
         public MmMessage()
         {
             MessageType = Msgtype.Nothing;

@@ -7,7 +7,7 @@
 @model  FmTalepler
 @{
     ViewBag.Title = "Index";
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml"; 
     var bilgiModel = (IndexPageInfoDto)ViewBag.bModel;
     var kYetki = RoleNames.SrTalepDuzelt.InRoleCurrent();
@@ -156,7 +156,7 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i> Salon Rezervasyon Taleplerim</h3>
                     <ul class="panel-controls">
-                        @foreach (var item in IndexModel.ListB)
+                        @foreach (var item in indexModel.ListB)
                         {
                             <li style="color:@item.Color">&nbsp&nbsp<i class="@item.ClassName" style="font-size:11pt;"></i>@item.Key:<b>@item.Toplam</b></li>
                         }
@@ -169,7 +169,7 @@
                             <tr>
                                 <th width="75">
                                 </th>
-                                <th class="sirala">Ad Soyad</th>
+                                <th>Ad Soyad</th>
                                 <th class="sirala" field="SalonAdi">Salon Bilgisi</th>
                                 <th class="sirala" field="Tarih" width="140">Talep Tarihi</th>
                                 <th class="sirala" field="DurumListeAdi" width="100">Durum</th>
@@ -278,7 +278,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="8" style="text-align: center;">
+                                    <td colspan="6" style="text-align: center;">
                                         [ Listelenen Kayıt Yok ]
                                     </td>
                                 </tr>

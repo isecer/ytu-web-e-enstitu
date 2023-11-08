@@ -189,7 +189,7 @@
 </div>
 
 
-@if ((mesajGroupId != null && mesajGroupId != ""))
+@if (!string.IsNullOrEmpty(mesajGroupId))
 {
     <script>
 
@@ -263,7 +263,7 @@ else if (isMesajGonder)
     {
            var popupSetting = {
             title:'Duyurular',
-            popupTipId:@DuyuruPopupTipleri.AnaSayfa,
+            popupTipId:@DuyuruPopupTipi.AnaSayfa,
             btnAdi: '',
             redirectUrl: '',
             callbackFnc: ''

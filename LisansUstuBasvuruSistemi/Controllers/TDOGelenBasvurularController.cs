@@ -318,8 +318,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
                                OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
                                YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
-                               DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
-                               DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
+                               DanismanAdSoyad = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad : (s.TDUnvanAdi + " " + s.TDAdSoyad),
+                               DanismanAnabilimDali = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDAnabilimDaliAdi : s.TDAnabilimDaliAdi,
                                EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
                                EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
                                EsDanismanKurumAdi = s.UniversiteAdi
@@ -331,7 +331,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 else
                 {
-                    var dataEsList = qes.Where(p => p.EYKYaGonderildi == true && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi
+                    var dataEsList = qes.Where(p => p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi
                                                                             && p.EYKYaGonderildiIslemTarihi <= bitisTarihi))
                          .OrderBy(o => o.EYKYaGonderildiIslemTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
                          {
@@ -342,8 +342,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                              OgrenciAdSoyad = s.TDOBasvuruDanisman.TDOBasvuru.Ad + " " + s.TDOBasvuruDanisman.TDOBasvuru.Soyad,
                              OgrenciAnabilimDali = s.TDOBasvuruDanisman.TDOBasvuru.Programlar.AnabilimDallari.AnabilimDaliAdi + " / " + s.TDOBasvuruDanisman.TDOBasvuru.Programlar.ProgramAdi,
                              YL_DR = s.TDOBasvuruDanisman.TDOBasvuru.OgrenimTipKod.IsDoktora() ? "DR" : "YL",
-                             DanismanAdSoyad = s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad,
-                             DanismanAnabilimDali = s.TDOBasvuruDanisman.TDAnabilimDaliAdi,
+                             DanismanAdSoyad = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDUnvanAdi + " " + s.TDOBasvuruDanisman.TDAdSoyad : (s.TDUnvanAdi + " " + s.TDAdSoyad),
+                             DanismanAnabilimDali = s.TDAdSoyad.IsNullOrWhiteSpace() ? s.TDOBasvuruDanisman.TDAnabilimDaliAdi : s.TDAnabilimDaliAdi,
                              EsDanismanOncekiAdSoyad = s.OncekiEsDanismanAdi,
                              EsDanismanAdSoyad = s.UnvanAdi + " " + s.AdSoyad,
                              EsDanismanKurumAdi = s.UniversiteAdi
@@ -377,7 +377,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                           .OrderBy(o => o.EYKDaOnaylandiOnayTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
                           {
                               SiraNo = inx + 1,
-                              s.TDODanismanTalepTipleri.TalepTipAdi, 
+                              s.TDODanismanTalepTipleri.TalepTipAdi,
                               EYKTarihi = s.EYKDaOnaylandiOnayTarihi,
                               s.TDOBasvuru.OgrenciNo,
                               OgrenciAdSoyad = s.TDOBasvuru.Ad + " " + s.TDOBasvuru.Soyad,
@@ -397,7 +397,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     else
                     {
                         var qData = _entities.TDOBasvuruDanismen.Where(p => p.TDOBasvuru.EnstituKod == enstituKod
-                       && p.EYKYaGonderildi == true
+                       && p.EYKYaGonderildi == true && !p.EYKDaOnaylandi.HasValue
                        && (p.EYKYaGonderildiIslemTarihi >= baslangicTarihi && p.EYKYaGonderildiIslemTarihi <= bitisTarihi))
                          .OrderBy(o => o.EYKYaGonderildiIslemTarihi).ThenBy(t => t.IslemTarihi).ToList().Select((s, inx) => new
                          {

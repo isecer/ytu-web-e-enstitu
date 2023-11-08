@@ -122,55 +122,19 @@
                                                                             <span class="label label-@(item.AnaSayfadaGozuksun ? "success" : "danger")">@item.AnaSayfadaGozuksun.ToEvetHayir()</span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Ana Sayfada Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.AnaSayfaPopupAc ? "success" : "danger")">@item.AnaSayfaPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Başvuru Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.BasvuruPopupAc ? "success" : "danger")">@item.BasvuruPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
+                                                                    @if (item.SeciliDuyuruPopupTips.Any())
+                                                                    {
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-3 col-xs-4 control-label">Duyurunun Popup olarak açılacağı sayfalar</label>
+                                                                            <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
+                                                                                @foreach (var itemp in item.SeciliDuyuruPopupTips)
+                                                                                {
+                                                                                    <span class="label label-info">@itemp.PopupTipAdi</span>
 
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Tez Danışmanı Önerisi Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.TDOBasvuruPopupAc ? "success" : "danger")">@item.TDOBasvuruPopupAc.ToEvetHayir()</span>
+                                                                                }
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Tez İzleme Jüri Önerisi Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.TijBasvuruPopupAc ? "success" : "danger")">@item.TijBasvuruPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Tez İzleme Başvuru Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.TIBasvuruPopupAc ? "success" : "danger")">@item.TIBasvuruPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Yeterlik Başvurusu Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.YeterlikBasvuruPopupAc ? "success" : "danger")">@item.YeterlikBasvuruPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Mezuniyet Başvurusu Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.MezuniyetBasvuruPopupAc ? "success" : "danger")">@item.MezuniyetBasvuruPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-4 control-label">Talep Yaparken Popup Aç</label>
-                                                                        <div class="col-md-9 col-xs-8" style="text-align: left; max-height: 200px; overflow: auto;">
-                                                                            <span class="label label-@(item.TalepYaparkenPopupAc ? "success" : "danger")">@item.TalepYaparkenPopupAc.ToEvetHayir()</span>
-                                                                        </div>
-                                                                    </div>
+                                                                    }
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-4 control-label">Başlık / Tarih</label>
                                                                         <div class="col-md-9 col-xs-8">

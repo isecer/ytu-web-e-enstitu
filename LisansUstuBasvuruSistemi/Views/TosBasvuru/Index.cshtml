@@ -69,17 +69,10 @@
                             <tr>
                                 <td>Not</td>
                                 <td>:</td>
-                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez Öneri Savunma başvurunuz bulunmaktadır. Yeni rapor oluşturmak için aşağıda bulunan Yeni Rapor Oluştur isimli mavi butona tıklayınız </td>
+                                <td>Okuduğunuz '@bilgiModel.ProgramAdi' programı için Tez Öneri Savunma başvurunuz bulunmaktadır.</td>
                             </tr>
                         }
-                        else
-                        {
-                            <tr>
-                                <td>Başvuru Durumu</td>
-                                <td>:</td>
-                                <td>Sistem Başvuru alımına açıktır. Başvuru yapmak için aşağıda bulunan Yeni Tez Önerisi Yap isimli mavi butona tıklayabilirsiniz.</td>
-                            </tr> 
-                        }
+                 
 
                     }
                     else
@@ -175,7 +168,7 @@
                                                 </table>
                                             </td>
                                             <td id="tosDonemContent_@item.ToBasvuruID">
-                                                @item.AktifDonemAdi<br />@(item.AktifSavunmaNo.HasValue?item.AktifSavunmaNo+". Savunma":"----")
+                                                @item.AktifDonemAdi<br />@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
                                             </td>
                                             <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
@@ -234,13 +227,14 @@ else if (Model.UniqueId.HasValue || Model.RowCount > 0)
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-    function YeniBasvuruDuyuruKontrol() {
-           var popupSetting = {
-            title:'||',
-            popupTipId:@DuyuruPopupTipleri.TIBasvuru,
-            btnAdi: 'Başvuru Yap',
-            redirectUrl: '@Url.Action("BasvuruYap",new { Model.KullaniciID})',
-            callbackFnc: ''
+   function YeniBasvuruDuyuruKontrol(toUniqueId) {
+        var popupSetting = {
+            title: '||',
+            popupTipId:@DuyuruPopupTipi.TezOneriSavunma,
+            btnAdi: 'Yeni Tez Öneri Savunma Başvurusu Yap',
+            redirectUrl: null,
+            fncparameter: toUniqueId,
+            callbackFnc: GetToSavunmaFormu
         }
         ShowDuyuru(popupSetting);
     }

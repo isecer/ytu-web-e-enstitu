@@ -487,7 +487,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 tD.AdSoyad = studentInfo.OgrenciInfo.DANISMAN_AD_SOYAD1;
                                 tD.UnvanAdi = studentInfo.OgrenciInfo.DANISMAN_UNVAN1;
+
                             }
+
+                            tD.UniversiteID = Management.UniversiteYtuKod;
                             tD.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tD.UnvanAdi);
 
 
@@ -502,6 +505,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 tik1.AdSoyad = obsTik1.TEZ_IZLEME_JURI_ADSOY;
                                 tik1.UnvanAdi = obsTik1.TEZ_IZLEME_JURI_UNVAN;
+                                tik1.UniversiteID = obsTik1.TEZ_IZLEME_JURI_UNIVER.ToLower().Contains("yıldız teknik")
+                                    ? Management.UniversiteYtuKod
+                                    : (int?)null;
+                                tik1.EMail = obsTik1.TEZ_IZLEME_JURI_EPOSTA.Trim();
+                                tik1.AnabilimdaliProgramAdi = obsTik1.TEZ_IZLEME_JURI_ANABLMDAL;
+
                             }
                             tik1.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tik1.UnvanAdi);
 
@@ -515,6 +524,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             {
                                 tik2.AdSoyad = obsTik2.TEZ_IZLEME_JURI_ADSOY;
                                 tik2.UnvanAdi = obsTik2.TEZ_IZLEME_JURI_UNVAN;
+                                tik2.UniversiteID = obsTik2.TEZ_IZLEME_JURI_UNIVER.ToLower().Contains("yıldız teknik")
+                                    ? Management.UniversiteYtuKod
+                                    : (int?)null;
+                                tik2.EMail = obsTik2.TEZ_IZLEME_JURI_EPOSTA.Trim();
+                                tik2.AnabilimdaliProgramAdi = obsTik2.TEZ_IZLEME_JURI_ANABLMDAL;
+
 
                             }
                             tik2.SlistUnvanAdi = new SelectList(cmbUnvanList, "Value", "Caption", tik2.UnvanAdi);
@@ -572,12 +587,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                         }
-                        
+
                         model.SelectedTabID = 1;
-                        var donemSelectedValue = (tiBasvuruAraRaporId.HasValue
+                        var donemSelectedValue = (tiBasvuruAraRapor != null
                             ? (tiBasvuruAraRapor.DonemBaslangicYil + "" + tiBasvuruAraRapor.DonemID)
                             : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
-                        model.SListDonemSecim = 
+                        model.SListDonemSecim =
                             new SelectList(TezIzlemeBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
                         model.SListUnvanAdi = new SelectList(cmbUnvanList);
                         model.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption");
@@ -1042,11 +1057,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuruAraRapor.BasvuruSonDonemSecilecekDersKodlari = TiAyar.SonDonemKayitOlunmasiGerekenDersKodlari.GetAyarTi(tiBasvuru.EnstituKod, "");
                                 tiBasvuru.TezDanismanID = td.KullaniciID;
                                 tiBasvuruAraRapor.TezDanismanID = td.KullaniciID;
-                                tiBasvuruAraRapor.RaporTarihi = DateTime.Now; 
+                                tiBasvuruAraRapor.RaporTarihi = DateTime.Now;
                                 tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumu.ToplantiBilgileriGirilmedi;
                                 tiBasvuruAraRapor = _entities.TIBasvuruAraRapors.Add(tiBasvuruAraRapor);
                             }
-                           
+
 
                             _entities.SaveChanges();
                             LogIslemleri.LogEkle("TIBasvuruAraRapor", isYeniJo ? IslemTipi.Insert : IslemTipi.Update, tiBasvuruAraRapor.ToJson());
@@ -1113,8 +1128,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
 
-        public ActionResult RezervasyonAl(int tiBasvuruAraRaporId )
-        { 
+        public ActionResult RezervasyonAl(int tiBasvuruAraRaporId)
+        {
             var toplantiYetki = RoleNames.TiToplantiTalebiYap.InRoleCurrent();
             var tiAraRapor = _entities.TIBasvuruAraRapors.First(p => p.TIBasvuruAraRaporID == tiBasvuruAraRaporId);
             var model = new KmSRTalep();
@@ -1126,7 +1141,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     var srTalep = tiAraRapor.SRTalepleris.First();
                     var tarih = model.IsSalonSecilsin ? srTalep.Tarih : (srTalep.Tarih.AddHours(srTalep.BasSaat.Hours).AddMinutes(srTalep.BasSaat.Minutes));
-                     
+
                     model.IsSalonSecilsin = srTalep.SRSalonID.HasValue;
                     model.IsOnline = srTalep.IsOnline;
                     model.SRTalepID = srTalep.SRTalepID;
@@ -1161,7 +1176,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
             }
-             
+
             return View(model);
         }
         [Authorize]

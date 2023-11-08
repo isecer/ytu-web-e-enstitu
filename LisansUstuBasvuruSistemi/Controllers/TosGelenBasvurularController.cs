@@ -50,12 +50,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EnstituKod = en.EnstituKod,
                         EnstituAdi = en.EnstituAd,
                         OgrenimTipAdi = o.OgrenimTipAdi,
+                        AnabilimDaliID = ab.AnabilimDaliID,
                         AnabilimdaliAdi = ab.AnabilimDaliAdi,
                         ProgramAdi = pr.ProgramAdi,
                         KullaniciID = s.KullaniciID,
                         AdSoyad = s.Kullanicilar.Ad + " " + s.Kullanicilar.Soyad,
-                        OgrenciNo = s.OgrenciNo,
-                        Kullanicilar = s.Kullanicilar,
+                        OgrenciNo = s.OgrenciNo, 
+                        TcKimlikNo = s.Kullanicilar.TcKimlikNo,
                         ResimAdi = s.Kullanicilar.ResimAdi,
                         OgrenimTipKod = s.OgrenimTipKod,
                         KayitOgretimYiliBaslangic = s.KayitOgretimYiliBaslangic,
@@ -87,25 +88,28 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (model.SavunmaNo.HasValue) q = q.Where(p => p.AktifSavunmaNo == model.SavunmaNo);
             if (model.AnabilimDaliID.HasValue) q = q.Where(p => p.AnabilimDaliID == model.AnabilimDaliID);
             if (model.AktifDurumID.HasValue)
-            {
-                q = q.Where(p => p.DurumModel.IsTezOnerisiVar);
-                if (model.AktifDurumID == 1000)
+            { 
+                if (model.AktifDurumID == 999)
                 {
-                    q = q.Where(p => !p.IsSinavBilgisiGirildi);
+                    q = q.Where(p => !p.DurumModel.IsTezOnerisiVar);
+                }
+                else if (model.AktifDurumID == 1000)
+                {
+                    q = q.Where(p => p.DurumModel.IsTezOnerisiVar && !p.IsSinavBilgisiGirildi);
                 }
                 else if (model.AktifDurumID == 1001)
                 {
-                    q = q.Where(p => p.IsSinavBilgisiGirildi && !p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
+                    q = q.Where(p => p.DurumModel.IsTezOnerisiVar && p.IsSinavBilgisiGirildi && !p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
                 }
                 else if (model.AktifDurumID == 1002)
                 {
-                    q = q.Where(p => p.IsSinavBilgisiGirildi && p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
+                    q = q.Where(p => p.DurumModel.IsTezOnerisiVar && p.IsSinavBilgisiGirildi && p.IsDegerlendirmeSuvecinde && !p.DurumID.HasValue);
                 }
                 else if (model.AktifDurumID == 1003)
                 {
-                    q = q.Where(p => p.DurumID.HasValue);
+                    q = q.Where(p => p.DurumModel.IsTezOnerisiVar && p.DurumID.HasValue);
                 }
-                else q = q.Where(p => p.DurumID == model.AktifDurumID);
+                else q = q.Where(p => p.DurumModel.IsTezOnerisiVar && p.DurumID == model.AktifDurumID);
             }
             if (!model.AdSoyad.IsNullOrWhiteSpace())
                 q = q.Where(p =>

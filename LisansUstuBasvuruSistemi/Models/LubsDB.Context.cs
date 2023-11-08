@@ -79,6 +79,8 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<Donemler> Donemlers { get; set; }
         public virtual DbSet<DuyuruEkleri> DuyuruEkleris { get; set; }
         public virtual DbSet<Duyurular> Duyurulars { get; set; }
+        public virtual DbSet<DuyuruPopuplar> DuyuruPopuplars { get; set; }
+        public virtual DbSet<DuyuruPopupTipleri> DuyuruPopupTipleris { get; set; }
         public virtual DbSet<Enstituler> Enstitulers { get; set; }
         public virtual DbSet<GonderilenMailEkleri> GonderilenMailEkleris { get; set; }
         public virtual DbSet<GonderilenMailKullanicilar> GonderilenMailKullanicilars { get; set; }

@@ -1339,7 +1339,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@OgrenciNo"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = tdoBasvuru.OgrenciNo });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanUnvanAdi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUnvanAdi", Value = tdoBasvuruDanisman.TDUnvanAdi });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanUnvanAdi", Value = danisman.Unvanlar.UnvanAdi });
                         if (item.SablonParametreleri.Any(a => a == "@DanismanAdSoyad"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "DanismanAdSoyad", Value = tdoBasvuruDanisman.TDAdSoyad });
 

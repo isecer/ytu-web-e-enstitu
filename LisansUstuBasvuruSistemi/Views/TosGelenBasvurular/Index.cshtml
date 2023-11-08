@@ -8,10 +8,7 @@
 @model  FmTosBasvuru
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent();
-    var degerlendirmeYetki = RoleNames.TosDegerlendirmeYap.InRoleCurrent();
-    var tiTezDegerlendirmeDuzeltme = RoleNames.TosDegerlendirmeDuzeltme.InRoleCurrent();
-    var toplantiTalepYetki = RoleNames.TosToplantiTalebiYap.InRoleCurrent();
+    var kyetki = RoleNames.TosGelenBasvuruKayit.InRoleCurrent(); 
     var filteredOgrenciIds = (List<int>)ViewBag.filteredOgrenciIds;
     var filteredDanismanIds = (List<int>)ViewBag.filteredOgrenciIds;
 }
@@ -147,7 +144,7 @@
 
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Başvurularım</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Gelen Başvurular</h3>
                     <ul class="panel-controls"></ul>
                 </div>
                 <div class="panel-body">
@@ -193,8 +190,8 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td id="tosDonemContent_@item.ToBasvuruID">
-                                            @item.AktifDonemAdi<br />@(item.AktifSavunmaNo.HasValue?item.AktifSavunmaNo+". Savunma":"----")
+                                        <td id="tosDonemContent_@item.ToBasvuruID"> 
+                                            @item.AktifDonemAdi<br/>@(item.AktifSavunmaNo > 0 ? item.AktifSavunmaNo + ". Savunma" : "----")
                                         </td>
                                         <td id="tosDurumContent_@item.ToBasvuruID">@item.DurumModel.TosBasvuruDurumView()</td>
 
@@ -234,7 +231,17 @@
         var unTogled = ($('.' + cls).css("display") == "none");
         toggleByClass(rwID, cls, unTogled);
     }
-
+    function YeniBasvuruDuyuruKontrol(toUniqueId) { 
+        var popupSetting = {
+            title: '||',
+            popupTipId:@DuyuruPopupTipi.TezOneriSavunma,
+            btnAdi: 'Yeni Tez Öneri Savunma Başvurusu Yap',
+            redirectUrl: null,
+            fncparameter: toUniqueId,
+            callbackFnc: GetToSavunmaFormu
+        }
+        ShowDuyuru(popupSetting);
+    }
 
 
     function ShowDetail(toUniqueId) {
@@ -304,15 +311,15 @@
                                     type: (result.IsSuccess ? "success" : "error"),
                                     confirmButtonText: 'tamam',
                                     padding: '2em'
-                                }); 
+                                });
                             },
                             error: function (err) {
                                 alert(err.responseText);
                             }
-                        }); 
+                        });
                 });
             }
-        }); 
+        });
     }
 </script>
 

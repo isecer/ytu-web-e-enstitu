@@ -118,14 +118,17 @@ namespace LisansUstuBasvuruSistemi.Business
                 var sonBasvuru = tosbasvurus.OrderByDescending(o => o.ToBasvuruSavunmaID).FirstOrDefault();
                 if (!tosbasvurus.Any(a => a.savunmaSinaviVar))
                 {
-                    var tezOneriIlkSavunmaHakkiGunKriter =
-                        TiAyar.TezOneriIlkSavunmaHakkiGunKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    var tezOneriIkinciSavunmaHakkiGunKriter =
-                        TiAyar.TezOneriIkinciSavunmaHakkiGunKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                    var toplamGecenGun = toBasvuru.YeterlikSozluSinavTarihi.ToToplamGun(kontrolTarih);
+                    var tezOneriIlkSavunmaHakkiAyKriter =
+                        TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    var tezOneriIkinciSavunmaHakkiAyKriter =
+                        TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    var tezOneriToplamSavunmaHakkiAyKriter =
+                        tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
+                    var ilkOneriBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
+                    var ikinciOneriBitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
 
-                    if (toplamGecenGun <= tezOneriIlkSavunmaHakkiGunKriter) return 1;
-                    if (toplamGecenGun <= (tezOneriIlkSavunmaHakkiGunKriter + tezOneriIkinciSavunmaHakkiGunKriter)) return 2;
+                    if (toBasvuru.IsBasvuruKriterMuaf || kontrolTarih.Date <= ilkOneriBitisTarihi.Date) return 1;
+                    if (kontrolTarih.Date <= ikinciOneriBitisTarihi) return 2;
                     return 3;
                 }
                 if (sonBasvuru?.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi) return 1;
@@ -134,50 +137,54 @@ namespace LisansUstuBasvuruSistemi.Business
 
             }
         }
-        public static MmMessage TosKalanHakSavunmaBaslangicTarihKriter(Guid toUniqueId, DateTime kontrolTarih)
+        public static MmMessage TosKalanHakSavunmaBaslangicTarihKriter(Guid toUniqueId, DateTime? kontrolTarih = null)
         {
             var msg = new MmMessage();
+
             using (var entities = new LisansustuBasvuruSistemiEntities())
             {
                 var toBasvuru = entities.ToBasvurus.First(p => p.UniqueID == toUniqueId);
+
                 var toBasvuruSavunmas = toBasvuru.ToBasvuruSavunmas.Where(p => p.ToBasvuruSavunmaDurumID.HasValue).OrderByDescending(o => o.ToBasvuruSavunmaID).ToList();
 
-                var tezOneriIlkSavunmaHakkiGunKriter =
-                    TiAyar.TezOneriIlkSavunmaHakkiGunKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                var tezOneriIkinciSavunmaHakkiGunKriter =
-                    TiAyar.TezOneriIkinciSavunmaHakkiGunKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
-                var tezOneriToplamSavunmaHakkiGunKriter =
-                    tezOneriIlkSavunmaHakkiGunKriter + tezOneriIkinciSavunmaHakkiGunKriter;
+                var tezOneriIlkSavunmaHakkiAyKriter =
+                    TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriIkinciSavunmaHakkiAyKriter =
+                    TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                var tezOneriToplamSavunmaHakkiAyKriter =
+                    tezOneriIlkSavunmaHakkiAyKriter + tezOneriIkinciSavunmaHakkiAyKriter;
                 if (!toBasvuruSavunmas.Any())
                 {
-                    var toplamGecenGun = toBasvuru.YeterlikSozluSinavTarihi.ToToplamGun(kontrolTarih);
-                    var strDate = toBasvuru.YeterlikSozluSinavTarihi.AddDays(tezOneriToplamSavunmaHakkiGunKriter)
-                        .ToDateString();
-                    if (toplamGecenGun > tezOneriToplamSavunmaHakkiGunKriter)
-                    {
+                    var ilkBitisTarihi = toBasvuru.IlkOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriIlkSavunmaHakkiAyKriter);
+                    var ikincibitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
 
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = toplamGecenGun <= tezOneriToplamSavunmaHakkiGunKriter,
-                            Message = $"Tez öneri savunması, yeterlik başarı {toBasvuru.YeterlikSozluSinavTarihi.ToDateString()} tarihi itibari ile {tezOneriToplamSavunmaHakkiGunKriter} gün içinde ve {strDate} tarihine kadar tez öneri savunma sınavı yapılması gerekir."
-                        });
+
+                    var strDateYeterlikSinav = toBasvuru.YeterlikSozluSinavTarihi.ToDateString();
+                    var strDateIlk = ilkBitisTarihi.ToDateString();
+                    var strDateIkinci = ikincibitisTarihi.ToDateString();
+
+                    var ekMsg = "";
+                    kontrolTarih = DateTime.Now.Date;
+                    if (toBasvuru.IsBasvuruKriterMuaf)
+                    {
+                        ekMsg = "<br/> Not: Öğrenci bu kriterlerden muaf tutulmaktadır.";
                     }
-                    else
+                    else if (kontrolTarih > ikincibitisTarihi)
                     {
-                        var strDateYeterlikSinav = toBasvuru.YeterlikSozluSinavTarihi.ToDateString();
-                        var strDateIlk = toBasvuru.YeterlikSozluSinavTarihi.AddDays(tezOneriIlkSavunmaHakkiGunKriter).ToDateString();
-                        var strDateIkinci = toBasvuru.YeterlikSozluSinavTarihi.AddDays(tezOneriToplamSavunmaHakkiGunKriter).ToDateString();
-
-
-
-                        msg.MessagesDialog.Add(new MrMessage
-                        {
-                            IsSucces = true,
-                            Message = $"1. Savunma hakkı kullanımı için {strDateYeterlikSinav} / {strDateIlk} tarihleri arasında savunma sınavı yapılması gerekir<br/>" +
-                                      $"2. Savunma hakkı kullanımı için {strDateIlk} / {strDateIkinci} tarihleri arasında savunma sınavı yapılması gerekir"
-                        });
+                        ekMsg = "<br/>Süreniz dolduğundan başvuru yapamazsınız.";
                     }
 
+                    msg.MessagesDialog.Add(new MrMessage
+                    {
+                        IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= ikincibitisTarihi,
+                        Message = $"1. Savunma hakkı kullanımı için {strDateYeterlikSinav} / {strDateIlk} tarihleri arasında savunma sınavı yapılması gerekir.<br/>" +
+                                  $"2. Savunma hakkı kullanımı için {strDateIlk} / {strDateIkinci} tarihleri arasında savunma sınavı yapılması gerekir." + ekMsg
+                    });
+                    toBasvuru.IlkOneriBitisTarihi = ilkBitisTarihi;
+                    toBasvuru.IkinciOneriBitisTarihi = ikincibitisTarihi;
+                    toBasvuru.RetDuzeltmeBitisTarihi = null;
+                    msg.Table = toBasvuru;
+                    //entities.SaveChanges();
                     return msg;
                 }
 
@@ -186,44 +193,65 @@ namespace LisansUstuBasvuruSistemi.Business
                     a.ToBasvuruSavunmaID > sonBasvuru.ToBasvuruSavunmaID && a.SRTalepleris.Any());
                 if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
                 {
-                    var tezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter =
-                        TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    kontrolTarih = (kontrolTarih ?? sonBasvuru.SRTalepleris.First().Tarih).Date;
+                    var tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter =
+                        TiAyar.TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
                     var duzeltmeAlinanSinav = sonBasvuru.SRTalepleris.First();
 
-                    var toplamGecenGun = duzeltmeAlinanSinav.Tarih.ToToplamGun(kontrolTarih);
-                    var strDate = duzeltmeAlinanSinav.Tarih.AddDays(tezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter)
-                        .ToDateString();
+                    var duzeltmeBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? duzeltmeAlinanSinav.Tarih.ToGetBitisTarihi(tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter)).Date;
+                    var strDate = duzeltmeBitisTarihi.ToDateString();
+                    var ekMsg = "";
+                    if (toBasvuru.IsBasvuruKriterMuaf)
+                    {
+                        ekMsg = "<br/> Not: Öğrenci bu kriterlerden muaf tutulmaktadır.";
+                    }
                     msg.MessagesDialog.Add(new MrMessage
                     {
-                        IsSucces = toplamGecenGun <= tezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter,
+                        IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= duzeltmeBitisTarihi,
                         Message = isYeniSinavAlindi ?
-                                $"{duzeltmeAlinanSinav.Tarih.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter} günlük bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma sınavı oluşturuldu." :
-                                $"{duzeltmeAlinanSinav.Tarih.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter} günlük bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma sınavı yapılması gerekmektedir."
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma sınavı oluşturuldu." :
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma sınavı yapılması gerekmektedir." + ekMsg
                     });
+                    toBasvuru.RetDuzeltmeBitisTarihi = duzeltmeBitisTarihi;
+                    toBasvuru.IlkOneriBitisTarihi = null;
+                    toBasvuru.IkinciOneriBitisTarihi = null;
+                    msg.Table = toBasvuru;
+                    //entities.SaveChanges();
                     return msg;
                 }
 
                 if (sonBasvuru.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi)
                 {
                     var sonBasvuruSinav = sonBasvuru.SRTalepleris.First();
-                    if (sonBasvuru.SavunmaNo >= 2)
+                    kontrolTarih = (kontrolTarih ?? sonBasvuruSinav.Tarih).Date;
+
+                    var maxBasarisizSavunmaNo = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(toBasvuru.EnstituKod).ToInt(0);
+                    if (sonBasvuru.SavunmaNo >= maxBasarisizSavunmaNo && !toBasvuru.IsBasvuruKriterMuaf)
                     {
                         msg.MessagesDialog.Add(new MrMessage
                         {
-                            Message = $"{sonBasvuruSinav.Tarih.ToDateString()} tarihinde yapılan 2. savunma sınavı başarısızlıkla sonuçlandığından yeni bir tez öneri savunma sınavı hakkı kalmamıştır."
+                            Message = $"{sonBasvuruSinav.Tarih.Date.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma sınavı başarısızlıkla sonuçlandığından yeni bir tez öneri savunma sınavı hakkı kalmamıştır."
                         });
                     }
                     else
                     {
-                        var toplamGecenGun = sonBasvuruSinav.Tarih.ToToplamGun(kontrolTarih);
-                        var strDate = sonBasvuruSinav.Tarih.AddDays(tezOneriIkinciSavunmaHakkiGunKriter)
-                            .ToDateString();
-
+                        var retBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? sonBasvuruSinav.Tarih.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter)).Date;
+                        var strDate = retBitisTarihi.ToDateString();
+                        var ekMsg = "";
+                        if (toBasvuru.IsBasvuruKriterMuaf)
+                        {
+                            ekMsg = "<br/> Not: Öğrenci bu kriterlerden muaf tutulmaktadır.";
+                        }
                         msg.MessagesDialog.Add(new MrMessage
                         {
-                            IsSucces = toplamGecenGun <= tezOneriIkinciSavunmaHakkiGunKriter,
-                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.ToDateString()} tarihli tez öneri savunma sınavı başarısızlıkla sonuçlandığından {tezOneriIkinciSavunmaHakkiGunKriter} gün içinde {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi "+(isYeniSinavAlindi?"oluşturuldu.":"oluşturulmadı.")
+                            IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= retBitisTarihi,
+                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.Date.ToDateString()} tarihli tez öneri savunma sınavı başarısızlıkla sonuçlandığından {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi " + (isYeniSinavAlindi ? "oluşturuldu." : "oluşturulmadı.") + ekMsg
                         });
+                        toBasvuru.RetDuzeltmeBitisTarihi = retBitisTarihi;
+                        toBasvuru.IlkOneriBitisTarihi = null;
+                        toBasvuru.IkinciOneriBitisTarihi = null;
+                        msg.Table = toBasvuru;
+                        //entities.SaveChanges();
                     }
                     return msg;
 
@@ -233,12 +261,15 @@ namespace LisansUstuBasvuruSistemi.Business
                     var sonBasvuruSinav = sonBasvuru.SRTalepleris.First();
 
                     if (!toBasvuru.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaID > sonBasvuru.ToBasvuruSavunmaID))
-
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
                             Message = $"{sonBasvuruSinav.Tarih.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma sınavı başarılı bir şekilde sonuçlandığı için istendiği zaman tekrar tez öneri savunma sınavı talebi yapılabilir."
                         });
+                    toBasvuru.RetDuzeltmeBitisTarihi = null;
+                    toBasvuru.IlkOneriBitisTarihi = null;
+                    toBasvuru.IkinciOneriBitisTarihi = null;
+                    entities.SaveChanges();
                     return msg;
 
                 }
@@ -246,6 +277,7 @@ namespace LisansUstuBasvuruSistemi.Business
             }
 
         }
+
         public static MmMessage GetTosSilKontrol(Guid toBasvuruSavunmaUniqueId)
         {
             var msg = new MmMessage();
@@ -309,6 +341,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 model.ToBasvuruID = basvuru.ToBasvuruID;
                 model.UniqueID = basvuru.UniqueID;
+                model.IsBasvuruKriterMuaf = basvuru.IsBasvuruKriterMuaf;
                 model.YeterlikSozluSinavTarihi = basvuru.YeterlikSozluSinavTarihi;
                 model.TezDanismanID = basvuru.TezDanismanID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
@@ -332,7 +365,9 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.EnstituAdi = enstitu.EnstituAd;
                 model.KullaniciID = basvuru.KullaniciID;
                 model.BasvuruTarihi = basvuru.BasvuruTarihi;
-
+                model.IlkOneriBitisTarihi = basvuru.IlkOneriBitisTarihi;
+                model.IkinciOneriBitisTarihi = basvuru.IkinciOneriBitisTarihi;
+                model.RetDuzeltmeBitisTarihi = basvuru.RetDuzeltmeBitisTarihi;
                 model.IslemTarihi = basvuru.IslemTarihi;
                 model.IslemYapanID = basvuru.IslemYapanID;
                 model.IslemYapanIP = basvuru.IslemYapanIP;
@@ -348,9 +383,6 @@ namespace LisansUstuBasvuruSistemi.Business
                         SavunmaBasvuruTarihi = s.SavunmaBasvuruTarihi,
                         SavunmaNo = s.SavunmaNo,
                         IsTezDiliTr = s.IsTezDiliTr,
-                        TezBaslikTr = s.TezBaslikTr,
-                        TezBaslikEn = s.TezBaslikEn,
-                        IsTezBasligiDegisti = s.IsTezBasligiDegisti,
                         YeniTezBaslikTr = s.YeniTezBaslikTr,
                         YeniTezBaslikEn = s.YeniTezBaslikEn,
                         CalismaRaporDosyaAdi = s.CalismaRaporDosyaAdi,
@@ -410,23 +442,35 @@ namespace LisansUstuBasvuruSistemi.Business
                     }).OrderByDescending(o => o.SavunmaBasvuruTarihi).ToList();
 
                 model.ToplamBasarisizTezOneriSavunmaHak = TiAyar.TezOneriToplamBasarisizTezOneriSavunmaHak.GetAyarTi(basvuru.EnstituKod).ToInt();
-                model.IlkSavunmaHakkiGunKriter = TiAyar.TezOneriIlkSavunmaHakkiGunKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
-                model.IkinciSavunmaHakkiGunKriter = TiAyar.TezOneriIkinciSavunmaHakkiGunKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
+                model.IlkSavunmaHakkiAyKriter = TiAyar.TezOneriIlkSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
+                model.IkinciSavunmaHakkiAyKriter = TiAyar.TezOneriIkinciSavunmaHakkiAyKriter.GetAyarTi(basvuru.EnstituKod).ToInt();
+
+
+
 
 
                 var sonTos = model.ToBasvuruSavunmaList.FirstOrDefault();
+
+
+
+
                 model.DurumHtmlString = (
                                             sonTos != null ? sonTos.DurumModel : new TosDurumDto()
                                         ).TosBasvuruDurumView().ToString();
                 model.DonemHtmlString = (sonTos ?? new ToBasvuruSavunmaDto()).TosBasvuruDonemView().ToString();
 
 
-                var basvuruKiterKontrol = TosKalanHakSavunmaBaslangicTarihKriter(basvuru.UniqueID, DateTime.Now);
+                var basvuruKiterKontrol = TosKalanHakSavunmaBaslangicTarihKriter(basvuru.UniqueID);
+
 
                 if (basvuruKiterKontrol.MessagesDialog.Any())
                 {
                     model.SavunmaBasvurusuYapmaSureBilgisiInfo = string.Join("<br/>", basvuruKiterKontrol.MessagesDialog.Select(s => s.Message));
                 }
+                var basvuru2 = db.ToBasvurus.First(p => p.UniqueID == toUniqueId);
+                model.IlkOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IlkOneriBitisTarihi;
+                model.IkinciOneriBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.IkinciOneriBitisTarihi;
+                model.RetDuzeltmeBitisTarihi = (basvuruKiterKontrol.Table as ToBasvuru)?.RetDuzeltmeBitisTarihi;
             }
             return model;
 
@@ -437,7 +481,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var mmMessage = new MmMessage();
             try
-            { 
+            {
                 using (var db = new LisansustuBasvuruSistemiEntities())
                 {
 
@@ -561,9 +605,9 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = prgL.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = toBasvuruSavunma.TezBaslikTr });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = toBasvuruSavunma.YeniTezBaslikTr });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikEn"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikEn", Value = toBasvuruSavunma.TezBaslikEn });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikEn", Value = toBasvuruSavunma.YeniTezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@YokDrBursiyeriBilgi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YokDrBursiyeriBilgi", Value = toBasvuruSavunma.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + toBasvuruSavunma.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
@@ -691,7 +735,7 @@ namespace LisansUstuBasvuruSistemi.Business
         {
             var mmMessage = new MmMessage();
             try
-            {  
+            {
                 using (var db = new LisansustuBasvuruSistemiEntities())
                 {
                     var toBasvuruSavunma = db.ToBasvuruSavunmas.First(p => p.UniqueID == toBasvuruSavunmaId);
@@ -800,9 +844,9 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@ProgramAdi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = prgL.ProgramAdi });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikTr"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = toBasvuruSavunma.TezBaslikTr });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikTr", Value = toBasvuruSavunma.YeniTezBaslikTr });
                         if (item.SablonParametreleri.Any(a => a == "@TezBaslikEn"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikEn", Value = toBasvuruSavunma.TezBaslikEn });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "TezBaslikEn", Value = toBasvuruSavunma.YeniTezBaslikEn });
                         if (item.SablonParametreleri.Any(a => a == "@YokDrBursiyeriBilgi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "YokDrBursiyeriBilgi", Value = toBasvuruSavunma.IsYokDrBursiyeriVar ? "Var (Öncelikli Alan: " + toBasvuruSavunma.YokDrOncelikliAlan + ")" : "Yok" });
                         if (item.SablonParametreleri.Any(a => a == "@DonemAdi"))
@@ -911,6 +955,7 @@ namespace LisansUstuBasvuruSistemi.Business
             if (bosSecimVar) dct.Add(new CmbIntDto { Value = null, Caption = "" });
 
 
+            dct.Add(new CmbIntDto { Value = 999, Caption = "Tez Önerisi Yapmayanlar" });
             dct.Add(new CmbIntDto { Value = 1000, Caption = "Sınav Bilgisi Girilmeyenler" });
             dct.Add(new CmbIntDto { Value = 1001, Caption = "Sınav Bilgisi Girilenler" });
             dct.Add(new CmbIntDto { Value = 1002, Caption = "Değerlendirme Sürecinde Olanlar" });

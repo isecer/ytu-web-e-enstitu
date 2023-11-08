@@ -475,6 +475,12 @@
     <Compile Include="Models\Duyurular.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DuyuruPopuplar.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DuyuruPopupTipleri.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Enstituler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -1950,6 +1956,7 @@
     <Content Include="Content\css\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\css\fonts\GpFFamily.css" />
     <Content Include="Content\css\fullcalendar\fullcalendar.css" />
+    <Content Include="Content\css\howerBtnStyle.css" />
     <Content Include="Content\css\introjs\introjs.min.css" />
     <Content Include="Content\css\ion\ion.rangeSlider.css" />
     <Content Include="Content\css\ion\ion.rangeSlider.skinFlat.css" />
@@ -5553,8 +5560,6 @@
     <Content Include="Views\Yeterlik\KomiteDegisiklikView.cshtml" />
     <Content Include="Views\MezuniyetSureci\KriterMuafOgrenciler.cshtml" />
     <Content Include="Views\TIBasvuru\DegerlendirmeLinkView.cshtml" />
-    <Content Include="Views\TikDegisiklik\Index.cshtml" />
-    <Content Include="Views\TikDegisiklikGb\Index.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\Index.cshtml" />
     <Content Include="Views\Ajax\GetDetailTijBasvuru.cshtml" />
     <Content Include="Views\TiJuriOnerileriGb\BasvuruDurumView.cshtml" />
@@ -5594,7 +5599,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Raporlar\Genel\RprAnket.resx">
       <DependentUpon>RprAnket.cs</DependentUpon>
     </EmbeddedResource>

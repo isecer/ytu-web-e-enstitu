@@ -398,7 +398,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
                 mMessage.Messages.AddRange(msgs);
-               
+
             }
 
             if (!mMessage.Messages.Any())
@@ -860,7 +860,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
                     mMessage.Messages.AddRange(msgs);
-                 
+
                 }
             }
 
@@ -868,7 +868,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
                 mMessage.Messages.AddRange(msgs);
-               
+
             }
             if (!mMessage.Messages.Any())
             {
@@ -953,7 +953,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var tdoBas = _entities.TDOBasvurus.First(p => p.TDOBasvuruID == kModel.TDOBasvuruID && p.KullaniciID == (formYetki ? p.KullaniciID : UserIdentity.Current.Id));
             var oncekiBasvuru = tdoBas.TDOBasvuruDanismen.Where(p => p.EYKDaOnaylandi == true && p.TDOBasvuruDanismanID != kModel.TDOBasvuruDanismanID).OrderByDescending(o => o.TDOBasvuruDanismanID).First();
             var isTezDiliTr = oncekiBasvuru.IsYeniTezDiliTr ?? oncekiBasvuru.IsTezDiliTr;
-            KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
+            var ogrenciCata = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBas.KullaniciID);
 
 
             if (!UserIdentity.Current.IsAdmin && !formYetki && tdoBas.KullaniciID != UserIdentity.Current.Id)
@@ -1120,10 +1120,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 kModel.VarolanTDAnabilimDaliAdi = oncekiBasvuru.TDAnabilimDaliAdi;
                 kModel.VarolanTDProgramAdi = oncekiBasvuru.TDProgramAdi;
                 kModel.IsTezDiliTr = isTezDiliTr;
-                //kModel.TezBaslikTr = oncekiBasvuru.TezBaslikTr;
-                //kModel.TezBaslikEn = oncekiBasvuru.TezBaslikEn;
-                kModel.YeniTezBaslikTr = oncekiBasvuru.YeniTezBaslikTr;
-                kModel.YeniTezBaslikEn = oncekiBasvuru.YeniTezBaslikEn;
+                kModel.TezBaslikTr = ogrenciCata.OgrenciTez.TEZ_BASLIK;
+                kModel.TezBaslikEn = ogrenciCata.OgrenciTez.TEZ_BASLIK_ENG;
+                kModel.YeniTezBaslikTr = ogrenciCata.OgrenciTez.TEZ_BASLIK;
+                kModel.YeniTezBaslikEn = ogrenciCata.OgrenciTez.TEZ_BASLIK_ENG;
                 kModel.SinavTipID = oncekiBasvuru.SinavTipID;
                 kModel.SinavAdi = oncekiBasvuru.SinavAdi;
                 kModel.SinavYili = oncekiBasvuru.SinavYili;
@@ -1249,7 +1249,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (!mMessage.Messages.Any() && !(tdoBasvuruDanismanId > 0))
             {
                 var msgs = TezIzlemeJuriOneriBus.IsAktifDevamEdenTijMessage(tdoBas.KullaniciID, tdoBas.OgrenciNo);
-                mMessage.Messages.AddRange(msgs); 
+                mMessage.Messages.AddRange(msgs);
             }
             if (!mMessage.Messages.Any())
             {
@@ -2520,6 +2520,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (!mMessage.Messages.Any())
             {
+                var ogrenciObsBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(tdoBasvuruDanismanData.TDOBasvuru.KullaniciID);
+                if (!ogrenciObsBilgi.IsDanismanHesabiBulunamadi)
+                {
+                    if (ogrenciObsBilgi.DanismanInfo.E_POSTA1.ToLower().Trim() ==
+                        tdoBasvuruDanismanData.Kullanicilar.EMail.ToLower().Trim())
+                    {
+                        kModel.TDAdSoyad = ogrenciObsBilgi.DanismanInfo.AD + " " + ogrenciObsBilgi.DanismanInfo.SOYAD;
+                        kModel.TDUnvanAdi = ogrenciObsBilgi.DanismanInfo.UNVAN_AD;
+                        kModel.TDAnabilimDaliAdi = ogrenciObsBilgi.DanismanInfo.ANABILIMDALI_AD;
+                        kModel.TDProgramAdi = ogrenciObsBilgi.DanismanInfo.PROGRAM_AD;
+                    }
+                }
+            }
+            if (!mMessage.Messages.Any())
+            {
                 var sendMail = false;
                 kModel.IslemYapanID = UserIdentity.Current.Id;
                 kModel.IslemYapanIP = UserIdentity.Ip;
@@ -2543,28 +2558,32 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     {
                         sendMail = true;
-                        tdoBasvuruEsDanis.OncekiEsDanismanAdi = kModel.OncekiEsDanismanAdi;
-                        tdoBasvuruEsDanis.BasvuruTarihi = kModel.BasvuruTarihi;
-                        tdoBasvuruEsDanis.AdSoyad = kModel.AdSoyad;
-                        tdoBasvuruEsDanis.UnvanAdi = kModel.UnvanAdi;
-                        tdoBasvuruEsDanis.UniversiteAdi = kModel.UniversiteAdi;
-                        tdoBasvuruEsDanis.AnabilimDaliAdi = kModel.AnabilimDaliAdi;
-                        tdoBasvuruEsDanis.ProgramAdi = kModel.ProgramAdi;
-                        tdoBasvuruEsDanis.EMail = kModel.EMail;
-                        tdoBasvuruEsDanis.Gerekce = kModel.Gerekce;
-                        tdoBasvuruEsDanis.IslemTarihi = kModel.IslemTarihi;
-                        tdoBasvuruEsDanis.IslemYapanID = kModel.IslemYapanID;
-                        tdoBasvuruEsDanis.IslemYapanIP = kModel.IslemYapanIP;
-                        tdoBasvuruEsDanis.FormKodu = kModel.FormKodu;
-                        tdoBasvuruEsDanis.UniqueID = kModel.UniqueID;
-                        tdoBasvuruEsDanis.EYKYaGonderildi = null;
-                        tdoBasvuruEsDanis.EYKYaGonderildiIslemYapanID = null;
-                        tdoBasvuruEsDanis.EYKYaGonderildiIslemTarihi = null;
-                        tdoBasvuruEsDanis.EYKDaOnaylandi = null;
-                        tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = null;
-                        tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = null;
+
                     }
-                    else tdoBasvuruDanismanData.TDOBasvuruEsDanismen.Add(kModel);
+                    tdoBasvuruEsDanis.OncekiEsDanismanAdi = kModel.OncekiEsDanismanAdi;
+                    tdoBasvuruEsDanis.BasvuruTarihi = kModel.BasvuruTarihi;
+                    tdoBasvuruEsDanis.AdSoyad = kModel.AdSoyad;
+                    tdoBasvuruEsDanis.UnvanAdi = kModel.UnvanAdi;
+                    tdoBasvuruEsDanis.UniversiteAdi = kModel.UniversiteAdi;
+                    tdoBasvuruEsDanis.AnabilimDaliAdi = kModel.AnabilimDaliAdi;
+                    tdoBasvuruEsDanis.ProgramAdi = kModel.ProgramAdi;
+                    tdoBasvuruEsDanis.TDAdSoyad = kModel.TDAdSoyad;
+                    tdoBasvuruEsDanis.TDUnvanAdi = kModel.TDUnvanAdi;
+                    tdoBasvuruEsDanis.TDAnabilimDaliAdi = kModel.TDAnabilimDaliAdi;
+                    tdoBasvuruEsDanis.TDProgramAdi = kModel.TDProgramAdi;
+                    tdoBasvuruEsDanis.EMail = kModel.EMail;
+                    tdoBasvuruEsDanis.Gerekce = kModel.Gerekce;
+                    tdoBasvuruEsDanis.IslemTarihi = kModel.IslemTarihi;
+                    tdoBasvuruEsDanis.IslemYapanID = kModel.IslemYapanID;
+                    tdoBasvuruEsDanis.IslemYapanIP = kModel.IslemYapanIP;
+                    tdoBasvuruEsDanis.FormKodu = kModel.FormKodu;
+                    tdoBasvuruEsDanis.UniqueID = kModel.UniqueID;
+                    tdoBasvuruEsDanis.EYKYaGonderildi = null;
+                    tdoBasvuruEsDanis.EYKYaGonderildiIslemYapanID = null;
+                    tdoBasvuruEsDanis.EYKYaGonderildiIslemTarihi = null;
+                    tdoBasvuruEsDanis.EYKDaOnaylandi = null;
+                    tdoBasvuruEsDanis.EYKDaOnaylandiIslemYapanID = null;
+                    tdoBasvuruEsDanis.EYKDaOnaylandiOnayTarihi = null;
 
                 }
                 else

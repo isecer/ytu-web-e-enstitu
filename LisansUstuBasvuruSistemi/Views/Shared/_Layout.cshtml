@@ -120,7 +120,7 @@
      
     <link href="~/Content/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />  
     <link href="~/Content/fontawesome-free-6.4.2-web/css/v4-shims.min.css" rel="stylesheet" /> 
-
+    <link href="~/Content/css/howerBtnStyle.css" rel="stylesheet" />
     <!-- END SCRIPTS -->
     <style>
         .popover {
@@ -1342,22 +1342,22 @@
             }
         }
         function ShowDuyuru(popupSetting) {
-        var buttons = [];
-        if (popupSetting.btnAdi != "") {
-            buttons.push({
-                label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
-                className: "btn-success",
-                callback: function () {
-                    if (popupSetting.redirectUrl != "")
-                        window.location.href = popupSetting.redirectUrl;
-                    else if (popupSetting.callbackFnc != "")
-                        popupSetting.callbackFnc();
-                }
-            });
-        }
+            var buttons = [];
+            if (popupSetting.btnAdi) {
+                buttons.push({
+                    label: '<i class="fa fa-plus tooltips"></i> ' + popupSetting.btnAdi,
+                    className: "btn-success",
+                    callback: function () { 
+                        if (popupSetting.redirectUrl)
+                            window.location.href = popupSetting.redirectUrl;
+                        else if (popupSetting.callbackFnc)
+                            popupSetting.callbackFnc(popupSetting.fncparameter);
+                    }
+                });
+            }
 
             buttons.push({
-                label: 'Vazgeç',
+                label: popupSetting.redirectUrl || popupSetting.callbackFnc ? 'Vazgeç' : 'Kapat',
                 className: "btn-primary",
                 callback: function () {
                     // Vazgeç butonuna tıklandığında yapılacak işlemler
@@ -1372,7 +1372,7 @@
                 cache: false,
                 dataType: "json",
                 data: { 'PopupTipID': popupSetting.popupTipId },
-                success: function (result) {
+                success: function (result) { 
                     if (result.ShowMessage) {
                         var mdlx = bootbox.dialog({
                             title: popupSetting.title,
@@ -1381,9 +1381,9 @@
                         });
                     }
                     else {
-                        if (popupSetting.redirectUrl != "") window.location.href = popupSetting.redirectUrl;
-                        else if (popupSetting.callbackFnc != "")
-                            popupSetting.callbackFnc();
+                        if (popupSetting.redirectUrl) window.location.href = popupSetting.redirectUrl;
+                        else if (popupSetting.callbackFnc)
+                            popupSetting.callbackFnc(popupSetting.fncparameter);
                     }
                 },
                 error: function (err) {
@@ -1391,7 +1391,7 @@
 
                 }
             });
-    }
+        }
 
         var frameLoad = false;
         function loadedFrame()

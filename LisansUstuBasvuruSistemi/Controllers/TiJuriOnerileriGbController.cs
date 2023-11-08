@@ -222,6 +222,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         mMessage.Messages.Add("Başvuru yapacağınız öğrencinin yeterlik sınavından başarılı olması gerekmetkedir.");
                     }
+                    else if (ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.IsNullOrWhiteSpace())
+                    {
+                        mMessage.Messages.Add("Başvuru yapacağınız öğrencinin yeterlik sözlü sınav tarihi bilgisi OBS sisteminden boş gelmektedir. Bu durumu enstitü yetkililerine iletiniz.");
+                    }
                     else
                     {
                         var devamEdenBasvuru = _entities.TijBasvurus.FirstOrDefault(f =>
@@ -784,10 +788,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 TijFormTipID = kModel.TijFormTipID,
                                 TijDegisiklikTipID = kModel.TijDegisiklikTipID,
                                 IsObsData = false,
-                                TezDanismanID = tijBasvuruOneri.TezDanismanID ?? kul.DanismanID,
+                                TezDanismanID = tijBasvuruOneri?.TezDanismanID ?? kul.DanismanID,
                                 DanismanOnayTarihi = danismanId.HasValue ? DateTime.Now : (DateTime?)null,
                                 DanismanOnayladi = danismanId.HasValue ? true : (bool?)null,
-                                BasvuruTarihi = tijBasvuruOneri.TijBasvuruOneriID > 0 ? tijBasvuruOneri.BasvuruTarihi : DateTime.Now,
+                                BasvuruTarihi = tijBasvuruOneri?.TijBasvuruOneriID > 0 ? tijBasvuruOneri.BasvuruTarihi : DateTime.Now,
                                 DonemBaslangicYil = donemBilgi.BaslangicYil,
                                 DonemID = donemBilgi.DonemID,
                                 SozluSinavBasariTarihi = ogrenciYeterlikBilgi.DR_YET_SOZ_SNV_TARIH.ToDate().Value,

@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     {
         private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
-        {
+        { 
             return Index(new FmYetkiGruplari());
         }
         [HttpPost]

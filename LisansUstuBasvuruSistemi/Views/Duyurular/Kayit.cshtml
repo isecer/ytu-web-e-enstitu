@@ -6,6 +6,8 @@
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var duyuruPopupTipleris = (List<DuyuruPopupTipleri>)ViewBag.DuyuruPopupTipleris;
+    var allChecked = duyuruPopupTipleris.All(a => Model.DuyuruPopuplars.Any(d => d.DuyuruPopupTipID == a.DuyuruPupupTipID));
 }
 
 <div class="row">
@@ -60,69 +62,43 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Ana Sayfada Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="AnaSayfaPopupAc" class="toggle" @Model.AnaSayfaPopupAc.ToChecked() />
+                                <label class="col-md-3 col-xs-4 control-label"></label>
+                                <div class="col-md-9 col-xs-8"> 
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading padding-0">
+                                            <h3 class="panel-title" style="font-size:9pt;">Duyurunun Popup Olarak Açılacağı Sayfalar</h3>
+                                            <ul class="panel-controls">
+                                                <li>
+                                                    Tümü:<div class="make-switch switch-small" data-on-label="Evet" data-off-label="Hayır">
+                                                        <input type="checkbox" value="true"  onchange="tumunusec(this)" class="toggle" @allChecked.ToChecked() />
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="panel-body padding-0" style="height: 300px; overflow: auto;">
+                                            <table class="chks" style="width:100%;table-layout:fixed;">
+                                                @foreach (var duyuruPopupTipi in duyuruPopupTipleris)
+                                                {
+                                                    var isChecked = Model.DuyuruPopuplars.Any(a => a.DuyuruPopupTipID == duyuruPopupTipi.DuyuruPupupTipID);
+                                                    <tr>
+                                                        <td>
+                                                            <div class="checkbox pull-left">
+                                                                <label>
+                                                                    <input type="checkbox" class="icheckbox" name="duyuruPopupTipIds" value="@duyuruPopupTipi.DuyuruPupupTipID" @isChecked.ToChecked()/> 
+                                                                    @duyuruPopupTipi.PopupTipAdi 
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Başvuru Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="BasvuruPopupAc" class="toggle" @Model.BasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Tez Danışmanı Önerisi Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="TDOBasvuruPopupAc" class="toggle" @Model.TDOBasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Tez İzleme Jüri Önerisi Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="TijBasvuruPopupAc" class="toggle" @Model.TijBasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Tez İzleme Başvuru Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="TIBasvuruPopupAc" class="toggle" @Model.TIBasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Yeterlik Başvuru Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="YeterlikBasvuruPopupAc" class="toggle" @Model.YeterlikBasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Mezuniyet Başvuru Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="MezuniyetBasvuruPopupAc" class="toggle" @Model.MezuniyetBasvuruPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-xs-4 control-label">Talep Yaparken Popup Açılsın</label>
-                                <div class="col-md-9 col-xs-8">
-                                    <div class="make-switch" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
-                                        <input type="checkbox" value="true" name="TalepYaparkenPopupAc" class="toggle" @Model.TalepYaparkenPopupAc.ToChecked() />
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-4 control-label">Başlık</label>
                                 <div class="col-md-9 col-xs-8">
@@ -171,7 +147,7 @@
 
                                             <tr class="foterRow">
                                                 <td colspan="4" style="text-align: center;">
-                                                    <a href="javascript:void(0)" onclick="yeniEkEkle()" class="btn btn-xs btn-success"><i class="fa fa-plus tooltips" data-style="blue" data-original-title="">Yeni Ek Ekle</i></a>
+                                                    <a href="javascript:void(0)" onclick="yeniEkEkle()" class="btn btn-xs btn-success"><i class="fa fa-plus tooltips" data-style="blue" data-original-title=""></i> Yeni Ek Ekle</a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -202,13 +178,24 @@
         </div>
     </form>
 </div>
-<script src="~/Content/ckeditor/ckeditor.js"></script>  
+<script src="~/Content/ckeditor/ckeditor.js"></script>
 <script src="~/Content/ckeditor/showCk.js"></script>
 <script>
+    function tumunusec(sndr) {
+        var parBox = $(sndr).parents(".panel").first();
+        var kategori = $(parBox).find('.chks').first();
+        var chkD = $(sndr).prop("checked");
+        $(kategori).find(":checkbox").each(function (inx, itmx) {
+            if (chkD) { $(itmx).parent().addClass("checked"); }
+            else { $(itmx).parent().removeClass("checked"); }
+            $(itmx).prop("checked", chkD);
+        });
 
-    $(function () { 
+
+    }
+    $(function () {
         $('#Tarih').datetimepicker({
-            lang: 'tr',   
+            lang: 'tr',
             timepicker: true,
             format: 'Y-m-d H:i'
         });
@@ -217,11 +204,11 @@
             timepicker: true,
             format: 'Y-m-d H:i'
         });
-        
+
         var model = '@Html.Raw(Json.Encode(MmMessage))';
         validateControl(model);
     });
-          
+
     $("form").submit(function (event) {
         var txt = CKEDITOR.instances.AciklamaHtml.document.getBody().getText();
         $('#Aciklama').val(txt);

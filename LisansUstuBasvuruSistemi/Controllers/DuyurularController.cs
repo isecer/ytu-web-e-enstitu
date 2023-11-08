@@ -25,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [HttpPost]
         public ActionResult Index(FmDuyurularDto model, string ekd)
-        { 
+        {
             var enstKods = UserIdentity.Current.EnstituKods ?? new List<string>();
             var q = from s in _entities.Duyurulars
                     join k in _entities.Kullanicilars on s.IslemYapanID equals k.KullaniciID
@@ -49,14 +49,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.IsAktif,
                         s.IsEnUsteSabitle,
                         s.AnaSayfadaGozuksun,
-                        s.AnaSayfaPopupAc,
-                        s.YeterlikBasvuruPopupAc,
-                        s.MezuniyetBasvuruPopupAc,
-                        s.BasvuruPopupAc,
-                        s.TijBasvuruPopupAc,
-                        s.TIBasvuruPopupAc,
-                        s.TDOBasvuruPopupAc,
-                        s.TalepYaparkenPopupAc,
+                        DuyuruPopuplari = s.DuyuruPopuplars.Select(sd => new FrDuyuruPopupTipleri
+                        {
+                            DuyuruPupupTipID = sd.DuyuruPopupID,
+                            PopupTipAdi = sd.DuyuruPopupTipleri.PopupTipAdi
+                        }).ToList(),
                         s.YayinSonTarih,
                     };
 
@@ -92,14 +89,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IsAktif = s.IsAktif,
                 IsEnUsteSabitle = s.IsEnUsteSabitle,
                 AnaSayfadaGozuksun = s.AnaSayfadaGozuksun,
-                AnaSayfaPopupAc = s.AnaSayfaPopupAc,
-                BasvuruPopupAc = s.BasvuruPopupAc,
-                TijBasvuruPopupAc = s.TijBasvuruPopupAc,
-                TIBasvuruPopupAc = s.TIBasvuruPopupAc,
-                TDOBasvuruPopupAc = s.TDOBasvuruPopupAc,
-                YeterlikBasvuruPopupAc = s.YeterlikBasvuruPopupAc,
-                MezuniyetBasvuruPopupAc = s.MezuniyetBasvuruPopupAc,
-                TalepYaparkenPopupAc = s.TalepYaparkenPopupAc,
+                SeciliDuyuruPopupTips = s.DuyuruPopuplari,
                 YayinSonTarih = s.YayinSonTarih
             }).ToList();
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod);
@@ -126,13 +116,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
             else sEnstituKod = EnstituBus.GetSelectedEnstitu(ekd);
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", model.EnstituKod ?? sEnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", model.IsAktif);
+            ViewBag.DuyuruPopupTipleris = _entities.DuyuruPopupTipleris.ToList();
             return View(model);
         }
 
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Kayit(Duyurular kModel, List<string> dosyaEkiAdi, List<HttpPostedFileBase> dosyaEki, List<int?> duyuruDosyaEkId)
+        public ActionResult Kayit(Duyurular kModel, List<string> dosyaEkiAdi, List<HttpPostedFileBase> dosyaEki, List<int?> duyuruDosyaEkId, List<int> duyuruPopupTipIds)
         {
             var mmMessage = new MmMessage();
             duyuruDosyaEkId = duyuruDosyaEkId ?? new List<int?>();
@@ -148,16 +139,19 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var qVarolanlar = (from s in qDosyaEkAdi
                                join sid in qDuyuruDosyaEkId on s.inx equals sid.inx
                                select new { s.inx, DosyaEkAdi = s.s, DuyuruDosyaEkID = sid.s });
+            duyuruPopupTipIds = duyuruPopupTipIds ?? new List<int>();
+            kModel.DuyuruPopuplars = duyuruPopupTipIds.Select(s => new DuyuruPopuplar { DuyuruPopupTipID = s })
+                .ToList();
             #region Kontrol
             if (kModel.EnstituKod.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Duyurunun Yayınlanacağı Enstitüyü Seçiniz");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "EnstituKod" });
 
             }
 
             if (kModel.Tarih == DateTime.MinValue)
-            { 
+            {
                 mmMessage.Messages.Add("Geçerli Bir Tarih Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
             }
@@ -166,7 +160,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.YayinSonTarih.HasValue)
                 {
                     if (kModel.YayinSonTarih.Value <= kModel.Tarih)
-                    { 
+                    {
                         mmMessage.Messages.Add("Duyurunun yayınlanacağı son tarih Duyuru tarihinden tarihten küçük ya da eşit olamaz! ");
                         mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Tarih" });
                         mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "YayinSonTarih" });
@@ -175,16 +169,16 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Tarih" });
             }
             if (kModel.Baslik.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Başlık Giriniz.");
                 mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Warning, PropertyName = "Baslik" });
             }
             else mmMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Success, PropertyName = "Baslik" });
 
             if (kModel.Aciklama.IsNullOrWhiteSpace() && kModel.AciklamaHtml.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("Aciklama Giriniz.");
-            } 
+            }
             #endregion
             if (mmMessage.Messages.Count == 0)
             {
@@ -195,6 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (kModel.DuyuruID <= 0)
                 {
                     kModel.IsAktif = true;
+                 
                     var eklenen = _entities.Duyurulars.Add(kModel);
 
                     foreach (var item in qDosyalar)
@@ -220,18 +215,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IsEnUsteSabitle = kModel.IsEnUsteSabitle;
                     data.YayinSonTarih = kModel.YayinSonTarih;
                     data.AnaSayfadaGozuksun = kModel.AnaSayfadaGozuksun;
-                    data.AnaSayfaPopupAc = kModel.AnaSayfaPopupAc;
-                    data.BasvuruPopupAc = kModel.BasvuruPopupAc;
-                    data.YeterlikBasvuruPopupAc = kModel.YeterlikBasvuruPopupAc;
-                    data.MezuniyetBasvuruPopupAc = kModel.MezuniyetBasvuruPopupAc;
-                    data.TalepYaparkenPopupAc = kModel.TalepYaparkenPopupAc;
-                    data.TDOBasvuruPopupAc = kModel.TDOBasvuruPopupAc;
-                    data.TIBasvuruPopupAc = kModel.TIBasvuruPopupAc;
-                    data.TijBasvuruPopupAc = kModel.TijBasvuruPopupAc;
+
                     data.IsAktif = kModel.IsAktif;
                     data.IslemTarihi = DateTime.Now;
                     data.IslemYapanID = kModel.IslemYapanID;
                     data.IslemYapanIP = kModel.IslemYapanIP;
+
+                    _entities.DuyuruPopuplars.RemoveRange(data.DuyuruPopuplars);
+                    data.DuyuruPopuplars = kModel.DuyuruPopuplars; 
 
                     var silinenDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) == false && p.DuyuruID == data.DuyuruID).ToList();
                     var varolanDuyuruEkleri = _entities.DuyuruEkleris.Where(p => duyuruDosyaEkId.Contains(p.DuyuruDosyaEkID) && p.DuyuruID == data.DuyuruID).ToList();
@@ -243,7 +234,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             item.DosyaEkAdi = qd.DosyaEkAdi;
                         }
                     }
+
                     _entities.DuyuruEkleris.RemoveRange(silinenDuyuruEkleri);
+
                     foreach (var item in qDosyalar)
                     {
                         string dosyaYolu = "/DuyuruDosyaları/" + item.Dosya.FileName.ToFileNameAddGuid();
@@ -267,6 +260,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             ViewBag.MmMessage = mmMessage;
             ViewBag.EnstituKod = new SelectList(EnstituBus.GetCmbYetkiliEnstituler(true), "Value", "Caption", kModel.EnstituKod);
             ViewBag.IsAktif = new SelectList(ComboData.GetCmbAktifPasifData(true), "Value", "Caption", kModel.IsAktif);
+            ViewBag.DuyuruPopupTipleris = _entities.DuyuruPopupTipleris.ToList();
             return View(kModel);
         }
         public ActionResult Sil(int id)
@@ -301,7 +295,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 message = "Silmek istediğiniz Duyuru sistemde bulunamadı!";
             }
             return Json(new { success, message }, "application/json", JsonRequestBehavior.AllowGet);
-        } 
+        }
         protected override void Dispose(bool disposing)
         {
             _entities.Dispose();

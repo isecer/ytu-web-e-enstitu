@@ -2,9 +2,11 @@
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
@@ -18,10 +20,15 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult Index(string ekd, string mesajGroupId, int? basvuruId, string rowId, bool isMesajGonder = false)
         {
+
+           
+
+
+
             var enstitu = _entities.Enstitulers.First(p => p.EnstituKisaAd.Contains(ekd));
             var donemBilgi = DateTime.Now.ToAraRaporDonemBilgi();
 
-         
+
 
 
             #region duyurular 
@@ -43,8 +50,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         EkSayisi = s.DuyuruEkleris.Count,
                         Ekler = s.DuyuruEkleris,
                         s.AnaSayfadaGozuksun,
-                        s.AnaSayfaPopupAc,
-                        s.BasvuruPopupAc,
+                        AnaSayfaPopupAc = s.DuyuruPopuplars.Any(a => a.DuyuruPopupTipID == DuyuruPopupTipi.AnaSayfa),
                         s.YayinSonTarih,
                         s.IsEnUsteSabitle,
                         s.IsAktif
@@ -63,12 +69,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 IslemYapanIP = s.IslemYapanIP,
                 EkSayisi = s.EkSayisi,
                 DuyuruEkleris = s.Ekler,
-                AnaSayfadaGozuksun = s.AnaSayfadaGozuksun,
-                AnaSayfaPopupAc = s.AnaSayfaPopupAc,
-                BasvuruPopupAc = s.BasvuruPopupAc,
                 YayinSonTarih = s.YayinSonTarih,
                 IsEnUsteSabitle = s.IsEnUsteSabitle,
-            }).OrderBy(o =>o.IsEnUsteSabitle?1:2).ThenByDescending(o => o.Tarih).ToList();
+            }).OrderBy(o => o.IsEnUsteSabitle ? 1 : 2).ThenByDescending(o => o.Tarih).ToList();
             ViewBag.Duyurular = data;
             #endregion
 

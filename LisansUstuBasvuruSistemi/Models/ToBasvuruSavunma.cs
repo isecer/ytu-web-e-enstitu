@@ -31,9 +31,6 @@ namespace LisansUstuBasvuruSistemi.Models
         public int DonemBaslangicYil { get; set; }
         public int DonemID { get; set; }
         public bool IsTezDiliTr { get; set; }
-        public string TezBaslikTr { get; set; }
-        public string TezBaslikEn { get; set; }
-        public bool IsTezBasligiDegisti { get; set; }
         public string YeniTezBaslikTr { get; set; }
         public string YeniTezBaslikEn { get; set; }
         public string CalismaRaporDosyaAdi { get; set; }

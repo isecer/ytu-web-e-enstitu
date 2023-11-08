@@ -20,7 +20,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var data = _entities.TIAyarlars.Where(p => p.EnstituKod == enstituKod && UserIdentity.Current.EnstituKods.Contains(p.EnstituKod)).OrderBy(o => o.Kategori).ThenBy(t => t.SiraNo).ToList();
             var cats = data.Select(s => new { s.Kategori, Toggle = true }).Distinct().ToList();
             var panelToggled = cats.ToDictionary(item => item.Kategori, item => item.Toggle);
-            ViewBag.PanelToggled = panelToggled;
+            ViewBag.PanelToggled = panelToggled; 
             return View(data);
         }
         [HttpPost]

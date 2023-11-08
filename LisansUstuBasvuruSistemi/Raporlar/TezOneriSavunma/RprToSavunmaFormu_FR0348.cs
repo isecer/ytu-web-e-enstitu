@@ -37,8 +37,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                                 YokDrBursiyeri = s.IsYokDrBursiyeriVar ? "Evet (Yes)" : "Hayır (No)",
                                 YokDrOncelikliAlan = s.IsYokDrBursiyeriVar ? s.YokDrOncelikliAlan : "",
                                 TezDili = s.IsTezDiliTr ? "Türkçe (Turkish)" : "İngilizce (English)",
-                                s.TezBaslikTr,
-                                s.TezBaslikEn,
                                 ToplantiSekli = sr.IsOnline ? "Çevrimiçi\r\n(Online)" : "Yüz yüze\r\n(Face-to-face)",
                                 ToplantiTarihi = sr.Tarih,
                                 ToplantiSaati = sr.BasSaat,
@@ -47,14 +45,12 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                                 KomiteCount = s.ToBasvuruSavunmaKomites.Count,
                                 IsTezIzlemeRaporuAltAlanUygun = s.ToBasvuruSavunmaKomites.Any(p => p.IsTezDanismani && p.IsCalismaRaporuAltAlanUygun == true),
                                 s.ToBasvuruSavunmaDurumID,
-                                IsBasariliCount = s.ToBasvuruSavunmaKomites.Count(p => p.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi),
-                                IsBasariliDegilCount = s.ToBasvuruSavunmaKomites.Count(p => p.ToBasvuruSavunmaDurumID != ToBasvuruSavunmaDurumu.KabulEdildi),
+                                s.IsOyBirligiOrCoklugu,
                                 Danisman = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.IsTezDanismani),
                                 TikUyesi1 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 1),
                                 TikUyesi2 = s.ToBasvuruSavunmaKomites.FirstOrDefault(p => p.TikNum == 2),
-                                s.IsTezBasligiDegisti,
-                                YeniTezBaslikTr = s.IsTezBasligiDegisti ? s.YeniTezBaslikTr : "",
-                                YeniTezBaslikEn = s.IsTezBasligiDegisti ? s.YeniTezBaslikEn : "",
+                                s.YeniTezBaslikTr,
+                                s.YeniTezBaslikEn,
                                 urlAdd = e.SistemErisimAdresi + "/DosyaKontrol/Index?Kod=" + "TOSF_" + s.ToBasvuruSavunmaID + "_" + s.UniqueID
                             }).First();
 
@@ -63,7 +59,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 xrQRCode.ImageUrl = data.urlAdd;
                 xrQRCode.Image = data.urlAdd.CreateQrCode();
 
-                cellOgrenciNo.Text = data.OgrenciNo; 
+                cellOgrenciNo.Text = data.OgrenciNo;
                 cellOgrenciAdSoyad.Text = data.AdSoyad;
                 cellOgrenciEnstituAdi.Text = data.EnstituAd;
                 cellOgrenciAnabilimDaliAdi.Text = data.AnabilimDaliAdi;
@@ -80,8 +76,9 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                     cellTezYok2000BursAltAlanUyumu.Text = (data.IsTezIzlemeRaporuAltAlanUygun ? "UYGUN " : "UYGUN DEĞİL") + "\r\n(" + (data.IsTezIzlemeRaporuAltAlanUygun ? "COMPATIBLE " : "INCOMPATIBLE") + ")";
                 }
                 else cellTezYok2000BursAltAlanUyumu.Text = "";
-                bool tezDegerlendirmeBasarili = data.ToBasvuruSavunmaDurumID== ToBasvuruSavunmaDurumu.KabulEdildi;
-                bool tezDegerlendirmeBasariliOyBirligiOrCoklugu = (tezDegerlendirmeBasarili ? data.IsBasariliCount : data.IsBasariliDegilCount) == data.KomiteCount;
+
+
+
                 var strDurumAdiTr =
                     data.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi
                         ? "KABUL EDİLDİ"
@@ -95,14 +92,13 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                             ? "REJECTED"
                             : "REVISION");
 
-                cellTezDegerlendirmeSonucu.Text = (tezDegerlendirmeBasariliOyBirligiOrCoklugu ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ")  + strDurumAdiTr +
-                                                  "\r\n(" + (tezDegerlendirmeBasariliOyBirligiOrCoklugu ? "UNANIMOUSLY " : "BY MAJORITY ") + strDurumAdiEn + ")";
+                cellTezDegerlendirmeSonucu.Text = (data.IsOyBirligiOrCoklugu == true ? "OY BİRLİĞİ İLE " : "OY ÇOKLUĞU İLE ") + strDurumAdiTr +
+                                                  "\r\n(" + (data.IsOyBirligiOrCoklugu == true ? "UNANIMOUSLY " : "BY MAJORITY ") + strDurumAdiEn + ")";
 
-                if (data.IsTezBasligiDegisti)
-                {
-                    cellYeniTezBaslikTr.Text = data.YeniTezBaslikTr;
-                    cellYeniTezBaslikEn.Text = data.YeniTezBaslikEn;
-                }
+
+                cellYeniTezBaslikTr.Text = data.YeniTezBaslikTr;
+                cellYeniTezBaslikEn.Text = data.YeniTezBaslikEn;
+
                 cellDanismanUnvanAdSoyad.Text = data.Danisman.UnvanAdi + "\r\n" + data.Danisman.AdSoyad;
                 cellDanismanAbdUniversiteAdi.Text = data.Danisman.AnabilimdaliAdi + " \r\n" + data.Danisman.UniversiteAdi;
                 cellTik1UnvanAdSoyad.Text = data.TikUyesi1.UnvanAdi + "\r\n" + data.TikUyesi1.AdSoyad;
@@ -112,7 +108,6 @@ namespace LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma
                 xRowYokBursAltAlan.Visible = data.IsYokDrBursiyeriVar;
                 xrIsAltAlan.Visible = data.IsYokDrBursiyeriVar;
                 xrAltAlanAdi.Visible = data.IsYokDrBursiyeriVar;
-                sbantTezBasligiDegisim.Visible = data.IsTezBasligiDegisti;
 
 
 

@@ -18,20 +18,13 @@ namespace LisansUstuBasvuruSistemi.Models
         public Duyurular()
         {
             this.DuyuruEkleris = new HashSet<DuyuruEkleri>();
+            this.DuyuruPopuplars = new HashSet<DuyuruPopuplar>();
         }
     
         public int DuyuruID { get; set; }
         public string EnstituKod { get; set; }
         public bool IsEnUsteSabitle { get; set; }
         public bool AnaSayfadaGozuksun { get; set; }
-        public bool AnaSayfaPopupAc { get; set; }
-        public bool BasvuruPopupAc { get; set; }
-        public bool MezuniyetBasvuruPopupAc { get; set; }
-        public bool TalepYaparkenPopupAc { get; set; }
-        public bool TijBasvuruPopupAc { get; set; }
-        public bool TIBasvuruPopupAc { get; set; }
-        public bool TDOBasvuruPopupAc { get; set; }
-        public bool YeterlikBasvuruPopupAc { get; set; }
         public System.DateTime Tarih { get; set; }
         public string Baslik { get; set; }
         public string Aciklama { get; set; }
@@ -46,5 +39,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual ICollection<DuyuruEkleri> DuyuruEkleris { get; set; }
         public virtual Enstituler Enstituler { get; set; }
         public virtual Kullanicilar Kullanicilar { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DuyuruPopuplar> DuyuruPopuplars { get; set; }
     }
 }

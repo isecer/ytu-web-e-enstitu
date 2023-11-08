@@ -190,8 +190,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
             kModel.KullaniciID = kayitYetki ? kModel.KullaniciID : UserIdentity.Current.Id;
             if (!errprMessages.Any())
             {
+                var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(kModel.KullaniciID);
                 var kullanici = _entities.Kullanicilars.First(p => p.KullaniciID == kModel.KullaniciID);
-                var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kullanici.TcKimlikNo);
                 var ogrenimTip = _entities.OgrenimTipleris.First(p => p.EnstituKod == enstituKod && p.OgrenimTipKod == kullanici.OgrenimTipKod);
 
 
@@ -254,6 +254,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [AllowAnonymous]
         public ActionResult GetDetail(Guid id, bool? isKomiteOrJuri, Guid? isDegerlendirme)
         {
+            if (UserIdentity.Current.IsAuthenticated)
+            {
+                var yBasvuru = _entities.YeterlikBasvurus.First(f => f.UniqueID == id);
+                var ogrenciBilgi = KullanicilarBus.OgrenciBilgisiGuncelleObs(yBasvuru.KullaniciID);
+
+                if (!yBasvuru.YeterlikBasvuruJuriUyeleris.Any() && ogrenciBilgi.AktifDanismanID.HasValue && ogrenciBilgi.AktifDanismanID.Value != yBasvuru.TezDanismanID)
+                {
+                    yBasvuru.TezDanismanID = ogrenciBilgi.AktifDanismanID.Value;
+                    _entities.SaveChanges();
+                }
+
+            }
             var query = _entities.YeterlikBasvurus.Select(s => new DmYeterlikDetayDto
             {
                 UniqueID = s.UniqueID,

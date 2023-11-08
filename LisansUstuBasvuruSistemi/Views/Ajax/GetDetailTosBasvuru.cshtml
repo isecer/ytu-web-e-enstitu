@@ -147,18 +147,16 @@
                                         <td style="padding-left:10px;text-align:left;">
                                             <table style="table-layout:fixed;">
                                                 <tr>
-                                                    <td class="CaptionTd" width="140">Tezin Mevcut Başlığı</td>
+                                                    <td class="CaptionTd" width="140">Önerilen Tez Başlığı Tr</td>
                                                     <td class="CaptionTd" width="10">:</td>
-                                                    <td class="ValueTd">@item.TezBaslikTr</td>
+                                                    <td class="ValueTd">@item.YeniTezBaslikTr</td>
                                                 </tr>
-                                                @if (item.IsTezBasligiDegisti)
-                                                {
-                                                    <tr>
-                                                        <td class="CaptionTd">Yeni Tez Başlığı</td>
-                                                        <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.YeniTezBaslikTr</td>
-                                                    </tr>
-                                                }
+
+                                                <tr>
+                                                    <td class="CaptionTd">Önerilen Tez Başlığı En</td>
+                                                    <td class="CaptionTd">:</td>
+                                                    <td class="ValueTd">@item.YeniTezBaslikEn</td>
+                                                </tr>
                                                 <tr>
                                                     <td class="CaptionTd">Savunma No</td>
                                                     <td class="CaptionTd">:</td>
@@ -274,7 +272,7 @@
                                                         {
                                                             @itemJr.Aciklama
                                                         }
-                                                    </td> 
+                                                    </td>
                                                 </tr>
                                                 @if (showDegerlendirme)
                                                 {
@@ -369,8 +367,8 @@
                                         <a href="javascript:void(0)" onclick="detayGor(@Model.TezDanismanID.Value,'#kulPnl')"><i class="fa fa-graduation-cap"></i> @Model.TezDanismanBilgiEslesen</a>
                                     }
                                 </td>
-
                             </tr>
+
                         </table>
                     </td>
                     <td class="clsHide" width="100" style="text-align:center;vertical-align:top;">
@@ -393,6 +391,160 @@
 
                         </td>
                     </tr>
+                    if (degerlendirmeDuzeltmeYetki || UserIdentity.Current.IsAdmin)
+                    {
+                        var muafContent = $"<ul style='font-size:8.5pt;'>  " +
+                                      $"<li><p>Yeterlik başarı tarihi itibari ile belirlenen gün içinde sınav yapma</p></li>  " +
+                                      $"<li><p>Başarısızlıkla sonuçlanan sınavın tarihinden itibari ile belirlenen gün için sınav yapma</p></li>" +
+                                      $"<li><p>Düzeltme ile sonuçlanan sınavın tarihinden itibari ile belirlenen gün için sınav yapma</p></li>" +
+                                      $"<li><p>Toplam başarısız tez öneri savunma sınavı kriteri aşıldığında öğrenciye başvuru yaptırmama</p></li>" +
+                                      $"<li><p><b>Öğrenci kriterden muaf tutulursa yukarıdaki kriterlerin kontolü yapılmaz</b></p></li>" +
+                                      $"</ul>";
+                        <tr>
+                            <td colspan="2" style="padding-left:10px;text-align:left;">
+                                <table>
+                                    <tr>
+                                        <td class="CaptionTd" width="160">
+                                            Kriterden Muaf Tut
+                                            <button style="padding-left:3px;padding-right:2px;" type="button" class="btn btn-info popover-dismiss glow-on-hover" title="Kriterden Muaf Tut nedir?" data-content="@muafContent">
+                                                <i class="fa fa-info-circle fa-lg" style="margin:0px;"></i>
+                                            </button>
+                                        </td>
+                                        <td class="CaptionTd" width="10">:</td>
+                                        <td class="ValueTd">
+                                            <div class="make-switch switch_@Model.UniqueID" data-on-label="Evet" data-off-label="Hayır" data-on="info" data-off="danger">
+                                                <input type="checkbox" value="true" class="toggle" onchange="KriterMuafSetChange('@Model.UniqueID',$(this).prop('checked'))" @Model.IsBasvuruKriterMuaf.ToChecked() />
+
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    @if (!Model.IsBasvuruKriterMuaf && (Model.RetDuzeltmeBitisTarihi.HasValue || Model.IlkOneriBitisTarihi.HasValue))
+                                    {
+                                        if (Model.RetDuzeltmeBitisTarihi.HasValue)
+                                        {
+                                            <tr>
+                                                <td class="CaptionTd" width="160">Ret/Düzeltme Bitiş Tarihi</td>
+                                                <td class="CaptionTd" width="10">:</td>
+                                                <td class="ValueTd">
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <input class="form-control input-medium tarihx" autocomplete="off" size="16" type="text" value="@Model.RetDuzeltmeBitisTarihi.ToFormatDateInput()" id="RetDuzeltmeBitisTarihi_@Model.UniqueID">
+                                                            </td>
+                                                            <td>
+                                                                <span class="btn btn-info" style="cursor:pointer;" onclick="SavunmaRetDuzeltmeTarihGuncelle('@Model.UniqueID');"><i class="fa fa-save"></i> Kaydet</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+
+                                                </td>
+                                            </tr>
+
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="CaptionTd" width="160">Savunma Bitiş Tarihleri</td>
+                                                <td class="CaptionTd" width="10">:</td>
+                                                <td class="ValueTd">
+                                                    <table style="width:100%;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1. Savunma Bitiş</td>
+                                                                <td style="width:5px;text-align:center;"></td>
+                                                                <td colspan="2">2. Savunma Bitiş</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><input class="form-control input-medium tarihx" autocomplete="off" size="16" type="text" value="@Model.IlkOneriBitisTarihi.ToFormatDateInput()" id="IlkOneriBitisTarihi_@Model.UniqueID"></td>
+                                                                <td style="width:5px;text-align:center;"></td>
+                                                                <td><input class="form-control input-medium tarihx" autocomplete="off" size="16" type="text" value="@Model.IkinciOneriBitisTarihi.ToFormatDateInput()" id="IkinciOneriBitisTarihi_@Model.UniqueID"></td>
+                                                                <td>
+                                                                    <span class="btn btn-info" style="cursor:pointer;" onclick="SavunmaBitisTarihGuncelle('@Model.UniqueID');"><i class="fa fa-save"></i> Kaydet</span>
+                                                                </td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <script>
+                                            $(function () {
+                                                $('.tarihx').datetimepicker({
+                                                    lang: 'tr',
+                                                    timepicker: false,
+                                                    format: 'Y-m-d'
+                                                });
+                                            })
+                                            function SavunmaRetDuzeltmeTarihGuncelle(toUniqueId) {
+                                                var _panel = $('#bsvrDet_' + toUniqueId);
+                                                PanelRefresh(_panel, false);
+                                                var retDuzeltmeBitisTarihi = $('#RetDuzeltmeBitisTarihi_' + toUniqueId).val();
+                                                $.ajax({
+                                                    url: '@Url.Action("SavunmaRetDuezltmeTarihGuncelle", "TosBasvuru")',
+                                                    data: {
+                                                        toUniqueId,
+                                                        retDuzeltmeBitisTarihi,
+                                                    },
+                                                    success: function (result) {
+                                                        PanelRefresh(_panel, true);
+                                                        GetDetail(toUniqueId);
+                                                        swal.fire({
+                                                            html: result.messageView,
+                                                            icon: (result.IsSuccess ? "success" : "error"),
+                                                            type: (result.IsSuccess ? "success" : "error"),
+                                                            confirmButtonText: 'tamam',
+                                                            padding: '2em'
+                                                        });
+                                                    },
+                                                    error: function (err) {
+                                                        PanelRefresh(_panel, true);
+                                                        alert(err.responseText);
+
+                                                    }
+                                                });
+                                            }
+                                            function SavunmaBitisTarihGuncelle(toUniqueId) {
+                                                var _panel = $('#bsvrDet_' + toUniqueId);
+                                                PanelRefresh(_panel, false);
+                                                var ilkOneriBitisTarihi = $('#IlkOneriBitisTarihi_' + toUniqueId).val();
+                                                var ikinciOneriBitisTarihi = $('#IkinciOneriBitisTarihi_' + toUniqueId).val();
+                                                $.ajax({
+                                                    url: '@Url.Action("SavunmaBitisTarihGuncelle", "TosBasvuru")',
+                                                    data: {
+                                                        toUniqueId,
+                                                        ilkOneriBitisTarihi,
+                                                        ikinciOneriBitisTarihi
+                                                    },
+                                                    success: function (result) {
+                                                        PanelRefresh(_panel, true);
+                                                        GetDetail(toUniqueId);
+                                                        swal.fire({
+                                                            html: result.messageView,
+                                                            icon: (result.IsSuccess ? "success" : "error"),
+                                                            type: (result.IsSuccess ? "success" : "error"),
+                                                            confirmButtonText: 'tamam',
+                                                            padding: '2em'
+                                                        });
+                                                    },
+                                                    error: function (err) {
+                                                        PanelRefresh(_panel, true);
+                                                        alert(err.responseText);
+
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    }
+                                </table>
+
+                            </td>
+                        </tr>
+
+                    }
+
                 }
 
             </table>
@@ -404,7 +556,7 @@
                     <td width="100" style="font-size:11pt;border-bottom:1px solid; text-align:right;padding-bottom:2px;">
                         @if (formOlusturmaYetki)
                         {
-                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="GetToSavunmaFormu('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
+                            <span class="label label-info" id="YeniRaporBtn_@Model.UniqueID" style="cursor:pointer;" onclick="YeniBasvuruDuyuruKontrol('@Model.UniqueID');"><i class="fa fa-plus"></i> Yeni Tez Öneri Savunma Başvurusu Yap</span>
                         }
                     </td>
 
@@ -475,30 +627,19 @@
                                                         <td class="CaptionTd" width="10">:</td>
                                                         <td class="ValueTd">@(item.IsTezDiliTr ? "Türkçe" : "İngilizce")</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="CaptionTd">Tez Başlığı Türkçe</td>
-                                                        <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.TezBaslikTr</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="CaptionTd">Tez Başlığı İngilizce</td>
-                                                        <td class="CaptionTd">:</td>
-                                                        <td class="ValueTd">@item.TezBaslikEn</td>
-                                                    </tr>
-
-                                                    @if (item.IsTezBasligiDegisti)
+                                                    @if (!item.YeniTezBaslikTr.IsNullOrWhiteSpace() && !item.YeniTezBaslikEn.IsNullOrWhiteSpace())
                                                     {
+
                                                         <tr>
-                                                            <td class="CaptionTd">Yeni Tez Başlığı</td>
+                                                            <td class="CaptionTd">Önerilen Tez Başlığı Tr</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">@item.YeniTezBaslikTr</td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="CaptionTd">Yeni Tez Başlığı Çevirisi</td>
+                                                            <td class="CaptionTd">Önerilen Tez Başlığı En</td>
                                                             <td class="CaptionTd">:</td>
                                                             <td class="ValueTd">@item.YeniTezBaslikEn</td>
                                                         </tr>
-
                                                     }
                                                     <tr>
                                                         <td class="CaptionTd">Çalışma Dosyası</td>
@@ -548,9 +689,9 @@
                                                         @foreach (var itemJr in item.ToBasvuruSavunmaKomites)
                                                         {
                                                             var isKomiteTezDanismani = itemJr.IsTezDanismani;
-                                                            var openRow = (isDanismani && isKomiteTezDanismani);
-                                                            var openDegerlendirme = srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.ToBasvuruSavunmaDurumID.HasValue) || degerlendirmeDuzeltmeYetki);
-                                                            var sendLink = srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.ToBasvuruSavunmaKomites.Count != item.ToBasvuruSavunmaKomites.Count(c => c.ToBasvuruSavunmaDurumID.HasValue) || (degerlendirmeDuzeltmeYetki));
+                                                            var openRow =  (isDanismani && isKomiteTezDanismani);
+                                                            var openDegerlendirme = inxRw == 1 && srTalebiYapildi && ((openRow && degerlendirmeYetki && !itemJr.ToBasvuruSavunmaDurumID.HasValue) || degerlendirmeDuzeltmeYetki);
+                                                            var sendLink = inxRw == 1 && srTalebiYapildi && (isDanismani && !isKomiteTezDanismani && item.ToBasvuruSavunmaKomites.Count != item.ToBasvuruSavunmaKomites.Count(c => c.ToBasvuruSavunmaDurumID.HasValue) || (degerlendirmeDuzeltmeYetki));
 
                                                             <tr>
                                                                 <td>
@@ -580,19 +721,19 @@
                                                                         }
                                                                         else if (itemJr.ToBasvuruSavunmaDurumID.HasValue)
                                                                         {
-                                                                            if (itemJr.ToBasvuruSavunmaDurumID == 1)
+                                                                            if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.KabulEdildi)
                                                                             {
                                                                                 <span style="color:green;font-size:10pt;" aria-hidden="true"><i class="fa fa-thumbs-o-up" style="font-size:12pt;"></i> Kabul Edildi</span>
                                                                                 <br />
                                                                                 <span style="font-size:8pt;color:green;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
-                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == 2)
+                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.RetEdildi)
                                                                             {
                                                                                 <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-thumbs-o-down" style="font-size:12pt;"></i> Ret Edildi</span>
                                                                                 <br />
                                                                                 <span style="font-size:8pt;color:maroon;">@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()  @itemJr.DegerlendirmeIslemTarihi.Value.ToString("HH:mm") Tarihinde Değerlendirildi.</span>
                                                                             }
-                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == 3)
+                                                                            else if (itemJr.ToBasvuruSavunmaDurumID == ToBasvuruSavunmaDurumu.Duzeltme)
                                                                             {
                                                                                 <span style="font-size:10pt;color:maroon;" aria-hidden="true"><i class="fa fa-calendar" style="font-size:12pt;"></i> Düzeltme Talep Edildi</span>
                                                                                 <br />
@@ -660,8 +801,8 @@
                                                                                 {
 
                                                                                     <tr>
-                                                                                        <td class="CaptionTd ctWidth">Çalışma Raporu ile 100/2000 YÖK Bursu Alt Alan Uyumlu mu?</td>
-                                                                                        <td class="CaptionTd">:</td>
+                                                                                        <td class="CaptionTd ctWidth" width="200">Çalışma Raporu ile 100/2000 YÖK Bursu Alt Alan Uyumlu mu?</td>
+                                                                                        <td class="CaptionTd" width="5">:</td>
                                                                                         <td class="ValueTd">
                                                                                             @if (openDegerlendirme)
                                                                                             {
@@ -679,8 +820,49 @@
                                                                                     </tr>
 
                                                                                 }
+                                                                                @if (isKomiteTezDanismani)
+                                                                                {
+                                                                                    if (openDegerlendirme)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td width="200"></td>
+                                                                                            <td width="5"></td>
+                                                                                            <td>
+                                                                                                Tez başlığında değişiklik yapacaksanız aşağıda bulunan Önerilen Tez Başlığı Türkçe, Önerilen Tez Başlığı İngilizce bilgilerini değiştirebilirsiniz.
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd ctWidth" width="200">Önerilen Tez Başlığı Türkçe</td>
+                                                                                        <td class="CaptionTd" width="5">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @if (openDegerlendirme)
+                                                                                            {
+                                                                                                <input type="text" name="YeniTezBaslikTr" autocomplete="off" id="YeniTezBaslikTr_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikTr" class="form-control" />
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                @item.YeniTezBaslikTr
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="CaptionTd ctWidth" width="200">Önerilen Tez Başlığı İngilizce</td>
+                                                                                        <td class="CaptionTd" width="5">:</td>
+                                                                                        <td class="ValueTd">
+                                                                                            @if (openDegerlendirme)
+                                                                                            {
+                                                                                                <input type="text" name="YeniTezBaslikEn" autocomplete="off" id="YeniTezBaslikEn_@itemJr.UniqueID" maxlength="2048" value="@item.YeniTezBaslikEn" class="form-control" />
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                @item.YeniTezBaslikEn
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
                                                                                 <tr>
-                                                                                    <td class="CaptionTd ctWidth" width="200">Tez Öneri Savunma Sınavı Değerlendirme Sonucu</td>
+                                                                                    <td class="CaptionTd ctWidth" width="200">Değerlendirme Sonucu</td>
                                                                                     <td class="CaptionTd" width="5">:</td>
                                                                                     <td class="ValueTd">
                                                                                         @if (openDegerlendirme)
@@ -831,10 +1013,40 @@
     }
 </div>
 <script>
-    $(function () {
-        jQuery('._popover').popover({ trigger: 'hover' });
-    })
 
+    $(function () {
+        $('.switch_@Model.UniqueID')['bootstrapSwitch']();
+        jQuery('._popover').popover({ trigger: 'hover' });
+        $(".popover-dismiss").popover({ trigger: 'hover', html: true });
+
+    })
+    function KriterMuafSetChange(toUniqueId, isMuaf) {
+        var _panel = $('#bsvrDet_' + toUniqueId);
+        PanelRefresh(_panel, false);
+        $.ajax({
+            url: '@Url.Action("KriterMuafSet", "TosBasvuru")',
+            data: {
+                toUniqueId,
+                isMuaf,
+            },
+            success: function (result) {
+                PanelRefresh(_panel, true);
+                GetDetail(toUniqueId);
+                swal.fire({
+                    html: result.messageView,
+                    icon: (result.IsSuccess ? "success" : "error"),
+                    type: (result.IsSuccess ? "success" : "error"),
+                    confirmButtonText: 'tamam',
+                    padding: '2em'
+                });
+            },
+            error: function (err) {
+                PanelRefresh(_panel, true);
+                alert(err.responseText);
+
+            }
+        });
+    }
 </script>
 
 <script>
@@ -850,10 +1062,12 @@
 {
     <script>
 
-        function TosDegerlendirmeKaydet(toUniqueId,tosKomiteUniqueId) {
+        function TosDegerlendirmeKaydet(toUniqueId, tosKomiteUniqueId) {
             var ToBasvuruSavunmaDurumID = $('#ToBasvuruSavunmaDurumID_' + tosKomiteUniqueId).val();
             var IsCalismaRaporuAltAlanUygun = $('#IsCalismaRaporuAltAlanUygun_' + tosKomiteUniqueId).val();
             var Aciklama = $('#Aciklama_' + tosKomiteUniqueId).val();
+            var YeniTezBaslikTr = $('#YeniTezBaslikTr_' + tosKomiteUniqueId).val();
+            var YeniTezBaslikEn = $('#YeniTezBaslikEn_' + tosKomiteUniqueId).val();
             var _panel = $('#bsvrDet_' + toUniqueId);
             Swal.fire({
                 text: "Tez Öneri Savunma Sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
@@ -878,6 +1092,8 @@
                                 tosKomiteUniqueId,
                                 IsCalismaRaporuAltAlanUygun,
                                 ToBasvuruSavunmaDurumID,
+                                YeniTezBaslikTr,
+                                YeniTezBaslikEn,
                                 Aciklama
 
                             },

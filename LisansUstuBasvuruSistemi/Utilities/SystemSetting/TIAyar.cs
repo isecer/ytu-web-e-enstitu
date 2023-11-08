@@ -14,9 +14,9 @@ namespace LisansUstuBasvuruSistemi.Utilities.SystemSetting
         public const string TezOneriSavunmaBasvuruAlimiAcik = "Tez öneri savunma sınavı başvuru alımı açık";
         public const string TezOneriSavunmaSinaviOnlineYapilabilsin= "Tez öneri savunma sınavı online yapılabilsin"; 
         public const string TezOneriToplamBasarisizTezOneriSavunmaHak = "Toplam başarısız tez öneri savunma sınavı hakkı";
-        public const string TezOneriDuzeltmeSonrasiSavunmaHakkiGunKriter = "Düzeltme alan öğrenci yeni sınavı kaç gün içinde amalı";
-        public const string TezOneriIlkSavunmaHakkiGunKriter= "ilk başvuru için 1. Savunma kaç gün içinde yapılmalı";
-        public const string TezOneriIkinciSavunmaHakkiGunKriter = "ilk başvuru için 2. Savunma kaç gün içinde yapılmalı";
+        public const string TezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter = "Düzeltme alan öğrenci yeni sınavı kaç ay içinde amalı";
+        public const string TezOneriIlkSavunmaHakkiAyKriter= "ilk başvuru için 1. Savunma kaç ay içinde yapılmalı";
+        public const string TezOneriIkinciSavunmaHakkiAyKriter = "ilk başvuru için 2. Savunma kaç ay içinde yapılmalı";
         
         public const string BasvurusuAcikmi = "Başvuru alımı açık";
         public const string SonDonemKayitOlunmasiGerekenDersKodlari = "Son dönem kayıt olunması gereken ders kodları";
