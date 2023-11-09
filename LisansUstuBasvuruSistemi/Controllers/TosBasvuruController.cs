@@ -1167,8 +1167,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             toBasvuruSavunma.IsOyBirligiOrCoklugu = groupDurumData.Count == 1;
                             toBasvuruSavunma.ToBasvuru.IlkOneriBitisTarihi = null;
                             toBasvuruSavunma.ToBasvuru.IkinciOneriBitisTarihi = null;
-                            toBasvuruSavunma.ToBasvuru.RetDuzeltmeBitisTarihi = null; 
-
+                            toBasvuruSavunma.ToBasvuru.RetDuzeltmeBitisTarihi = null;
+                            _entities.SaveChanges();
                             var messages = TezOneriSavunmaBus.SendMailTosDegerlendirmeLink(toBasvuruSavunma.UniqueID, null, false);
                             if (isTezDanismani || degerlendirmeDuzeltmeYetki)
                             {
@@ -1195,6 +1195,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             toBasvuruSavunma.ToBasvuruSavunmaDurumID = null;
                         }
                         LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("ToBasvuruSavunma", IslemTipi.Update, toBasvuruSavunma.ToJson());
                         _entities.SaveChanges();
                     }
                 }

@@ -1133,7 +1133,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             return mMessage.ToJsonResult();
         }
-        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, string ekd)
+        public ActionResult GetTutanakRaporuExport(string basTar, string bitTar, bool exportWordOrExcel, bool isDegisiklik, string ekd)
         {
 
             var enstituKod = EnstituBus.GetSelectedEnstitu(ekd);
@@ -1154,7 +1154,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                          where tijBasvuru.EnstituKod == enstituKod &&
                                tijBasvuruOneri.EYKDaOnaylandi == true &&
                                tijBasvuruOneri.EYKTarihi >= baslangicTarihi &&
-                               tijBasvuruOneri.EYKTarihi <= bitisTarihi
+                               tijBasvuruOneri.EYKTarihi <= bitisTarihi &&
+                               tijBasvuruOneri.TijFormTipleri.IsDegisiklik == isDegisiklik
                          select new
                          {
                              tijBasvuruOneri.TijFormTipID,

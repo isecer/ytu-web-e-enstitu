@@ -2312,7 +2312,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             return mMessage.ToJsonResult();
         }
 
-        public ActionResult TdoEykDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi)
+        public ActionResult TdoEykDaOnayPost(int tdoBasvuruDanismanId, bool? eykDaOnaylandi, DateTime? eykDaOnaylandiOnayTarihi, string eykDaOnaylanmadiDurumAciklamasi, bool isBaslikGuncellensin, bool isYeniTezBasligiGozuksun, string tezBaslikTr, string tezBaslikEn)
         {
             var mMessage = new MmMessage
             {
@@ -2346,6 +2346,22 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "EYKDaOnaylandiOnayTarihi_" + tdoBasvuruDanismanId });
 
                 }
+
+                if (isBaslikGuncellensin)
+                {
+                    if (tezBaslikTr.IsNullOrWhiteSpace())
+                    {
+                        mMessage.Messages.Add((isYeniTezBasligiGozuksun ? "Yeni " : "") + "Tez Başlığı Türkçe bilgisi boş bırakılamaz");
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "TezBaslikTr_" + tdoBasvuruDanismanId });
+
+                    }
+                    if (tezBaslikEn.IsNullOrWhiteSpace())
+                    {
+                        mMessage.Messages.Add((isYeniTezBasligiGozuksun ? "Yeni " : "") + "Tez Başlığı İngilizce bilgisi boş bırakılamaz");
+                        mMessage.MessagesDialog.Add(new MrMessage { MessageType = Msgtype.Error, PropertyName = "TezBaslikEn_" + tdoBasvuruDanismanId });
+
+                    }
+                }
             }
             if (!mMessage.Messages.Any())
             {
@@ -2355,6 +2371,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (eykDaOnaylandi == true) tdoBasvuruDanis.EYKDaOnaylandiOnayTarihi = eykDaOnaylandiOnayTarihi.Value;
                 tdoBasvuruDanis.EYKDaOnaylandiIslemYapanID = UserIdentity.Current.Id;
                 if (eykDaOnaylandi == false) tdoBasvuruDanis.EYKDaOnaylanmadiDurumAciklamasi = eykDaOnaylanmadiDurumAciklamasi;
+
+                if (isBaslikGuncellensin)
+                {
+                    if (isYeniTezBasligiGozuksun)
+                    {
+                        tdoBasvuruDanis.YeniTezBaslikTr = tezBaslikTr;
+                        tdoBasvuruDanis.YeniTezBaslikEn = tezBaslikEn;
+                    }
+                    else
+                    {
+                        tdoBasvuruDanis.TezBaslikTr = tezBaslikTr;
+                        tdoBasvuruDanis.TezBaslikEn = tezBaslikEn;
+                    }
+                }
+
                 tdoBasvuruDanis.IslemTarihi = DateTime.Now;
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;

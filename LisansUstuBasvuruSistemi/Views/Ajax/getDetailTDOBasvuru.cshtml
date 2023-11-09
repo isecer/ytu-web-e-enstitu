@@ -782,9 +782,26 @@
                                                                                 </td>
                                                                             </tr>
                                                                         </table>
-
                                                                     </td>
                                                                 </tr>
+                                                                if (item.TDODanismanTalepTipID != TdoDanismanTalepTip.TezDanismaniDegisikligi)
+                                                                {
+                                                                    <tr id="EYKOnayTezBaslikTrRow_@item.TDOBasvuruDanismanID" class="form-group hide">
+                                                                        <td class="CaptionTd">@(item.IsYeniTezBasligiGozuksun ? "Yeni" : "") Tez Başlığı Türkçe</td>
+                                                                        <td class="CaptionTd">:</td>
+                                                                        <td class="ValueTd form-group">
+                                                                            <input type="hidden" id="IsYeniTezBasligiGozuksun_@item.TDOBasvuruDanismanID" value="@item.IsYeniTezBasligiGozuksun.ToString().ToLower()"/>
+                                                                            <input type="text" id="TezBaslikTr_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikTr : item.TezBaslikTr)" class="form-control " style="color:black;"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr id="EYKOnayTezBaslikEnRow_@item.TDOBasvuruDanismanID" class="form-group hide">
+                                                                        <td class="CaptionTd">@(item.IsYeniTezBasligiGozuksun ? "Yeni" : "") Tez Başlığı İngilizce</td>
+                                                                        <td class="CaptionTd">:</td>
+                                                                        <td class="ValueTd form-group">
+                                                                            <input type="text" id="TezBaslikEn_@item.TDOBasvuruDanismanID" autocomplete="off" maxlength="512" value="@(item.IsYeniTezBasligiGozuksun ? item.YeniTezBaslikEn : item.TezBaslikEn)" class="form-control " style="color:black;" />
+                                                                        </td>
+                                                                    </tr>
+                                                                }
                                                                 <tr id="EYKOnayAciklamaRow_@item.TDOBasvuruDanismanID" class="form-group @(item.EYKDaOnaylandi == false ? "" : "hide")">
                                                                     <td class="CaptionTd">Onaylanmama Açıklaması</td>
                                                                     <td class="CaptionTd">:</td>
@@ -1024,7 +1041,7 @@
                                                                                                                                     </select>
                                                                                                                                 </td>
                                                                                                                                 <td class="form-group">
-                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTimeInput()"/>
+                                                                                                                                    <input type="text" class="form-control tarihB @(itemE.EYKDaOnaylandi == true ? "" : "hide")" style="width:100px;" placeholder="EYK Tarihi" id="EYKDaOnaylandiOnayTarihiEs_@itemE.TDOBasvuruEsDanismanID" value="@itemE.EYKDaOnaylandiOnayTarihi.ToFormatDateAndTimeInput()" />
 
                                                                                                                                 </td>
                                                                                                                                 <td>
@@ -1194,10 +1211,14 @@
         }
         if (val == 'true') {
             $('#EYKDaOnaylandiOnayTarihi_' + id).removeClass('hide');
+            $('#EYKOnayTezBaslikTrRow_' + id).removeClass('hide');
+            $('#EYKOnayTezBaslikEnRow_' + id).removeClass('hide');
 
         }
         else {
             $('#EYKDaOnaylandiOnayTarihi_' + id).addClass('hide');
+            $('#EYKOnayTezBaslikTrRow_' + id).addClass('hide');
+            $('#EYKOnayTezBaslikEnRow_' + id).addClass('hide');
         }
     }
     function EYKYaOnayChange(id) {
@@ -1331,13 +1352,26 @@
         var EYKDaOnaylandi = $('#EYKDaOnaylandi_' + id).val();
         var EYKDaOnaylandiOnayTarihi = $('#EYKDaOnaylandiOnayTarihi_' + id).val();
         var EYKDaOnaylanmadiDurumAciklamasi = $('#EYKDaOnaylanmadiDurumAciklamasi_' + id).val();
+        var isBaslikGuncellensin = false;
+        var isYeniTezBasligiGozuksun = false;
+        var tezBaslikTr = "";
+        var tezBaslikEn = ""; 
+        if (EYKDaOnaylandi == 'true' && $('#TezBaslikTr_' + id).length > 0) {
+            isBaslikGuncellensin = true; 
+            isYeniTezBasligiGozuksun = $('#IsYeniTezBasligiGozuksun_' + id).val()=='true';
+            tezBaslikTr = $('#TezBaslikTr_' + id).val();
+            tezBaslikEn = $('#TezBaslikEn_' + id).val();  
+        }
         var model = {
             TDOBasvuruDanismanID: id,
             EYKDaOnaylandi: EYKDaOnaylandi,
             EYKDaOnaylandiOnayTarihi: EYKDaOnaylandiOnayTarihi,
-            EYKDaOnaylanmadiDurumAciklamasi: EYKDaOnaylanmadiDurumAciklamasi
-
-        };
+            EYKDaOnaylanmadiDurumAciklamasi: EYKDaOnaylanmadiDurumAciklamasi,
+            isBaslikGuncellensin,
+            isYeniTezBasligiGozuksun,
+            tezBaslikTr,
+            tezBaslikEn
+        }
         $.ajax({
             url: '@Url.Action("TdoEykDaOnayPost", "TDOBasvuru")',
             type: 'POST',

@@ -1024,7 +1024,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprMezuniyetTezTeslimFormu_FR0338(MB.RowID, IlkOrIkinci == 1);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1040,7 +1040,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprMezuniyetTezDuzeltmeJuriUyelerineCiltliTezTeslimTutanagi_FR0329_FR0325(DataID[0].Value);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1057,7 +1057,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprTezSinavSonucTutanagi_FR0342_FR0377(SrTalep.UniqueID.Value);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1072,7 +1072,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprJuriUyelerineTezTeslimFormu_FR0341_FR0302(MezuniyetJuriOneriFormID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1088,7 +1088,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprMezuniyetTezdenUretilenYayinlariDegerlendirmeFormu_FR0304(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1104,7 +1104,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprMezuniyetTezDegerlendirmeFormu_FR0303(MezuniyetJuriOneriFormID, MezuniyetJuriOneriFormuJuriID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1119,7 +1119,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprMezuniyetTezKontrolFormu(null, ID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1134,14 +1134,14 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprTiDegerlendirmeFormu_FR0307(ID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     var IsSwhoRaporDetay = false;
                     if (DataID.Count > 1) IsSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
                     if (IsSwhoRaporDetay)
                     {
                         var rpr2 = new RprTiDegerlendirmeFormuDetay_FR0307(ID);
                         rpr2.CreateDocument();
-                        rpr2.DisplayName = rpr2.DisplayName + ".pdf";
+                        rpr2.DisplayName += ".pdf";
                         rpr.Pages.AddRange(rpr2.Pages);
                     }
                     rpr.ExportOptions.Pdf.Compressed = true;
@@ -1157,14 +1157,14 @@ namespace LisansUstuBasvuruSistemi.Models
                     var ID = DataID[0].Value;  
                     var rpr = new RprToSavunmaFormu_FR0348(ID);
                     rpr.CreateDocument(); 
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     var isSwhoRaporDetay = false;
                     if (DataID.Count > 1) isSwhoRaporDetay = DataID[1].ToIntToBooleanObj() ?? false;
                     if (isSwhoRaporDetay)
                     {
                         var rpr2 = new RprToSavunmaFormuDetay_FR0348(ID);
                         rpr2.CreateDocument();
-                        rpr2.DisplayName = rpr2.DisplayName + ".pdf";
+                        rpr2.DisplayName += ".pdf";
                         rpr.Pages.AddRange(rpr2.Pages);
                     }
                     rpr.ExportOptions.Pdf.Compressed = true;
@@ -1181,7 +1181,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprTezDanismaniOneriFormu_FR0347(ID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1196,7 +1196,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprTezDanismaniDegisiklikFormu_FR0308(ID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1211,7 +1211,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var rpr = new RprTezEsDanismaniOneriFormu_FR0320(ID);
 
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1225,7 +1225,7 @@ namespace LisansUstuBasvuruSistemi.Models
                     var id = DataID[0].Value;
                     var rpr = new RprDrYeterlikSinavDegerlendirmeFormu_FR1227(id);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1240,7 +1240,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     var rpr = new RprTijOneriFormu_FR0306(id);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);
@@ -1255,7 +1255,7 @@ namespace LisansUstuBasvuruSistemi.Models
 
                     var rpr = new RprTijDegisiklikFormu_FR1460(id);
                     rpr.CreateDocument();
-                    rpr.DisplayName = rpr.DisplayName + ".pdf";
+                    rpr.DisplayName += ".pdf";
                     rpr.ExportOptions.Pdf.Compressed = true;
                     ms = new MemoryStream();
                     rpr.ExportToPdf(ms);

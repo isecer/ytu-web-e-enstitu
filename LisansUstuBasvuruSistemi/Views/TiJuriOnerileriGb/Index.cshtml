@@ -58,9 +58,9 @@
                                                                                   
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
-                                                                                var _RaporTarihi = $('#BitTar').val();
+                                                                                var _isDegisiklik = $('#isDegisiklik').val();
                                                                                 var _ExportWordOrExcel = $('#exportWordOrExcel').val(); 
-                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar  + '&ExportWordOrExcel=' + _ExportWordOrExcel;
+                                                                                window.location = '@Url.Action("GetTutanakRaporuExport", "TiJuriOnerileriGb")?&BasTar=' + _Bastar + '&BitTar=' + _Bittar  + '&ExportWordOrExcel=' + _ExportWordOrExcel+"&isDegisiklik="+_isDegisiklik;
 
                                                                             }
                                                                             else {
