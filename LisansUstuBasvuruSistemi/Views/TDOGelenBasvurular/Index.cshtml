@@ -121,7 +121,7 @@
                                                                     success: function (result) {
 
                                                                         PanelRefresh(pnlx, true);
-                                                                            if (result.IsSuccess) { 
+                                                                            if (result.IsSuccess) {
                                                                                 var _Bastar = $('#BasTar').val();
                                                                                 var _Bittar = $('#BitTar').val();
                                                                                 //var _RaporTarihi = $('#RaporTarihi').val();
@@ -185,7 +185,7 @@
                             <li>
                                 <a href="javascript:void(0)" onclick="mGonderGB('@string.Join(",",mKids)',true,false)" title="Listelenen @mKids.Count Kişiye Mail Gönder"><i class="fa fa-envelope"></i></a>
                             </li>
-                        } 
+                        }
                     </ul>
                 </div>
                 <div class="panel-body">
@@ -299,10 +299,10 @@
                             @if (Model.RowCount > 0)
                             {
 
-                                int rowIndex = Model.StartRowIndex;  
+                                int rowIndex = Model.StartRowIndex;
                                 foreach (var item in Model.TdoBasvuruDtos)
                                 {
-                                    rowIndex++; 
+                                    rowIndex++;
                                     <tr style="color:@item.DurumColor;">
                                         <td>
                                             <table>
@@ -330,7 +330,7 @@
                                             @item.AktifDonemAdi
                                         </td>
                                         <td>
-                                          @item.ToBasvuruDurumView()
+                                            @item.ToBasvuruDurumView()
 
                                         </td>
 
@@ -368,9 +368,9 @@
         </div>
     }
 </div>
-@if (danismanOnayYetki && !eykOnayYetki && (Model.RowCount > 0 || Model.TDOBasvuruID.HasValue))
+@if (Model.RowCount == 1)
 {
-    if (!Model.TDOBasvuruID.HasValue && Model.RowCount > 0) { Model.TDOBasvuruID = Model.TdoBasvuruDtos.First().TDOBasvuruID; }
+    Model.TDOBasvuruID = Model.TdoBasvuruDtos.First().TDOBasvuruID;
     <script>
         $(function () {
         ShowDetail('@Model.TDOBasvuruID');
@@ -474,7 +474,7 @@
                     }
                 }
             }
-        }); 
-    } 
+        });
+    }
 
 </script>

@@ -673,6 +673,18 @@
     <Compile Include="Models\Sehirler.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ServiceLog.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ServiceRole.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ServiceUser.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ServiceUserRole.cs">
+      <DependentUpon>LubsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SikcaSorulanSorular.cs">
       <DependentUpon>LubsDB.tt</DependentUpon>
     </Compile>
@@ -938,6 +950,7 @@
     </Compile>
     <Compile Include="Utilities\Dtos\BasvuruDtos.cs" />
     <Compile Include="Utilities\Dtos\DmYeterlikDetayDto.cs" />
+    <Compile Include="Utilities\Dtos\MbYayinEkleViewDto.cs" />
     <Compile Include="Utilities\Dtos\TijBasvuruDetayDto.cs" />
     <Compile Include="Utilities\Dtos\TijOneriDtos.cs" />
     <Compile Include="Utilities\Dtos\FmYeterlikBasvuruDto.cs" />
@@ -1372,7 +1385,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="WebServiceData\GsisService.cs" />
     <Compile Include="WebServiceData\YokService.cs" />
   </ItemGroup>
   <ItemGroup>

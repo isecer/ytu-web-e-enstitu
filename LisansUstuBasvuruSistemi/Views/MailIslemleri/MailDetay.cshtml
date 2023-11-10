@@ -1,4 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Models
+﻿@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model FrMailGondermeDto
@@ -121,7 +122,16 @@
                                             {
                                                 <tr>
                                                     <td style="width: 25px;">@(item2.inx + 1))</td>
-                                                    <td class="name"><a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-download" style="color: green;"></span>&nbsp;@item2.s.EkAdi</a></td>
+                                                    <td class="name">
+                                                        @if (item2.s.EkDosyaYolu.IsNullOrWhiteSpace())
+                                                        {
+                                                            <span class="fa fa-paperclip" style="color: green;"></span> @item2.s.EkAdi
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@item2.s.EkDosyaYolu" target="_blank"><span class="fa fa-paperclip" style="color: green;"></span> @item2.s.EkAdi</a>
+                                                        }
+                                                    </td>
                                                 </tr>
                                             }
                                         }
@@ -151,7 +161,7 @@
                             <span>Kullanıcı Yok</span>
                         }
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>

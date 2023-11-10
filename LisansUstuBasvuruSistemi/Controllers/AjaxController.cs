@@ -58,6 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }).FirstOrDefault();
             return Json(k, "application/json", JsonRequestBehavior.AllowGet);
         }
+        [Authorize]
         public ActionResult SetThemeSetting(string columnName, string value)
         {
 

@@ -979,6 +979,7 @@
           <Property Name="KayitTarihi" Type="datetime" />
           <Property Name="KayitYilBaslangic" Type="int" />
           <Property Name="KayitDonemID" Type="int" />
+          <Property Name="OkuduguDonemNo" Type="int" />
           <Property Name="DanismanID" Type="int" />
           <Property Name="FixedHeader" Type="bit" Nullable="false" />
           <Property Name="FixedSidebar" Type="bit" Nullable="false" />
@@ -1808,6 +1809,45 @@
           <Property Name="IslemTarihi" Type="datetime" Nullable="false" />
           <Property Name="IslemYapanID" Type="int" Nullable="false" />
           <Property Name="IslemYapanIP" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceLog">
+          <Key>
+            <PropertyRef Name="ServiceLogId" />
+          </Key>
+          <Property Name="ServiceLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceUserID" Type="int" />
+          <Property Name="ServiceUserName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="MethodName" Type="nvarchar" MaxLength="255" />
+          <Property Name="IslemSuresiSn" Type="int" Nullable="false" />
+          <Property Name="LogTarihi" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceRole">
+          <Key>
+            <PropertyRef Name="ServiceRoleID" />
+          </Key>
+          <Property Name="ServiceRoleID" Type="int" Nullable="false" />
+          <Property Name="ServiceRoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceUser">
+          <Key>
+            <PropertyRef Name="ServiceUserID" />
+          </Key>
+          <Property Name="ServiceUserID" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Detail" Type="nvarchar" MaxLength="1024" />
+          <Property Name="EMail" Type="nvarchar" MaxLength="256" />
+          <Property Name="PasswordHash" Type="varbinary(max)" Nullable="false" />
+          <Property Name="PasswordSalt" Type="varbinary(max)" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceUserRole">
+          <Key>
+            <PropertyRef Name="ServiceuserRoleID" />
+          </Key>
+          <Property Name="ServiceuserRoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceUserID" Type="int" Nullable="false" />
+          <Property Name="ServiceRoleID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SikcaSorulanSorular">
           <Key>
@@ -5578,6 +5618,30 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServiceUserRole_ServiceRole">
+          <End Role="ServiceRole" Type="Self.ServiceRole" Multiplicity="1" />
+          <End Role="ServiceUserRole" Type="Self.ServiceUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceRole">
+              <PropertyRef Name="ServiceRoleID" />
+            </Principal>
+            <Dependent Role="ServiceUserRole">
+              <PropertyRef Name="ServiceRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceUserRoles_ServiceUser">
+          <End Role="ServiceUser" Type="Self.ServiceUser" Multiplicity="1" />
+          <End Role="ServiceUserRole" Type="Self.ServiceUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceUser">
+              <PropertyRef Name="ServiceUserID" />
+            </Principal>
+            <Dependent Role="ServiceUserRole">
+              <PropertyRef Name="ServiceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SinavNotlari_SinavTipleri">
           <End Role="SinavTipleri" Type="Self.SinavTipleri" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -7144,6 +7208,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Programlar" EntityType="Self.Programlar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roller" EntityType="Self.Roller" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sehirler" EntityType="Self.Sehirler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceLog" EntityType="Self.ServiceLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceRole" EntityType="Self.ServiceRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceUser" EntityType="Self.ServiceUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceUserRole" EntityType="Self.ServiceUserRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SikcaSorulanSorular" EntityType="Self.SikcaSorulanSorular" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavDilleri" EntityType="Self.SinavDilleri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SinavNotlari" EntityType="Self.SinavNotlari" Schema="dbo" store:Type="Tables" />
@@ -8072,6 +8140,14 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             <End Role="Kullanicilar" EntitySet="Kullanicilar" />
             <End Role="Sehirler" EntitySet="Sehirler" />
           </AssociationSet>
+          <AssociationSet Name="FK_ServiceUserRole_ServiceRole" Association="Self.FK_ServiceUserRole_ServiceRole">
+            <End Role="ServiceRole" EntitySet="ServiceRole" />
+            <End Role="ServiceUserRole" EntitySet="ServiceUserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceUserRoles_ServiceUser" Association="Self.FK_ServiceUserRoles_ServiceUser">
+            <End Role="ServiceUser" EntitySet="ServiceUser" />
+            <End Role="ServiceUserRole" EntitySet="ServiceUserRole" />
+          </AssociationSet>
           <AssociationSet Name="FK_SinavNotlari_SinavTipleri" Association="Self.FK_SinavNotlari_SinavTipleri">
             <End Role="SinavTipleri" EntitySet="SinavTipleri" />
             <End Role="SinavNotlari" EntitySet="SinavNotlari" />
@@ -8661,6 +8737,10 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySet Name="Programlars" EntityType="LisansustuBasvuruSistemiModel.Programlar" />
           <EntitySet Name="Rollers" EntityType="LisansustuBasvuruSistemiModel.Roller" />
           <EntitySet Name="Sehirlers" EntityType="LisansustuBasvuruSistemiModel.Sehirler" />
+          <EntitySet Name="ServiceLogs" EntityType="LisansustuBasvuruSistemiModel.ServiceLog" />
+          <EntitySet Name="ServiceRoles" EntityType="LisansustuBasvuruSistemiModel.ServiceRole" />
+          <EntitySet Name="ServiceUsers" EntityType="LisansustuBasvuruSistemiModel.ServiceUser" />
+          <EntitySet Name="ServiceUserRoles" EntityType="LisansustuBasvuruSistemiModel.ServiceUserRole" />
           <EntitySet Name="SikcaSorulanSorulars" EntityType="LisansustuBasvuruSistemiModel.SikcaSorulanSorular" />
           <EntitySet Name="SinavDilleris" EntityType="LisansustuBasvuruSistemiModel.SinavDilleri" />
           <EntitySet Name="SinavNotlaris" EntityType="LisansustuBasvuruSistemiModel.SinavNotlari" />
@@ -9798,6 +9878,14 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <AssociationSet Name="FK_YetkiGrupRolleri_Roller" Association="LisansustuBasvuruSistemiModel.FK_YetkiGrupRolleri_Roller">
             <End Role="Roller" EntitySet="Rollers" />
             <End Role="YetkiGrupRolleri" EntitySet="YetkiGrupRolleris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceUserRole_ServiceRole" Association="LisansustuBasvuruSistemiModel.FK_ServiceUserRole_ServiceRole">
+            <End Role="ServiceRole" EntitySet="ServiceRoles" />
+            <End Role="ServiceUserRole" EntitySet="ServiceUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceUserRoles_ServiceUser" Association="LisansustuBasvuruSistemiModel.FK_ServiceUserRoles_ServiceUser">
+            <End Role="ServiceUser" EntitySet="ServiceUsers" />
+            <End Role="ServiceUserRole" EntitySet="ServiceUserRoles" />
           </AssociationSet>
           <AssociationSet Name="FK_SinavNotlari_SinavTipleri" Association="LisansustuBasvuruSistemiModel.FK_SinavNotlari_SinavTipleri">
             <End Role="SinavTipleri" EntitySet="SinavTipleris" />
@@ -11233,6 +11321,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
           <Property Name="KayitYilBaslangic" Type="Int32" />
           <Property Name="KayitDonemID" Type="Int32" />
+          <Property Name="OkuduguDonemNo" Type="Int32" />
           <Property Name="DanismanID" Type="Int32" />
           <Property Name="FixedHeader" Type="Boolean" Nullable="false" />
           <Property Name="FixedSidebar" Type="Boolean" Nullable="false" />
@@ -12277,6 +12366,49 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Kullanicilars2" Relationship="LisansustuBasvuruSistemiModel.FK_Kullanicilar_Sehirler2" FromRole="Sehirler" ToRole="Kullanicilar" />
           <NavigationProperty Name="Kullanicilar" Relationship="LisansustuBasvuruSistemiModel.FK_Sehirler_Kullanicilar" FromRole="Sehirler" ToRole="Kullanicilar" />
         </EntityType>
+        <EntityType Name="ServiceLog">
+          <Key>
+            <PropertyRef Name="ServiceLogId" />
+          </Key>
+          <Property Name="ServiceLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceUserID" Type="Int32" />
+          <Property Name="ServiceUserName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MethodName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IslemSuresiSn" Type="Int32" Nullable="false" />
+          <Property Name="LogTarihi" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ServiceRole">
+          <Key>
+            <PropertyRef Name="ServiceRoleID" />
+          </Key>
+          <Property Name="ServiceRoleID" Type="Int32" Nullable="false" />
+          <Property Name="ServiceRoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ServiceUserRoles" Relationship="LisansustuBasvuruSistemiModel.FK_ServiceUserRole_ServiceRole" FromRole="ServiceRole" ToRole="ServiceUserRole" />
+        </EntityType>
+        <EntityType Name="ServiceUser">
+          <Key>
+            <PropertyRef Name="ServiceUserID" />
+          </Key>
+          <Property Name="ServiceUserID" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Detail" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="EMail" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="PasswordSalt" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServiceUserRoles" Relationship="LisansustuBasvuruSistemiModel.FK_ServiceUserRoles_ServiceUser" FromRole="ServiceUser" ToRole="ServiceUserRole" />
+        </EntityType>
+        <EntityType Name="ServiceUserRole">
+          <Key>
+            <PropertyRef Name="ServiceuserRoleID" />
+          </Key>
+          <Property Name="ServiceuserRoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceUserID" Type="Int32" Nullable="false" />
+          <Property Name="ServiceRoleID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ServiceRole" Relationship="LisansustuBasvuruSistemiModel.FK_ServiceUserRole_ServiceRole" FromRole="ServiceUserRole" ToRole="ServiceRole" />
+          <NavigationProperty Name="ServiceUser" Relationship="LisansustuBasvuruSistemiModel.FK_ServiceUserRoles_ServiceUser" FromRole="ServiceUserRole" ToRole="ServiceUser" />
+        </EntityType>
         <EntityType Name="SikcaSorulanSorular">
           <Key>
             <PropertyRef Name="SSSID" />
@@ -13260,6 +13392,9 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <Property Name="TezDanismanID" Type="Int32" />
           <Property Name="YeterlikSozluSinavTarihi" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="IsBasvuruKriterMuaf" Type="Boolean" Nullable="false" />
+          <Property Name="IlkOneriBitisTarihi" Type="DateTime" Precision="3" />
+          <Property Name="IkinciOneriBitisTarihi" Type="DateTime" Precision="3" />
+          <Property Name="RetDuzeltmeBitisTarihi" Type="DateTime" Precision="3" />
           <Property Name="IslemTarihi" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IslemYapanID" Type="Int32" Nullable="false" />
           <Property Name="IslemYapanIP" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
@@ -13268,9 +13403,6 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <NavigationProperty Name="Kullanicilar" Relationship="LisansustuBasvuruSistemiModel.FK_ToBasvuru_Kullanicilar" FromRole="ToBasvuru" ToRole="Kullanicilar" />
           <NavigationProperty Name="Programlar" Relationship="LisansustuBasvuruSistemiModel.FK_ToBasvuru_Programlar" FromRole="ToBasvuru" ToRole="Programlar" />
           <NavigationProperty Name="ToBasvuruSavunmas" Relationship="LisansustuBasvuruSistemiModel.FK_ToBasvuruSavunma_ToBasvuru" FromRole="ToBasvuru" ToRole="ToBasvuruSavunma" />
-          <Property Name="IlkOneriBitisTarihi" Type="DateTime" Precision="3" />
-          <Property Name="IkinciOneriBitisTarihi" Type="DateTime" Precision="3" />
-          <Property Name="RetDuzeltmeBitisTarihi" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="ToBasvuruSavunma">
           <Key>
@@ -16921,6 +17053,30 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServiceUserRole_ServiceRole">
+          <End Type="LisansustuBasvuruSistemiModel.ServiceRole" Role="ServiceRole" Multiplicity="1" />
+          <End Type="LisansustuBasvuruSistemiModel.ServiceUserRole" Role="ServiceUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceRole">
+              <PropertyRef Name="ServiceRoleID" />
+            </Principal>
+            <Dependent Role="ServiceUserRole">
+              <PropertyRef Name="ServiceRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceUserRoles_ServiceUser">
+          <End Type="LisansustuBasvuruSistemiModel.ServiceUser" Role="ServiceUser" Multiplicity="1" />
+          <End Type="LisansustuBasvuruSistemiModel.ServiceUserRole" Role="ServiceUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceUser">
+              <PropertyRef Name="ServiceUserID" />
+            </Principal>
+            <Dependent Role="ServiceUserRole">
+              <PropertyRef Name="ServiceUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SinavNotlari_SinavTipleri">
           <End Type="LisansustuBasvuruSistemiModel.SinavTipleri" Role="SinavTipleri" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -18663,6 +18819,7 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="FixedSidebar" ColumnName="FixedSidebar" />
                 <ScalarProperty Name="FixedHeader" ColumnName="FixedHeader" />
                 <ScalarProperty Name="DanismanID" ColumnName="DanismanID" />
+                <ScalarProperty Name="OkuduguDonemNo" ColumnName="OkuduguDonemNo" />
                 <ScalarProperty Name="KayitDonemID" ColumnName="KayitDonemID" />
                 <ScalarProperty Name="KayitYilBaslangic" ColumnName="KayitYilBaslangic" />
                 <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
@@ -19537,6 +19694,49 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
                 <ScalarProperty Name="IsAktif" ColumnName="IsAktif" />
                 <ScalarProperty Name="Ad" ColumnName="Ad" />
                 <ScalarProperty Name="SehirKod" ColumnName="SehirKod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceLogs">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ServiceLog">
+              <MappingFragment StoreEntitySet="ServiceLog">
+                <ScalarProperty Name="LogTarihi" ColumnName="LogTarihi" />
+                <ScalarProperty Name="IslemSuresiSn" ColumnName="IslemSuresiSn" />
+                <ScalarProperty Name="MethodName" ColumnName="MethodName" />
+                <ScalarProperty Name="ServiceUserName" ColumnName="ServiceUserName" />
+                <ScalarProperty Name="ServiceUserID" ColumnName="ServiceUserID" />
+                <ScalarProperty Name="ServiceLogId" ColumnName="ServiceLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceRoles">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ServiceRole">
+              <MappingFragment StoreEntitySet="ServiceRole">
+                <ScalarProperty Name="ServiceRoleName" ColumnName="ServiceRoleName" />
+                <ScalarProperty Name="ServiceRoleID" ColumnName="ServiceRoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceUsers">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ServiceUser">
+              <MappingFragment StoreEntitySet="ServiceUser">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EMail" ColumnName="EMail" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ServiceUserID" ColumnName="ServiceUserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceUserRoles">
+            <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ServiceUserRole">
+              <MappingFragment StoreEntitySet="ServiceUserRole">
+                <ScalarProperty Name="ServiceRoleID" ColumnName="ServiceRoleID" />
+                <ScalarProperty Name="ServiceUserID" ColumnName="ServiceUserID" />
+                <ScalarProperty Name="ServiceuserRoleID" ColumnName="ServiceuserRoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -20416,12 +20616,12 @@ warning 6002: The table/view 'LisansustuBasvuruSistemi.dbo.vW_ProgramBasvuruSonu
           <EntitySetMapping Name="ToBasvurus">
             <EntityTypeMapping TypeName="LisansustuBasvuruSistemiModel.ToBasvuru">
               <MappingFragment StoreEntitySet="ToBasvuru">
-                <ScalarProperty Name="RetDuzeltmeBitisTarihi" ColumnName="RetDuzeltmeBitisTarihi" />
-                <ScalarProperty Name="IkinciOneriBitisTarihi" ColumnName="IkinciOneriBitisTarihi" />
-                <ScalarProperty Name="IlkOneriBitisTarihi" ColumnName="IlkOneriBitisTarihi" />
                 <ScalarProperty Name="IslemYapanIP" ColumnName="IslemYapanIP" />
                 <ScalarProperty Name="IslemYapanID" ColumnName="IslemYapanID" />
                 <ScalarProperty Name="IslemTarihi" ColumnName="IslemTarihi" />
+                <ScalarProperty Name="RetDuzeltmeBitisTarihi" ColumnName="RetDuzeltmeBitisTarihi" />
+                <ScalarProperty Name="IkinciOneriBitisTarihi" ColumnName="IkinciOneriBitisTarihi" />
+                <ScalarProperty Name="IlkOneriBitisTarihi" ColumnName="IlkOneriBitisTarihi" />
                 <ScalarProperty Name="IsBasvuruKriterMuaf" ColumnName="IsBasvuruKriterMuaf" />
                 <ScalarProperty Name="YeterlikSozluSinavTarihi" ColumnName="YeterlikSozluSinavTarihi" />
                 <ScalarProperty Name="TezDanismanID" ColumnName="TezDanismanID" />

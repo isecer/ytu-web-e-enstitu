@@ -18,19 +18,39 @@ namespace LisansUstuBasvuruSistemi.Business
 {
     public static class MezuniyetBus
     {
+        // tezli Yl öğrencilerinin mezuniyet başvurusu için belli bir dönem okuyu ondan sonra başvurabilirler 31-03-2016 tarihi itibari ile 4 dönem okumaları gerekir.
+        public static DateTime MezuniyetDonemKontrolKriterBasTar = new DateTime(2016, 03, 31);
+
         public static int? GetMezuniyetAktifSurecId(string enstituKod, int? mezuniyetSurecId = null)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
 
                 var nowDate = DateTime.Now;
-                var bf = db.MezuniyetSurecis.Where(p => (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif && (p.EnstituKod == enstituKod) && p.MezuniyetSurecID == (mezuniyetSurecId.HasValue ? mezuniyetSurecId.Value : p.MezuniyetSurecID));
+                var bf = db.MezuniyetSurecis.Where(p =>
+                    (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif &&
+                    (p.EnstituKod == enstituKod) && p.MezuniyetSurecID ==
+                    (mezuniyetSurecId.HasValue ? mezuniyetSurecId.Value : p.MezuniyetSurecID));
                 var qBf = bf.FirstOrDefault();
                 int? id = null;
                 if (qBf != null) id = qBf.MezuniyetSurecID;
                 return id;
             }
         }
+
+        public static bool IsSurecAktif(int mezuniyetSurecId)
+        {
+            using (var db = new LisansustuBasvuruSistemiEntities())
+            {
+
+                var nowDate = DateTime.Now;
+                return db.MezuniyetSurecis.Any(p =>
+                    (p.BaslangicTarihi <= nowDate && p.BitisTarihi >= nowDate) && p.IsAktif &&
+                    p.MezuniyetSurecID == mezuniyetSurecId);
+
+            }
+        }
+
         public static MmMessage MezuniyetBasvurusuSilKontrol(int mezuniyetBasvurulariId)
         {
             var msg = new MmMessage
@@ -41,7 +61,8 @@ namespace LisansUstuBasvuruSistemi.Business
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
                 var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-                var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
+                var basvuru =
+                    db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId);
                 if (basvuru == null)
                 {
                     msg.IsSuccess = false;
@@ -49,12 +70,13 @@ namespace LisansUstuBasvuruSistemi.Business
                 }
                 else
                 {
-                    if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
+                    if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki &&
+                        basvuru.KullaniciID != UserIdentity.Current.Id)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Bu enstitüye ait başvuruyu silmeye yetkili değilsiniz!");
                     }
-                    else if (!GetMezuniyetAktifSurecId(basvuru.MezuniyetSureci.EnstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
+                    else if (!IsSurecAktif(basvuru.MezuniyetSurecID) && UserIdentity.Current.IsAdmin == false)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
@@ -65,228 +87,459 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.IsSuccess = false;
                         msg.Messages.Add("Başka bir kullanıcıya ait başvuruyu silmeye hakkınız yoktur!");
                     }
-                    else if (kayitYetki == false && basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
+                    else if (kayitYetki == false &&
+                             basvuru.MezuniyetYayinKontrolDurumID != MezuniyetYayinKontrolDurumu.Taslak)
                     {
                         msg.IsSuccess = false;
                         msg.Messages.Add("Taslak Harici Başvurular Silinemez.");
                     }
                 }
             }
+
             return msg;
         }
-        public static MmMessage MezuniyetSurecAktifKontrol(string enstituKod, int? kullaniciId, int? mezuniyetBasvurulariId = null)
+
+        public static MmMessage MezuniyetBasvuruKriterKontrol(string enstituKod, int? mezuniyetBasvurulariId = null)
         {
-            var messageModel = new MmMessage
-            {
-                IsSuccess = true
-            };
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
-                var kul = db.Kullanicilars.First(f => f.KullaniciID == kullaniciId);
-                var basvuruVar = db.MezuniyetBasvurularis.Any(p =>
-                                                                   kul.ProgramKod == p.ProgramKod &&
-                                                                   kul.OgrenciNo == p.OgrenciNo &&
-                                                                   kul.OgrenimTipKod == p.OgrenimTipKod &&
-                                                                   p.KullaniciID == kullaniciId &&
-                                                                   p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
-                                                                   (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi || p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
+            var mMessage = new MmMessage();
+            var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
 
-                if (basvuruVar)
-                {
-                    messageModel.IsSuccess = false;
-                    messageModel.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
-                    return messageModel;
+            using (var entities = new LisansustuBasvuruSistemiEntities())
+            {
 
-                }
-                if (mezuniyetBasvurulariId.HasValue)
+
+                if (mezuniyetBasvurulariId > 0)
                 {
-                    var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
+                    var basvuru = entities.MezuniyetBasvurularis.FirstOrDefault(p =>
+                        p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
                     if (basvuru == null)
                     {
-                        messageModel.IsSuccess = false;
-                        messageModel.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
+                        mMessage.Messages.Add("Düzenlenmek istenen mezuniyet başvurusu sistemde bulunamadı.");
+                        return mMessage;
                     }
-                    else
+
+                    //Önce Kayıt yetkisi varsa ona göre kontrol et
+                    if (kayitYetki)
                     {
-
-                        if (basvuru.MezuniyetSureci.EnstituKod != enstituKod)
+                        if (UserIdentity.Current.IsAdmin == false && !IsSurecAktif(basvuru.MezuniyetSurecID))
                         {
-                            enstituKod = basvuru.MezuniyetSureci.EnstituKod;
+                            mMessage.Messages.Add(
+                                "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+                            return mMessage;
                         }
 
-                        if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
+                        if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod))
                         {
-                            messageModel.IsSuccess = false;
-                            messageModel.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
-                        }
-                        else if (!GetMezuniyetAktifSurecId(enstituKod, basvuru.MezuniyetSurecID).HasValue && UserIdentity.Current.IsAdmin == false)
-                        {
-                            messageModel.IsSuccess = false;
-                            messageModel.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
-
-                        }
-                        if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
-                        {
-                            messageModel.IsSuccess = false;
-                            messageModel.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
-                        }
-                        else if (kayitYetki == false && (basvuru.IsDanismanOnay == true))
-                        {
-                            messageModel.IsSuccess = false;
-                            messageModel.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
+                            mMessage.Messages.Add("Başvurunun ait olduğu enstitü yetkiniz bulunmamaktadır.");
+                            return mMessage;
                         }
 
+                        return mMessage;
                     }
+
+                    //kayıt yetkisi yoksa ona göre kontrol et
+                    if (basvuru.KullaniciID != UserIdentity.Current.Id)
+                    {
+                        mMessage.Messages.Add("Bu İşlem için yetkili değilsiniz.");
+                        return mMessage;
+                    }
+
+                    if (basvuru.IsDanismanOnay == true)
+                    {
+                        mMessage.Messages.Add("Danışman tarafından onaylanan başvuruda düzenleme işlemi yapamazsınız!");
+                        return mMessage;
+                    }
+
+                    if (!IsSurecAktif(basvuru.MezuniyetSurecID))
+                    {
+                        mMessage.Messages.Add(
+                            "Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+                        return mMessage;
+                    }
+
+                    return mMessage;
                 }
-                else
+
+                // bu kısımda özel yetki kontrolü yok, yeni bir başvuru için kontroller yapılır ve yeni başvurular öğrenci adına yapılamaz. Ancak öğrenci hesabına geçerek yapılabilir.
+
+                var kul = entities.Kullanicilars.First(f => f.KullaniciID == UserIdentity.Current.Id);
+                var aktifBasvuruVar = entities.MezuniyetBasvurularis.Any(p =>
+                    kul.ProgramKod == p.ProgramKod &&
+                    kul.OgrenciNo == p.OgrenciNo &&
+                    kul.OgrenimTipKod == p.OgrenimTipKod &&
+                    p.KullaniciID == kul.KullaniciID &&
+                    p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
+                    (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi ||
+                     p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
+
+                if (aktifBasvuruVar)
                 {
-                    int? mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
-                    messageModel.IsSuccess = mezuniyetSurecId.HasValue;
-                    if (kullaniciId.HasValue == false) kullaniciId = UserIdentity.Current.Id;
-                    else if (kullaniciId != UserIdentity.Current.Id && UserIdentity.Current.IsAdmin == false)
-                    {
-                        kullaniciId = UserIdentity.Current.Id;
-                    }
-                    if (messageModel.IsSuccess == false)
-                    {
-                        messageModel.Messages.Add("Başvuru Süreci Kapalı");
-                    }
-                    else if (!(kul.KullaniciTipleri.BasvuruYapabilir))
-                    {
-                        messageModel.IsSuccess = false;
-                        messageModel.Messages.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
-                    }
-                    else
-                    {
-                        if (kul.YtuOgrencisi)
-                        {
-                            if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
-                            {
-                                messageModel.IsSuccess = false;
-                                messageModel.Messages.Add(
-                                    "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
-                            }
-                            else if (kul.KayitDonemID.HasValue == false)
-                            {
-                                messageModel.IsSuccess = false;
-                                messageModel.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
-                            }
-                            else if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
-
-                            {
-                                messageModel.IsSuccess = false;
-                                messageModel.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
-                                return messageModel;
-                            }
-
-
-                            if (GetMezuniyetSureciOgrenimTipUygunMu(mezuniyetSurecId.Value, kullaniciId.Value) == false)
-                            {
-                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-                                    .OgrenimTipAdi;
-                                messageModel.IsSuccess = false;
-                                messageModel.Messages.Add(otsAdi +
-                                                 " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
-                            }
-                            else if (kullaniciId != UserIdentity.Current.Id &&
-                                     kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
-                                     (kul.KayitTarihi > Convert.ToDateTime("31-03-2016") && MezuniyetBus
-                                         .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
-                                             kul.KayitDonemID.Value).Count < 4))
-                            {
-                                var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-                                    .OgrenimTipAdi;
-                                messageModel.IsSuccess = false;
-                                messageModel.Messages.Add(otsAdi +
-                                                 " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
-                            }
-                            else
-                            {
-                                if (!db.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
-                                        a.MezuniyetSurecID == mezuniyetSurecId.Value &&
-                                        a.KullaniciID == kul.KullaniciID))
-                                {
-
-
-                                    var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p =>
-                                        p.MezuniyetSurecID == mezuniyetSurecId.Value &&
-                                        p.OgrenimTipKod == kul.OgrenimTipKod);
-                                    var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri
-                                        .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
-                                        .Where(p => !p.IsNullOrWhiteSpace()).ToList();
-
-                                    var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
-                                    var bkMsg = new List<string>();
-                                    if (basvuruSonDonemSecilecekDersKodlari.Any() &&
-                                        ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
-                                            basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
-                                        basvuruSonDonemSecilecekDersKodlari.Count)
-                                    {
-                                        bkMsg.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
-                                                  " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
-                                    }
-
-                                    if (basvuruKriterleri.MBasvuruToplamKrediKriteri >
-                                        ogrenciBilgi.AktifDonemDers.ToplamKredi)
-                                    {
-                                        bkMsg.Add("Toplam Kredi sayınız " +
-                                                  basvuruKriterleri.MBasvuruToplamKrediKriteri +
-                                                  " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
-                                                  ogrenciBilgi.AktifDonemDers.ToplamKredi);
-
-                                    }
-                                    if (!basvuruKriterleri.MBasvuruEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
-                                    {
-                                        bkMsg.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-                                    }
-                                    if (!basvuruKriterleri.MBasvuruSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
-                                    {
-                                        bkMsg.Add("Seminer dersi için ders notu " + basvuruKriterleri.MBasvuruSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
-                                    }
-                                    if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
-                                    {
-                                        bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
-                                                  " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
-                                                  ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
-
-                                    }
-
-                                    if (basvuruKriterleri.MBasvuruAKTSKriteri >
-                                        ogrenciBilgi.AktifDonemDers.ToplamAkts)
-                                    {
-                                        bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
-                                                  " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
-                                                  ogrenciBilgi.AktifDonemDers.ToplamAkts);
-
-                                    }
-
-                                    if (bkMsg.Count > 0)
-                                    {
-                                        var otsAdi = db.OgrenimTipleris
-                                            .First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
-                                            .OgrenimTipAdi;
-                                        messageModel.Messages.Add(otsAdi +
-                                                         " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
-                                        messageModel.Messages.AddRange(bkMsg);
-                                        messageModel.IsSuccess = false;
-                                    }
-                                }
-                            }
-
-                        }
-                        else
-                        {
-                            messageModel.IsSuccess = false;
-                            messageModel.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
-                        }
-                    }
+                    mMessage.Messages.Add(
+                        "Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
+                    return mMessage;
                 }
 
+                var mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
+                if (!mezuniyetSurecId.HasValue)
+                {
+                    mMessage.Messages.Add("Başvuru süreci kapalı");
+                    return mMessage;
+                }
+
+                if (!kul.KullaniciTipleri.BasvuruYapabilir)
+                {
+                    mMessage.Messages.Add(kul.KullaniciTipleri.KullaniciTipAdi +
+                                          " hesap türleri için başvuru işlemleri kapalıdır.");
+                    return mMessage;
+                }
+
+                if (!kul.YtuOgrencisi)
+                {
+                    mMessage.Messages.Add(
+                        "Mezuniyet başvurusu yapabilmeniz için hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
+                    return mMessage;
+                }
+
+                if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
+                {
+                    mMessage.Messages.Add(
+                        "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
+                    return mMessage;
+                }
+
+                if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
+                {
+                    mMessage.Messages.Add(
+                        "Okuduğunuz program enstitüsü ile başvuru yapmaya çalıştığınız enstitü farklıdır. Okuduğunuz enstitü sayfasından başvuru yapmaya çalıştığınızdan emin olunuz!");
+                    return mMessage;
+                }
+
+                if (kul.KayitDonemID.HasValue == false || !kul.KayitYilBaslangic.HasValue ||
+                    !kul.OkuduguDonemNo.HasValue)
+                {
+                    mMessage.Messages.Add(
+                        "Öğrenci bilgilerinizde kayıt donemi, okuduğunuz dönem verileri eksik olduğundan eksik başvuru yapamazsınız.");
+                    return mMessage;
+                }
+
+                var isMezuniyetYonetmelikOgrenimTipUygun = entities.MezuniyetSureciYonetmelikleris.Any(p =>
+                    p.MezuniyetSurecID == mezuniyetSurecId
+                    && p.MezuniyetSureciYonetmelikleriOTs.Any(a =>
+                        a.OgrenimTipKod == kul.OgrenimTipKod &&
+                        a.IsGecerli));
+                if (!isMezuniyetYonetmelikOgrenimTipUygun)
+                {
+                    var otsAdi = entities.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+                        .OgrenimTipAdi;
+                    mMessage.Messages.Add(otsAdi +
+                                          " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar.");
+                    return mMessage;
+                }
+
+
+
+                var isOgrenciSureckriterlerindenMuaf = entities.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
+                    a.MezuniyetSurecID == mezuniyetSurecId.Value &&
+                    a.KullaniciID == kul.KullaniciID);
+                if (!isOgrenciSureckriterlerindenMuaf)
+                {
+                    var basvuruKriterleri = entities.MezuniyetSureciOgrenimTipKriterleris.First(p =>
+                        p.MezuniyetSurecID == mezuniyetSurecId.Value &&
+                        p.OgrenimTipKod == kul.OgrenimTipKod);
+
+                    var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+
+                    //düzenlenecek max dönem kriterleri süreç e eklenebilecek ve bu kriteri açanlar başvuru yapamayacak 
+                    //if (kul.KayitTarihi > MezuniyetDonemKontrolKriterBasTar && kul.OkuduguDonemNo.Value < 4)
+                    //{
+                    //    mMessage.Messages.Add("Tezli yuksek lisans öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
+                    //    return mMessage;
+                    //}
+
+                    var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri
+                        .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
+                        .Where(p => !p.IsNullOrWhiteSpace()).ToList();
+
+                    var subMessages = new List<string>();
+                    if (basvuruSonDonemSecilecekDersKodlari.Any() &&
+                        ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
+                            basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
+                        basvuruSonDonemSecilecekDersKodlari.Count)
+                    {
+                        subMessages.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
+                                        " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
+                    }
+
+                    if (basvuruKriterleri.MBasvuruToplamKrediKriteri >
+                        ogrenciBilgi.AktifDonemDers.ToplamKredi)
+                    {
+                        subMessages.Add("Toplam Kredi sayınız " +
+                                        basvuruKriterleri.MBasvuruToplamKrediKriteri +
+                                        " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
+                                        ogrenciBilgi.AktifDonemDers.ToplamKredi);
+
+                    }
+
+                    if (!basvuruKriterleri.MBasvuruEtikNotKriteri.IsNullOrWhiteSpace() &&
+                        !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruEtikNotKriteri,
+                            ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+                    {
+                        subMessages.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri +
+                                        " veya daha üstü bir not almanız gerekmektedir.");
+                    }
+
+                    if (!basvuruKriterleri.MBasvuruSeminerNotKriteri.IsNullOrWhiteSpace() &&
+                        !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruSeminerNotKriteri,
+                            ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+                    {
+                        subMessages.Add("Seminer dersi için ders notu " + basvuruKriterleri.MBasvuruSeminerNotKriteri +
+                                        " veya daha üstü bir not almanız gerekmektedir.");
+                    }
+
+                    if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
+                    {
+                        subMessages.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
+                                        " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
+                                        ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
+
+                    }
+
+                    if (basvuruKriterleri.MBasvuruAKTSKriteri >
+                        ogrenciBilgi.AktifDonemDers.ToplamAkts)
+                    {
+                        subMessages.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
+                                        " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
+                                        ogrenciBilgi.AktifDonemDers.ToplamAkts);
+
+                    }
+
+                    if (subMessages.Any())
+                    {
+                        mMessage.Messages.Add("Mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
+                        mMessage.Messages.AddRange(subMessages);
+                        return mMessage;
+                    }
+
+                }
+                return mMessage;
             }
-            return messageModel;
 
         }
+        //public static MmMessage MezuniyetSurecAktifKontrol(string enstituKod, int? mezuniyetBasvurulariId = null)
+        //{
+        //    var messageModel = new MmMessage();
+        //    using (var db = new LisansustuBasvuruSistemiEntities())
+        //    {
+        //        var kayitYetki = RoleNames.MezuniyetGelenBasvurularKayit.InRoleCurrent();
+        //        var kul = db.Kullanicilars.First(f => f.KullaniciID == UserIdentity.Current.Id);
+        //        var basvuruVar = db.MezuniyetBasvurularis.Any(p =>
+        //                                                           kul.ProgramKod == p.ProgramKod &&
+        //                                                           kul.OgrenciNo == p.OgrenciNo &&
+        //                                                           kul.OgrenimTipKod == p.OgrenimTipKod &&
+        //                                                           p.KullaniciID == kul.KullaniciID &&
+        //                                                           p.MezuniyetBasvurulariID != mezuniyetBasvurulariId &&
+        //                                                           (p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.Onaylandi || p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumu.KabulEdildi));
+
+        //        if (basvuruVar)
+        //        {
+        //            messageModel.IsSuccess = false;
+        //            messageModel.Messages.Add("Okuduğunuz program için zaten bir başvurunuz bulunmakta. Tekrar başvuru yapamazsınız.");
+        //            return messageModel;
+
+        //        }
+        //        if (mezuniyetBasvurulariId.HasValue)
+        //        {
+        //            var basvuru = db.MezuniyetBasvurularis.FirstOrDefault(p => p.MezuniyetBasvurulariID == mezuniyetBasvurulariId.Value);
+        //            if (basvuru == null)
+        //            {
+        //                messageModel.IsSuccess = false;
+        //                messageModel.Messages.Add("Düzenlenmek istenen Mezuniyet Başvurusu sistemde bulunamadı.");
+        //            }
+        //            else
+        //            {
+
+        //                if (basvuru.MezuniyetSureci.EnstituKod != enstituKod)
+        //                {
+        //                    enstituKod = basvuru.MezuniyetSureci.EnstituKod;
+        //                }
+        //                if (!UserIdentity.Current.EnstituKods.Contains(basvuru.MezuniyetSureci.EnstituKod) && kayitYetki && basvuru.KullaniciID != UserIdentity.Current.Id)
+        //                {
+        //                    messageModel.IsSuccess = false;
+        //                    messageModel.Messages.Add("Bu Enstitü İçin Yetkili Değilsiniz.");
+        //                }
+        //                else if (!IsSurecAktif(basvuru.MezuniyetSurecID) && UserIdentity.Current.IsAdmin == false)
+        //                {
+        //                    messageModel.IsSuccess = false;
+        //                    messageModel.Messages.Add("Başvuru süreci dolduğundan başvuru üzerinden herhangi bir işlem yapılamaz!");
+
+        //                }
+        //                if (kayitYetki == false && basvuru.KullaniciID != UserIdentity.Current.Id)
+        //                {
+        //                    messageModel.IsSuccess = false;
+        //                    messageModel.Messages.Add("Bu İşlem için Yetkili Değilsiniz.");
+        //                }
+        //                else if (kayitYetki == false && (basvuru.IsDanismanOnay == true))
+        //                {
+        //                    messageModel.IsSuccess = false;
+        //                    messageModel.Messages.Add("Danışman tarafından onaylanan başvurunuzda düzenleme işlemi yapamazsınız!");
+        //                }
+
+        //            }
+        //        }
+        //        else
+        //        {
+        //            int? mezuniyetSurecId = GetMezuniyetAktifSurecId(enstituKod);
+        //            messageModel.IsSuccess = mezuniyetSurecId.HasValue;
+
+        //            if (messageModel.IsSuccess == false)
+        //            {
+        //                messageModel.Messages.Add("Başvuru Süreci Kapalı");
+        //            }
+        //            else if (!(kul.KullaniciTipleri.BasvuruYapabilir))
+        //            {
+        //                messageModel.IsSuccess = false;
+        //                messageModel.Messages.Add("Kullanıcı Hesap Türünüz için Başvuru İşlemleri Kapalıdır.");
+        //            }
+        //            else
+        //            {
+        //                if (kul.YtuOgrencisi)
+        //                {
+        //                    if (kul.OgrenimDurumID != OgrenimDurum.HalenOğrenci)
+        //                    {
+        //                        messageModel.IsSuccess = false;
+        //                        messageModel.Messages.Add(
+        //                            "Mezuniyet Başvuru işlemini yapabilmeniz için profil kısmındaki öğrenim bilgilerinizde bulunan Öğrenim durumunuzun Halen öğrenci olarak seçilmesi gerekmektedir. (Not: özel öğrenciler bu sistem üzerinden başvuru yapamazlar.)");
+        //                    }
+        //                    else if (kul.KayitDonemID.HasValue == false)
+        //                    {
+        //                        messageModel.IsSuccess = false;
+        //                        messageModel.Messages.Add("Kayıt Tarihi Bilginiz Eksik Başvuru Yapamazsınız");
+        //                    }
+        //                    else if (kul.Programlar.AnabilimDallari.EnstituKod != enstituKod)
+
+        //                    {
+        //                        messageModel.IsSuccess = false;
+        //                        messageModel.Messages.Add("Bu enstitüye mezuniyet başvurusu yapamazsınız!");
+        //                        return messageModel;
+        //                    }
+
+        //                    //var studentInfo = KullanicilarBus.OgrenciBilgisiGuncelleObs(kul.KullaniciID);
+
+        //                    //if (studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK.IsNullOrWhiteSpace())
+        //                    //    messageModel.Messages.Add("Türkçe tez başlığınızın bilgisi OBS sisteminde tanımlı olmadığından başvuru yapamazsınız. Bu durumu enstitünüze iletiniz.");
+
+        //                    //if (!studentInfo.IsTezDiliTr && studentInfo.OgrenciTez.TEZ_BASLIK_ENG.IsNullOrWhiteSpace())
+        //                    //    messageModel.Messages.Add("İngilice Tez başlığınızın bilgisi OBS sisteminde tanımlı olmadığından başvuru yapamazsınız. Bu durumu enstitünüze iletiniz.");
+
+
+
+
+        //                    if (IsMezuniyetSureciOgrenimTipUygun(mezuniyetSurecId.Value, kul.KullaniciID) == false)
+        //                    {
+        //                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+        //                            .OgrenimTipAdi;
+        //                        messageModel.IsSuccess = false;
+        //                        messageModel.Messages.Add(otsAdi +
+        //                                         " Öğrenim seviyesinde okuyan öğrenciler mezuniyet başvurusu yapamazlar");
+        //                    }
+        //                    else if (kul.KullaniciID != UserIdentity.Current.Id &&
+        //                             kul.OgrenimTipKod == OgrenimTipi.TezliYuksekLisans &&
+        //                             (kul.KayitTarihi > MezuniyetDonemKontrolKriterBasTar && MezuniyetBus
+        //                                 .GetCmbOkunanDonemList(mezuniyetSurecId.Value, kul.KayitYilBaslangic.Value,
+        //                                     kul.KayitDonemID.Value).Count < 4))
+        //                    {
+        //                        var otsAdi = db.OgrenimTipleris.First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+        //                            .OgrenimTipAdi;
+        //                        messageModel.IsSuccess = false;
+        //                        messageModel.Messages.Add(otsAdi +
+        //                                         " öğrenim seviyesi okuyan öğrencilerin mezuniyet başvurusu için en az 4 dönem okumaları gerekmektedir.");
+        //                    }
+        //                    else
+        //                    {
+        //                        if (!db.MezuniyetSureciKriterMuafOgrencilers.Any(a =>
+        //                                a.MezuniyetSurecID == mezuniyetSurecId.Value &&
+        //                                a.KullaniciID == kul.KullaniciID))
+        //                        {
+
+
+        //                            var basvuruKriterleri = db.MezuniyetSureciOgrenimTipKriterleris.First(p =>
+        //                                p.MezuniyetSurecID == mezuniyetSurecId.Value &&
+        //                                p.OgrenimTipKod == kul.OgrenimTipKod);
+        //                            var basvuruSonDonemSecilecekDersKodlari = basvuruKriterleri
+        //                                .MBasvuruSonDonemKaydiKontrolEdilecekDersKodlari.Split(',')
+        //                                .Where(p => !p.IsNullOrWhiteSpace()).ToList();
+
+        //                            var ogrenciBilgi = KullanicilarBus.OgrenciKontrol(kul.TcKimlikNo);
+        //                            var bkMsg = new List<string>();
+        //                            if (basvuruSonDonemSecilecekDersKodlari.Any() &&
+        //                                ogrenciBilgi.AktifDonemDers.DersKodNums.Count(p =>
+        //                                    basvuruSonDonemSecilecekDersKodlari.Any(a => a == p)) !=
+        //                                basvuruSonDonemSecilecekDersKodlari.Count)
+        //                            {
+        //                                bkMsg.Add(string.Join(", ", basvuruSonDonemSecilecekDersKodlari) +
+        //                                          " kodlu derslere son dönemde kayıt yaptırmanız gerekmektedi.");
+        //                            }
+
+        //                            if (basvuruKriterleri.MBasvuruToplamKrediKriteri >
+        //                                ogrenciBilgi.AktifDonemDers.ToplamKredi)
+        //                            {
+        //                                bkMsg.Add("Toplam Kredi sayınız " +
+        //                                          basvuruKriterleri.MBasvuruToplamKrediKriteri +
+        //                                          " krediden büyük ya da eşit olmalıdır. Mevcut Kredi: " +
+        //                                          ogrenciBilgi.AktifDonemDers.ToplamKredi);
+
+        //                            }
+        //                            if (!basvuruKriterleri.MBasvuruEtikNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruEtikNotKriteri, ogrenciBilgi.AktifDonemDers.EtikDersNotu))
+        //                            {
+        //                                bkMsg.Add("Etik dersi için ders notu " + basvuruKriterleri.MBasvuruEtikNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+        //                            }
+        //                            if (!basvuruKriterleri.MBasvuruSeminerNotKriteri.IsNullOrWhiteSpace() && !YeterlikBus.IsHarfNotuBuyukEsit(basvuruKriterleri.MBasvuruSeminerNotKriteri, ogrenciBilgi.AktifDonemDers.SeminerDersNotu))
+        //                            {
+        //                                bkMsg.Add("Seminer dersi için ders notu " + basvuruKriterleri.MBasvuruSeminerNotKriteri + " veya daha üstü bir not almanız gerekmektedir.");
+        //                            }
+        //                            if (basvuruKriterleri.MBasvuruAGNOKriteri > ogrenciBilgi.AktifDonemDers.Agno)
+        //                            {
+        //                                bkMsg.Add("Ortalamanız " + basvuruKriterleri.MBasvuruAGNOKriteri +
+        //                                          " ortalamasından büyük ya da eşit olmalıdır. Mevcut Ortalama: " +
+        //                                          ogrenciBilgi.AktifDonemDers.Agno.ToString("n2"));
+
+        //                            }
+
+        //                            if (basvuruKriterleri.MBasvuruAKTSKriteri >
+        //                                ogrenciBilgi.AktifDonemDers.ToplamAkts)
+        //                            {
+        //                                bkMsg.Add("Akts toplamınız " + basvuruKriterleri.MBasvuruAKTSKriteri +
+        //                                          " akts'den büyük ya da eşit olmalıdır. Mevcut Akts: " +
+        //                                          ogrenciBilgi.AktifDonemDers.ToplamAkts);
+
+        //                            }
+
+        //                            if (bkMsg.Count > 0)
+        //                            {
+        //                                var otsAdi = db.OgrenimTipleris
+        //                                    .First(p => p.OgrenimTipKod == kul.OgrenimTipKod)
+        //                                    .OgrenimTipAdi;
+        //                                messageModel.Messages.Add(otsAdi +
+        //                                                 " mezuniyet başvurunuz aşağıdaki sebeplerden dolayı başlatılamadı.");
+        //                                messageModel.Messages.AddRange(bkMsg);
+        //                                messageModel.IsSuccess = false;
+        //                            }
+        //                        }
+        //                    }
+
+        //                }
+        //                else
+        //                {
+        //                    messageModel.IsSuccess = false;
+        //                    messageModel.Messages.Add("Mezuniyet başvurusu yapabilmeniz için Hesap bilginizi düzelterek YTÜ öğrencisi olduğunuzu belirtiniz.");
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    return messageModel;
+
+        //}
         public static KmMezuniyetBasvuru GetMezuniyetBasvuruBilgi(int mezuniyetBasvurulariId)
         {
             var model = new KmMezuniyetBasvuru();
@@ -881,15 +1134,8 @@ namespace LisansUstuBasvuruSistemi.Business
 
             return mmMessage;
         }
-        public static bool GetMezuniyetSureciOgrenimTipUygunMu(int mezuniyetSurecId, int kullaniciId)
-        {
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var kul = db.Kullanicilars.First(p => p.KullaniciID == kullaniciId);
-                return db.MezuniyetSureciYonetmelikleris.Any(p => p.MezuniyetSurecID == mezuniyetSurecId && p.MezuniyetSureciYonetmelikleriOTs.Any(a => a.OgrenimTipKod == kul.OgrenimTipKod && a.IsGecerli));
-            }
-        }
-        public static MezuniyetSureciYonetmelikleri GetMezuniyetAktifYonetmelik(int mezuniyetSurecId, int kullaniciId, int mezuniyetBasvurulariId)
+
+        public static MezuniyetSureciYonetmelikleri GetMezuniyetAktifYonetmelik(int mezuniyetSurecId, int kullaniciId, int? mezuniyetBasvurulariId)
         {
             using (var db = new LisansustuBasvuruSistemiEntities())
             {
@@ -1110,7 +1356,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 foreach (var item in model.OgrenimTipKriterList)
                 {
-                    item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruEtikNotKriteri); 
+                    item.SlistEtikNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruEtikNotKriteri);
                     item.SlistSeminerNots = new SelectList(YeterlikBus.NotDegerleri, item.MBasvuruSeminerNotKriteri);
                 }
             }
@@ -1377,32 +1623,32 @@ namespace LisansUstuBasvuruSistemi.Business
             }
             return lst;
         }
-        public static List<CmbMultyTypeDto> GetCmbOkunanDonemList(int mezuniyetSurecId, int basYil, int donemId)
-        {
-            var kdonems = new List<CmbMultyTypeDto>();
-            using (var db = new LisansustuBasvuruSistemiEntities())
-            {
-                var surec = db.MezuniyetSurecis.First(p => p.MezuniyetSurecID == mezuniyetSurecId);
+        //public static List<CmbMultyTypeDto> GetCmbOkunanDonemList(int mezuniyetSurecId, int kayitYili, int kayitDonemId)
+        //{
+        //    var kdonems = new List<CmbMultyTypeDto>();
+        //    using (var db = new LisansustuBasvuruSistemiEntities())
+        //    {
+        //        var surec = db.MezuniyetSurecis.First(p => p.MezuniyetSurecID == mezuniyetSurecId);
 
-                for (int i = basYil; i <= surec.BaslangicYil; i++)
-                {
-                    for (int r = 1; r <= 2; r++)
-                    {
-                        bool add = true;
-                        if (i == basYil)
-                        {
-                            if (donemId == 2 && r == 1) add = false;
-                        }
-                        else if (i == surec.BaslangicYil)
-                        {
-                            if (surec.DonemID == 1 && r == 2) add = false;
-                        }
-                        if (add) kdonems.Add(new CmbMultyTypeDto { Inx = i, Value = r });
-                    }
-                }
-            }
-            return kdonems;
-        }
+        //        for (int i = kayitYili; i <= surec.BaslangicYil; i++)
+        //        {
+        //            for (int donemIndex = 1; donemIndex <= 2; donemIndex++)
+        //            {
+        //                bool add = true;
+        //                if (i == kayitYili)
+        //                {
+        //                    if (kayitDonemId == DonemBilgi.BaharYariyili && donemIndex == 1) add = false;
+        //                }
+        //                else if (i == surec.BaslangicYil)
+        //                {
+        //                    if (surec.DonemID ==  DonemBilgi.GuzYariyili && donemIndex == 2) add = false;
+        //                }
+        //                if (add) kdonems.Add(new CmbMultyTypeDto { Inx = i, Value = donemIndex });
+        //            }
+        //        }
+        //    }
+        //    return kdonems;
+        //}
 
         public static List<CmbIntDto> GetCmbMezuniyetYayinDurum(bool bosSecimVar = false, bool tumu = false)
         {
@@ -1586,7 +1832,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var jof = mb.MezuniyetJuriOneriFormlaris.First();
 
 
-                   
+
                     if (isLinkOrSonuc)
                     {
 

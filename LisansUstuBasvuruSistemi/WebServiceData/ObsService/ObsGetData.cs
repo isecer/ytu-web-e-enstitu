@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
     {
         public string UserName => "ProEnsMiner";
         public string Password => "+!Pro*22Ytu!23#-Ens+!";
-        public StudentControl GetObsStudentControl(string tcKimlikNo,string donemId)
+        public StudentControl GetObsStudentControl(string tcKimlikNo, string donemId)
         {
             var model = new StudentControl();
             try
@@ -26,7 +26,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                 using (var service =
                        new proliz_ytu_enstitu_minerSoapClient())
                 {
-                  
+
                     var ogrencis = service.AktifOgrenciBilgiGetir(UserName, Password, null, tcKimlikNo);
 
                     if (!ogrencis.Any() || !ogrencis[0].Sucess)
@@ -75,7 +75,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
 
 
                             var ogrenciDersler =
-                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO,null, donemId);
+                                service.OgrenciDersBilgileriGetir(UserName, Password, ogrenci.OGR_NO, null, donemId);
 
                             if (ogrenciDersler[0].Sucess)
                             {
@@ -128,7 +128,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                                     var danismanBilgi = danismanResult[0];
                                     if (danismanBilgi.Sucess)
                                     {
-                                        model.DanismanInfo = danismanBilgi.personel.FirstOrDefault(); 
+                                        model.DanismanInfo = danismanBilgi.personel.FirstOrDefault();
                                     }
                                 }
                             }
@@ -163,7 +163,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
         }
 
 
-        public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo,string donemId)
+        public ObsOgrenciSorgulaModel GetOgrenciBilgi(string tcKimlikNo, string donemId)
         {
             var model = new ObsOgrenciSorgulaModel();
             try

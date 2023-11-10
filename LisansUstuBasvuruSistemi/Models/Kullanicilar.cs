@@ -111,6 +111,7 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<System.DateTime> KayitTarihi { get; set; }
         public Nullable<int> KayitYilBaslangic { get; set; }
         public Nullable<int> KayitDonemID { get; set; }
+        public Nullable<int> OkuduguDonemNo { get; set; }
         public Nullable<int> DanismanID { get; set; }
         public bool FixedHeader { get; set; }
         public bool FixedSidebar { get; set; }

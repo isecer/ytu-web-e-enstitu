@@ -1101,7 +1101,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             var hataMsj = "Kayıt işlemi sırasında bir hata oluştu! \r\nHata:" + ex.ToExceptionMessage();
                             mMessage.Messages.Add(hataMsj);
-                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "TIBasvuru/TIAraRaporFormuPost", LogType.Hata);
+                            SistemBilgilendirmeBus.SistemBilgisiKaydet(hataMsj, "TIBasvuru/TIAraRaporFormuPost\r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                         }
 
 

@@ -44,7 +44,6 @@ namespace LisansUstuBasvuruSistemi.Business
                 if (kul.YtuOgrencisi)
                 {
                     var tcKimlikNo = kul.TcKimlikNo;
-                    var donem = DateTime.Now.Date.ToAraRaporDonemBilgi();
                     kayitBilgi = OgrenciKontrol(tcKimlikNo);
                     if (kayitBilgi.KayitVar && kayitBilgi.OgrenciInfo.OGRENIMSEVIYE_ID.ToIntObj() == kul.OgrenimTipKod)
                     {
@@ -64,6 +63,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }
 
                             kul.DanismanID = danismanId;
+                            kul.OkuduguDonemNo = kayitBilgi.OkuduguDonemNo;
                             kayitBilgi.AktifDanismanID = danismanId;
                         }
 
@@ -77,6 +77,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         kul.KayitDonemID = null;
                         kul.KayitYilBaslangic = null;
                         kul.KayitTarihi = null;
+                        kul.OkuduguDonemNo = null;
                     }
                     db.SaveChanges();
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BiskaUtil;
@@ -75,17 +76,17 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             bool dgr;
             if (obj != null && bool.TryParse(obj.ToString(), out dgr)) return Convert.ToBoolean(obj);
-            else return (bool?)null;
+            return (bool?)null;
         }
         public static double? ToDoubleObj(this object obj)
         {
             if (obj != null && obj.IsNumber()) return Convert.ToDouble(obj);
-            else return (double?)null;
+            return (double?)null;
         }
         public static int? ToIntObj(this object obj)
         {
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
-            else return (int?)null;
+            return (int?)null;
         }
         public static int ToEmptyStringToZero(this object obj)
         {
@@ -105,51 +106,60 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && obj.ToString() != "0") retval = obj.ToString();
             return retval;
         }
-
-        public static string ToFormatDate(this DateTime? datetime)
+        #region Datetime Convert
+        public static string ToFormatDate(this DateTime? dateTime)
         {
-            if (!datetime.HasValue) return "";
-            return datetime == DateTime.MinValue ? "" : datetime.Value.ToFormatDate();
+            if (!dateTime.HasValue) return "";
+            return dateTime == DateTime.MinValue ? "" : dateTime.Value.ToFormatDate();
         }
-        public static string ToFormatDate(this DateTime datetime)
+        public static string ToFormatDate(this DateTime dateTime)
         {
-            return datetime == DateTime.MinValue ? "" : datetime.ToString("dd.MM.yyyy");
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy");
         }
         public static string ToFormatDateAndTime(this DateTime? datetime)
         {
             if (!datetime.HasValue || datetime == DateTime.MinValue) return "";
             return datetime.Value.ToString("dd.MM.yyyy HH:mm");
         }
-        public static string ToFormatDateAndTime(this DateTime datetime)
+        public static string ToFormatDateAndTime(this DateTime dateTime)
         {
-            return datetime == DateTime.MinValue ? "" : datetime.ToString("dd.MM.yyyy HH:mm");
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy HH:mm");
         }
-        public static string ToFormatDateInput(this DateTime? datetime)
+
+        public static string ToFormatDateDayTime(this DateTime dateTime)
         {
-            if (!datetime.HasValue) return "";
-            return datetime == DateTime.MinValue ? "" : datetime.Value.ToFormatDateInput();
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("dd.MM.yyyy dddd HH.mm", new CultureInfo("tr-TR"));
         }
-        public static string ToFormatDateInput(this DateTime datetime)
+        public static string ToFormatDateDayTime(this DateTime? dateTime)
         {
-            return datetime == DateTime.MinValue ? "" : datetime.ToString("yyyy-MM-dd");
+            return dateTime == null || dateTime == DateTime.MinValue ? "" : dateTime.Value.ToString("dd.MM.yyyy dddd HH.mm", new CultureInfo("tr-TR"));
+        }
+        public static string ToFormatDateInput(this DateTime? dateTime)
+        {
+            if (!dateTime.HasValue) return "";
+            return dateTime == DateTime.MinValue ? "" : dateTime.Value.ToFormatDateInput();
+        }
+        public static string ToFormatDateInput(this DateTime dateTime)
+        {
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("yyyy-MM-dd");
         }
         public static string ToFormatDateAndTimeInput(this DateTime? datetime)
         {
             if (!datetime.HasValue || datetime == DateTime.MinValue) return "";
             return datetime.Value.ToString("yyyy-MM-dd HH:mm");
         }
-        public static string ToFormatDateAndTimeInput(this DateTime datetime)
+        public static string ToFormatDateAndTimeInput(this DateTime dateTime)
         {
-            return datetime == DateTime.MinValue ? "" : datetime.ToString("yyyy-MM-dd HH:mm");
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("yyyy-MM-dd HH:mm");
         }
         public static string ToFormatTime(this DateTime? datetime)
         {
             if (!datetime.HasValue) return "";
             return datetime == DateTime.MinValue ? "" : datetime.Value.ToString("HH.mm");
         }
-        public static string ToFormatTime(this DateTime datetime)
+        public static string ToFormatTime(this DateTime dateTime)
         {
-            return datetime == DateTime.MinValue ? "" : datetime.ToString("HH.mm");
+            return dateTime == DateTime.MinValue ? "" : dateTime.ToString("HH.mm");
         }
         public static DateTime TodateToShortDate(this DateTime Tarih)
         {
@@ -161,39 +171,8 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (Tarih != null) return Tarih.ToDateString().ToDate().Value;
             else return null;
         }
-        public static string ToBelirtilmemis(this int? sayi)
-        {
-            return !sayi.HasValue ? "Belirtilmemiş" : sayi.Value.ToString();
-        }
-        public static string ToCinsiyet(this int? sayi)
-        {
-            string cins;
-            switch (sayi)
-            {
-                case null:
-                    cins = "Belirtilmemiş";
-                    break;
-                case 1:
-                    cins = "Erkek";
-                    break;
-                case 2:
-                    cins = "Kadın";
-                    break;
-                default:
-                    cins = sayi.Value.ToString();
-                    break;
-            }
-            return cins;
-
-        }
-        public static string ToEvliBekar(this bool? durum)
-        {
-            string cins;
-            if (!durum.HasValue) cins = "Belirtilmemiş";
-            else if (durum.Value) cins = "Evli";
-            else cins = "Bekar";
-            return cins;
-        }
+        #endregion
+       
         public static string ToAsilYedek(this bool? durum)
         {
             string cins;
@@ -214,7 +193,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             }
             return returnSonuc;
         }
-       
+
 
         public static string ToKullaniciResim(this string resimAdi)
         {
@@ -222,26 +201,13 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return rsm;
         }
 
-        public static int ToToplamAy(this DateTime baslangicTarihi, DateTime bitisTarihi)
-        { 
-            // İki tarih arasındaki toplam ay süresini hesaplayın
-            int toplamAylar = (bitisTarihi.Year - baslangicTarihi.Year) * 12 + bitisTarihi.Month - baslangicTarihi.Month;
-
-            // Eğer tarihler arasında bir tam aydan fazla bir süre varsa ek ayı ekleyin
-            if ((bitisTarihi.Day - baslangicTarihi.Day) > 0)
-            {
-                toplamAylar++;
-            }
-
-            return toplamAylar;
-
-        }
+       
         public static DateTime ToGetBitisTarihi(this DateTime baslangicTarihi, int ay)
         {
             // İki tarih arasındaki toplam ay süresini hesaplayın
-            var bitisTarihi =  baslangicTarihi.AddMonths(ay);
+            var bitisTarihi = baslangicTarihi.AddMonths(ay);
 
-             
+
             return bitisTarihi;
 
         }

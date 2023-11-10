@@ -2,7 +2,7 @@
 @model LisansUstuBasvuruSistemi.Utilities.Dtos.DmYeterlikDetayDto
 @{
     Layout = null;
-    var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue;
+    var openRow = !Model.IsAbdKomitesiJuriyiOnayladi.HasValue || Model.IsDegerlendirme.HasValue;
 }
 
 <div class="widget widget-default" style="border-top: 1px solid; border-top-color: lightgray; margin-bottom: 8px; padding: 6px 10px; min-height: 20px;">

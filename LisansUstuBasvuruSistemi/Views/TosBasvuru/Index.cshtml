@@ -282,10 +282,10 @@ else if (Model.UniqueId.HasValue || Model.RowCount > 0)
     function SilDetay(toUniqueId, tosUniqueId, adSoyad, tarih,isSilmeyeUygun) {
         var notMsg = '';
         if (isSilmeyeUygun!="true" && '@UserIdentity.Current.IsAdmin.ToString().ToLower()'=='true') {
-            notMsg=" <br/><b>Not: Silme işlemini onaylarsanız Değerlendirme süreci başladığı halde Tez Öneri Savunma Sınavı Silinecektir!</b>"
+            notMsg=" <br/><b>Not: Silme işlemini onaylarsanız Değerlendirme süreci başladığı halde Tez Öneri Savunma Silinecektir!</b>"
         }
         bootbox.dialog({
-            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait " + tarih + " tarihli Tez Öneri Savunma Sınavını silmek istiyor musunuz? " + notMsg +"</td></tr></table>",
+            message: "<table style='table-layout:fixed;width:100%;'><tr><td style='font-size:11pt;text-align:center;color:maroon;'>" + adSoyad + " öğrencisine ait " + tarih + " tarihli Tez Öneri Savunmasını silmek istiyor musunuz? " + notMsg +"</td></tr></table>",
             title: "Tez Öneris Savunması Silme İşlemi",
             buttons: {
                 success: {

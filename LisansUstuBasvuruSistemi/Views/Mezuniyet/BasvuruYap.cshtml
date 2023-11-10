@@ -2,8 +2,7 @@
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using BiskaUtil;
-@using LisansUstuBasvuruSistemi.Business
-@using LisansUstuBasvuruSistemi.Models.ObsService
+@using LisansUstuBasvuruSistemi.Business 
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmMezuniyetBasvuru
 @{
@@ -11,7 +10,7 @@
 
     var _MmMessage = (MmMessage)ViewBag._MmMessage;
     var BsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu;
-   
+
 
 
 }
@@ -140,29 +139,29 @@
                                                 <input type="text" style="display:none;" id="MezuniyetBasvurulariID" name="MezuniyetBasvurulariID" value="@Model.MezuniyetBasvurulariID" />
                                                 <input type="text" style="display:none;" id="BasvuruTarihi" name="BasvuruTarihi" value="@Model.BasvuruTarihi" />
                                                 <input type="text" style="display:none;" id="KullaniciID" name="KullaniciID" value="@Model.KullaniciID" />
-                                                <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" /> 
+                                                <input type="text" style="display:none;" id="TcKimlikNo" name="TcKimlikNo" value="@Model.TcKimlikNo" />
                                                 <input type="text" style="display:none;" id="ResimAdi" name="ResimAdi" value="@Model.ResimAdi" />
                                                 <input type="text" style="display:none;" id="KullaniciTipID" name="KullaniciTipID" value="@Model.KullaniciTipID" />
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Dili</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <select id="IsTezDiliTr" name="IsTezDiliTr"   class="form-control">
+                                                        <select id="IsTezDiliTr" name="IsTezDiliTr" class="form-control">
                                                             <option></option>
                                                             <option value="true" @(Model.IsTezDiliTr == true ? "selected" : "")>Türkçe</option>
                                                             <option value="false" @(Model.IsTezDiliTr == false ? "selected" : "")>İngilizce</option>
-                                                        </select> 
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (Türkçe)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr"   maxlength="250" value="@Model.TezBaslikTr" class="form-control" />
+                                                        <input type="text" name="TezBaslikTr" id="TezBaslikTr" maxlength="250" value="@Model.TezBaslikTr" class="form-control" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-md-3 col-xs-2 control-label">Tez Başlığı (İngilizce)</label>
                                                     <div class="col-md-9 col-xs-10">
-                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn"  maxlength="250" value="@Model.TezBaslikEn" class="form-control" />
+                                                        <input type="text" name="TezBaslikEn" id="TezBaslikEn" maxlength="250" value="@Model.TezBaslikEn" class="form-control" />
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

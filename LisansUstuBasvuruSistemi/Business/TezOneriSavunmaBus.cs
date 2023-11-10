@@ -209,8 +209,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= duzeltmeBitisTarihi,
                         Message = isYeniSinavAlindi ?
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma sınavı oluşturuldu." :
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunma sınavından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma sınavı yapılması gerekmektedir." + ekMsg
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma oluşturuldu." :
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma yapılması gerekmektedir." + ekMsg
                     });
                     toBasvuru.RetDuzeltmeBitisTarihi = duzeltmeBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
@@ -230,7 +230,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.MessagesDialog.Add(new MrMessage
                         {
-                            Message = $"{sonBasvuruSinav.Tarih.Date.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma sınavı başarısızlıkla sonuçlandığından yeni bir tez öneri savunma sınavı hakkı kalmamıştır."
+                            Message = $"{sonBasvuruSinav.Tarih.Date.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunması başarısızlıkla sonuçlandığından yeni bir tez öneri savunma hakkı kalmamıştır."
                         });
                     }
                     else
@@ -245,7 +245,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= retBitisTarihi,
-                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.Date.ToDateString()} tarihli tez öneri savunma sınavı başarısızlıkla sonuçlandığından {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi " + (isYeniSinavAlindi ? "oluşturuldu." : "oluşturulmadı.") + ekMsg
+                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.Date.ToDateString()} tarihli tez öneri savunması başarısızlıkla sonuçlandığından {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi " + (isYeniSinavAlindi ? "oluşturuldu." : "oluşturulmadı.") + ekMsg
                         });
                         toBasvuru.RetDuzeltmeBitisTarihi = retBitisTarihi;
                         toBasvuru.IlkOneriBitisTarihi = null;
@@ -264,7 +264,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
-                            Message = $"{sonBasvuruSinav.Tarih.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma sınavı başarılı bir şekilde sonuçlandığı için istendiği zaman tekrar tez öneri savunma sınavı talebi yapılabilir."
+                            Message = $"{sonBasvuruSinav.Tarih.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma  başarılı bir şekilde sonuçlandığı için istendiği zaman tekrar tez öneri savunma talebi yapılabilir."
                         });
                     toBasvuru.RetDuzeltmeBitisTarihi = null;
                     toBasvuru.IlkOneriBitisTarihi = null;
@@ -287,7 +287,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 var tezOneriSavunma = db.ToBasvuruSavunmas.FirstOrDefault(f => f.UniqueID == toBasvuruSavunmaUniqueId);
                 if (tezOneriSavunma == null)
                 {
-                    msg.Messages.Add("Tez Öneri Savunma Sınavı Bulunamadı.");
+                    msg.Messages.Add("Tez Öneri Savunması Bulunamadı.");
                 }
                 else
                 {
@@ -308,7 +308,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }
                     else if (tezOneriSavunma.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
                     {
-                        msg.Messages.Add("Komite üyeleri tarafından değerlendirme yapıldıktan sonra Tez Öneri Savunma Sınavı silinemez!");
+                        msg.Messages.Add("Komite üyeleri tarafından değerlendirme yapıldıktan sonra Tez Öneri Savunması silinemez!");
                     }
 
                 }
@@ -925,7 +925,7 @@ namespace LisansUstuBasvuruSistemi.Business
             catch (Exception ex)
             {
                 var message = "";
-                message = isLinkOrSonuc ? "Tez Öneri Savunma değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!" : "Tez Öneri Savunma değerlendirmesi sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
+                message = isLinkOrSonuc ? "Tez Öneri Savunması değerlendirmesi için Komite üyelerine değerlendirme davetiye linki mail olarak gönderilirken bir hata oluştu!" : "Tez Öneri Savunması değerlendirme sonucu Komite üyelerine mail olarak gönderilirken bir hata oluştu!";
                 SistemBilgilendirmeBus.SistemBilgisiKaydet(message + "\r\n Hata:" + ex.ToExceptionMessage(), "TezOneriSavunmaBus/SendMailTosDegerlendirmeLink \r\n" + ex.ToExceptionStackTrace(), LogType.Hata);
                 //mmMessage.Title = "Hata";
                 mmMessage.Messages.Add(message + "</br> Hata:" + ex.ToExceptionMessage());

@@ -34,12 +34,12 @@ namespace LisansUstuBasvuruSistemi.Models
         public Nullable<int> TezDanismanID { get; set; }
         public System.DateTime YeterlikSozluSinavTarihi { get; set; }
         public bool IsBasvuruKriterMuaf { get; set; }
-        public System.DateTime IslemTarihi { get; set; }
-        public int IslemYapanID { get; set; }
-        public string IslemYapanIP { get; set; }
         public Nullable<System.DateTime> IlkOneriBitisTarihi { get; set; }
         public Nullable<System.DateTime> IkinciOneriBitisTarihi { get; set; }
         public Nullable<System.DateTime> RetDuzeltmeBitisTarihi { get; set; }
+        public System.DateTime IslemTarihi { get; set; }
+        public int IslemYapanID { get; set; }
+        public string IslemYapanIP { get; set; }
     
         public virtual Donemler Donemler { get; set; }
         public virtual Enstituler Enstituler { get; set; }

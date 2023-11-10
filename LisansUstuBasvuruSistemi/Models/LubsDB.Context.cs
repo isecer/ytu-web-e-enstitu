@@ -140,6 +140,10 @@ namespace LisansUstuBasvuruSistemi.Models
         public virtual DbSet<Programlar> Programlars { get; set; }
         public virtual DbSet<Roller> Rollers { get; set; }
         public virtual DbSet<Sehirler> Sehirlers { get; set; }
+        public virtual DbSet<ServiceLog> ServiceLogs { get; set; }
+        public virtual DbSet<ServiceRole> ServiceRoles { get; set; }
+        public virtual DbSet<ServiceUser> ServiceUsers { get; set; }
+        public virtual DbSet<ServiceUserRole> ServiceUserRoles { get; set; }
         public virtual DbSet<SikcaSorulanSorular> SikcaSorulanSorulars { get; set; }
         public virtual DbSet<SinavDilleri> SinavDilleris { get; set; }
         public virtual DbSet<SinavNotlari> SinavNotlaris { get; set; }

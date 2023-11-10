@@ -175,7 +175,7 @@ namespace LisansUstuBasvuruSistemi
         //    try
         //    {
 
-        //        var FileName = DateTime.Now.ToString("yyyy-MM-dd") + "_Logs.txt";
+        //        var FileName = DateTime.Now.ToFormatDate() + "_Logs.txt";
         //        var _path = Server.MapPath("/LogS/" + FileName);
         //        if (!File.Exists(_path))
         //        { 

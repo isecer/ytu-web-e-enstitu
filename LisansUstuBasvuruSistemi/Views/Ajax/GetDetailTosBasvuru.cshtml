@@ -45,7 +45,7 @@
             {
                 <table style="width:100%;">
                     <tr>
-                        <td style="font-weight:bold;font-size:11pt;"><i class="fa fa-check fa-lg"></i> Tez Öneri Savunma Sınavı Değerlendirme İşlemi</td>
+                        <td style="font-weight:bold;font-size:11pt;"><i class="fa fa-check fa-lg"></i> Tez Önerisi Savunma Değerlendirme İşlemi</td>
                         <td class="clsHide" width="100" style="font-weight:bold;font-size:15pt; text-align:right;">
                             <a href="javascript:void(0);" onclick="GetDetail('@Model.UniqueID')" title="Ekranı Yenile" class="panel-refresh"><span class="fa fa-refresh" aria-hidden="true"></span></a>
                         </td>
@@ -205,7 +205,7 @@
                                 <table style="width:100%;">
                                     <tr>
                                         <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;">
-                                            <i style="font-size:16pt;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Komite Üyesi Tez Öneri Savunma Sınavı Değerlendirmesi
+                                            <i style="font-size:16pt;" class="glyphicon glyphicon-info-sign" aria-hidden="true"></i> Komite Üyesi Tez Önerisi Savunma Değerlendirmesi
                                         </td>
                                     </tr>
                                     <tr>
@@ -266,7 +266,7 @@
                                                     <td class="ValueTd">
                                                         @if (showDegerlendirme)
                                                         {
-                                                            <textarea placeholder="Tez Öneri Savunma Sınavı Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
+                                                            <textarea placeholder="Tez Önerisi Savunma Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
                                                         }
                                                         else
                                                         {
@@ -397,7 +397,7 @@
                                       $"<li><p>Yeterlik başarı tarihi itibari ile belirlenen gün içinde sınav yapma</p></li>  " +
                                       $"<li><p>Başarısızlıkla sonuçlanan sınavın tarihinden itibari ile belirlenen gün için sınav yapma</p></li>" +
                                       $"<li><p>Düzeltme ile sonuçlanan sınavın tarihinden itibari ile belirlenen gün için sınav yapma</p></li>" +
-                                      $"<li><p>Toplam başarısız tez öneri savunma sınavı kriteri aşıldığında öğrenciye başvuru yaptırmama</p></li>" +
+                                      $"<li><p>Toplam başarısız tez öneri savunma kriteri aşıldığında öğrenciye başvuru yaptırmama</p></li>" +
                                       $"<li><p><b>Öğrenci kriterden muaf tutulursa yukarıdaki kriterlerin kontolü yapılmaz</b></p></li>" +
                                       $"</ul>";
                         <tr>
@@ -795,7 +795,7 @@
                                                                         <div class="widget widget-default" style="border-top:1px solid;border-top-color:lightgray; margin-bottom:8px;padding:6px 10px;min-height:20px;">
                                                                             <table style="width:100%;">
                                                                                 <tr>
-                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Öneri Savunma Sınavı Değerlendirmesi</td>
+                                                                                    <td colspan="3" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;"><i class="glyphicon glyphicon-info-sign"></i> Tez Önerisi Savunma Değerlendirmesi</td>
                                                                                 </tr>
                                                                                 @if (item.IsYokDrBursiyeriVar && isKomiteTezDanismani)
                                                                                 {
@@ -897,7 +897,7 @@
                                                                                                 <td class="ValueTd">
                                                                                                     @if (openDegerlendirme)
                                                                                                     {
-                                                                                                        <textarea placeholder="Tez Öneri Savunma Sınavı Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
+                                                                                                        <textarea placeholder="Tez Önerisi Savunma Değerlendirme Açıklaması" id="Aciklama_@itemJr.UniqueID" maxlength="2048" style="min-height:140px;resize:vertical;border:1px solid;" class="form-control">@itemJr.Aciklama</textarea>
                                                                                                     }
                                                                                                     else
                                                                                                     {
@@ -975,7 +975,7 @@
                                                                         <td class="CaptionTd">Toplantı Tarihi</td>
                                                                         <td class="CaptionTd">:</td>
                                                                         <td class="ValueTd">
-                                                                            @item.SRModel.Tarih.ToString("yyyy-MM-dd") @item.SRModel.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.SRModel.BasSaat)
+                                                                            @item.SRModel.Tarih.ToFormatDate() @item.SRModel.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.SRModel.BasSaat)
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -1070,7 +1070,7 @@
             var YeniTezBaslikEn = $('#YeniTezBaslikEn_' + tosKomiteUniqueId).val();
             var _panel = $('#bsvrDet_' + toUniqueId);
             Swal.fire({
-                text: "Tez Öneri Savunma Sınavı değerlendirmenizi kaydetmek istediğinize emin misiniz?",
+                text: "Tez Önerisi Savunma değerlendirmenizi kaydetmek istediğinize emin misiniz?",
                 type: 'warning',
                 icon: "question",
                 showCancelButton: true,

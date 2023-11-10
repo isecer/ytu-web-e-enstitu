@@ -845,7 +845,7 @@
                                                                             <td class="CaptionTd">Toplantı Tarihi</td>
                                                                             <td class="CaptionTd">:</td>
                                                                             <td class="ValueTd">
-                                                                                @item.SRModel.Tarih.ToString("yyyy-MM-dd") @item.SRModel.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.SRModel.BasSaat)
+                                                                                @item.SRModel.Tarih.ToFormatDate() @item.SRModel.HaftaGunAdi @string.Format("{0:hh\\:mm}", item.SRModel.BasSaat)
                                                                             </td>
                                                                         </tr>
                                                                         <tr>

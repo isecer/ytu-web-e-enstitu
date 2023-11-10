@@ -1068,7 +1068,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var srBaslangicTarih = mb.EYKTarihi.Value.AddDays(otBilgiTarihBilgi.MBSRTalebiKacGunSonraAlabilir);
                     if (sinavTarihi.Value.Date < srBaslangicTarih.Date)
                     {
-                        mmMessage.Messages.Add("Talep tarihi " + srBaslangicTarih.Date.ToString("yyyy-MM-dd") + " tarihinden küçük olamaz!");
+                        mmMessage.Messages.Add("Talep tarihi " + srBaslangicTarih.Date.ToFormatDate() + " tarihinden küçük olamaz!");
                     }
                 }
 

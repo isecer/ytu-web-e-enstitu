@@ -70,7 +70,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         else
                         {
                             bbModel.KullaniciTipYetki = false;
-                            bbModel.KullaniciTipYetkiYokMsj = "Tez Öneri Savunma Sınavı başvurusu yapılabilmesi için Doktora öğrencisi olunması gerekmektedir.";
+                            bbModel.KullaniciTipYetkiYokMsj = "Tez Önerisi Savunma başvurusu yapılabilmesi için Doktora öğrencisi olunması gerekmektedir.";
 
                         }
                         if (bbModel.KullaniciTipYetki)
@@ -177,11 +177,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var kul = _entities.Kullanicilars.First(p => p.KullaniciID == toBasvuru.KullaniciID);
             if (!degerlendirmeYetki)
             {
-                mMessage.Messages.Add("Tez Öneri Savunma Sınavı başvurusu oluşturma yetkisine sahip değilsiniz.");
+                mMessage.Messages.Add("Tez Önerisi Savunma başvurusu oluşturma yetkisine sahip değilsiniz.");
             }
             else if (toBasvuruSavunma == null && !basvuruAlimiAktif)
             {
-                mMessage.Messages.Add("Tez Öneri Savunma Sınavı başvuru süreci pasif durumdadır. Yeni bir Tez Öneri Savunma Sınavı oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
+                mMessage.Messages.Add("Tez Önerisi Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Önerisi Savunma oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
             }
             else if (tosUniqueId.HasValue && toBasvuruSavunma.ToBasvuruSavunmaKomites.Any(a => a.ToBasvuruSavunmaDurumID.HasValue))
             {
@@ -189,7 +189,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (!tosUniqueId.HasValue && toBasvuru.ToBasvuruSavunmas.Any(a => !a.ToBasvuruSavunmaDurumID.HasValue))
             {
-                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Öneri Savunma Sınavı yapamazsınız. ");
+                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Önerisi Savunma yapamazsınız. ");
             }
             else if (!tosUniqueId.HasValue && !kul.DanismanID.HasValue)
             {
@@ -241,11 +241,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
                         else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
                     }
 
@@ -440,11 +440,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
             }
             else if (toBasvuruSavunma == null && !basvuruAlimiAktif)
             {
-                mMessage.Messages.Add("Tez Öneri Savunma Sınavı başvuru süreci pasif durumdadır. Yeni bir Tez Öneri Savunma Sınavı oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
+                mMessage.Messages.Add("Tez Önerisi Savunma başvuru süreci pasif durumdadır. Yeni bir Tez Önerisi Savunma oluşturamazsınız. Detaylı bilgi almak için duyuruları takip edebilirsiniz ya da Enstitünüz ile görüşebilirsiniz.");
             }
             else if (toBasvuru.ToBasvuruSavunmas.Any(a => a.ToBasvuruSavunmaID != kModel.ToBasvuruSavunmaID && !a.ToBasvuruSavunmaDurumID.HasValue))
             {
-                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Öneri Savunma Sınavı yapamazsınız. ");
+                mMessage.Messages.Add("Süreci devam eden bir Tez Öneri Savunma formunuz bulunmakta yeni bir Tez Önerisi Savunma yapamazsınız. ");
             }
 
             else if (toBasvuruSavunma == null && !kul.DanismanID.HasValue && (danismanTc.IsNullOrWhiteSpace() || danismanTc.Length != 11))
@@ -475,11 +475,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     {
                         if (TezDanismanOneriBus.IsAktifDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
                         else if (TezDanismanOneriBus.IsAktifEsDanismanOneriVar(kul.KullaniciID))
                         {
-                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Öneri Savunma Sınavı başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
+                            mMessage.Messages.Add("Aktif bir Tez Eş Danışman Öneri başvurunuz bulunmakta. Tez Önerisi Savunma başvurusu yapılabilmesi bu sürecinin tamamlanması gerekmektedir.");
                         }
                     }
                 }
@@ -977,13 +977,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var toplantiTarihi = toplanti.Tarih.Add(toplanti.BasSaat);
                         if (DateTime.Now < toplantiTarihi)
                         {
-                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Öneri Savunma Sınavı değerlendirme işlemi başarısız.<br/>Değerlendirme işlemi toplantı tarihi olan <b>'" + toplantiTarihi.ToLongDateString() + " " +
+                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Önerisi Savunma değerlendirme işlemi başarısız.<br/>Değerlendirme işlemi toplantı tarihi olan <b>'" + toplantiTarihi.ToLongDateString() + " " +
                                                   $"{toplanti.BasSaat:hh\\:mm}" + "'</b> dan önce yapılamaz!</span>");
                         }
                         else if (komite.ToBasvuruSavunmaDurumID.HasValue)
                         {
                             mMessage.IsSuccess = true;
-                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Öneri Savunma Sınavı değerlendirme işlemini daha önceden zaten yaptınız!</span>");
+                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Önerisi Savunma değerlendirme işlemini daha önceden zaten yaptınız!</span>");
                         }
 
                         else
@@ -1025,7 +1025,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         var toplantiTarihi = toplanti.Tarih.Add(toplanti.BasSaat);
                         if (!UserIdentity.Current.IsAdmin && DateTime.Now < toplantiTarihi)
                         {
-                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Öneri Savunma Sınavı değerlendirme işlemi başarısız.<br/>Değerlendirme işlemi toplantı tarihi olan <b>'" + toplantiTarihi.ToLongDateString() + " " +
+                            mMessage.Messages.Add("<span style='color:maroon;'>Tez Önerisi Savunma değerlendirme işlemi başarısız.<br/>Değerlendirme işlemi toplantı tarihi olan <b>'" + toplantiTarihi.ToLongDateString() + " " +
                                                   $"{toplanti.BasSaat:hh\\:mm}" + "'</b> tarihinden önce yapılamaz!</span>");
                         }
                         else
@@ -1320,7 +1320,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (tezOneriSavunma.SRTalepleris.Any()) LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Delete, tezOneriSavunma.SRTalepleris.ToJson());
                     if (tezOneriSavunma.ToBasvuruSavunmaKomites.Any()) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Delete, tezOneriSavunma.ToBasvuruSavunmaKomites.ToJson());
 
-                    mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Öneri Savunma Sınavı silindi.");
+                    mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Önerisi Savunma silindi.");
                     mmMessage.MessageType = Msgtype.Success;
 
                 }
@@ -1328,7 +1328,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     mmMessage.MessageType = Msgtype.Error;
                     mmMessage.IsSuccess = false;
-                    mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Öneri Savunma Sınavı silinemedi.");
+                    mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Önerisi Savunma silinemedi.");
                     mmMessage.Title = "Hata";
                     SistemBilgilendirmeBus.SistemBilgisiKaydet(ex.ToExceptionMessage(), "TosBasvuru/SilDetay<br/><br/>" + ex.ToExceptionStackTrace(), LogType.OnemsizHata);
                 }
@@ -1349,7 +1349,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var mMessage = new MmMessage
             {
                 IsSuccess = false,
-                Title = "Tez Öneri Savunma Sınavı Değerlendirme Linki Gönderme İşlemi"
+                Title = "Tez Önerisi Savunma Değerlendirme Linki Gönderme İşlemi"
             };
             var toBasvuruSavunma = _entities.ToBasvuruSavunmas.First(p => p.UniqueID == tosUniqueId);
             var basvuru = toBasvuruSavunma.ToBasvuru;
