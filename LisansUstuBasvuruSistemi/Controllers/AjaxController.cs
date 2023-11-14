@@ -2,12 +2,24 @@
 using BiskaUtil;
 using CaptchaMvc.HtmlHelpers;
 using DevExpress.XtraReports.UI;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Models.ObsService;
 using LisansUstuBasvuruSistemi.Raporlar;
+using LisansUstuBasvuruSistemi.Raporlar.BelgeTalep;
+using LisansUstuBasvuruSistemi.Raporlar.Genel;
+using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
+using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
+using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
+using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
+using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.SystemData;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
@@ -21,18 +33,6 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using LisansUstuBasvuruSistemi.Business;
-using LisansUstuBasvuruSistemi.Raporlar.BelgeTalep;
-using LisansUstuBasvuruSistemi.Raporlar.Genel;
-using LisansUstuBasvuruSistemi.Raporlar.Mezuniyet;
-using LisansUstuBasvuruSistemi.Raporlar.TezDanismanOneri;
-using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
-using LisansUstuBasvuruSistemi.Raporlar.TezIzlemeJuriOneri;
-using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
-using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

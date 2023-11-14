@@ -11,7 +11,6 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -20,7 +19,7 @@ using System.Web.Routing;
 
 namespace LisansUstuBasvuruSistemi
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -39,8 +38,7 @@ namespace LisansUstuBasvuruSistemi
             bool otomatikMailBilgilendirmeServisiniCalistir = SistemAyar.OtomatikMailBilgilendirmeServisiniCalistir.GetAyar().ToBooleanObj() ?? false;
             if (otomatikMailBilgilendirmeServisiniCalistir)
             {
-                ApplicationClock ap = new ApplicationClock();
-                ap.Start();
+              new ApplicationClock().Start(); 
             }
             ScriptPermissionManager.GlobalInstance = new ScriptPermissionManager(ExecutionMode.Unrestricted);
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Disabled;
@@ -139,7 +137,7 @@ namespace LisansUstuBasvuruSistemi
                     var url = HttpContext.Current.Request.Url;
                     routeData.Values.Add("url", url);
                     routeData.Values.Add("ErrC", errCode);
-                    errorController = new LisansUstuBasvuruSistemi.Controllers.AppEventController();
+                    errorController = new Controllers.AppEventController();
                     routeData.Values.Add("controller", "AppEvent");
                     routeData.Values.Add("action", "PageNotFound");
                     Response.TrySkipIisCustomErrors = true;
@@ -150,7 +148,7 @@ namespace LisansUstuBasvuruSistemi
                 {
                     //routeData.Values.Add("controller", "Home");
                     //routeData.Values.Add("action", "Index");
-                    errorController = new LisansUstuBasvuruSistemi.Controllers.AppEventController();
+                    errorController = new Controllers.AppEventController();
                     var url = HttpContext.Current.Request.Url;
                     routeData.Values.Add("url", url);
                     routeData.Values.Add("ErrC", errCode);
@@ -225,71 +223,58 @@ namespace LisansUstuBasvuruSistemi
         //    //    // Server.Execute("/account/login?ReturnUrl" + url);
         //    //}
         //}
-        void SystemInformation_OnEvent(BiskaUtil.SystemInformation info)
+        void SystemInformation_OnEvent(SystemInformation info)
         {
             Management.AddMessage(info);
         }
 
-        void Membership_OnRequireUserIdentity(string userName, ref BiskaUtil.UserIdentity userIdentity)
-        {
+        private static void Membership_OnRequireUserIdentity(string userName, ref UserIdentity userIdentity)
+        { 
             userIdentity = UserBus.GetUserIdentity(userName);
         }
-        protected void Application_AcquireRequestState(Object sender, EventArgs e)
+        protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            BiskaUtil.UserIdentity.SetCurrent();
+            UserIdentity.SetCurrent();
             if (true)
             {
                 var session = HttpContext.Current.Session;
-                if (session != null)
+                if (session == null) return;
+                string platform;
+                if (HttpContext.Current.Request.Browser.IsMobileDevice)
                 {
-                    string browser = "";
-                    string platform = "";
-                    string version = "";
-                    if (HttpContext.Current.Request.Browser.IsMobileDevice)
-                    {
-                        platform = HttpContext.Current.Request.Browser.MobileDeviceManufacturer + " " + HttpContext.Current.Request.Browser.MobileDeviceModel;
-                    }
-                    else
-                    {
-                        platform = HttpContext.Current.Request.Browser.Platform;
-                    }
-                    browser = HttpContext.Current.Request.Browser.Browser;
-                    version = HttpContext.Current.Request.Browser.Version;
-                    //var q = HttpContext.Current.Request.UserAgent.ToString().toDeviceType();  
+                    platform = HttpContext.Current.Request.Browser.MobileDeviceManufacturer + " " + HttpContext.Current.Request.Browser.MobileDeviceModel;
+                }
+                else
+                {
+                    platform = HttpContext.Current.Request.Browser.Platform;
+                }    
+                var uniqueId = Session["UserId"].ToStrObj();
 
-                    //var userAgent = HttpContext.Current.Request.UserAgent; 
-                    var uniqueId = Session["UserId"].ToStrObj();
-
-                    if (uniqueId != null)
-                    {
-                        var usr = OnlineUsersHelper.GetUsers.FirstOrDefault(p => p.UniqueId == uniqueId);
-                        if (usr != null)
-                        {
-                            if (User.Identity.IsAuthenticated)
-                            {
-                                var user = UserBus.GetUser();
-                                usr.KullaniciID = user.KullaniciID;
-                                usr.Name = user.Ad + " " + user.Soyad;
-                                usr.UserName = user.KullaniciAdi;
-                                usr.Platform = platform;
-                                usr.Browser = browser;
-                                usr.Version = version;
-                                usr.KullaniciTipi = user.KullaniciTipAdi;
-                                usr.ResimAdi = user.ResimAdi.ToKullaniciResim();
-                                usr.IsAuthenticated = true;
-                            }
-                            else
-                            {
-                                usr.Name = "Misafir";
-                                usr.ResimAdi = "".ToKullaniciResim();
-                                usr.KullaniciTipi = "";
-                                usr.Platform = platform;
-                                usr.Browser = browser;
-                                usr.Version = version;
-                                usr.IsAuthenticated = false;
-                            }
-                        }
-                    }
+                if (uniqueId == null) return;
+                var usr = OnlineUsersHelper.GetUsers.FirstOrDefault(p => p.UniqueId == uniqueId);
+                if (usr == null) return;
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = UserBus.GetUser();
+                    usr.KullaniciId = user.KullaniciID;
+                    usr.Name = user.Ad + " " + user.Soyad;
+                    usr.UserName = user.KullaniciAdi;
+                    usr.Platform = platform;
+                    usr.Browser = HttpContext.Current.Request.Browser.Browser;
+                    usr.Version = HttpContext.Current.Request.Browser.Version;
+                    usr.KullaniciTipi = user.KullaniciTipAdi;
+                    usr.ResimAdi = user.ResimAdi.ToKullaniciResim();
+                    usr.IsAuthenticated = true;
+                }
+                else
+                {
+                    usr.Name = "Misafir";
+                    usr.ResimAdi = "".ToKullaniciResim();
+                    usr.KullaniciTipi = "";
+                    usr.Platform = platform;
+                    usr.Browser = HttpContext.Current.Request.Browser.Browser;
+                    usr.Version = HttpContext.Current.Request.Browser.Version;
+                    usr.IsAuthenticated = false;
                 }
             }
 
@@ -341,24 +326,22 @@ namespace LisansUstuBasvuruSistemi
         }
         void Session_End(object sender, EventArgs e)
         {
-            if (Session["UserId"] != null)
+            if (Session["UserId"] == null) return;
+            var uniqueId = Session["UserId"].ToString();
+            var oUser = OnlineUsersHelper.GetById(uniqueId);
+            if (oUser?.KullaniciId != null)
             {
-                var uniqueId = Session["UserId"].ToString();
-                var oUser = OnlineUsersHelper.GetById(uniqueId);//.users.Where(p => p.UniqueId == UniqueId).FirstOrDefault();
-                if (oUser?.KullaniciID != null)
+                using (var db = new LisansustuBasvuruSistemiEntities())
                 {
-                    using (var db = new LisansustuBasvuruSistemiEntities())
+                    var kul = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == oUser.KullaniciId);
+                    if (kul != null)
                     {
-                        var kul = db.Kullanicilars.FirstOrDefault(p => p.KullaniciID == oUser.KullaniciID);
-                        if (kul != null)
-                        {
-                            kul.LastLogonDate = DateTime.Now;
-                            db.SaveChanges();
-                        }
+                        kul.LastLogonDate = DateTime.Now;
+                        db.SaveChanges();
                     }
                 }
-                OnlineUsersHelper.RemoveUser(uniqueId);
             }
+            OnlineUsersHelper.RemoveUser(uniqueId);
         }
 
 

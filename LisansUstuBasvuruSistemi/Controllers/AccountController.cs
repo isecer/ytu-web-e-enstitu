@@ -1,11 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.Drawing;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
-using BiskaUtil;
+﻿using BiskaUtil;
 using CaptchaMvc.HtmlHelpers;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
@@ -16,6 +9,13 @@ using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
+using System;
+using System.Configuration;
+using System.Drawing;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using BiskaUtil;
+﻿using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
@@ -11,6 +7,10 @@ using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -18,7 +18,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.AnabilimDallari)]
     public class AnabilimDallariController : Controller
     {
-        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index(string ekd)
         {
             return Index(new FmAnabilimDallariDto { },ekd);

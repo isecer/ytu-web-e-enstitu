@@ -9,7 +9,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
     public class OnlineUser
     {
         public bool IsAuthenticated { get; set; }
-        public int? KullaniciID { get; set; }
+        public int? KullaniciId { get; set; }
         public string Tc { get; set; }
         public string Name { get; set; }
         public string UserName { get; set; }

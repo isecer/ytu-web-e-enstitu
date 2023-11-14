@@ -149,8 +149,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Helpers
                 ePosta.IsBodyHtml = true;
                 
                 foreach (var item in eMails)
-                {
-                    //item.Value == true ? TO: CC;
+                { 
                     if (!mailBilgi.TestEmailAddress.IsNullOrWhiteSpace()) item.EMail = mailBilgi.TestEmailAddress;
                     if (item.ToOrBcc) ePosta.To.Add(item.EMail);
                     else ePosta.Bcc.Add(item.EMail);

@@ -98,12 +98,12 @@ namespace LisansUstuBasvuruSistemi.Models
                                     else if (item.MailSablonTipID == MailSablonTipiEnum.MezTezKontrolTezDosyasiYuklenmeli)
                                     {
                                         //Sınav sonucu başarılı olup tez dosyasını teslim etmeyenler getir.
-                                        qbasvurular = qbasvurular.Where(p =>  p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && !p.MezuniyetBasvurulariTezTeslimFormlaris.Any());
+                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && !p.MezuniyetBasvurulariTezTeslimFormlaris.Any());
                                     }
                                     else if (item.MailSablonTipID == MailSablonTipiEnum.MezCiltliTezTeslimYapilmali || item.MailSablonTipID == MailSablonTipiEnum.MezCiltliTezTeslimYapilmadi)
                                     {
                                         //Sınav sonucu başarılı olup bezcilt formunu oluşturmayanlar ya da oluşturup teslim etmeyenleri getir.
-                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili  && 
+                                        qbasvurular = qbasvurular.Where(p => p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili &&
                                                                              (!p.MezuniyetBasvurulariTezTeslimFormlaris.Any()
                                                                               ||
                                                                              (p.MezuniyetSinavDurumID == MezuniyetSinavDurumEnum.Basarili && p.MezuniyetBasvurulariTezTeslimFormlaris.Any() && !p.IsMezunOldu.HasValue)
@@ -385,8 +385,12 @@ namespace LisansUstuBasvuruSistemi.Models
                 else
                     sistemErisimAdresi = "http://" + wurlAddr.First();
                 var qTaslaklar = db.MezuniyetBasvurularis.Where(p => p.MezuniyetSurecID == bsurec.MezuniyetSurecID && p.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak).Select(s => new { s.Kullanicilar.EMail, s.Kullanicilar.KullaniciTipleri.Yerli, s.KullaniciID }).Distinct().ToList();
-                Dictionary<string, List<CmbIntDto>> dct = new Dictionary<string, List<CmbIntDto>>();
-                dct.Add("", qTaslaklar.Select(s => new CmbIntDto { Value = s.KullaniciID, Caption = s.EMail }).ToList());
+                var dct = new Dictionary<string, List<CmbIntDto>> {
+                {
+                    "",
+                    qTaslaklar.Select(s => new CmbIntDto { Value = s.KullaniciID, Caption = s.EMail }).ToList()
+
+                } };
                 var bdurumAds = db.BasvuruDurumlaris.Where(p => p.BasvuruDurumID == MezuniyetYayinKontrolDurumuEnum.Taslak).ToList();
                 taslakCount = qTaslaklar.Count();
                 var zmnB = db.MezuniyetSurecOtoMails.FirstOrDefault(p => p.MezuniyetSurecID == bsurec.MezuniyetSurecID && p.MailSablonTipID.HasValue == false && p.ZamanTipID == zamanTipId && p.Zaman == zaman);
@@ -423,7 +427,6 @@ namespace LisansUstuBasvuruSistemi.Models
                         mmmC.Content = tableContent;
                         string htmlMail = ViewRenderHelper.RenderPartialView("Ajax", "getMailContent", mmmC);
                         var eMailList = itemMailD.Value.Select(s => s.Caption).Distinct().Select(s => new MailSendList { EMail = s, ToOrBcc = false }).ToList();
-                        // EMailList = new List<MailSendList> { new MailSendList { EMail = "irfansecer@gmail.com", ToOrBcc = true } };
                         var emailSend = MailManager.SendMailRetVal(bsurec.EnstituKod, "Başvurunuz taslak halindedir.Lütfen başvuru süreci bitmeden başvurunuzu onaylayınız", htmlMail, eMailList, null);
                         if (emailSend == null)
                         {
