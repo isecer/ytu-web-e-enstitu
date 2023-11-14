@@ -323,7 +323,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-                LogIslemleri.LogEkle("TIBasvuru", isNewRecord ? IslemTipi.Insert : IslemTipi.Update, data.ToJson());
+                LogIslemleri.LogEkle("TIBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
 
                 return RedirectToAction("Index", new { data.TIBasvuruID });
             }
@@ -588,14 +588,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                         }
 
-                        model.SelectedTabID = 1;
+                        model.SelectedTabId = 1;
                         var donemSelectedValue = (tiBasvuruAraRapor != null
                             ? (tiBasvuruAraRapor.DonemBaslangicYil + "" + tiBasvuruAraRapor.DonemID)
                             : (donemBilgi.BaslangicYil + "" + donemBilgi.DonemID));
                         model.SListDonemSecim =
                             new SelectList(TezIzlemeBus.CmbTiDonemListeBasvuru(tiBasvuru.EnstituKod), "Value", "Caption", donemSelectedValue);
                         model.SListUnvanAdi = new SelectList(cmbUnvanList);
-                        model.SListUniversiteID = new SelectList(cmbUniversiteList, "Value", "Caption");
+                        model.SListUniversiteId = new SelectList(cmbUniversiteList, "Value", "Caption");
                         model.SListAraRaporSayisi = new SelectList(TezIzlemeBus.CmbAraRaporSayisi(true), "Value", "Caption", model.AraRaporSayisi);
 
                         mMessage.MessageType = MsgTypeEnum.Information;
@@ -796,18 +796,18 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 if (mMessage.Messages.Count > 0)
                 {
-                    kModel.SelectedTabID = 1;
+                    kModel.SelectedTabId = 1;
                 }
                 if (mMessage.Messages.Count == 0)
                 {
                     var sinavPuanKontroluYap = TiAyar.SinavPuanGirisKontroluYapilsin.GetAyarTi(tiBasvuru.EnstituKod, "false").ToBoolean().Value;
                     var puanKriteri = TiAyar.UyelerMinSinavPuan.GetAyarTi(tiBasvuru.EnstituKod, "80").ToInt().Value;
-                    var tabIDs = kModel.TabID.Select((s, i) => new { TabID = s, Inx = (i + 1) }).ToList();
+                    var tabIDs = kModel.TabId.Select((s, i) => new { TabID = s, Inx = (i + 1) }).ToList();
                     var juriTipAdis = kModel.JuriTipAdi.Select((s, i) => new { JuriTipAdi = s, Inx = (i + 1) }).ToList();
                     var adSoyads = kModel.AdSoyad.Select((s, i) => new { AdSoyad = s, Inx = (i + 1) }).ToList();
                     var unvanAdis = kModel.UnvanAdi.Select((s, i) => new { UnvanAdi = s, Inx = (i + 1) }).ToList();
                     var eMails = kModel.EMail.Select((s, i) => new { EMail = s.Trim(), Inx = (i + 1) }).ToList();
-                    var universiteIDs = kModel.UniversiteID.Select((s, i) => new { UniversiteID = s, Inx = (i + 1) }).ToList();
+                    var universiteIDs = kModel.UniversiteId.Select((s, i) => new { UniversiteID = s, Inx = (i + 1) }).ToList();
                     var anabilimdaliProgramAdis = kModel.AnabilimdaliProgramAdi.Select((s, i) => new { AnabilimdaliProgramAdi = s, Inx = (i + 1) }).ToList();
                     var dilSinavAdis = kModel.DilSinavAdi.Select((s, i) => new { DilSinavAdi = s, Inx = (i + 1) }).ToList();
                     var isDilSinaviOrUniversites = kModel.IsDilSinaviOrUniversite.Select((s, i) => new { IsDilSinaviOrUniversite = s, Inx = (i + 1) }).ToList();
@@ -861,7 +861,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     foreach (var item in qData)
                     {
 
-                        if ((errSelectedTabId <= kModel.SelectedTabID && errSelectedTabId == item.Row.TabID) && !item.IsSuccessRow)
+                        if ((errSelectedTabId <= kModel.SelectedTabId && errSelectedTabId == item.Row.TabID) && !item.IsSuccessRow)
                         {
                             mMessage.Messages.Add(item.Row.JuriTipAdi + " bilgilerinde eksik ya da hatalı veri girişleri mevcut!");
                             if (!item.Row.AdSoyadSuccess) mMessage.Messages.Add("Ad Soyad bilgisi");
@@ -891,13 +891,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     if (errSelectedTabId == 0)
                     {
-                        errSelectedTabId = kModel.SelectedTabID;
+                        errSelectedTabId = kModel.SelectedTabId;
                         if (saveData == false)
                         {
-                            kModel.SelectedTabID = kModel.SelectedTabID + 1;
+                            kModel.SelectedTabId = kModel.SelectedTabId + 1;
                         }
                     }
-                    else kModel.SelectedTabID = errSelectedTabId;
+                    else kModel.SelectedTabId = errSelectedTabId;
 
                     if (mMessage.Messages.Count == 0 && saveData)
                     {
@@ -1064,10 +1064,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                             _entities.SaveChanges();
-                            LogIslemleri.LogEkle("TIBasvuruAraRapor", isYeniJo ? IslemTipi.Insert : IslemTipi.Update, tiBasvuruAraRapor.ToJson());
+                            LogIslemleri.LogEkle("TIBasvuruAraRapor", isYeniJo ? LogCrudType.Insert : LogCrudType.Update, tiBasvuruAraRapor.ToJson());
                             foreach (var item in tiBasvuruAraRapor.TIBasvuruAraRaporKomites)
                             {
-                                LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", isYeniJo ? IslemTipi.Insert : IslemTipi.Update, item.ToJson());
+                                LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", isYeniJo ? LogCrudType.Insert : LogCrudType.Update, item.ToJson());
                             }
                             mMessage.IsSuccess = true;
                             int? srTalepId = null;
@@ -1117,7 +1117,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage,
                 IsYeniJO = isYeniJo,
                 SaveData = saveData,
-                kModel.SelectedTabID,
+                SelectedTabID = kModel.SelectedTabId,
             }.ToJsonResult();
         }
         [Authorize]
@@ -1332,7 +1332,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             srTalep.IslemYapanIP = kModel.IslemYapanIP;
                         }
                         _entities.SaveChanges();
-                        LogIslemleri.LogEkle("SRTalepleri", isNewRecord ? IslemTipi.Insert : IslemTipi.Update, srTalep.ToJson());
+                        LogIslemleri.LogEkle("SRTalepleri", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, srTalep.ToJson());
 
                         mmMessage.IsSuccess = true;
                         mmMessage.MessageType = MsgTypeEnum.Success;
@@ -1497,7 +1497,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             komite.TIBasvuruAraRapor.FormKodu = formKodu;
                         }
                         _entities.SaveChanges();
-                        LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", LogCrudType.Update, komite.ToJson());
                         mMessage.IsSuccess = true;
                         if (sendMailLink)
                         {
@@ -1570,7 +1570,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 tiBasvuruAraRapor.TIBasvuruAraRaporDurumID = TiAraRaporDurumuEnum.ToplantiBilgileriGirildi;
                             }
                         }
-                        LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", LogCrudType.Update, komite.ToJson());
                         _entities.SaveChanges();
                     }
                 }
@@ -1623,7 +1623,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         _entities.TIBasvurus.Remove(kayit);
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("TIBasvuru", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("TIBasvuru", LogCrudType.Delete, kayit.ToJson());
 
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -1676,7 +1676,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.TIBasvuruAraRapors.Remove(araRapor);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("TIbasvuruAraRapor", IslemTipi.Delete, araRapor.ToJson());
+                    LogIslemleri.LogEkle("TIbasvuruAraRapor", LogCrudType.Delete, araRapor.ToJson());
                     mmMessage.Messages.Add(araRapor.AraRaporSayisi + ". Rapor sistemden silindi.");
 
                 }

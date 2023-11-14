@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmMulakatSureci : PagerOption
+    public class FmMulakatSureci : PagerModel
     {
         public string ProgramAdi { get; set; }
         public string ProgramKod { get; set; }

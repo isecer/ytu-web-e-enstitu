@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model BasvuruDetayDto
 @{
     Layout = null; 
@@ -8,7 +8,7 @@
 
 <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
     <div class="panel-heading padding-0">
-        <h3 class="panel-title"><i class="fa fa-id-card-o fa-lg myCaptionTd" style="color:@color;"></i>&nbsp; <span class="myCaptionTd" style="color:@color;">Kimlik / Adres Bilgisi</span></h3>
+        <h3 class="panel-title"><i class="fa fa-id-card-o fa-lg myCaptionTd" style="color:@color;"></i> <span class="myCaptionTd" style="color:@color;">Kimlik / Adres Bilgisi</span></h3>
     </div>
     <div class="panel-body form-group-separated" style="padding:0px;">
         <table class="table" style="font-size:9pt;margin:0px;color:@color;">
@@ -39,7 +39,7 @@
             <tr>
                 <td style="text-align:right;">Doğum Tarihi</td>
                 <td>:</td>
-                <td>@Model.DogumTarihi.ToDateString()</td>
+                <td>@Model.DogumTarihi.ToFormatDate()</td>
             </tr>
             <tr>
                 <td style="text-align:right;">Doğum Yeri</td>

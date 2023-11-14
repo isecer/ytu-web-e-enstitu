@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmMezuniyetYonetmelikler : PagerOption
+    public class FmMezuniyetYonetmelikler : PagerModel
     {
         public string EnstituKod { get; set; }
         public int? TarihKriterID { get; set; }

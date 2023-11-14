@@ -1,5 +1,5 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmSistemBilgilendirme
 @{
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -16,7 +16,7 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-envelope"></i>&nbsp; Bilgi Mesajları</h3>
+                    <h3 class="panel-title"><i class="fa fa-envelope"></i> Bilgi Mesajları</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
@@ -40,7 +40,7 @@
                                     @Html.DropDownList("BilgiTipi", null, "", new { @class = "form-control" })
                                 </th>
                                 <th>
-                                    <input type="text" name="IslemZamani" value="@Model.IslemZamani.ToDateString()" class="form-control" />
+                                    <input type="text" name="IslemZamani" value="@Model.IslemZamani.ToFormatDate()" class="form-control" />
                                 </th>
                                 <th>
                                     <input type="text" name="AdSoyad" value="@Model.AdSoyad" class="form-control" />
@@ -99,7 +99,7 @@
                                             else
                                             {
                                                 <span>
-                                                    @Html.Raw(item.data.Message.Length > 60 ? item.data.Message.Substr(0, 60) + "..." : item.data.Message)
+                                                    @Html.Raw(item.data.Message.Length > 60 ? item.data.Message.Substring(0, 60) + "..." : item.data.Message)
                                                 </span>
                                             }
                                         </td>

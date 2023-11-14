@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmSrTalepTipleri : PagerOption
+    public class FmSrTalepTipleri : PagerModel
     {
         public string TalepTipAdi { get; set; }
         public bool? IsTezSinavi { get; set; }

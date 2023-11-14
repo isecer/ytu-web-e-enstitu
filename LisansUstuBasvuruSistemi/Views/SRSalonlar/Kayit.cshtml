@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model KmSalonlar
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -16,7 +16,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title">
-                        <i class="fa fa-pencil"></i>&nbsp; @(Model.SRSalonID <= 0 ? "Yeni salon tanımlama işlemi" : "Salon bilgisi düzenleme işlemi")
+                        <i class="fa fa-pencil"></i> @(Model.SRSalonID <= 0 ? "Yeni salon tanımlama işlemi" : "Salon bilgisi düzenleme işlemi")
                     </h3>
                     <ul class="panel-controls">
                         <li>
@@ -70,7 +70,7 @@
                                     <div class="panel panel-default padding-0" id="pnlSaatler" style="padding: 0px; margin: 0px;">
                                         <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
                                             <h3 class="panel-title">
-                                                <i class="glyphicon glyphicon-time"></i>&nbsp; Saat Kriteri Ekle
+                                                <i class="glyphicon glyphicon-time"></i> Saat Kriteri Ekle
                                             </h3>
                                             <a style="float: right;" id="btntarihekle" onclick="saatEkle()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
                                         </div>
@@ -189,13 +189,13 @@
         //$.mask.definitions['P'] = "[AaPp]";
         //$.mask.definitions['p'] = "[Mm]";
         $('.hours').mask("Hh:Mm");
-       
+
         var model = '@Html.Raw(Json.Encode(MmMessage))';
         validateControl(model);
     });
 
 
-    function saatEkle() {                  
+    function saatEkle() {
         var _panel = $('#pnlSaatler');
         var haftaGunleri = $('#_haftaGunu').val();
         var haftaGunleriText = $('#_haftaGunu').parents('td').first().find('button').first().attr("title");

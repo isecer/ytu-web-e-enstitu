@@ -159,9 +159,9 @@ namespace LisansUstuBasvuruSistemi.Business
                     var ikincibitisTarihi = toBasvuru.IkinciOneriBitisTarihi ?? toBasvuru.YeterlikSozluSinavTarihi.ToGetBitisTarihi(tezOneriToplamSavunmaHakkiAyKriter);
 
 
-                    var strDateYeterlikSinav = toBasvuru.YeterlikSozluSinavTarihi.ToDateString();
-                    var strDateIlk = ilkBitisTarihi.ToDateString();
-                    var strDateIkinci = ikincibitisTarihi.ToDateString();
+                    var strDateYeterlikSinav = toBasvuru.YeterlikSozluSinavTarihi.ToFormatDate();
+                    var strDateIlk = ilkBitisTarihi.ToFormatDate();
+                    var strDateIkinci = ikincibitisTarihi.ToFormatDate();
 
                     var ekMsg = "";
                     kontrolTarih = DateTime.Now.Date;
@@ -199,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     var duzeltmeAlinanSinav = sonBasvuru.SRTalepleris.First();
 
                     var duzeltmeBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? duzeltmeAlinanSinav.Tarih.ToGetBitisTarihi(tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter)).Date;
-                    var strDate = duzeltmeBitisTarihi.ToDateString();
+                    var strDate = duzeltmeBitisTarihi.ToFormatDate();
                     var ekMsg = "";
                     if (toBasvuru.IsBasvuruKriterMuaf)
                     {
@@ -209,8 +209,8 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= duzeltmeBitisTarihi,
                         Message = isYeniSinavAlindi ?
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma oluşturuldu." :
-                                $"{duzeltmeAlinanSinav.Tarih.Date.ToDateString()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma yapılması gerekmektedir." + ekMsg
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alındı ve bu süre içinde yeni tez öneri savunma oluşturuldu." :
+                                $"{duzeltmeAlinanSinav.Tarih.Date.ToFormatDate()} tarihindeki savunmasından {tezOneriDuzeltmeSonrasiSavunmaHakkiAyKriter} aylık bir düzeltme hakkı alınmıştır. Düzeltme işlemlerinin yapılıp {strDate} tarihine kadar yeni tez öneri savunma yapılması gerekmektedir." + ekMsg
                     });
                     toBasvuru.RetDuzeltmeBitisTarihi = duzeltmeBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
@@ -230,13 +230,13 @@ namespace LisansUstuBasvuruSistemi.Business
                     {
                         msg.MessagesDialog.Add(new MrMessage
                         {
-                            Message = $"{sonBasvuruSinav.Tarih.Date.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunması başarısızlıkla sonuçlandığından yeni bir tez öneri savunma hakkı kalmamıştır."
+                            Message = $"{sonBasvuruSinav.Tarih.Date.ToFormatDate()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunması başarısızlıkla sonuçlandığından yeni bir tez öneri savunma hakkı kalmamıştır."
                         });
                     }
                     else
                     {
                         var retBitisTarihi = (toBasvuru.RetDuzeltmeBitisTarihi ?? sonBasvuruSinav.Tarih.ToGetBitisTarihi(tezOneriIkinciSavunmaHakkiAyKriter)).Date;
-                        var strDate = retBitisTarihi.ToDateString();
+                        var strDate = retBitisTarihi.ToFormatDate();
                         var ekMsg = "";
                         if (toBasvuru.IsBasvuruKriterMuaf)
                         {
@@ -245,7 +245,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = toBasvuru.IsBasvuruKriterMuaf || kontrolTarih <= retBitisTarihi,
-                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.Date.ToDateString()} tarihli tez öneri savunması başarısızlıkla sonuçlandığından {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi " + (isYeniSinavAlindi ? "oluşturuldu." : "oluşturulmadı.") + ekMsg
+                            Message = $"Son yapılan {sonBasvuruSinav.Tarih.Date.ToFormatDate()} tarihli tez öneri savunması başarısızlıkla sonuçlandığından {strDate} tarihine kadar {sonBasvuru.SavunmaNo + 1}. savunma hakkı tanınmıştır. Bu süre içerisinde yeni bir sınav talebi " + (isYeniSinavAlindi ? "oluşturuldu." : "oluşturulmadı.") + ekMsg
                         });
                         toBasvuru.RetDuzeltmeBitisTarihi = retBitisTarihi;
                         toBasvuru.IlkOneriBitisTarihi = null;
@@ -264,7 +264,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         msg.MessagesDialog.Add(new MrMessage
                         {
                             IsSucces = true,
-                            Message = $"{sonBasvuruSinav.Tarih.ToDateString()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma  başarılı bir şekilde sonuçlandığı için istendiği zaman tekrar tez öneri savunma talebi yapılabilir."
+                            Message = $"{sonBasvuruSinav.Tarih.ToFormatDate()} tarihinde yapılan {sonBasvuru.SavunmaNo}. savunma  başarılı bir şekilde sonuçlandığı için istendiği zaman tekrar tez öneri savunma talebi yapılabilir."
                         });
                     toBasvuru.RetDuzeltmeBitisTarihi = null;
                     toBasvuru.IlkOneriBitisTarihi = null;
@@ -713,7 +713,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (isSavunmaOrToplanti) toBasvuruSavunma.ToSavunmaBaslatildiMailGonderimTarihi = DateTime.Now;
                         else toBasvuruSavunma.ToplantiBilgiGonderimTarihi = DateTime.Now;
 
-                        LogIslemleri.LogEkle("ToBasvuruSavunma", IslemTipi.Update, toBasvuruSavunma.ToJson());
+                        LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Update, toBasvuruSavunma.ToJson());
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -914,7 +914,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         db.GonderilenMaillers.Add(kModel);
                         db.SaveChanges();
-                        if (isLinkOrSonuc) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Update, juri.ToJson());
+                        if (isLinkOrSonuc) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, juri.ToJson());
                     }
 
                     mmMessage.IsSuccess = true;

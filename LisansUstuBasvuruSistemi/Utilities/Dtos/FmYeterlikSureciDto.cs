@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmYeterlikSureciDto : PagerOption
+    public class FmYeterlikSureciDto : PagerModel
     {
         public string EnstituKod { get; set; }
         public List<FrYeterlikSureci> FrYeterlikSurecis { get; set; }

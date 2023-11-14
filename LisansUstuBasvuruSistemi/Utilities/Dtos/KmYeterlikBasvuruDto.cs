@@ -8,7 +8,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 { 
     public class KmYeterlikBasvuruDto : YeterlikBasvuru
     {
-        public Guid? UniqueID { get; set; }
+        public new Guid? UniqueID { get; set; }
         public string AdSoyad { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string ProgramAdi { get; set; }

@@ -483,7 +483,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (isAraRaporOrToplanti) tiAraRapor.RSBaslatildiMailGonderimTarihi = DateTime.Now;
                         else tiAraRapor.ToplantiBilgiGonderimTarihi = DateTime.Now;
 
-                        LogIslemleri.LogEkle("TIBasvuruAraRapor", IslemTipi.Update, tiAraRapor.ToJson());
+                        LogIslemleri.LogEkle("TIBasvuruAraRapor", LogCrudType.Update, tiAraRapor.ToJson());
                     }
                     if (isSended) db.SaveChanges();
                     mmMessage.IsSuccess = true;
@@ -674,7 +674,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                         db.GonderilenMaillers.Add(kModel);
                         db.SaveChanges();
-                        if (isLinkOrSonuc) LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", IslemTipi.Update, juri.ToJson());
+                        if (isLinkOrSonuc) LogIslemleri.LogEkle("TIBasvuruAraRaporKomite", LogCrudType.Update, juri.ToJson());
                     }
 
                     mmMessage.IsSuccess = true;

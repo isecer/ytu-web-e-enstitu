@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmOzelTanimlar : PagerOption
+    public class FmOzelTanimlar : PagerModel
     {
         public string EnstituKod { get; set; }
         public int? SROzelTanimTipID { get; set; }

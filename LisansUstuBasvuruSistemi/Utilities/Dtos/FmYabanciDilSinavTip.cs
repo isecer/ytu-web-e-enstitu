@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmYabanciDilSinavTip : PagerOption
+    public class FmYabanciDilSinavTip : PagerModel
     {
         public int? YabanciDilSinavTipKod { get; set; }
         public string Ad { get; set; }

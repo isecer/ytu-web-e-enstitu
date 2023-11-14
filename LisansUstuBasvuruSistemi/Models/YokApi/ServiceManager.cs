@@ -34,7 +34,7 @@ namespace LisansUstuBasvuruSistemi.YokApi
         private readonly string ServiceBaseUrl = "https://servisler.yok.gov.tr";
         //pedagojikFormasyonListele
         //-<resource path = "/rest/obs/pedagojikformasyonalanlari" >
-        private async Task<HttpClient> GetClientAsync()
+        private Task<HttpClient> GetClientAsync()
         {
             var client = new HttpClient();
             ServicePointManager.Expect100Continue = true;
@@ -45,7 +45,7 @@ namespace LisansUstuBasvuruSistemi.YokApi
             string authInfo = "126982" + ":" + "kzB)s2U796";
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authInfo);
-            return client;
+            return Task.FromResult(client);
         }
         private HttpClient GetClient()
         {

@@ -780,7 +780,7 @@ namespace LisansUstuBasvuruSistemi.Business
                 model.IslemYapanID = basvuru.IslemYapanID;
                 model.IslemYapanIP = basvuru.IslemYapanIP;
                 var nowDate = DateTime.Now;
-                model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + db.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToDateString() + "-" + bsurec.BitisTarihi.ToDateString() + ")";
+                model.BasvuruSureciTarihi = bsurec.BaslangicYil + "/" + bsurec.BitisYil + " " + db.Donemlers.First(p => p.DonemID == bsurec.DonemID).DonemAdi + " (" + bsurec.BaslangicTarihi.ToFormatDate() + "-" + bsurec.BitisTarihi.ToFormatDate() + ")";
                 model.sonucGirisSureciAktif = bsurec.BaslangicTarihi <= nowDate && bsurec.BitisTarihi >= nowDate;
                 model.IsMezunOldu = basvuru.IsMezunOldu;
                 model.MezuniyetTarihi = basvuru.MezuniyetTarihi;
@@ -1010,7 +1010,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 AnketTipID = 4,
                                 BasvuruSurecID = bsurec.MezuniyetSurecID,
                                 AnketID = bsurec.AnketID.Value,
-                                JsonStringData = anketSorulari.ToJsonText()
+                                JsonStringData = anketSorulari.ToJson()
                             };
                             foreach (var item in anketSorulari)
                             {
@@ -1573,7 +1573,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }).ToList();
                 foreach (var item in data)
                 {
-                    lst.Add(new CmbIntDto { Value = item.MezuniyetSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " " + item.SiraNo + " (" + item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() + ")") });
+                    lst.Add(new CmbIntDto { Value = item.MezuniyetSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " " + item.SiraNo + " (" + item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() + ")") });
                 }
             }
             return lst;
@@ -1990,7 +1990,7 @@ namespace LisansUstuBasvuruSistemi.Business
                                 juri.LinkGonderimTarihi = DateTime.Now;
                                 juri.LinkGonderenID = UserIdentity.Current.Id;
                                 db.SaveChanges();
-                                LogIslemleri.LogEkle("SRTaleplerJuri", IslemTipi.Update, juri.ToJson());
+                                LogIslemleri.LogEkle("SRTaleplerJuri", LogCrudType.Update, juri.ToJson());
                             }
 
                             db.GonderilenMaillers.Add(kModel);
@@ -2148,7 +2148,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
                         if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
-                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.Value.ToDateString() });
+                            paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.Value.ToFormatDate() });
                         if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
                             paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
                         if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))

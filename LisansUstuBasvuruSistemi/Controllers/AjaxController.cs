@@ -20,6 +20,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Raporlar.BelgeTalep;
 using LisansUstuBasvuruSistemi.Raporlar.Genel;
@@ -198,7 +199,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             loginUser.KullaniciID, tdoBasvuruId);
                     }
                 }
-                FormsAuthenticationUtil.SetAuthCookie(loginUser.KullaniciAdi, "", rememberMe.Value);
+                FormsAuthentication.SetAuthCookie(loginUser.KullaniciAdi, rememberMe.Value);
                 UserBus.SetLastLogon();
             }
             return mmMessage.ToJsonResult();
@@ -213,7 +214,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 var kul = _entities.Kullanicilars.First(p => p.KullaniciID == kulId);
                 kul.LastLogonDate = DateTime.Now;
                 _entities.SaveChanges();
-                FormsAuthenticationUtil.SignOut();
+                FormsAuthentication.SignOut();
             }
 
             mmMessage.ReturnUrl = returnUrl.IsNullOrWhiteSpace() ? Url.Action("Index", "Home") : returnUrl;
@@ -1062,7 +1063,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         [Authorize]
         public ActionResult GetBasvuruSinavBilgileri(BasvuruDetayDto model)
-        { 
+        {
             return View(model);
         }
         [Authorize]
@@ -2235,7 +2236,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             if (mesajId <= 0)
             {
                 if (konu.IsNullOrWhiteSpace())
-                { 
+                {
                     mmMessage.Messages.Add("Konu Giriniz.");
                 }
             }
@@ -2258,7 +2259,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
             }
             if (aciklama.IsNullOrWhiteSpace() && aciklamaHtml.IsNullOrWhiteSpace())
-            { 
+            {
                 mmMessage.Messages.Add("İçerik Giriniz.");
             }
 
@@ -2732,7 +2733,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                         var maskAdSoyad = "";
                                         foreach (var itemI in isims)
                                         {
-                                            maskAdSoyad += itemI.Substr(0, 1) + "**** ";
+                                            maskAdSoyad += itemI.Substring(0, 1) + "**** ";
                                         }
 
                                         item2.AdSoyad = maskAdSoyad;
@@ -3008,7 +3009,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                                                      IsEkAciklamaGir = ss.IsEkAciklamaGir,
                                                                      Count = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).Count(),
                                                                      AnketCevaplaris = cevaplar.Where(p => p.AnketSoruSecenekID == ss.AnketSoruSecenekID).ToList(),
-                                                                     
+
                                                                  }
                                                                ).OrderBy(o => o.SiraNo).ToList(),
                                           AnketCevaplaris = cevaplar.Where(p => p.AnketSoruID == sa.AnketSoruID).ToList()
@@ -3047,13 +3048,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 }
                             }
                             else
-                            { 
+                            {
                                 foreach (var item2 in item.FrAnketSecenekDetay)
-                                { 
-                                    
+                                {
+
                                     item.AnketSeceneklerDetays.Add(new AnketSeceneklerDetayDto
                                     {
-                                        EkAciklamas = item2.AnketCevaplaris.Where(p=>!p.EkAciklama.IsNullOrWhiteSpace()).ToList(),
+                                        EkAciklamas = item2.AnketCevaplaris.Where(p => !p.EkAciklama.IsNullOrWhiteSpace()).ToList(),
                                         SiraNo = item2.SiraNo,
                                         SecenekAdi = item2.SecenekAdi,
                                         Count = item2.Count,

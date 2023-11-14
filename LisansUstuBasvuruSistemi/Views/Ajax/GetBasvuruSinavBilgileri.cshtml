@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Enums 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model BasvuruDetayDto
 @{
     Layout = null;
@@ -25,7 +25,7 @@
         {
             <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt fa-lg" style="color:@color;"></i>&nbsp; <span style="color:@color;">@item.GrupAdi</span></h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt fa-lg" style="color:@color;"></i> <span style="color:@color;">@item.GrupAdi</span></h3>
                 </div>
                 <div class="panel-body form-group-separated">
 
@@ -63,17 +63,13 @@
                                                 <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
                                                 <td>Sınav Tarihi</td>
                                                 <td>:</td>
-                                                <td style="font-weight:bold;">@item.SinavTarihi.ToDateString()</td>
+                                                <td style="font-weight:bold;">@item.SinavTarihi.ToFormatDate()</td>
                                             </tr>
                                         }
                                     }
                                     else
                                     {
-                                        bool IsTarihIstensin = true;
-                                        if (item.SinavTipGrupID == SinavTipGrupEnum.Tomer && ((Model.IsTurkceProgramVar && (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)) || !Model.IsTurkceProgramVar))
-                                        {
-                                            IsTarihIstensin = false;
-                                        }
+                                        bool IsTarihIstensin = !(item.SinavTipGrupID == SinavTipGrupEnum.Tomer && ((Model.IsTurkceProgramVar && (Model.LEgitimDiliTurkce == true || Model.YLEgitimDiliTurkce == true)) || !Model.IsTurkceProgramVar));
                                         if (IsTarihIstensin)
                                         {
 
@@ -82,7 +78,7 @@
                                                 <td width="100">Sınav Tarihi</td>
                                                 <td width="3">:</td>
                                                 <td>
-                                                    <span style="font-weight:bold;font-size: 9pt;">@item.SinavTarihi.ToDateString()</span>
+                                                    <span style="font-weight:bold;font-size: 9pt;">@item.SinavTarihi.ToFormatDate()</span>
                                                 </td>
                                             </tr>
                                         }

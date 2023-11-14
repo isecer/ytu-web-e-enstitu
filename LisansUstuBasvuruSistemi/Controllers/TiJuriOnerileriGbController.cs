@@ -900,7 +900,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("TiJuriOnerileriGb", IslemTipi.Update, tijBasvuruOneri.ToJson());
+                    LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Update, tijBasvuruOneri.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(isDanismanOnay.HasValue ? (isDanismanOnay.Value ? "Jüri öneri formu Onaylandı." : "Jüri öneri formu Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
                     if (sendMail)
@@ -977,7 +977,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 juri.IsAsil = isAsil;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TijBasvuruOneriJuriler", IslemTipi.Update, juri.ToJson());
+                LogIslemleri.LogEkle("TijBasvuruOneriJuriler", LogCrudType.Update, juri.ToJson());
 
                 mmMessage.IsSuccess = true;
             }
@@ -1087,7 +1087,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add("Form " + (onaylandi.HasValue ? (onaylandi.Value ? "'Onaylandı'" : "'Onaylanmadı'") : "İşlem bekliyor") + " şeklinde güncellendi...");
 
-                    LogIslemleri.LogEkle("TiJuriOnerileriGb", IslemTipi.Update, tijBasvuruOneri.ToJson());
+                    LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Update, tijBasvuruOneri.ToJson());
 
                     if (onaylandi.HasValue && isDegisiklikVar)
                     {
@@ -1320,10 +1320,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     _entities.TijBasvuruOneris.Remove(kayit);
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("TiJuriOnerileriGb", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Delete, kayit.ToJson());
                     if (removedAllData)
                     {
-                        LogIslemleri.LogEkle("TiJuriOnerileriGb", IslemTipi.Delete, kayit.ToJson());
+                        LogIslemleri.LogEkle("TiJuriOnerileriGb", LogCrudType.Delete, kayit.ToJson());
                     }
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli tez izleme jüri önerisi silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;

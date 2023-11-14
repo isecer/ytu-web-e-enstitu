@@ -1,6 +1,6 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model MailSablonlari
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <div class="panel panel-success">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-gear"></i>&nbsp; Sistem Mail Şablonu Tanımlama İşlemi</h3>
+                    <h3 class="panel-title"><i class="fa fa-gear"></i> Sistem Mail Şablonu Tanımlama İşlemi</h3>
                     <ul class="panel-controls">
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Kayit", Model.MailSablonlariID)';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>

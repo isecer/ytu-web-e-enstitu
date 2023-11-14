@@ -102,7 +102,7 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToDateString() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
+                                                                            <a href="javascript:void(0);" onclick="yeniDialogBB(null, 'LİSANSÜSTÜ CİLTLİ TEZ TESLİM FORMU','@Url.Action("GetDxReport", "Ajax")?IsPdfStream=true&RaporTipi=@RaporTipiEnum.MezuniyetCiltFormuRaporu&ID=@mezuniyetBasvurulariTezTeslimFormu.MezuniyetBasvurulariTezTeslimFormID' , 'auto', 'modal-dialog modal-lg' )">@mezuniyetBasvurulariTezTeslimFormu.IslemTarihi.ToFormatDate() Tarihinde oluşturulmuş Tez Teslim Formunu Görmek için tıklayınız</a>
 
                                                                         }
 
@@ -123,7 +123,7 @@
                                                         <td class="CaptionTd"></td>
                                                         <td class="CaptionTd">:</td>
                                                         <td class="ValueTd" style="color:maroon;">
-                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TeslimSonTarih.ToDateString() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
+                                                            <i class="fa fa-info-circle fa-lg"></i> @Html.Raw(mezuniyetBasvurulariTezTeslimFormu == null ? "Tez Teslim Formu oluşturup çıktısını <b>" + item.TeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır." : "Hazırladığınız Tez Teslim Formunun çıktısını <b>" + item.TeslimSonTarih.ToFormatDate() + "</b> tarihine kadar enstitü yetkililerine teslim etmeniz gerekmektedir. Aksi halde mezuniyet işleminiz tamamlanamayacaktır.")
                                                         </td>
                                                     </tr>
 

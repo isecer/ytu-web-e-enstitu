@@ -3,7 +3,7 @@ using LisansUstuBasvuruSistemi.Models;
 using System.Collections.Generic;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmAnketlerDto : PagerOption
+    public class FmAnketlerDto : PagerModel
     {
         public string EnstituKod { get; set; }
         public string AnketAdi { get; set; }

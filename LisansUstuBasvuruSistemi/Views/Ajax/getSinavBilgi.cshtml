@@ -1,13 +1,13 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Helpers
 @model BasvuruSinavBilgiGrupDto
 @{
     Layout = null;
-    string color = Model.DurumColor; 
+    string color = Model.DurumColor;
 }
 
 <table class="table" style="table-layout:fixed; font-size:9pt;margin:0px;color:@color;">
@@ -49,7 +49,7 @@
                             <td><span class="fa fa-caret-right" style="font-size: 9pt;"></span></td>
                             <td>Açıklanma Tarihi</td>
                             <td>:</td>
-                            <td style="font-weight:bold;">@Model.Sinav.WsAciklanmaTarihi.ToDateString()</td>
+                            <td style="font-weight:bold;">@Model.Sinav.WsAciklanmaTarihi.ToFormatDate()</td>
                         </tr>
                     }
 
@@ -94,15 +94,15 @@
                                 }
                                 else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.BelirliTarihdenOncesi)
                                 {
-                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve önceki sınavlar</span>
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToFormatDate()</b> tarihi ve önceki sınavlar</span>
                                 }
                                 else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.BelirliTarhidenSonrasi)
                                 {
-                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> tarihi ve sonraki sınavlar</span>
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToFormatDate()</b> tarihi ve sonraki sınavlar</span>
                                 }
                                 else if (Model.SinavDetay.OzelTarihTipID == OzelTarihTipiEnum.IkiTarihArasi)
                                 {
-                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToDateString()</b> ile <b>@Model.SinavDetay.Tarih2.Value.ToDateString()</b> tarih aralığındaki sınavlar</span>
+                                    <span><b>@Model.SinavDetay.Tarih1.Value.ToFormatDate()</b> ile <b>@Model.SinavDetay.Tarih2.Value.ToFormatDate()</b> tarih aralığındaki sınavlar</span>
                                 }
                             }
                             else
@@ -116,7 +116,7 @@
                         <td>Sınav Tarihi</td>
                         <td>:</td>
                         <td>
-                            <span style="font-weight:bold;font-size: 9pt;">@Model.Sinav.SinavTarihi.ToDateString()</span>
+                            <span style="font-weight:bold;font-size: 9pt;">@Model.Sinav.SinavTarihi.ToFormatDate()</span>
                         </td>
                     </tr>
 
@@ -132,7 +132,7 @@
                                 <td>
                                     @foreach (var itemSb in Model.SinavDetay.BasvuruSurecSinavTiplerSubSinavAraliks)
                                     {
-                                        <span>@itemSb.SubSinavAralikAdi kriterine göre <b>@itemSb.SubSinavMin</b> ile @itemSb.SubSinavMax notları arasında</span> 
+                                        <span>@itemSb.SubSinavAralikAdi kriterine göre <b>@itemSb.SubSinavMin</b> ile @itemSb.SubSinavMax notları arasında</span>
                                     }
                                 </td>
                             </tr>
@@ -154,7 +154,7 @@
                                 <td width="100">Not Kriteri</td>
                                 <td width="3">:</td>
                                 <td>
-                                    <b>@string.Join(", ", Model.SinavDetay.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotAdi).Select(s => s.SinavNotAdi).ToList())</b> Notları seçilebilir 
+                                    <b>@string.Join(", ", Model.SinavDetay.BasvuruSurecSinavNotlaris.OrderBy(o => o.SinavNotAdi).Select(s => s.SinavNotAdi).ToList())</b> Notları seçilebilir
                                 </td>
                             </tr>
                             <tr>
@@ -218,9 +218,9 @@
                     {
                         minNot = Model.SinavDetay.Min.ToStrObjEmptString();
                     }
-                    var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.Tomer ? 
-                                    (Model.IsTurkceProgramVar ? "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim." : "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.") 
-                                    : (Model.SinavDetay.GIsTaahhutVar ? (Model.SinavDetay.SinavTipKod == 56 ? "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)" : "Başvuru koşullarında belirtilen koşula uygun sınav notu bulunan dil sınavı belgemi getireceğimi taahhüt ederim. Aksi halde başvurumun iptal edilmesini onaylıyorum.") 
+                    var locTaahhutkey = Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.Tomer ?
+                                    (Model.IsTurkceProgramVar ? "Kayıt olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim." : "Mezun olana kadar, başvuru koşullarında belirtilen koşula uygun sınav notu bulunan TÖMER belgemi getireceğimi taahhüt ederim.")
+                                    : (Model.SinavDetay.GIsTaahhutVar ? (Model.SinavDetay.SinavTipKod == 56 ? "28 Ağustos 2022 YÖKDİL sınavına girmiş olan adaylar minimum puan değeri girmeleri gerekmektedir. Programı kayıt hakkı kazanmanız durumunda; lisansüstü kayıt takviminde yer alan tarihlerde sisteme minimum değeri sağlayan sınav sonucu belgenizi yükleyeceğimi taahhüt ederim. (Aksi taktirde kaydınız yapılmayacaktır.)" : "Başvuru koşullarında belirtilen koşula uygun sınav notu bulunan dil sınavı belgemi getireceğimi taahhüt ederim. Aksi halde başvurumun iptal edilmesini onaylıyorum.")
                         : "DilSinaviTaahhut");
                     @locTaahhutkey.Replace("_xXx_", minNot)
                 }
@@ -235,24 +235,7 @@
             </td>
             <td class="myCaptionTd">:</td>
             <td class="myCaptionTd" style="text-align: left;">
-
-                @if (Model.Sinav.SinavTipGrupID == SinavTipGrupEnum.Ales_Gree && Model.SinavDetay.WebService)
-                {
-                    var mdlXml = Model.Sinav.WsXmlData.toSinavSonucAlesXmlModel();
-                    if (Model.SinavDetay.EnstituKod == EnstituKodlariEnum.FenBilimleri)
-                    {
-                        <span>Sayısal Puan :@mdlXml.SAY_PUAN.ToDouble().ToString("n2")</span>
-                    }
-                    else if (Model.SinavDetay.EnstituKod == EnstituKodlariEnum.SosyalBilimleri)
-                    {
-                        <span>Sayısal Puan:@mdlXml.SAY_PUAN.ToDouble().ToString("n2") , Eşit Ağırlık Puan:@mdlXml.EA_PUAN.ToDouble().ToString("n2") , Sözel Puan :@mdlXml.SOZ_PUAN.ToDouble().ToString("n2")</span>
-                    }
-                }
-                else
-                {
-                    @Model.Sinav.SinavNotu
-                }
-
+                @Model.Sinav.SinavNotu
             </td>
         </tr>
     }

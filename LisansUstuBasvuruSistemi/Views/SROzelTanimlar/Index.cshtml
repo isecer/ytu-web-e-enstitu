@@ -17,7 +17,7 @@
                 <div class="panel-heading padding-0">
                     <table style="table-layout:fixed;width:100%;">
                         <tr>
-                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Özel Tanımlar Listesi</h3></td>
+                            <td><h3 class="panel-title"><i class="fa fa-list-alt"></i> Özel Tanımlar Listesi</h3></td>
                             <td width="220px;">
                                 @Html.DropDownList("EnstituKod", null, new { @class = "form-control", style = "padding:0px;", onchange = "$(this).parents('form').first().submit();" })
                             </td>
@@ -104,7 +104,7 @@
                                             else if (item.SROzelTanimTipID == SrOzelTanimTipiEnum.Rezervasyon)
                                             {
                                                 var dofW = item.Tarih.Value.DayOfWeek.ToString("d").ToInt().Value;
-                                                var haftaGunu = haftaGunleri.Where(p => p.HaftaGunID == dofW).First();
+                                                var haftaGunu = haftaGunleri.First(p => p.HaftaGunID == dofW);
 
                                                 <span>
                                                     @item.SalonAdi   <br />

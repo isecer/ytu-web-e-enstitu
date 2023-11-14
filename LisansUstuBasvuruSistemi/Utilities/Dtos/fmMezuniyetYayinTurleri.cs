@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmMezuniyetYayinTurleri : PagerOption
+    public class FmMezuniyetYayinTurleri : PagerModel
     {
         public bool? IsAktif { get; set; }
         public bool Expand { get; set; }

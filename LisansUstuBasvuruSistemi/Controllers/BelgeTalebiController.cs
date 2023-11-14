@@ -127,14 +127,14 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     };
 
 
-            if (model.OgrenimDurumID.HasValue) q = q.Where(p => p.OgrenimDurumID == model.OgrenimDurumID);
+            if (model.OgrenimDurumId.HasValue) q = q.Where(p => p.OgrenimDurumID == model.OgrenimDurumId);
             if (model.DilKodu.IsNullOrWhiteSpace() == false) q = q.Where(p => p.BelgeDilKodu == model.DilKodu);
             if (model.AranacakKelime.IsNullOrWhiteSpace() == false) q = q.Where(p => p.AdiSoyadi.Contains(model.AranacakKelime) || p.Telefon == model.AranacakKelime || p.Email.Contains(model.AranacakKelime) || p.OgrenciNo == model.AranacakKelime);
-            if (model.BelgeTipID.HasValue) q = q.Where(p => p.BelgeTipID == model.BelgeTipID);
+            if (model.BelgeTipId.HasValue) q = q.Where(p => p.BelgeTipID == model.BelgeTipId);
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (model.ProgramKod.IsNullOrWhiteSpace() == false) q = q.Where(p => p.ProgramKod == model.ProgramKod);
-            if (model.BelgeID.HasValue) q = q.Where(p => p.BelgeTalepID == model.BelgeID.Value);
-            if (model.BelgeDurumID.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumID.Value);
+            if (model.BelgeId.HasValue) q = q.Where(p => p.BelgeTalepID == model.BelgeId.Value);
+            if (model.BelgeDurumId.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumId.Value);
             if (model.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = model.OgretimYili.Split('/').ToList();
@@ -197,9 +197,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             #endregion
 
-            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipId);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true), "Value", "Caption", model.OgretimYili);
-            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumId);
             return View(model);
         }
 
@@ -791,7 +791,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         {
                             AnketTipID = 2,
                             AnketID = anketId,
-                            JsonStringData = anketSorulari.ToJsonText()
+                            JsonStringData = anketSorulari.ToJson()
                         };
                         foreach (var item in anketSorulari)
                         {

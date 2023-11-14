@@ -150,7 +150,7 @@ namespace LisansUstuBasvuruSistemi.Models
                             }).ToList();
                 foreach (var item in data)
                 {
-                    lst.Add(new CmbIntDto { Value = item.BasvuruSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() + ")") });
+                    lst.Add(new CmbIntDto { Value = item.BasvuruSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() + ")") });
                 }
             }
             return lst;
@@ -932,7 +932,7 @@ namespace LisansUstuBasvuruSistemi.Models
                 {
                     case RaporTipiEnum.MezuniyetBasvuruRaporu:
                         {
-                            var gd = Guid.NewGuid().ToString().Substr(0, 5);
+                            var gd = Guid.NewGuid().ToString().Substring(0, 5);
 
                             var mezuniyetBasvurulariId = dataId[0].Value;
                             var rpr = new RprMezuniyetYayinSartiOnayiFormu(mezuniyetBasvurulariId);

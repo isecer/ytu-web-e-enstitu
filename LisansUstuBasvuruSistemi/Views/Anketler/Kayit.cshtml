@@ -1,9 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Models 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model Anket
 @{
-    var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
@@ -12,7 +10,7 @@
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default" id="bPanel">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.AnketID <= 0 ? "Yeni Anket Tanımlama" :"Anket Güncelleme İşlemi")</h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.AnketID <= 0 ? "Yeni Anket Tanımlama" :"Anket Güncelleme İşlemi")</h3>
                     <ul class="panel-controls">
                         <li><a href="@Url.Action("Kayit", Model.AnketID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>

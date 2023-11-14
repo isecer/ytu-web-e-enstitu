@@ -9,7 +9,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmTijBasvuru : PagerOption
+    public class FmTijBasvuru : PagerModel
     {
         public Guid? SelectedBasvuruUniqueId { get; set; }
         public string EnstituKod { get; set; }

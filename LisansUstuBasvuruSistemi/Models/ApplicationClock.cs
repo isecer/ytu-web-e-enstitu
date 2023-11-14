@@ -250,11 +250,11 @@ namespace LisansUstuBasvuruSistemi.Models
                                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "OgrenciNo", Value = itemB.OgrenciNo });
                                             if (parametreler.Any(a => a == "@EYKTarihi"))
                                             {
-                                                var eykTarih = itemB.EYKTarihi.HasValue ? itemB.EYKTarihi.Value.ToDateString() : "";
+                                                var eykTarih = itemB.EYKTarihi.HasValue ? itemB.EYKTarihi.Value.ToFormatDate() : "";
                                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = eykTarih });
                                             }
                                             if (parametreler.Any(a => a == "@SRTarihi"))
-                                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SRTarihi", Value = sonTarih.ToDateString() });
+                                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SRTarihi", Value = sonTarih.ToFormatDate() });
                                             if (parametreler.Any(a => a == "@SinavTarihi") && sinavTarihi.HasValue)
                                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "SinavTarihi", Value = sinavTarihi.Value.ToLongDateString() });
                                             if (parametreler.Any(a => a == "@SinavSaati") && sinavSaati.HasValue)
@@ -264,7 +264,7 @@ namespace LisansUstuBasvuruSistemi.Models
                                             if (parametreler.Any(a => a == "@ProgramAdi"))
                                                 paramereDegerleri.Add(new MailReplaceParameterDto { Key = "ProgramAdi", Value = itemB.Programlar.ProgramAdi });
                                             if (parametreler.Any(a => a == "@CiltTeslimTarih"))//düzenlenecek
-                                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "CiltTeslimTarih", Value = sonTarih.HasValue ? sonTarih.ToDateString() : "" });
+                                                paramereDegerleri.Add(new MailReplaceParameterDto { Key = "CiltTeslimTarih", Value = sonTarih.HasValue ? sonTarih.ToFormatDate() : "" });
                                             if (parametreler.Any(a => a == "@DonemAdi"))
                                             {
                                                 var donemAdi = itemB.MezuniyetSureci.BaslangicYil + " " + itemB.MezuniyetSureci.BitisYil + " " + itemB.MezuniyetSureci.Donemler.DonemAdi;

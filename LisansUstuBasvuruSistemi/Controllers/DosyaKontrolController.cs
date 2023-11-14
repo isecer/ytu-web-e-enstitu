@@ -13,6 +13,7 @@ using LisansUstuBasvuruSistemi.Raporlar.TezIzleme;
 using LisansUstuBasvuruSistemi.Raporlar.TezOneriSavunma;
 using LisansUstuBasvuruSistemi.Raporlar.Yeterlik;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {

@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmBelgeTipDetayDto : PagerOption
+    public class FmBelgeTipDetayDto : PagerModel
     {
         public string BelgeTipAdi { get; set; }
         public string OgrenimDurumAdi { get; set; }

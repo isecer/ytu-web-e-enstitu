@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;  
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmAnabilimDallariDto : PagerOption
+    public class FmAnabilimDallariDto : PagerModel
     {
         public string EnstituKod { get; set; }
         public string AnabilimDaliKod { get; set; }

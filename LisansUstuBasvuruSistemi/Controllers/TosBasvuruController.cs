@@ -646,10 +646,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                             _entities.SaveChanges();
-                            LogIslemleri.LogEkle("ToBasvuruSavunma", isYeniKayit ? IslemTipi.Insert : IslemTipi.Update, toBasvuruSavunma.ToJson());
+                            LogIslemleri.LogEkle("ToBasvuruSavunma", isYeniKayit ? LogCrudType.Insert : LogCrudType.Update, toBasvuruSavunma.ToJson());
                             foreach (var item in toBasvuruSavunma.ToBasvuruSavunmaKomites)
                             {
-                                LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", isYeniKayit ? IslemTipi.Insert : IslemTipi.Update, item.ToJson());
+                                LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", isYeniKayit ? LogCrudType.Insert : LogCrudType.Update, item.ToJson());
                             }
                             mMessage.IsSuccess = true;
                             int? srTalepId = null;
@@ -914,7 +914,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             srTalep.IslemYapanIP = kModel.IslemYapanIP;
                         }
                         _entities.SaveChanges();
-                        LogIslemleri.LogEkle("SRTalepleri", isNewRecord ? IslemTipi.Insert : IslemTipi.Update, srTalep.ToJson());
+                        LogIslemleri.LogEkle("SRTalepleri", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, srTalep.ToJson());
 
                         mmMessage.IsSuccess = true;
                         mmMessage.MessageType = MsgTypeEnum.Success;
@@ -1125,7 +1125,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             komite.ToBasvuruSavunma.FormKodu = formKodu;
                         }
                         _entities.SaveChanges();
-                        LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, komite.ToJson());
                         mMessage.IsSuccess = true;
                         if (sendMailLink)
                         {
@@ -1194,8 +1194,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             toBasvuruSavunma.IsOyBirligiOrCoklugu = null;
                             toBasvuruSavunma.ToBasvuruSavunmaDurumID = null;
                         }
-                        LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Update, komite.ToJson());
-                        LogIslemleri.LogEkle("ToBasvuruSavunma", IslemTipi.Update, toBasvuruSavunma.ToJson());
+                        LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Update, toBasvuruSavunma.ToJson());
                         _entities.SaveChanges();
                     }
                 }
@@ -1239,7 +1239,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     toBasvuru.IlkOneriBitisTarihi = ilkOneriBitisTarihi;
                     toBasvuru.IkinciOneriBitisTarihi= ikinciOneriBitisTarihi;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("ToBasvuru",  IslemTipi.Update, toBasvuru.ToJson());
+                    LogIslemleri.LogEkle("ToBasvuru",  LogCrudType.Update, toBasvuru.ToJson());
 
                     mMessage.Messages.Add("Tez Önerisi savunma bitiş tarihi bilgileri güncellendi.");
                     mMessage.IsSuccess = true;
@@ -1284,7 +1284,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     toBasvuru.RetDuzeltmeBitisTarihi = retDuzeltmeBitisTarihi;
                     toBasvuru.IlkOneriBitisTarihi = null;
                     toBasvuru.IkinciOneriBitisTarihi = null;
-                    LogIslemleri.LogEkle("ToBasvuru", IslemTipi.Update, toBasvuru.ToJson());
+                    LogIslemleri.LogEkle("ToBasvuru", LogCrudType.Update, toBasvuru.ToJson());
                     _entities.SaveChanges();
                     mMessage.Messages.Add("Tez Önerisi savunması ret/düzeltme bitiş tarihi bilgileri güncellendi.");
                     mMessage.IsSuccess = true;
@@ -1316,9 +1316,9 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.ToBasvuruSavunmaKomites.RemoveRange(tezOneriSavunma.ToBasvuruSavunmaKomites);
                     _entities.ToBasvuruSavunmas.Remove(tezOneriSavunma);
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("ToBasvuruSavunma", IslemTipi.Delete, tezOneriSavunma.ToJson());
-                    if (tezOneriSavunma.SRTalepleris.Any()) LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Delete, tezOneriSavunma.SRTalepleris.ToJson());
-                    if (tezOneriSavunma.ToBasvuruSavunmaKomites.Any()) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", IslemTipi.Delete, tezOneriSavunma.ToBasvuruSavunmaKomites.ToJson());
+                    LogIslemleri.LogEkle("ToBasvuruSavunma", LogCrudType.Delete, tezOneriSavunma.ToJson());
+                    if (tezOneriSavunma.SRTalepleris.Any()) LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Delete, tezOneriSavunma.SRTalepleris.ToJson());
+                    if (tezOneriSavunma.ToBasvuruSavunmaKomites.Any()) LogIslemleri.LogEkle("ToBasvuruSavunmaKomite", LogCrudType.Delete, tezOneriSavunma.ToBasvuruSavunmaKomites.ToJson());
 
                     mmMessage.Messages.Add(tezOneriSavunma.SavunmaBasvuruTarihi + " Tarihli Tez Önerisi Savunma silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
@@ -1437,7 +1437,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     var ogrenci = toBasvuru.Kullanicilar;
                     if (isMuaf) mMessage.Messages.Add(ogrenci.Ad + " " + ogrenci.Soyad + " isimli öğrenci başvuru kriterinden <b>muaf tutuldu.</b>");
                     else mMessage.Messages.Add(ogrenci.Ad + " " + ogrenci.Soyad + " isimli öğrenci başvuru kriterinden <b>muaf kriteri kaldırıldı.</b>");
-                    LogIslemleri.LogEkle("ToBasvuru", IslemTipi.Update, toBasvuru.ToJson());
+                    LogIslemleri.LogEkle("ToBasvuru", LogCrudType.Update, toBasvuru.ToJson());
 
                 }
             }

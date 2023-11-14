@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmUnvanlar
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -13,7 +13,7 @@
                                              
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Ünvan Listesi</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Ünvan Listesi</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
                         <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>

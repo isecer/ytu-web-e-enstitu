@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmKotalarDto : PagerOption
+    public class FmKotalarDto : PagerModel
     {
         public bool? MulakatSurecineGirecek { get; set; }
         public bool? IsAlesYerineDosyaNotuIstensin { get; set; }

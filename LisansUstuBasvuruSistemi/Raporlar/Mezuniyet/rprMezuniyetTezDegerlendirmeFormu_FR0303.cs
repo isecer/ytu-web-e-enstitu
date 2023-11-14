@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
+﻿using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {

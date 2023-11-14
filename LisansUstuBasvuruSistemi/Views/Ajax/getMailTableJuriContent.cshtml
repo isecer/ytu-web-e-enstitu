@@ -1,4 +1,4 @@
-﻿@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model LisansUstuBasvuruSistemi.Utilities.Helpers.MailTableContentDto
 @{
     Layout = null;
@@ -11,7 +11,8 @@
         <tr>
             <td style="font-family:Tahoma;font-size:11pt;color:maroon;text-align:@(Model.AciklamaTextAlingCenter?"center":"left")">@Model.AciklamaBasligi</td>
         </tr>
-    </table>  
+    </table>
+
 }
 @if (Model.AciklamaDetayi.IsNullOrWhiteSpace() == false)
 {
@@ -31,17 +32,17 @@
             <ul style="margin-top:0px;margin-bottom:10px;padding-left:0px;list-style:none">
                 @if (Model.IsJuriBilgi)
                 {
-                <li style="color:rgb(36,36,36);padding-left:1px;padding-right:1px;padding-top:2px;padding-bottom:2px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:rgb(245,249,23)">
-                    <table style="border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed;background-color:#ffffff;">
-                        <tbody>
-                            <tr>
-                                <th style="width:50px;border-right-width:1px;border-right-style:dotted"></th>
-                                <th style="border-right-width:1px;border-right-style:dotted">Jüri Adı</th>
-                                <th style="width:100px;">Asil / Yedek</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </li>
+                    <li style="color:rgb(36,36,36);padding-left:1px;padding-right:1px;padding-top:2px;padding-bottom:2px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:rgb(245,249,23)">
+                        <table style="border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed;background-color:#ffffff;">
+                            <tbody>
+                                <tr>
+                                    <th style="width:50px;border-right-width:1px;border-right-style:dotted"></th>
+                                    <th style="border-right-width:1px;border-right-style:dotted">Jüri Adı</th>
+                                    <th style="width:100px;">Asil / Yedek</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
                 }
                 @foreach (var item in Model.Detaylar)
                 {

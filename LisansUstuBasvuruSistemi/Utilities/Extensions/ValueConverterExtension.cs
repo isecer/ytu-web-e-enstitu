@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Web;
+using System.Web.Mvc;
 using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
@@ -12,7 +15,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
 {
     public static class ValueConverterExtension
     {
-        public static string ToJsonText(this object obj)
+        public static string ToJson(this object obj)
         {
             return JsonConvert.SerializeObject(obj); ;
         }
@@ -54,6 +57,44 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && obj.IsNumber()) return Convert.ToDecimal(obj);
             else return (decimal?)null;
         }
+        public static bool? ToBoolean(this string @string)
+        {
+            bool? ok = null;
+            if (string.IsNullOrEmpty(@string)) return ok;
+
+            if (@string.ToUpper() == true.ToString().ToUpper() ||
+                @string == "1" ||
+                @string.ToLower() == "evet" ||
+                @string.ToLower() == "var" ||
+                @string.ToLower() == "on")
+                ok = true;
+            if (@string.ToUpper() == false.ToString().ToUpper() ||
+                @string == "0" ||
+                @string.ToLower() == "hayır" ||
+                @string.ToLower() == "yok" ||
+                @string.ToLower() == "off")
+                ok = false;
+            return ok;
+        }
+        public static bool ToBoolean(this string @string, bool defaultValue)
+        {
+            bool ok = defaultValue;
+            if (string.IsNullOrEmpty(@string)) return ok;
+
+            if (@string.ToUpper() == true.ToString().ToUpper() ||
+                @string == "1" ||
+                @string.ToLower() == "evet" ||
+                @string.ToLower() == "var" ||
+                @string.ToLower() == "on")
+                ok = true;
+            if (@string.ToUpper() == false.ToString().ToUpper() ||
+                @string == "0" ||
+                @string.ToLower() == "hayır" ||
+                @string.ToLower() == "yok" ||
+                @string.ToLower() == "off")
+                ok = false;
+            return ok;
+        }
         public static bool? ToIntToBooleanObj(this object obj)
         {
             var intValue = obj.ToIntObj();
@@ -88,6 +129,19 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && (obj.IsNumber())) return Convert.ToInt32(obj);
             return (int?)null;
         }
+        public static int ToInt(this string @string, int @default)
+        {
+            var x = ToInt(@string);
+            x = x ?? @default;
+            return x.Value;
+        }
+        public static int? ToInt(this string @string)
+        {
+            int i = 0;
+            if (int.TryParse(@string, out i))
+                return i;
+            return null;
+        }
         public static int ToEmptyStringToZero(this object obj)
         {
             int retval = 0;
@@ -106,6 +160,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             if (obj != null && obj.ToString() != "0") retval = obj.ToString();
             return retval;
         }
+
         #region Datetime Convert
         public static string ToFormatDate(this DateTime? dateTime)
         {
@@ -161,18 +216,42 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
         {
             return dateTime == DateTime.MinValue ? "" : dateTime.ToString("HH.mm");
         }
-        public static DateTime TodateToShortDate(this DateTime Tarih)
+        public static DateTime TodateToShortDate(this DateTime tarih)
         {
-            var data1 = Tarih.ToDateString().ToDate().Value;
+            var data1 = tarih.ToFormatDate().ToDate().Value;
             return data1;
         }
-        public static DateTime? TodateToShortDate(this DateTime? Tarih)
+        public static DateTime? TodateToShortDate(this DateTime? tarih)
         {
-            if (Tarih != null) return Tarih.ToDateString().ToDate().Value;
+            if (tarih != null) return tarih.ToFormatDate().ToDate().Value;
             else return null;
         }
+        public static DateTime? ToDate(this string @string)
+        {
+            DateTime? result = null;
+            DateTime tarih = DateTime.Today;
+            if (string.IsNullOrWhiteSpace(@string) == false && DateTime.TryParse(@string, out tarih))
+            {
+                //result=tarih.Date;
+                result = new DateTime(tarih.Year, tarih.Month, tarih.Day);
+            }
+            return result;
+        }
+        public static DateTime ToDate(this string @string, DateTime defaultDate)
+        {
+            var tarih = ToDate(@string);
+            if (tarih.HasValue) return tarih.Value;
+            return defaultDate;
+        }
         #endregion
-       
+        public static bool IsNullOrEmpty(this string @string)
+        {
+            return string.IsNullOrEmpty(@string);
+        }
+        public static bool IsNullOrWhiteSpace(this string @string)
+        {
+            return string.IsNullOrWhiteSpace(@string);
+        }
         public static string ToAsilYedek(this bool? durum)
         {
             string cins;
@@ -211,6 +290,263 @@ namespace LisansUstuBasvuruSistemi.Utilities.Extensions
             return bitisTarihi;
 
         }
+        public static bool InRole(this string userRole)
+        {
+            if (HttpContext.Current != null && HttpContext.Current.User != null)
+            {
+                bool hasRole = HttpContext.Current.User.IsInRole(userRole);
+                if (!hasRole && UserIdentity.Current != null)
+                    hasRole = UserIdentity.Current.Roles.Contains(userRole);
+                return hasRole;
+            }
+            return false;
+        }
+        public static bool IsImage(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "jpg", "jpeg", "gif", "png", "bmp", "tiff" };
+            return exts.Contains(ext);
+        }
+        public static bool IsPdfFile(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "pdf" };
+            return exts.Contains(ext);
+        }
+        public static bool IsDocFile(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "doc" };
+            return exts.Contains(ext);
+        }
+        public static bool IsDocXFile(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "docx" };
+            return exts.Contains(ext);
+        }
+        public static bool IsXlsFile(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "xls" };
+            return exts.Contains(ext);
+        }
+        public static bool IsXlsXFile(this string filePath)
+        {
+            if (filePath.IsNullOrWhiteSpace()) return false;
+            var ext = filePath.Split('.').Last().ToLower();
+            var exts = new string[] { "xlsx" };
+            return exts.Contains(ext);
+        }
+        public static MvcHtmlString ToChecked(this bool? attrChecked)
+        {
+            return new MvcHtmlString(attrChecked.HasValue && attrChecked.Value ? "checked='checked'" : "");
+        }
+        public static MvcHtmlString ToChecked(this bool attrChecked)
+        {
+            return new MvcHtmlString(attrChecked ? "checked='checked'" : "");
+        }
+        public static double? ToDouble(this string @string)
+        {
+            double dbl = 0;
+            if (double.TryParse(@string, out dbl))
+                return dbl;
+            return null;
+        }
+        public static MvcHtmlString ToSelected(this bool? attSelected)
+        {
+            return new MvcHtmlString(attSelected.HasValue && attSelected.Value ? "selected='selected'" : "");
+        }
+        public static MvcHtmlString ToSelected(this bool attSelected)
+        {
+            return new MvcHtmlString(attSelected ? "selected='selected'" : "");
+        }
+        public static double ToDouble(this string @string, double defaultValue)
+        {
+            double dbl = 0;
+            if (double.TryParse(@string, out dbl))
+                return dbl;
+            return defaultValue;
+        }
+        public static MvcHtmlString ToEvetHayir(this bool Bool)
+        {
+            return new MvcHtmlString((Bool ? "Evet" : "Hayır"));
+        }
+        public static MvcHtmlString ToEvetHayir(this bool? Bool)
+        {
+            return new MvcHtmlString(Bool == null ? "" : (Bool.Value ? "Evet" : "Hayır"));
+        }
+        public static MvcHtmlString ToAktifPasif(this bool @bool)
+        {
+            return new MvcHtmlString(@bool ? "Aktif" : "Pasif");
+        }
+        public static MvcHtmlString ToAktifPasif(this bool? @bool)
+        {
+            return new MvcHtmlString(@bool == null ? "" : (@bool.Value ? "Aktif" : "Pasif"));
+        }
+        public static string ComputeHash(this string sifre, string tuz = null)
+        {
+            SHA256Managed sha = new SHA256Managed();
+            //var tuz = "M@V0R£";
+            //sifre = sifre+ tuz;
+            if (tuz != null)
+                sifre += tuz;
+            byte[] sifreBytes = Encoding.UTF8.GetBytes(sifre);
+            byte[] ozetBytes = sha.ComputeHash(sifreBytes);
+            string hesaplananOzetSifre = Convert.ToBase64String(ozetBytes);
+            return hesaplananOzetSifre;
+        }
+        public static string _ToOrderedListPadChar = string.Concat(((char)160).ToString(), ((char)160).ToString(), ((char)160).ToString());
+        //public static string _ToOrderedListPadChar = "---";
+        public static T[] ToOrderedList<T>(this IEnumerable<T> ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField)
+        {
+            //string padStr = ((char)160).ToString();
+            //padStr = padStr + padStr + padStr;
+            string padStr = _ToOrderedListPadChar;
+            return ObjectList.ToOrderedList(RootPropertyField, ParentPropertyField, TextPropertyField, padStr);
+        }
+        public static T[] ToOrderedList<T>(this IEnumerable<T> ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField, string PadString)
+        {
+            List<T> resultList = new List<T>();
+            if (ObjectList == null) return resultList.ToArray();
+            //var LstObject = (object[])ObjectList;            
+            var LstObject = ObjectList;
+            if (LstObject.Count() == 0) return resultList.ToArray();
+            var Lst = LstObject.AsQueryable();
+
+            var type = Lst.First().GetType();
+            IEnumerable<string> ids = new string[] { };
+            try
+            {
+                ids = Lst.Select(s => type.GetProperty(RootPropertyField).GetValue(s, null).ToString()).ToArray();
+            }
+            catch
+            {
+                return resultList.ToArray();
+            }
+            List<T> roots = new List<T>();
+            foreach (var l in Lst)
+            {
+                if (type.GetProperty(ParentPropertyField).GetValue(l, null) == null) roots.Add(l);
+                else
+                {
+                    var bid = type.GetProperty(ParentPropertyField).GetValue(l, null).ToString();
+                    if (ids.Contains(bid) == false) roots.Add(l);
+                }
+            }
+
+            int deep = 0;
+            Func<T, int> fxDetail = null;
+            fxDetail = new Func<T, int>
+                (
+                   (parent) =>
+                   {
+                       deep++;
+                       object parentid = type.GetProperty(RootPropertyField).GetValue(parent, null);
+                       var details = Lst.Where(p =>
+                           type.GetProperty(ParentPropertyField).GetValue(p, null) != null && //it is root
+                           type.GetProperty(ParentPropertyField).GetValue(p, null).ToString() == parentid.ToString())
+                           .AsEnumerable();
+                       foreach (var m in details)
+                       {
+                           if (string.IsNullOrEmpty(TextPropertyField) == false)
+                           {
+                               var val = type.GetProperty(TextPropertyField).GetValue(m, null);
+                               if (val != null)
+                               {
+                                   var str = val.ToString();
+                                   if (str.StartsWith(PadString) == false)
+                                       for (int i = 0; i < deep; i++)
+                                           str = PadString + str;
+                                   type.GetProperty(TextPropertyField).SetValue(m, str, null);
+                               }
+                           }
+                           resultList.Add(m);
+                           fxDetail(m);
+                       }
+                       deep--;
+                       return 0;
+                   }
+                );
+
+            foreach (var root in roots)
+            {
+                resultList.Add(root);
+                fxDetail(root);
+            }
+            return resultList.ToArray();
+
+        }
+
+        public static T[] ToOrderedList<T>(this T[] ObjectList, string RootPropertyField, string ParentPropertyField, string TextPropertyField, string PadString, string SetHasChildField)
+        {
+            List<T> resultList = new List<T>();
+            if (ObjectList == null) return resultList.ToArray();
+            //var LstObject = (object[])ObjectList;            
+            var LstObject = ObjectList;
+            if (LstObject.Length == 0) return resultList.ToArray();
+            var Lst = LstObject.AsQueryable();
+
+            var type = Lst.First().GetType();
+            var ids = Lst.Select(s => s.GetType().GetProperty(RootPropertyField).GetValue(s, null).ToString()).ToArray();
+
+            List<T> roots = new List<T>();
+            foreach (var l in Lst)
+            {
+                if (type.GetProperty(ParentPropertyField).GetValue(l, null) == null) roots.Add(l);
+                else
+                {
+                    var bid = type.GetProperty(ParentPropertyField).GetValue(l, null).ToString();
+                    if (ids.Contains(bid) == false) roots.Add(l);
+                }
+            }
+
+            int deep = 0;
+            Func<T, int> fxDetail = null;
+            fxDetail = new Func<T, int>
+                (
+                   (parent) =>
+                   {
+                       deep++;
+                       object parentid = type.GetProperty(RootPropertyField).GetValue(parent, null);
+                       var details = Lst.Where(p =>
+                           type.GetProperty(ParentPropertyField).GetValue(p, null) != null && //it is root
+                           type.GetProperty(ParentPropertyField).GetValue(p, null).ToString() == parentid.ToString()).ToArray();
+                       if (!string.IsNullOrEmpty(SetHasChildField))
+                       {
+                           type.GetProperty(SetHasChildField).SetValue(parent, details.Length > 0, null);
+                       }
+                       foreach (var m in details)
+                       {
+                           var val = type.GetProperty(TextPropertyField).GetValue(m, null);
+                           if (val != null)
+                           {
+                               var str = val.ToString();
+                               for (int i = 0; i < deep; i++)
+                                   str = PadString + str;
+                               type.GetProperty(TextPropertyField).SetValue(m, str, null);
+                           }
+                           resultList.Add(m);
+                           fxDetail(m);
+                       }
+                       deep--;
+                       return 0;
+                   }
+                );
+
+            foreach (var root in roots)
+            {
+                resultList.Add(root);
+                fxDetail(root);
+            }
+            return resultList.ToArray();
+        }
+
 
     }
 }

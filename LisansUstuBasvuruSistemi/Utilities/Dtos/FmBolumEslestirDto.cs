@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmBolumEslestirDto : PagerOption
+    public class FmBolumEslestirDto : PagerModel
     {
         public string EnstituKod { get; set; }
         public string ProgramAdi { get; set; }

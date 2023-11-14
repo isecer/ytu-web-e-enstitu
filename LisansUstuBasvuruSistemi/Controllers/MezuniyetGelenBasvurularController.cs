@@ -355,7 +355,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 yayin.IslemYapanID = UserIdentity.Current.Id;
                 yayin.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("MezuniyetBasvurulariYayins", IslemTipi.Update, yayin.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulariYayins", LogCrudType.Update, yayin.ToJson());
                 mmMessage.IsSuccess = true;
                 mmMessage.Title = "Yayın bilgi kontrol işlemi";
                 mmMessage.Messages.Add("Kayıt güncellendi");
@@ -382,7 +382,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             {
                 kayit.MezuniyetYayinIndexTurID = indexId;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("MezuniyetBasvurulariYayins", IslemTipi.Update, kayit.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulariYayins", LogCrudType.Update, kayit.ToJson());
                 mmMessage.Messages.Add("Index Bilgisi Güncellendi");
                 mmMessage.MessageType = MsgTypeEnum.Success;
 
@@ -451,7 +451,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 mmMessage.IsSuccess = true;
                 mmMessage.Messages.Add("Başvuru durum değişikliği gerçekleştirildi.");
-                LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mBasvur.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mBasvur.ToJson());
 
                 #region sendMail
                 if (mgonder)
@@ -609,7 +609,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mBasvur.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mBasvur.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(IsDanismanOnay.HasValue ? (IsDanismanOnay.Value ? "Başvuru Onaylandı." : "Başvuru Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
                     if (sendMail)
@@ -732,7 +732,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     srTalep.DanismanOnayTarihi = DateTime.Now;
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("SRTalebi", IslemTipi.Update, srTalep.ToJson());
+                    LogIslemleri.LogEkle("SRTalebi", LogCrudType.Update, srTalep.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(isDanismanUzatmaSonrasiOnay.HasValue ? (isDanismanUzatmaSonrasiOnay.Value ? "Başvuru Onaylandı." : "Başvuru Ret Edildi.") : "Onaylama İşlemi Geril Alındı.");
                 }
@@ -783,7 +783,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             talep.IslemYapanIP = UserIdentity.Ip;
             if (srDurumId == SrTalepDurumEnum.Reddedildi) talep.SRDurumAciklamasi = srDurumAciklamasi;
             _entities.SaveChanges();
-            LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Update, talep.ToJson());
+            LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, talep.ToJson());
             var qbDrm = talep.SRDurumlari;
 
             if (talep.SRTalepTipleri.IsTezSinavi && sendMail)
@@ -829,7 +829,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     if (tezTeslimSonTarih.HasValue && !ttEkSureYetki && tezTeslimSonTarih.Value > talep.Tarih.AddDays(mbOKriters.MBTezTeslimSuresiGun))
                     {
-                        mmMessage.Messages.Add("Tez teslim son tarih kriteri " + talep.Tarih.AddDays(mbOKriters.MBTezTeslimSuresiGun).ToDateString() + " tarihinden daha büyük olamaz!");
+                        mmMessage.Messages.Add("Tez teslim son tarih kriteri " + talep.Tarih.AddDays(mbOKriters.MBTezTeslimSuresiGun).ToFormatDate() + " tarihinden daha büyük olamaz!");
                     }
                 }
                 else tezTeslimSonTarih = null;
@@ -848,7 +848,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 talep.MezuniyetSinavDurumIslemYapanID = UserIdentity.Current.Id;
                 talep.MezuniyetBasvurulari.MezuniyetSinavDurumIslemYapanID = UserIdentity.Current.Id;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, talep.MezuniyetBasvurulari.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, talep.MezuniyetBasvurulari.ToJson());
 
                 var drm = _entities.MezuniyetSinavDurumlaris.First(p => p.MezuniyetSinavDurumID == mezuniyetSinavDurumId);
                 mmMessage.IsSuccess = true;
@@ -903,7 +903,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     talep.IslemYapanID = UserIdentity.Current.Id;
                     talep.IslemYapanIP = UserIdentity.Ip;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", IslemTipi.Update, talep.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulariTezDosyalari", LogCrudType.Update, talep.ToJson());
                     mmMessage.IsSuccess = true;
                     if (kModel.IsOnaylandiOrDuzeltme == true) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiBasarili, kModel.Aciklama).Messages);
                     else if (kModel.IsOnaylandiOrDuzeltme == false) mmMessage.Messages.AddRange(MezuniyetBus.SendMailMezuniyetTezSablonKontrol(talep.MezuniyetBasvurulariTezDosyaID, MailSablonTipiEnum.MezTezKontrolTezDosyasiOnaylanmadi, kModel.Aciklama).Messages);
@@ -975,7 +975,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, talep.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, talep.ToJson());
                 }
                 mmMessage.IsSuccess = true;
             }
@@ -1009,8 +1009,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         if (maxT < eykTarihi)
                         {
                             mmMessage.Messages.Add("Eyk tarihi öğrencinin almış olduğu ilk salon rezervasyonu tarihi için uygun değildir.");
-                            mmMessage.Messages.Add("İlk salon rezervasyonu '" + ilkSrTalep.Tarih.ToDateString() + "' tarihinde alınmıştır.");
-                            mmMessage.Messages.Add("Belirlenen kurallara göre EYK tarihi en son '" + maxT.ToDateString() + "' tarihi olabilir.");
+                            mmMessage.Messages.Add("İlk salon rezervasyonu '" + ilkSrTalep.Tarih.ToFormatDate() + "' tarihinde alınmıştır.");
+                            mmMessage.Messages.Add("Belirlenen kurallara göre EYK tarihi en son '" + maxT.ToFormatDate() + "' tarihi olabilir.");
                             mmMessage.IsSuccess = false;
                         }
                     }
@@ -1021,7 +1021,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mb.EYKTarihi = eykTarihi;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mb.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mb.ToJson());
                     mmMessage.Messages.Add("Eyk Tarihi Güncellendi");
                     mmMessage.IsSuccess = true;
                 }
@@ -1079,7 +1079,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     srTalep.BitSaat = new TimeSpan(sinavTarihi.Value.Hour + 2, sinavTarihi.Value.Minute, 0);
                     srTalep.Tarih = sinavTarihi.Value.Date;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Update, srTalep.ToJson());
+                    LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, srTalep.ToJson());
                     mmMessage.Messages.Add("Sınav Tarihi Güncellendi");
                     mmMessage.IsSuccess = true;
                 }
@@ -1115,7 +1115,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mb.TezTeslimSonTarih = tarih.Value;
 
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Update, mb.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Update, mb.ToJson());
                 mmMessage.Messages.Add("Tez Teslim Son Tarih Kriteri Güncellendi");
                 mmMessage.IsSuccess = true;
             }
@@ -1593,10 +1593,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         if (isYeniJo || isDegisiklikVar || _entities.MezuniyetJuriOneriFormuJurileris.Count(p => p.MezuniyetJuriOneriFormID == kModel.MezuniyetJuriOneriFormID) != kData.Count(p => p.AdSoyad.IsNullOrWhiteSpace() == false))
                         {
-                            var uniqueId = Guid.NewGuid().ToString().Replace("-", "").Substr(0, 8).ToUpper();
+                            var uniqueId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                             while (_entities.MezuniyetJuriOneriFormlaris.Any(a => a.UniqueID == uniqueId))
                             {
-                                uniqueId = Guid.NewGuid().ToString().Replace("-", "").Substr(0, 8).ToUpper();
+                                uniqueId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
                             }
                             mbjo.UniqueID = uniqueId;
                         }
@@ -1905,7 +1905,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                                 if (item.SablonParametreleri.Any(a => a == "@WebAdresi"))
                                     paramereDegerleri.Add(new MailReplaceParameterDto { Key = "WebAdresi", Value = enstitu.WebAdresi, IsLink = true });
                                 if (item.SablonParametreleri.Any(a => a == "@EYKTarihi"))
-                                    paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.Value.ToDateString() });
+                                    paramereDegerleri.Add(new MailReplaceParameterDto { Key = "EYKTarihi", Value = mb.EYKTarihi.Value.ToFormatDate() });
                                 if (item.SablonParametreleri.Any(a => a == "@AdSoyad"))
                                     paramereDegerleri.Add(new MailReplaceParameterDto { Key = "AdSoyad", Value = item.AdSoyad });
                                 if (item.SablonParametreleri.Any(a => a == "@UnvanAdi"))
@@ -2075,7 +2075,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     mmMessage.Title = "Uyarı";
                     _entities.MezuniyetBasvurularis.Remove(kayit);
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Delete, kayit.ToJson());
                     mmMessage.Messages.Add(tarih + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;
                     foreach (var item in fFList)

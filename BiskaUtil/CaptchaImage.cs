@@ -12,38 +12,24 @@ namespace BiskaUtil
     public class CaptchaImage
     {
         // Public properties (all read-only).
-        public string Text
-        {
-            get { return this.text; }
-        }
-        public Bitmap Image
-        {
-            get { return this.image; }
-        }
-        public int Width
-        {
-            get { return this.width; }
-        }
-        public int Height
-        {
-            get { return this.height; }
-        }
+        public string Text { get; }
+
+        public Bitmap Image { get; private set; }
+
+        public int Width { get; private set; }
+
+        public int Height { get; private set; }
 
         // Internal properties.
-        private string text;
-        private int width;
-        private int height;
-        private string familyName;
-        private Bitmap image;
+        private string _familyName;
 
         public float FontSize { get; set; }
         // For generating random numbers.
-        private Random random = new Random();
+        private Random _random = new Random();
 
         public CaptchaImage(string s, int width, int height, int fontSize)
         {
-            if (string.IsNullOrWhiteSpace(s) == false) this.text = s;
-            else this.text = GenerateRandomCode();
+            this.Text = string.IsNullOrWhiteSpace(s) == false ? s : GenerateRandomCode();
             this.FontSize = fontSize;
             this.SetDimensions(width, height);
             this.GenerateImage();
@@ -55,8 +41,7 @@ namespace BiskaUtil
         // ====================================================================
         public CaptchaImage(string s, int width, int height)
         {
-            if (string.IsNullOrWhiteSpace(s) == false) this.text = s;
-            else this.text = GenerateRandomCode();
+            this.Text = string.IsNullOrWhiteSpace(s) == false ? s : GenerateRandomCode();
             this.SetDimensions(width, height);
             this.GenerateImage();
         }
@@ -67,7 +52,7 @@ namespace BiskaUtil
         // ====================================================================
         public CaptchaImage(string s, int width, int height, string familyName)
         {
-            this.text = s;
+            this.Text = s;
             this.SetDimensions(width, height);
             this.SetFamilyName(familyName);
             this.GenerateImage();
@@ -97,7 +82,7 @@ namespace BiskaUtil
         {
             if (disposing)
                 // Dispose of the bitmap.
-                this.image.Dispose();
+                this.Image.Dispose();
         }
 
         // ====================================================================
@@ -110,8 +95,8 @@ namespace BiskaUtil
                 throw new ArgumentOutOfRangeException("width", width, "Argument out of range, must be greater than zero.");
             if (height <= 0)
                 throw new ArgumentOutOfRangeException("height", height, "Argument out of range, must be greater than zero.");
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
         }
 
         // ====================================================================
@@ -122,13 +107,13 @@ namespace BiskaUtil
             // If the named font is not installed, default to a system font.
             try
             {
-                Font font = new Font(this.familyName, 12F);
-                this.familyName = familyName;
+                var font = new Font(this._familyName, 12F);
+                _familyName = familyName;
                 font.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                this.familyName = System.Drawing.FontFamily.GenericSerif.Name;
+                _familyName = System.Drawing.FontFamily.GenericSerif.Name;
             }
         }
 
@@ -138,53 +123,52 @@ namespace BiskaUtil
         private void GenerateImage()
         {
             // Create a new 32-bit bitmap image.
-            Bitmap bitmap = new Bitmap(this.width, this.height, PixelFormat.Format32bppArgb);
+            var bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
 
             // Create a graphics object for drawing.
-            Graphics g = Graphics.FromImage(bitmap);
+            var g = Graphics.FromImage(bitmap);
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            Rectangle rect = new Rectangle(0, 0, this.width, this.height);
+            var rect = new Rectangle(0, 0, this.Width, this.Height);
 
             // Fill in the background.
-            HatchBrush hatchBrush = new HatchBrush(HatchStyle.SmallConfetti, Color.LightGray, Color.White);
+            var hatchBrush = new HatchBrush(HatchStyle.SmallConfetti, Color.LightGray, Color.White);
             g.FillRectangle(hatchBrush, rect);
 
             // Set up the text font.
-            SizeF size;
             float fontSize = rect.Height + 5;
             Font font;
             if (this.FontSize == 0)
             {
                 // Adjust the font size until the text fits within the image.
+                SizeF size;
                 do
                 {
                     fontSize--;
-                    font = new Font(this.familyName, fontSize, FontStyle.Bold);
-                    size = g.MeasureString(this.text, font);
+                    font = new Font(this._familyName, fontSize, FontStyle.Bold);
+                    size = g.MeasureString(this.Text, font);
                 } while (size.Width > rect.Width);
             }
             else
             {
-                font = new Font(this.familyName, fontSize, FontStyle.Bold);
-                fontSize = this.FontSize;
+                font = new Font(this._familyName, fontSize, FontStyle.Bold);
             }
             // Set up the text format.
-            StringFormat format = new StringFormat();
+            var format = new StringFormat();
             format.Alignment = StringAlignment.Near;
             format.LineAlignment = StringAlignment.Near;
             format.FormatFlags = StringFormatFlags.NoWrap;
             // Create a path using the text and warp it randomly.
-            GraphicsPath path = new GraphicsPath();
-            path.AddString(this.text, font.FontFamily, (int)font.Style, font.Size, rect, format);
-            float v = 4F;
+            var path = new GraphicsPath();
+            path.AddString(this.Text, font.FontFamily, (int)font.Style, font.Size, rect, format);
+            const float v = 4F;
             PointF[] points =
-			{
-				new PointF(this.random.Next(rect.Width) / v, this.random.Next(rect.Height) / v),
-				new PointF(rect.Width - this.random.Next(rect.Width) / v, this.random.Next(rect.Height) / v),
-				new PointF(this.random.Next(rect.Width) / v, rect.Height - this.random.Next(rect.Height) / v),
-				new PointF(rect.Width - this.random.Next(rect.Width) / v, rect.Height - this.random.Next(rect.Height) / v)
-			};
-            Matrix matrix = new Matrix();
+            {
+                new PointF(this._random.Next(rect.Width) / v, this._random.Next(rect.Height) / v),
+                new PointF(rect.Width - this._random.Next(rect.Width) / v, this._random.Next(rect.Height) / v),
+                new PointF(this._random.Next(rect.Width) / v, rect.Height - this._random.Next(rect.Height) / v),
+                new PointF(rect.Width - this._random.Next(rect.Width) / v, rect.Height - this._random.Next(rect.Height) / v)
+            };
+            var matrix = new Matrix();
             matrix.Translate(0F, 0F);
             path.Warp(points, rect, matrix, WarpMode.Perspective, 0F);
 
@@ -193,13 +177,13 @@ namespace BiskaUtil
             g.FillPath(hatchBrush, path);
 
             // Add some random noise.
-            int m = Math.Max(rect.Width, rect.Height);
-            for (int i = 0; i < (int)(rect.Width * rect.Height / 30F); i++)
+            var m = Math.Max(rect.Width, rect.Height);
+            for (var i = 0; i < (int)(rect.Width * rect.Height / 30F); i++)
             {
-                int x = this.random.Next(rect.Width);
-                int y = this.random.Next(rect.Height);
-                int w = this.random.Next(m / 50);
-                int h = this.random.Next(m / 50);
+                var x = this._random.Next(rect.Width);
+                var y = this._random.Next(rect.Height);
+                var w = this._random.Next(m / 50);
+                var h = this._random.Next(m / 50);
                 g.FillEllipse(hatchBrush, x, y, w, h);
             }
 
@@ -209,7 +193,7 @@ namespace BiskaUtil
             g.Dispose();
 
             // Set the image.
-            this.image = bitmap;
+            Image = bitmap;
         }
 
         private string GenerateRandomCode()
@@ -223,15 +207,15 @@ namespace BiskaUtil
             //}
             //return str;
 
-            string s = "";
-            for (int i = 0; i < 4; i++)
-                s = String.Concat(s, this.random.Next(10).ToString());
+            var s = "";
+            for (var i = 0; i < 4; i++)
+                s = string.Concat(s, _random.Next(10).ToString());
             return s;
         }
-        public string getBase64ImageSrc()
+        public string GetBase64ImageSrc()
         {
-            System.IO.MemoryStream ms = new System.IO.MemoryStream();
-            this.Image.Save(ms, ImageFormat.Jpeg);
+            var ms = new System.IO.MemoryStream();
+            Image.Save(ms, ImageFormat.Jpeg);
             try
             {
                 return "data:image/jpg;base64," + Convert.ToBase64String(ms.GetBuffer());

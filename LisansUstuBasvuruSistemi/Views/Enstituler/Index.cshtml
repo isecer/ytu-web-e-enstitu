@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmEnstitulerDto
 @{
     var indexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -14,7 +14,7 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Enstitü Listesi</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Enstitü Listesi</h3>
                     <ul class="panel-controls">
                         <li><span class="label label-info label-form" style="cursor: pointer;" onclick="window.location.href='@Url.Action("Kayit")'"><i class="fa fa-plus" aria-hidden="true"></i> Yeni Enstitü Ekle</span></li>
                         <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>

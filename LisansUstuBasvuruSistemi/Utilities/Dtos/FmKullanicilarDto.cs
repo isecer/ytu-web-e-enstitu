@@ -6,7 +6,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Models; 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmKullanicilarDto : PagerOption
+    public class FmKullanicilarDto : PagerModel
     {
         public bool Expand { get; set; }
         public int KullaniciID { get; set; }

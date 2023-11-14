@@ -1,6 +1,6 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using BiskaUtil
-@model KmTDOBasvuruDanisman
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@model KmTdoBasvuruDanisman
 @{
     Layout = null;
     var tezDiliTr = Model.IsYeniTezDiliTr.HasValue ? Model.IsYeniTezDiliTr == true : Model.IsTezDiliTr;
@@ -128,14 +128,14 @@
                     <td class="CaptionTd">Anabilim Dalı</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        @Html.DropDownList("TDAnabilimDaliID", Model.SListTDAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" })
+                        @Html.DropDownList("TDAnabilimDaliID", Model.SListTdAnabilimDali, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDAnabilimDaliID", onchange = "getPrograms(this);" })
                     </td>
                 </tr>
                 <tr>
                     <td class="CaptionTd">Programı</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        @Html.DropDownList("TDProgramKod", Model.SListTDProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
+                        @Html.DropDownList("TDProgramKod", Model.SListTdProgram, new { @class = "form-control", @style = "width:100%;color:black;", id = "TDProgramKod" })
                     </td>
                 </tr>
                 <tr class="dilRow">
@@ -145,7 +145,7 @@
                     <td class="CaptionTd">Sınav Adı</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group">
-                        @Html.DropDownList("TDSinavTipID", Model.SListTDSinav, new { @class = "form-control", @style = "color:black;", id = "TDSinavTipID", onchange = "SinavTipKontrol(this,'TDSinavPuani','TdSpInp');" })
+                        @Html.DropDownList("TDSinavTipID", Model.SListTdSinav, new { @class = "form-control", @style = "color:black;", id = "TDSinavTipID", onchange = "SinavTipKontrol(this,'TDSinavPuani','TdSpInp');" })
                     </td>
                 </tr>
                 <tr class="TdSinavUni dilRow">
@@ -166,13 +166,13 @@
                     <td class="CaptionTd">Sınav Puanı</td>
                     <td class="CaptionTd">:</td>
                     <td class="ValueTd form-group TdSpInp">
-                        @if (Model.SListTDSinavNot == null)
+                        @if (Model.SListTdSinavNot == null)
                         {
                             <input type="text" name="TDSinavPuani" id="TDSinavPuani" maxlength="64" autocomplete="off" value="@Model.TDSinavPuani" class="form-control" style="color: black;" />
                         }
                         else
                         {
-                            @Html.DropDownList("TDSinavPuani", Model.SListTDSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
+                            @Html.DropDownList("TDSinavPuani", Model.SListTdSinavNot, new { @class = "form-control", id = "TDSinavPuani" })
                         }
                     </td>
                 </tr>

@@ -8,15 +8,15 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class KontenjanProgramBilgiModel : Programlar
     {
-        public int BasvuruSurecID { get; set; }
-        public int BasvuruID { get; set; }
-        public int KullaniciID { get; set; }
+        public int BasvuruSurecId { get; set; }
+        public int BasvuruId { get; set; }
+        public int KullaniciId { get; set; }
         public int OgrenimTipKod { get; set; }
         public string OgrenimTipAdi { get; set; }
         public string AnabilimDaliAdi { get; set; }
-        public string ProgramAdi { get; set; }
+        public new string ProgramAdi { get; set; }
         public string AlesTipAdi { get; set; }
-        public int AlanTipID { get; set; }
+        public int AlanTipId { get; set; }
         public bool OrtakKota { get; set; }
         public int? OrtakKotaSayisi { get; set; }
         public int AlanIciKota { get; set; }
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public bool Kazandi { get; set; }
         public bool KayitEdildi { get; set; }
 
-        public string UniqueID { get; set; }
+        public string UniqueId { get; set; }
 
         public KontenjanProgramBilgiModel()
         {

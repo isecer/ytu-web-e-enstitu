@@ -1,8 +1,9 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@{ 
-    var root = LisansUstuBasvuruSistemi.Models.Management.GetRoot(); 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@{
+    var root = LisansUstuBasvuruSistemi.Models.Management.GetRoot();
 }
 <head>
     <meta charset="utf-8" />
@@ -97,20 +98,20 @@
                             }
                         </div>
 
-                  
-                     }
-                  }
-               }
-               else
-               {
-                   var mmmsgs = new MmMessage();
-                   if (Session["ShwMesaj"] != null)
-                   {
-                       mmmsgs = (MmMessage)Session["ShwMesaj"];
-                       Session["ShwMesaj"] = null;
-                   }
-                   if (mmmsgs.Messages.Count > 0)
-                   {
+
+                    }
+                }
+            }
+            else
+            {
+                var mmmsgs = new MmMessage();
+                if (Session["ShwMesaj"] != null)
+                {
+                    mmmsgs = (MmMessage)Session["ShwMesaj"];
+                    Session["ShwMesaj"] = null;
+                }
+                if (mmmsgs.Messages.Count > 0)
+                {
                     <div id="msgs" style="display: none;">
                         @{
                             var cls = mmmsgs.MessageType == MsgTypeEnum.Success ? "success" : (mmmsgs.MessageType == MsgTypeEnum.Warning ? "warning" : (mmmsgs.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
@@ -130,11 +131,11 @@
                     </div>
 
 
-                 }
-           
-           
-           
-             }
+                }
+
+
+
+            }
         }
     </div>
 
@@ -148,7 +149,7 @@
     <script type='text/javascript' src="~/Content/js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script type='text/javascript' src="~/Content/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 
-  
+
     <script type="text/javascript" src="~/Content/js/plugins/owl/owl.carousel.min.js"></script>
 
     <script type="text/javascript" src="~/Content/js/plugins/moment.min.js"></script>

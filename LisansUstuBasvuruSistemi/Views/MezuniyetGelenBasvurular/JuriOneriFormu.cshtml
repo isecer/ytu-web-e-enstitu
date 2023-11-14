@@ -14,7 +14,7 @@
 <div class="widget widget-default" style="margin:0px;padding:4px;">
     <div class="panel panel-default form-horizontal" style="margin:0px;margin-top:5px;">
         <div class="panel-heading padding-0">
-            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i>&nbsp; <span class="myCaptionTd"> @(Model.IsDoktoraOrYL ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</span> </h3>
+            <h3 class="panel-title"><i class="fa fa-book myCaptionTd"></i> <span class="myCaptionTd"> @(Model.IsDoktoraOrYL ? "Doktora Tez Jüri Öneri Formu" : "Yüksek Lisans Tez Jüri Öneri Formu")</span> </h3>
             <ul class="panel-controls">
 
                 <li><a href="javascript:void(0);" onclick="ShowNote();"><span class="fa fa-info-circle"></span></a></li>
@@ -89,30 +89,30 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#tab-TezDanismani" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">Tez Danışmanı</span>
+                                    <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">Tez Danışmanı</span>
                                 </a>
                             </li>
                             @if (Model.IsDoktoraOrYL)
                             {
                                 <li>
                                     <a href="#tab-TikUyesi1" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">1. Tik Üyesi</span>
+                                        <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">1. Tik Üyesi</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#tab-TikUyesi2" data-toggle="tab" aria-expanded="false">
-                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">2. Tik Üyesi</span>
+                                        <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">2. Tik Üyesi</span>
                                     </a>
                                 </li>
                             }
                             <li>
                                 <a href="#tab-YtuIciJuri" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">YTÜ İçinden Jüri Adayı Önerisi</span>
+                                    <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">YTÜ İçinden Jüri Adayı Önerisi</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab-YtuDisiJuri" data-toggle="tab" aria-expanded="false">
-                                    <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">YTÜ Dışından Jüri Adayı Önerisi</span>
+                                    <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">YTÜ Dışından Jüri Adayı Önerisi</span>
                                 </a>
                             </li>
                         </ul>
@@ -447,7 +447,7 @@
                                                 var ActiveCls = i == 1 ? "active" : "";
                                                 <li class="@ActiveCls">
                                                     <a href="#tab-YtuIciJuri-@(i)" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                        <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
                                                     </a>
                                                 </li>
                                             }
@@ -594,7 +594,7 @@
                                                 var ActiveCls = i == 1 ? "active" : "";
                                                 <li class="@ActiveCls">
                                                     <a href="#tab-YtuDisiJuri-@(i)" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user myCaptionTd"></i>&nbsp; <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
+                                                        <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">@i - Üye Önerisi @(i == 4 ? "" : "(*)")</span>
                                                     </a>
                                                 </li>
                                             }

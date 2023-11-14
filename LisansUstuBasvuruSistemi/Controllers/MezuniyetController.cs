@@ -558,7 +558,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 }
 
-                LogIslemleri.LogEkle("MezuniyetBasvurulari", isNewRecord ? IslemTipi.Insert : IslemTipi.Update, mBasvuru.ToJson());
+                LogIslemleri.LogEkle("MezuniyetBasvurulari", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, mBasvuru.ToJson());
 
 
                 var qMyId = kModel._MezuniyetBasvurulariYayinID.Select((s, inx) => new { MezuniyetBasvurulariYayinID = s, Index = inx }).ToList();
@@ -1130,7 +1130,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             mmMessage.IsSuccess = false;
             mmMessage.Title = "Salon Rezervasyonu Talep İşlemi";
             mmMessage.MessageType = MsgTypeEnum.Warning;
-            var surecKayitYetki = RoleNames.MezuniyetSureciKayıt.InRole();
+            var surecKayitYetki = RoleNames.MezuniyetSureciKayıt.InRoleCurrent();
 
             var mezuniyetBasvurusu = _entities.MezuniyetBasvurularis.First(p => p.MezuniyetBasvurulariID == kModel.MezuniyetBasvurulariID);
             var sonSrTalebi = mezuniyetBasvurusu.SRTalepleris.LastOrDefault();
@@ -1354,7 +1354,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                         _entities.SaveChanges();
 
-                        LogIslemleri.LogEkle("SRTalepleri", kModel.SRTalepID <= 0 ? IslemTipi.Insert : IslemTipi.Update, srTalebi.ToJson());
+                        LogIslemleri.LogEkle("SRTalepleri", kModel.SRTalepID <= 0 ? LogCrudType.Insert : LogCrudType.Update, srTalebi.ToJson());
                         mmMessage.IsSuccess = true;
                         mmMessage.MessageType = MsgTypeEnum.Success;
                         mmMessage.Messages.Add("Belirtilen tarih için rezervasyon talebi oluşturuldu.");
@@ -1904,7 +1904,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         komite.IslemYapanID = UserIdentity.Current != null ? UserIdentity.Current.Id : (int?)null;
                         komite.IslemYapanIP = UserIdentity.Ip;
                         _entities.SaveChanges();
-                        LogIslemleri.LogEkle("SRTalepleriJuri", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("SRTalepleriJuri", LogCrudType.Update, komite.ToJson());
                         mMessage.IsSuccess = true;
                         if (sendMailLink)
                         {
@@ -1987,7 +1987,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
                             _entities.SaveChanges();
                         }
-                        LogIslemleri.LogEkle("SRTalepJuris", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("SRTalepJuris", LogCrudType.Update, komite.ToJson());
 
                     }
                 }
@@ -2186,7 +2186,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     srTalep.OgrenciOnayTarihi = DateTime.Now;
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("SRTalepleri", IslemTipi.Update, srTalep.ToJson());
+                    LogIslemleri.LogEkle("SRTalepleri", LogCrudType.Update, srTalep.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.Messages.Add(isOgrenciUzatmaSonrasiOnay.HasValue ? (isOgrenciUzatmaSonrasiOnay.Value ? "Tahhüt Onaylandı." : "Taahhüt Ret Edildi.") : "Taahhüt İşlemi Geril Alındı.");
                 }
@@ -2224,7 +2224,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     _entities.MezuniyetBasvurularis.Remove(kayit);
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("MezuniyetBasvurulari", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("MezuniyetBasvurulari", LogCrudType.Delete, kayit.ToJson());
                     if (kayit.DanismanImzaliFormDosyaYolu.IsNullOrWhiteSpace() == false)
                     {
                         var path = Server.MapPath("~" + kayit.DanismanImzaliFormDosyaYolu);

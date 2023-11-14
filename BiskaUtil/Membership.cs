@@ -122,12 +122,13 @@ namespace BiskaUtil
                     var key = string.IsNullOrWhiteSpace(attr.RolAdi) ? oVal.ToString() : attr.RolAdi;
                     attr.RolAdi = key;
                     var rolKey = field.DeclaringType?.FullName + "." + field.Name;
-                    if (attr.RolID == 0) attr.RolID = 1000000000 + rolKey.ToCrc16();
+                    if (attr.RolID == 0) attr.RolID = 1000000000 + ToCrc16(rolKey);
                     roles.Add(attr);
                 }
             }
             return roles.ToArray();
         }
+    
         public static MenuAttribute[] Menus()
         {
             var fields = MenuFields();
@@ -146,7 +147,7 @@ namespace BiskaUtil
                     var key = string.IsNullOrWhiteSpace(attr.MenuAdi) ? oVal.ToString() : attr.MenuAdi;
                     attr.MenuAdi = key;
                     var menuKey = field.DeclaringType?.FullName + "." + field.Name;
-                    if (attr.MenuID == 0) attr.MenuID = 1000000000 + menuKey.ToCrc16();
+                    if (attr.MenuID == 0) attr.MenuID = 1000000000 + ToCrc16(menuKey);
                     #region otomatik ilişki koy
                     if (oroleAttr != null)
                     {
@@ -161,7 +162,30 @@ namespace BiskaUtil
             }
             return menus.ToArray();
         }
-
+        private static int ToCrc32(string strText)
+        {
+            var x = Crc32.CRC32String(strText);
+            try
+            {
+                return (int)x;
+            }
+            catch
+            {
+                return (int)Math.Round((double)(x / 3));
+            }
+        }
+        private static int ToCrc16(string strText)
+        {
+            var x = Crc16.ComputeChecksum(strText);
+            try
+            {
+                return (int)x;
+            }
+            catch
+            {
+                return ToCrc32(strText);
+            }
+        }
         public static UserIdentity GetUserIdentity(string UserName)
         {
             if (OnRequireUserIdentity != null)

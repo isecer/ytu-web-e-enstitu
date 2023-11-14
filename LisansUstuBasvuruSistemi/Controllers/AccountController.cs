@@ -1,31 +1,26 @@
-﻿
-using BiskaUtil;
-using CaptchaMvc.HtmlHelpers;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using BiskaUtil;
+using CaptchaMvc.HtmlHelpers;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
-using LisansUstuBasvuruSistemi.Utilities.Filters;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemSetting;
-using LisansUstuBasvuruSistemi.Utilities.Helpers;
-using LisansUstuBasvuruSistemi.Ws_YokOgrenciSorgula;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
 
-    [System.Web.Mvc.OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class AccountController : Controller
     {
         private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
@@ -35,7 +30,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             if (logout == true)
             {
-                FormsAuthenticationUtil.SignOut();
+                FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
             }
             if (UserIdentity.Current.IsAuthenticated) return RedirectToAction("Index", "Home");
@@ -121,7 +116,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             }
 
                             rememberMe = rememberMe ?? false;
-                            FormsAuthenticationUtil.SetAuthCookie(user.KullaniciAdi, "", rememberMe.Value);
+                            FormsAuthentication.SetAuthCookie(user.KullaniciAdi,  rememberMe.Value);
                             UserBus.SetLastLogon();
 
                             if (returnUrl.IsNullOrWhiteSpace()) return RedirectToAction("Index", "Home");
@@ -483,7 +478,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
                 }
-                else if (kModel.TcKimlikNo.IsNumber() == false)
+                else if (ValueTypeControlExtension.IsNumber(kModel.TcKimlikNo) == false)
                 {
                     messageModel.Messages.Add("T.C. Kimlik Numarası Sadece Sayıdan Oluşmalıdır.");
                     messageModel.MessagesDialog.Add(new MrMessage { MessageType = MsgTypeEnum.Warning, PropertyName = "TcKimlikNo" });
@@ -783,7 +778,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     else kModel.KullaniciAdi = kModel.EMail;
                 }
-                kModel.Sifre = Guid.NewGuid().ToString().Substr(0, 6);
+                kModel.Sifre = Guid.NewGuid().ToString().Substring(0, 6);
                 var excpt = KullanicilarBus.YeniHesapMailGonder(kModel, kModel.Sifre);
                 if (excpt != null)
                 {
@@ -913,7 +908,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     messageModel.IsCloseDialog = true;
                     messageModel.IsSuccess = true;
                     messageModel.MessageType = MsgTypeEnum.Success;
-                    LogIslemleri.LogEkle("Kullanicilar", IslemTipi.Update, data.ToJson());
+                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, data.ToJson());
                 }
             }
             else

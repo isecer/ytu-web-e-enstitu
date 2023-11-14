@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Web;
+using System.Web.Security;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Business
@@ -216,7 +217,7 @@ namespace LisansUstuBasvuruSistemi.Business
             {
                 var menus = new List<Menuler>();
                 var kull = db.Kullanicilars.FirstOrDefault(p => p.KullaniciAdi == userName);
-                if (kull == null) FormsAuthenticationUtil.SignOut();
+                if (kull == null) FormsAuthentication.SignOut();
                 var kullRoll = kull.Rollers.SelectMany(s => s.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 var ygRoll = kull.YetkiGruplari.YetkiGrupRolleris.SelectMany(s => s.Roller.Menulers).Distinct().OrderBy(o => o.SiraNo).ToList();
                 menus.AddRange(kullRoll);
@@ -248,7 +249,7 @@ namespace LisansUstuBasvuruSistemi.Business
 
                 }
 
-                FormsAuthenticationUtil.SignOut();
+                FormsAuthentication.SignOut();
                 throw new SecurityException("Kullanıcı Tanımlı Değil");
 
             }
@@ -351,7 +352,7 @@ namespace LisansUstuBasvuruSistemi.Business
             var kull = UserBus.GetUser(userName);
             if (kull == null)
             {
-                FormsAuthenticationUtil.SignOut();
+                FormsAuthentication.SignOut();
                 return null;
             }
 
@@ -383,7 +384,7 @@ namespace LisansUstuBasvuruSistemi.Business
             ui.Informations.Add("BoxedOrFullWidth", kull.BoxedOrFullWidth);
             ui.Informations.Add("ThemeName", kull.ThemeName);
             ui.Informations.Add("BackgroundImage", kull.BackgroundImage);
-            ui.KullaniciTipID = kull.KullaniciTipID;
+            ui.KullaniciTipId = kull.KullaniciTipID;
 
             ui.EnstituKods = UserBus.GetUserEnstituKods(kull.KullaniciID);
             ui.SeciliEnstituKodu = kull.EnstituKod;

@@ -7,18 +7,18 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class KmTDOBasvuruDanisman : TDOBasvuruDanisman
+    public class KmTdoBasvuruDanisman : TDOBasvuruDanisman
     {
-        public bool? isCopy;
+        public bool? IsCopy;
 
-        public bool? IsTezDiliTr { get; set; }
+        public new bool? IsTezDiliTr { get; set; }
         public string OgrenciAdSoyad { get; set; }
         public SelectList SListSinav { get; set; }
         public SelectList SListSinavNot { get; set; }
-        public SelectList SListTDAnabilimDali { get; set; }
-        public SelectList SListTDProgram { get; set; }
-        public SelectList SListTDSinav { get; set; }
-        public SelectList SListTDSinavNot { get; set; }
+        public SelectList SListTdAnabilimDali { get; set; }
+        public SelectList SListTdProgram { get; set; }
+        public SelectList SListTdSinav { get; set; }
+        public SelectList SListTdSinavNot { get; set; }
         public SelectList SListTDoDanismanTalepTip { get; internal set; }
     }
 }

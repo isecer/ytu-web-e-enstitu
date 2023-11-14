@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmTiBasvuru : PagerOption
+    public class FmTiBasvuru : PagerModel
     {
         public int? TIBasvuruID { get; set; }
         public int? KullaniciID { get; set; }

@@ -1,11 +1,11 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model BelgeTipDetayKayitDto
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var BelgeTipleriList = (List<CmbIntDto>)ViewBag.BelgeTipleriList;
-    var HaftaGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;       
+    var HaftaGunleri = (List<CmbIntDto>)ViewBag.HaftaGunleri;
 }
 
 
@@ -15,7 +15,7 @@
         <div class="col-md-12 col-md-12 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-pencil"></i>&nbsp; @(Model.BelgeTipDetayID <= 0 ? "Yeni belge tip detayı tanımlama işlemi" : "Belge tip detayı bilgisi düzenleme işlemi")</h3>
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i> @(Model.BelgeTipDetayID <= 0 ? "Yeni belge tip detayı tanımlama işlemi" : "Belge tip detayı bilgisi düzenleme işlemi")</h3>
                     <ul class="panel-controls">
                         <li><a href="@Url.Action("Kayit", Model.BelgeTipDetayID)" class=""><span class="fa fa-refresh panel-refresh"></span></a></li>
                     </ul>
@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <div class="panel panel-default padding-0" id="pnlSaatler" style="padding: 0px; margin: 0px;">
                                     <div class="panel-heading padding-0" style="padding:0px;margin:0px;">
-                                        <h3 class="panel-title"><i class="glyphicon glyphicon-time"></i>&nbsp; Saat Kriteri Ekle</h3>
+                                        <h3 class="panel-title"><i class="glyphicon glyphicon-time"></i> Saat Kriteri Ekle</h3>
                                         <a style="float: right;" id="btntarihekle" onclick="saatEkle()" href="javascript:void(0);" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Ekle</a>
                                     </div>
                                     <div class="form-group">
@@ -202,12 +202,12 @@
                                                 @foreach (var item in Model.Saatler)
                                                 {
                                                     <tr>
-                                                        <td>  
+                                                        <td>
                                                             <input name="HaftaGunleri" value="@string.Join(",", item.GunNos.Select(s=>s.Value.Value))" class="hide" />
-                                                            @string.Join(", ", item.GunNos.Select(s=>s.Caption))
+                                                            @string.Join(", ", item.GunNos.Select(s => s.Caption))
                                                         </td>
                                                         <td>
-                                                            <input name="TalepBaslangicSaat"  value="@item.TalepBaslangicSaat" class="hide" />
+                                                            <input name="TalepBaslangicSaat" value="@item.TalepBaslangicSaat" class="hide" />
                                                             <input name="TalepBitisSaat" value="@item.TalepBitisSaat" class="hide" />
                                                             @(item.TalepBaslangicSaat)-@(item.TalepBitisSaat)
                                                         </td>
@@ -283,7 +283,7 @@
 
     function saatEkle() {
 
-        var _panel = $('#pnlSaatler'); 
+        var _panel = $('#pnlSaatler');
         var haftaGunleri = $('#_haftaGunu').val();
         var haftaGunleriText = $('#_haftaGunu').parents('td').first().find('button').first().attr("title");
         var tBaslangicSaati = $('#_TaleBasSaat').val();
@@ -292,7 +292,7 @@
         var tsBaslangicSaati = $('#_TeslimBasSaat').val();
         var tsBitisSaati = $('#_TeslimBitSaat').val();
 
-                   
+
         var _haftaGunleri = "[";
         var _tBaslangicSaati = "[";
         var _tBitisSaati = "[";
@@ -310,7 +310,7 @@
             _tBaslangicSaati += (inx > 0 ? "," : "") + "'" + _TalepBaslangicSaat + "'";
             _tBitisSaati += (inx > 0 ? "," : "") + "'" + _TalepBitisSaat + "'";
 
-        });          
+        });
         _haftaGunleri += "]";
         _tBaslangicSaati += "]";
         _tBitisSaati += "]";
@@ -322,10 +322,10 @@
             "EklenecekGun": eklenecekGun,
             "TeslimBaslangicSaat": tsBaslangicSaati,
             "TeslimBitisSaat": tsBitisSaati,
-            "HaftaGunleriList": eval(_haftaGunleri),   
+            "HaftaGunleriList": eval(_haftaGunleri),
             "TalepBaslangicSaatList": eval(_tBaslangicSaati),
             "TalepBitisSaatList": eval(_tBitisSaati)
-        };              
+        };
         PanelRefresh(_panel, false);
         $.ajax({
             url: '@Url.Action("SaatEkleKontrol", "BelgeTipDetay")',

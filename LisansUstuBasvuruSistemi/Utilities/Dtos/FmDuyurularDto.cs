@@ -8,7 +8,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmDuyurularDto : PagerOption
+    public class FmDuyurularDto : PagerModel
     {
         public string EnstituKod { get; set; }
         public string Baslik { get; set; }

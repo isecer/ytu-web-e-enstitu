@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmSalonBilgi : PagerOption
+    public class FmSalonBilgi : PagerModel
     {
         public string EnstituKod { get; set; }
         public int? SRTalepTipID { get; set; }

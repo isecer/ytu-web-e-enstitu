@@ -3,6 +3,7 @@ using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
@@ -23,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 cell_OnaylayanKisi.Text = onaylayan.Ad + " " + onaylayan.Soyad;
 
 
-                var kayitDonemi = mBasvuru.KayitOgretimYiliBaslangic + "/" + (mBasvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == mBasvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + mBasvuru.KayitTarihi.ToDateString();
+                var kayitDonemi = mBasvuru.KayitOgretimYiliBaslangic + "/" + (mBasvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == mBasvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + mBasvuru.KayitTarihi.ToFormatDate();
                 lngLbl_AkademikTarih.Text = "Eğitim Öğretim Yılı";
                 cell_AkademikYil.Text = mBasvuru.MezuniyetSureci.BaslangicYil + "-" + mBasvuru.MezuniyetSureci.BitisYil + " " + db.Donemlers.First(p => p.DonemID == mBasvuru.MezuniyetSureci.DonemID).DonemAdi;
                 lblKayitTarihi.Text = "Kayıt Tarihi";
@@ -47,7 +48,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 chk_YS_Yok.Checked = yturs.Count == 0;
                 chk_YS_Yok.Text = "Yok";
                 cell_AdSoyadImza.Text = mBasvuru.Ad + " " + mBasvuru.Soyad;
-                cell_Tarih.Text = mBasvuru.BasvuruTarihi.ToDateString();
+                cell_Tarih.Text = mBasvuru.BasvuruTarihi.ToFormatDate();
                 var ysEvet = "Evet";
                 var ysHayir = "Hayır";
                 capt_YayinTuru.Text = "Yayın Türü Adı";

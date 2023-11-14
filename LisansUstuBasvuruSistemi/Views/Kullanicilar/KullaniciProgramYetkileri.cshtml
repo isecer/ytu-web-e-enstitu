@@ -1,18 +1,18 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Business
+﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model List<KulaniciProgramYetkiModel>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var user = (Kullanicilar)ViewBag.Kullanici;
-    var allchecked = Model.Where(s => s.YetkiVar).Count() == Model.Count;
+    var allchecked = Model.Count(s => s.YetkiVar) == Model.Count;
 
     var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    var EnstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
 }
 
 
@@ -37,12 +37,12 @@
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Kayit", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Kullanıcı</span></li>
 
                             }
-                            @if (ErisimYetki)
+                            @if (erisimYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Yetkilendirme", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Erişim Yetkileri</span></li>
 
                             }
-                            @if (EnstituYetki)
+                            @if (enstituYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("YetkilendirmeEnstitu", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Enstitü Yetkileri</span></li>
                             }

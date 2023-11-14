@@ -8,7 +8,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmTosBasvuru : PagerOption
+    public class FmTosBasvuru : PagerModel
     {
 
         public Guid? UniqueId { get; set; }
@@ -118,7 +118,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string OgrenciProgramAdi { get; set; }
         public string OgrenciAdSoyad { get; set; }
-        public bool? IsYokDrBursiyeriVar { get; set; }
+        public new bool? IsYokDrBursiyeriVar { get; set; }
 
         public List<int> TikNums { get; set; }
         public List<bool> IsTezDanismanis { get; set; }

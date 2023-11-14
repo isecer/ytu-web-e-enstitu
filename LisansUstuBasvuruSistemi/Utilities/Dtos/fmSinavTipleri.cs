@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmSinavTipleri : PagerOption
+    public class FmSinavTipleri : PagerModel
     {
         public string EnstituKod { get; set; }
         public string SinavAdi { get; set; }

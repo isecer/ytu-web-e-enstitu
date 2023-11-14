@@ -1,14 +1,15 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -16,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.YetkiGruplari)]
     public class YetkiGruplariController : Controller
     {
-        private LisansustuBasvuruSistemiEntities db = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         { 
             return Index(new FmYetkiGruplari());
@@ -24,7 +25,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         [HttpPost]
         public ActionResult Index(FmYetkiGruplari model)
         {
-            var q = from s in db.YetkiGruplaris
+            var q = from s in _entities.YetkiGruplaris
                     select new
                     {
                         s.YetkiGrupID,
@@ -57,7 +58,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             var model = new YetkiGruplari();
             if (id.HasValue && id > 0)
             {
-                var data = db.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
+                var data = _entities.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
                 if (data != null) model = data;
             }
 
@@ -72,7 +73,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
             });
             ViewBag.Roller = dataR;
             var kategr = roles.Select(s => s.Kategori).Distinct().ToArray();
-            var menuK = db.Menulers.Where(a => a.BagliMenuID == 0 && kategr.Contains(a.MenuAdi)).ToList();
+            var menuK = _entities.Menulers.Where(a => a.BagliMenuID == 0 && kategr.Contains(a.MenuAdi)).ToList();
             var dct = new List<CmbIntDto>();
             foreach (var item in menuK)
             {
@@ -107,21 +108,21 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 if (model.YetkiGrupID == 0)
                 {
 
-                    db.YetkiGruplaris.Add(model);
-                    db.SaveChanges();
+                    _entities.YetkiGruplaris.Add(model);
+                    _entities.SaveChanges();
                 }
                 else
                 {
-                    var yg = db.YetkiGruplaris.First(p => p.YetkiGrupID == model.YetkiGrupID);
+                    var yg = _entities.YetkiGruplaris.First(p => p.YetkiGrupID == model.YetkiGrupID);
                     yg.YetkiGrupAdi = model.YetkiGrupAdi;
                 }
-                var eskiROl = db.YetkiGrupRolleris.Where(p => p.YetkiGrupID == model.YetkiGrupID).ToList();
-                db.YetkiGrupRolleris.RemoveRange(eskiROl);
+                var eskiROl = _entities.YetkiGrupRolleris.Where(p => p.YetkiGrupID == model.YetkiGrupID).ToList();
+                _entities.YetkiGrupRolleris.RemoveRange(eskiROl);
                 foreach (var item in rolId)
                 {
-                    db.YetkiGrupRolleris.Add(new YetkiGrupRolleri { YetkiGrupID = model.YetkiGrupID, RolID = item });
+                    _entities.YetkiGrupRolleris.Add(new YetkiGrupRolleri { YetkiGrupID = model.YetkiGrupID, RolID = item });
                 }
-                db.SaveChanges();
+                _entities.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -143,7 +144,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         }
         public ActionResult Sil(int id)
         {
-            var kayit = db.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
+            var kayit = _entities.YetkiGruplaris.FirstOrDefault(p => p.YetkiGrupID == id);
             string message = "";
             bool success = true;
             if (kayit != null)
@@ -151,8 +152,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 try
                 {
                     message = "'" + kayit.YetkiGrupAdi + "' Yetki Grubu Silindi!";
-                    db.YetkiGruplaris.Remove(kayit);
-                    db.SaveChanges();
+                    _entities.YetkiGruplaris.Remove(kayit);
+                    _entities.SaveChanges();
                 }
                 catch (Exception ex)
                 {

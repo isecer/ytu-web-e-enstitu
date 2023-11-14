@@ -4,6 +4,7 @@ using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 using LisansUstuBasvuruSistemi.Utilities.Logs;
 using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -660,7 +662,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         data.ResimAdi = KullanicilarBus.ResimKaydet(profilResmi);
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("Kullanicilar", IslemTipi.Update, data.ToJson());
+                    LogIslemleri.LogEkle("Kullanicilar", LogCrudType.Update, data.ToJson());
                     if (isYetkiDegisti) UserBus.SetUserRoles(data.KullaniciID, new List<int>(), data.YetkiGrupID);
                     if (data.KullaniciID == UserIdentity.Current.Id) { UserIdentity.Current.ImagePath = data.ResimAdi.ToKullaniciResim(); }
 
@@ -865,7 +867,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             var prevUserKey = Guid.NewGuid().ToString();
 
-            FormsAuthenticationUtil.SetAuthCookie(kullanici.KullaniciAdi, "", false);
+            FormsAuthentication.SetAuthCookie(kullanici.KullaniciAdi,   false);
             var ui = UserBus.GetUserIdentity(kullanici.KullaniciAdi);
             ui.Informations.Add("PrevUserKey", prevUserKey);
             ui.Informations.Add(prevUserKey, UserIdentity.Current.Id);

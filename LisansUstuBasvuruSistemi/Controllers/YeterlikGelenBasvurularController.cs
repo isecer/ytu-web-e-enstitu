@@ -190,7 +190,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     mmMessage.IsSuccess = true;
                 mmMessage.MessageType = MsgTypeEnum.Success;
-                LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
+                LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, basvuru.ToJson());
                 if (sendMail)
                     YeterlikBus.SendMailBasvuruOnayi(basvuru.UniqueID);
             }
@@ -227,7 +227,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         YeterlikBus.SendMailBasvuruOnayi(uniqueId);
                     }
                     message = basvurus.Count + " Yeterlik başvurusu onaylandı";
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvurus.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, basvurus.ToJson());
 
                 }
                 catch (Exception ex)

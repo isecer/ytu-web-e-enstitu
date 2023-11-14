@@ -1,13 +1,13 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @{
     Layout = null;
 
     var root = Management.GetRoot();
     root = root.EndsWith("/") ? root : root + "/";
 
-    var apath = Request.Url.AbsolutePath.IndexOf("?") > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?")) : Request.Url.AbsolutePath;
+    var apath = Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal) > -1 ? Request.Url.AbsolutePath.Substring(0, Request.Url.AbsolutePath.IndexOf("?", StringComparison.Ordinal)) : Request.Url.AbsolutePath;
 
     var spl = apath.Split('/').Where(p => p != "").Select((item, inx) => new { item, inx }).ToList();
     string selectedEnstKisAd = (spl.Count == 0 ? "FBE" : (EnstituBus.IsContainsEnstitu(spl.First().item) ? spl.First().item : "FBE")).ToLower();
@@ -15,12 +15,10 @@
     root = root + enst;
     var eKod = EnstituBus.GetSelectedEnstitu(selectedEnstKisAd);
     //var unShowMenuIds = new List<int> { 80000, 80500, 81000 };
-    var unShowMenuIds = new List<int> {   };
-    var menudata = MenulerBus.Menulers.Where(p =>  p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
-   
-    List<Menuler> mMenu;
+    var unShowMenuIds = new List<int> { };
+    var menudata = MenulerBus.Menulers.Where(p => p.YetkiliEnstitu == null || p.YetkiliEnstitu.Contains(eKod)).ToList();
 
-    mMenu = UserBus.GetUserMenus().ToList(); 
+    var mMenu = UserBus.GetUserMenus().ToList();
     IEnumerable<Menuler> eklenecekler;
     do
     {
@@ -34,39 +32,32 @@
     while (eklenecekler.Any());
 
     mMenu.AddRange(menudata.Where(p => p.YetkisizErisim.HasValue && p.YetkisizErisim.Value && mMenu.Any(a => a.MenuID == p.MenuID) == false));
-    mMenu = mMenu.Where(p=>!unShowMenuIds.Contains(p.MenuID) || unShowMenuIds.Contains(p.BagliMenuID ?? 0)).OrderBy(o => o.SiraNo).ToList();
+    mMenu = mMenu.Where(p => !unShowMenuIds.Contains(p.MenuID) || unShowMenuIds.Contains(p.BagliMenuID ?? 0)).OrderBy(o => o.SiraNo).ToList();
 
     var sb = new System.Text.StringBuilder();
     Func<int?, bool> fxMenu = null;
 
-    fxMenu = new Func<int?, bool>((parentID) =>
+    fxMenu = new Func<int?, bool>((parentId) =>
     {
         Menuler[] menuler = null;
-        if (!parentID.HasValue)
-        {
-            menuler = mMenu.Where(p => p.BagliMenuID == 0).ToArray();
-        }
-        else
-        {
-            menuler = mMenu.Where(p => p.BagliMenuID == parentID).ToArray();
-        }
+        menuler = !parentId.HasValue ? mMenu.Where(p => p.BagliMenuID == 0).ToArray() : mMenu.Where(p => p.BagliMenuID == parentId).ToArray();
         if (menuler.Any())
         {
-            for (int i = 0; i < menuler.Count(); i++)
+            for (var i = 0; i < menuler.Count(); i++)
             {
                 var menu = menuler[i];
-                string menuAdi =  menu.MenuAdi;
-                string MenuAD = (parentID.HasValue ? menuAdi : "<span class='xn-text'>" + menuAdi + "</span>");
+                var menuAdi = menu.MenuAdi;
+                var menuAd = (parentId.HasValue ? menuAdi : "<span class='xn-text'>" + menuAdi + "</span>");
 
-                string autC = menu.AuthenticationControl;
-                bool navAutC = !menu.AuthenticationControl.IsNullOrWhiteSpace();
+                var autC = menu.AuthenticationControl;
+                var navAutC = !menu.AuthenticationControl.IsNullOrWhiteSpace();
                 var hrefUrl = navAutC || menu.MenuUrl.IsNullOrWhiteSpace() ? "javascript:void(0);" : (root + menu.MenuUrl);
 
                 var hassubmenu = (mMenu.Any(a => a.BagliMenuID == menu.MenuID));
                 sb.AppendLine("<li " + (hassubmenu ? "class='xn-openable'" : "") + ">" +
-                                    "<a href='" + hrefUrl + "' " + (navAutC ? ("onclick='" + autC + "'") : "") + " menuurl='" + root.ToLower() + (menu.MenuUrl.IndexOf("I") > -1 ? menu.MenuUrl.Replace("I", "i") : menu.MenuUrl).ToLower() + "'>" +
+                                    "<a href='" + hrefUrl + "' " + (navAutC ? ("onclick='" + autC + "'") : "") + " menuurl='" + root.ToLower() + (menu.MenuUrl.IndexOf("I", StringComparison.Ordinal) > -1 ? menu.MenuUrl.Replace("I", "i") : menu.MenuUrl).ToLower() + "'>" +
                                        "<span class='" + menu.MenuCssClass + "'></span>" +
-                                        MenuAD +
+                                        menuAd +
                                      "</a>");
                 if (hassubmenu)
                 {

@@ -1,10 +1,10 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Models 
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model YetkiGruplari
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var MmMessage = ViewBag.MmMessage as MmMessage;
     var roller = (IEnumerable<CheckObject<Roller>>)ViewBag.Roller;
     var cats = (List<CmbIntDto>)ViewBag.cats;
  }
@@ -15,7 +15,7 @@
     <div class="col-md-12 col-md-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading padding-0">
-                <h3 class="panel-title"><i class="@(Model.YetkiGrupID>0?"fa fa-edit":"fa fa-plus")"></i>&nbsp; @(Model.YetkiGrupID > 0 ? "Yetki Grubu Düzeltme İşlemi" : "Yeni Yetki Grubu Oluşturma İşlemi")</h3>
+                <h3 class="panel-title"><i class="@(Model.YetkiGrupID>0?"fa fa-edit":"fa fa-plus")"></i> @(Model.YetkiGrupID > 0 ? "Yetki Grubu Düzeltme İşlemi" : "Yeni Yetki Grubu Oluşturma İşlemi")</h3>
 
                 <ul class="panel-controls">
                     <li><a href="javascript:void(0)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>

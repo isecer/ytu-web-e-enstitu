@@ -191,7 +191,7 @@
             <!-- START SIMPLE DATATABLE -->
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Gelen Başvuru Listesi</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Gelen Başvuru Listesi</h3>
                     <ul class="panel-controls">
                         @foreach (var item in indexModel.ListB)
                         {
@@ -251,7 +251,7 @@
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td>@item.BasvuruSurecAdi <br />@item.BasTar.ToDateString() - @item.BitTar.ToDateString()</td>
+                                        <td>@item.BasvuruSurecAdi <br />@item.BasTar.ToFormatDate() - @item.BitTar.ToFormatDate()</td>
                                         <td>
                                             @item.BasvuruTarihi
                                         </td>

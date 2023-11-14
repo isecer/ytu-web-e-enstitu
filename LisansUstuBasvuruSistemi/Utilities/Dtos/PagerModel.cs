@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace BiskaUtil
+namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    [Serializable]
-    public class PagerOption
+    public class PagerModel
     {
-        public PagerOption()
+        public PagerModel()
         {
             PageIndex = 1;
             PageSize = 20;
@@ -26,9 +25,8 @@ namespace BiskaUtil
             {
                 if ((decimal)RowCount / (decimal)_pageIndex == 0 || PageCount < _pageIndex) _pageIndex = 1;
                 return _pageIndex;
-
             }
-            set => _pageIndex = value;
+            set { _pageIndex = value; }
         }
 
 

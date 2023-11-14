@@ -306,7 +306,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanIP = kModel.IslemYapanIP;
                     _entities.YeterlikSurecOgrenimTipleris.RemoveRange(data.YeterlikSurecOgrenimTipleris);
 
-                    LogIslemleri.LogEkle("YeterlikSureci", IslemTipi.Update, data.ToJson());
+                    LogIslemleri.LogEkle("YeterlikSureci", LogCrudType.Update, data.ToJson());
 
                 }
 

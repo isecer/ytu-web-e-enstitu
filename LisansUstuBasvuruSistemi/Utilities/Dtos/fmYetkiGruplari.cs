@@ -6,7 +6,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmYetkiGruplari : PagerOption
+    public class FmYetkiGruplari : PagerModel
     {
         public int YetkiGrupID { get; set; }
         public string YetkiGrupAdi { get; set; }

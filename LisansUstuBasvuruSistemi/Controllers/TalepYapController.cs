@@ -630,7 +630,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                 }
-                LogIslemleri.LogEkle("TalepGelenTalepler", yeniKayit ? IslemTipi.Insert : IslemTipi.Update, talep.ToJson());
+                LogIslemleri.LogEkle("TalepGelenTalepler", yeniKayit ? LogCrudType.Insert : LogCrudType.Update, talep.ToJson());
                 mmMessage.IsSuccess = true;
                 mmMessage.MessageType = MsgTypeEnum.Success;
                 return mmMessage.ToJsonResult();
@@ -844,7 +844,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         mmMessage.Messages.Add("Onaylanan Taleplere mail gönderilirken bir hata oluştu.");
                         SistemBilgilendirmeBus.SistemBilgisiKaydet("Onaylanan Taleplere mail gönderilirken bir hata oluştu! <br/><br/> Hata: " + ex.ToExceptionMessage(), "TalepYap/GelenTalepOnay<br/><br/>" + ex.ToExceptionStackTrace(), LogTipiEnum.Hata);
                     }
-                    LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Update, talepler.ToJson());
+                    LogIslemleri.LogEkle("TalepGelenTalepler", LogCrudType.Update, talepler.ToJson());
 
                 }
                 catch (Exception ex)
@@ -960,13 +960,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                             { 
                                 System.IO.File.Delete(dosya.DosyaYolu);
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 // ignored
                             }
                         }
                     }
-                    LogIslemleri.LogEkle("TalepGelenTalepler", IslemTipi.Delete, talep.ToJson());
+                    LogIslemleri.LogEkle("TalepGelenTalepler", LogCrudType.Delete, talep.ToJson());
                     mmMessage.IsSuccess = true;
                     mmMessage.MessageType = MsgTypeEnum.Success;
                 }

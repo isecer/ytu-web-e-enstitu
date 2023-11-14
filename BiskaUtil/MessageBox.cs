@@ -29,30 +29,30 @@ namespace BiskaUtil
             }
         }
 
-        public static void Show(string Message)
+        public static void Show(string message)
         {
-            Show(Message, "", MessageType.Information);
+            Show(message, "", MessageType.Information);
         }
-        public static void Show(string Message, string Title) 
+        public static void Show(string message, string title) 
         {
-            Show(Message, Title, MessageType.Information);
+            Show(message, title, MessageType.Information);
         }
-        public static void Show(string Message,MessageType MsgType)
+        public static void Show(string message,MessageType msgType)
         {
-            Show(Message, "", MsgType);
+            Show(message, "", msgType);
         }
-        public static void Show(string Message, string Title, MessageType MsgType)
+        public static void Show(string message, string title, MessageType msgType)
         {
-            Queues.Add(new Msg { Message =new string[]{Message}, Title = Title, MsgType = MsgType });
+            Queues.Add(new Msg { Message =new string[]{message}, Title = title, MsgType = msgType });
         }
-        public static void Show(string Title, MessageType MsgType,params string[] Messages)
+        public static void Show(string title, MessageType msgType,params string[] messages)
         {
-            Queues.Add(new Msg { Message = Messages, Title = Title, MsgType = MsgType });
+            Queues.Add(new Msg { Message = messages, Title = title, MsgType = msgType });
         }
         public static Msg GetShow()
         {
-            var fi=Queues.FirstOrDefault();
-            if (fi != null) Queues.RemoveAt(0); 
+            var fi = Queues.FirstOrDefault();
+            if (fi != null) Queues.RemoveAt(0);
             return fi;
         }
         public static Msg[] GetShows()

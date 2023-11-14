@@ -7,11 +7,11 @@ using System.Web;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Logs
 {
-    public static class IslemTipi
+    public class LogCrudType
     {
-        public static string Insert => "Insert";
-        public static string Update => "Update";
-        public static string Delete => "Delete";
+        public const string Insert = "Insert";
+        public const string Update = "Update";
+        public const string Delete = "Delete";
     }
     public static class LogIslemleri
     {
@@ -21,11 +21,11 @@ namespace LisansUstuBasvuruSistemi.Utilities.Logs
             {
 
                 using (var db = new LisansustuBasvuruSistemiEntities())
-                { 
+                {
 
                     db.Logs.Add(new Log
                     {
-                        TabloAdi = tabloAdi, 
+                        TabloAdi = tabloAdi,
                         IslemTipi = islemTipi,
                         TableData = tableData,
                         IslemTarihi = DateTime.Now,

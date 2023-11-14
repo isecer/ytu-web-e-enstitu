@@ -1,8 +1,7 @@
-﻿@using LisansUstuBasvuruSistemi.Models
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
-@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model BasvuruDetayDto
 @{
@@ -12,380 +11,374 @@
     var secimColorA = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipiEnum.Asil) ? "#2f8c8d" : "";
     var secimColorY = Model.Tercihlers.Any(p => p.IsSecilenTercih == true && p.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek) ? "#2f8c8d" : "";
     var secilenTercihVar = Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (!Model.IsYedekCokluTercih || p.IsSeciliBasvuruyaAitTercih) && p.IsSecilenTercih == true);
-      bool fileDialogShow = !Model.KayitIslemiGordu;
+    bool fileDialogShow = !Model.KayitIslemiGordu;
 
 }
 <div class="panel panel-default" style="padding: 0px; margin: 0px;">
-<div class="panel-heading padding-0">
-    <h3 class="panel-title"></h3>
-    @if (mGonder)
-    {
-        <ul class="panel-controls">
-            @if (Model.IsGonderilenMaillerVar)
-            {
+    <div class="panel-heading padding-0">
+        <h3 class="panel-title"></h3>
+        @if (mGonder)
+        {
+            <ul class="panel-controls">
+                @if (Model.IsGonderilenMaillerVar)
+                {
+                    <li>
+                        <span class="label label-info label-form" onclick="mGonderilenListeBK('@Model.RowID.ToString()');" style="cursor:pointer;"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Gönderilen Mailleri Gör</span>
+                    </li>
+                }
                 <li>
-                    <span class="label label-info label-form" onclick="mGonderilenListeBK('@Model.RowID.ToString()');" style="cursor:pointer;"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Gönderilen Mailleri Gör</span>
+
+                    <span class="label label-primary label-form" onclick="mGonderBK('@Model.RowID.ToString()',@Model.BasvuruID);" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Mail Gönder</span>
                 </li>
-            }
-            <li>
 
-                <span class="label label-primary label-form" onclick="mGonderBK('@Model.RowID.ToString()',@Model.BasvuruID);" style="cursor:pointer;" title="Mail Gönder"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Mail Gönder</span>
-            </li>
-
-        </ul>
-    }
-</div>
-<div class="panel-body" style="padding:2px;">
-@if (!Model.IsHesaplandi)
-{
-    <table style="width:100%;">
-        <tr>
-            <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Başvuru henüz hesaplanmamıştır. Hesaplama işleminden sonra tercih edilen programlarda Asil ya da Yedek hakkı kazanıldığı taktirde Belge yükleme işlemleri açılacaktır.</td>
-        </tr>
-    </table>
-}
-else if (!Model.IsKayitHakkiVar)
-{
-    <table style="width:100%;">
-        <tr>
-            <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Hesaplama sonucunda bu başvuru için kayıt hakkı kazanılan herhangi bir program bulunmamaktadır.</td>
-        </tr>
-    </table>
-
-}
-else if (!Model.IsBelgeYuklemeAktif && !Model.Tercihlers.Any(a => a.IsSecilenTercih == true))
-{
-    <table style="width:100%;">
-        <tr>
-            <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Kayıt hakkı kazandığınız programlar için belge yüklemesi aktif değildir.</td>
-        </tr>
-    </table>
-}
-else
-{
-
-    <input type="text" class="hide" id="IsSave_@Model.BasvuruID" value="@(Model.IsSave.ToString().ToLower())" />
-    <div class="dd" id="ddLst" style="height: auto;">
-
-    <ol class="dd-list" id="Rw_tbody">
-    @if (!Model.IsYedekCokluTercih)
-    {
-        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Asil && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
-        {
-            bool IsBelgeYuklemeAktif = false;
-            <li class="dd-item dd3-item">
-                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@secimColorA;">
-                    <table style="width:100%;table-layout:fixed;">
-                        <tbody>
-
-                        <tr>
-                            <td width="240" style="color:@secimColorA;font-weight:bold;text-align:right;">Asil kontenjan hakkından kayıt olunmak istenen tercih</td>
-                            <td width="10" style="color:@secimColorA;font-weight:bold;text-align:right;">:</td>
-                            <td style="text-align:left; color:@secimColorA;padding-right:4px;">
-                                <select id="KayitTercihUniqueIDA_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorA">
-                                    <option value="">@(Model.IsSecilenTercihVarAsil ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
-                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Asil).OrderBy(o => o.SiraNo))
-                                    {
-                                        IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
-                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
-                                        <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
-                                    }
-                                </select>
-                            </td>
-                            <td width="125">
-                                
-                            </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-
-                </div>
-            </li>
+            </ul>
         }
-        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+    </div>
+    <div class="panel-body" style="padding:2px;">
+        @if (!Model.IsHesaplandi)
         {
-            bool IsBelgeYuklemeAktif = false;
-            <li class="dd-item dd3-item">
-
-                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@secimColorY;">
-                    <table style="width:100%;table-layout:fixed;">
-                        <tbody>
-
-                        <tr>
-                            <td width="240" style="color:@secimColorY;font-weight:bold;text-align:right;">Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
-                            <td width="10" style="color:@secimColorY;font-weight:bold;text-align:right;">:</td>
-                            <td style="text-align:left; color:@secimColorY;padding-right:4px;">
-                                <select id="KayitTercihUniqueIDY_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorY">
-                                    <option value="">@(Model.IsSecilenTercihVarYedek ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
-                                    @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek).OrderBy(o => o.SiraNo))
-                                    {
-                                        IsBelgeYuklemeAktif = item.IsBelgeYuklemeAktif;
-                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
-                                        <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
-                                    }
-                                </select>
-                            </td>
-                            <td width="125">
-                                
-                            </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-
-                </div>
-            </li>
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Başvuru henüz hesaplanmamıştır. Hesaplama işleminden sonra tercih edilen programlarda Asil ya da Yedek hakkı kazanıldığı taktirde Belge yükleme işlemleri açılacaktır.</td>
+                </tr>
+            </table>
         }
-    }
-    else
-    {
-        <li class="dd-item dd3-item">
-            <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
-                <table style="width:100%;">
-                    <tbody>
-                    <tr>
-                        <td colspan="2" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding:5px;"> Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left:10px;text-align:left;">
-                            <table style="width:100%;" id="tercihS_@Model.BasvuruID">
-                                <tr>
-                                    <th>Program</th>
-                                    <th width="90">Kayıt Seçeneği</th>
-                                    <th width="90">Kayıt Önceliği</th>
-
-                                </tr>
-                                @foreach (var item in Model.Tercihlers)
-                                {
-                                    var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(Kayıt İşlemi Bekleniyor)" : ""));
-
-                                    <tr>
-                                        <td class="TRowPrName">@item.ProgramKod @item.ProgramAdi (@item.OgrenimTipAdi) @(durum)</td>
-                                        <td style="text-align:center;">
-                                            <input class="TRowUnID hide" value="@item.UniqueID" />
-                                            <select class="KsCls" style="font-weight:bold; color:@(item.IsSecilenTercih==true?"green":"maroon")" id="KayitSecenek_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
-                                                <option value="" onchange=""></option>
-                                                <option value="true" style="font-weight:bold;color:green;" @(item.IsSecilenTercih == true ? "selected" : "")>Kayıt Olmak İstiyorum</option>
-                                                <option value="false" style="font-weight:bold;color:maroon;" @(item.IsSecilenTercih == false ? "selected" : "")>Kayıt Olmak İstemiyorum</option>
-                                            </select>
-
-                                        </td>
-                                        <td style="text-align:center;">
-                                            <select class="KoCls @(item.IsSecilenTercih!=true?"hide":"")" id="KayitOncelik_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
-                                                <option value=""></option>
-                                                <option value="1" @(item.KayitSiraNo == 1 ? "selected" : "")>1. Öncelik</option>
-                                                <option value="2" @(item.KayitSiraNo == 2 ? "selected" : "")>2. Öncelik</option>
-                                            </select>
-                                        </td>
-
-                                    </tr>
-                                }
-
-                            </table>
-                        </td>
-                        <td width="100" style="vertical-align:middle;">
-                            <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@secimColorY" onclick="KayitOlunacakTercihiKaydet2(@Model.BasvuruID)"><span class="fa fa-save fa-lg"></span> Kaydet</span>
-
-                        </td>
-                    </tr>
-
-                    </tbody>
-                </table>
-
-            </div>
-        </li>
-    }
-    @if ( secilenTercihVar)
-    {
-        <li class="dd-item dd3-item">
-            <div class="dd3-content" style="margin:1px;padding :5px;">Aşağıya ekleyeceğiniz belgeler kayıt esnasında yetkililer tarafından kontol edilip onaylanacaktır. Belgelerin pdf olarak eklenmesi gerekmektedir.</div>
-        </li>
-    }
-    @if (secilenTercihVar)
-    {
-        var TBasvuruIDCount = Model.Tercihlers.Select(s => s.BasvuruID).Distinct().Count();
-
-        foreach (var itemT in Model.Tercihlers.Where(p => p.IsSecilenTercih == true).Take(TBasvuruIDCount))
+        else if (!Model.IsKayitHakkiVar)
         {
-            <li>
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Hesaplama sonucunda bu başvuru için kayıt hakkı kazanılan herhangi bir program bulunmamaktadır.</td>
+                </tr>
+            </table>
 
-                <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
-                    <table style="width:100%;">
-                        <tbody>
-                        <tr>
-                            <td style="font-weight:bold;font-size:9pt; border-bottom:1px solid;padding:5px;">
-                                @if (!Model.IsYedekCokluTercih || TBasvuruIDCount == 1)
-                                {
-                                    <i class="fa fa-file-pdf-o fa-lg" style="color:@color;"></i> <span style="color:@color;">Kayıt işlemi sırasında gerekli olacak belgeler aşağıda listelenmiştir</span>
-                                }
-                                else
-                                {
-                                    <i class="fa fa-file-pdf-o fa-lg" style="color:@color;"></i> <span style="color:@color;">@(itemT.KayitSiraNo + " .Öncelik >") @itemT.ProgramKod @itemT.ProgramAdi (@itemT.OgrenimTipAdi) programı için istenen belgeler</span>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+        }
+        else if (!Model.IsBelgeYuklemeAktif && Model.Tercihlers.All(a => a.IsSecilenTercih != true))
+        {
+            <table style="width:100%;">
+                <tr>
+                    <td style="height:260px;vertical-align:middle;color:maroon;text-align:center;">Kayıt hakkı kazandığınız programlar için belge yüklemesi aktif değildir.</td>
+                </tr>
+            </table>
+        }
+        else
+        {
 
-                                <ol class="dd-list">
-                                    @foreach (var item in Model.Belgelers.Where(p => p.BasvuruID == itemT.BasvuruID))
-                                    {
+            <input type="text" class="hide" id="IsSave_@Model.BasvuruID" value="@(Model.IsSave.ToString().ToLower())" />
+            <div class="dd" id="ddLst" style="height: auto;">
 
-                                        var BelgeVar = !item.BelgeAdi.IsNullOrWhiteSpace();
-                                        var colorKb = !BelgeVar ? "" : "#2f8c8d";
-                                        var colorOb = !item.IsOnaylandi ? "#8d4a2f" : "#2f8c8d";
+                <ol class="dd-list" id="Rw_tbody">
+                    @if (!Model.IsYedekCokluTercih)
+                    {
+                        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Asil && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+                        {
+                            <li class="dd-item dd3-item">
+                                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@secimColorA;">
+                                    <table style="width:100%;table-layout:fixed;">
+                                        <tbody>
 
-                                        var RwID = item.BasvuruID + "_" + item.BasvuruBelgeTipID;
-                                        var frmID = "BasvuruDosyaEklePost_" + RwID;
+                                            <tr>
+                                                <td width="240" style="color:@secimColorA;font-weight:bold;text-align:right;">Asil kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                                <td width="10" style="color:@secimColorA;font-weight:bold;text-align:right;">:</td>
+                                                <td style="text-align:left; color:@secimColorA;padding-right:4px;">
+                                                    <select id="KayitTercihUniqueIDA_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorA">
+                                                        <option value="">@(Model.IsSecilenTercihVarAsil ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
+                                                        @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Asil).OrderBy(o => o.SiraNo))
+                                                        {
+                                                            var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                                            <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td width="125">
+                                                </td>
+                                            </tr>
 
-                                        <li class="dd-item dd3-item">
+                                        </tbody>
+                                    </table>
 
-                                            <div class="dd3-content" style="margin:2px;padding :0px;border-color:@colorKb;">
+                                </div>
+                            </li>
+                        }
+                        if (Model.Tercihlers.Any(a => a.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek && (a.IsBelgeYuklemeAktif || a.IsSecilenTercih == true)))
+                        {
+                            <li class="dd-item dd3-item">
 
-                                                @using (Ajax.BeginForm("BasvuruDosyaEklePost", "Ajax", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmID }))
-                                                {
-                                                    <table style="width:100%;table-layout:fixed;">
-                                                        <tbody>
+                                <div class="dd3-content" style="margin:2px;margin-bottom:10px;padding :0px;padding-top:5px;padding-bottom:5px; border-color:@secimColorY;">
+                                    <table style="width:100%;table-layout:fixed;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td width="240" style="color:@secimColorY;font-weight:bold;text-align:right;">Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                                <td width="10" style="color:@secimColorY;font-weight:bold;text-align:right;">:</td>
+                                                <td style="text-align:left; color:@secimColorY;padding-right:4px;">
+                                                    <select id="KayitTercihUniqueIDY_@Model.BasvuruID" class="form-control" style="width:100%;color:@secimColorY">
+                                                        <option value="">@(Model.IsSecilenTercihVarYedek ? "Kayıt Olmak İstemiyorum" : "Seçilmedi...")</option>
+                                                        @foreach (var item in Model.Tercihlers.Where(p => p.MulakaSonucTipID == MulakatSonucTipiEnum.Yedek).OrderBy(o => o.SiraNo))
+                                                        {
+                                                            var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(İşlem Bekleniyor)" : ""));
+                                                            <option @(item.IsSecilenTercih == true ? "selected" : "") value="@item.UniqueID">@item.ProgramAdi (@item.ProgramKod) (@item.OgrenimTipAdi) @durum</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td width="125">
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="dd-item dd3-item">
+                            <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
+                                <table style="width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2" style="font-weight:bold;font-size:11pt; border-bottom:1px solid;padding:5px;"> Yedek kontenjan hakkından kayıt olunmak istenen tercih</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left:10px;text-align:left;">
+                                                <table style="width:100%;" id="tercihS_@Model.BasvuruID">
+                                                    <tr>
+                                                        <th>Program</th>
+                                                        <th width="90">Kayıt Seçeneği</th>
+                                                        <th width="90">Kayıt Önceliği</th>
+
+                                                    </tr>
+                                                    @foreach (var item in Model.Tercihlers)
+                                                    {
+                                                        var durum = (item.KayıtOldu.HasValue ? (item.KayıtOldu.Value ? (item.KayitDurumID == KayitDurumuEnum.KayitOldu ? "(Kayıt Tamamlandı)" : "(Ön Kayıt Yapıldı)") : "(İptal Edildi)") : (item.IsSecilenTercih == true ? "(Kayıt İşlemi Bekleniyor)" : ""));
+
                                                         <tr>
-                                                            <td width="34">
-                                                                @if (!item.Not.IsNullOrWhiteSpace())
-                                                                {
-                                                                    <button style="padding-left:8px;padding-right:5px;" type="button" class="btn btn-info popover-dismiss" title="Bilgi" data-content="@item.Not"><i class="fa fa-info-circle fa-lg"></i></button>
-                                                                }
-                                                            </td>
-                                                            <td width="240" style="color:@colorKb;font-weight:bold;text-align:right;">
-                                                                @if (item.BasvuruBelgeTipID == BasvuruBelgeTipiEnum.KimlikBelgesi)
-                                                                {
-                                                                    @(Model.IsYerli ? "Kimlik Belgesi" : "Pasaport Belgesi")
-                                                                }
-                                                                else
-                                                                {
-                                                                    @item.BasvuruBelgeTipAdi
-                                                                }
-                                                            </td>
-                                                            <td width="10" style="color:@colorKb;text-align:right;">:</td>
-                                                            <td style="text-align:left; color:@colorKb;">
-                                                                <div class="input-group">
-                                                                    <table style="width:100%;table-layout:fixed;">
-                                                                        <tr>
-                                                                            @if (BelgeVar)
-                                                                            {
-                                                                                <td width="35">
-                                                                                    <span class="input-group-addon" id="BelgeIcon_@RwID" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" class="form-control" id="BelgeAdi_@RwID" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(BelgeVar ? item.BelgeAdi :"Belge Seçilmedi, Lütfen belge seçiniz.")">
-                                                                                </td>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <td width="35">
-                                                                                    <span class="input-group-addon" id="BelgeIcon_@RwID" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input type="text" class="form-control" id="BelgeAdi_@RwID" style="cursor:default;color:@colorKb;" readonly="readonly" value="@(BelgeVar ? item.BelgeAdi :(Model.IsSave ? "Belge öğrenci tarafından yüklenmedi." : "Belge Seçilmedi, Lütfen belge seçiniz."))">
-                                                                                </td>
-                                                                            }
-                                                                            <td width="120" style="padding:1px;" class="@(!fileDialogShow || item.IsOnaylandi ? "hide" : "")">
-                                                                                <span class="input-group-addon" id="DosyaSec_@RwID" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@RwID').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
-                                                                            </td>
+                                                            <td class="TRowPrName">@item.ProgramKod @item.ProgramAdi (@item.OgrenimTipAdi) @(durum)</td>
+                                                            <td style="text-align:center;">
+                                                                <input class="TRowUnID hide" value="@item.UniqueID" />
+                                                                <select class="KsCls" style="font-weight:bold; color:@(item.IsSecilenTercih==true?"green":"maroon")" id="KayitSecenek_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
+                                                                    <option value="" onchange=""></option>
+                                                                    <option value="true" style="font-weight:bold;color:green;" @(item.IsSecilenTercih == true ? "selected" : "")>Kayıt Olmak İstiyorum</option>
+                                                                    <option value="false" style="font-weight:bold;color:maroon;" @(item.IsSecilenTercih == false ? "selected" : "")>Kayıt Olmak İstemiyorum</option>
+                                                                </select>
 
-                                                                            <td width="120" style="padding:1px;">
-                                                                                <span class="input-group-addon hide" id="BelgeyiKaydet_@RwID" style="background-color:@colorKb;cursor:pointer" onclick="BasvuruBelgeKaydet('@frmID')"><span class="fa fa-save fa-lg"></span> Kaydet</span>
+                                                            </td>
+                                                            <td style="text-align:center;">
+                                                                <select class="KoCls @(item.IsSecilenTercih!=true?"hide":"")" id="KayitOncelik_@item.BasvuruTercihID" onchange="KayitSecenekKontrol(@item.BasvuruTercihID)">
+                                                                    <option value=""></option>
+                                                                    <option value="1" @(item.KayitSiraNo == 1 ? "selected" : "")>1. Öncelik</option>
+                                                                    <option value="2" @(item.KayitSiraNo == 2 ? "selected" : "")>2. Öncelik</option>
+                                                                </select>
+                                                            </td>
 
-                                                                                <table class="@(!BelgeVar ? "hide" : "")" id="yOnayChk_@RwID">
-                                                                                    <tr>
-                                                                                        @if (!Model.KayitIslemiGordu)
+                                                        </tr>
+                                                    }
+
+                                                </table>
+                                            </td>
+                                            <td width="100" style="vertical-align:middle;">
+                                                <span class="input-group-addon" id="TercihSecKaydet" style="cursor:pointer;background-color:@secimColorY" onclick="KayitOlunacakTercihiKaydet2(@Model.BasvuruID)"><span class="fa fa-save fa-lg"></span> Kaydet</span>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </li>
+                    }
+                    @if (secilenTercihVar)
+                    {
+                        <li class="dd-item dd3-item">
+                            <div class="dd3-content" style="margin:1px;padding :5px;">Aşağıya ekleyeceğiniz belgeler kayıt esnasında yetkililer tarafından kontol edilip onaylanacaktır. Belgelerin pdf olarak eklenmesi gerekmektedir.</div>
+                        </li>
+                    }
+                    @if (secilenTercihVar)
+                    {
+                        var TBasvuruIDCount = Model.Tercihlers.Select(s => s.BasvuruID).Distinct().Count();
+
+                        foreach (var itemT in Model.Tercihlers.Where(p => p.IsSecilenTercih == true).Take(TBasvuruIDCount))
+                        {
+                            <li>
+
+                                <div class="dd3-content" style="margin:2px;padding :0px;border-color:maroon;">
+                                    <table style="width:100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-weight:bold;font-size:9pt; border-bottom:1px solid;padding:5px;">
+                                                    @if (!Model.IsYedekCokluTercih || TBasvuruIDCount == 1)
+                                                    {
+                                                        <i class="fa fa-file-pdf-o fa-lg" style="color:@color;"></i> <span style="color:@color;">Kayıt işlemi sırasında gerekli olacak belgeler aşağıda listelenmiştir</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-file-pdf-o fa-lg" style="color:@color;"></i> <span style="color:@color;">@(itemT.KayitSiraNo + " .Öncelik >") @itemT.ProgramKod @itemT.ProgramAdi (@itemT.OgrenimTipAdi) programı için istenen belgeler</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+
+                                                    <ol class="dd-list">
+                                                        @foreach (var item in Model.Belgelers.Where(p => p.BasvuruID == itemT.BasvuruID))
+                                                        {
+
+                                                            var isBelgeVar = !item.BelgeAdi.IsNullOrWhiteSpace();
+                                                            var colorKb = !isBelgeVar ? "" : "#2f8c8d";
+                                                            var colorOb = !item.IsOnaylandi ? "#8d4a2f" : "#2f8c8d";
+
+                                                            var rwId = item.BasvuruID + "_" + item.BasvuruBelgeTipID;
+                                                            var frmId = "BasvuruDosyaEklePost_" + rwId;
+
+                                                            <li class="dd-item dd3-item">
+
+                                                                <div class="dd3-content" style="margin:2px;padding :0px;border-color:@colorKb;">
+
+                                                                    @using (Ajax.BeginForm("BasvuruDosyaEklePost", "Ajax", null, new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data", id = frmId }))
+                                                                    {
+                                                                        <table style="width:100%;table-layout:fixed;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td width="34">
+                                                                                        @if (!item.Not.IsNullOrWhiteSpace())
                                                                                         {
-                                                                                            <td style="vertical-align:middle;">
-                                                                                                <input type="checkbox" id="yOnayChkInpt_@RwID" style="cursor:pointer;margin:5px;width:18px;height:18px;color:@colorOb;" onchange="BasvuruBelgeOnayla(@Model.BasvuruID,@item.BasvuruBelgeTipID,$(this).prop('checked'))" value="true" @item.IsOnaylandi.ToChecked() />
-                                                                                            </td>
-
-                                                                                            <td style="cursor:pointer;font-size:10pt;color:@colorOb;" onclick="$('#yOnayChkInpt_@RwID').click();">
-                                                                                                Onaylandı
-                                                                                            </td>
+                                                                                            <button style="padding-left:8px;padding-right:5px;" type="button" class="btn btn-info popover-dismiss" title="Bilgi" data-content="@item.Not"><i class="fa fa-info-circle fa-lg"></i></button>
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td width="240" style="color:@colorKb;font-weight:bold;text-align:right;">
+                                                                                        @if (item.BasvuruBelgeTipID == BasvuruBelgeTipiEnum.KimlikBelgesi)
+                                                                                        {
+                                                                                            @(Model.IsYerli ? "Kimlik Belgesi" : "Pasaport Belgesi")
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <td style="vertical-align:middle;">
-                                                                                                <input type="checkbox" id="yOnayChkInpt_@RwID" style="margin:3px;width:18px;height:18px;color:@colorOb" disabled="disabled" value="true" @item.IsOnaylandi.ToChecked() />
-                                                                                            </td>
-
-                                                                                            <td style="font-size:9pt;color:@colorOb">
-                                                                                                @(item.IsOnaylandi ? "Onaylandı" : "Onaylanmadı")
-                                                                                            </td>
+                                                                                            @item.BasvuruBelgeTipAdi
                                                                                         }
+                                                                                    </td>
+                                                                                    <td width="10" style="color:@colorKb;text-align:right;">:</td>
+                                                                                    <td style="text-align:left; color:@colorKb;">
+                                                                                        <div class="input-group">
+                                                                                            <table style="width:100%;table-layout:fixed;">
+                                                                                                <tr>
+                                                                                                    @if (isBelgeVar)
+                                                                                                    {
+                                                                                                        <td width="35">
+                                                                                                            <span class="input-group-addon" id="BelgeIcon_@rwId" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@rwId" onclick="PopupCenter('@item.BelgeYolu','@item.BelgeAdi',800,600);" style="cursor:pointer;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? item.BelgeAdi :"Belge Seçilmedi, Lütfen belge seçiniz.")">
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td width="35">
+                                                                                                            <span class="input-group-addon" id="BelgeIcon_@rwId" style="background-color:@colorKb;"><span class="fa fa-file-pdf-o fa-lg"></span></span>
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <input type="text" class="form-control" id="BelgeAdi_@rwId" style="cursor:default;color:@colorKb;" readonly="readonly" value="@(isBelgeVar ? item.BelgeAdi :(Model.IsSave ? "Belge öğrenci tarafından yüklenmedi." : "Belge Seçilmedi, Lütfen belge seçiniz."))">
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    <td width="120" style="padding:1px;" class="@(!fileDialogShow || item.IsOnaylandi ? "hide" : "")">
+                                                                                                        <span class="input-group-addon" id="DosyaSec_@rwId" style="background-color:@colorKb;cursor:pointer;" onclick="$('#Belge_@rwId').click();"><span class="glyphicon glyphicon-folder-open"></span> Dosya Seç</span>
+                                                                                                    </td>
 
-                                                                                    </tr>
-                                                                                </table>
-                                                                            </td>
+                                                                                                    <td width="120" style="padding:1px;">
+                                                                                                        <span class="input-group-addon hide" id="BelgeyiKaydet_@rwId" style="background-color:@colorKb;cursor:pointer" onclick="BasvuruBelgeKaydet('@frmId')"><span class="fa fa-save fa-lg"></span> Kaydet</span>
 
-                                                                        </tr>
+                                                                                                        <table class="@(!isBelgeVar ? "hide" : "")" id="yOnayChk_@rwId">
+                                                                                                            <tr>
+                                                                                                                @if (!Model.KayitIslemiGordu)
+                                                                                                                {
+                                                                                                                    <td style="vertical-align:middle;">
+                                                                                                                        <input type="checkbox" id="yOnayChkInpt_@rwId" style="cursor:pointer;margin:5px;width:18px;height:18px;color:@colorOb;" onchange="BasvuruBelgeOnayla(@Model.BasvuruID,@item.BasvuruBelgeTipID,$(this).prop('checked'))" value="true" @item.IsOnaylandi.ToChecked() />
+                                                                                                                    </td>
 
-                                                                    </table>
-                                                                    <input type="text" class="hide" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
-                                                                    <input type="text" class="hide" name="BasvuruID" value="@item.BasvuruID" />
-                                                                    <input type="text" class="hide" name="KullaniciID" value="@Model.KullaniciID" />
-                                                                    <input type="text" class="hide" name="BasvuruBelgeTipID" value="@item.BasvuruBelgeTipID" />
-                                                                    <input class="hide" type="file" accept="application/pdf" name="BelgeDosyasi" id="Belge_@RwID" onchange="ChangeFile(this,'@RwID');" />
+                                                                                                                    <td style="cursor:pointer;font-size:10pt;color:@colorOb;" onclick="$('#yOnayChkInpt_@rwId').click();">
+                                                                                                                        Onaylandı
+                                                                                                                    </td>
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    <td style="vertical-align:middle;">
+                                                                                                                        <input type="checkbox" id="yOnayChkInpt_@rwId" style="margin:3px;width:18px;height:18px;color:@colorOb" disabled="disabled" value="true" @item.IsOnaylandi.ToChecked() />
+                                                                                                                    </td>
+
+                                                                                                                    <td style="font-size:9pt;color:@colorOb">
+                                                                                                                        @(item.IsOnaylandi ? "Onaylandı" : "Onaylanmadı")
+                                                                                                                    </td>
+                                                                                                                }
+
+                                                                                                            </tr>
+                                                                                                        </table>
+                                                                                                    </td>
+
+                                                                                                </tr>
+
+                                                                                            </table>
+                                                                                            <input type="text" class="hide" name="BasvuruSurecID" value="@Model.BasvuruSurecID" />
+                                                                                            <input type="text" class="hide" name="BasvuruID" value="@item.BasvuruID" />
+                                                                                            <input type="text" class="hide" name="KullaniciID" value="@Model.KullaniciID" />
+                                                                                            <input type="text" class="hide" name="BasvuruBelgeTipID" value="@item.BasvuruBelgeTipID" />
+                                                                                            <input class="hide" type="file" accept="application/pdf" name="BelgeDosyasi" id="Belge_@rwId" onchange="ChangeFile(this,'@rwId');" />
 
 
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                    }
                                                                 </div>
-                                                            </td>
-                                                        </tr>
-                                                                                
-                                                        </tbody>
-                                                    </table>
-                                                }
-                                            </div>
-                                        </li>
+                                                            </li>
 
+                                                        }
+
+                                                    </ol>
+
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                        }
+                        if (Model.IsSave)
+                        {
+                            <li class="dd-item dd3-item ">
+                                <div class="dd3-content" style="margin:1px;padding :5px;">
+                                    @("* Yukarıda bulunan belgelerin isimlerinin bulunduğu kutucuğa tıklayıp belgeleri kontrol ediniz. Eksik, hatalı veya uygun olmayan bir belge yükelendi ise öğrenciye mail atıp belgelerin uygun bir şekilde yüklenmesini talep ediniz.")<br />
+                                    @("* Belgeler düzgün yüklenmiş ise Onaylandı seçeneğine tıklayıp belgeleri onaylayınız ve kaydı tamamlayınız.")<br />
+
+                                    @if (!Model.IsKayittaBelgeOnayiZorunlu)
+                                    {
+                                        <span style="color:maroon;"><b>Not:</b> Olası istisna durumlar için belge yükleme ve onaylama işlemleri yapılmadan kayıt işlemi gerçekleştirilebilir. Lütfen istisna harici durumlar için belge kontrolünü dikkatli yapınız.</span>
                                     }
-
-                                </ol>
-
-                            </td>
-
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </li>
-        }
-        if (Model.IsSave)
-        {
-            <li class="dd-item dd3-item ">
-                <div class="dd3-content" style="margin:1px;padding :5px;">
-                    @("* Yukarıda bulunan belgelerin isimlerinin bulunduğu kutucuğa tıklayıp belgeleri kontrol ediniz. Eksik, hatalı veya uygun olmayan bir belge yükelendi ise öğrenciye mail atıp belgelerin uygun bir şekilde yüklenmesini talep ediniz.")<br />
-                    @("* Belgeler düzgün yüklenmiş ise Onaylandı seçeneğine tıklayıp belgeleri onaylayınız ve kaydı tamamlayınız.")<br />
-
-                    @if (!Model.IsKayittaBelgeOnayiZorunlu)
-                    {
-                        <span style="color:maroon;"><b>Not:</b> Olası istisna durumlar için belge yükleme ve onaylama işlemleri yapılmadan kayıt işlemi gerçekleştirilebilir. Lütfen istisna harici durumlar için belge kontrolünü dikkatli yapınız.</span>
+                                </div>
+                            </li>
+                        }
                     }
-                </div>
-            </li>
+                    else
+                    {
+
+                        <li>
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="height:220px;vertical-align:middle;color:maroon;text-align:center;">
+                                        @(Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (Model.IsYedekCokluTercih ? p.IsSeciliBasvuruyaAitTercih : true) && p.IsSecilenTercih.HasValue) ? "Kayıt olunmak istenen tercih yok" : "Tercih seçiminizi yapınız.")
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+
+                    }
+                </ol>
+            </div>
         }
-    }
-    else
-    {
-
-        <li>
-            <table style="width:100%;">
-                <tr>
-                    <td style="height:220px;vertical-align:middle;color:maroon;text-align:center;">
-                        @(Model.Tercihlers.Any(p => p.IsSeciliBasvuruyaAitTercih == (Model.IsYedekCokluTercih ? p.IsSeciliBasvuruyaAitTercih : true) && p.IsSecilenTercih.HasValue) ? "Kayıt olunmak istenen tercih yok" : "Tercih seçiminizi yapınız.")
-                    </td>
-                </tr>
-            </table>
-        </li>
-
-    }
-    </ol>
     </div>
-}
-</div>
 </div>
 
 @if (Model.IsBelgeYuklemeAktif)
@@ -397,7 +390,7 @@ else
             repeat: 48,
             speed: 300,
             glow: true
-        }); 
+        });
         function KayitSecenekKontrol(BasvuruTercihID) {
             var $Ks = $('#KayitSecenek_' + BasvuruTercihID);
             var $Ks2 = $('#KayitSecenek_' + BasvuruTercihID).parents('table').first().find('.KsCls').not('#KayitSecenek_' + BasvuruTercihID).first();
@@ -442,4 +435,3 @@ else
     });
 
 </script>
- 

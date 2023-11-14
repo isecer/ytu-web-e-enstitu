@@ -1,8 +1,8 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmBelgeTipDetayDto
 @{
-    var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
+    var indexModel = (MIndexBilgi)ViewBag.IndexModel;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -16,9 +16,9 @@
                 <div class="panel-heading padding-0">
                     <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp;Belge Tip Detayı</h3>
                     <ul class="panel-controls">
-                        <li><span class="label label-success label-form">T:@IndexModel.Toplam</span></li>
-                        <li><span class="label label-info label-form">A:@IndexModel.Aktif</span></li>
-                        <li><span class="label label-danger label-form">P:@IndexModel.Pasif</span></li>
+                        <li><span class="label label-success label-form">T:@indexModel.Toplam</span></li>
+                        <li><span class="label label-info label-form">A:@indexModel.Aktif</span></li>
+                        <li><span class="label label-danger label-form">P:@indexModel.Pasif</span></li>
                         <li><a href="javascript:void(0);" onclick="setTimeout(function(){window.location.href='@Url.Action("Index")';},600)" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                     </ul>
                 </div>
@@ -62,7 +62,7 @@
                                                     <td style="width: 30px;">@RowIndex</td>
                                                     <td>
                                                         <ul class="panel-controls">
-                                                            <li id="iShow_@item.BelgeTipDetayID"  title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BelgeTipDetayID')">
+                                                            <li id="iShow_@item.BelgeTipDetayID" title="Detayı açmak veya kapatmak için tıklayınız." onclick="ShowDetail('@item.BelgeTipDetayID')">
                                                                 <a href="javascript:void(0)"><span class="fa fa-angle-down"></span></a>
                                                             </li>
                                                         </ul>
@@ -71,7 +71,7 @@
                                             </table>
                                         </td>
                                         <td id="tdMad_@item.BelgeTipDetayID">
-                                          @string.Join(", ",item.BelgeTipAdi)
+                                            @string.Join(", ", item.BelgeTipAdi)
                                         </td>
                                         <td id="tdOd_@item.BelgeTipDetayID">
                                             @item.OgrenimDurumAdi
@@ -138,16 +138,16 @@
                                                                             @(item.DonemlikKota.HasValue ? (item.DonemlikKota.Value + " Adet") : "Kota Yok")
                                                                         </div>
                                                                     </div>
-                                                                    @if (item.UcretAciklamasiLink.IsNullOrWhiteSpace()==false)
+                                                                    @if (item.UcretAciklamasiLink.IsNullOrWhiteSpace() == false)
                                                                     {
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-3 col-xs-3 control-label">Ücret Bilgi Linki</label>
-                                                                        <div class="col-md-9 col-xs-9" style="font-size:9pt;font-weight:bold;">
-                                                                          <a href="@item.UcretAciklamasiLink" target="_blank">@item.UcretAciklamasiLink</a> 
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-3 col-xs-3 control-label">Ücret Bilgi Linki</label>
+                                                                            <div class="col-md-9 col-xs-9" style="font-size:9pt;font-weight:bold;">
+                                                                                <a href="@item.UcretAciklamasiLink" target="_blank">@item.UcretAciklamasiLink</a>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
                                                                     }
-                                                                    <div class="form-group">                                                                                                
+                                                                    <div class="form-group">
                                                                         <div class="col-md-12 col-xs-12">
                                                                             <table class="table" style="width:100%;table-layout:fixed;">
                                                                                 <thead>
@@ -155,25 +155,25 @@
                                                                                         <th>Hafta Günleri</th>
                                                                                         <th width="120">Talep Saat Aralığı</th>
                                                                                         <th width="120">Verilecek Gün</th>
-                                                                                        <th width="120">Teslim Saat Aralığı</th>     
+                                                                                        <th width="120">Teslim Saat Aralığı</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     @foreach (var itemS in item.Saatler)
                                                                                     {
                                                                                         <tr>
-                                                                                            <td>                                                                                                              
+                                                                                            <td>
                                                                                                 @string.Join(", ", itemS.GunNos.Select(s => s.Caption))
                                                                                             </td>
-                                                                                            <td>                                                                               
+                                                                                            <td>
                                                                                                 @(itemS.TalepBaslangicSaat)-@(itemS.TalepBitisSaat)
                                                                                             </td>
                                                                                             <td>
-                                                                                                @(itemS.EklenecekGun == 0 ? "Aynı gün verilsin" : itemS.EklenecekGun + " gün sonra verilsin")  
+                                                                                                @(itemS.EklenecekGun == 0 ? "Aynı gün verilsin" : itemS.EklenecekGun + " gün sonra verilsin")
                                                                                             </td>
                                                                                             <td>
-                                                                                                @(itemS.TeslimBaslangicSaat)-@(itemS.TeslimBitisSaat)               
-                                                                                            </td>  
+                                                                                                @(itemS.TeslimBaslangicSaat)-@(itemS.TeslimBitisSaat)
+                                                                                            </td>
                                                                                         </tr>
                                                                                     }
                                                                                 </tbody>
@@ -189,7 +189,7 @@
                                                                     <div class="form-group">
                                                                         <label class="col-md-3 col-xs-3 control-label">İşlem Yapan</label>
                                                                         <div class="col-md-9 col-xs-9">@item.IslemYapan [@item.IslemTarihi]</div>
-                                                                    </div>    
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -221,7 +221,7 @@
     }
 </div>
 <script type="text/javascript">
-    function ShowDetail(id) {    
+    function ShowDetail(id) {
         var sndr = $('#iShow_' + id);
         var cls = 'cls-' + id;
         var unTogled = ($('.' + cls).css("display") == "none");

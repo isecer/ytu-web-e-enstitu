@@ -1,5 +1,5 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model  FmAnketlerDto
 @{
     var IndexModel = (MIndexBilgi)ViewBag.IndexModel;
@@ -18,7 +18,7 @@
             <div class="panel panel-danger">
                 <div class="panel-heading padding-0">
 
-                    <h3 class="panel-title"><i class="fa fa-list-alt"></i>&nbsp; Anket Listesi</h3>
+                    <h3 class="panel-title"><i class="fa fa-list-alt"></i> Anket Listesi</h3>
 
                     <ul class="panel-controls">
                         <li><span class="label label-primary label-form"><a href="@Url.Action("Kayit")" style="color:white;"><i class="fa fa-plus fa-lg"></i> Yeni Anket Ekle</a></span></li>

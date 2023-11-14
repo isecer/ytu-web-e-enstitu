@@ -121,7 +121,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         AnketTipID = 3,
                         RowID = rowId,
                         AnketID = anketId,
-                        JsonStringData = anketSorulari.ToJsonText()
+                        JsonStringData = anketSorulari.ToJson()
                     };
                     foreach (var item in anketSorulari)
                     {

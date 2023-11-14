@@ -8,11 +8,8 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var _MmMessage = (MmMessage)ViewBag._MmMessage;
-    var BsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu;
-
-
-
+    var mmMessage = (MmMessage)ViewBag._MmMessage;
+    var bsvDurum = (MezuniyetYayinKontrolDurumDto)ViewBag.MezuniyetYayinKontrolDurumu; 
 }
 
 <div class="row">
@@ -72,7 +69,7 @@
                                                     <td style="font-size:9pt;">@Model.AnabilimdaliAdi / @Model.ProgramAdi</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-size:9pt;">Kayıt Tarihi: @Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                                                    <td style="font-size:9pt;">Kayıt Tarihi: @Model.KayitDonemi , @Model.KayitTarihi.ToFormatDate()</td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -81,33 +78,33 @@
                                                 <table style="margin:0px;table-layout:fixed;width:100%;">
                                                     <tr>
                                                         <td style="font-size:14pt;font-weight:bold;text-align:right;">
-                                                            @if (!BsvDurum.ClassName.IsNullOrWhiteSpace())
+                                                            @if (!bsvDurum.ClassName.IsNullOrWhiteSpace())
                                                             {
-                                                                var classname = BsvDurum.ClassName;
-                                                                var color = BsvDurum.Color;
-                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
+                                                                var classname = bsvDurum.ClassName;
+                                                                var color = bsvDurum.Color;
+                                                                if (bsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
                                                                     <span class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi" style="cursor:pointer;color:@color;">
-                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @BsvDurum.DurumAdi
+                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @bsvDurum.DurumAdi
                                                                     </span>
                                                                 }
                                                                 else
                                                                 {
                                                                     <span @(!color.IsNullOrWhiteSpace() ? (" style=color:" + color) : "")>
-                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @BsvDurum.DurumAdi
+                                                                        <i class="@classname" style="font-size:20pt;font-weight:bold;"></i> @bsvDurum.DurumAdi
                                                                     </span>
                                                                 }
 
                                                             }
                                                             else
                                                             {
-                                                                if (BsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
+                                                                if (bsvDurum.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.IptalEdildi)
                                                                 {
-                                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi">@BsvDurum.DurumAdi</span>
+                                                                    <span style="cursor:pointer" class="tooltips" data-style="blue" data-original-title="@Model.MezuniyetYayinKontrolDurumAciklamasi">@bsvDurum.DurumAdi</span>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <span>@BsvDurum.DurumAdi</span>
+                                                                    <span>@bsvDurum.DurumAdi</span>
                                                                 }
                                                             }
                                                         </td>
@@ -787,7 +784,7 @@
         }
         validateControl(null, result);
     }
-    var model = '@Html.Raw(Json.Encode(_MmMessage))';
+    var model = '@Html.Raw(Json.Encode(mmMessage))';
     validateControl(model);
 
 </script>

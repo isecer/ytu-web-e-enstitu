@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmBelgeTipleriDto : PagerOption
+    public class FmBelgeTipleriDto : PagerModel
     {
         public string BelgeTipAdi { get; set; }
         public bool? IsAktif { get; set; }

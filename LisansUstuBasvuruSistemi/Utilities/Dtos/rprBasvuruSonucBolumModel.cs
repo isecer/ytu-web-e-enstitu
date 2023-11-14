@@ -10,7 +10,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string ProgramAdi { get; set; }
         public string BolumAdi { get; set; }
         public List<RprBasvuruSonucModel> ProgramB { get; set; }
-        public List<krMulakatDetay> MulakatDetayB { get; set; }
+        public List<KrMulakatDetay> MulakatDetayB { get; set; }
         public List<RwMulakatJuri> MulakatJuriB { get; set; }
         public List<RwMulakatJuri> k2 { get; set; }
         public RprBasvuruSonucBolumModel()

@@ -1,8 +1,8 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Business
+﻿@using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,8 +11,8 @@
     var user = (Kullanicilar)ViewBag.Kullanici;
     var cats = (List<CmbIntDto>)ViewBag.cats;
     var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var ProgramYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
-    var EnstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
+    var programYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var enstituYetki = RoleNames.KullanicilarEnstituYetkileri.InRoleCurrent();
 
 }
 
@@ -33,12 +33,12 @@
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Kayit", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Kullanıcı</span></li>
 
                             }
-                            @if (ProgramYetki)
+                            @if (programYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("KullaniciProgramYetkileri", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Program Yetkileri</span></li>
 
                             }
-                            @if (EnstituYetki)
+                            @if (enstituYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("YetkilendirmeEnstitu", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Enstitü Yetkileri</span></li>
                             }
@@ -103,7 +103,7 @@
                     <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-reply">&nbsp</i>Geri Dön</a>
 
                     <button class="btn btn-primary pull-right"><i class="fa fa-save">&nbsp</i>Kaydet</button>
-                    @if (ProgramYetki)
+                    @if (programYetki)
                     {
                         <input type="hidden" id="ProgramYetkilerineGit" name="ProgramYetkilerineGit" value="false" />
                         <a href="javascript:void(0);" class="btn btn-default pull-right" onclick="$('#ProgramYetkilerineGit').val('true'); $('form').submit();"><i class="fa fa-save">&nbsp</i>Kaydet ve Program Yetkilerine Git</a>

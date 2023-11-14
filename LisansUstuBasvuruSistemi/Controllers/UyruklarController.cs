@@ -1,14 +1,15 @@
-﻿using BiskaUtil;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using System;
-using System.Linq;
-using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -16,7 +17,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
     [Authorize(Roles = RoleNames.Uyruklar)]
     public class UyruklarController : Controller
     {
-        private LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
+        private readonly LisansustuBasvuruSistemiEntities _entities = new LisansustuBasvuruSistemiEntities();
         public ActionResult Index()
         {
             return Index(new FmUyruklar { });

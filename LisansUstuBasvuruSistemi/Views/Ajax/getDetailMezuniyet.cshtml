@@ -97,7 +97,7 @@
                                     <tr>
                                         <td>Kayıt Tarihi</td>
                                         <td>:</td>
-                                        <td>@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                                        <td>@Model.KayitDonemi , @Model.KayitTarihi.ToFormatDate()</td>
                                     </tr>
                                     @if (Model.MezuniyetYayinKontrolDurumID == MezuniyetYayinKontrolDurumuEnum.KabulEdildi)
                                     {
@@ -128,7 +128,7 @@
                                                 <table>
                                                     <tr>
                                                         <td id="eykLbl_@Model.MezuniyetBasvurulariID">
-                                                            @(Model.EYKTarihi.HasValue ? Model.EYKTarihi.Value.ToDateString() : "EYK Tarihi Girilmedi")
+                                                            @(Model.EYKTarihi.HasValue ? Model.EYKTarihi.Value.ToFormatDate() : "EYK Tarihi Girilmedi")
                                                         </td>
                                                         <td id="eykInp_@Model.MezuniyetBasvurulariID" class="hide">
                                                             <input class="form-control form-control-inline input-medium date-pickerx" autocomplete="off" size="16" type="text" value="@(Model.EYKTarihi == null ? "" : Model.EYKTarihi.ToFormatDateInput())" id="InpEyk_@Model.MezuniyetBasvurulariID">

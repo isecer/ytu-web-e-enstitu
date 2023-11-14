@@ -1,6 +1,7 @@
 ﻿@using BiskaUtil
 @using LisansUstuBasvuruSistemi.Business
 @using LisansUstuBasvuruSistemi.Models
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,8 +11,8 @@
     var allchecked = roller.All(a => a.Checked.Value);
 
     var kullaniciKayit = RoleNames.KullanicilarKayit.InRoleCurrent();
-    var ErisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
-    var ProgramYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
+    var erisimYetki = RoleNames.KullanicilarIslemYetkileri.InRoleCurrent();
+    var programYetki = RoleNames.KullanicilarProgramYetkileri.InRoleCurrent();
 }
 
 
@@ -32,12 +33,12 @@
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Kayit", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Kullanıcı</span></li>
 
                             }
-                            @if (ErisimYetki)
+                            @if (erisimYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("Yetkilendirme", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Erişim Yetkileri</span></li>
 
                             }
-                            @if (ProgramYetki)
+                            @if (programYetki)
                             {
                                 <li><span class="label label-success label-form" onclick="window.location.href='@Url.Action("KullaniciProgramYetkileri", new { id = user.KullaniciID })'" style="cursor:pointer;"><i class="fa fa-edit"></i> Program Yetkileri</span></li>
                             }

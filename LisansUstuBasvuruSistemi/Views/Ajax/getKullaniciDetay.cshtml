@@ -1,6 +1,7 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
 @using BiskaUtil;
 @using LisansUstuBasvuruSistemi.Business
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles
 @model Kullanicilar
@@ -131,12 +132,12 @@
                                 <tr>
                                     <td>Son Giriş Tarihi</td>
                                     <td>:</td>
-                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToDatetTimeString() : "Henüz Giriş Yapmamış")</td>
+                                    <td>@(Model.LastLogonDate.HasValue ? Model.LastLogonDate.ToFormatDateAndTime() : "Henüz Giriş Yapmamış")</td>
                                 </tr>
                                 <tr>
                                     <td>Oluşturma Tarihi</td>
                                     <td>:</td>
-                                    <td>@Model.OlusturmaTarihi.ToDatetTimeString()</td>
+                                    <td>@Model.OlusturmaTarihi.ToFormatDateAndTime()</td>
                                 </tr>
 
                                 @if (Model.Aciklama.IsNullOrWhiteSpace() == false)
@@ -308,7 +309,7 @@
                         <tr>
                             <td>Kayıt Tarihi</td>
                             <td>:</td>
-                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToDateString()</td>
+                            <td>@Model.KayitYilBaslangic/@(Model.KayitYilBaslangic + 1) @donem.DonemAdi , @Model.KayitTarihi.Value.ToFormatDate()</td>
                         </tr>
                     }
                     <tr>

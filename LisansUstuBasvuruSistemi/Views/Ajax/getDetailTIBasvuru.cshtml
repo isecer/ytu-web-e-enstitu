@@ -88,7 +88,7 @@
                                                         <tr>
                                                             <td class="CaptionTd">Kayıt Tarihi</td>
                                                             <td class="CaptionTd">:</td>
-                                                            <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                                                            <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToFormatDate()</td>
                                                         </tr>
                                                     }
                                                     <tr>
@@ -306,7 +306,7 @@
                 else
                 {
                     <br />
-                    <span style="color:green;font-size:12pt;">  <b>@itemJr.DegerlendirmeIslemTarihi.Value.ToLongDateString()</b>  tarihi ve <b>@itemJr.DegerlendirmeIslemTarihi.ToString("HH:mm")</b> saatinde Tez İzleme Raporu değerlendirmeniz başarıyla gerçekleşmiştir.</span>
+                    <span style="color:green;font-size:12pt;">  <b>@itemJr.DegerlendirmeIslemTarihi.Value.ToFormatDateAndTime()</b>  tarihinde Tez İzleme Raporu değerlendirmeniz başarıyla gerçekleşmiştir.</span>
                     <br />
                     <br />
                 }
@@ -355,7 +355,7 @@
                                     <tr>
                                         <td class="CaptionTd">Kayıt Tarihi</td>
                                         <td class="CaptionTd">:</td>
-                                        <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToDateString()</td>
+                                        <td class="ValueTd">@Model.KayitDonemi , @Model.KayitTarihi.ToFormatDate()</td>
                                     </tr>
                                 }
                             </table>

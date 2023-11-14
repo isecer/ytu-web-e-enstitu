@@ -1,15 +1,16 @@
-﻿using BiskaUtil;
-using LisansUstuBasvuruSistemi.Models;
-using LisansUstuBasvuruSistemi.Utilities.Dtos;
-using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BiskaUtil;
 using LisansUstuBasvuruSistemi.Business;
+using LisansUstuBasvuruSistemi.Models;
+using LisansUstuBasvuruSistemi.Utilities.Dtos;
+using LisansUstuBasvuruSistemi.Utilities.Enums;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 using LisansUstuBasvuruSistemi.Utilities.SystemData;
 
 namespace LisansUstuBasvuruSistemi.Controllers
@@ -173,7 +174,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     foreach (var item in qDosyalar)
                     {
                         var dosyaTipi = item.Dosya.FileName.Split('.').Last();
-                        var dosyaAdi = item.Dosya.FileName.Replace('.' + dosyaTipi, "_" + Guid.NewGuid().ToString().Substr(0, 4) + "." + dosyaTipi);
+                        var dosyaAdi = item.Dosya.FileName.Replace('.' + dosyaTipi, "_" + Guid.NewGuid().ToString().Substring(0, 4) + "." + dosyaTipi);
                         string dosyaYolu = "/DuyuruDosyaları/" + dosyaAdi;
                         item.Dosya.SaveAs(Server.MapPath("~" + dosyaYolu));
 

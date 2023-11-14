@@ -7,15 +7,15 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmBelgeTalepleriDto : PagerOption
+    public class FmBelgeTalepleriDto : PagerModel
     {
         public bool Expand { get; set; }
         public string DilKodu { get; set; }
-        public int? OgrenimDurumID { get; set; }
-        public int? BelgeID { get; set; }
+        public int? OgrenimDurumId { get; set; }
+        public int? BelgeId { get; set; }
         public int? OgrenimTipKod { get; set; }
-        public int? BelgeDurumID { get; set; }
-        public int? BelgeTipID { get; set; }
+        public int? BelgeDurumId { get; set; }
+        public int? BelgeTipId { get; set; }
         public string OgretimYili { get; set; }
         public string AranacakKelime { get; set; }
         public string ProgramKod { get; set; }
@@ -23,8 +23,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public IEnumerable<FrBelgeTalepleriDto> BelgeTalepleriDtos { get; set; }
     }
     public class FrBelgeTalepleriDto : BelgeTalepleri
-    {
-        public int? KullaniciID { get; set; }
+    { 
         public string ResimAdi { get; set; }
         public string ClassName { get; set; }
         public string Color { get; set; }

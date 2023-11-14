@@ -11,16 +11,16 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
     {
         public string OgrenciAnabilimdaliProgramAdi { get; set; }
         public string OgrenciAdSoyad { get; set; }
-        public bool? IsYokDrBursiyeriVar { get; set; }
+        public new bool? IsYokDrBursiyeriVar { get; set; }
         public SelectList SListAraRaporSayisi { get; set; }
-        public int SelectedTabID { get; set; }
-        public List<int> TabID { get; set; }
+        public int SelectedTabId { get; set; }
+        public List<int> TabId { get; set; }
         public List<string> AnaTabAdi { get; set; }
         public List<string> JuriTipAdi { get; set; }
         public List<string> AdSoyad { get; set; }
         public List<string> UnvanAdi { get; set; }
         public List<string> EMail { get; set; }
-        public List<int?> UniversiteID { get; set; }
+        public List<int?> UniversiteId { get; set; }
         public List<string> AnabilimdaliProgramAdi { get; set; }
         public List<string> DilSinavAdi { get; set; }
         public List<string> IsDilSinaviOrUniversite { get; set; }
@@ -28,7 +28,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public List<string> SinavTarihi { get; set; }
         public SelectList SListDonemSecim { get; set; }
         public SelectList SListUnvanAdi { get; set; }
-        public SelectList SListUniversiteID { get; set; }
+        public SelectList SListUniversiteId { get; set; }
         public List<KrTIBasvuruAraRaporKomite> KomiteList { get; set; }
 
         public HttpPostedFileBase Dosya { get; set; }
@@ -40,7 +40,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
             AdSoyad = new List<string>();
             UnvanAdi = new List<string>();
             EMail = new List<string>();
-            UniversiteID = new List<int?>();
+            UniversiteId = new List<int?>();
             AnabilimdaliProgramAdi = new List<string>();
             DilSinavAdi = new List<string>();
             DilPuani = new List<string>();

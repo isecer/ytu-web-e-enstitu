@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmUnvanlar : PagerOption
+    public class FmUnvanlar : PagerModel
     {
         public int? UnvanSiraNo { get; set; }
         public string UnvanAdi { get; set; }

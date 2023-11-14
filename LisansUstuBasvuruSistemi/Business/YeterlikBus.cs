@@ -266,7 +266,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             }).ToList();
                 foreach (var item in data)
                 {
-                    lst.Add(new CmbIntDto { Value = item.YeterlikSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() + ")") });
+                    lst.Add(new CmbIntDto { Value = item.YeterlikSurecID, Caption = (item.BaslangicYil + "/" + item.BitisYil + " " + item.DonemAdi + " (" + item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() + ")") });
                 }
             }
             return lst;
@@ -611,7 +611,7 @@ namespace LisansUstuBasvuruSistemi.Business
                             komite.LinkGonderenID = UserIdentity.Current.Id;
                             db.GonderilenMaillers.Add(kModel);
                             db.SaveChanges();
-                            LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Update, komite.ToJson());
+                            LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Update, komite.ToJson());
                         }
                     }
 

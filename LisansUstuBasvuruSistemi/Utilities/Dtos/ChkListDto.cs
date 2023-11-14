@@ -24,7 +24,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public ChkListDto(string InputName = "")
         {
             this.InputName = InputName;
-            var ID = Guid.NewGuid().ToString().Substr(0, 4);
+            var ID = Guid.NewGuid().ToString().Substring(0, 4);
             TableID = ID;
         }
     }

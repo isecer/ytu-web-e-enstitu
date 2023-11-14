@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using BiskaUtil;
-using LisansUstuBasvuruSistemi.Business;
+﻿using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {

@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmMezuniyetSureci : PagerOption
+    public class FmMezuniyetSureci : PagerModel
     {
         public string EnstituKod { get; set; }
         public IEnumerable<FrMezuniyetSureci> Data { get; set; }

@@ -79,11 +79,11 @@
                                         <td>Kayıtlı Olduğu Program</td>
                                         <td>:</td>
                                         <td>
-                                            @Html.Raw((Model.YokOgrenimKontrolTarihi.HasValue ? Model.YokOgrenimKontrolTarihi.ToDatetTimeString() + " Tarhinde kontrol edildi <br/>" : ""))
+                                            @Html.Raw((Model.YokOgrenimKontrolTarihi.HasValue ? Model.YokOgrenimKontrolTarihi.ToFormatDateAndTime() + " Tarhinde kontrol edildi <br/>" : ""))
                                             @if (Model.YokOgrenimKaydiVar == true)
                                             {
-                                                var Liste = Model.YokStudentControl != null ? Model.YokStudentControl.AktifOgrenimListesi : new List<string>();
-                                                @Html.Raw(string.Join("<br/>", Liste))
+                                                var liste = Model.YokStudentControl != null ? Model.YokStudentControl.AktifOgrenimListesi : new List<string>();
+                                                @Html.Raw(string.Join("<br/>", liste))
                                             }
                                             else
                                             {

@@ -1,10 +1,10 @@
-﻿@using BiskaUtil
-@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
+@using LisansUstuBasvuruSistemi.Utilities.Dtos
 @using LisansUstuBasvuruSistemi.Utilities.Enums
 @model MmMessage
 
 @if (Model.Messages.Count > 0)
-{ 
+{
     var cls = Model.MessageType == MsgTypeEnum.Success ? "success" : (Model.MessageType == MsgTypeEnum.Warning ? "warning" : (Model.MessageType == MsgTypeEnum.Error ? "danger" : "info"));
     <div class="panel-body panel-body-pricing">
         @if (!Model.Title.IsNullOrWhiteSpace())
@@ -19,5 +19,5 @@
                 </p>
             }
         </div>
-    </div> 
+    </div>
 }

@@ -4,6 +4,7 @@ using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
 
 namespace LisansUstuBasvuruSistemi.Business
 {
@@ -116,7 +117,7 @@ namespace LisansUstuBasvuruSistemi.Business
                     }).ToList();
                 foreach (var item in data)
                 {
-                    lst.Add(new CmbIntDto { Value = item.TalepSurecID, Caption = item.BaslangicTarihi.ToDateString() + " - " + item.BitisTarihi.ToDateString() });
+                    lst.Add(new CmbIntDto { Value = item.TalepSurecID, Caption = item.BaslangicTarihi.ToFormatDate() + " - " + item.BitisTarihi.ToFormatDate() });
                 }
             }
             return lst;

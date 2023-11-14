@@ -1,9 +1,9 @@
-﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil 
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos 
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model List<KrSinavTipleriOtNotAraliklari>
 @{
     Layout = null;
-    var xIPProgramKod = (List<CmbStringDto>)ViewBag.IPProgramKod;
+    var xIpProgramKod = (List<CmbStringDto>)ViewBag.IPProgramKod;
 }
 
 <table class="table" style="width:100%;table-layout:fixed;">
@@ -78,7 +78,7 @@
                             @{
                                 var xID = ("ProgramKod-" + item.OgrenimTipKod + "-" + (item.Ingilizce ? "En" : "Tr"));
                                 <select name="IPProgramKod" id="@xID" multiple class="form-control selectpicker" data_live_search="true" data_live_search_placeholder="Search" data_actions_box="true">
-                                    @foreach (var item2 in xIPProgramKod)
+                                    @foreach (var item2 in xIpProgramKod)
                                     {
                                         bool contains = item.ProgramKods.Contains(item2.Value);
                                         <option value="@(xID + "_" + item2.Value)" @(contains ? "selected=selected" : "")>@item2.Caption</option>

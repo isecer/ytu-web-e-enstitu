@@ -16,7 +16,7 @@ namespace LisansUstuBasvuruSistemi.Utilities.Dtos
         public string AnabilimDaliAdi { get; set; }
         public string ProgramKod { get; set; }
         public string ProgramAdi { get; set; }
-        public List<krMulakatDetay> MulakatDetayB { get; set; }
+        public List<KrMulakatDetay> MulakatDetayB { get; set; }
         public List<MulakatJuri> MulakatJuriB { get; set; }
         public List<CmbIntDto> GonderilecekMails { get; set; }
     }

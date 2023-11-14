@@ -51,23 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveDirectory.cs" />
     <Compile Include="CheckObject.cs" />
     <Compile Include="CaptchaImage.cs" />
     <Compile Include="Crc16.cs" />
     <Compile Include="Crc32.cs" />
-    <Compile Include="Dynamic.cs" />
-    <Compile Include="EncryptDecrypt.cs" />
-    <Compile Include="FormsAuthenticationUtil.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="LocalMachine.cs" />
     <Compile Include="Membership.cs" />
     <Compile Include="MenuAttribute.cs" />
     <Compile Include="MessageBox.cs" />
     <Compile Include="NameValue.cs" />
     <Compile Include="NotAuthenticatedUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecherExtension.cs" />
     <Compile Include="SystemInformation.cs" />
     <Compile Include="UserIdentity.cs" />
     <Compile Include="WinImpersonate.cs" />

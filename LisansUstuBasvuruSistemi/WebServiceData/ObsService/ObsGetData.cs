@@ -201,7 +201,7 @@ namespace LisansUstuBasvuruSistemi.Models.ObsService
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }

@@ -345,7 +345,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
 
                 }
-                LogIslemleri.LogEkle("TDOBasvuru", isNewRecord ? IslemTipi.Insert : IslemTipi.Update, data.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuru", isNewRecord ? LogCrudType.Insert : LogCrudType.Update, data.ToJson());
 
                 return RedirectToAction("Index", new { data.TDOBasvuruID });
             }
@@ -375,7 +375,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTdoYeniDanismanFormu(int tdoBasvuruId, int? tdoBasvuruDanismanId, bool? isCopy, int? tdoDanismanTalepTipId)
         {
 
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, isCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TdoDanismanTalepTipEnum.TezDanismaniOnerisi };
+            var model = new KmTdoBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId, IsCopy = isCopy, TDODanismanTalepTipID = tdoDanismanTalepTipId ?? TdoDanismanTalepTipEnum.TezDanismaniOnerisi };
             var mMessage = new MmMessage()
             {
                 Title = "Tez Danışmanı Öneri İşlemi"
@@ -466,11 +466,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
                 model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
-                model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
+                model.SListTdSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
@@ -479,7 +479,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTdSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
@@ -814,7 +814,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBas.AktifTDOBasvuruDanismanID = kModel.TDOBasvuruDanismanID;
                 }
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? IslemTipi.Update : IslemTipi.Insert, tdoBasvuruDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? LogCrudType.Update : LogCrudType.Insert, tdoBasvuruDanis.ToJson());
 
                 mMessage.IsSuccess = true;
                 TezDanismanOneriBus.SendMailTdoBilgisi(kModel.TDOBasvuruDanismanID);
@@ -828,7 +828,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
         public ActionResult GetTdoDanismanDegisiklikFormu(int tdoBasvuruId, int tdoBasvuruDanismanId)
         {
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId };
+            var model = new KmTdoBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId };
             var mMessage = new MmMessage()
             {
                 Title = "Tez Danışmanı Değişikliği İşlemi"
@@ -908,12 +908,12 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 }
 
                 model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
 
                 var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
-                model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
+                model.SListTdSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
@@ -922,7 +922,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTdSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
@@ -1210,7 +1210,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBas.AktifTDOBasvuruDanismanID = kModel.TDOBasvuruDanismanID;
                 }
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? IslemTipi.Update : IslemTipi.Insert, tdoBasvuruDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? LogCrudType.Update : LogCrudType.Insert, tdoBasvuruDanis.ToJson());
 
                 mMessage.IsSuccess = true;
 
@@ -1225,7 +1225,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTdoDilBaslikDegisiklikFormu(int tdoBasvuruId, int tdoBasvuruDanismanId)
         {
 
-            var model = new KmTDOBasvuruDanisman()
+            var model = new KmTdoBasvuruDanisman()
             {
                 TDOBasvuruID = tdoBasvuruId
             };
@@ -1283,11 +1283,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
-                model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
+                model.SListTdSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
@@ -1296,7 +1296,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTdSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
@@ -1577,7 +1577,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBas.AktifTDOBasvuruDanismanID = kModel.TDOBasvuruDanismanID;
                 }
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? IslemTipi.Update : IslemTipi.Insert, tdoBasvuruDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? LogCrudType.Update : LogCrudType.Insert, tdoBasvuruDanis.ToJson());
 
                 mMessage.IsSuccess = true;
                 TezDanismanOneriBus.SendMailTdoBilgisi(kModel.TDOBasvuruDanismanID);
@@ -1592,7 +1592,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
         public ActionResult GetTdoDanismanBaslikDilDegisiklikFormu(int tdoBasvuruId, int tdoBasvuruDanismanId)
         {
 
-            var model = new KmTDOBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId };
+            var model = new KmTdoBasvuruDanisman() { TDOBasvuruID = tdoBasvuruId };
             var mMessage = new MmMessage()
             {
                 Title = "Tez Danışmanı, Tez Dili, Tez Başlığı Değişikliği İşlemi"
@@ -1653,11 +1653,11 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                 model.SListTDoDanismanTalepTip = new SelectList(TezDanismanOneriBus.CmbTdoDanismanTalepTip(model.TDODanismanTalepTipID > TdoDanismanTalepTipEnum.TezDanismaniOnerisi, false), "Value", "Caption", model.TDODanismanTalepTipID);
                 model.SListSinav = new SelectList(Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true), "Value", "Caption", model.SinavTipID);
-                model.SListTDAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
-                model.SListTDProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
+                model.SListTdAnabilimDali = new SelectList(Management.CmbGetAktifAnabilimDallari(tdoBas.EnstituKod, true), "Value", "Caption", model.TDAnabilimDaliID);
+                model.SListTdProgram = new SelectList(Management.CmbGetAktifProgramlar(true, model.TDAnabilimDaliID), "Value", "Caption", model.TDProgramKod);
                 var dilSinavList = Management.CmbGetAktifSinavlar(tdoBas.EnstituKod, SinavTipGrupEnum.DilSinavlari, true);
                 dilSinavList.Insert(1, new CmbIntDto { Value = -1, Caption = "Yurt Dışı Doktora veya %100 İngilizce Eğitim Veren Üniversite Mezunu" });
-                model.SListTDSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
+                model.SListTdSinav = new SelectList(dilSinavList, "Value", "Caption", model.TDSinavTipID);
 
                 if (model.SinavTipID.HasValue)
                 {
@@ -1666,7 +1666,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     if (model.TDSinavTipID != -1 && model.TDSinavTipID.HasValue)
                     {
                         var sinavTd = _entities.SinavTipleris.First(p => p.SinavTipID == model.TDSinavTipID);
-                        if (sinavTd.OzelNot) model.SListTDSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
+                        if (sinavTd.OzelNot) model.SListTdSinavNot = new SelectList(Management.CmbGetSinavTipOzelNot(model.TDSinavTipID.Value, true), "Value", "Caption", model.TDSinavPuani);
                     }
 
                 }
@@ -2049,7 +2049,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     tdoBas.AktifTDOBasvuruDanismanID = kModel.TDOBasvuruDanismanID;
                 }
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? IslemTipi.Update : IslemTipi.Insert, tdoBasvuruDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", kModel.TDOBasvuruDanismanID > 0 ? LogCrudType.Update : LogCrudType.Insert, tdoBasvuruDanis.ToJson());
 
                 mMessage.IsSuccess = true;
                 TezDanismanOneriBus.SendMailTdoBilgisi(kModel.TDOBasvuruDanismanID);
@@ -2202,7 +2202,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                     TezDanismanOneriBus.SendMailTdoDanismanOnay(kModel.TDOBasvuruDanismanID, kModel.DanismanOnayladi == true);
                 }
             }
@@ -2259,7 +2259,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                     TezDanismanOneriBus.SendMailTdoDanismanOnay(kModel.TDOBasvuruDanismanID, tdoBasvuruDanis.VarolanDanismanOnayladi.Value);
                 }
             }
@@ -2304,7 +2304,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruDanis.IslemYapanID = UserIdentity.Current.Id;
                 tdoBasvuruDanis.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
-                LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                 mMessage.IsSuccess = true;
             }
 
@@ -2394,7 +2394,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Update, tdoBasvuruDanis.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Update, tdoBasvuruDanis.ToJson());
                     TezDanismanOneriBus.SendMailTdoEykOnay(tdoBasvuruDanismanId, eykDaOnaylandi.Value);
                 }
             }
@@ -2627,7 +2627,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", insertOrUpdate ? IslemTipi.Insert : IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", insertOrUpdate ? LogCrudType.Insert : LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
                     TezDanismanOneriBus.SendMailTdoEsBilgisi(tdoBasvuruEsDanis.TDOBasvuruEsDanismanID);
                 }
 
@@ -2673,7 +2673,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 tdoBasvuruEsDanis.IslemYapanIP = UserIdentity.Ip;
                 _entities.SaveChanges();
                 mMessage.IsSuccess = true;
-                LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
+                LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
             }
 
             mMessage.MessageType = mMessage.IsSuccess ? MsgTypeEnum.Success : MsgTypeEnum.Error;
@@ -2734,7 +2734,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 mMessage.IsSuccess = true;
                 if (sendMail)
                 {
-                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Update, tdoBasvuruEsDanis.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Update, tdoBasvuruEsDanis.ToJson());
                     TezDanismanOneriBus.SendMailTdoEsEykOnay(tdoBasvuruEsDanismanId, eykDaOnaylandi.Value);
                 }
             }
@@ -2773,7 +2773,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.TDOBasvuruDanismen.Remove(tdoBasvuruDanisman);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("TDOBasvuruDanisman", IslemTipi.Delete, tdoBasvuruDanisman.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruDanisman", LogCrudType.Delete, tdoBasvuruDanisman.ToJson());
                     mmMessage.Messages.Add(tdoBasvuruDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Danışman Öneri Formu sistemden silindi.");
 
                 }
@@ -2818,7 +2818,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.TDOBasvuruEsDanismen.Remove(tdoEsDanisman);
                     _entities.SaveChanges();
                     mmMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", IslemTipi.Delete, tdoEsDanisman.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuruEsDanisman", LogCrudType.Delete, tdoEsDanisman.ToJson());
                     mmMessage.Messages.Add(tdoEsDanisman.BasvuruTarihi.ToFormatDateAndTime() + " tarihli Eş Danışman Öneri Formu sistemden silindi.");
 
                 }
@@ -2869,7 +2869,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         _entities.TDOBasvurus.Remove(kayit);
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("TDOBasvuru", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("TDOBasvuru", LogCrudType.Delete, kayit.ToJson());
 
                     mmMessage.Messages.Add(kayit.BasvuruTarihi + " Tarihli başvuru silindi.");
                     mmMessage.MessageType = MsgTypeEnum.Success;

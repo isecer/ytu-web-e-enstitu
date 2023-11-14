@@ -37,8 +37,8 @@
     <div class="panel-body" style="margin: 0px; padding: 0px;">
         <div class="panel panel-default tabs" style="margin-bottom:0px; padding:0px;">
             <ul class="nav nav-tabs MsTabBtn_@id" role="tablist">
-                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@id',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i>&nbsp; <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
-                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@id',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i>&nbsp; <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 1 ? "active" : "") bnt-@tbName-1"><a href="#" onclick="tbChangeSetPage('@tbName','@id',1)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="glyphicon glyphicon-time myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Süreç</span></a></li>
+                <li class="@(Model.SelectedTabIndex == 2 ? "active" : "") bnt-@tbName-2"><a href="#" onclick="tbChangeSetPage('@tbName','@id',2)" style="cursor:pointer;" role="tab" data-toggle="tab"> <i class="fa fa-list-alt myCaptionTdx" style="@color"></i> <span class="myCaptionTdx" style="@color">Yönetmelik Bilgileri</span></a></li>
                      @if (!isDelete)
                 {
                     <li><a href="javascript:void(0);" onclick="subData('@id');" class="panel-refresh"><span class="fa fa-refresh myValueTdx" style="@color"></span></a></li>

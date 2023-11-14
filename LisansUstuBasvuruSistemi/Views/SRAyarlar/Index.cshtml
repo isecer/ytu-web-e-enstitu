@@ -1,5 +1,5 @@
 ﻿@using LisansUstuBasvuruSistemi.Models
-@using BiskaUtil;
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model List<SRAyarlar>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,7 +23,7 @@
                     @foreach (var cat in grup)
                     {
                         var ayar = Model.Where(p => p.Kategori == cat).ToArray();
-                        var toggleC = dctGrupToggle.Where(p => p.Key == cat).First();
+                        var toggleC = dctGrupToggle.First(p => p.Key == cat);
 
                         <div class="panel panel-warning @(toggleC.Value?"panel-toggled":"")">
                             <div class="panel-heading padding-0">
@@ -68,7 +68,7 @@
                                                             var dataOnL = "Evet";
                                                             var dataOfL = "Hayır";
                                                             if (itms.Length > 1) { dataOnL = itms[0]; dataOfL = itms[1]; }
-                                                            var chkD = item.AyarDegeri.IsNullOrWhiteSpace() ? false : Convert.ToBoolean(item.AyarDegeri);
+                                                            var chkD = !item.AyarDegeri.IsNullOrWhiteSpace() && Convert.ToBoolean(item.AyarDegeri);
                                                             <input type="text" name="AyarDegeri" value="@item.AyarDegeri" style="display: none;" />
                                                             <div class="make-switch" data-on-label="@dataOnL" data-off-label="@dataOfL">
                                                                 <input type="checkbox" value="true" class="toggle" @chkD.ToChecked() onchange="checkControl(this)" />

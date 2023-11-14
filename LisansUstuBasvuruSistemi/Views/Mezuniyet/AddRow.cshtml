@@ -214,7 +214,7 @@
                                 <td width="200" style="font-weight:bold;">Bildiri Tarihi</td>
                                 <td width="5">:</td>
                                 <td>
-                                    @(Model.MezuniyetYayinTarih.HasValue ? Model.MezuniyetYayinTarih.Value.ToDateString() : "")
+                                    @(Model.MezuniyetYayinTarih.HasValue ? Model.MezuniyetYayinTarih.Value.ToFormatDate() : "")
                                     @if (!Model.IsDataShow)
                                     {
                                         <input type="text" class="hide" value="@Model.MezuniyetYayinTarih" name="_MezuniyetYayinTarih">

@@ -6,9 +6,9 @@
 @model TiAraRaporFormuModel
 @{
     Layout = null;
-    var TezDanismaniBilgi = Model.KomiteList.Where(p => p.JuriTipAdi == "TezDanismani").FirstOrDefault();
-    var TikUyesi1Bilgi = Model.KomiteList.Where(p => p.JuriTipAdi == "TikUyesi1").FirstOrDefault();
-    var TikUyesi2Bilgi = Model.KomiteList.Where(p => p.JuriTipAdi == "TikUyesi2").FirstOrDefault();
+    var tezDanismaniBilgi = Model.KomiteList.FirstOrDefault(p => p.JuriTipAdi == "TezDanismani");
+    var tikUyesi1Bilgi = Model.KomiteList.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi1");
+    var tikUyesi2Bilgi = Model.KomiteList.FirstOrDefault(p => p.JuriTipAdi == "TikUyesi2");
     var enstituKayitYetki = RoleNames.TiGelenBasvuruKayit.InRole();
 }
 <div class="widget widget-default" style="margin:0px;padding:4px;">
@@ -25,7 +25,7 @@
                 @Html.HiddenFor(p => p.TIBasvuruID);
                 @Html.HiddenFor(p => p.TIBasvuruAraRaporID);
                 @Html.HiddenFor(p => p.IsTezDiliTr);
-                @Html.Hidden("SelectedTabID", Model.SelectedTabID);
+                @Html.Hidden("SelectedTabID", Model.SelectedTabId);
                 @Html.Hidden("SaveData", (Model.TIBasvuruAraRaporID > 0 ? "true" : "false"));
                 <div class="panel-body form-group-separated">
                     <div class="form-group">
@@ -64,8 +64,7 @@
                                 <a href="#tab-4" data-toggle="tab" onclick="TITabChangeSet(4)" aria-expanded="false">
                                     <i class="fa fa-user myCaptionTd"></i> <span style="font-size:8pt;">2. Tik Üyesi</span>
                                 </a>
-                            </li>
-
+                            </li> 
                         </ul>
                         <div class="panel-body tab-content" style="padding:0px;">
                             <div class="tab-pane active" id="tab-1">
@@ -238,7 +237,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TezDanismani" />
                                                     <input type="hidden" name="TabID" value="2" />
-                                                    <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.AdSoyad : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
+                                                    <input type="text" class="form-control upperCase" name="AdSoyad" maxlength="128" value="@(tezDanismaniBilgi!=null ? tezDanismaniBilgi.AdSoyad : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniAdSoyad" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -247,7 +246,7 @@
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
 
-                                                    <input type="text" autocomplete="off" class="form-control upperCase" name="UnvanAdi" maxlength="128" value="@(TezDanismaniBilgi!=null ? TezDanismaniBilgi.UnvanAdi : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniUnvanAdi" />
+                                                    <input type="text" autocomplete="off" class="form-control upperCase" name="UnvanAdi" maxlength="128" value="@(tezDanismaniBilgi!=null ? tezDanismaniBilgi.UnvanAdi : "")" readonly="readonly" style="width: 100%;color:black;" id="TezDanismaniUnvanAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -255,7 +254,7 @@
                                                     E-Posta Adresi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMail" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.EMail : "")" style="width: 100%;" id="TezDanismaniEMail" />
+                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="EMail" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.EMail : "")" style="width: 100%;" id="TezDanismaniEMail" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -263,12 +262,12 @@
                                                     Üniversitesi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    @Html.DropDownList("UniversiteID", TezDanismaniBilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUniversiteID" })
-                                                    @if (TezDanismaniBilgi != null && TezDanismaniBilgi.UniversiteID.HasValue)
+                                                    @Html.DropDownList("UniversiteID", tezDanismaniBilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TezDanismaniUniversiteID" })
+                                                    @if (tezDanismaniBilgi != null && tezDanismaniBilgi.UniversiteID.HasValue)
                                                     {
                                                         <script>
                                                             $(function () {
-                                                                $('#TezDanismaniUniversiteID').val('@TezDanismaniBilgi.UniversiteID.Value');
+                                                                $('#TezDanismaniUniversiteID').val('@tezDanismaniBilgi.UniversiteID.Value');
                                                             })
                                                         </script>
                                                     }
@@ -279,7 +278,7 @@
                                                     Anabilim Dalı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" autocomplete="off" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TezDanismaniAnabilimdaliProgramAdi" />
+                                                    <input type="text" autocomplete="off" class="form-control" maxlength="256" name="AnabilimdaliProgramAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TezDanismaniAnabilimdaliProgramAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil">
@@ -287,24 +286,24 @@
                                                 <div class="col-md-9">
                                                     <select class="form-control" name="IsDilSinaviOrUniversite" id="TezDanismaniIsDilSinaviOrUniversite" onchange="DilBilgisiKontrol('TezDanismani')">
                                                         <option></option>
-                                                        <option value="true" @(TezDanismaniBilgi != null && TezDanismaniBilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
-                                                        <option value="false" @(TezDanismaniBilgi != null && TezDanismaniBilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
+                                                        <option value="true" @(tezDanismaniBilgi != null && tezDanismaniBilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
+                                                        <option value="false" @(tezDanismaniBilgi != null && tezDanismaniBilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
                                                     </select>
 
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TezDanismaniDvDilSinavAdi">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0  TezDanismaniLblDilSinavAdi">
-                                                    @(TezDanismaniBilgi == null || TezDanismaniBilgi.IsDilSinaviOrUniversite == true ? "Sınavı Bilgisi" : "Üniversite Bilgisi") (*)
+                                                    @(tezDanismaniBilgi == null || tezDanismaniBilgi.IsDilSinaviOrUniversite == true ? "Sınavı Bilgisi" : "Üniversite Bilgisi") (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="DilSinavAdi" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.DilSinavAdi : "")" style="width: 100%;" id="TezDanismaniDilSinavAdi" />
+                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="DilSinavAdi" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.DilSinavAdi : "")" style="width: 100%;" id="TezDanismaniDilSinavAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TezDanismaniDvDilSinavTarih">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-3 control-label">Dil Sınavı Yılı (*)</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.SinavTarihi.ToStrObjEmptString() : "")" name="SinavTarihi" id="TezDanismaniSinavTarihi">
+                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.SinavTarihi.ToStrObjEmptString() : "")" name="SinavTarihi" id="TezDanismaniSinavTarihi">
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TezDanismaniDvDilSinavPuani">
@@ -312,7 +311,7 @@
                                                     Dil Sınavı Puanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="DilPuani" value="@(TezDanismaniBilgi != null ? TezDanismaniBilgi.DilPuani : "")" style="width: 100%;" id="TezDanismaniDilPuani" />
+                                                    <input type="text" autocomplete="off" class="form-control" maxlength="128" name="DilPuani" value="@(tezDanismaniBilgi != null ? tezDanismaniBilgi.DilPuani : "")" style="width: 100%;" id="TezDanismaniDilPuani" />
                                                 </div>
                                             </div>
                                         </div>
@@ -334,7 +333,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TikUyesi1" />
                                                     <input type="hidden" name="TabID" value="3" />
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1AdSoyad" />
 
                                                 </div>
                                             </div>
@@ -343,7 +342,7 @@
                                                     Unvanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1UnvanAdi" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi1UnvanAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -351,7 +350,7 @@
                                                     E-Posta Adresi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.EMail : "")" style="width: 100%;color:black;" id="TikUyesi1EMail" />
+                                                    <input type="text" class="form-control" maxlength="128" name="EMail" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.EMail : "")" style="width: 100%;color:black;" id="TikUyesi1EMail" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -359,12 +358,12 @@
                                                     Üniversitesi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    @Html.DropDownList("UniversiteID", TikUyesi1Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi1UniversiteID" })
-                                                    @if (TikUyesi1Bilgi != null && TikUyesi1Bilgi.UniversiteID.HasValue)
+                                                    @Html.DropDownList("UniversiteID", tikUyesi1Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi1UniversiteID" })
+                                                    @if (tikUyesi1Bilgi != null && tikUyesi1Bilgi.UniversiteID.HasValue)
                                                     {
                                                         <script>
                                                             $(function () {
-                                                                $('#TikUyesi1UniversiteID').val('@TikUyesi1Bilgi.UniversiteID.Value');
+                                                                $('#TikUyesi1UniversiteID').val('@tikUyesi1Bilgi.UniversiteID.Value');
                                                             })
                                                         </script>
                                                     }
@@ -376,7 +375,7 @@
                                                     Anabilim Dalı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;color:black;" id="TikUyesi1AnabilimdaliProgramAdi" />
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="256" name="AnabilimdaliProgramAdi" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;color:black;" id="TikUyesi1AnabilimdaliProgramAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil">
@@ -384,24 +383,24 @@
                                                 <div class="col-md-9">
                                                     <select class="form-control" name="IsDilSinaviOrUniversite" id="TikUyesi1IsDilSinaviOrUniversite" onchange="DilBilgisiKontrol('TikUyesi1')">
                                                         <option></option>
-                                                        <option value="true" @(TikUyesi1Bilgi != null && TikUyesi1Bilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
-                                                        <option value="false" @(TikUyesi1Bilgi != null && TikUyesi1Bilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
+                                                        <option value="true" @(tikUyesi1Bilgi != null && tikUyesi1Bilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
+                                                        <option value="false" @(tikUyesi1Bilgi != null && tikUyesi1Bilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
                                                     </select>
 
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi1DvDilSinavAdi">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0 TikUyesi1LblDilSinavAdi">
-                                                    @(TikUyesi1Bilgi == null || TikUyesi1Bilgi.IsDilSinaviOrUniversite == true ? "Dil Sınavı Adı" : "Üniversite Adı") (*)
+                                                    @(tikUyesi1Bilgi == null || tikUyesi1Bilgi.IsDilSinaviOrUniversite == true ? "Dil Sınavı Adı" : "Üniversite Adı") (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="DilSinavAdi" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi1DilSinavAdi" />
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="DilSinavAdi" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi1DilSinavAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi1DvDilSinavTarih">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-3 control-label">Dil Sınavı Yılı (*)</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.SinavTarihi.ToStrObjEmptString(): "")" name="SinavTarihi" id="TikUyesi1SinavTarihi">
+                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.SinavTarihi.ToStrObjEmptString(): "")" name="SinavTarihi" id="TikUyesi1SinavTarihi">
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi1DvDilSinavPuani">
@@ -409,7 +408,7 @@
                                                     Dil Sınavı Puanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" placeholder="Puan Bilgisi Yüzlük Sistemde Girilmelidir." maxlength="128" name="DilPuani" value="@(TikUyesi1Bilgi != null ? TikUyesi1Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi1DilPuani" />
+                                                    <input type="text" class="form-control" autocomplete="off" placeholder="Puan Bilgisi Yüzlük Sistemde Girilmelidir." maxlength="128" name="DilPuani" value="@(tikUyesi1Bilgi != null ? tikUyesi1Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi1DilPuani" />
                                                 </div>
                                             </div>
                                         </div>
@@ -431,7 +430,7 @@
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
                                                     <input type="hidden" name="JuriTipAdi" value="TikUyesi2" />
                                                     <input type="hidden" name="TabID" value="4" />
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="AdSoyad" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.AdSoyad.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2AdSoyad" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -439,7 +438,7 @@
                                                     Unvanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2UnvanAdi" />
+                                                    <input type="text" class="form-control upperCase" maxlength="128" name="UnvanAdi" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.UnvanAdi.ToUpper() : "")" readonly="readonly" style="width: 100%;color:black;" id="TikUyesi2UnvanAdi" />
 
                                                 </div>
                                             </div>
@@ -448,7 +447,7 @@
                                                     E-Posta Adresi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="EMail" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.EMail : "")" style="width: 100%;" id="TikUyesi2EMail" />
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="EMail" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.EMail : "")" style="width: 100%;" id="TikUyesi2EMail" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -456,12 +455,12 @@
                                                     Üniversitesi (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    @Html.DropDownList("UniversiteID", TikUyesi2Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi2UniversiteID" })
-                                                    @if (TikUyesi2Bilgi != null && TikUyesi2Bilgi.UniversiteID.HasValue)
+                                                    @Html.DropDownList("UniversiteID", tikUyesi2Bilgi.SListUniversiteID, new { @class = "form-control", @style = "width:100%;color:black;", id = "TikUyesi2UniversiteID" })
+                                                    @if (tikUyesi2Bilgi != null && tikUyesi2Bilgi.UniversiteID.HasValue)
                                                     {
                                                         <script>
                                                             $(function () {
-                                                                $('#TikUyesi2UniversiteID').val('@TikUyesi2Bilgi.UniversiteID.Value');
+                                                                $('#TikUyesi2UniversiteID').val('@tikUyesi2Bilgi.UniversiteID.Value');
                                                             })
                                                         </script>
                                                     }
@@ -472,7 +471,7 @@
                                                     Anabilim Dalı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="256" name="AnabilimdaliProgramAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TikUyesi2AnabilimdaliProgramAdi" />
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="256" name="AnabilimdaliProgramAdi" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.AnabilimdaliProgramAdi : "")" style="width: 100%;" id="TikUyesi2AnabilimdaliProgramAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil">
@@ -480,24 +479,24 @@
                                                 <div class="col-md-9">
                                                     <select class="form-control" name="IsDilSinaviOrUniversite" id="TikUyesi2IsDilSinaviOrUniversite" onchange="DilBilgisiKontrol('TikUyesi2')">
                                                         <option></option>
-                                                        <option value="true" @(TikUyesi2Bilgi != null && TikUyesi2Bilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
-                                                        <option value="false" @(TikUyesi2Bilgi != null && TikUyesi2Bilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
+                                                        <option value="true" @(tikUyesi2Bilgi != null && tikUyesi2Bilgi.IsDilSinaviOrUniversite == true ? "selected" : "")>Dil Sınavı</option>
+                                                        <option value="false" @(tikUyesi2Bilgi != null && tikUyesi2Bilgi.IsDilSinaviOrUniversite == false ? "selected" : "")>Üniversite Bilgisi</option>
                                                     </select>
 
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi2DvDilSinavAdi">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-4 control-label padding-top-0 padding-bottom-0 TikUyesi2LblDilSinavAdi">
-                                                    @(TikUyesi2Bilgi == null || TikUyesi2Bilgi.IsDilSinaviOrUniversite == true ? "Dil Sınavı Adı" : "Üniversite Adı") (*)
+                                                    @(tikUyesi2Bilgi == null || tikUyesi2Bilgi.IsDilSinaviOrUniversite == true ? "Dil Sınavı Adı" : "Üniversite Adı") (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" maxlength="128" autocomplete="off" name="DilSinavAdi" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi2DilSinavAdi" />
+                                                    <input type="text" class="form-control" maxlength="128" autocomplete="off" name="DilSinavAdi" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.DilSinavAdi : "")" style="width: 100%;" id="TikUyesi2DilSinavAdi" />
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi2DvDilSinavTarih">
                                                 <label style="text-align:left;" class="col-md-3 col-xs-3 control-label">Dil Sınavı Yılı (*)</label>
                                                 <div class="col-md-9 col-xs-9">
-                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.SinavTarihi.ToStrObjEmptString() : "")" name="SinavTarihi" id="TikUyesi2SinavTarihi">
+                                                    <input class="form-control form-control-inline input-medium" type="text" maxlength="4" autocomplete="off" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.SinavTarihi.ToStrObjEmptString() : "")" name="SinavTarihi" id="TikUyesi2SinavTarihi">
                                                 </div>
                                             </div>
                                             <div class="form-group DvDil TikUyesi2DvDilSinavPuani">
@@ -505,7 +504,7 @@
                                                     Dil Sınavı Puanı (*)
                                                 </label>
                                                 <div class="col-md-9 col-xs-8 line-height-30 padding-top-0 padding-bottom-0">
-                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="DilPuani" value="@(TikUyesi2Bilgi != null ? TikUyesi2Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi2DilPuani" />
+                                                    <input type="text" class="form-control" autocomplete="off" maxlength="128" name="DilPuani" value="@(tikUyesi2Bilgi != null ? tikUyesi2Bilgi.DilPuani : "")" style="width: 100%;" id="TikUyesi2DilPuani" />
                                                 </div>
                                             </div>
                                         </div>

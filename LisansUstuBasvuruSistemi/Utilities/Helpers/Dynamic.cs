@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
 
-namespace BiskaUtil
+namespace LisansUstuBasvuruSistemi.Utilities.Helpers
 {
     public static class DynamicQueryable
     {

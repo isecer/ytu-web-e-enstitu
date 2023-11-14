@@ -1,15 +1,14 @@
-﻿@using LisansUstuBasvuruSistemi.Models 
-@using LisansUstuBasvuruSistemi.Utilities.Dtos
-@using BiskaUtil;
+﻿@using LisansUstuBasvuruSistemi.Utilities.Dtos
+@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @using LisansUstuBasvuruSistemi.Utilities.SystemData
 @model MezuniyetBasvuruDetayDto
 @{
     var MmMessage = ViewBag.MmMessage as MmMessage;
     var Color = Model.DurumColor;
-    Layout = null; 
-}      
+    Layout = null;
+}
 <div class="widget widget-default" style="margin:0px;padding:4px;">
-    <div class="panel panel-default form-horizontal" style="margin:0px;" id="yayinPopup">      
+    <div class="panel panel-default form-horizontal" style="margin:0px;" id="yayinPopup">
         <div class="panel-body form-group-separated">
             <table class="table" style="font-size:9pt;margin:0px;color:@Color;">
                 <tr>
@@ -160,7 +159,7 @@
                                     {
                                         <option value="@(item.Value.HasValue? item.Value.Value.ToString().ToLower():"")" @(item.Value == Model.SelectedYayin.DanismanIsmiVar ? "selected" : "")>@item.Caption</option>
                                     }
-                                </select>    
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -182,9 +181,9 @@
                                     <option @(Model.SelectedYayin.Onaylandi.HasValue == false ? "selected" : "")></option>
                                     <option value="true" @(Model.SelectedYayin.Onaylandi == true ? "selected" : "")>Onaylandı</option>
                                     <option value="false" @(Model.SelectedYayin.Onaylandi == false ? "selected" : "")>Onaylanmadı</option>
-                                </select> 
+                                </select>
                             </div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
             </div>

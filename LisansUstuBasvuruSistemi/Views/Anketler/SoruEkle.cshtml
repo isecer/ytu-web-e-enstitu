@@ -1,4 +1,4 @@
-﻿@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model LisansUstuBasvuruSistemi.Models.AnketSoru
 @{
     Layout = null;
@@ -38,12 +38,12 @@
                             <div class="col-md-10 col-xs-9">
                                 <input type="text" name="IsTabloVeriMaxSatir" id="IsTabloVeriMaxSatir" value="@Model.IsTabloVeriMaxSatir" class="form-control" />
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
     <script>
         $(function () {
             $('.make-switch')['bootstrapSwitch']();
@@ -56,5 +56,6 @@
                 $('.maxVG').addClass("hide");
             }
         }
-    </script> 
+    </script>
+
 }

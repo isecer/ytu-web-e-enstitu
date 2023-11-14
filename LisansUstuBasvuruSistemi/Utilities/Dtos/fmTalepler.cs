@@ -8,7 +8,7 @@ using LisansUstuBasvuruSistemi.Models;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmTalepler : PagerOption
+    public class FmTalepler : PagerModel
     {
         public string EnstituKod { get; set; }
         public int? SRTalepTipID { get; set; }

@@ -135,7 +135,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                     cellYazarlarBildiri.Text = ulusalOrUluslararasiBildiri.YazarAdi;
                     cellMakaleBasligiBildiri.Text = ulusalOrUluslararasiBildiri.YayinBasligi;
                     cellEtkinlikAdiBildiri.Text = ulusalOrUluslararasiBildiri.EtkinlikAdi;
-                    cellTarihBildiri.Text = ulusalOrUluslararasiBildiri.MezuniyetYayinTarih.ToDateString();
+                    cellTarihBildiri.Text = ulusalOrUluslararasiBildiri.MezuniyetYayinTarih.ToFormatDate();
                     cellYerBildiri.Text = ulusalOrUluslararasiBildiri.YerBilgisi;
                     cellWebSayfasi.Text = ulusalOrUluslararasiBildiri.MezuniyetYayinKaynakLinki;
 

@@ -1,11 +1,11 @@
-﻿@using BiskaUtil
+﻿@using LisansUstuBasvuruSistemi.Utilities.Extensions
 @model LisansUstuBasvuruSistemi.Utilities.Helpers.MailTableContentDto
 @{
     Layout = null;
 }
 
 @if (Model.AciklamaBasligi.IsNullOrWhiteSpace() == false)
-{ 
+{
     <table style="width:100%;table-layout:fixed;">
         <tr>
             <td style="font-family:Tahoma;font-size:9pt;color:maroon;text-align:@(Model.AciklamaTextAlingCenter?"center":"left")">@Html.Raw(Model.AciklamaBasligi)</td>
@@ -14,7 +14,7 @@
 }
 @if (Model.AciklamaDetayi.IsNullOrWhiteSpace() == false)
 {
-     
+
     <table style="width:100%;table-layout:fixed;">
         <tr>
             <td style="font-family:Tahoma;font-size:9pt;color:maroon;text-align:@(Model.AciklamaTextAlingCenter?"center":"left")">@Html.Raw(Model.AciklamaDetayi)</td>
@@ -39,7 +39,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
             }
             @foreach (var item in Model.Detaylar)
             {

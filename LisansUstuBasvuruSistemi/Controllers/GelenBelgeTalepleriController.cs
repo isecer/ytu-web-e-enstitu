@@ -1,14 +1,15 @@
-﻿using BiskaUtil;
+﻿using System;
+using System.Data.Objects;
+using System.Linq;
+using System.Web.Mvc;
+using BiskaUtil;
+using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Dtos;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
-using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
-using System;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Web.Mvc;
-using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using LisansUstuBasvuruSistemi.Utilities.Helpers;
+using LisansUstuBasvuruSistemi.Utilities.MenuAndRoles;
 
 namespace LisansUstuBasvuruSistemi.Controllers
 {
@@ -84,13 +85,13 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         s.EklenecekGun
                     };
 
-            if (model.OgrenimDurumID.HasValue) q = q.Where(p => p.OgrenimDurumID == model.OgrenimDurumID);
+            if (model.OgrenimDurumId.HasValue) q = q.Where(p => p.OgrenimDurumID == model.OgrenimDurumId);
             if (model.AranacakKelime.IsNullOrWhiteSpace() == false) q = q.Where(p => p.AdiSoyadi.Contains(model.AranacakKelime) || p.Telefon == model.AranacakKelime || p.Email.Contains(model.AranacakKelime) || p.OgrenciNo == model.AranacakKelime);
-            if (model.BelgeTipID.HasValue) q = q.Where(p => p.BelgeTipID == model.BelgeTipID);
+            if (model.BelgeTipId.HasValue) q = q.Where(p => p.BelgeTipID == model.BelgeTipId);
             if (model.OgrenimTipKod.HasValue) q = q.Where(p => p.OgrenimTipKod == model.OgrenimTipKod);
             if (model.ProgramKod.IsNullOrWhiteSpace() == false) q = q.Where(p => p.ProgramKod == model.ProgramKod);
-            if (model.BelgeID.HasValue) q = q.Where(p => p.BelgeTalepID == model.BelgeID.Value);
-            if (model.BelgeDurumID.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumID.Value);
+            if (model.BelgeId.HasValue) q = q.Where(p => p.BelgeTalepID == model.BelgeId.Value);
+            if (model.BelgeDurumId.HasValue) q = q.Where(p => p.BelgeDurumID == model.BelgeDurumId.Value);
             if (model.OgretimYili.IsNullOrWhiteSpace() == false)
             {
                 var oy = model.OgretimYili.Split('/').ToList();
@@ -179,10 +180,10 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
             #endregion
             ViewBag.IndexModel = indexModel;
-            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipID);
+            ViewBag.BelgeTipID = new SelectList(BelgeTalepBus.GetCmbBelgeTipleri(true), "Value", "Caption", model.BelgeTipId);
             ViewBag.OgretimYili = new SelectList(DonemlerBus.GetCmbAkademikTarih(true, 0), "Value", "Caption", model.OgretimYili);
-            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumID);
-            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumID);
+            ViewBag.BelgeDurumID = new SelectList(BelgeTalepBus.GetCmbBelgeTalepDurumListe(true), "Value", "Caption", model.BelgeDurumId);
+            ViewBag.OgrenimDurumID = new SelectList(Management.CmbAktifOgrenimDurumu(true, IsHesapKayittaGozuksun: true), "Value", "Caption", model.OgrenimDurumId);
             ViewBag.OgrenimTipKod = new SelectList(OgrenimTipleriBus.CmbAktifOgrenimTipleri(enstituKod, true), "Value", "Caption", model.OgrenimTipKod);
             ViewBag.ProgramKod = new SelectList(Management.CmbGetAktifProgramlar(enstituKod, true), "Value", "Caption", model.ProgramKod);
             ViewBag.DilKodu = new SelectList(Management.GetDiller(true), "Value", "Caption", model.DilKodu);

@@ -4,7 +4,7 @@ using BiskaUtil;
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmSistemBilgilendirme : PagerOption
+    public class FmSistemBilgilendirme : PagerModel
     {
         public byte? BilgiTipi { get; set; }
         public string Kategori { get; set; }

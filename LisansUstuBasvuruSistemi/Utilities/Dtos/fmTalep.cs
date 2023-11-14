@@ -7,7 +7,7 @@ using LisansUstuBasvuruSistemi.Models; using LisansUstuBasvuruSistemi.Utilities.
 
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
-    public class FmTalep : PagerOption
+    public class FmTalep : PagerModel
     {
         public bool Expand { get; set; }
         public int? TalepSurecID { get; set; }

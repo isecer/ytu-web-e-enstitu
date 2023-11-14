@@ -248,7 +248,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         else if (resim.ContentLength >= 800000 && resim.ContentLength < 1000000) quality = 40;
                         else if (resim.ContentLength >= 1000000) quality = 30;
                         System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-                        var path2 = resimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4).ToString() + ".jpg";
                         var myEncoderParameters = new EncoderParameters(1);
                         var myEncoderParameter = new EncoderParameter(myEncoder, quality);
                         myEncoderParameters.Param[0] = myEncoderParameter;
@@ -280,7 +280,7 @@ namespace LisansUstuBasvuruSistemi.Business
                         int orientationValue = img1.GetPropertyItem(prop.Id).Value[0];
                         RotateFlipType rotateFlipType = GetOrientationToFlipType(orientationValue);
                         img1.RotateFlip(rotateFlipType);
-                        var path2 = resimYolu + Guid.NewGuid().ToString().Substr(0, 4).ToString() + ".jpg";
+                        var path2 = resimYolu + Guid.NewGuid().ToString().Substring(0, 4).ToString() + ".jpg";
                         img1.Save(path2);
                         img1.Dispose();
                         if (File.Exists(resimYolu))

@@ -215,7 +215,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     data.IslemYapanIP = UserIdentity.Ip;
                     data.IslemYapanID = UserIdentity.Current.Id;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, data.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, data.ToJson());
 
                 }
                 else
@@ -244,7 +244,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
 
                     });
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Insert, kayit.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Insert, kayit.ToJson());
                 }
                 return RedirectToAction("Index");
             }
@@ -548,7 +548,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         YeterlikBus.SendMailKomiteDegerlendirmeLink(yeterlikBasvuru.UniqueID, komite.UniqueID);
                     }
                 }
-                LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any() ? IslemTipi.Insert : IslemTipi.Update), juriEntitys.ToJson());
+                LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", (!yeterlikBasvuru.YeterlikBasvuruJuriUyeleris.Any() ? LogCrudType.Insert : LogCrudType.Update), juriEntitys.ToJson());
                 mMessage.IsSuccess = true;
                 mMessage.MessageType = MsgTypeEnum.Success;
             }
@@ -596,7 +596,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         KullaniciID = s.KullaniciID,
                     }));
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Update, komites.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Update, komites.ToJson());
                     mMessage.IsSuccess = true;
                     mMessage.Messages.Add("Komite üyeleri güncellendi.");
                 }
@@ -717,7 +717,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         komite.YeterlikBasvuru.IsAbdKomitesiJuriyiOnayladi = herkesOnayladi;
                         _entities.SaveChanges();
                         mMessage.IsSuccess = true;
-                        LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Update, komite.ToJson());
+                        LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Update, komite.ToJson());
                         if (herkesOnayladi == true)
                         {
                             var messages = YeterlikBus.SendMailKomiteDegerlendirmeSonuc(komite.YeterlikBasvuru.UniqueID);
@@ -812,7 +812,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
 
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");
                     mmMessage.IsSuccess = true;
 
@@ -883,7 +883,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     yeterlikBasvuru.SozluSinavYeri = kModel.SozluSinavYeri;
                     yeterlikBasvuru.IsSozluSinavinaKatildi = kModel.IsSozluSinavinaKatildi;
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, yeterlikBasvuru.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, yeterlikBasvuru.ToJson());
                     mmMessage.Messages.Add("Kayıt işlemi yapıldı.");
                     mmMessage.IsSuccess = true;
 
@@ -988,7 +988,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                         }
                     }
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Update, basvuru.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Update, basvuru.ToJson());
                     YeterlikBus.SendMailSinavBilgi(basvuru.UniqueID, !basvuru.IsSozluSinavinaKatildi.HasValue);
 
                 }
@@ -1097,7 +1097,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     }
                     _entities.SaveChanges();
                     mMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", IslemTipi.Update, juri.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuruJuriUyeleri", LogCrudType.Update, juri.ToJson());
 
                 }
             }
@@ -1174,8 +1174,8 @@ namespace LisansUstuBasvuruSistemi.Controllers
                     _entities.YeterlikBasvuruKomitelers.Add(yeniKomite);
                     _entities.SaveChanges();
                     mMessage.IsSuccess = true;
-                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Delete, varolankomite.ToJson());
-                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", IslemTipi.Insert, yeniKomite.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Delete, varolankomite.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuruKomiteler", LogCrudType.Insert, yeniKomite.ToJson());
 
                 }
             }
@@ -1262,7 +1262,7 @@ namespace LisansUstuBasvuruSistemi.Controllers
                 {
                     _entities.YeterlikBasvurus.Remove(kayit);
                     _entities.SaveChanges();
-                    LogIslemleri.LogEkle("YeterlikBasvuru", IslemTipi.Delete, kayit.ToJson());
+                    LogIslemleri.LogEkle("YeterlikBasvuru", LogCrudType.Delete, kayit.ToJson());
                     mmMessage.Messages.Add(adSoyad + " Öğrencisine ait Yeterlik başvurusu silindi.");
                     mmMessage.IsSuccess = true;
 

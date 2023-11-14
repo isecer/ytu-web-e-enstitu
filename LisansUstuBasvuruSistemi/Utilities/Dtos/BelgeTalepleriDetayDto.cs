@@ -7,8 +7,7 @@ using LisansUstuBasvuruSistemi.Models;
 namespace LisansUstuBasvuruSistemi.Utilities.Dtos
 {
     public class BelgeTalepleriDetayDto : BelgeTalepleri
-    {
-        public int? KullaniciID { get; set; }
+    { 
         public string KullaniciTipAdi { get; set; }
         public string ResimAdi { get; set; }
         public string ClassName { get; set; }

@@ -23,7 +23,7 @@ namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
                 var onaylayan = db.Kullanicilars.First(p => p.KullaniciID == mezuniyetBasvurulariTezDosyasi.OnayYapanID);
                 cell_OnaylayanKisi.Text = onaylayan.Ad + " " + onaylayan.Soyad;
                 cellOnayTarihi.Text = mezuniyetBasvurulariTezDosyasi.OnayTarihi.ToFormatDateAndTime(); 
-                var kayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + basvuru.KayitTarihi.ToDateString();
+                var kayitDonemi = basvuru.KayitOgretimYiliBaslangic + "/" + (basvuru.KayitOgretimYiliBaslangic + 1) + " " + db.Donemlers.First(p => p.DonemID == basvuru.KayitOgretimYiliDonemID.Value).DonemAdi + " - " + basvuru.KayitTarihi.ToFormatDate();
                 lngLbl_AkademikTarih.Text = "Eğitim Öğretim Yılı";
                 cell_AkademikYil.Text = basvuru.MezuniyetSureci.BaslangicYil + "-" + basvuru.MezuniyetSureci.BitisYil + " " + db.Donemlers.First(p => p.DonemID == basvuru.MezuniyetSureci.DonemID).DonemAdi;
                 lblKayitTarihi.Text = "Kayıt Tarihi";

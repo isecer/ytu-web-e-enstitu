@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BiskaUtil;
-using DevExpress.XtraReports.UI;
+﻿using DevExpress.XtraReports.UI;
 using LisansUstuBasvuruSistemi.Business;
 using LisansUstuBasvuruSistemi.Models;
 using LisansUstuBasvuruSistemi.Utilities.Enums;
+using LisansUstuBasvuruSistemi.Utilities.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LisansUstuBasvuruSistemi.Raporlar.Mezuniyet
 {
